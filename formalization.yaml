@@ -1,0 +1,271 @@
+version: "v0.4"
+
+project:
+  name: "Rigidity of harmonic functions on the supercritical percolation cluster"
+  description: >-
+    A Lean 4 formalization of the paper "Rigidity of harmonic functions on the supercritical
+    percolation cluster" by Bou-Rabee, Cooperman and Dario, in a corrected draft of the arXiv v2
+    source: on the infinite cluster of supercritical Bernoulli bond percolation on Z^d, Lipschitz
+    harmonic functions are constant (Theorem 1.1), integer-valued harmonic functions of linear growth
+    are constant (Theorem 1.2), in two dimensions a function with integer Laplacian of finite support
+    that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov chain on
+    the largest cluster of a box of radius n mixes in time of order n^d log n (Theorem 6.5). All 43
+    numbered results that the paper proves are proved in Lean, from twelve results of the literature
+    that enter as explicit hypotheses; the other five numbered results are quoted from the
+    literature. Theorems 1.1, 1.2, 1.3 and 6.5 are independently checked by the comparator pairs
+    under RigidityAudit/.
+  authors:
+    - "Ahmed Bou-Rabee"
+  responsible_maintainers:
+    - "Ahmed Bou-Rabee"
+  license: "Apache-2.0"
+
+classification:
+  arxiv: ["math.PR", "math.AP"]
+  msc2020: ["60K35", "82B43"]
+
+sources:
+  - title: "Rigidity of harmonic functions on the supercritical percolation cluster"
+    authors:
+      - "Ahmed Bou-Rabee"
+      - "William Cooperman"
+      - "Paul Dario"
+    type: "paper"
+    relationship: "formalizes"
+    location: "paper/"
+    note: >-
+      Transactions of the American Mathematical Society 378(6) (2025), 3823-3896,
+      doi:10.1090/tran/9264; arXiv:2303.04736. The statements follow the corrected draft
+      paper/percolation-harmonic-corrected.tex, whose corrections are marked in the source and listed
+      in README.md; the unmodified arXiv v2 source is paper/percolation-harmonic.tex.
+    license: "authors' copyright; included with the authors' permission"
+    author_endorsement: "participated"
+  - title: "Elliptic regularity and quantitative homogenization on percolation clusters"
+    authors: ["Scott Armstrong", "Paul Dario"]
+    type: "paper"
+    relationship: "assumes"
+    note: "Comm. Pure Appl. Math. 71 (2018); arXiv:1609.09431v2. Theorem 2(iii) at k = 0 and k = 1, with (1.16), enters as literature inputs (see README)."
+  - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
+    authors: ["Paul Dario", "Chenlin Gu"]
+    type: "paper"
+    relationship: "assumes"
+    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof), Proposition 2.12 and Proposition A.1 enter as literature inputs."
+  - title: "Percolation"
+    authors: ["Geoffrey Grimmett"]
+    type: "book"
+    relationship: "assumes"
+    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2."
+  - title: "Density and uniqueness in percolation"
+    authors: ["Robert M. Burton", "Michael Keane"]
+    type: "paper"
+    relationship: "assumes"
+    note: "Comm. Math. Phys. 121 (1989), 501-505. Theorem 2 (uniqueness of the infinite cluster) enters as a literature input."
+  - title: "Surface order large deviations for Ising, Potts and percolation models"
+    authors: ["Agoston Pisztora"]
+    type: "paper"
+    relationship: "assumes"
+    note: "Probab. Theory Related Fields 104 (1996). The box estimate of Theorems 1.2 and 3.1, as recalled by Penrose and Pisztora (Adv. Appl. Probab. 28 (1996), p. 35), gives Proposition 2.3 of the paper for d >= 3 by a union bound; Proposition 2.3 is a literature input."
+  - title: "Surface order large deviations for 2D FK-percolation and Potts models"
+    authors: ["Olivier Couronné", "Reda Jürg Messikh"]
+    type: "paper"
+    relationship: "assumes"
+    note: "Stochastic Process. Appl. 113 (2004), 81-99; arXiv:math/0303117v1. Theorem 5, (7), gives Proposition 2.3 of the paper for d = 2 by a union bound."
+  - title: "Percolation Theory for Mathematicians"
+    authors: ["Harry Kesten"]
+    type: "book"
+    relationship: "assumes"
+    note: "Birkhäuser, 1982. Theorem 11.1, equation (11.4), enters as a literature input."
+  - title: "Real and Complex Analysis"
+    authors: ["Walter Rudin"]
+    type: "book"
+    relationship: "assumes"
+    note: "Chapter 14, as cited in the paper: the Jordan curve theorem on the sphere enters as a literature input."
+  - title: "Algebraic Topology"
+    authors: ["Allen Hatcher"]
+    type: "book"
+    relationship: "assumes"
+    note: "Cambridge University Press, 2002. Proposition 2B.1 and the remark after it (p. 169): the Jordan curve theorem on the sphere, a literature input."
+  - title: "Worst-case to average-case reductions based on Gaussian measures"
+    authors: ["Daniele Micciancio", "Oded Regev"]
+    type: "paper"
+    relationship: "assumes"
+    note: "SIAM J. Comput. 37 (2007). Lemma 3.3 enters as a literature input."
+
+related_formalizations:
+  - id: "https://github.com/nitromannitol/Lattice-Probability"
+    relationship: "builds-on"
+    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency."
+
+status:
+  scope: >-
+    All 43 numbered results that the paper proves, in the corrected draft, and the four main
+    theorems among them (Theorems 1.1, 1.2, 1.3 and 6.5): Theorems 1.1, 1.2 and 1.3 are stated as
+    printed, and Theorem 6.5 as printed with its restriction event made explicit. The other five
+    numbered results are quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 and
+    Lemma 2.14 enter as literature inputs, and Lemma 2.13 is used by no proof. README.md lists every
+    numbered result with its Lean declaration.
+  sorry_count: 0
+  sorry_count_scope: "Rigidity/ and Rigidity.lean"
+  comparator_challenge_sorry_count: 4
+  sorry_in_definitions: 0
+  axioms:
+    - "propext"
+    - "Classical.choice"
+    - "Quot.sound"
+  literature_inputs: 12
+  literature_inputs_note: >-
+    Twelve results of the literature are stated as propositions, seven in Rigidity/External/ and five
+    in the directory LatticeProb/External/ of Lattice-Probability, each with its source in its
+    docstring. They enter as explicit hypotheses of the theorems that use them, not as axioms;
+    README.md lists them with the results that use them. The library also declares
+    Rigidity.External.AntalPisztoraChemicalDistance, which no numbered result uses.
+  main_results:
+    - declaration: "Rigidity.Assembly.Main.lipschitz"
+      file: "Rigidity/Proofs/Assembly/Main.lean"
+      statement: "Theorem 1.1"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "RigidityAudit/Lipschitz/comparator.json"
+      literature_dependencies:
+        - "LatticeProb.External.SupercriticalBondUniqueness"
+        - "LatticeProb.External.SupercriticalBondCorrectorInput"
+        - "Rigidity.External.CorrectorQuantitativeInput"
+        - "LatticeProb.External.ArmstrongDarioOrderZero"
+        - "LatticeProb.External.SupercriticalBondGreenColumnExistence"
+        - "LatticeProb.External.SupercriticalBondGreenQuantitative"
+        - "Rigidity.External.WellConnectedInput"
+    - declaration: "Rigidity.Assembly.Main.integerValuedLinearGrowth"
+      file: "Rigidity/Proofs/Assembly/Main.lean"
+      statement: "Theorem 1.2"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "RigidityAudit/IntegerLinearGrowth/comparator.json"
+      literature_dependencies:
+        - "LatticeProb.External.SupercriticalBondUniqueness"
+        - "LatticeProb.External.SupercriticalBondCorrectorInput"
+    - declaration: "Rigidity.Assembly.Main.fastDecay"
+      file: "Rigidity/Proofs/Assembly/Main.lean"
+      statement: "Theorem 1.3"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "RigidityAudit/FastDecay/comparator.json"
+      literature_dependencies:
+        - "LatticeProb.External.SupercriticalBondUniqueness"
+        - "LatticeProb.External.SupercriticalBondCorrectorInput"
+        - "Rigidity.External.CorrectorQuantitativeInput"
+        - "LatticeProb.External.ArmstrongDarioOrderZero"
+        - "Rigidity.External.ArmstrongDarioOrderOneOrigin"
+        - "LatticeProb.External.SupercriticalBondGreenColumnExistence"
+        - "LatticeProb.External.SupercriticalBondGreenQuantitative"
+        - "Rigidity.External.ClusterDensityConcentrationInput"
+        - "Rigidity.External.WellConnectedInput"
+        - "Rigidity.External.KestenRectangleCrossing"
+        - "Rigidity.External.JordanCurveTheoremSphere"
+    - declaration: "Rigidity.Assembly.Main.slowMixing"
+      file: "Rigidity/Proofs/Assembly/Main.lean"
+      statement: "Theorem 6.5"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "RigidityAudit/SlowMixing/comparator.json"
+      literature_dependencies:
+        - "LatticeProb.External.SupercriticalBondUniqueness"
+        - "Rigidity.External.WellConnectedInput"
+        - "Rigidity.External.MicciancioRegevSmoothing"
+
+automation:
+  methods:
+    - method: "agent"
+      models:
+        - "claude-opus-5-5"
+      framework: "Claude Code (Anthropic)"
+      tool_setup: >-
+        The Lean statements of the numbered results and of the proof steps, the proofs, their
+        composition into the numbered results, the comparator pairs and the documentation, under
+        Lean v4.32.0 with the Mathlib and Lattice-Probability revisions of this repository; every
+        change was checked by a Lake build. Claude Opus 5.5 at maximum reasoning effort, read-only,
+        also tested the suspected gaps of the printed proofs, checked the literature inputs against
+        their sources, and audited the final statements and inputs.
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "not tracked"
+        hardware: "local Linux machine"
+      prompting_notes: >-
+        Human-directed work. Proof tasks fixed the statements to be proved and forbade changing them.
+    - method: "agent"
+      models:
+        - "gpt-6.1-sol"
+      framework: "Codex CLI (OpenAI)"
+      tool_setup: >-
+        Six results in Rigidity/Frozen/, stated and proved in late October 2026 (Lemmas 4.5 and 4.6,
+        Propositions 2.8, 4.1 and 6.4, and Theorem 1.2), under the same toolchain and dependency
+        revisions.
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "not tracked"
+        hardware: "local Linux machine"
+      prompting_notes: >-
+        Human-directed work; each task fixed the statements to be proved and forbade changing them.
+    - method: "agent"
+      models:
+        - "gpt-6-astra"
+      framework: "Codex CLI (OpenAI)"
+      tool_setup: >-
+        Read-only reviews, separate from the development agents: reviews of the results in
+        Rigidity/Frozen/ in October 2026, and a refute-first test of the statements of the paper at
+        maximum reasoning effort, which found printed errors that the corrected draft repairs.
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "not tracked"
+        hardware: "local Linux machine"
+      prompting_notes: "Review of the mathematics and the statements only; no Lean proofs."
+  spend_usd: "not tracked"
+  notes: >-
+    The Lean development was written by AI agents in October and November 2026, under the
+    direction of Ahmed Bou-Rabee, who fixed the scope, approved the corrections to the paper and set
+    the policy that results of the literature enter only as explicit hypotheses. Every numbered
+    result was stated in Lean before its proof; each proof step of the paper was then stated as its
+    own Lean proposition and proved from the propositions of the steps it uses. Every proof is
+    checked by the Lean kernel. The library contains no sorry; each of the four comparator challenge
+    files contains exactly one intentional statement-level sorry, which the corresponding
+    Solution.lean proves.
+
+fidelity:
+  divergences: >-
+    The Lean statements follow the corrected draft paper/percolation-harmonic-corrected.tex. Its
+    corrections change the statements of Proposition 2.6, Lemma 2.16, Proposition 4.1, Lemma 4.9,
+    Theorem 5.1, Proposition 5.3, Lemma 5.6, Propositions 5.7, 5.8 and 5.11 and Lemma 5.19, and the
+    definitions of the triangle T_L, the continuum and normalized Green's functions and the good
+    events G_1, G_2 and G_3; README.md lists each correction with the published text, the corrected
+    text and the reason. Theorems 1.1, 1.2 and 1.3 are stated as printed, and Theorem 6.5 as printed
+    with its restriction event made explicit (see below), with the regime
+    2 <= d, p_c(d) < p < 1 (d = 2 for Theorem 1.3) as hypotheses. For events that quantify over the
+    corrected planes of every configuration and are not shown measurable, positive probability is
+    stated for a measurable subevent (Proposition 3.2, Lemmas 5.25 and 5.27); Lemma 5.26 states that
+    the good event is null-measurable. In Theorem 6.5 the chain is the random walk on the sandpile
+    group of a largest open cluster of the box, and the bounds are proved for every largest cluster
+    that lies in the infinite cluster and meets the boundary of the box; the statement also asserts
+    that such a cluster exists for all large n. Lemma 4.8 is stated as printed, with the positivity of
+    the conditioning event and its lower bound on an outer measure; its printed proof has a gap,
+    repaired in the corrected draft. Lemma 5.28 is stated for every edge (x_0, x_1) of the infinite
+    cluster as in the proof of Lemma 5.27. Theorem 1.2 is proved directly, and Lemmas 4.7 and 4.9 are
+    derived from it.
+
+review:
+  status: "model review"
+  reviewers:
+    - "OpenAI GPT-6 Astra (maximum reasoning effort, read-only, separate from the development agents): refute-first test of the statements of the paper"
+    - "Anthropic Claude Opus 5.5 (maximum reasoning effort, read-only): tests of the suspected gaps of the printed proofs, source checks of the literature inputs, and independent audits of the final statements and literature inputs"
+  notes: >-
+    Every proof is checked by the Lean kernel. Each Lean statement was compared with the corrected
+    draft by a model that had not written it, and each literature input was checked against its source
+    in an independent model review. Eleven inputs are stated in their sources; the twelfth,
+    Proposition 2.3 of the paper (WellConnectedInput), is stated by its cited sources only in
+    single-scale forms and follows from Couronné and Messikh (d = 2) and Pisztora (d >= 3) by a union
+    bound. The inputs remain assumptions. The author fixed the scope, the
+    corrections and the policy for literature inputs, but did not review every Lean statement personally.
+    The statements of Theorems 1.1, 1.2, 1.3 and 6.5, and of the literature inputs they use, are also
+    checked against self-contained challenge files by the comparator. This is a model review, not
+    external peer review.
+
+acknowledgements: >-
+  Built on Lean 4, Mathlib, Lake, Lattice-Probability and leanprover/comparator.

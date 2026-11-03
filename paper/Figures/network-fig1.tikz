@@ -1,0 +1,32 @@
+\begin{tikzpicture} [main/.style = {draw, circle}] 
+    \node[main] (s) {$\sgadget$};
+    \node[main] [right=of s] (1) {$\agadget$};
+    \node[main] [above=of 1] (2) {};
+    \node[main] [above=of 2] (3) {};
+    \node[main] [above=of 3] (4) {};
+    \node[main] [above=of 4] (5) {};
+    \node[main] [right=of 1] (a) {$\bgadget$};
+    \node[main] [above=of a] (b) {};
+    \node[main] [above=of b] (c) {};
+    \node[main] [above=of c] (d) {};
+    \node[main] [above=of d] (e) {};
+    \node[main] [right=of a] (t) {$\tgadget$};
+
+    \draw[dashed] (s) -- (1) node[midway, below] {$1$};
+    \draw (1) -- (2) node[midway, left] {$1$};
+    \draw (2) -- (3) node[midway, left] {$1$};
+    \draw (4) -- (5) node[midway, left] {$1$};
+    \draw[dashed] (1) -- (a) node[midway, below] {$1$};
+    \draw (a) -- (b) node[midway, right] {$1$};
+    \draw (b) -- (c) node[midway, right] {$1$};
+    \draw (d) -- (e) node[midway, right] {$1$};
+    \draw[dashed] (a) -- (t) node[midway, below] {$1$};
+    \draw (2) -- (b) node[midway, above] {$1$};
+    \draw (3) -- (c) node[midway, above] {$1$};
+    \draw (4) -- (d) node[midway, above] {$1$};
+    \draw (5) -- (e) node[midway, above] {$1$};
+    \path (3) -- (4) node[midway] {$\vdots$};
+    \path (c) -- (d) node[midway] {$\vdots$};
+
+    \draw[decorate, decoration={brace, amplitude=10pt, raise=10pt}] (2) -- (5) node[midway, xshift=-30pt] {$\Tn{n}$};
+\end{tikzpicture}

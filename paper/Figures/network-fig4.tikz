@@ -1,0 +1,8 @@
+
+
+\begin{tikzpicture} [main/.style = {draw, circle}] 
+    \node[main] (s) {$\sgadget$};
+    \node[main] [right=of a] (t) {$\tgadget$};
+
+    \draw[] (s) -- (t) node[midway, below] {$\frac{3 \Rn{n} + 2}{\Rn{n} + 1}$};
+\end{tikzpicture}

@@ -1,0 +1,61 @@
+cff-version: 1.2.0
+message: "If you use this formalization, please cite it as below."
+title: "Rigidity of harmonic functions on the supercritical percolation cluster: Lean formalization"
+type: software
+repository-code: "https://github.com/nitromannitol/Percolation-Rigidity"
+abstract: >-
+  A Lean 4 and Mathlib formalization of the paper "Rigidity of harmonic functions on the
+  supercritical percolation cluster" by Ahmed Bou-Rabee, William Cooperman and Paul Dario, in a
+  corrected draft of the arXiv v2 source kept in paper/. All 43 numbered results that the paper
+  proves are proved in Lean, with no sorry and only the standard axioms, from twelve results of the
+  literature that enter as explicit hypotheses; the other five numbered results are quoted from the
+  literature. Among them are the main theorems: on the infinite cluster of supercritical bond
+  percolation, Lipschitz harmonic functions and integer-valued harmonic functions of linear growth
+  are constant (Theorems 1.1 and 1.2), in two dimensions a function with integer Laplacian of finite
+  support that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov
+  chain on the largest cluster of a box mixes in time of order n^d log n (Theorem 6.5). Each of the
+  four main theorems has a Mathlib-only comparator challenge.
+authors:
+  - family-names: Bou-Rabee
+    given-names: Ahmed
+keywords:
+  - Lean
+  - mathlib
+  - formal verification
+  - percolation
+  - harmonic functions
+  - stochastic homogenization
+  - abelian sandpile
+license: Apache-2.0
+references:
+  - type: article
+    title: "Rigidity of harmonic functions on the supercritical percolation cluster"
+    authors:
+      - family-names: Bou-Rabee
+        given-names: Ahmed
+      - family-names: Cooperman
+        given-names: William
+      - family-names: Dario
+        given-names: Paul
+    journal: "Transactions of the American Mathematical Society"
+    volume: 378
+    issue: "6"
+    start: 3823
+    end: 3896
+    year: 2025
+    doi: "10.1090/tran/9264"
+    url: "https://arxiv.org/abs/2303.04736"
+    identifiers:
+      - type: other
+        value: "arXiv:2303.04736"
+    notes: "The paper formalized by this repository."
+  - type: unpublished
+    title: "Rigidity of harmonic functions on the supercritical percolation cluster (corrected draft)"
+    authors:
+      - family-names: Bou-Rabee
+        given-names: Ahmed
+      - family-names: Cooperman
+        given-names: William
+      - family-names: Dario
+        given-names: Paul
+    notes: "The corrected draft of the arXiv v2 source that the statements follow, in paper/percolation-harmonic-corrected.tex; its corrections are listed in README.md."

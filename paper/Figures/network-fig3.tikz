@@ -1,0 +1,10 @@
+\begin{tikzpicture} [main/.style = {draw, circle}] 
+    \node[main] (s) {$\sgadget$};
+    \node[main] [right=of s] (1) {$\agadget$};
+    \node[main] [right=of 1] (a) {$\bgadget$};
+    \node[main] [right=of a] (t) {$\tgadget$};
+
+    \draw[] (s) -- (1) node[midway, below] {$1$};
+    \draw[] (1) -- (a) node[midway, below] {$\frac{\Rn{n}}{\Rn{n}+1}$} ;
+    \draw[] (a) -- (t) node[midway, below] {$1$};
+\end{tikzpicture}

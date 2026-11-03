@@ -1,0 +1,281 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{BDCKY15}
+
+\bibitem[Abe15]{effective-resistance-percolation-cluster}
+Yoshihiro Abe.
+\newblock Effective resistances for supercritical percolation clusters in
+  boxes.
+\newblock {\em Ann. Inst. Henri Poincar\'{e} Probab. Stat.}, 51(3):935--946,
+  2015.
+
+\bibitem[AD18]{armstrong-dario-2018}
+Scott Armstrong and Paul Dario.
+\newblock Elliptic regularity and quantitative homogenization on percolation
+  clusters.
+\newblock {\em Comm. Pure Appl. Math.}, 71(9):1717--1849, 2018.
+
+\bibitem[AKM19]{AKM19}
+Scott Armstrong, Tuomo Kuusi, and Jean-Christophe Mourrat.
+\newblock {\em Quantitative stochastic homogenization and large-scale
+  regularity}, volume 352 of {\em Grundlehren der mathematischen Wissenschaften
+  [Fundamental Principles of Mathematical Sciences]}.
+\newblock Springer, Cham, 2019.
+
+\bibitem[AP96]{antal-pisztora-chemical}
+Peter Antal and Agoston Pisztora.
+\newblock On the chemical distance for supercritical {B}ernoulli percolation.
+\newblock {\em Ann. Probab.}, 24(2):1036--1048, 1996.
+
+\bibitem[AS14]{ergodic-theorem-lemma}
+Scott~N. Armstrong and Charles~K. Smart.
+\newblock Stochastic homogenization of fully nonlinear uniformly elliptic
+  equations revisited.
+\newblock {\em Calc. Var. Partial Differential Equations}, 50(3-4):967--980,
+  2014.
+
+\bibitem[Bar04]{barlow-random-walk-percolation}
+Martin~T. Barlow.
+\newblock Random walks on supercritical percolation clusters.
+\newblock {\em Ann. Probab.}, 32(4):3024--3084, 2004.
+
+\bibitem[BB07]{berger-rw-percolation}
+Noam Berger and Marek Biskup.
+\newblock Quenched invariance principle for simple random walk on percolation
+  clusters.
+\newblock {\em Probab. Theory Related Fields}, 137(1-2):83--120, 2007.
+
+\bibitem[BDCKY15]{disorder-entropy-2015}
+Itai Benjamini, Hugo Duminil-Copin, Gady Kozma, and Ariel Yadin.
+\newblock Disorder, entropy and harmonic functions.
+\newblock {\em Ann. Probab.}, 43(5):2332--2373, 2015.
+
+\bibitem[BGW13]{fastmixing-ising}
+Thierry Bodineau, Benjamin Graham, and Marc Wouts.
+\newblock Metastability in the dilute {I}sing model.
+\newblock {\em Probab. Theory Related Fields}, 157(3-4):955--1009, 2013.
+
+\bibitem[BH09]{BH09}
+M.~T. Barlow and B.~M. Hambly.
+\newblock Parabolic {H}arnack inequality and local limit theorem for
+  percolation clusters.
+\newblock {\em Electron. J. Probab.}, 14:no. 1, 1--27, 2009.
+
+\bibitem[BLMS22]{blms-harmonic}
+Lev Buhovsky, Alexander Logunov, Eugenia Malinnikova, and Mikhail Sodin.
+\newblock A discrete harmonic function bounded on a large portion of {$\Bbb
+  Z^2$} is constant.
+\newblock {\em Duke Math. J.}, 171(6):1349--1378, 2022.
+
+\bibitem[BR21]{bourabee-sandpile-2021}
+Ahmed Bou-Rabee.
+\newblock Convergence of the random {A}belian sandpile.
+\newblock {\em Ann. Probab.}, 49(6):3168--3196, 2021.
+
+\bibitem[BR24a]{bou2021integer}
+Ahmed Bou-Rabee.
+\newblock Integer superharmonic matrices on the {F}-lattice.
+\newblock {\em Advances in Mathematics}, 436:109400, 2024.
+
+\bibitem[BR24b]{bou2021shape}
+Ahmed Bou-Rabee.
+\newblock A shape theorem for exploding sandpiles.
+\newblock {\em The Annals of Applied Probability}, 34(1A):714--742, 2024.
+
+\bibitem[CCF{\etalchar{+}}86]{chayes-quantum-percolation}
+J.~T. Chayes, L.~Chayes, Judy~R. Franz, James~P. Sethna, and S.~A. Trugman.
+\newblock On the density of states for the quantum percolation problem.
+\newblock {\em J. Phys. A}, 19(18):L1173--L1177, 1986.
+
+\bibitem[Dar21]{dario-corrector}
+Paul Dario.
+\newblock Optimal corrector estimates on percolation cluster.
+\newblock {\em Ann. Appl. Probab.}, 31(1):377--431, 2021.
+
+\bibitem[Del99]{delmotte-elliptic-estimates}
+Thierry Delmotte.
+\newblock Parabolic {H}arnack inequality and estimates of {M}arkov chains on
+  graphs.
+\newblock {\em Rev. Mat. Iberoamericana}, 15(1):181--232, 1999.
+
+\bibitem[DG21]{dario-gu-green}
+Paul Dario and Chenlin Gu.
+\newblock Quantitative homogenization of the parabolic and elliptic {G}reen's
+  functions on percolation clusters.
+\newblock {\em Ann. Probab.}, 49(2):556--636, 2021.
+
+\bibitem[DRSV95]{dhar-algebraic-aspects}
+D.~Dhar, P.~Ruelle, S.~Sen, and D.-N. Verma.
+\newblock Algebraic aspects of abelian sandpile models.
+\newblock {\em J. Phys. A}, 28(4):805--831, 1995.
+
+\bibitem[DS84]{doyle-snell-electric-networks}
+Peter~G. Doyle and J.~Laurie Snell.
+\newblock {\em Random walks and electric networks}, volume~22 of {\em Carus
+  Mathematical Monographs}.
+\newblock Mathematical Association of America, Washington, DC, 1984.
+
+\bibitem[DS20]{ding-smart-localization}
+Jian Ding and Charles~K. Smart.
+\newblock Localization near the edge for the {A}nderson {B}ernoulli model on
+  the two dimensional lattice.
+\newblock {\em Invent. Math.}, 219(2):467--506, 2020.
+
+\bibitem[Gri87]{grimmett-long-paths}
+Geoffrey~R. Grimmett.
+\newblock Long paths and cycles in a random lattice.
+\newblock In {\em Random graphs '85 ({P}ozna\'{n}, 1985)}, volume 144 of {\em
+  North-Holland Math. Stud.}, pages 69--76. North-Holland, Amsterdam, 1987.
+
+\bibitem[Gri99]{percolation-book}
+Geoffrey Grimmett.
+\newblock {\em Percolation}, volume 321 of {\em Grundlehren der mathematischen
+  Wissenschaften [Fundamental Principles of Mathematical Sciences]}.
+\newblock Springer-Verlag, Berlin, second edition, 1999.
+
+\bibitem[Han94]{han-singular-sets}
+Qing Han.
+\newblock Singular sets of solutions to elliptic equations.
+\newblock {\em Indiana Univ. Math. J.}, 43(3):983--1002, 1994.
+
+\bibitem[HJL19]{sandpiles-square-lattice}
+Robert~D. Hough, Daniel~C. Jerison, and Lionel Levine.
+\newblock Sandpiles on the square lattice.
+\newblock {\em Comm. Math. Phys.}, 367(1):33--87, 2019.
+
+\bibitem[HS21a]{hough-cutoff}
+Robert Hough and Hyojeong Son.
+\newblock Cut-off for sandpiles on tiling graphs.
+\newblock {\em Ann. Probab.}, 49(2):671--731, 2021.
+
+\bibitem[HS21b]{hough-spectrum}
+Robert Hough and Hyojeong Son.
+\newblock The spectrum of the abelian sandpile model.
+\newblock {\em Math. Comp.}, 90(327):441--469, 2021.
+
+\bibitem[JLP19]{jerison-levine-pike-2019}
+Daniel~C. Jerison, Lionel Levine, and John Pike.
+\newblock Mixing time and eigenvalues of the abelian sandpile {M}arkov chain.
+\newblock {\em Trans. Amer. Math. Soc.}, 372(12):8307--8345, 2019.
+
+\bibitem[Kes82]{kesten-book}
+Harry Kesten.
+\newblock {\em Percolation theory for mathematicians}, volume~2 of {\em
+  Progress in Probability and Statistics}.
+\newblock Birkh\"{a}user, Boston, Mass., 1982.
+
+\bibitem[LM20]{logunov-malinnikova-survey}
+Alexander Logunov and Eugenia Malinnikova.
+\newblock Review of {Y}au's conjecture on zero sets of {L}aplace
+  eigenfunctions.
+\newblock In {\em Current developments in mathematics 2018}, pages 179--212.
+  Int. Press, Somerville, MA, 2020.
+
+\bibitem[LP10]{levine-what-is}
+Lionel Levine and James Propp.
+\newblock What is {$\dots$} a sandpile?
+\newblock {\em Notices Amer. Math. Soc.}, 57(8):976--979, 2010.
+
+\bibitem[LP16]{lyons-peres-book}
+Russell Lyons and Yuval Peres.
+\newblock {\em Probability on trees and networks}, volume~42 of {\em Cambridge
+  Series in Statistical and Probabilistic Mathematics}.
+\newblock Cambridge University Press, New York, 2016.
+
+\bibitem[LP17]{levine-peres-survey}
+Lionel Levine and Yuval Peres.
+\newblock Laplacian growth, sandpiles, and scaling limits.
+\newblock {\em Bull. Amer. Math. Soc. (N.S.)}, 54(3):355--382, 2017.
+
+\bibitem[LPS16]{apollonian-sandpile}
+Lionel Levine, Wesley Pegden, and Charles~K. Smart.
+\newblock Apollonian structure in the {A}belian sandpile.
+\newblock {\em Geom. Funct. Anal.}, 26(1):306--336, 2016.
+
+\bibitem[LPS17]{apollonian-matrix}
+Lionel Levine, Wesley Pegden, and Charles~K. Smart.
+\newblock The {A}pollonian structure of integer superharmonic matrices.
+\newblock {\em Ann. of Math. (2)}, 186(1):1--67, 2017.
+
+\bibitem[LSS97]{domination-by-product-measures}
+T.~M. Liggett, R.~H. Schonmann, and A.~M. Stacey.
+\newblock Domination by product measures.
+\newblock {\em Ann. Probab.}, 25(1):71--95, 1997.
+
+\bibitem[LZ22]{li-zhang-localization}
+Linjun Li and Lingfu Zhang.
+\newblock Anderson-{B}ernoulli localization on the three-dimensional lattice
+  and discrete unique continuation principle.
+\newblock {\em Duke Math. J.}, 171(2):327--415, 2022.
+
+\bibitem[Mat08]{mathieu-homogenization}
+P.~Mathieu.
+\newblock Quenched invariance principles for random walks with random
+  conductances.
+\newblock {\em J. Stat. Phys.}, 130(5):1025--1046, 2008.
+
+\bibitem[Mil73]{miller-unique-continuation}
+Keith Miller.
+\newblock Nonunique continuation for uniformly parabolic and elliptic equations
+  in selfadjoint divergence form with {H}\"{o}lder continuous coefficients.
+\newblock {\em Bull. Amer. Math. Soc.}, 79:350--354, 1973.
+
+\bibitem[MP07]{mathieu-rw-percolation}
+P.~Mathieu and A.~Piatnitski.
+\newblock Quenched invariance principles for random walks on percolation
+  clusters.
+\newblock {\em Proc. R. Soc. Lond. Ser. A Math. Phys. Eng. Sci.},
+  463(2085):2287--2307, 2007.
+
+\bibitem[MR04]{isoperimetry-mathieu-remy}
+Pierre Mathieu and Elisabeth Remy.
+\newblock Isoperimetry and heat kernel decay on percolation clusters.
+\newblock {\em Ann. Probab.}, 32(1A):100--128, 2004.
+
+\bibitem[Pis96]{pisztora-percolation}
+Agoston Pisztora.
+\newblock Surface order large deviations for {I}sing, {P}otts and percolation
+  models.
+\newblock {\em Probab. Theory Related Fields}, 104(4):427--466, 1996.
+
+\bibitem[PP96]{penrose-pisztora-1996}
+Mathew~D. Penrose and Agoston Pisztora.
+\newblock Large deviations for discrete and continuous percolation.
+\newblock {\em Adv. in Appl. Probab.}, 28(1):29--52, 1996.
+
+\bibitem[PS13]{pegden-smart-sandpile-2013}
+Wesley Pegden and Charles~K. Smart.
+\newblock Convergence of the {A}belian sandpile.
+\newblock {\em Duke Math. J.}, 162(4):627--642, 2013.
+
+\bibitem[PS20]{pegden-smart-stability}
+Wesley Pegden and Charles~K. Smart.
+\newblock Stability of patterns in the {A}belian sandpile.
+\newblock {\em Ann. Henri Poincar\'{e}}, 21(4):1383--1399, 2020.
+
+\bibitem[Rud87]{rudinanalysis}
+Walter Rudin.
+\newblock {\em Real and Complex Analysis, 3rd Ed.}
+\newblock McGraw-Hill, Inc., USA, 1987.
+
+\bibitem[SD11]{sadhu2011effect}
+Tridib Sadhu and Deepak Dhar.
+\newblock The effect of noise on patterns formed by growing sandpiles.
+\newblock {\em Journal of Statistical Mechanics: Theory and Experiment},
+  2011(03):P03001, 2011.
+
+\bibitem[SMKW15]{sokolov2015memory}
+Andrey Sokolov, Andrew Melatos, Tien Kieu, and Rachel Webster.
+\newblock Memory on multiple time-scales in an {A}belian sandpile.
+\newblock {\em Physica A: Statistical Mechanics and its Applications},
+  428:295--301, 2015.
+
+\bibitem[SV09]{schmidt-verbitskiy-2009}
+Klaus Schmidt and Evgeny Verbitskiy.
+\newblock Abelian sandpiles and the harmonic model.
+\newblock {\em Comm. Math. Phys.}, 292(3):721--759, 2009.
+
+\bibitem[Yad22]{disorder-entropy-2015-question}
+Ariel Yadin.
+\newblock personal communication, 2022.
+
+\end{thebibliography}

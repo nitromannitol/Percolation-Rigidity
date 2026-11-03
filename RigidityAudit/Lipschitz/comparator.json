@@ -1,0 +1,14 @@
+{
+  "challenge_module": "RigidityAudit.Lipschitz.Challenge",
+  "solution_module": "RigidityAudit.Lipschitz.Solution",
+  "theorem_names": [
+    "Rigidity.StatementAudit.Lipschitz.lipschitz"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

@@ -1,0 +1,14 @@
+{
+  "challenge_module": "RigidityAudit.FastDecay.Challenge",
+  "solution_module": "RigidityAudit.FastDecay.Solution",
+  "theorem_names": [
+    "Rigidity.StatementAudit.FastDecay.fastDecay"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

@@ -1,0 +1,87 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{proposition}{Proposition}
+\begin{document}
+\title{A correction to the open gadget assertion}
+\author{}
+\date{}
+\maketitle
+This fragment is separate from the preserved source of
+\emph{Rigidity of harmonic functions on the supercritical percolation cluster},
+arXiv:2303.04736v2 (29 March 2024). It corrects only the gadget proposition
+at source lines 1141--1144 and the direction of divisibility at line 1319.
+The proposition as printed on the closed rectangle is false: values at unused
+closed sites can make a function nonconstant without changing either terminal value.
+The original source and its abstract are not revised by this fragment.
+
+For integers $d\geq2$ and $n\geq1$, put
+\[
+V_n=\bigl(([1,4]\cap\mathbb Z)\times\{1\}\bigr)
+ \cup\bigl(\{2,3\}\times([1,n]\cap\mathbb Z)\bigr),
+\]
+and regard this set as a subset of $\mathbb Z^d$ by setting every coordinate
+after the second equal to zero. Set $s=(1,1,0,\ldots,0)$ and
+$t=(4,1,0,\ldots,0)$. Join precisely those pairs in $V_n$ whose
+$\ell^1$ distance in $\mathbb Z^d$ is one. For a real function on
+$\mathbb Z^d$, the induced graph Laplacian is
+\[
+\Delta_{V_n}u(x)=\sum_{\substack{y\in V_n\\|y-x|_1=1}}(u(y)-u(x)),
+\qquad x\in V_n.
+\]
+Thus the neighbors are taken in the actual open carrier, including the top rung.
+The two terminals are the only vertices at which no harmonic equation is required.
+
+\begin{proposition}
+There is one constant $C>0$ such that, for every $d\geq2$, every integer
+$n\geq1$, and every $u : \mathbb Z^d\to\mathbb R$ satisfying
+$u(x)\in\mathbb Z$ for all $x\in V_n$,
+$\Delta_{V_n}u(x)=0$ for every $x\in V_n\setminus\{s,t\}$,
+and $u(x)\ne u(y)$ for some $x,y\in V_n$, one has
+\[
+ C3^n\leq |u(t)-u(s)|.
+\]
+In fact $C=1$ works, and $|u(t)-u(s)|\geq A_{n+1}$, where
+$A_0=A_1=1$ and $A_{k+2}=4A_{k+1}-A_k$ for every integer $k\geq0$.
+\end{proposition}
+
+\begin{proof}
+Write $\delta_j=u(3,j,0,\ldots,0)-u(2,j,0,\ldots,0)$ for
+$1\leq j\leq n$. If $n=1$, the harmonic equations at $(2,1)$ and
+$(3,1)$ give $u(t)-u(s)=3\delta_1=A_2\delta_1$.
+If $n\geq2$, subtracting the two column equations at the top rung,
+at an interior rung, and at the bottom rung, respectively, gives
+\[
+\delta_{n-1}=3\delta_n,\qquad
+\delta_{j-1}=4\delta_j-\delta_{j+1}\ (1<j<n),\qquad
+u(t)-u(s)=4\delta_1-\delta_2.
+\]
+Backward induction with the defining recurrence of $A$ yields
+$\delta_j=A_{n-j+1}\delta_n$ for every $1\leq j\leq n$.
+Consequently, in both height cases,
+\[
+ u(t)-u(s)=A_{n+1}\delta_n.
+\]
+The finite graph is connected, since each column is joined by vertical edges,
+each rung joins the two columns, and the two leaves attach at the bottom.
+If the terminals had the same value, the maximum principle would force the
+function to be constant: a maximum or minimum different from that terminal
+value occurs at a nonterminal, and the harmonic equation propagates that
+extreme along every adjacent edge until a terminal is reached.
+Nonconstancy therefore implies $u(t)\ne u(s)$, hence $\delta_n\ne0$.
+The integer values on $V_n$ give $|\delta_n|\geq1$.
+Finally, the recurrence gives $A_{k+1}\geq3^k$ for every $k\geq0$:
+$A_1=1$, $A_2=3$, and positivity and
+$A_{k+2}\geq3A_{k+1}$ propagate since $A_k\leq A_{k+1}$.
+This proves the asserted stronger bound and the uniform choice $C=1$.
+\end{proof}
+
+At source line 1319, replace the claim that the normalized value $u(t)$
+divides $A_{n+1}$ by the claim that $A_{n+1}$ divides $u(t)$ after
+subtracting $u(s)$. The displayed terminal transfer identity proves this
+direction directly. Integer recovery from real pointwise integer values
+introduces no new premise: each value has a unique integer representative,
+by injectivity of the cast from $\mathbb Z$ to $\mathbb R$.
+No cluster attachment, isolation of nonterminal bonds, restriction of
+cluster harmonicity, or cylinder probability is asserted here. Those
+applications and the three main rigidity theorems are outside this fragment.
+\end{document}
