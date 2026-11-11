@@ -295,8 +295,9 @@ abelian sandpile Markov chain*, Trans. Amer. Math. Soc. 372 (2019).
 
 The precise Lean statement of each input, with its pinpoint reference and its conventions, is in
 [`Rigidity/External/`](Rigidity/External/) or, for the inputs in the namespace
-`LatticeProb.External`, in the directory `LatticeProb/External/` of Lattice-Probability. Eight
-results use no literature input: Lemma 2.1, Proposition 4.1, Lemmas 4.2 to 4.6 and Proposition 6.4.
+`LatticeProb.External`, in the directory `LatticeProb/External/` of Lattice-Probability at the
+pinned commit (five of these files are not on its `main` branch). Eight results use no literature
+input: Lemma 2.1, Proposition 4.1, Lemmas 4.2 to 4.6 and Proposition 6.4.
 The library also declares `Rigidity.External.AntalPisztoraChemicalDistance` (Antal and Pisztora,
 Theorem 1.1), which no numbered result uses.
 
@@ -339,7 +340,8 @@ Theorem 1.1), which no numbered result uses.
 ## Size
 
 `Rigidity/` and `Rigidity.lean`: 237 Lean files with 64,912 lines, on top of mathlib and
-Lattice-Probability. The comparator sources (16 files, 5,130 lines) are counted separately.
+Lattice-Probability. The comparator pairs (15 files, 5,052 lines) and the axiom report
+`RigidityAudit/Axioms.lean` (78 lines) are counted separately.
 
 ## Building
 
@@ -358,7 +360,8 @@ Lattice-Probability has no prebuilt cache, so the first build compiles it as wel
 It is a public repository, pinned in [`lake-manifest.json`](lake-manifest.json):
 
 - Lattice-Probability: `https://github.com/nitromannitol/Lattice-Probability` at
-  `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069`.
+  `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069`, the commit of the tag
+  `percolation-rigidity-2026-11-03`, which is not on `main`.
 
 The main theorems are in `Rigidity/Proofs/Assembly/Main.lean`; `import Rigidity.Proofs.Assembly.Main`
 loads them and what they use.
