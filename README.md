@@ -305,12 +305,13 @@ Theorem 1.1), which no numbered result uses.
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Axioms.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 50 axiom reports: the
-  theorem of each of the 43 proved results, Lemma 5.25 as printed, and the six propositions that state
-  the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and 2.5, Lemma 2.14).
-  [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any axiom other than `propext`,
-  `Classical.choice` and `Quot.sound`, on `sorryAx`, or on a missing report. The literature inputs are
-  hypotheses, not axioms, so they do not appear in the reports of the theorems.
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 50 axiom
+  reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, and the six
+  propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
+  2.5, Lemma 2.14). Each of the 50 reports lists exactly `propext`, `Classical.choice` and
+  `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
+  `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
+  not appear in the reports of the theorems.
 - **Independent check of the statements.** Theorems 1.1, 1.2, 1.3 and 6.5 are restated using mathlib
   alone in [`RigidityAudit/Lipschitz/`](RigidityAudit/Lipschitz/),
   [`RigidityAudit/IntegerLinearGrowth/`](RigidityAudit/IntegerLinearGrowth/),
@@ -320,21 +321,25 @@ Theorem 1.1), which no numbered result uses.
   hypotheses; each `Solution.lean` proves the restatement from the library; and
   [leanprover/comparator](https://github.com/leanprover/comparator) checks that the two statements
   agree, that only the permitted axioms are used, and replays the proof through an independent
-  implementation of the Lean kernel.
-- **Literature inputs checked against their sources.** Each of the twelve literature inputs was
-  checked against its source in an independent model review; the sources are listed in
-  [Assumed literature inputs](#assumed-literature-inputs). The inputs remain assumptions.
+  implementation of the Lean kernel. The other numbered results have no comparator pair.
 - **Pinned toolchain and dependencies.** Lean `v4.32.0`, Mathlib
   `81a5d257c8e410db227a6665ed08f64fea08e997` and Lattice-Probability
   `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069`, as recorded in [`lean-toolchain`](lean-toolchain) and
-  [`lake-manifest.json`](lake-manifest.json).
-- **The paper is part of the repository**, in [`paper/`](paper/): the arXiv v2 source, the corrected
-  draft, both compiled to PDF, and the list of corrections.
+  [`lake-manifest.json`](lake-manifest.json) (see [Building](#building)).
+- **The paper is part of the repository.** [`paper/`](paper/) holds the arXiv v2 source, the
+  corrected draft, both compiled to PDF, and the list of corrections. The statements follow the
+  corrected draft `paper/percolation-harmonic-corrected.tex`, with SHA-256
+  `7efc35830365f4965c0e1c77f8ce60527798bee4df760511ea6d0728b3fb5abd`; the arXiv v2 source
+  `paper/percolation-harmonic.tex` has SHA-256
+  `8a77e097b6e5c2debd4a249d4c9a7721636277817026f87fe18189934adb0b1e`.
+- **Literature inputs checked against their sources.** Each of the twelve literature inputs was
+  checked against its source in an independent model review; the sources are listed in
+  [Assumed literature inputs](#assumed-literature-inputs). The inputs remain assumptions.
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 237 Lean files with 64,880 lines, on top of mathlib and
-Lattice-Probability. The comparator sources are counted separately.
+`Rigidity/` and `Rigidity.lean`: 237 Lean files with 64,912 lines, on top of mathlib and
+Lattice-Probability. The comparator sources (16 files, 5,130 lines) are counted separately.
 
 ## Building
 
@@ -350,6 +355,13 @@ lake build RigidityAudit                                    # the comparator pai
 ```
 
 Lattice-Probability has no prebuilt cache, so the first build compiles it as well as the library.
+It is a public repository, pinned in [`lake-manifest.json`](lake-manifest.json):
+
+- Lattice-Probability: `https://github.com/nitromannitol/Lattice-Probability` at
+  `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069`.
+
+The main theorems are in `Rigidity/Proofs/Assembly/Main.lean`; `import Rigidity.Proofs.Assembly.Main`
+loads them and what they use.
 
 To rebuild the PDFs of the paper, run `pdflatex` three times on `percolation-harmonic.tex` or
 `percolation-harmonic-corrected.tex` in [`paper/`](paper/); the bibliography is included as `.bbl`
@@ -374,8 +386,11 @@ script builds the library and the audit modules, runs the comparator on every pa
 pair is missing or rejected; its logs are kept under `.lake/comparator-logs/`.
 
 There are two continuous-integration workflows: **CI** builds the library, checks the axiom reports
-and builds the comparator pairs, on every push to `main`; **Comparator audit** runs the comparator on
-the four pairs, on manual dispatch.
+and builds the comparator pairs; **Comparator audit** runs the comparator on the four pairs. CI runs
+on pushes to `main` that change more than documentation, the paper, `formalization.yaml` or
+`CITATION.cff`; the comparator audit runs when it is started manually. Both workflows can be started
+manually from the [Actions page](https://github.com/nitromannitol/Percolation-Rigidity/actions).
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for build conventions.
 
 ## Repository layout
 
@@ -398,6 +413,8 @@ paper/                        the arXiv v2 source and the corrected draft (LaTeX
                               CORRECTIONS.md, make_corrected.py, the note on the gadget, README.md
 scripts/                      check_axioms.py, run_comparators.sh, prefetch_toolchain.py (used by CI)
 .github/workflows/            build.yml (CI) and comparator.yml (Comparator audit)
+LICENSE                       the Apache License 2.0
+CONTRIBUTING.md               build conventions and contribution notes
 CITATION.cff                  citation metadata
 formalization.yaml            source, statement, automation and review metadata
 lakefile.lean, lake-manifest.json, lean-toolchain   the build
