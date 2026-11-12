@@ -24,8 +24,7 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
   harmonic function equals `-1` at two sites); the constants of the theorem absorb this.
 * Convention: like every `...Stmt` of the draft, `SlowMixingStmt` omits the standing assumption
   `p_c(d) < p < 1` (and `2 ≤ d`) of the paper (corrected draft L66, L231); the composed theorem
-  (`Rigidity.Assembly.slowMixing`) carries it as hypotheses `hpc`, `hp1`. Read alone, outside
-  that regime, the statement may be false. -/
+  (`Rigidity.Assembly.slowMixing`) carries it as hypotheses `hpc`, `hp1`. -/
 
 open MeasureTheory LatticeProb.Percolation Classical Filter
 

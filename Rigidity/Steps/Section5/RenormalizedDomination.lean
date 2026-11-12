@@ -35,10 +35,8 @@ once `R ≥ 10`, so their events depend on common edges, although `|x - y| > 2R 
 `1`-dependent for the `ℓ^∞` distance (`KDependentPlanar 1`), whose dependency graph has degree
 `Δ = 8`, and the theorem applies with `Δ = 8`; the conclusion is unchanged.
 
-The statement `RenormalizedDominationStmt p` carries no hypothesis on `p`; it is false for `p = 0`
-(no cube of positive radius is very good, so the renormalized field vanishes identically).
-The supercritical hypothesis `p_c(2) < p` of Section 5 is a hypothesis of
-`renormalizedDomination_of_steps`.
+The statement `RenormalizedDominationStmt p` carries no hypothesis on `p`. The supercritical
+hypothesis `p_c(2) < p` of Section 5 is a hypothesis of `renormalizedDomination_of_steps`.
 -/
 
 open MeasureTheory LatticeProb.Percolation

@@ -22,8 +22,7 @@ The hypotheses are those of Lemma 5.27 (ii) used by the proof of Lemma 5.28: the
 
 Convention: like every `...Stmt` of the draft, the statement omits the paper's standing
 assumption `p_c(d) < p < 1` (corrected draft L66, L231); composed theorems in
-`Rigidity/Proofs/Assembly` carry it as hypotheses (`criticalProbability 2 < p`, `p < 1`). Read
-alone, outside that regime, it may be false. -/
+`Rigidity/Proofs/Assembly` carry it as hypotheses (`criticalProbability 2 < p`, `p < 1`). -/
 
 open MeasureTheory LatticeProb.Percolation Classical Filter Topology
 

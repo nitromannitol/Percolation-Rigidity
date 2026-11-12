@@ -16,7 +16,7 @@ the cube of radius `r`.
 Convention: like every `...Stmt` of the draft, the statements below omit the paper's standing
 assumption `p_c(d) < p < 1` (corrected draft L66, L231); the composed theorems in
 `Rigidity/Proofs/Assembly` carry it as hypotheses (`criticalProbability 2 < p`, `p < 1`, or the
-part of it they use). Read alone, outside that regime, a statement may be false. -/
+part of it they use). -/
 
 open MeasureTheory LatticeProb.Percolation Classical Filter Topology
 

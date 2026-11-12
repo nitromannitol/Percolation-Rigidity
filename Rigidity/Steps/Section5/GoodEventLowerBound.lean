@@ -60,9 +60,8 @@ region (`Rigidity.Proofs.S3.exteriorNetworkStep`).
 `exists_measurable_subset_eventG1_eventG2_zero` is the union bound at the origin shared by both
 forms of the lemma.
 
-The statement `GoodEventLowerBoundStmt p` carries no hypothesis on `p`; it is false for `p ≤ p_c`
-(the event `G_3` is null). The hypotheses `p_c(2) < p < 1` of Section 5 are hypotheses of
-`goodEventLowerBound_of_steps`.
+The statement `GoodEventLowerBoundStmt p` carries no hypothesis on `p`. The hypotheses
+`p_c(2) < p < 1` of Section 5 are hypotheses of `goodEventLowerBound_of_steps`.
 -/
 
 open MeasureTheory Filter Topology LatticeProb.Percolation

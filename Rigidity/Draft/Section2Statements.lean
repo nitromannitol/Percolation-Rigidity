@@ -17,8 +17,8 @@ corrected draft `paper/percolation-harmonic-corrected.tex` (each correction is m
   `xᵢ` and each other only at `N`.
 * Convention: like every `...Stmt` of the draft, Proposition 2.6 omits the paper's standing
   assumption `p_c(d) < p < 1` (corrected draft L66, L231); the composed theorem
-  `Rigidity.Assembly.greenGradientHomogenization` carries it as hypotheses `hpc`, `hp1`. Read
-  alone, outside that regime, it may be false. Lemma 2.16 is deterministic. -/
+  `Rigidity.Assembly.greenGradientHomogenization` carries it as hypotheses `hpc`, `hp1`.
+  Lemma 2.16 is deterministic. -/
 
 open MeasureTheory LatticeProb.Percolation Classical
 
