@@ -52,6 +52,15 @@ def ClusterDensityConcentrationInput : Prop :=
         (2 * ((d : ℝ) - 1) / (3 * (d : ℝ) ^ 2 + 2 * (d : ℝ) - 1))
         (C * (3 : ℝ) ^ (-((d : ℝ) * (m : ℝ)) / 2))
 
+/-- Density concentration in a fixed dimension and at a fixed bond parameter. -/
+def ClusterDensityConcentrationAt (d : ℕ) (p : unitInterval) : Prop :=
+  ∃ C : ℝ, 0 < C ∧ ∀ (m : ℕ) (k : Vertex d),
+      IsOsBond d p
+        (fun ω => |(infiniteClusterCount (triadicCube d m k) ω : ℝ) /
+          ((triadicCube d m k).ncard : ℝ) - theta d p|)
+        (2 * ((d : ℝ) - 1) / (3 * (d : ℝ) ^ 2 + 2 * (d : ℝ) - 1))
+        (C * (3 : ℝ) ^ (-((d : ℝ) * (m : ℝ)) / 2))
+
 /-- Dario–Gu density concentration for planar bond percolation. -/
 def ClusterDensityConcentrationInputTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →

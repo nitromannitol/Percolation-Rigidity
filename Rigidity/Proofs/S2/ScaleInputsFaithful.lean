@@ -63,6 +63,17 @@ def ClusterDensityInputFaithful : Prop :=
               ({z : uniqueInfiniteComponent h |
                 dist (latticeEuclideanEmbedding z.val) y < r / 100}.ncard : ℝ)
 
+/-- The density lower bound at a fixed dimension and bond parameter. -/
+def ClusterDensityInputFaithfulAt (d : ℕ) (p : unitInterval) : Prop :=
+  ∃ s C c : ℝ, 0 < s ∧ 0 < C ∧ 0 < c ∧ ∀ x : Vertex d,
+      ∃ M : Configuration d → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond d p M s C ∧
+      ∀ᵐ ω ∂latticeBondLaw d p, ∀ h : HasUniqueInfiniteOpenComponent ω,
+        ∀ r : ℝ, M ω ≤ r → ∀ y : EuclideanSpace ℝ (Fin d),
+          dist (latticeEuclideanEmbedding x) y < r / 100 →
+            c * r ^ d ≤
+              ({z : uniqueInfiniteComponent h |
+                dist (latticeEuclideanEmbedding z.val) y < r / 100}.ncard : ℝ)
+
 /-- **Large-scale `C^{1,1}` regularity**, eq. (large scale-regularity) as printed at paper
 L513-518 (literature input; Armstrong–Dario, CPAM 71 (2018), the large-scale `C^{k,1}` estimate
 at `k = 1`, with the first-order correctors of Theorem 2.5): there are `s, C > 0` and, for every
@@ -291,11 +302,20 @@ theorem ncard_eq_card_componentEuclideanBall {ω : Configuration d} (C : OpenCom
   rw [Set.ncard_eq_toFinset_card _ (finite_componentEuclideanBall C z r)]
   rfl
 
-/-- The printed density sentence at every centre gives the proposed form (centres in `B̄_r(x)`). -/
-theorem clusterDensityInputProposed_of_faithful (hD : ClusterDensityInputFaithful) :
-    ClusterDensityInputProposed := by
-  intro d _ hd p hpc hp1
-  obtain ⟨s, C, c, hs, hC, hc, hx⟩ := hD d hd p hpc hp1
+/-- The uniform density lower bound at a fixed dimension and bond parameter. -/
+def ClusterDensityInputProposedAt (d : ℕ) (p : unitInterval) : Prop :=
+  ∃ s C c : ℝ, 0 < s ∧ 0 < C ∧ 0 < c ∧ ∀ x : Vertex d,
+      ∃ M : Configuration d → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond d p M s C ∧
+      ∀ᵐ ω ∂latticeBondLaw d p, ∀ h : HasUniqueInfiniteOpenComponent ω,
+        ∀ r : ℝ, M ω ≤ r → ∀ z : Vertex d,
+          dist (latticeEuclideanEmbedding z) (latticeEuclideanEmbedding x) ≤ r →
+            c * r ^ d ≤
+              ((componentEuclideanBall (uniqueInfiniteComponent h) z (r / 100)).card : ℝ)
+
+/-- The density sentence at every centre implies the uniform bound at that dimension. -/
+theorem clusterDensityInputProposedAt_of_faithfulAt [NeZero d] (p : unitInterval)
+    (hD : ClusterDensityInputFaithfulAt d p) : ClusterDensityInputProposedAt d p := by
+  obtain ⟨s, C, c, hs, hC, hc, hx⟩ := hD
   choose Md hMdm hMd0 hMdO hMda using hx
   obtain ⟨Ct, hCt, htail⟩ := tailOfOsStep d p s C hs hC
   have hTail : ∀ z, HasStretchedExpTail d p (Md z) s Ct :=
@@ -340,6 +360,12 @@ theorem clusterDensityInputProposed_of_faithful (hD : ClusterDensityInputFaithfu
       linarith
     · rw [dist_self]
       exact hr0
+
+/-- The printed density sentence at every centre gives the proposed form (centres in `B̄_r(x)`). -/
+theorem clusterDensityInputProposed_of_faithful (hD : ClusterDensityInputFaithful) :
+    ClusterDensityInputProposed := by
+  intro d _ hd p hpc hp1
+  exact clusterDensityInputProposedAt_of_faithfulAt p (hD d hd p hpc hp1)
 
 end Density
 
