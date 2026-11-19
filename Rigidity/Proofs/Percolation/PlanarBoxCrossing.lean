@@ -9,6 +9,7 @@ coordinate direction.
 -/
 
 open MeasureTheory LatticeProb.Percolation Rigidity.External
+open scoped ENNReal
 
 namespace Rigidity.Percolation
 
@@ -48,5 +49,19 @@ theorem cube_crossing_failure_bound (p : unitInterval)
   have heq : x i - (N : ℤ) + 2 * N = x i + N := by ring
   rw [heq] at h
   simpa only [Nat.cast_mul, Nat.cast_ofNat] using h
+
+/-- A union bound for any finite family of equal-sized planar crossing rectangles. -/
+theorem rectangle_crossing_family_failure_bound (p : unitInterval)
+    (hp : criticalProbability 2 < (p : ℝ)) :
+    ∃ C c : ℝ, 0 < C ∧ 0 < c ∧ ∀ (m n : ℕ) (T : Finset (Vertex 2 × Fin 2)),
+      latticeBondLaw 2 p (⋃ q ∈ T, {ω | ¬ HasOpenCrossing ω q.1 m n q.2}) ≤
+        (T.card : ℝ≥0∞) * ENNReal.ofReal (C * (m + 1) * Real.exp (-(c * n))) := by
+  obtain ⟨C, c, hC, hc, hbound⟩ := kesten_rectangle_crossing p hp
+  refine ⟨C, c, hC, hc, fun m n T => ?_⟩
+  refine (measure_biUnion_finset_le _ _).trans ?_
+  calc
+    _ ≤ ∑ _q ∈ T, ENNReal.ofReal (C * (m + 1) * Real.exp (-(c * n))) :=
+      Finset.sum_le_sum fun q _ => hbound q.1 m n q.2
+    _ = _ := by simp only [Finset.sum_const, nsmul_eq_mul]
 
 end Rigidity.Percolation
