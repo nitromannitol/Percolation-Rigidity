@@ -251,6 +251,13 @@ Proposition 3.2.
 
 ## Assumed literature inputs
 
+The table records the hypotheses of the original theorem statements. Two of these propositions
+are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](Rigidity/Proofs/Percolation/BondUniqueness.lean)
+and [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean).
+[`Rigidity.Assembly.WithProvedInputs`](Rigidity/Proofs/Assembly/ProvedInputs.lean) gives versions of
+Theorems 1.1, 1.2 and 1.3 without the uniqueness hypothesis and Theorem 6.5 without either of
+these two hypotheses. The other inputs listed below remain hypotheses of those versions.
+
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
 | `LatticeProb.External.SupercriticalBondUniqueness` | `0 < 𝔭_c(d) < 1` for `d ≥ 2`, and for `𝔭_c(d) < p < 1` there is almost surely a unique infinite open cluster | Grimmett, (1.8), (1.10) and (1.11), pp. 13–14, and Theorem 8.1, p. 198; Burton and Keane, Theorem 2 | Theorems 1.1, 1.2, 1.3, 5.1, 6.5; Propositions 3.2, 4.10, 5.3, 5.5, 5.7, 5.8, 5.11, 5.12, 5.20; Lemmas 3.1, 3.3, 4.7, 4.9, 5.6, 5.14, 5.16, 5.17, 5.18, 5.19, 5.25, 5.27, 5.28 |
@@ -335,7 +342,8 @@ Theorem 1.1), which no numbered result uses.
   `8a77e097b6e5c2debd4a249d4c9a7721636277817026f87fe18189934adb0b1e`.
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
   checked against its source in an independent model review; the sources are listed in
-  [Assumed literature inputs](#assumed-literature-inputs). The inputs remain assumptions.
+  [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
+  hypotheses; the versions described above discharge two of them.
 
 ## Size
 

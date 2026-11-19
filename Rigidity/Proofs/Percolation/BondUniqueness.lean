@@ -18,7 +18,7 @@ namespace Rigidity.Percolation
 open LatticeProb.Percolation
 
 /-- The classical critical bounds and uniqueness for supercritical lattice bond percolation. -/
-theorem supercriticalBondUniqueness : LatticeProb.External.SupercriticalBondUniqueness := by
+theorem supercritical_bond_uniqueness : LatticeProb.External.SupercriticalBondUniqueness := by
   constructor
   · intro d _ hd
     exact ⟨criticalProbability_pos d, criticalProbability_lt_one d hd⟩
