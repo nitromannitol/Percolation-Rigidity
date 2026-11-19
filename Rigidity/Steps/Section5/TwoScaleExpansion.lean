@@ -182,13 +182,12 @@ theorem two_scale_numeric {τ n r lam mf C6 CT ρf A : ℝ} (hτ1 : 1 ≤ τ) (h
 /-- Proposition 5.8 follows from Proposition 2.6, the steps of Lemma 5.6, the symmetry of the
 normalized Green function, the edge reading of Proposition 2.6, the Taylor expansion of `∇Ḡ`, the
 linear growth of `∇ℓ_{eᵢ}` and the union bound over the poles. -/
-theorem twoScaleExpansion_of_steps {p : unitInterval}
+theorem twoScaleExpansion_of_connectingSet {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
-    (hW : Rigidity.External.WellConnectedInput)
     (hGQ : LatticeProb.External.SupercriticalBondGreenQuantitative)
     (hCQ : Rigidity.External.CorrectorQuantitativeInput) (hU : UniqueClusterAe p)
     (h26 : GreenGradientHomogenizationStmt 2 le_rfl p)
-    (hC : ConnectingSetStep) (hF : FlowOnConnectedSetStep) (hS : SummationByPartsStep)
+    (hC : ConnectingSetAt p) (hF : FlowOnConnectedSetStep) (hS : SummationByPartsStep)
     (hrad : ConnectedSetRadiusStep) (hsym : NormalizedGreenSymmetryStep)
     (hgrad : CorrectedPlaneGradientStep) (hedge : ForwardDiffEdgeStep) (htay : GreenTaylorStep)
     (htail : TailOfOsStep 2 p) (hmin : MinimalScaleStep 2 p)
@@ -197,7 +196,7 @@ theorem twoScaleExpansion_of_steps {p : unitInterval}
   obtain ⟨κ, h26'⟩ := h26
   obtain ⟨s6, C6, hs6, hC6, h26δ⟩ := h26' (1 / 8) (by norm_num)
   choose M6 hM6m _ hM6os hM6ae using h26δ
-  obtain ⟨θR, sR, hθR, hsR, R, hRm, hRos, hRae⟩ := hC hW p hpc hp1 f hf
+  obtain ⟨θR, sR, hθR, hsR, R, hRm, hRos, hRae⟩ := hC f hf
   obtain ⟨sΛ, θΛ, hsΛ, hθΛ, Λ, hΛm, hΛos, hΛae⟩ := hgrad hCQ p hpc hp1
   obtain ⟨CT, hCT, hT⟩ := htay κ
   obtain ⟨c6, hc6, ht6⟩ := htail s6 C6 hs6 hC6
@@ -432,5 +431,20 @@ theorem twoScaleExpansion_of_steps {p : unitInterval}
           (by linarith)
     _ ≤ C' / τ ^ 30 := by gcongr
     _ = C' * (l1 x.val).rpow (-5 / 4) := by rw [hrpow]; ring
+
+/-- Proposition 5.8 from the all-dimensional well-connectedness input. -/
+theorem twoScaleExpansion_of_steps {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hW : Rigidity.External.WellConnectedInput)
+    (hGQ : LatticeProb.External.SupercriticalBondGreenQuantitative)
+    (hCQ : Rigidity.External.CorrectorQuantitativeInput) (hU : UniqueClusterAe p)
+    (h26 : GreenGradientHomogenizationStmt 2 le_rfl p)
+    (hC : ConnectingSetStep) (hF : FlowOnConnectedSetStep) (hS : SummationByPartsStep)
+    (hrad : ConnectedSetRadiusStep) (hsym : NormalizedGreenSymmetryStep)
+    (hgrad : CorrectedPlaneGradientStep) (hedge : ForwardDiffEdgeStep) (htay : GreenTaylorStep)
+    (htail : TailOfOsStep 2 p) (hmin : MinimalScaleStep 2 p)
+    (f : Vertex 2 → ℤ) : TwoScaleExpansionStmt p f :=
+  twoScaleExpansion_of_connectingSet hpc hp1 hGQ hCQ hU h26 (hC hW p hpc hp1) hF hS
+    hrad hsym hgrad hedge htay htail hmin f
 
 end Rigidity.Steps.Section5
