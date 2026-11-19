@@ -1,12 +1,13 @@
 import Rigidity.Proofs.Assembly.Main
 import Rigidity.Proofs.Assembly.Smoothing
 import Rigidity.Proofs.Percolation.BondUniqueness
+import Rigidity.Proofs.Percolation.KestenCrossing
 
 /-!
 # Main theorems with the proved percolation inputs
 
-The uniqueness theorem is supplied by the supercritical bond result. The smoothing bound is
-also supplied in the sandpile mixing theorem.
+The uniqueness and rectangle-crossing theorems are supplied by their percolation proofs. The
+smoothing bound is supplied in the sandpile mixing theorem.
 -/
 
 namespace Rigidity.Assembly.WithProvedInputs
@@ -41,7 +42,7 @@ theorem integer_valued_linear_growth (d : ℕ) [NeZero d] (hd : 2 ≤ d) (p : un
   Rigidity.Assembly.Main.integerValuedLinearGrowth d hd p hpc hp1
     Rigidity.Percolation.supercritical_bond_uniqueness hCorr
 
-/-- Theorem 1.3, with supercritical bond uniqueness supplied. -/
+/-- Theorem 1.3, with supercritical bond uniqueness and rectangle crossings supplied. -/
 theorem fast_decay (p : unitInterval)
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hCorr : LatticeProb.External.SupercriticalBondCorrectorInput)
@@ -52,11 +53,10 @@ theorem fast_decay (p : unitInterval)
     (hGQ : LatticeProb.External.SupercriticalBondGreenQuantitative)
     (hDG : Rigidity.External.ClusterDensityConcentrationInput)
     (hW : Rigidity.External.WellConnectedInput)
-    (hK : Rigidity.External.KestenRectangleCrossing)
     (hJ : Rigidity.External.JordanCurveTheoremSphere) :
     Rigidity.Section5.FastDecayStmt p :=
   Rigidity.Assembly.Main.fastDecay p hpc hp1 Rigidity.Percolation.supercritical_bond_uniqueness
-    hCorr hCQ hAD hAD1 hE hGQ hDG hW hK hJ
+    hCorr hCQ hAD hAD1 hE hGQ hDG hW Rigidity.Percolation.kesten_rectangle_crossing hJ
 
 /-- Theorem 6.5, with supercritical bond uniqueness and lattice smoothing supplied. -/
 theorem slow_mixing (d : ℕ) [NeZero d] (hd : 2 ≤ d) (p : unitInterval)

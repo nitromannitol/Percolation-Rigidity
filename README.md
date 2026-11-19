@@ -251,12 +251,14 @@ Proposition 3.2.
 
 ## Assumed literature inputs
 
-The table records the hypotheses of the original theorem statements. Two of these propositions
-are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](Rigidity/Proofs/Percolation/BondUniqueness.lean)
-and [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean).
+The table records the hypotheses of the original theorem statements. Three of these propositions
+are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](Rigidity/Proofs/Percolation/BondUniqueness.lean),
+[`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean),
+and [`Rigidity.Percolation.kesten_rectangle_crossing`](Rigidity/Proofs/Percolation/KestenCrossing.lean).
 [`Rigidity.Assembly.WithProvedInputs`](Rigidity/Proofs/Assembly/ProvedInputs.lean) gives versions of
-Theorems 1.1, 1.2 and 1.3 without the uniqueness hypothesis and Theorem 6.5 without either of
-these two hypotheses. The other inputs listed below remain hypotheses of those versions.
+Theorems 1.1 and 1.2 without the uniqueness hypothesis, Theorem 1.3 without the uniqueness or
+crossing hypotheses, and Theorem 6.5 without the uniqueness or smoothing hypotheses. The other
+inputs listed below remain hypotheses of those versions.
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -343,7 +345,7 @@ Theorem 1.1), which no numbered result uses.
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
   checked against its source in an independent model review; the sources are listed in
   [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
-  hypotheses; the versions described above discharge two of them.
+  hypotheses; the versions described above discharge three of them.
 
 ## Size
 
