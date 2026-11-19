@@ -84,4 +84,16 @@ def WellConnectedInput : Prop :=
       latticeBondLaw d p {ω | ¬ IsWellConnected ω x N} ≤
         ENNReal.ofReal (C * Real.exp (-(c * (N : ℝ) ^ s)))
 
+/-- Proposition 2.3 for planar bond percolation. -/
+def WellConnectedInputTwo : Prop :=
+  ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+    ∃ c C s : ℝ, 0 < c ∧ 0 < C ∧ 0 < s ∧ ∀ (x : Vertex 2) (N : ℕ),
+      latticeBondLaw 2 p {ω | ¬ IsWellConnected ω x N} ≤
+        ENNReal.ofReal (C * Real.exp (-(c * (N : ℝ) ^ s)))
+
+/-- The all-dimensional estimate implies its planar specialization. -/
+theorem wellConnectedInputTwo_of_wellConnectedInput (h : WellConnectedInput) :
+    WellConnectedInputTwo :=
+  h 2 le_rfl
+
 end Rigidity.External
