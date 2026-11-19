@@ -49,7 +49,7 @@ noncomputable def circleHomeoSphere : Circle ≃ₜ sphere (0 : Plane) 1 :=
     apply Continuous.subtype_mk
     exact complexLIE.continuous.comp continuous_subtype_val
 
-/-- **Circle model bridge** (as requested): `sphere (0:Plane) 1 ≃ₜ Circle`. -/
+/-- **Circle model bridge**: `sphere (0:Plane) 1 ≃ₜ Circle`. -/
 noncomputable def spherePlaneHomeoCircle : sphere (0 : Plane) 1 ≃ₜ Circle :=
   circleHomeoSphere.symm
 
