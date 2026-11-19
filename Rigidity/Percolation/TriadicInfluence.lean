@@ -4,7 +4,7 @@ import Rigidity.Percolation.TriadicCube
 # Influence of triadic cubes
 
 A cube influences each next-scale cube whose parent meets it or is at lattice
-neighbor distance one. Iterating this relation gives the influence set used in
+ℓ∞ distance at most one. Iterating this relation gives the influence set used in
 the construction of a partition into good cubes.
 -/
 
@@ -16,7 +16,7 @@ open LatticeProb.Percolation
 def TriadicCube.InfluenceStep {d : ℕ} (Q R : TriadicCube d) : Prop :=
   R.scale = Q.scale + 1 ∧
     ∃ a ∈ Q.vertices, ∃ b ∈ R.parent.vertices,
-      a = b ∨ (nearestNeighborGraph d).Adj a b
+      ∀ i, |a i - b i| ≤ 1
 
 /-- The cubes reachable by finitely many influence steps. -/
 def TriadicCube.influence {d : ℕ} (Q : TriadicCube d) : Set (TriadicCube d) :=
@@ -53,8 +53,11 @@ theorem TriadicCube.center_mem {d : ℕ} (Q : TriadicCube d) :
 /-- A cube influences its parent. -/
 theorem TriadicCube.influenceStep_parent {d : ℕ} (Q : TriadicCube d) :
     Q.InfluenceStep Q.parent := by
-  refine ⟨rfl, _, Q.center_mem, _, ?_, Or.inl rfl⟩
-  exact Q.parent.vertices_subset_parent (Q.vertices_subset_parent Q.center_mem)
+  refine ⟨rfl, (fun i => Q.side * Q.index i), Q.center_mem,
+    (fun i => Q.side * Q.index i), ?_, ?_⟩
+  · exact Q.parent.vertices_subset_parent (Q.vertices_subset_parent Q.center_mem)
+  · intro i
+    simp
 
 /-- Stability under influence passes to the parent of a cube. -/
 theorem TriadicCube.parent_mem_stableGood {d : ℕ} {G : Set (TriadicCube d)}
