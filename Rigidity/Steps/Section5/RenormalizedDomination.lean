@@ -55,6 +55,14 @@ def VeryGoodProbabilityStep : Prop :=
         latticeBondLaw 2 p {ω | ¬ IsVeryGood ω x r} ≤
           ENNReal.ofReal (C * Real.exp (-(c * (r : ℝ) ^ s)))
 
+/-- The very-good-cube estimate from the planar well-connectedness input. -/
+def VeryGoodProbabilityStepTwo : Prop :=
+  WellConnectedInputTwo → KestenRectangleCrossing →
+    ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) →
+      ∃ C c s : ℝ, 0 < C ∧ 0 < c ∧ 0 < s ∧ ∀ (x : Vertex 2) (r : ℕ),
+        latticeBondLaw 2 p {ω | ¬ IsVeryGood ω x r} ≤
+          ENNReal.ofReal (C * Real.exp (-(c * (r : ℝ) ^ s)))
+
 /-- Step `step:5.23-measurable`: the renormalized percolation process of size `R` is a measurable
 function of the bond configuration. -/
 def RenormFieldMeasurableStep : Prop :=

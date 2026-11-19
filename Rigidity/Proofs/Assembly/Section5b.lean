@@ -44,4 +44,14 @@ theorem longPathRenormalized (hW : Rigidity.External.WellConnectedInput)
       Proofs.Section5.kestenChannelCutStep)
     Proofs.Section5.oneDependentWalkStep
 
+/-- Proposition 5.24 from planar well-connectedness and the rectangle crossing estimate. -/
+theorem longPathRenormalized_two (hW : Rigidity.External.WellConnectedInputTwo)
+    (hK : Rigidity.External.KestenRectangleCrossing) {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) : LongPathRenormalizedStmt p :=
+  longPathRenormalized_of_peierls_two hW hK hpc Proofs.Section5.veryGoodProbabilityStep_two
+    Proofs.Section5.renormFieldMeasurableStep Proofs.Section5.renormFieldOneDependentStep
+    (renormalizedClusterPaths_of_cut Proofs.Section5.mengerRaysStep
+      Proofs.Section5.kestenChannelCutStep)
+    Proofs.Section5.oneDependentWalkStep
+
 end Rigidity.Assembly
