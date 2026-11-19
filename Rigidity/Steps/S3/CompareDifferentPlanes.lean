@@ -195,16 +195,19 @@ theorem correctedPlane_exists_unique_add_const {ω : Configuration d} (C : OpenC
 
 /-- Lemma 3.3 follows from its five steps, the existence and uniqueness of the infinite cluster,
 the qualitative corrector input and the existence of the Green columns. -/
-theorem compareDifferentPlanes_of_steps [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
+theorem compareDifferentPlanes_of_green_event [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
     (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
-    (huniq : LatticeProb.External.SupercriticalBondUniqueness)
     (hcorr : LatticeProb.External.SupercriticalBondCorrectorInput)
-    (hgreen : LatticeProb.External.SupercriticalBondGreenColumnExistence)
+    (hgreen : ∀ᵐ ω ∂latticeBondLaw d p,
+      ∃ _h : HasUniqueInfiniteOpenComponent ω,
+        ∀ h' : HasUniqueInfiniteOpenComponent ω, ∀ y : uniqueInfiniteComponent h',
+          ∃! g : uniqueInfiniteComponent h' → ℝ,
+            IsGreenColumn d hd (uniqueInfiniteComponent h') y g)
     (hcluster : FlipClusterStep d) (hflip : FlipCorrectorStep d p)
     (hlap : GreenLaplacianStep d hd) (hsub : GreenColumnSublinearStep d hd)
     (hliou : SublinearLiouvilleStep d p) :
     Section3.CompareDifferentPlanesStmt d hd p := by
-  filter_upwards [ae_unique_green_column_for_all_poles hgreen huniq d hd p hpc hp1,
+  filter_upwards [hgreen,
     hcorr d hd p hpc hp1, hflip, hliou] with ω hGω hCω hFω hLω
   obtain ⟨h, hGh⟩ := hGω
   refine ⟨h, fun B hB hconn => ?_⟩
@@ -240,5 +243,19 @@ theorem compareDifferentPlanes_of_steps [NeZero d] (hd : 2 ≤ d) (p : unitInter
   show _ = ∑ e ∈ B, compareSummand (greenFunction _ G) (extend _ u') a.val b.val e.val
   simp only [compareSummand_eq_greenDipole_sub, Finset.sum_sub_distrib]
   linarith
+
+/-- Lemma 3.3 from the all-dimensional Green-column input. -/
+theorem compareDifferentPlanes_of_steps [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (huniq : LatticeProb.External.SupercriticalBondUniqueness)
+    (hcorr : LatticeProb.External.SupercriticalBondCorrectorInput)
+    (hgreen : LatticeProb.External.SupercriticalBondGreenColumnExistence)
+    (hcluster : FlipClusterStep d) (hflip : FlipCorrectorStep d p)
+    (hlap : GreenLaplacianStep d hd) (hsub : GreenColumnSublinearStep d hd)
+    (hliou : SublinearLiouvilleStep d p) :
+    Section3.CompareDifferentPlanesStmt d hd p :=
+  compareDifferentPlanes_of_green_event hd p hpc hp1 hcorr
+    (ae_unique_green_column_for_all_poles hgreen huniq d hd p hpc hp1)
+    hcluster hflip hlap hsub hliou
 
 end Rigidity.Steps.S3
