@@ -7,7 +7,8 @@ import Rigidity.Proofs.Smoothing.ZeroRank
 # The lattice smoothing parameter
 
 Micciancio and Regev, *Worst-case to average-case reductions based on Gaussian measures*,
-SIAM J. Comput. 37 (2007), Lemma 3.3, bounds the Gaussian mass of the nonzero dual lattice
+SIAM J. Comput. 37 (2007), no. 1, 267–302, doi:10.1137/S0097539705447360, Lemma 3.3,
+bounds the Gaussian mass of the nonzero dual lattice
 at the smoothing scale. The lattice is taken in the real span of its independent generators.
 -/
 
