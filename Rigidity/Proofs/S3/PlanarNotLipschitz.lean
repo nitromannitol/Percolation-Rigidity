@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Assembly.Section3
+import Rigidity.Proofs.S3.PlanarGreenColumn
 
 /-!
 # Non-Lipschitz correctors from planar well-connectedness
@@ -32,13 +33,17 @@ theorem notLipschitz_two (p : unitInterval)
     (hcorrector : LatticeProb.External.SupercriticalBondCorrectorInput)
     (hquant : Rigidity.External.CorrectorQuantitativeInput)
     (hreg : LatticeProb.External.ArmstrongDarioOrderZero)
-    (hgreen : LatticeProb.External.SupercriticalBondGreenColumnExistence)
+    (hgreen : Rigidity.External.SupercriticalBondGreenColumnExistenceTwo)
     (hginput : LatticeProb.External.SupercriticalBondGreenQuantitative)
     (hwc : Rigidity.External.WellConnectedInputTwo)
     (hhom : HomogenizedCoefficientProposed) : Rigidity.Section3.NotLipschitzStmt 2 p :=
   notLipschitzStmt_of_originGradient hclassical hcorrector le_rfl hpc hp1 fun L hL =>
     originGradient_of_wellConnected_event le_rfl p hpc hp1 hginput hreg hclassical
-      (Rigidity.Assembly.compareDifferentPlanes le_rfl p hpc hp1 hclassical hcorrector hgreen hreg)
+      (compareDifferentPlanes_of_green_event le_rfl p hpc hp1 hcorrector
+        (ae_unique_green_column_for_all_poles_two hgreen hclassical p hpc hp1)
+        flipClusterStep (flipCorrectorStep le_rfl p hpc hp1 hcorrector)
+        (greenLaplacianStep le_rfl) (greenColumnSublinearStep le_rfl)
+        (sublinearLiouvilleStep le_rfl p hpc hp1 hreg))
       (edgeGradientStep p) (finiteEnergyStep p) (closedBondsUniqueStep p)
       (wellConnectedEvent_two p hwc hpc hp1) (greenScaleEventStep 2 p)
       (fluxEventStep hclassical hcorrector hquant hhom p) removalStep

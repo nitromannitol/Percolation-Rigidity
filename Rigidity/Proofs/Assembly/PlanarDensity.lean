@@ -3,6 +3,7 @@ import Rigidity.Proofs.Assembly.PlanarWellConnected
 import Rigidity.Proofs.S2.ClusterDensityFromDarioGu
 import Rigidity.Proofs.S2.PlanarRegularity
 import Rigidity.Proofs.Section5.ConnectingSet
+import Rigidity.Proofs.Section5.PlanarGreenFamily
 
 /-!
 # Fast decay from planar density concentration
@@ -21,7 +22,7 @@ theorem fast_decay (p : unitInterval)
     (hCQ : Rigidity.External.CorrectorQuantitativeInput)
     (hAD : LatticeProb.External.ArmstrongDarioOrderZero)
     (hAD1 : Rigidity.External.ArmstrongDarioOrderOneOriginTwo)
-    (hE : LatticeProb.External.SupercriticalBondGreenColumnExistence)
+    (hE : Rigidity.External.SupercriticalBondGreenColumnExistenceTwo)
     (hGQ : LatticeProb.External.SupercriticalBondGreenQuantitative)
     (hDG : Rigidity.External.ClusterDensityConcentrationInputTwo)
     (hW : Rigidity.External.WellConnectedInputTwo)
@@ -49,7 +50,7 @@ theorem fast_decay (p : unitInterval)
       (hExpansion f) (correctedPlanesExist_of_input hCorr hpc hp1)
   exact fastDecay_of_steps
     (fastDecayDichotomy_of_steps hPotential (Rigidity.Assembly.logGrowth hUq hGQ hpc hp1)
-      (Proofs.Section5.greenFamilyExists hE hpc hp1)
+      (Proofs.Section5.greenFamilyExists_two hE hpc hp1)
       (Proofs.Section5.sublinearLiouville p hpc hp1 hAD) Proofs.Section5.potentialLaplacian)
     Proofs.Section5.annulusStep
 
