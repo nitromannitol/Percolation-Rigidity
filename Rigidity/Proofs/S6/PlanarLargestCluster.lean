@@ -48,4 +48,71 @@ theorem planar_largestCluster_subset_infinite (p : unitInterval)
   exact (mem_uniqueInfiniteComponent_iff hω x).mpr
     (LargestClusterExists.mem_infiniteComponentEvent_of_mem_goodCluster hN₀ hn hx)
 
+/-- Almost surely every infinite-cluster vertex in the inner half of a sufficiently large box
+belongs to each largest open cluster of that box. -/
+theorem ae_planar_infiniteCluster_mem_largestBox (p : unitInterval)
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ᶠ n : ℕ in atTop,
+      ∀ V : Finset (Vertex 2), IsLargestBoxCluster ω n V →
+        ∀ x : Vertex 2, (∀ i, 2 * |x i| ≤ (n : ℤ)) →
+          ω ∈ infiniteComponentEvent x → x ∈ V := by
+  let q : ℕ := 100 * 2 ^ 2
+  have hq : q ≠ 0 := by dsimp [q]; positivity
+  have hex : ∀ n : ℕ, ∃ m, n ≤ m ^ q := fun n => ⟨n, Nat.le_self_pow hq n⟩
+  let mOf : ℕ → ℕ := fun n => Nat.find (hex n)
+  have hscale : ∀ n, 22 ^ q ≤ n → 1 ≤ mOf n ∧ 20 * mOf n ≤ n ∧
+      (2 * mOf n + 1) ^ 2 < (2 * (n - 2 * mOf n) + 1) / (2 * mOf n + 1) ∧
+      (n : ℝ) ^ ((q : ℝ)⁻¹) ≤ mOf n := by
+    intro n hn
+    have hspec : n ≤ mOf n ^ q := Nat.find_spec (hex n)
+    have h22 : 22 ≤ mOf n := by
+      by_contra h
+      push Not at h
+      exact absurd (hn.trans hspec) (not_le.mpr (Nat.pow_lt_pow_left h hq))
+    have hlow : (mOf n - 1) ^ q < n := by
+      have h := Nat.find_min (hex n) (show mOf n - 1 < mOf n by omega)
+      push Not at h
+      exact h
+    obtain ⟨h20, hK⟩ := SingleExit.scale_conditions (d := 2) (by norm_num) rfl h22 hlow
+    refine ⟨by omega, h20, hK, ?_⟩
+    calc (n : ℝ) ^ ((q : ℝ)⁻¹) ≤ ((mOf n : ℝ) ^ q) ^ ((q : ℝ)⁻¹) :=
+          Real.rpow_le_rpow (by positivity) (by exact_mod_cast hspec) (by positivity)
+      _ = mOf n := Real.pow_rpow_inv_natCast (by positivity) hq
+  have hδ : (1 / (10 * (2 : ℝ)) ^ 2) = (q : ℝ)⁻¹ := by dsimp [q]; norm_num
+  filter_upwards [ae_eventually_planar_wellConnected p hpc hp1] with ω hW
+  filter_upwards [hW, eventually_ge_atTop (22 ^ q)] with n hWn hn
+  intro V hV x hx hinf
+  obtain ⟨hm1, h20, hK, hnm⟩ := hscale n hn
+  have hg : SingleExit.CubesGood ω n (mOf n) := by
+    intro z hz
+    have hmem : ∀ M : ℕ, (cubeAt z M ∩ cubeAt 0 n).Nonempty := fun M =>
+      ⟨z, fun i => by simp, fun i => by simpa using hz i⟩
+    have h20' : (20 : ℝ) * mOf n ≤ n := by exact_mod_cast h20
+    have hpos : 0 ≤ (n : ℝ) ^ (1 / (10 * (2 : ℝ)) ^ 2) := by positivity
+    have hlo : (n : ℝ) ^ (1 / (10 * (2 : ℝ)) ^ 2) ≤ mOf n := by rw [hδ]; exact hnm
+    exact ⟨hWn.2.2 z _ (by linarith) (by linarith) (hmem _),
+      hWn.2.2 z _ (by push_cast; linarith) (by push_cast; linarith) (hmem _)⟩
+  have hbound : ∀ i, |x i| ≤ (n : ℤ) - 2 * mOf n := by
+    intro i
+    have h20' : (20 : ℤ) * (mOf n : ℤ) ≤ n := by exact_mod_cast h20
+    linarith [hx i, abs_nonneg (x i)]
+  exact GadgetCount.mem_of_mem_infiniteComponentEvent (d := 2) (by norm_num) hg hm1
+    (by omega) hK hV hbound hinf
+
+/-- The largest planar box cluster lies in the infinite cluster and contains its inner half-box. -/
+theorem planar_largestBox_absorbs_infiniteCluster (p : unitInterval)
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∀ᵐ ω ∂latticeBondLaw 2 p, ∃ h : HasUniqueInfiniteOpenComponent ω, ∀ᶠ n : ℕ in atTop,
+      ∃ V : Finset (Vertex 2), IsLargestBoxCluster ω n V ∧
+        (∀ x ∈ V, x ∈ (uniqueInfiniteComponent h).supp) ∧
+        ∀ x, (∀ i, 2 * |x i| ≤ (n : ℤ)) → x ∈ (uniqueInfiniteComponent h).supp → x ∈ V := by
+  filter_upwards [planar_largestCluster_subset_infinite p hpc hp1,
+    ae_planar_infiniteCluster_mem_largestBox p hpc hp1] with ω hV hinner
+  obtain ⟨h, hV⟩ := hV
+  refine ⟨h, ?_⟩
+  filter_upwards [hV, hinner] with n hn hninner
+  obtain ⟨V, hlarge, hsubset⟩ := hn
+  refine ⟨V, hlarge, hsubset, fun x hx hxinf => ?_⟩
+  exact hninner V hlarge x hx ((mem_uniqueInfiniteComponent_iff h x).mp hxinf)
+
 end Rigidity.Proofs.S6
