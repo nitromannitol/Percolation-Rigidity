@@ -138,4 +138,75 @@ theorem IntegerCube.measureReal_slabRootSurvival_le {d : ℕ} (Q : IntegerCube d
       _ ≤ (1 - (p : ℝ) * δ) ^ (n + 1) := by
         simpa only [pow_succ, mul_comm] using mul_le_mul_of_nonneg_left ih' hq
 
+/-- A root that escapes the prefix but does not cross the marked faces in the
+cube survives at the prefix boundary. -/
+theorem IntegerCube.slabRootSurvival_of_escape {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) {width k : ℕ} (hwidth : 0 < width) (hsize : k * width < Q.size)
+    {ω : Configuration d} {z : Vertex d} (hz : z ∈ Q.slabPrefix j width k)
+    (lower upper : Fin d → Set (Vertex d))
+    (hescape : targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width k) z ω)
+    (hfail : ¬ IsCrossingRoot ω Q.vertices lower upper z) :
+    ω ∈ Q.slabRootSurvival j width k z lower upper := by
+  obtain ⟨w, _, hw, hzw⟩ := hescape
+  refine ⟨Q.slabBoundaryReachable_of_reachable_outside_prefix j hwidth hsize hz hw.2 hzw, ?_⟩
+  intro hroot
+  have hsub : Q.slabPrefix j width k ⊆ Q.vertices := fun _ hx => hx.1
+  exact hfail (hroot.of_reachable_in_larger_region hsub (hsub hz)
+    (SimpleGraph.Reachable.refl z))
+
+/-- A root that escapes a distant prefix without crossing the marked faces
+has geometrically small probability. -/
+theorem IntegerCube.measureReal_escape_without_crossing_le {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) (width k₀ N : ℕ) (hwidth : 0 < width)
+    (hsize : ∀ n ≤ N, (k₀ + n) * width < Q.size)
+    (z : Vertex d) (hz : z ∈ Q.slabPrefix j width k₀)
+    (lower upper : Fin d → Set (Vertex d)) (p : unitInterval) (δ : ℝ) (hδ : δ ≤ 1)
+    (hprob : ∀ n < N, ∀ y ∈ Q.slab j width (k₀ + n), δ ≤ (latticeBondLaw d p).real
+      {ω | IsCrossingRoot ω (Q.slab j width (k₀ + n)) lower upper y}) :
+    (latticeBondLaw d p).real {ω |
+      targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z ω ∧
+      ¬ IsCrossingRoot ω Q.vertices lower upper z} ≤ (1 - (p : ℝ) * δ) ^ N := by
+  apply (measureReal_mono ?_ (measure_ne_top _ _)).trans
+    (Q.measureReal_slabRootSurvival_le j width k₀ N hwidth
+      (fun n hn => hsize n (Nat.le_of_lt hn)) z hz lower upper p δ hδ hprob N le_rfl)
+  intro ω hω
+  exact Q.slabRootSurvival_of_escape j hwidth (hsize N le_rfl)
+    (Q.slabPrefix_mono j width (Nat.le_add_right k₀ N) hz) lower upper hω.1 hω.2
+
+/-- A connection from a finite set of roots to a distant region, without a
+root crossing the marked faces, is controlled by the root escape bound. -/
+theorem IntegerCube.measureReal_connection_without_crossing_le {d : ℕ}
+    (Q : IntegerCube d) (j : Fin d) (width k₀ N : ℕ) (hwidth : 0 < width)
+    (hsize : ∀ n ≤ N, (k₀ + n) * width < Q.size)
+    (A : Finset (Vertex d)) (hA : (↑A : Set (Vertex d)) ⊆ Q.slabPrefix j width k₀)
+    (L R : Set (Vertex d)) (hL : L ⊆ A)
+    (hR : R ⊆ Q.vertices \ Q.slabPrefix j width (k₀ + N))
+    (lower upper : Fin d → Set (Vertex d)) (p : unitInterval) (δ : ℝ) (hδ : δ ≤ 1)
+    (hprob : ∀ n < N, ∀ y ∈ Q.slab j width (k₀ + n), δ ≤ (latticeBondLaw d p).real
+      {ω | IsCrossingRoot ω (Q.slab j width (k₀ + n)) lower upper y}) :
+    (latticeBondLaw d p).real {ω | ConnectsRegions ω Q.vertices L R ∧
+      ¬ ∃ z, IsCrossingRoot ω Q.vertices lower upper z} ≤
+      (A.card : ℝ) * (1 - (p : ℝ) * δ) ^ N := by
+  classical
+  let E : Vertex d → Set (Configuration d) := fun z => {ω |
+    targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z ω ∧
+    ¬ IsCrossingRoot ω Q.vertices lower upper z}
+  have hcover : {ω | ConnectsRegions ω Q.vertices L R ∧
+      ¬ ∃ z, IsCrossingRoot ω Q.vertices lower upper z} ⊆ ⋃ z ∈ A, E z := by
+    rintro ω ⟨⟨z, _, hzL, w, hwQ, hwR, hzw⟩, hfail⟩
+    refine Set.mem_iUnion₂.mpr ⟨z, hL hzL, ⟨w, hwQ, hR hwR, hzw⟩, ?_⟩
+    intro hcross
+    exact hfail ⟨z, hcross⟩
+  calc
+    _ ≤ (latticeBondLaw d p).real (⋃ z ∈ A, E z) :=
+      measureReal_mono hcover (measure_ne_top _ _)
+    _ ≤ ∑ z ∈ A, (latticeBondLaw d p).real (E z) :=
+      measureReal_biUnion_finset_le _ _
+    _ ≤ ∑ _z ∈ A, (1 - (p : ℝ) * δ) ^ N := by
+      apply Finset.sum_le_sum
+      intro z hz
+      exact Q.measureReal_escape_without_crossing_le j width k₀ N hwidth hsize
+        z (hA hz) lower upper p δ hδ hprob
+    _ = _ := by simp only [Finset.sum_const, nsmul_eq_mul]
+
 end Rigidity.Percolation
