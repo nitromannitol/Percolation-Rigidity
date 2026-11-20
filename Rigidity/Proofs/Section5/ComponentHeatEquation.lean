@@ -94,4 +94,26 @@ theorem exists_greenColumn_of_truncatedPotential_limit {ω : Configuration 2} (C
   exists_greenColumn_of_heat_limit C hC y (fun n => truncatedComponentPotential C n y) v K R₀
     hu (fun n x => componentLaplacian_truncatedPotential C hC n x y) hK hbound
 
+/-- Any diverging sequence of truncated potentials with a logarithmically bounded pointwise
+limit gives a planar Green column. -/
+theorem exists_greenColumn_of_truncatedPotential_subsequence_limit {ω : Configuration 2}
+    (C : OpenComponent ω) (hC : C.supp.Infinite) (y : C) (φ : ℕ → ℕ)
+    (hφ : Tendsto φ atTop atTop) (v : C → ℝ) (K R₀ : ℝ)
+    (hu : ∀ x, Tendsto (fun n => truncatedComponentPotential C (φ n) y x)
+      atTop (nhds (v x)))
+    (hK : 0 ≤ K) (hbound : ∀ x : C, R₀ ≤ Rigidity.Section5.eucl x.val →
+      |v x| ≤ K * Real.log (Rigidity.Section5.eucl x.val)) :
+    ∃ g, IsGreenColumn 2 le_rfl C y g := by
+  have hΔ : ∀ x, componentLaplacian C v x = if x = y then 1 else 0 := by
+    apply componentLaplacian_eq_of_tendsto C
+      (fun n => truncatedComponentPotential C (φ n) y) v (fun x => if x = y then 1 else 0) hu
+    intro x
+    have h := (tendsto_const_nhds (x := (if x = y then (1 : ℝ) else 0))).sub
+      (((tendsto_componentHeat_zero C hC x y).comp hφ).const_mul
+        (((componentGraph C).degree x : ℝ) / (componentGraph C).degree y))
+    simp_rw [componentLaplacian_truncatedPotential C hC]
+    simpa only [Function.comp_apply, mul_zero, sub_zero] using h
+  exact ⟨fun x => v y - v x, isGreenColumn_of_potentialKernel C y v hΔ
+    (isSublinearOn_of_log_bound C v K R₀ hK hbound)⟩
+
 end Rigidity.Proofs.Section5
