@@ -1,4 +1,5 @@
 import Rigidity.Percolation.IntegerCubeCoalescence
+import Rigidity.Percolation.CrossingPathCoalescence
 
 /-!
 # A union bound for subcube coalescence
@@ -125,5 +126,47 @@ theorem IntegerCube.measure_not_coalesces_le {d : ℕ}
         _ ≤ (Q.vertices.card : ℝ≥0∞) * a + (Q.vertices.card : ℝ≥0∞) * b :=
           add_le_add (mul_le_mul_left hcs a) (mul_le_mul_left hck b)
         _ = _ := by rw [mul_add]
+
+
+/-- Bounds for crossing components that connect all selected paths yield the
+ambient coalescence bound at both subcube scales. -/
+theorem IntegerCube.measure_not_coalesces_le_of_crossing_paths {d : ℕ}
+    (hd : 0 < d) (Q : IntegerCube d) (s k : ℕ) (R : ℤ)
+    (hR : 0 < R) (hsR : 2 * R + 1 ≤ (s : ℤ))
+    (hks : k + 1 ≤ s) (hRk : R ≤ (k : ℤ) - 1) (hsQ : s ≤ Q.size)
+    (large : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop)
+    (hdiam : ∀ n γ, large n γ → pathDiameterAtLeast R n γ)
+    (μ : Measure (Configuration d)) (a b : ℝ≥0∞)
+    (ha : ∀ T : IntegerCube d, T.size = s →
+      (↑T.vertices : Set (Vertex d)) ⊆ Q.vertices →
+      μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑T.vertices)
+        (fun i => ↑(T.lowerFace i)) (fun i => ↑(T.upperFace i))
+        (pathDiameterAtLeast R)} ≤ a)
+    (hb : ∀ T : IntegerCube d, T.size = k →
+      (↑T.vertices : Set (Vertex d)) ⊆ Q.vertices →
+      μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑T.vertices)
+        (fun i => ↑(T.lowerFace i)) (fun i => ↑(T.upperFace i))
+        (pathDiameterAtLeast R)} ≤ b) :
+    μ {ω | ¬ LargePathsCoalesce ω (↑Q.vertices) large} ≤
+      (Q.vertices.card : ℝ≥0∞) * (a + b) := by
+  apply Q.measure_not_coalesces_le hd s k R hR hsR hks hRk hsQ large hdiam μ a b
+  · intro T hTs hT
+    calc
+      _ ≤ μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑T.vertices)
+          (fun i => ↑(T.lowerFace i)) (fun i => ↑(T.upperFace i))
+          (pathDiameterAtLeast R)} := by
+        apply measure_mono
+        intro ω hω hgood
+        exact hω hgood.crossing_and_coalescence.2
+      _ ≤ a := ha T hTs hT
+  · intro T hTk hT
+    calc
+      _ ≤ μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑T.vertices)
+          (fun i => ↑(T.lowerFace i)) (fun i => ↑(T.upperFace i))
+          (pathDiameterAtLeast R)} := by
+        apply measure_mono
+        intro ω hω hgood
+        exact hω hgood.crossing_and_coalescence.1
+      _ ≤ b := hb T hTk hT
 
 end Rigidity.Percolation
