@@ -49,4 +49,53 @@ theorem measureReal_le_pow_of_condExp_indicator_le {Ω : Type*} [m₀ : Measurab
         (hm (n + 1) _ (hG (n + 1))) (hdecr n) q (hcond n)
       exact hstep.trans (by simpa only [pow_succ, mul_comm] using mul_le_mul_of_nonneg_left ih hq)
 
+
+/-- If a success event excludes survival, its conditional lower bound gives a
+conditional upper bound for survival. -/
+theorem condExp_indicator_le_one_sub_of_disjoint {Ω : Type*} [m₀ : MeasurableSpace Ω]
+    (μ : Measure Ω) [IsFiniteMeasure μ] {m : MeasurableSpace Ω} (hm : m ≤ m₀)
+    {A B C : Set Ω} (hB : @MeasurableSet Ω m₀ B) (hC : @MeasurableSet Ω m₀ C)
+    (hBC : Disjoint B C) (δ : ℝ)
+    (hcond : ∀ᵐ ω ∂μ.restrict A,
+      δ ≤ μ[C.indicator (fun _ => (1 : ℝ)) | m] ω) :
+    ∀ᵐ ω ∂μ.restrict A,
+      μ[B.indicator (fun _ => (1 : ℝ)) | m] ω ≤ 1 - δ := by
+  have hBint : Integrable (B.indicator (fun _ => (1 : ℝ))) μ :=
+    (integrable_const 1).indicator hB
+  have hCint : Integrable (C.indicator (fun _ => (1 : ℝ))) μ :=
+    (integrable_const 1).indicator hC
+  have hpoint : B.indicator (fun _ => (1 : ℝ)) ≤ᵐ[μ]
+      (fun _ => (1 : ℝ)) - C.indicator (fun _ => (1 : ℝ)) := by
+    filter_upwards [] with ω
+    by_cases hωB : ω ∈ B <;> by_cases hωC : ω ∈ C
+    · exact (Set.disjoint_left.mp hBC hωB hωC).elim
+    · simp [hωB, hωC]
+    · simp [hωB, hωC]
+    · simp [hωB, hωC]
+  have hmono := condExp_mono (m := m) hBint ((integrable_const 1).sub hCint) hpoint
+  have hsub := condExp_sub (integrable_const 1) hCint m
+  have hone := condExp_const (μ := μ) hm (1 : ℝ)
+  filter_upwards [ae_restrict_of_ae hmono, ae_restrict_of_ae hsub, hcond] with ω h₁ h₂ h₃
+  rw [hone] at h₂
+  simp only [Pi.sub_apply] at h₂
+  linarith
+
+
+/-- If each exploration step has a conditional chance of a success which
+precludes survival, the survival probability decays geometrically. -/
+theorem measureReal_le_pow_one_sub_of_condExp_success {Ω : Type*}
+    [m₀ : MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (m : ℕ → MeasurableSpace Ω) (hm : ∀ n, m n ≤ m₀)
+    (G C : ℕ → Set Ω) (hG : ∀ n, MeasurableSet[m n] (G n))
+    (hC : ∀ n, @MeasurableSet Ω m₀ (C n))
+    (hdecr : ∀ n, G (n + 1) ⊆ G n)
+    (hdisj : ∀ n, Disjoint (G (n + 1)) (C n)) (δ : ℝ) (hδ : δ ≤ 1)
+    (hcond : ∀ n, ∀ᵐ ω ∂μ.restrict (G n),
+      δ ≤ μ[(C n).indicator (fun _ => (1 : ℝ)) | m n] ω) :
+    ∀ n, μ.real (G n) ≤ (1 - δ) ^ n := by
+  apply measureReal_le_pow_of_condExp_indicator_le μ m hm G hG hdecr (1 - δ) (sub_nonneg.mpr hδ)
+  intro n
+  exact condExp_indicator_le_one_sub_of_disjoint μ (hm n)
+    (hm (n + 1) _ (hG (n + 1))) (hC n) (hdisj n) δ (hcond n)
+
 end Rigidity.Percolation
