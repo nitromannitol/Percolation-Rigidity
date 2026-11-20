@@ -72,17 +72,17 @@ theorem osBound_of_triadic_tail (B c s : ℝ) (hB : 0 < B) (hc : 0 < c) (hs : 0 
           exact (div_le_one (Real.exp_pos _)).2 hexp
         _ = _ := one_mul _
 
-/-- A random variable bounded by the side length of a stopping cube at a fixed
-point has a stretched-exponential stochastic bound. -/
-theorem TriadicCube.osBound_of_stopping_side {d : ℕ} {Ω : Type*} [MeasurableSpace Ω]
+/-- Stopping-cube size bounds have a stochastic scale uniform in the vertex. -/
+theorem TriadicCube.uniform_osBound_of_stopping_side {d : ℕ} {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) (G : Ω → Set (TriadicCube d))
     (C : ℝ≥0∞) (hC : C ≠ ∞) (s c : ℝ) (hs : 0 < s) (hc : 0 < c)
     (hprob : ∀ R : TriadicCube d,
       μ {ω | R ∉ G ω} ≤ C * ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ R.scale) ^ s)))
-    (x : Vertex d) (X : Ω → ℝ) (hX : ∀ ω, 0 ≤ X ω)
-    (hbound : ∀ ω, 0 < X ω → ∃ R : TriadicCube d,
-      x ∈ R.vertices ∧ R.IsStopping (G ω) ∧ X ω ≤ (3 : ℝ) ^ R.scale) :
-    ∃ θ : ℝ, 0 < θ ∧ OsBound μ s θ X := by
+    : ∃ θ : ℝ, 0 < θ ∧ ∀ (x : Vertex d) (X : Ω → ℝ),
+      (∀ ω, 0 ≤ X ω) →
+      (∀ ω, 0 < X ω → ∃ R : TriadicCube d,
+        x ∈ R.vertices ∧ R.IsStopping (G ω) ∧ X ω ≤ (3 : ℝ) ^ R.scale) →
+      OsBound μ s θ X := by
   let D : ℝ≥0∞ := (19 ^ d : ℝ≥0∞) * C *
     ∑' m : ℕ, ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ s - 1))) ^ m
   have hD : D ≠ ∞ := by
@@ -95,7 +95,9 @@ theorem TriadicCube.osBound_of_stopping_side {d : ℕ} {Ω : Type*} [MeasurableS
     rw [← ENNReal.ofReal_toReal hD]
     exact ENNReal.ofReal_le_ofReal (le_max_right _ _)
   obtain ⟨θ, hθ, htail⟩ := osBound_of_triadic_tail B c s hB hc hs
-  refine ⟨θ, hθ, htail μ X hX ?_⟩
+  refine ⟨θ, hθ, ?_⟩
+  intro x X hX hbound
+  apply htail μ X hX
   intro n
   calc
     μ {ω | (3 : ℝ) ^ (n + 2) < X ω} ≤
@@ -122,5 +124,19 @@ theorem TriadicCube.osBound_of_stopping_side {d : ℕ} {Ω : Type*} [MeasurableS
       mul_le_mul_left hDB _
     _ = ENNReal.ofReal (B * Real.exp (-c * ((3 : ℝ) ^ n) ^ s)) :=
       (ENNReal.ofReal_mul hB.le).symm
+
+/-- A random variable bounded by the side length of a stopping cube at a fixed
+point has a stretched-exponential stochastic bound. -/
+theorem TriadicCube.osBound_of_stopping_side {d : ℕ} {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) (G : Ω → Set (TriadicCube d))
+    (C : ℝ≥0∞) (hC : C ≠ ∞) (s c : ℝ) (hs : 0 < s) (hc : 0 < c)
+    (hprob : ∀ R : TriadicCube d,
+      μ {ω | R ∉ G ω} ≤ C * ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ R.scale) ^ s)))
+    (x : Vertex d) (X : Ω → ℝ) (hX : ∀ ω, 0 ≤ X ω)
+    (hbound : ∀ ω, 0 < X ω → ∃ R : TriadicCube d,
+      x ∈ R.vertices ∧ R.IsStopping (G ω) ∧ X ω ≤ (3 : ℝ) ^ R.scale) :
+    ∃ θ : ℝ, 0 < θ ∧ OsBound μ s θ X := by
+  obtain ⟨θ, hθ, h⟩ := uniform_osBound_of_stopping_side μ G C hC s c hs hc hprob
+  exact ⟨θ, hθ, h x X hX hbound⟩
 
 end Rigidity.Percolation

@@ -100,4 +100,24 @@ theorem TriadicCube.stoppingSize_exp_moment {d : ℕ} {Ω : Type*} [MeasurableSp
   exact OsBound.exists_exp_rpow_integrable_le_two μ hs hθ
     (measurable_stoppingSize G hG x) (fun ω => stoppingSize_nonneg (G ω) x) ht
 
+/-- The exponential-moment scale for stopping-cube sizes can be chosen
+uniformly over all vertices. -/
+theorem TriadicCube.uniform_stoppingSize_exp_moment {d : ℕ} {Ω : Type*}
+    [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
+    (G : Ω → Set (TriadicCube d))
+    (hG : ∀ Q : TriadicCube d, MeasurableSet {ω | Q ∈ G ω})
+    (C : ℝ≥0∞) (hC : C ≠ ∞) (s c : ℝ) (hs : 0 < s) (hc : 0 < c)
+    (hprob : ∀ R : TriadicCube d,
+      μ {ω | R ∉ G ω} ≤ C * ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ R.scale) ^ s))) :
+    ∃ θ : ℝ, 0 < θ ∧ ∀ x : Vertex d,
+      Integrable (fun ω => Real.exp ((stoppingSize (G ω) x / θ) ^ s)) μ ∧
+      (∫ ω, Real.exp ((stoppingSize (G ω) x / θ) ^ s) ∂μ) ≤ 2 := by
+  obtain ⟨θ, hθ, ht⟩ := uniform_osBound_of_stopping_side μ G C hC s c hs hc hprob
+  refine ⟨θ * (32 : ℝ) ^ (1 / s), mul_pos hθ (Real.rpow_pos_of_pos (by norm_num) _), ?_⟩
+  intro x
+  apply OsBound.exp_rpow_integrable_le_two μ hs hθ (measurable_stoppingSize G hG x)
+    (fun ω => stoppingSize_nonneg (G ω) x)
+  exact ht x (fun ω => stoppingSize (G ω) x) (fun ω => stoppingSize_nonneg (G ω) x)
+    (fun ω => exists_stopping_of_stoppingSize_pos (G ω) x)
+
 end Rigidity.Percolation

@@ -55,14 +55,13 @@ private theorem integrable_exp_of_osBound_one {Ω : Type*} [MeasurableSpace Ω]
 
 /-- A measurable nonnegative variable with a stretched-exponential stochastic
 bound has an exponential moment bounded by two at a larger scale. -/
-theorem OsBound.exists_exp_rpow_integrable_le_two {Ω : Type*} [MeasurableSpace Ω]
+theorem OsBound.exp_rpow_integrable_le_two {Ω : Type*} [MeasurableSpace Ω]
     (μ : Measure Ω) [IsProbabilityMeasure μ] {s θ : ℝ} {X : Ω → ℝ}
     (hs : 0 < s) (hθ : 0 < θ) (hm : Measurable X) (hn : ∀ ω, 0 ≤ X ω)
     (ht : OsBound μ s θ X) :
-    ∃ C : ℝ, 0 < C ∧ Integrable (fun ω => Real.exp ((X ω / C) ^ s)) μ ∧
-      (∫ ω, Real.exp ((X ω / C) ^ s) ∂μ) ≤ 2 := by
+    Integrable (fun ω => Real.exp ((X ω / (θ * (32 : ℝ) ^ (1 / s))) ^ s)) μ ∧
+      (∫ ω, Real.exp ((X ω / (θ * (32 : ℝ) ^ (1 / s))) ^ s) ∂μ) ≤ 2 := by
   let C := θ * (32 : ℝ) ^ (1 / s)
-  have hC : 0 < C := mul_pos hθ (Real.rpow_pos_of_pos (by norm_num) _)
   let Y : Ω → ℝ := fun ω => (max (X ω) 0 / θ) ^ s
   have hY : OsBound μ 1 1 Y := ht.normalized_rpow hs hθ
   have hYm : Measurable Y := by dsimp [Y]; fun_prop
@@ -77,10 +76,24 @@ theorem OsBound.exists_exp_rpow_integrable_le_two {Ω : Type*} [MeasurableSpace 
       (Real.rpow_nonneg (by norm_num) _), ← Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 32)]
     have h : (1 / s) * s = 1 := by field_simp
     rw [h, Real.rpow_one]
-  refine ⟨C, hC, ?_, ?_⟩
+  change Integrable (fun ω => Real.exp ((X ω / C) ^ s)) μ ∧
+    (∫ ω, Real.exp ((X ω / C) ^ s) ∂μ) ≤ 2
+  refine ⟨?_, ?_⟩
   · simp_rw [heq]
     exact hi
   · simp_rw [heq]
     exact hb
+
+/-- A measurable nonnegative stochastic bound admits an exponential moment
+bounded by two for some positive scale. -/
+theorem OsBound.exists_exp_rpow_integrable_le_two {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] {s θ : ℝ} {X : Ω → ℝ}
+    (hs : 0 < s) (hθ : 0 < θ) (hm : Measurable X) (hn : ∀ ω, 0 ≤ X ω)
+    (ht : OsBound μ s θ X) :
+    ∃ C : ℝ, 0 < C ∧ Integrable (fun ω => Real.exp ((X ω / C) ^ s)) μ ∧
+      (∫ ω, Real.exp ((X ω / C) ^ s) ∂μ) ≤ 2 := by
+  refine ⟨θ * (32 : ℝ) ^ (1 / s), ?_, ?_⟩
+  · exact mul_pos hθ (Real.rpow_pos_of_pos (by norm_num) _)
+  · exact OsBound.exp_rpow_integrable_le_two μ hs hθ hm hn ht
 
 end Rigidity.Percolation
