@@ -142,4 +142,24 @@ theorem truncatedComponentPotential_le_induced_flow_energy {d : ℕ}
       flowEnergyOn_extendFiniteFlow G T θ]
     exact henergy
 
+/-- Logarithmic-energy flows on finite induced subgraphs give a planar Green column. -/
+theorem exists_greenColumn_of_finite_logarithmic_flows
+    {ω : LatticeProb.Percolation.Configuration 2} (C : LatticeProb.Percolation.OpenComponent ω)
+    (hC : C.supp.Infinite) (y : C) (K R₀ : ℝ) (hK : 0 ≤ K)
+    (hflow : ∀ x : C, R₀ ≤ Rigidity.Section5.eucl x.val →
+      ∃ (T : Finset C) (hy : y ∈ T) (hx : x ∈ T) (θ : T → T → ℝ),
+        IsFlow ((LatticeProb.Percolation.componentGraph C).induce (T : Set C)) θ ∧
+        (∀ z : T, divergence ((LatticeProb.Percolation.componentGraph C).induce (T : Set C)) θ z =
+          (if z = ⟨y, hy⟩ then 1 else 0) - (if z = ⟨x, hx⟩ then 1 else 0)) ∧
+        flowEnergyOn ((LatticeProb.Percolation.componentGraph C).induce (T : Set C))
+          (unitCond ((LatticeProb.Percolation.componentGraph C).induce (T : Set C))) Finset.univ θ ≤
+            2 * (K * Real.log (Rigidity.Section5.eucl x.val))) :
+    ∃ g, LatticeProb.Percolation.IsGreenColumn 2 le_rfl C y g := by
+  apply exists_greenColumn_of_truncatedPotential_log_bound C hC y K R₀ hK
+  intro n x hx
+  obtain ⟨T, hy, hxT, θ, hθ, hdiv, henergy⟩ := hflow x hx
+  rw [abs_of_nonneg (truncatedComponentPotential_nonneg C n y x)]
+  exact truncatedComponentPotential_le_induced_flow_energy C hC y x T hy hxT θ _
+    hθ hdiv henergy n
+
 end Rigidity.Proofs.Section5
