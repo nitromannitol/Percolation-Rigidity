@@ -117,4 +117,67 @@ theorem ae_eventually_dyadic_crossing_grid {p : unitInterval}
   exact translated_strip_crossings_intersect ha0 ha1 hatop hb0 hb1 hbtop
     ((hH a).1 h hh).1 ((hV b).1 v hv).1
 
+/-- Almost surely, every sufficiently large centered dyadic square contains coherent horizontal
+and vertical families of disjoint open site crossings, with every perpendicular pair meeting.
+The crossing coordinates are expressed relative to the square's lower-left corner. -/
+theorem ae_eventually_centered_dyadic_crossing_grid {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ᶠ j : ℕ in atTop,
+      0 < (j + 1) / 2 ∧
+      ∃ H V : dyadicStripStarts j → Finset (List (LatticeModels.Site 2)),
+        (∀ a : dyadicStripStarts j, Menger.IsLinkage
+            (Menger.edgesIn (planarOpenSiteGraph
+              (translatePlanarField a (translatePlanarField (dyadicCenteredOffset j) (renormField R ω))))
+              (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+            (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) (H a) ∧
+          (H a).card = (j + 1) / 2) ∧
+        (∀ b : dyadicStripStarts j, Menger.IsLinkage
+            (Menger.edgesIn (planarOpenSiteGraph
+              (translatePlanarField b (swapPlanarField
+                (translatePlanarField (dyadicCenteredOffset j) (renormField R ω)))))
+              (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+            (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) (V b) ∧
+          (V b).card = (j + 1) / 2) ∧
+        ∀ (a b : dyadicStripStarts j), ∀ h ∈ H a, ∀ v ∈ V b,
+          ∃ z ∈ h.map (translateLatticeSite a), z ∈ v.map (swapTranslateLatticeSite b) := by
+  classical
+  filter_upwards [ae_eventually_centered_dyadic_strips hpc] with R hR
+  filter_upwards [hR] with ω hω
+  filter_upwards [hω, eventually_ge_atTop 1] with j hj hj1
+  have hH : ∀ a : dyadicStripStarts j, ∃ H : Finset (List (LatticeModels.Site 2)),
+      Menger.IsLinkage
+        (Menger.edgesIn (planarOpenSiteGraph
+          (translatePlanarField a (translatePlanarField (dyadicCenteredOffset j) (renormField R ω))))
+          (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+        (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) H ∧
+      H.card = (j + 1) / 2 := by
+    intro a
+    rw [translatePlanarField_translate]
+    apply not_not.1
+    apply hj.1
+    exact Finset.mem_image.2 ⟨a, a.2, rfl⟩
+  have hV : ∀ b : dyadicStripStarts j, ∃ V : Finset (List (LatticeModels.Site 2)),
+      Menger.IsLinkage
+        (Menger.edgesIn (planarOpenSiteGraph
+          (translatePlanarField b (swapPlanarField
+            (translatePlanarField (dyadicCenteredOffset j) (renormField R ω)))))
+          (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+        (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) V ∧
+      V.card = (j + 1) / 2 := by
+    intro b
+    rw [swapPlanarField_translate_diagonal _ (by rfl), translatePlanarField_translate]
+    apply not_not.1
+    apply hj.2
+    exact Finset.mem_image.2 ⟨b, b.2, rfl⟩
+  choose H hH hHcard using hH
+  choose V hV hVcard using hV
+  refine ⟨by omega, H, V, (fun a => ⟨hH a, hHcard a⟩), (fun b => ⟨hV b, hVcard b⟩), ?_⟩
+  intro a b h hh v hv
+  have ha0 := dyadicStripStarts_fst_eq_zero a.2
+  have hb0 := dyadicStripStarts_fst_eq_zero b.2
+  obtain ⟨ha1, hatop⟩ := dyadicStripStarts_vertical_bound a.2
+  obtain ⟨hb1, hbtop⟩ := dyadicStripStarts_vertical_bound b.2
+  exact translated_strip_crossings_intersect ha0 ha1 hatop hb0 hb1 hbtop
+    ((hH a).1 h hh).1 ((hV b).1 v hv).1
+
 end Rigidity.Proofs.Section5.Kesten
