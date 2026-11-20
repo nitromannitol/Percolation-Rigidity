@@ -84,4 +84,124 @@ theorem IntegerCube.pow_le_slab_transverse_crossing {d : ℕ}
     (Q.transverseLower j) (Q.transverseUpper j) x hx point hpointB hpointFace ρ hρ
     (fun face => hprob (point face) (hpointB face))
 
+/-- Transverse crossing, together with connection to both faces in the slab
+direction, gives a crossing component of the cube. -/
+theorem IntegerCube.crossingRoot_of_transverse {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) {ω : Configuration d} {z : Vertex d}
+    (htrans : IsCrossingRoot ω Q.vertices (Q.transverseLower j) (Q.transverseUpper j) z)
+    (hj : targetConnection Q.vertices (Q.lowerFace j) z ω ∧
+      targetConnection Q.vertices (Q.upperFace j) z ω) :
+    IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+      (fun i => ↑(Q.upperFace i)) z := by
+  refine ⟨htrans.1, fun i => ?_⟩
+  by_cases hij : i = j
+  · subst i
+    exact hj
+  · simpa only [IntegerCube.transverseLower, IntegerCube.transverseUpper, if_neg hij] using
+      htrans.2 i
+
+/-- If a root connects both faces in the slab direction, failure of full
+cube crossing implies that the root does not cross the transverse faces. -/
+theorem IntegerCube.not_transverse_of_not_crossing {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) {ω : Configuration d} {z : Vertex d}
+    (hj : targetConnection Q.vertices (Q.lowerFace j) z ω ∧
+      targetConnection Q.vertices (Q.upperFace j) z ω)
+    (hfail : ¬ ∃ w, IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+      (fun i => ↑(Q.upperFace i)) w) :
+    ¬ IsCrossingRoot ω Q.vertices (Q.transverseLower j) (Q.transverseUpper j) z := by
+  intro htrans
+  exact hfail ⟨z, Q.crossingRoot_of_transverse j htrans hj⟩
+
+/-- A connection between the two faces in the slab direction, without a full
+crossing component, has geometrically small probability under a uniform slab
+two-point bound. -/
+theorem IntegerCube.measureReal_face_connection_without_crossing_le {d : ℕ}
+    (Q : IntegerCube d) (j : Fin d) (width k₀ N : ℕ) (hwidth : 0 < width)
+    (hsize : ∀ n ≤ N, (k₀ + n) * width < Q.size)
+    (A : Finset (Vertex d)) (hA : (↑A : Set (Vertex d)) ⊆ Q.slabPrefix j width k₀)
+    (hL : (↑(Q.lowerFace j) : Set (Vertex d)) ⊆ A)
+    (hR : (↑(Q.upperFace j) : Set (Vertex d)) ⊆
+      Q.vertices \ Q.slabPrefix j width (k₀ + N))
+    (p : unitInterval) (ρ : ℝ) (hρ : 0 ≤ ρ) (hρ₁ : ρ ≤ 1)
+    (hprob : ∀ n < N, ∀ x ∈ Q.slab j width (k₀ + n),
+      ∀ y ∈ Q.slab j width (k₀ + n), ρ ≤ (latticeBondLaw d p).real
+        {ω | (openIn ω (Q.slab j width (k₀ + n))).Reachable x y}) :
+    (latticeBondLaw d p).real {ω | ConnectsRegions ω Q.vertices
+      (Q.lowerFace j) (Q.upperFace j) ∧
+      ¬ ∃ z, IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+        (fun i => ↑(Q.upperFace i)) z} ≤
+      (A.card : ℝ) * (1 - (p : ℝ) * ρ ^ (2 * d)) ^ N := by
+  classical
+  let E : Vertex d → Set (Configuration d) := fun z => {ω |
+    targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z ω ∧
+    ¬ IsCrossingRoot ω Q.vertices (Q.transverseLower j) (Q.transverseUpper j) z}
+  have hcover : {ω | ConnectsRegions ω Q.vertices (Q.lowerFace j) (Q.upperFace j) ∧
+      ¬ ∃ z, IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+        (fun i => ↑(Q.upperFace i)) z} ⊆ ⋃ z ∈ A, E z := by
+    rintro ω ⟨⟨z, hzQ, hzL, w, hwQ, hwR, hzw⟩, hfail⟩
+    have hj : targetConnection Q.vertices (Q.lowerFace j) z ω ∧
+        targetConnection Q.vertices (Q.upperFace j) z ω :=
+      ⟨⟨z, hzQ, hzL, SimpleGraph.Reachable.refl z⟩, ⟨w, hwQ, hwR, hzw⟩⟩
+    exact Set.mem_iUnion₂.mpr ⟨z, hL hzL, ⟨w, hwQ, hR hwR, hzw⟩,
+      Q.not_transverse_of_not_crossing j hj hfail⟩
+  have hcross : ∀ n < N, ∀ y ∈ Q.slab j width (k₀ + n),
+      ρ ^ (2 * d) ≤ (latticeBondLaw d p).real {ω |
+        IsCrossingRoot ω (Q.slab j width (k₀ + n))
+          (Q.transverseLower j) (Q.transverseUpper j) y} := by
+    intro n hn y hy
+    exact Q.pow_le_slab_transverse_crossing j width (k₀ + n) p ρ hρ y hy
+      (hprob n hn y hy)
+  calc
+    _ ≤ (latticeBondLaw d p).real (⋃ z ∈ A, E z) :=
+      measureReal_mono hcover (measure_ne_top _ _)
+    _ ≤ ∑ z ∈ A, (latticeBondLaw d p).real (E z) :=
+      measureReal_biUnion_finset_le _ _
+    _ ≤ ∑ _z ∈ A, (1 - (p : ℝ) * ρ ^ (2 * d)) ^ N := by
+      apply Finset.sum_le_sum
+      intro z hz
+      exact Q.measureReal_escape_without_crossing_le j width k₀ N hwidth hsize
+        z (hA hz) (Q.transverseLower j) (Q.transverseUpper j) p (ρ ^ (2 * d))
+        (pow_le_one₀ hρ hρ₁) hcross
+    _ = _ := by simp only [Finset.sum_const, nsmul_eq_mul]
+
+/-- The lower face lies in a nonempty initial prefix and the upper face lies
+beyond any prefix ending inside the cube. -/
+theorem IntegerCube.faces_separated_by_prefixes {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) {width k₀ N : ℕ} (hstart : 0 < k₀ * width)
+    (hend : (k₀ + N) * width < Q.size) :
+    (↑(Q.lowerFace j) : Set (Vertex d)) ⊆ Q.slabPrefix j width k₀ ∧
+    (↑(Q.upperFace j) : Set (Vertex d)) ⊆
+      Q.vertices \ Q.slabPrefix j width (k₀ + N) := by
+  constructor
+  · intro x hx
+    obtain ⟨hxQ, hface⟩ := (Q.mem_lowerFace j x).mp hx
+    have hp : (0 : ℤ) < ((k₀ * width : ℕ) : ℤ) := by exact_mod_cast hstart
+    exact ⟨hxQ, by omega⟩
+  · intro x hx
+    obtain ⟨hxQ, hface⟩ := (Q.mem_upperFace j x).mp hx
+    have he : ((k₀ + N) * width : ℕ) < Q.size := hend
+    have he' : (((k₀ + N) * width : ℕ) : ℤ) < Q.size := by exact_mod_cast he
+    refine ⟨hxQ, ?_⟩
+    intro hp
+    have hp' := hp.2
+    omega
+
+/-- A face-crossing path fails to belong to a full cube-crossing component
+with geometric probability under uniform slab two-point bounds. -/
+theorem IntegerCube.measureReal_face_connection_without_crossing_le_of_slab {d : ℕ}
+    (Q : IntegerCube d) (j : Fin d) (width k₀ N : ℕ) (hwidth : 0 < width)
+    (hstart : 0 < k₀ * width) (hsize : ∀ n ≤ N, (k₀ + n) * width < Q.size)
+    (p : unitInterval) (ρ : ℝ) (hρ : 0 ≤ ρ) (hρ₁ : ρ ≤ 1)
+    (hprob : ∀ n < N, ∀ x ∈ Q.slab j width (k₀ + n),
+      ∀ y ∈ Q.slab j width (k₀ + n), ρ ≤ (latticeBondLaw d p).real
+        {ω | (openIn ω (Q.slab j width (k₀ + n))).Reachable x y}) :
+    (latticeBondLaw d p).real {ω | ConnectsRegions ω Q.vertices
+      (Q.lowerFace j) (Q.upperFace j) ∧
+      ¬ ∃ z, IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+        (fun i => ↑(Q.upperFace i)) z} ≤
+      ((Q.lowerFace j).card : ℝ) * (1 - (p : ℝ) * ρ ^ (2 * d)) ^ N := by
+  obtain ⟨hL, hR⟩ := Q.faces_separated_by_prefixes j hstart (hsize N le_rfl)
+  exact Q.measureReal_face_connection_without_crossing_le j width k₀ N hwidth hsize
+    (Q.lowerFace j) hL (Set.Subset.refl _) hR p ρ hρ hρ₁ hprob
+
 end Rigidity.Percolation
