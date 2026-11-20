@@ -91,11 +91,12 @@ many contacts occur with arbitrarily small probability. -/
 theorem exists_seed_eventually_few_orthantFace_contacts {d : ℕ} (p : unitInterval)
     (hp : (p : ℝ) < 1) (hθ : 0 < LatticeProb.Percolation.theta d p)
     (i : Fin d) (ε : ℝ) (hε : 0 < ε) :
-    ∃ M : ℕ, ∀ m : ℕ, ∀ᶠ n in atTop,
+    ∃ M : ℕ, 0 < M ∧ ∀ m : ℕ, ∀ᶠ n in atTop,
       (latticeBondLaw d p).real (fewSeedContacts (centeredBondCube (M + n))
         (centeredBondCubeFinset M) (centeredCubeOrthantFace (M + n) i (fun _ => true)) m) < ε := by
   have hlim := tendsto_measureReal_noInfiniteSeed_of_theta_pos p hθ
-  obtain ⟨M, hM⟩ := (hlim.eventually (eventually_lt_nhds (pow_pos hε (d * 2 ^ d)))).exists
-  exact ⟨M, fun m => eventually_measureReal_few_orthantFace_contacts_lt p hp M m i ε hε.le hM⟩
+  obtain ⟨M, hM, hMpos⟩ := ((hlim.eventually
+    (eventually_lt_nhds (pow_pos hε (d * 2 ^ d)))).and (eventually_ge_atTop 1)).exists
+  exact ⟨M, hMpos, fun m => eventually_measureReal_few_orthantFace_contacts_lt p hp M m i ε hε.le hM⟩
 
 end Rigidity.Percolation

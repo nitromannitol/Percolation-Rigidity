@@ -59,15 +59,15 @@ with arbitrarily high probability under their combined Bernoulli law. -/
 theorem exists_seed_eventually_singleFieldFaceSuccess {d : ℕ} (q r : unitInterval)
     (hq : (q : ℝ) < 1) (hθ : 0 < LatticeProb.Percolation.theta d q)
     (hr : 0 < (r : ℝ)) (i : Fin d) (η : ℝ) (hη : 0 < η) :
-    ∃ M : ℕ, ∀ᶠ n in atTop,
+    ∃ M : ℕ, 0 < M ∧ ∀ᶠ n in atTop,
       1 - η < (latticeBondLaw d (sprinkledDensity q r)).real (singleFieldSeedFaceSuccess
         (centeredBondCube (M + n)) (centeredBondCubeFinset M)
         (centeredCubeOrthantFace (M + n) i (fun _ => true)) (2 * M + 1) i (M + n)) := by
   haveI : IsProbabilityMeasure (bondPairLaw d q r) := by
     dsimp only [bondPairLaw]
     infer_instance
-  obtain ⟨M, hM⟩ := exists_seed_eventually_faceSuccess q r hq hθ hr i η hη
-  refine ⟨M, ?_⟩
+  obtain ⟨M, hMpos, hM⟩ := exists_seed_eventually_faceSuccess q r hq hθ hr i η hη
+  refine ⟨M, hMpos, ?_⟩
   filter_upwards [hM] with n hn
   have hsprinkled : Measurable (@sprinkledBondConfiguration d) := by
     apply measurable_pi_lambda
@@ -96,7 +96,7 @@ positive orthant face. -/
 theorem exists_seed_eventually_singleFieldFaceSuccess_of_supercritical {d : ℕ} [NeZero d]
     (p : unitInterval) (hp : criticalProbability d < (p : ℝ)) (i : Fin d)
     (η : ℝ) (hη : 0 < η) :
-    ∃ M : ℕ, ∀ᶠ n in atTop,
+    ∃ M : ℕ, 0 < M ∧ ∀ᶠ n in atTop,
       1 - η < (latticeBondLaw d p).real (singleFieldSeedFaceSuccess
         (centeredBondCube (M + n)) (centeredBondCubeFinset M)
         (centeredCubeOrthantFace (M + n) i (fun _ => true)) (2 * M + 1) i (M + n)) := by

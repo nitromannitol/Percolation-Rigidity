@@ -19,7 +19,7 @@ probability arbitrarily close to one on all sufficiently large cube faces. -/
 theorem exists_seed_eventually_faceSuccess {d : ℕ} (q r : unitInterval)
     (hq : (q : ℝ) < 1) (hθ : 0 < LatticeProb.Percolation.theta d q)
     (hr : 0 < (r : ℝ)) (i : Fin d) (η : ℝ) (hη : 0 < η) :
-    ∃ M : ℕ, ∀ᶠ n in atTop,
+    ∃ M : ℕ, 0 < M ∧ ∀ᶠ n in atTop,
       1 - η < (bondPairLaw d q r).real (seedReachableFaceSuccess
         (centeredBondCube (M + n)) (centeredBondCubeFinset M)
         (centeredCubeOrthantFace (M + n) i (fun _ => true)) (2 * M + 1) i (M + n)) := by
@@ -30,7 +30,7 @@ theorem exists_seed_eventually_faceSuccess {d : ℕ} (q r : unitInterval)
     have h := min_le_left (η / 3) (1 / 3)
     dsimp only [δ]
     linarith
-  obtain ⟨M, hM⟩ := exists_seed_eventually_few_orthantFace_contacts q hq hθ i δ hδ
+  obtain ⟨M, hMpos, hM⟩ := exists_seed_eventually_few_orthantFace_contacts q hq hθ i δ hδ
   let k := 2 * M + 1
   have hk : 0 < k := by dsimp [k]; omega
   let a : ℝ := (r : ℝ) ^ ((k ^ d + 1) ^ 2)
@@ -39,7 +39,7 @@ theorem exists_seed_eventually_faceSuccess {d : ℕ} (q r : unitInterval)
   have hlim := tendsto_pow_atTop_nhds_zero_of_lt_one (sub_nonneg.mpr ha1)
     (show 1 - a < 1 by linarith)
   obtain ⟨m, hm⟩ := (hlim.eventually (eventually_lt_nhds hδ)).exists
-  refine ⟨M, ?_⟩
+  refine ⟨M, hMpos, ?_⟩
   filter_upwards [hM (m * k ^ d)] with n hn
   have hface : ∀ x ∈ centeredCubeOrthantFace (M + n) i (fun _ => true),
       x i = ((M + n : ℕ) : ℤ) := by
