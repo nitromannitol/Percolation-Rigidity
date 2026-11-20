@@ -129,4 +129,39 @@ theorem condExp_indicator_lower_of_bounded_base_seed_selection {d : ℕ} {ι : T
   condExp_indicator_lower_of_base_seed_selection q r U A hA hG hC hcover hsubset
     ((r : ℝ) ^ N) (fun i => latticeBondLaw_real_fullyOpenRegion_lower r (U i) (hU i) N (hN i))
 
+/-- For a rectangle and two of its vertices chosen from the base field, a
+uniform bound on its internal bonds gives a conditional lower bound for their
+connection in the sprinkled field. -/
+theorem condExp_indicator_lower_of_base_rectangle_selection {d : ℕ} {ι : Type*}
+    [Countable ι] (q r : unitInterval) (lo hi x y : ι → Vertex d)
+    (hU : ∀ i, (latticeRectangle (lo i) (hi i)).Finite) (N : ℕ)
+    (hN : ∀ i, (finite_localBonds (hU i)).toFinset.card ≤ N)
+    (hx : ∀ i, x i ∈ latticeRectangle (lo i) (hi i))
+    (hy : ∀ i, y i ∈ latticeRectangle (lo i) (hi i))
+    (A : ι → Set (Bond d → Bool × Bool)) {G : Set (Bond d → Bool × Bool)}
+    (hA : ∀ i, MeasurableSet[baseBondSigma d] (A i))
+    (hG : MeasurableSet G) (hcover : G ⊆ ⋃ i, A i) :
+    ∀ᵐ ω ∂(bondPairLaw d q r).restrict G,
+      (r : ℝ) ^ N ≤ (bondPairLaw d q r)[(⋃ i, A i ∩ {ω | (openIn (sprinkledBondConfiguration ω)
+          (latticeRectangle (lo i) (hi i))).Reachable (x i) (y i)}).indicator
+          (fun _ => (1 : ℝ)) | baseBondSigma d] ω := by
+  have hbase : Measurable (@baseBondConfiguration d) := by
+    apply measurable_pi_lambda
+    intro e
+    exact measurable_fst.comp (measurable_pi_apply e)
+  have hsprinkle : Measurable (@sprinkledBondConfiguration d) := by
+    change Measurable (fun ω : Bond d → Bool × Bool => fun e => (ω e).1 || (ω e).2)
+    fun_prop
+  have hC : MeasurableSet (⋃ i, A i ∩ {ω | (openIn (sprinkledBondConfiguration ω)
+      (latticeRectangle (lo i) (hi i))).Reachable (x i) (y i)}) := by
+    apply MeasurableSet.iUnion
+    intro i
+    exact (hbase.comap_le _ (hA i)).inter
+      (hsprinkle (measurableSet_openIn_reachable _ _ _))
+  apply condExp_indicator_lower_of_bounded_base_seed_selection q r
+    (fun i => latticeRectangle (lo i) (hi i)) hU N hN A hA hG hC hcover
+  intro i ω hω
+  refine Set.mem_iUnion.mpr ⟨i, hω.1, ?_⟩
+  exact reachable_sprinkled_rectangle_of_added_seed (lo i) (hi i) hω.2 (hx i) (hy i)
+
 end Rigidity.Percolation
