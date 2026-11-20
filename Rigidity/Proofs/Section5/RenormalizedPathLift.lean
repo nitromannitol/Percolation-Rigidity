@@ -131,6 +131,33 @@ theorem exists_channel_of_renorm_open {ω : Configuration 2} {R : ℕ} {z : Plan
   obtain ⟨j, hj, y, hy⟩ := exists_unhit_channel hgood.2.1 ∅ J hJ hw hcard
   exact ⟨j, hJ j hj, y, Or.inl hy⟩
 
+/-- An index of a channel in an open renormalized block. -/
+noncomputable def renormChannelIndex {ω : Configuration 2} {R : ℕ} {z : PlanarCarrier}
+    (hR : 3210 ≤ R) (hz : renormField R ω z = true) : ℕ :=
+  Classical.choose (exists_channel_of_renorm_open hR hz)
+
+/-- A distinguished vertex on a channel of an open renormalized block. -/
+noncomputable def renormChannelAnchor {ω : Configuration 2} {R : ℕ} {z : PlanarCarrier}
+    (hR : 3210 ≤ R) (hz : renormField R ω z = true) : Vertex 2 :=
+  Classical.choose (Classical.choose_spec (exists_channel_of_renorm_open hR hz)).2
+
+theorem renormChannelIndex_lt {ω : Configuration 2} {R : ℕ} {z : PlanarCarrier}
+    (hR : 3210 ≤ R) (hz : renormField R ω z = true) :
+    renormChannelIndex hR hz < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10) :=
+  (Classical.choose_spec (exists_channel_of_renorm_open hR hz)).1
+
+theorem renormChannelAnchor_isChannel {ω : Configuration 2} {R : ℕ} {z : PlanarCarrier}
+    (hR : 3210 ≤ R) (hz : renormField R ω z = true) :
+    AnyChannel ω ∅ (renormCentre R z) (11 * R / 10) (renormChannelIndex hR hz)
+      (renormChannelAnchor hR hz) :=
+  Classical.choose_spec (Classical.choose_spec (exists_channel_of_renorm_open hR hz)).2
+
+/-- The distinguished channel vertex lies in its enlarged block. -/
+theorem renormChannelAnchor_mem_cube {ω : Configuration 2} {R : ℕ} {z : PlanarCarrier}
+    (hR : 3210 ≤ R) (hz : renormField R ω z = true) :
+    renormChannelAnchor hR hz ∈ cubeAt (renormCentre R z) (11 * R / 10) :=
+  (renormChannelAnchor_isChannel hR hz).mem_cube
+
 /-- Any given channel at the start of an open renormalized walk connects inside the visited
 blocks to a channel at its endpoint. -/
 theorem renorm_walk_lifts_channel {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
@@ -257,6 +284,18 @@ theorem renorm_walk_lifts_between_channels_short {ω : Configuration 2} {R : ℕ
       P.length < (w.length + 1) * (2 * (11 * R / 10) + 1) ^ 2 := by
   simpa only [SimpleGraph.Walk.length_support] using
     short_path_of_reachIn_region w.support (renorm_walk_lifts_between_channels hR w hv hj hj' hx hy)
+
+/-- A renormalized site walk joins the distinguished vertices of its endpoint blocks by a
+self-avoiding path contained in the visited blocks. -/
+theorem renorm_walk_lifts_anchors {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
+    {u v : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
+    (hu : renormField R ω u = true) (hv : renormField R ω v = true) :
+    ∃ P : (openGraph ω).Walk (renormChannelAnchor hR hu) (renormChannelAnchor hR hv),
+      P.IsPath ∧ (∀ z ∈ P.support, z ∈ renormPathRegion R w.support) ∧
+      P.length < (w.length + 1) * (2 * (11 * R / 10) + 1) ^ 2 :=
+  renorm_walk_lifts_between_channels_short hR w hv (renormChannelIndex_lt hR hu)
+    (renormChannelIndex_lt hR hv) (renormChannelAnchor_isChannel hR hu)
+    (renormChannelAnchor_isChannel hR hv)
 
 /-- The lifted lattice path can be chosen self-avoiding, with length at most the number of
 visited sites times the volume of one enlarged block. -/
