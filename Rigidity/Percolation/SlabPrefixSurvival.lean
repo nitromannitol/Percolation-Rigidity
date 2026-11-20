@@ -127,4 +127,44 @@ theorem IntegerCube.measureReal_slabPrefixSurvival_le {d : ℕ} (Q : IntegerCube
       _ ≤ (1 - (p : ℝ) * ((p : ℝ) * δ)) ^ (n + 1) := by
         simpa only [pow_succ, mul_comm] using mul_le_mul_of_nonneg_left ih' hq
 
+/-- Two globally disconnected components that both leave a prefix survive at
+its boundary. -/
+theorem IntegerCube.slabPrefixSurvival_of_two_escapes {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) {width k : ℕ} (hwidth : 0 < width) (hsize : k * width < Q.size)
+    {ω : Configuration d} {z z' : Vertex d} (hz : z ∈ Q.slabPrefix j width k)
+    (hz' : z' ∈ Q.slabPrefix j width k)
+    (hescape : targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width k) z ω)
+    (hescape' : targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width k) z' ω)
+    (hsep : ¬ (openIn ω Q.vertices).Reachable z z') :
+    ω ∈ Q.slabPrefixSurvival j width k z z' := by
+  obtain ⟨w, _, hw, hzw⟩ := hescape
+  obtain ⟨w', _, hw', hz'w'⟩ := hescape'
+  refine ⟨Q.slabBoundaryReachable_of_reachable_outside_prefix j hwidth hsize hz hw.2 hzw,
+    Q.slabBoundaryReachable_of_reachable_outside_prefix j hwidth hsize hz' hw'.2 hz'w', ?_⟩
+  intro hconn
+  exact hsep (reachable_openIn_mono (fun _ hx => hx.1) hconn)
+
+/-- The probability that two disconnected components both leave a distant
+prefix has the same geometric upper bound as slab survival. -/
+theorem IntegerCube.measureReal_two_escapes_le {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) (width k₀ N : ℕ) (hwidth : 0 < width)
+    (hsize : ∀ n ≤ N, (k₀ + n) * width < Q.size)
+    (z z' : Vertex d) (hz : z ∈ Q.slabPrefix j width k₀)
+    (hz' : z' ∈ Q.slabPrefix j width k₀) (p : unitInterval) (δ : ℝ) (hδ : δ ≤ 1)
+    (hprob : ∀ n < N, ∀ y ∈ Q.slab j width (k₀ + n),
+      ∀ y' ∈ Q.slab j width (k₀ + n), δ ≤ (latticeBondLaw d p).real
+        {ω | (openIn ω (Q.slab j width (k₀ + n))).Reachable y y'}) :
+    (latticeBondLaw d p).real {ω |
+      targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z ω ∧
+      targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z' ω ∧
+      ¬ (openIn ω Q.vertices).Reachable z z'} ≤
+      (1 - (p : ℝ) * ((p : ℝ) * δ)) ^ N := by
+  apply (measureReal_mono ?_ (measure_ne_top _ _)).trans
+    (Q.measureReal_slabPrefixSurvival_le j width k₀ N hwidth
+      (fun n hn => hsize n (Nat.le_of_lt hn)) z z' hz hz' p δ hδ hprob N le_rfl)
+  intro ω hω
+  exact Q.slabPrefixSurvival_of_two_escapes j hwidth (hsize N le_rfl)
+    (Q.slabPrefix_mono j width (Nat.le_add_right k₀ N) hz)
+    (Q.slabPrefix_mono j width (Nat.le_add_right k₀ N) hz') hω.1 hω.2.1 hω.2.2
+
 end Rigidity.Percolation
