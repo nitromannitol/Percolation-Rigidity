@@ -142,4 +142,96 @@ theorem IntegerCube.exists_prefixes_spanned_by_path {d : ℕ} (Q : IntegerCube d
       Q.exists_prefixes_between_vertices j width N hwidth (hγ.mem_region b) (hγ.mem_region a) hgap
     exact ⟨j, k₀, hkpos, hksize, ⟨b, hb⟩, ⟨a, ha⟩⟩
 
+/-- Uniform slab two-point bounds control the probability that a path of
+large coordinate diameter is disconnected from a cube-crossing component. -/
+theorem IntegerCube.measureReal_disconnected_large_path_le_of_twoPoint_slabs {d : ℕ}
+    (Q : IntegerCube d) (width N : ℕ) (hwidth : 0 < width) (p : unitInterval)
+    (ρ : ℝ) (hρ : ρ ≤ 1)
+    (hprob : ∀ j : Fin d, ∀ k : ℕ, k * width < Q.size →
+      ∀ x ∈ Q.slab j width k, ∀ y ∈ Q.slab j width k,
+        ρ ≤ (latticeBondLaw d p).real {ω | (openIn ω (Q.slab j width k)).Reachable x y}) :
+    (latticeBondLaw d p).real {ω | ∃ root,
+      IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+        (fun i => ↑(Q.upperFace i)) root ∧
+      ∃ n γ, IsSelectedOpenPath ω Q.vertices
+        (pathDiameterAtLeast (((N + 1) * width : ℕ) : ℤ)) n γ ∧
+        ¬ (openIn ω Q.vertices).Reachable root (γ 0)} ≤
+      ((d * Q.size : ℕ) : ℝ) * ((Q.vertices.card : ℝ) ^ 2 *
+        (1 - (p : ℝ) * ((p : ℝ) * ρ)) ^ N) := by
+  classical
+  let large := pathDiameterAtLeast (d := d) (((N + 1) * width : ℕ) : ℤ)
+  let E : Fin d × Fin Q.size → Set (Configuration d) := fun jk => {ω |
+    0 < jk.2.val * width ∧ (jk.2.val + N) * width < Q.size ∧
+    ∃ root, IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+      (fun i => ↑(Q.upperFace i)) root ∧
+      ∃ n γ, IsSelectedOpenPath ω Q.vertices large n γ ∧
+        (∃ a, γ a ∈ Q.slabPrefix jk.1 width jk.2.val) ∧
+        (∃ b, γ b ∉ Q.slabPrefix jk.1 width (jk.2.val + N)) ∧
+        ¬ (openIn ω Q.vertices).Reachable root (γ 0)}
+  have hq : 0 ≤ 1 - (p : ℝ) * ((p : ℝ) * ρ) := by
+    have hfirst : (p : ℝ) * ρ ≤ 1 := by
+      calc
+        (p : ℝ) * ρ ≤ (p : ℝ) * 1 := mul_le_mul_of_nonneg_left hρ p.property.1
+        _ ≤ 1 := by simpa using p.property.2
+    have hsecond : (p : ℝ) * ((p : ℝ) * ρ) ≤ 1 := by
+      calc
+        (p : ℝ) * ((p : ℝ) * ρ) ≤ (p : ℝ) * 1 :=
+          mul_le_mul_of_nonneg_left hfirst p.property.1
+        _ ≤ 1 := by simpa using p.property.2
+    exact sub_nonneg.mpr hsecond
+  have hbound : ∀ jk, (latticeBondLaw d p).real (E jk) ≤
+      (Q.vertices.card : ℝ) ^ 2 * (1 - (p : ℝ) * ((p : ℝ) * ρ)) ^ N := by
+    intro ⟨j, k⟩
+    by_cases hk : 0 < k.val * width ∧ (k.val + N) * width < Q.size
+    · have hsize : ∀ n ≤ N, (k.val + n) * width < Q.size := by
+        intro n hn
+        have hmul := Nat.mul_le_mul_right width (Nat.add_le_add_left hn k.val)
+        exact lt_of_le_of_lt hmul hk.2
+      have hlocal : ∀ n < N, ∀ x ∈ Q.slab j width (k.val + n),
+          ∀ y ∈ Q.slab j width (k.val + n), ρ ≤ (latticeBondLaw d p).real
+            {ω | (openIn ω (Q.slab j width (k.val + n))).Reachable x y} := by
+        intro n hn
+        exact hprob j (k.val + n) (hsize n (Nat.le_of_lt hn))
+      have hcard : ((Q.vertices.filter fun x => x ∈ Q.slabPrefix j width k.val).card : ℝ) ≤
+          Q.vertices.card := by
+        exact_mod_cast Finset.card_filter_le _ _
+      have hevent := Q.measureReal_disconnected_path_spanning_prefixes_le j width k.val N
+        hwidth hk.1 hsize large p ρ hρ hlocal
+      calc
+        (latticeBondLaw d p).real (E (j, k)) ≤
+            ((Q.vertices.filter fun x => x ∈ Q.slabPrefix j width k.val).card : ℝ) ^ 2 *
+              (1 - (p : ℝ) * ((p : ℝ) * ρ)) ^ N := by
+          apply (measureReal_mono ?_ (measure_ne_top _ _)).trans hevent
+          intro ω hω
+          exact hω.2.2
+        _ ≤ _ := mul_le_mul_of_nonneg_right
+          (pow_le_pow_left₀ (Nat.cast_nonneg _) hcard 2) (pow_nonneg hq N)
+    · have hempty : E (j, k) = ∅ := by
+        ext ω
+        simp only [E, Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+        intro h
+        exact hk ⟨h.1, h.2.1⟩
+      rw [hempty, measureReal_empty]
+      exact mul_nonneg (sq_nonneg _) (pow_nonneg hq N)
+  have hcover : {ω | ∃ root,
+      IsCrossingRoot ω Q.vertices (fun i => ↑(Q.lowerFace i))
+        (fun i => ↑(Q.upperFace i)) root ∧
+      ∃ n γ, IsSelectedOpenPath ω Q.vertices large n γ ∧
+        ¬ (openIn ω Q.vertices).Reachable root (γ 0)} ⊆ ⋃ jk, E jk := by
+    rintro ω ⟨root, hroot, n, γ, hγ, hsep⟩
+    obtain ⟨j, k₀, hkpos, hksize, ha, hb⟩ :=
+      Q.exists_prefixes_spanned_by_path width N hwidth hγ
+    have hksize' : k₀ < Q.size := by nlinarith
+    exact Set.mem_iUnion.mpr ⟨(j, ⟨k₀, hksize'⟩), hkpos, hksize,
+      root, hroot, n, γ, hγ, ha, hb, hsep⟩
+  calc
+    _ ≤ (latticeBondLaw d p).real (⋃ jk, E jk) :=
+      measureReal_mono hcover (measure_ne_top _ _)
+    _ ≤ ∑ jk, (latticeBondLaw d p).real (E jk) := measureReal_iUnion_fintype_le E
+    _ ≤ ∑ _jk : Fin d × Fin Q.size,
+        ((Q.vertices.card : ℝ) ^ 2 * (1 - (p : ℝ) * ((p : ℝ) * ρ)) ^ N) :=
+      Finset.sum_le_sum fun jk _ => hbound jk
+    _ = _ := by simp only [Finset.sum_const, Finset.card_univ, Fintype.card_prod,
+      Fintype.card_fin, nsmul_eq_mul, Nat.cast_mul]
+
 end Rigidity.Percolation
