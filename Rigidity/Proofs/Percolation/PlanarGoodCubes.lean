@@ -64,9 +64,9 @@ theorem TriadicCube.mem_planarSquares {Q : TriadicCube 2} {R : IntegerCube 2} :
 def TriadicCube.planarMeshed (Q : TriadicCube 2) (ω : Configuration 2) : Prop :=
   ∀ R ∈ Q.planarSquares, PlanarMesh ω R (3 ^ Q.scale / 100)
 
-/-- The random family of meshed triadic cubes. -/
+/-- The random family of meshed triadic cubes of scale at least `7`. -/
 def planarMeshedFamily (ω : Configuration 2) : Set (TriadicCube 2) :=
-  {Q | Q.planarMeshed ω}
+  {Q | 7 ≤ Q.scale ∧ Q.planarMeshed ω}
 
 /-- Connectivity inside a fixed region is a measurable event, in the form of open walks. -/
 theorem measurableSet_reachIn (S : Set (Vertex 2)) (a b : Vertex 2) :
@@ -100,13 +100,16 @@ theorem measurableSet_planarMesh (R : IntegerCube 2) (w : ℕ) :
 /-- Meshedness of a fixed triadic cube is a measurable event. -/
 theorem measurableSet_mem_planarMeshedFamily (Q : TriadicCube 2) :
     MeasurableSet {ω : Configuration 2 | Q ∈ planarMeshedFamily ω} := by
-  change MeasurableSet {ω | ∀ R ∈ Q.planarSquares, PlanarMesh ω R (3 ^ Q.scale / 100)}
-  have heq : {ω : Configuration 2 | ∀ R ∈ Q.planarSquares, PlanarMesh ω R (3 ^ Q.scale / 100)} =
-      ⋂ R ∈ Q.planarSquares, {ω | PlanarMesh ω R (3 ^ Q.scale / 100)} := by
+  change MeasurableSet {ω | 7 ≤ Q.scale ∧ ∀ R ∈ Q.planarSquares,
+    PlanarMesh ω R (3 ^ Q.scale / 100)}
+  have heq : {ω : Configuration 2 | 7 ≤ Q.scale ∧ ∀ R ∈ Q.planarSquares,
+      PlanarMesh ω R (3 ^ Q.scale / 100)} =
+      {_ω | 7 ≤ Q.scale} ∩ ⋂ R ∈ Q.planarSquares, {ω | PlanarMesh ω R (3 ^ Q.scale / 100)} := by
     ext ω
-    simp only [Set.mem_setOf_eq, Set.mem_iInter]
+    simp only [Set.mem_setOf_eq, Set.mem_inter_iff, Set.mem_iInter]
   rw [heq]
-  exact Finset.measurableSet_biInter _ fun R _ => measurableSet_planarMesh R _
+  exact (MeasurableSet.const _).inter
+    (Finset.measurableSet_biInter _ fun R _ => measurableSet_planarMesh R _)
 
 /-- A polynomial factor `(s + 1)^k` costs half of an exponential rate. -/
 theorem add_one_pow_mul_exp_neg_le (k : ℕ) {a s : ℝ} (ha : 0 < a) (hs : 0 ≤ s) :
@@ -218,8 +221,9 @@ theorem measure_not_planarMeshed_le {p : unitInterval} (hpc : criticalProbabilit
   have hsub : {ω | Q ∉ planarMeshedFamily ω} ⊆
       ⋃ R ∈ Q.planarSquares, {ω | ¬ PlanarMesh ω R w} := by
     intro ω hω
-    simp only [Set.mem_setOf_eq, planarMeshedFamily, TriadicCube.planarMeshed, not_forall] at hω
-    obtain ⟨R, hR, hfail⟩ := hω
+    simp only [Set.mem_setOf_eq, planarMeshedFamily, TriadicCube.planarMeshed, not_and,
+      not_forall] at hω
+    obtain ⟨R, hR, hfail⟩ := hω hQ
     exact Set.mem_biUnion hR hfail
   refine (measure_mono hsub).trans ((measure_biUnion_le_card_mul _ _ _ hterm).trans
     (ENNReal.ofReal_le_ofReal ?_))
