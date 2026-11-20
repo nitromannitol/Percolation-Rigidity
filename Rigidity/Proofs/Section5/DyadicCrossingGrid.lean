@@ -19,6 +19,56 @@ theorem dyadicStripStarts_fst_eq_zero {j : ℕ} {a : PlanarCarrier} (ha : a ∈ 
   obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 ha
   rfl
 
+/-- The lower-left corner of the dyadic square centered at the origin. -/
+def dyadicCenteredOffset (j : ℕ) : PlanarCarrier :=
+  (-((2 ^ j / 2 : ℕ) : ℤ), -((2 ^ j / 2 : ℕ) : ℤ))
+
+/-- Strip starting points in the dyadic square centered at the origin. -/
+def dyadicCenteredStarts (j : ℕ) : Finset PlanarCarrier :=
+  (dyadicStripStarts j).image fun a => dyadicCenteredOffset j + a
+
+/-- The centered dyadic strip family has at most `2^j` members. -/
+theorem card_dyadicCenteredStarts_le (j : ℕ) : (dyadicCenteredStarts j).card ≤ 2 ^ j :=
+  Finset.card_image_le.trans (card_dyadicStripStarts_le j)
+
+/-- Field translations compose in the same order as their displacements. -/
+theorem translatePlanarField_translate (a b : PlanarCarrier) (η : PlanarCarrier → Bool) :
+    translatePlanarField a (translatePlanarField b η) = translatePlanarField (b + a) η := by
+  funext z
+  simp only [translatePlanarField, add_assoc]
+
+/-- Coordinate exchange commutes with translation by a diagonal displacement. -/
+theorem swapPlanarField_translate_diagonal (b : PlanarCarrier) (hb : b.1 = b.2)
+    (η : PlanarCarrier → Bool) :
+    swapPlanarField (translatePlanarField b η) = translatePlanarField b (swapPlanarField η) := by
+  funext z
+  change η (b + Prod.swap z) = η (Prod.swap (b + z))
+  congr 1
+  apply Prod.ext <;> simp only [Prod.fst_add, Prod.snd_add, Prod.fst_swap, Prod.snd_swap] <;> omega
+
+/-- At large block scales, every strip in each sufficiently large centered dyadic square has
+many disjoint crossings in both orientations, almost surely. -/
+theorem ae_eventually_centered_dyadic_strips {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ᶠ j : ℕ in atTop,
+      (∀ a ∈ dyadicCenteredStarts j, translatePlanarField a (renormField R ω) ∉
+        disjointCrossingFailure (2 ^ j) (j + 1) ((j + 1) / 2)) ∧
+      ∀ a ∈ dyadicCenteredStarts j, translatePlanarField a (swapPlanarField (renormField R ω)) ∉
+        disjointCrossingFailure (2 ^ j) (j + 1) ((j + 1) / 2) := by
+  filter_upwards [ae_eventually_planar_renormalized_dyadic_strip_crossings hpc] with R hR
+  apply hR dyadicCenteredStarts (fun j => 2 ^ j) (fun j => j + 1) (fun j => (j + 1) / 2)
+  · intro j
+    positivity
+  · intro j
+    omega
+  · intro j
+    omega
+  · exact card_dyadicCenteredStarts_le
+  · intro j
+    exact le_rfl
+  · intro j
+    omega
+
 /-- Almost surely, at every large dyadic scale each horizontal strip and each vertical strip
 have disjoint open crossings, and every horizontal crossing meets every vertical crossing. -/
 theorem ae_eventually_dyadic_crossing_grid {p : unitInterval}
