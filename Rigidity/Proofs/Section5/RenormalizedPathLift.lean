@@ -14,6 +14,94 @@ namespace Rigidity.Proofs.Section5.Kesten
 def renormPathRegion (R : ℕ) (l : List PlanarCarrier) : Set (Vertex 2) :=
   ⋃ z ∈ l, cubeAt (renormCentre R z) (11 * R / 10)
 
+/-- Enlarged blocks that meet at one vertex have centers at star distance at most one. -/
+theorem renorm_sites_close_of_mem_blocks {R : ℕ} {z w : PlanarCarrier} {x : Vertex 2}
+    (hz : x ∈ cubeAt (renormCentre R z) (11 * R / 10))
+    (hw : x ∈ cubeAt (renormCentre R w) (11 * R / 10)) :
+    |z.1 - w.1| ≤ 1 ∧ |z.2 - w.2| ≤ 1 := by
+  have hr : ((11 * R / 10 : ℕ) : ℤ) ≤ 2 * (R : ℤ) := by
+    exact_mod_cast (show 11 * R / 10 ≤ 2 * R by omega)
+  have hR : (0 : ℤ) ≤ R := by positivity
+  have hcoord {a b t : ℤ} (ha : |t - (2 * (R : ℤ) + 1) * a| ≤ (11 * R / 10 : ℕ))
+      (hb : |t - (2 * (R : ℤ) + 1) * b| ≤ (11 * R / 10 : ℕ)) : |a - b| ≤ 1 := by
+    have ha' := abs_le.1 ha
+    have hb' := abs_le.1 hb
+    apply abs_le.2
+    constructor
+    · by_contra h
+      have hmul := mul_nonneg (show (0 : ℤ) ≤ 2 * R + 1 by omega)
+        (show (0 : ℤ) ≤ b - a - 2 by omega)
+      nlinarith
+    · by_contra h
+      have hmul := mul_nonneg (show (0 : ℤ) ≤ 2 * R + 1 by omega)
+        (show (0 : ℤ) ≤ a - b - 2 by omega)
+      nlinarith
+  constructor
+  · apply hcoord (t := x 0)
+    · simpa only [cubeAt, renormCentre, Matrix.cons_val_zero] using hz 0
+    · simpa only [cubeAt, renormCentre, Matrix.cons_val_zero] using hw 0
+  · apply hcoord (t := x 1)
+    · simpa only [cubeAt, renormCentre, Matrix.cons_val_one, Matrix.cons_val_zero] using hz 1
+    · simpa only [cubeAt, renormCentre, Matrix.cons_val_one, Matrix.cons_val_zero] using hw 1
+
+/-- At most nine enlarged blocks contain any fixed lattice vertex. -/
+theorem card_renorm_blocks_containing_le_nine {R : ℕ} {x : Vertex 2}
+    (V : Finset PlanarCarrier)
+    (hV : ∀ z ∈ V, x ∈ cubeAt (renormCentre R z) (11 * R / 10)) : V.card ≤ 9 := by
+  classical
+  by_cases hne : V.Nonempty
+  · obtain ⟨z, hz⟩ := hne
+    let B := (Finset.Icc (z.1 - 1) (z.1 + 1)).product (Finset.Icc (z.2 - 1) (z.2 + 1))
+    have hsub : V ⊆ B := by
+      intro w hw
+      have h := renorm_sites_close_of_mem_blocks (hV w hw) (hV z hz)
+      have h₁ := abs_le.1 h.1
+      have h₂ := abs_le.1 h.2
+      apply Finset.mem_product.2
+      constructor <;> apply Finset.mem_Icc.2 <;> omega
+    calc
+      V.card ≤ B.card := Finset.card_le_card hsub
+      _ = 9 := by
+        dsimp only [B]
+        rw [Finset.product_eq_sprod, Finset.card_product, Int.card_Icc, Int.card_Icc]
+        have h₁ : z.1 + 1 + 1 - (z.1 - 1) = 3 := by omega
+        have h₂ : z.2 + 1 + 1 - (z.2 - 1) = 3 := by omega
+        rw [h₁, h₂]
+        decide
+  · have hVempty : V = ∅ := Finset.not_nonempty_iff_eq_empty.1 hne
+    simp [hVempty]
+
+/-- At most nine pairwise site-disjoint path regions contain a given lattice vertex. -/
+theorem card_disjoint_path_regions_meeting_le_nine {R : ℕ} {x : Vertex 2}
+    (L : Finset (List PlanarCarrier))
+    (hdisj : ∀ l ∈ L, ∀ l' ∈ L, l ≠ l' → ∀ z ∈ l, z ∉ l')
+    (hx : ∀ l ∈ L, x ∈ renormPathRegion R l) : L.card ≤ 9 := by
+  classical
+  have hex : ∀ l ∈ L, ∃ z, z ∈ l ∧ x ∈ cubeAt (renormCentre R z) (11 * R / 10) := by
+    intro l hl
+    obtain ⟨z, hz, hxz⟩ : ∃ z, ∃ _ : z ∈ l,
+        x ∈ cubeAt (renormCentre R z) (11 * R / 10) := by
+      simpa only [renormPathRegion, Set.mem_iUnion] using hx l hl
+    exact ⟨z, hz, hxz⟩
+  let f : List PlanarCarrier → PlanarCarrier := fun l =>
+    if hl : l ∈ L then Classical.choose (hex l hl) else 0
+  have hf (l : List PlanarCarrier) (hl : l ∈ L) :
+      f l ∈ l ∧ x ∈ cubeAt (renormCentre R (f l)) (11 * R / 10) := by
+    dsimp only [f]
+    rw [dif_pos hl]
+    exact Classical.choose_spec (hex l hl)
+  have hinj : Set.InjOn f (↑L : Set (List PlanarCarrier)) := by
+    intro l hl l' hl' heq
+    by_contra hne
+    apply hdisj l hl l' hl' hne (f l) (hf l hl).1
+    rw [heq]
+    exact (hf l' hl').1
+  have hb : (L.image f).card ≤ 9 := card_renorm_blocks_containing_le_nine _ (by
+    intro z hz
+    obtain ⟨l, hl, rfl⟩ := Finset.mem_image.1 hz
+    exact (hf l hl).2)
+  rwa [Finset.card_image_of_injOn hinj] at hb
+
 /-- A channel start lies in its cube. -/
 theorem AnyChannel.mem_cube {ω : Configuration 2} {X : Finset (Vertex 2)}
     {c y : Vertex 2} {r j : ℕ} (h : AnyChannel ω X c r j y) : y ∈ cubeAt c r := by
