@@ -74,8 +74,7 @@ theorem planar_renormalized_disjoint_crossings {p : unitInterval}
               (Finset.finite_toSet (Percolation.Literature.rectangle m n)))
             (↑(Percolation.Literature.leftSide m n))
             (↑(Percolation.Literature.rightSide m n)) L ∧ L.card = k} ≤
-      ENNReal.ofReal (4 * (((Percolation.Literature.topSide m n).image
-        (fun x => (x 0, x 1))).card : ℝ) * (1 / 8 : ℝ) ^ n) := by
+      ENNReal.ofReal (4 * (m + 1 : ℝ) * (1 / 8 : ℝ) ^ n) := by
   filter_upwards [planar_renormalized_closed_marginal hpc] with R hsmall m n k hm hn hk
   haveI : IsProbabilityMeasure ((latticeBondLaw 2 p).map (renormField R)) :=
     Measure.isProbabilityMeasure_map (renormFieldMeasurableStep R).aemeasurable
