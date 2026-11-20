@@ -108,4 +108,77 @@ theorem finite_cluster_exceeds_square_tail (p : unitInterval)
     omega
   exact (measure_mono_ae hsub).trans (hcross (R - 1))
 
+/-- A supercritical planar finite cluster has a stretched-exponential size tail. -/
+theorem planar_finite_cluster_size_tail (p : unitInterval)
+    (hp : criticalProbability 2 < (p : ℝ)) :
+    ∃ C c : ℝ, 0 < C ∧ 0 < c ∧ ∀ N : ℕ,
+      latticeBondLaw 2 p {ω |
+        ((openGraph ω).connectedComponentMk 0).supp.Finite ∧
+        N ≤ ((openGraph ω).connectedComponentMk 0).supp.ncard} ≤
+      ENNReal.ofReal (C * Real.exp (-(c * Real.sqrt N))) := by
+  obtain ⟨C, c, hC, hc, htail⟩ := finite_cluster_exceeds_square_tail p hp
+  refine ⟨(C + 1) * Real.exp (2 * c), c / 8, by positivity, by positivity, fun N => ?_⟩
+  have hroot : Real.sqrt N ≤ (Nat.sqrt N : ℝ) + 1 := by
+    apply Real.sqrt_le_iff.mpr
+    constructor
+    · positivity
+    · have hnat : N < (Nat.sqrt N + 1) * (Nat.sqrt N + 1) :=
+        Nat.sqrt_lt.mp (Nat.lt_succ_self _)
+      have hreal : (N : ℝ) ≤ ((Nat.sqrt N : ℝ) + 1) * ((Nat.sqrt N : ℝ) + 1) := by
+        exact_mod_cast hnat.le
+      nlinarith
+  by_cases hN : 64 ≤ N
+  · let R := Nat.sqrt N / 8
+    have hk : 8 ≤ Nat.sqrt N := Nat.le_sqrt.mpr (by omega)
+    have hR : 1 ≤ R := by dsimp [R]; omega
+    have hdiv := Nat.div_add_mod (Nat.sqrt N) 8
+    have hmod := Nat.mod_lt (Nat.sqrt N) (by omega : 0 < 8)
+    have hlo : 8 * R ≤ Nat.sqrt N := by dsimp [R]; omega
+    have hhi : Nat.sqrt N < 8 * R + 8 := by dsimp [R]; omega
+    have hvol : (4 * R + 1) ^ 2 < N := by
+      have hlt : 4 * R + 1 < Nat.sqrt N := by omega
+      have hsq := Nat.sqrt_le N
+      nlinarith
+    have hsqrt : Real.sqrt N ≤ 8 * (R : ℝ) + 8 := by
+      have hcst : (Nat.sqrt N : ℝ) ≤ 8 * (R : ℝ) + 7 := by exact_mod_cast (show Nat.sqrt N ≤ 8 * R + 7 by omega)
+      linarith
+    have he : Real.exp (-(c * (R - 1 : ℕ))) ≤
+        Real.exp (2 * c) * Real.exp (-(c / 8 * Real.sqrt N)) := by
+      rw [← Real.exp_add]
+      apply Real.exp_le_exp.mpr
+      rw [Nat.cast_sub hR]
+      push_cast
+      nlinarith
+    calc
+      _ ≤ latticeBondLaw 2 p {ω |
+          ((openGraph ω).connectedComponentMk 0).supp.Finite ∧
+          (4 * R + 1) ^ 2 < ((openGraph ω).connectedComponentMk 0).supp.ncard} := by
+        apply measure_mono
+        rintro ω ⟨hfin, hsize⟩
+        exact ⟨hfin, hvol.trans_le hsize⟩
+      _ ≤ ENNReal.ofReal (C * Real.exp (-(c * (R - 1 : ℕ)))) := htail R hR
+      _ ≤ ENNReal.ofReal ((C + 1) * Real.exp (2 * c) *
+          Real.exp (-(c / 8 * Real.sqrt N))) := by
+        apply ENNReal.ofReal_le_ofReal
+        have hexp : 0 ≤ Real.exp (2 * c) * Real.exp (-(c / 8 * Real.sqrt N)) := by positivity
+        nlinarith
+  · have hsqrt : Real.sqrt N ≤ 8 := by
+      apply Real.sqrt_le_iff.mpr
+      constructor
+      · norm_num
+      · have : (N : ℝ) ≤ 64 := by exact_mod_cast (show N ≤ 64 by omega)
+        nlinarith
+    have he : 1 ≤ Real.exp (2 * c) * Real.exp (-(c / 8 * Real.sqrt N)) := by
+      rw [← Real.exp_add, ← Real.exp_zero]
+      apply Real.exp_le_exp.mpr
+      nlinarith
+    calc
+      _ ≤ (latticeBondLaw 2 p) Set.univ := measure_mono (Set.subset_univ _)
+      _ = 1 := measure_univ
+      _ = ENNReal.ofReal 1 := ENNReal.ofReal_one.symm
+      _ ≤ ENNReal.ofReal ((C + 1) * Real.exp (2 * c) *
+          Real.exp (-(c / 8 * Real.sqrt N))) := by
+        apply ENNReal.ofReal_le_ofReal
+        nlinarith [Real.exp_pos (2 * c), Real.exp_pos (-(c / 8 * Real.sqrt N))]
+
 end Rigidity.Percolation
