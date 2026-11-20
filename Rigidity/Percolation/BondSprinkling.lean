@@ -142,4 +142,30 @@ theorem bondPairLaw_map_sprinkled (d : ℕ) (q r : unitInterval) :
   rw [Measure.infinitePi_map_pi _ (fun _ => hm)]
   simp only [map_or_bernoulli, latticeBondLaw]
 
+/-- On every finite family of bonds, the base and added layer assignments
+have the product of their separate probabilities. -/
+theorem bondPairLaw_finite_layer_assignments (d : ℕ) (q r : unitInterval)
+    (s : Finset (Bond d)) (a b : Configuration d) :
+    bondPairLaw d q r {ω | ∀ e ∈ s, (ω e).1 = a e ∧ (ω e).2 = b e} =
+      latticeBondLaw d q {ω | ∀ e ∈ s, ω e = a e} *
+        latticeBondLaw d r {ω | ∀ e ∈ s, ω e = b e} := by
+  have hpair : {ω : Bond d → Bool × Bool | ∀ e ∈ s, (ω e).1 = a e ∧ (ω e).2 = b e} =
+      (↑s : Set (Bond d)).pi (fun e => ({a e} : Set Bool) ×ˢ ({b e} : Set Bool)) := by
+    ext ω
+    simp only [Set.mem_setOf_eq, Set.mem_pi, Finset.mem_coe, Set.mem_prod, Set.mem_singleton_iff]
+  have hbase : {ω : Configuration d | ∀ e ∈ s, ω e = a e} =
+      (↑s : Set (Bond d)).pi (fun e => ({a e} : Set Bool)) := by
+    ext ω
+    simp only [Set.mem_setOf_eq, Set.mem_pi, Finset.mem_coe, Set.mem_singleton_iff]
+  have hadd : {ω : Configuration d | ∀ e ∈ s, ω e = b e} =
+      (↑s : Set (Bond d)).pi (fun e => ({b e} : Set Bool)) := by
+    ext ω
+    simp only [Set.mem_setOf_eq, Set.mem_pi, Finset.mem_coe, Set.mem_singleton_iff]
+  rw [hpair, hbase, hadd, bondPairLaw, latticeBondLaw, latticeBondLaw]
+  rw [Measure.infinitePi_pi, Measure.infinitePi_pi, Measure.infinitePi_pi]
+  · simp only [Measure.prod_prod, Finset.prod_mul_distrib]
+  · exact fun e _ => measurableSet_singleton (b e)
+  · exact fun e _ => measurableSet_singleton (a e)
+  · exact fun e _ => (measurableSet_singleton (a e)).prod (measurableSet_singleton (b e))
+
 end Rigidity.Percolation
