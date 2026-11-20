@@ -187,4 +187,54 @@ theorem planar_density_influence_spatial_tail (p : unitInterval)
       congr 1
       ring
 
+/-- A density influence has a joint stretched-exponential bound in its magnitude and the
+coordinate separation of the bond from the counting cube. -/
+theorem planar_density_influence_joint_tail (p : unitInterval)
+    (hp : criticalProbability 2 < (p : ℝ)) :
+    ∃ C c : ℝ, 0 < C ∧ 0 < c ∧ ∀ (m : ℕ) (k : Vertex 2) (e : Bond 2)
+      (i : Fin 2) (n t : ℕ), 1 ≤ n → 1 ≤ t →
+      (∀ x ∈ triadicCube 2 m k, ∀ y ∈ e.val, (n : ℝ) ≤ |(x i : ℝ) - (y i : ℝ)|) →
+      ((latticeBondLaw 2 p).prod (latticeBondLaw 2 p))
+        {q | (4 * t : ℝ) ≤
+          |(infiniteClusterCount (triadicCube 2 m k) q.1 : ℝ) -
+            (infiniteClusterCount (triadicCube 2 m k) (resampleBond q.1 q.2 e) : ℝ)|} ≤
+        ENNReal.ofReal (C * Real.exp (-(c * (Real.sqrt n + Real.sqrt t)))) := by
+  obtain ⟨C₁, c₁, hC₁, hc₁, hsize⟩ := planar_density_single_influence_tail p hp
+  obtain ⟨C₂, c₂, hC₂, hc₂, hspace⟩ := planar_density_influence_spatial_tail p hp
+  let C := max C₁ C₂
+  let c := min c₁ c₂ / 2
+  have hC : 0 < C := lt_of_lt_of_le hC₁ (le_max_left _ _)
+  have hc : 0 < c := by dsimp [c]; positivity
+  have hc₁' : 2 * c ≤ c₁ := by dsimp [c]; linarith [min_le_left c₁ c₂]
+  have hc₂' : 2 * c ≤ c₂ := by dsimp [c]; linarith [min_le_right c₁ c₂]
+  refine ⟨C, c, hC, hc, fun m k e i n t hn ht hsep => ?_⟩
+  have hsubset : {q : Configuration 2 × Configuration 2 | (4 * t : ℝ) ≤
+      |(infiniteClusterCount (triadicCube 2 m k) q.1 : ℝ) -
+        (infiniteClusterCount (triadicCube 2 m k) (resampleBond q.1 q.2 e) : ℝ)|} ⊆
+      {q | infiniteClusterCount (triadicCube 2 m k) q.1 ≠
+        infiniteClusterCount (triadicCube 2 m k) (resampleBond q.1 q.2 e)} := by
+    intro q hq heq
+    have ht' : (1 : ℝ) ≤ t := by exact_mod_cast ht
+    simp only [Set.mem_setOf_eq, heq, sub_self, abs_zero] at hq
+    linarith
+  by_cases hnt : n ≤ t
+  · have hsqrt : Real.sqrt n ≤ Real.sqrt t := Real.sqrt_le_sqrt (by exact_mod_cast hnt)
+    have he : Real.exp (-(c₁ * Real.sqrt t)) ≤
+        Real.exp (-(c * (Real.sqrt n + Real.sqrt t))) := by
+      apply Real.exp_le_exp.mpr
+      nlinarith [mul_nonneg (sub_nonneg.mpr hc₁') (Real.sqrt_nonneg t),
+        mul_nonneg hc.le (sub_nonneg.mpr hsqrt)]
+    refine (hsize m k e t ht).trans (ENNReal.ofReal_le_ofReal ?_)
+    exact mul_le_mul (le_max_left _ _) he (Real.exp_pos _).le hC.le
+  · have htn : t ≤ n := by omega
+    have hsqrt : Real.sqrt t ≤ Real.sqrt n := Real.sqrt_le_sqrt (by exact_mod_cast htn)
+    have he : Real.exp (-(c₂ * Real.sqrt n)) ≤
+        Real.exp (-(c * (Real.sqrt n + Real.sqrt t))) := by
+      apply Real.exp_le_exp.mpr
+      nlinarith [mul_nonneg (sub_nonneg.mpr hc₂') (Real.sqrt_nonneg n),
+        mul_nonneg hc.le (sub_nonneg.mpr hsqrt)]
+    refine ((measure_mono hsubset).trans (hspace m k e i n hn hsep)).trans
+      (ENNReal.ofReal_le_ofReal ?_)
+    exact mul_le_mul (le_max_right _ _) he (Real.exp_pos _).le hC.le
+
 end Rigidity.Proofs.S2
