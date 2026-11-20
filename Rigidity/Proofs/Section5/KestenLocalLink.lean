@@ -6,7 +6,7 @@ import Rigidity.Proofs.Section5.KestenChannelCut
 Kesten channels in adjacent very-good blocks connect inside the union of the two blocks.
 -/
 
-open LatticeProb.Percolation Rigidity.Section5
+open LatticeProb.Percolation Rigidity.Section5 Rigidity.Steps.Section5
 
 namespace Rigidity.Proofs.Section5.Kesten
 
@@ -100,5 +100,50 @@ theorem linked_of_neighbours_in_union {ω : Configuration 2} {R : ℕ}
     exact reachIn_of_channels (hH.of_cube_subset Set.subset_union_left)
       (hV.of_cube_subset Set.subset_union_right) (by linarith) (by linarith)
       (by linarith) (by linarith)
+
+/-- Adjacent open renormalized sites have locally joined channels. -/
+theorem renorm_neighbours_linked_in_union {ω : Configuration 2} {R : ℕ}
+    {z w : PlanarCarrier} (hR : 3210 ≤ R)
+    (hzw : (siteOpenGraph (renormField R ω)).Adj z w) :
+    ∃ j < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10), ∃ y,
+      AnyChannel ω ∅ (renormCentre R z) (11 * R / 10) j y ∧
+      ∃ j' < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10), ∃ y',
+        AnyChannel ω ∅ (renormCentre R w) (11 * R / 10) j' y' ∧
+        ReachIn ω (cubeAt (renormCentre R z) (11 * R / 10) ∪
+          cubeAt (renormCentre R w) (11 * R / 10)) y y' := by
+  have hz : IsVeryGood ω (renormCentre R z) (11 * R / 10) := by
+    simpa only [renormField, decide_eq_true_eq] using hzw.2.1
+  have hw : IsVeryGood ω (renormCentre R w) (11 * R / 10) := by
+    simpa only [renormField, decide_eq_true_eq] using hzw.2.2
+  have hstep : (w.1 = z.1 + 1 ∧ w.2 = z.2) ∨ (z.1 = w.1 + 1 ∧ w.2 = z.2) ∨
+      (w.2 = z.2 + 1 ∧ w.1 = z.1) ∨ (z.2 = w.2 + 1 ∧ w.1 = z.1) := by
+    have h := hzw.1
+    rcases abs_cases (z.1 - w.1) with ⟨h1, _⟩ | ⟨h1, _⟩ <;>
+      rcases abs_cases (z.2 - w.2) with ⟨h2, _⟩ | ⟨h2, _⟩ <;> omega
+  have hforward : ∀ {z w : PlanarCarrier},
+      (w.1 = z.1 + 1 ∧ w.2 = z.2) ∨ (w.2 = z.2 + 1 ∧ w.1 = z.1) →
+      (renormCentre R w 0 = renormCentre R z 0 + (2 * R + 1) ∧
+        renormCentre R w 1 = renormCentre R z 1) ∨
+      (renormCentre R w 1 = renormCentre R z 1 + (2 * R + 1) ∧
+        renormCentre R w 0 = renormCentre R z 0) := by
+    intro z w h
+    rcases h with ⟨h1, h2⟩ | ⟨h1, h2⟩
+    · left
+      simp only [renormCentre, Matrix.cons_val_zero, Matrix.cons_val_one]
+      constructor <;> nlinarith
+    · right
+      simp only [renormCentre, Matrix.cons_val_zero, Matrix.cons_val_one]
+      constructor <;> nlinarith
+  rcases hstep with h | h | h | h
+  · exact linked_of_neighbours_in_union hR hz hw (hforward (Or.inl h))
+  · have hback := hforward (z := w) (w := z) (Or.inl ⟨h.1, h.2.symm⟩)
+    obtain ⟨j, hj, y, hy, j', hj', y', hy', hlink⟩ :=
+      linked_of_neighbours_in_union hR hw hz hback
+    exact ⟨j', hj', y', hy', j, hj, y, hy, by simpa only [Set.union_comm] using hlink.symm⟩
+  · exact linked_of_neighbours_in_union hR hz hw (hforward (Or.inr h))
+  · have hback := hforward (z := w) (w := z) (Or.inr ⟨h.1, h.2.symm⟩)
+    obtain ⟨j, hj, y, hy, j', hj', y', hy', hlink⟩ :=
+      linked_of_neighbours_in_union hR hw hz hback
+    exact ⟨j', hj', y', hy', j, hj, y, hy, by simpa only [Set.union_comm] using hlink.symm⟩
 
 end Rigidity.Proofs.Section5.Kesten
