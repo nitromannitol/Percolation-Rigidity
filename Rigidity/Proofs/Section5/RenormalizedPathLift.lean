@@ -177,6 +177,26 @@ theorem renorm_walk_lifts_channel {ω : Configuration 2} {R : ℕ} (hR : 3210 �
     exact ⟨j', hj', y', hy', (hfirst.mono hu).trans
       ((hlink.mono (Set.union_subset hu hu')).trans (hlast.mono hw))⟩
 
+/-- A renormalized walk joins any prescribed channels of its endpoint blocks inside the
+union of its visited blocks. -/
+theorem renorm_walk_lifts_between_channels {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
+    {u v : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
+    (hv : renormField R ω v = true) {j j' : ℕ} {x y : Vertex 2}
+    (hj : j < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10))
+    (hj' : j' < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10))
+    (hx : AnyChannel ω ∅ (renormCentre R u) (11 * R / 10) j x)
+    (hy : AnyChannel ω ∅ (renormCentre R v) (11 * R / 10) j' y) :
+    ReachIn ω (renormPathRegion R w.support) x y := by
+  obtain ⟨k, hk, z, hz, hxz⟩ := renorm_walk_lifts_channel hR w j hj x hx
+  have hv' : IsVeryGood ω (renormCentre R v) (11 * R / 10) := by
+    simpa only [renormField, decide_eq_true_eq] using hv
+  have hzy := channels_reachable_in_cube hR hv' hk hj' hz hy
+  have hsub : cubeAt (renormCentre R v) (11 * R / 10) ⊆ renormPathRegion R w.support := by
+    intro a ha
+    simp only [renormPathRegion, Set.mem_iUnion]
+    exact ⟨v, w.end_mem_support, ha⟩
+  exact hxz.trans (hzy.mono hsub)
+
 /-- An open renormalized walk lifts to an open lattice walk through its enlarged blocks. -/
 theorem renorm_walk_lifts {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
     {u v : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
