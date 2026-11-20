@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Assembly.PlanarProvedDensity
 import Rigidity.Proofs.Section5.PlanarGoodEvent
+import Rigidity.Proofs.Section5.PlanarGreenUniqueness
 import Rigidity.Proofs.Section5.PlanarMinimalScale
 import Rigidity.Proofs.Section5.PlanarGreenAsymptotics
 import Rigidity.Steps.Section5.PlanarLargeGradient
@@ -117,5 +118,18 @@ theorem fast_decay (p : unitInterval)
       (Proofs.Section5.greenFamilyExists_two hE hpc hp1)
       (Proofs.Section5.sublinearLiouville_two p hpc hp1 hAD) Proofs.Section5.potentialLaplacian)
     Proofs.Section5.annulusStep
+
+
+/-- Theorem 1.3 from planar inputs and Green-column existence. -/
+theorem fast_decay_of_green_exists (p : unitInterval)
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hCorr : Rigidity.External.SupercriticalBondCorrectorInputTwo)
+    (hCQ : Rigidity.External.CorrectorQuantitativeInputTwo)
+    (hAD : Rigidity.External.ArmstrongDarioOrderZeroTwo)
+    (hAD1 : Rigidity.External.ArmstrongDarioOrderOneOriginTwo)
+    (hE : Rigidity.External.SupercriticalBondGreenColumnExistsTwo)
+    (hGQ : Rigidity.External.SupercriticalBondGreenQuantitativeTwo) : FastDecayStmt p :=
+  fast_decay p hpc hp1 hCorr hCQ hAD hAD1
+    (Proofs.Section5.greenColumnExistenceTwo_of_exists hAD hE) hGQ
 
 end Rigidity.Assembly.WithPlanarInputs
