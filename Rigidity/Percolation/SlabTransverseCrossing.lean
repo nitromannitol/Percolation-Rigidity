@@ -204,4 +204,94 @@ theorem IntegerCube.measureReal_face_connection_without_crossing_le_of_slab {d :
   exact Q.measureReal_face_connection_without_crossing_le j width k₀ N hwidth hsize
     (Q.lowerFace j) hL (Set.Subset.refl _) hR p ρ hρ hρ₁ hprob
 
+/-- Every slab whose first coordinate slice lies in the cube is nonempty. -/
+theorem IntegerCube.exists_mem_slab {d : ℕ} (Q : IntegerCube d) (j : Fin d)
+    {width k : ℕ} (hwidth : 0 < width) (hsize : k * width < Q.size) :
+    ∃ x, x ∈ Q.slab j width k := by
+  classical
+  let x : Vertex d := Function.update Q.corner j (Q.corner j + ((k * width : ℕ) : ℤ))
+  have hsize' : ((k * width : ℕ) : ℤ) < (Q.size : ℤ) := by exact_mod_cast hsize
+  have hwidth' : (0 : ℤ) < (width : ℤ) := by exact_mod_cast hwidth
+  have hxj : x j = Q.corner j + ((k * width : ℕ) : ℤ) := by
+    simp only [x, Function.update_self]
+  have hxQ : x ∈ Q.vertices := by
+    rw [Q.mem_vertices]
+    intro i
+    by_cases hij : i = j
+    · subst i
+      rw [hxj]
+      have hk : (0 : ℤ) ≤ ((k * width : ℕ) : ℤ) := by exact_mod_cast Nat.zero_le _
+      omega
+    · have hi : x i = Q.corner i := Function.update_of_ne hij _ _
+      rw [hi]
+      constructor
+      · exact le_rfl
+      · have hk : (0 : ℤ) ≤ ((k * width : ℕ) : ℤ) := by exact_mod_cast Nat.zero_le _
+        omega
+  refine ⟨x, hxQ, by rw [hxj], ?_⟩
+  rw [hxj]
+  push_cast
+  nlinarith
+
+/-- A uniform two-point bound in each perpendicular slab controls failure of
+a cube face connection. -/
+theorem IntegerCube.measureReal_no_face_connection_le_of_twoPoint {d : ℕ}
+    (Q : IntegerCube d) (j i : Fin d) (hij : i ≠ j) (width : ℕ)
+    (hwidth : 0 < width) (p : unitInterval) (ρ : ℝ)
+    (hprob : ∀ k : Fin (Q.size / width), ∀ x ∈ Q.slab j width k,
+      ∀ y ∈ Q.slab j width k, ρ ≤ (latticeBondLaw d p).real
+        {ω | (openIn ω (Q.slab j width k)).Reachable x y}) :
+    (latticeBondLaw d p).real {ω | ¬ ConnectsRegions ω Q.vertices
+      (Q.lowerFace i) (Q.upperFace i)} ≤ (1 - ρ) ^ (Q.size / width) := by
+  apply Q.measureReal_no_face_connection_le j i width p ρ
+  intro k
+  have hk : (k.val + 1) * width ≤ Q.size := by
+    apply (Nat.le_div_iff_mul_le hwidth).mp
+    exact k.isLt
+  have hksize : k.val * width < Q.size := by nlinarith
+  obtain ⟨x, hx⟩ := Q.exists_mem_slab j hwidth hksize
+  obtain ⟨⟨a, ha, hal⟩, ⟨b, hb, hbu⟩⟩ := Q.exists_slab_face_points j i hij width k hx
+  apply (hprob k a ha b hb).trans
+  apply measureReal_mono _ (measure_ne_top _ _)
+  intro ω hω
+  exact ⟨a, ha, hal, b, hb, hbu, hω⟩
+
+/-- Uniform two-point bounds in perpendicular slab families give an explicit
+upper bound for failure of a full crossing component in the cube. -/
+theorem IntegerCube.measureReal_no_crossing_le_of_twoPoint_slabs {d : ℕ}
+    (Q : IntegerCube d) (j i : Fin d) (hij : i ≠ j)
+    (width width' k₀ N : ℕ) (hwidth : 0 < width) (hwidth' : 0 < width')
+    (hstart : 0 < k₀ * width) (hsize : ∀ n ≤ N, (k₀ + n) * width < Q.size)
+    (p : unitInterval) (ρ : ℝ) (hρ : 0 ≤ ρ) (hρ₁ : ρ ≤ 1)
+    (hparallel : ∀ n < N, ∀ x ∈ Q.slab j width (k₀ + n),
+      ∀ y ∈ Q.slab j width (k₀ + n), ρ ≤ (latticeBondLaw d p).real
+        {ω | (openIn ω (Q.slab j width (k₀ + n))).Reachable x y})
+    (hperp : ∀ k : Fin (Q.size / width'), ∀ x ∈ Q.slab i width' k,
+      ∀ y ∈ Q.slab i width' k, ρ ≤ (latticeBondLaw d p).real
+        {ω | (openIn ω (Q.slab i width' k)).Reachable x y}) :
+    (latticeBondLaw d p).real {ω | ¬ ∃ z,
+      IsCrossingRoot ω Q.vertices (fun t => ↑(Q.lowerFace t))
+        (fun t => ↑(Q.upperFace t)) z} ≤
+      (1 - ρ) ^ (Q.size / width') +
+        ((Q.lowerFace j).card : ℝ) * (1 - (p : ℝ) * ρ ^ (2 * d)) ^ N := by
+  let F : Set (Configuration d) := {ω | ¬ ConnectsRegions ω Q.vertices
+    (Q.lowerFace j) (Q.upperFace j)}
+  let G : Set (Configuration d) := {ω | ConnectsRegions ω Q.vertices
+    (Q.lowerFace j) (Q.upperFace j) ∧
+      ¬ ∃ z, IsCrossingRoot ω Q.vertices (fun t => ↑(Q.lowerFace t))
+        (fun t => ↑(Q.upperFace t)) z}
+  have hcover : {ω | ¬ ∃ z, IsCrossingRoot ω Q.vertices (fun t => ↑(Q.lowerFace t))
+      (fun t => ↑(Q.upperFace t)) z} ⊆ F ∪ G := by
+    intro ω hω
+    by_cases h : ConnectsRegions ω Q.vertices (Q.lowerFace j) (Q.upperFace j)
+    · exact Or.inr ⟨h, hω⟩
+    · exact Or.inl h
+  calc
+    _ ≤ (latticeBondLaw d p).real (F ∪ G) := measureReal_mono hcover (measure_ne_top _ _)
+    _ ≤ (latticeBondLaw d p).real F + (latticeBondLaw d p).real G := measureReal_union_le _ _
+    _ ≤ _ := add_le_add
+      (Q.measureReal_no_face_connection_le_of_twoPoint i j (Ne.symm hij) width' hwidth' p ρ hperp)
+      (Q.measureReal_face_connection_without_crossing_le_of_slab j width k₀ N hwidth
+        hstart hsize p ρ hρ hρ₁ hparallel)
+
 end Rigidity.Percolation
