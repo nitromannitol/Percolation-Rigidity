@@ -12,6 +12,17 @@ open LatticeProb.Percolation Rigidity.Steps.Section5 Rigidity.Section5 Percolati
 
 namespace Rigidity.Proofs.Section5.Kesten
 
+/-- The coordinate identification maps planar open-site edges to lattice-represented edges. -/
+def siteOpenPlanarHom (η : PlanarCarrier → Bool) : siteOpenGraph η →g planarOpenSiteGraph η where
+  toFun := toSite2
+  map_rel' {z w} h := by
+    refine ⟨?_, h.2⟩
+    rw [zdGraph_two_adj_iff]
+    simp only [toSite2, Matrix.cons_val_zero, Matrix.cons_val_one]
+    have hdist := h.1
+    rcases abs_cases (z.1 - w.1) with ⟨h1, _⟩ | ⟨h1, _⟩ <;>
+      rcases abs_cases (z.2 - w.2) with ⟨h2, _⟩ | ⟨h2, _⟩ <;> omega
+
 /-- Translating the coordinates of a translated field gives a site graph homomorphism. -/
 def translateOpenSiteHom (a : PlanarCarrier) (η : PlanarCarrier → Bool) :
     siteOpenGraph (translatePlanarField a η) →g siteOpenGraph η where

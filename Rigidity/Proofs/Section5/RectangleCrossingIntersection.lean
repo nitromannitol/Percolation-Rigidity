@@ -48,6 +48,23 @@ theorem linkWalk_last_mem {V : Type*} {E : Finset (Sym2 V)} {A B : Set V}
   rw [List.getLast?_eq_some_getLast hl.ne_nil, Option.mem_def, Option.some.injEq] at ha
   exact ha ▸ haB
 
+/-- A link walk maps to a link walk when its edges and endpoint sets are preserved. -/
+theorem linkWalk_map {V W : Type*} {E : Finset (Sym2 V)} {F : Finset (Sym2 W)}
+    {A B : Set V} {A' B' : Set W} {l : List V} (f : V → W)
+    (hl : Menger.IsLinkWalk E A B l)
+    (hE : ∀ a b, s(a, b) ∈ E → s(f a, f b) ∈ F)
+    (hA : ∀ a ∈ A, f a ∈ A') (hB : ∀ b ∈ B, f b ∈ B') :
+    Menger.IsLinkWalk F A' B' (l.map f) := by
+  refine ⟨(List.isChain_map f).2 (hl.1.imp hE), ?_, ?_⟩
+  · obtain ⟨a, ha, haA⟩ := hl.2.1
+    refine ⟨f a, ?_, hA a haA⟩
+    rw [Option.mem_def] at ha ⊢
+    simp only [List.head?_map, ha, Option.map_some]
+  · obtain ⟨b, hb, hbB⟩ := hl.2.2
+    refine ⟨f b, ?_, hB b hbB⟩
+    rw [Option.mem_def] at hb ⊢
+    simp only [List.getLast?_map, hb, Option.map_some]
+
 /-- Horizontal and vertical site link walks inside one rectangle meet. -/
 theorem rectangle_link_crossings_intersect {η : PlanarCarrier → Bool} {m n : ℕ}
     {H V : List (LatticeModels.Site 2)}
