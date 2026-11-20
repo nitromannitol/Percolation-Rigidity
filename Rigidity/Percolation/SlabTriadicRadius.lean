@@ -216,4 +216,60 @@ theorem eventually_measure_no_crossingComponent_le_exp_of_twoPoint_slabs {d : �
   · rw [← ENNReal.ofReal_toReal (measure_ne_top (latticeBondLaw d p) _)]
     exact ENNReal.ofReal_le_ofReal hreal
 
+/-- Connecting every path in a larger selection also connects every path in a
+smaller selection. -/
+theorem HasCrossingComponentConnectingPaths.mono_selection {d : ℕ}
+    {ω : Configuration d} {B : Set (Vertex d)} {lower upper : Fin d → Set (Vertex d)}
+    {large small : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop}
+    (h : HasCrossingComponentConnectingPaths ω B lower upper large)
+    (hselect : ∀ n γ, small n γ → large n γ) :
+    HasCrossingComponentConnectingPaths ω B lower upper small := by
+  obtain ⟨root, hroot, hpaths⟩ := h
+  exact ⟨root, hroot, fun n γ hγ => hpaths n γ (hselect n γ hγ)⟩
+
+/-- Slab two-point bounds give simultaneous exponential control of cube
+crossing and coalescence of paths above a prescribed coordinate diameter. -/
+theorem eventually_crossing_and_diameter_coalescence_le_of_twoPoint_slabs {d : ℕ}
+    (hd : 0 < d) (j i : Fin d) (hij : i ≠ j) (width K : ℕ) (hwidth : 0 < width)
+    (p : unitInterval) (ρ c : ℝ) (hρ : 0 ≤ ρ) (hρ₁ : ρ ≤ 1) (hc : 0 < c)
+    (hcρ : c ≤ ρ) (hcroot : c ≤ (p : ℝ) * ρ ^ (2 * d))
+    (hctwo : c ≤ (p : ℝ) * ((p : ℝ) * ρ)) :
+    ∀ᶠ t : ℕ in atTop, ∀ (Q : IntegerCube d) (r : ℤ), 1 ≤ Q.size →
+      8 * t < 10 * d * Q.size → Q.size ≤ K * (8 * t) → 2 * (t : ℤ) ≤ r →
+      (∀ a : Fin d, ∀ k : ℕ, (k + 1) * width ≤ Q.size →
+        ∀ x ∈ Q.slab a width k, ∀ y ∈ Q.slab a width k,
+          ρ ≤ (latticeBondLaw d p).real {ω | (openIn ω (Q.slab a width k)).Reachable x y}) →
+      (latticeBondLaw d p) {ω | ¬ HasCrossingComponent ω Q.vertices
+          (fun a => ↑(Q.lowerFace a)) (fun a => ↑(Q.upperFace a)) ∨
+        ¬ LargePathsCoalesce ω Q.vertices (pathDiameterAtLeast r)} ≤
+        ENNReal.ofReal (Real.exp (-(((c / (2 * ((10 * d * width : ℕ) : ℝ))) / 2) *
+          ((8 * t : ℕ) : ℝ)))) := by
+  have hscale : Tendsto (fun t : ℕ => 8 * t) atTop atTop := by
+    apply tendsto_atTop_mono (fun t => ?_) tendsto_id
+    change t ≤ 8 * t
+    omega
+  have hmain := eventually_no_crossing_connecting_radius_le_exp hd j i hij width K hwidth
+    p ρ c hρ hρ₁ hc hcρ hcroot hctwo
+  filter_upwards [hscale.eventually hmain, eventually_ge_atTop 1] with t ht htpos
+  intro Q r hQ hfit hcomp hr hprob
+  have hreal := ht Q hQ hfit hcomp hprob
+  apply (measure_mono ?_).trans
+    (show (latticeBondLaw d p) {ω | ¬ HasCrossingComponentConnectingPaths ω Q.vertices
+      (fun a => ↑(Q.lowerFace a)) (fun a => ↑(Q.upperFace a))
+      (fun n γ => ∀ z : Vertex d, ∃ b : Fin (n + 1),
+        ((8 * t : ℕ) : ℤ) < 10 * ∑ k, |γ b k - z k|)} ≤ _ from ?_)
+  · intro ω hbad hgood
+    have hdiam := hgood.of_l1_radius t (by omega)
+    have hdiam' : HasCrossingComponentConnectingPaths ω Q.vertices
+        (fun a => ↑(Q.lowerFace a)) (fun a => ↑(Q.upperFace a))
+        (pathDiameterAtLeast r) := by
+      apply hdiam.mono_selection
+      intro n γ hγ
+      obtain ⟨a, b, k, hk⟩ := hγ
+      exact ⟨a, b, k, hr.trans hk⟩
+    obtain ⟨hcross, hcoal⟩ := hdiam'.crossing_and_coalescence
+    exact hbad.elim (fun h => h hcross) (fun h => h hcoal)
+  · rw [← ENNReal.ofReal_toReal (measure_ne_top (latticeBondLaw d p) _)]
+    exact ENNReal.ofReal_le_ofReal hreal
+
 end Rigidity.Percolation
