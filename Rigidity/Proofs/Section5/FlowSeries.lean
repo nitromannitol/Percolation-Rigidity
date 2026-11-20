@@ -90,7 +90,7 @@ theorem isFlow_average_unit_divergence {ι : Type*} (s : Finset ι) (hs : s.None
     exact mul_div_cancel_left₀ _ hs0
 
 /-- The energy of an averaged flow is bounded by the squared average absolute edge load. -/
-theorem flowEnergyOn_average_le {ι : Type*} (s : Finset ι) (θ : ι → V → V → ℝ)
+theorem flowEnergyOn_average_le {ι : Type*} (s : Finset ι) (hs : s.Nonempty) (θ : ι → V → V → ℝ)
     (S : Finset V) :
     flowEnergyOn G (unitCond G) S (fun x y => (∑ i ∈ s, θ i x y) / s.card) ≤
       ∑ x ∈ S, ∑ y ∈ G.neighborFinset x, ((∑ i ∈ s, |θ i x y|) / s.card) ^ 2 := by
@@ -100,7 +100,8 @@ theorem flowEnergyOn_average_le {ι : Type*} (s : Finset ι) (θ : ι → V → 
   apply Finset.sum_le_sum
   intro y hy
   have hadj : G.Adj x y := (SimpleGraph.mem_neighborFinset _ _ _).mp hy
-  have hcard : (0 : ℝ) ≤ s.card := Nat.cast_nonneg _
+  have hcardpos : (0 : ℝ) < s.card := by exact_mod_cast hs.card_pos
+  have hcard : (0 : ℝ) ≤ s.card := hcardpos.le
   have habs : |(∑ i ∈ s, θ i x y) / s.card| ≤ (∑ i ∈ s, |θ i x y|) / s.card := by
     rw [abs_div, abs_of_nonneg hcard]
     exact div_le_div_of_nonneg_right (Finset.abs_sum_le_sum_abs _ _) hcard
