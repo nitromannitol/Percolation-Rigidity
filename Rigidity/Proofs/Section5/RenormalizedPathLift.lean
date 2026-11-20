@@ -208,19 +208,16 @@ theorem renorm_walk_lifts {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
   obtain ⟨j', hj', y, hy, hxy⟩ := renorm_walk_lifts_channel hR w j hj x hx
   exact ⟨x, hx.mem_cube, y, hy.mem_cube, hxy⟩
 
-/-- The lifted lattice path can be chosen self-avoiding, with length at most the number of
-visited sites times the volume of one enlarged block. -/
-theorem renorm_walk_lifts_short_path {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
-    {u v : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
-    (hu : renormField R ω u = true) :
-    ∃ x ∈ cubeAt (renormCentre R u) (11 * R / 10),
-      ∃ y ∈ cubeAt (renormCentre R v) (11 * R / 10),
-        ∃ P : (openGraph ω).Walk x y, P.IsPath ∧
-          (∀ z ∈ P.support, z ∈ renormPathRegion R w.support) ∧
-          P.length < (w.length + 1) * (2 * (11 * R / 10) + 1) ^ 2 := by
+/-- Any open connection inside a finite union of enlarged blocks admits a self-avoiding
+representative whose length is bounded by the sum of the block volumes. -/
+theorem short_path_of_reachIn_region {ω : Configuration 2} {R : ℕ} {x y : Vertex 2}
+    (l : List PlanarCarrier) (h : ReachIn ω (renormPathRegion R l) x y) :
+    ∃ P : (openGraph ω).Walk x y, P.IsPath ∧
+      (∀ z ∈ P.support, z ∈ renormPathRegion R l) ∧
+      P.length < l.length * (2 * (11 * R / 10) + 1) ^ 2 := by
   classical
-  obtain ⟨x, hx, y, hy, P, hP⟩ := renorm_walk_lifts hR w hu
-  let V := w.support.toFinset.biUnion fun z =>
+  obtain ⟨P, hP⟩ := h
+  let V := l.toFinset.biUnion fun z =>
     Rigidity.Proofs.S3.cubeFinset (renormCentre R z) (11 * R / 10)
   have hsub : P.bypass.support.toFinset ⊆ V := by
     intro z hz
@@ -232,18 +229,47 @@ theorem renorm_walk_lifts_short_path {ω : Configuration 2} {R : ℕ} (hR : 3210
     refine ⟨a, List.mem_toFinset.2 ha, ?_⟩
     apply Rigidity.Proofs.S3.mem_cubeFinset.2
     exact hza
-  have hcard : V.card ≤ w.support.length * (2 * (11 * R / 10) + 1) ^ 2 := by
+  have hcard : V.card ≤ l.length * (2 * (11 * R / 10) + 1) ^ 2 := by
     calc
-      V.card ≤ w.support.toFinset.card * (2 * (11 * R / 10) + 1) ^ 2 :=
+      V.card ≤ l.toFinset.card * (2 * (11 * R / 10) + 1) ^ 2 :=
         Finset.card_biUnion_le_card_mul _ _ _ fun z _ => by
           rw [Rigidity.Proofs.S3.card_cubeFinset]
-      _ ≤ w.support.length * (2 * (11 * R / 10) + 1) ^ 2 :=
+      _ ≤ l.length * (2 * (11 * R / 10) + 1) ^ 2 :=
         Nat.mul_le_mul_right _ (List.toFinset_card_le _)
   have hlen := (Finset.card_le_card hsub).trans hcard
   rw [List.toFinset_card_of_nodup P.bypass_isPath.support_nodup,
-    SimpleGraph.Walk.length_support, SimpleGraph.Walk.length_support] at hlen
-  refine ⟨x, hx, y, hy, P.bypass, P.bypass_isPath, ?_, by omega⟩
+    SimpleGraph.Walk.length_support] at hlen
+  refine ⟨P.bypass, P.bypass_isPath, ?_, by omega⟩
   intro z hz
   exact hP z (P.support_bypass_subset_support hz)
+
+/-- Any prescribed endpoint channels of an open site walk are joined by a self-avoiding
+lattice path of length at most the number of visited sites times the block volume. -/
+theorem renorm_walk_lifts_between_channels_short {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
+    {u v : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
+    (hv : renormField R ω v = true) {j j' : ℕ} {x y : Vertex 2}
+    (hj : j < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10))
+    (hj' : j' < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10))
+    (hx : AnyChannel ω ∅ (renormCentre R u) (11 * R / 10) j x)
+    (hy : AnyChannel ω ∅ (renormCentre R v) (11 * R / 10) j' y) :
+    ∃ P : (openGraph ω).Walk x y, P.IsPath ∧
+      (∀ z ∈ P.support, z ∈ renormPathRegion R w.support) ∧
+      P.length < (w.length + 1) * (2 * (11 * R / 10) + 1) ^ 2 := by
+  simpa only [SimpleGraph.Walk.length_support] using
+    short_path_of_reachIn_region w.support (renorm_walk_lifts_between_channels hR w hv hj hj' hx hy)
+
+/-- The lifted lattice path can be chosen self-avoiding, with length at most the number of
+visited sites times the volume of one enlarged block. -/
+theorem renorm_walk_lifts_short_path {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
+    {u v : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
+    (hu : renormField R ω u = true) :
+    ∃ x ∈ cubeAt (renormCentre R u) (11 * R / 10),
+      ∃ y ∈ cubeAt (renormCentre R v) (11 * R / 10),
+        ∃ P : (openGraph ω).Walk x y, P.IsPath ∧
+          (∀ z ∈ P.support, z ∈ renormPathRegion R w.support) ∧
+          P.length < (w.length + 1) * (2 * (11 * R / 10) + 1) ^ 2 := by
+  obtain ⟨x, hx, y, hy, hxy⟩ := renorm_walk_lifts hR w hu
+  obtain ⟨P, hP, hsupport, hlen⟩ := short_path_of_reachIn_region w.support hxy
+  exact ⟨x, hx, y, hy, P, hP, hsupport, by simpa only [SimpleGraph.Walk.length_support] using hlen⟩
 
 end Rigidity.Proofs.Section5.Kesten
