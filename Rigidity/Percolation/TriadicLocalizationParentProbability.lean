@@ -13,14 +13,14 @@ namespace Rigidity.Percolation
 open LatticeProb.Percolation MeasureTheory
 open scoped ENNReal
 
-/-- If the complement of a region is sufficiently far from a cube, a change
-in a stopping partition within that cube is witnessed by a larger bad cube. -/
+/-- If the complement of a region is sufficiently far from a set inside a cube, a change
+in a stopping partition within the set is witnessed by a larger bad cube. -/
 theorem TriadicCube.exists_large_bad_near_of_parent_stopping_ne {d : ℕ}
     {G H : Set (TriadicCube d)} {U : Set (Vertex d)} (hGH : G ⊆ H)
     (hlocal : ∀ T : TriadicCube d, T.parent.vertices ⊆ U → T ∈ H → T ∈ G)
-    (A : TriadicCube d) (n : ℕ)
-    (hdist : ∀ x ∈ A.vertices, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
-    {x : Vertex d} (hx : x ∈ A.vertices) {Q R : TriadicCube d}
+    (A : TriadicCube d) (V : Set (Vertex d)) (hVA : V ⊆ A.vertices) (n : ℕ)
+    (hdist : ∀ x ∈ V, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
+    {x : Vertex d} (hx : x ∈ V) {Q R : TriadicCube d}
     (hxQ : x ∈ Q.vertices) (hxR : x ∈ R.vertices)
     (hQ : Q.IsMaximalStopping G) (hR : R.IsMaximalStopping H) (hne : Q ≠ R) :
     ∃ T : TriadicCube d, n < T.scale ∧ T ∉ G ∧
@@ -34,18 +34,18 @@ theorem TriadicCube.exists_large_bad_near_of_parent_stopping_ne {d : ℕ}
     obtain ⟨i, hi⟩ := hdist x hx y hyU
     have hclose := hclose i
     omega
-  exact ⟨T, hlarge, hTG, x, hx, T.center, T.center_mem, hnear T.center T.center_mem⟩
+  exact ⟨T, hlarge, hTG, x, hVA hx, T.center, T.center_mem, hnear T.center T.center_mem⟩
 
 /-- A scale-dependent bad-cube estimate controls the probability that the
-maximal stopping partitions differ anywhere in a cube. -/
+maximal stopping partitions differ anywhere in a set inside a cube. -/
 theorem TriadicCube.measure_parent_stopping_discrepancy_le {d : ℕ} {Ω : Type*}
     [MeasurableSpace Ω] (μ : Measure Ω) (G H : Ω → Set (TriadicCube d))
-    (U : Set (Vertex d)) (A : TriadicCube d) (n : ℕ)
+    (U : Set (Vertex d)) (A : TriadicCube d) (V : Set (Vertex d)) (hVA : V ⊆ A.vertices) (n : ℕ)
     (hGH : ∀ ω, G ω ⊆ H ω)
     (hlocal : ∀ ω T, T.parent.vertices ⊆ U → T ∈ H ω → T ∈ G ω)
-    (hdist : ∀ x ∈ A.vertices, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
+    (hdist : ∀ x ∈ V, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
     (p : ℕ → ℝ≥0∞) (hprob : ∀ T : TriadicCube d, μ {ω | T ∉ G ω} ≤ p T.scale) :
-    μ {ω | ∃ x ∈ A.vertices, ∃ Q R : TriadicCube d,
+    μ {ω | ∃ x ∈ V, ∃ Q R : TriadicCube d,
       x ∈ Q.vertices ∧ x ∈ R.vertices ∧ Q.IsMaximalStopping (G ω) ∧
         R.IsMaximalStopping (H ω) ∧ Q ≠ R} ≤
       ∑' k : ℕ, (((2 * 3 ^ (A.scale - (n + 1 + k)) + 29) ^ d : ℕ) : ℝ≥0∞) *
@@ -54,19 +54,19 @@ theorem TriadicCube.measure_parent_stopping_discrepancy_le {d : ℕ} {Ω : Type*
   let cubes : ℕ → Finset (TriadicCube d) := fun k =>
     (A.finite_near_at_scale (n + 1 + k)).1.toFinset
   let bad : TriadicCube d → Set Ω := fun T => {ω | T ∉ G ω}
-  have hsubset : {ω | ∃ x ∈ A.vertices, ∃ Q R : TriadicCube d,
+  have hsubset : {ω | ∃ x ∈ V, ∃ Q R : TriadicCube d,
       x ∈ Q.vertices ∧ x ∈ R.vertices ∧ Q.IsMaximalStopping (G ω) ∧
         R.IsMaximalStopping (H ω) ∧ Q ≠ R} ⊆ ⋃ k, ⋃ T ∈ cubes k, bad T := by
     intro ω hω
     obtain ⟨x, hx, Q, R, hxQ, hxR, hQ, hR, hne⟩ := hω
     obtain ⟨T, hlarge, hbad, hnear⟩ :=
-      exists_large_bad_near_of_parent_stopping_ne (hGH ω) (hlocal ω) A n hdist hx hxQ hxR hQ hR hne
+      exists_large_bad_near_of_parent_stopping_ne (hGH ω) (hlocal ω) A V hVA n hdist hx hxQ hxR hQ hR hne
     refine Set.mem_iUnion.mpr ⟨T.scale - (n + 1), Set.mem_iUnion.mpr ⟨T, ?_⟩⟩
     refine Set.mem_iUnion.mpr ⟨?_, hbad⟩
     simp only [cubes, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
     exact ⟨by omega, hnear⟩
   calc
-    μ {ω | ∃ x ∈ A.vertices, ∃ Q R : TriadicCube d,
+    μ {ω | ∃ x ∈ V, ∃ Q R : TriadicCube d,
       x ∈ Q.vertices ∧ x ∈ R.vertices ∧ Q.IsMaximalStopping (G ω) ∧
         R.IsMaximalStopping (H ω) ∧ Q ≠ R} ≤ μ (⋃ k, ⋃ T ∈ cubes k, bad T) :=
           measure_mono hsubset
@@ -95,17 +95,17 @@ theorem TriadicCube.measure_parent_stopping_discrepancy_le {d : ℕ} {Ω : Type*
 
 
 /-- A stretched-exponential bad-cube bound yields a stretched-exponential
-estimate for changes in the stopping partition inside a cube. -/
+estimate for changes in the stopping partition inside a subset of a cube. -/
 theorem TriadicCube.measure_parent_stopping_discrepancy_le_stretched {d : ℕ} {Ω : Type*}
     [MeasurableSpace Ω] (μ : Measure Ω) (G H : Ω → Set (TriadicCube d))
-    (U : Set (Vertex d)) (A : TriadicCube d) (n : ℕ)
+    (U : Set (Vertex d)) (A : TriadicCube d) (V : Set (Vertex d)) (hVA : V ⊆ A.vertices) (n : ℕ)
     (hGH : ∀ ω, G ω ⊆ H ω)
     (hlocal : ∀ ω T, T.parent.vertices ⊆ U → T ∈ H ω → T ∈ G ω)
-    (hdist : ∀ x ∈ A.vertices, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
+    (hdist : ∀ x ∈ V, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
     (C : ℝ≥0∞) (b c : ℝ) (hb : 1 < b) (hc : 0 < c)
     (hprob : ∀ T : TriadicCube d,
       μ {ω | T ∉ G ω} ≤ C * ENNReal.ofReal (Real.exp (-c * b ^ T.scale))) :
-    μ {ω | ∃ x ∈ A.vertices, ∃ Q R : TriadicCube d,
+    μ {ω | ∃ x ∈ V, ∃ Q R : TriadicCube d,
       x ∈ Q.vertices ∧ x ∈ R.vertices ∧ Q.IsMaximalStopping (G ω) ∧
         R.IsMaximalStopping (H ω) ∧ Q ≠ R} ≤
       (((2 * 3 ^ (A.scale - (n + 1)) + 29) ^ d : ℕ) : ℝ≥0∞) * C *
@@ -114,7 +114,7 @@ theorem TriadicCube.measure_parent_stopping_discrepancy_le_stretched {d : ℕ} {
   calc
     _ ≤ ∑' k : ℕ, (((2 * 3 ^ (A.scale - (n + 1 + k)) + 29) ^ d : ℕ) : ℝ≥0∞) *
         (C * ENNReal.ofReal (Real.exp (-c * b ^ (n + 1 + k)))) :=
-      measure_parent_stopping_discrepancy_le μ G H U A n hGH hlocal hdist
+      measure_parent_stopping_discrepancy_le μ G H U A V hVA n hGH hlocal hdist
         (fun j => C * ENNReal.ofReal (Real.exp (-c * b ^ j))) hprob
     _ ≤ ∑' k : ℕ, (((2 * 3 ^ (A.scale - (n + 1)) + 29) ^ d : ℕ) : ℝ≥0∞) *
         (C * (ENNReal.ofReal (Real.exp (-c * b ^ (n + 1))) *
@@ -142,14 +142,14 @@ theorem TriadicCube.measure_parent_stopping_discrepancy_le_stretched {d : ℕ} {
 ratio at the cost of weakening the stretched-exponential rate by `d`. -/
 theorem TriadicCube.measure_parent_stopping_discrepancy_le_stretched_linear {d : ℕ} (hd : 0 < d)
     {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω) [IsProbabilityMeasure μ]
-    (G H : Ω → Set (TriadicCube d)) (U : Set (Vertex d)) (A : TriadicCube d) (n : ℕ)
+    (G H : Ω → Set (TriadicCube d)) (U : Set (Vertex d)) (A : TriadicCube d) (V : Set (Vertex d)) (hVA : V ⊆ A.vertices) (n : ℕ)
     (hGH : ∀ ω, G ω ⊆ H ω)
     (hlocal : ∀ ω T, T.parent.vertices ⊆ U → T ∈ H ω → T ∈ G ω)
-    (hdist : ∀ x ∈ A.vertices, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
+    (hdist : ∀ x ∈ V, ∀ y ∉ U, ∃ i, 14 * (3 : ℤ) ^ n ≤ |x i - y i|)
     (C : ℝ≥0∞) (b c : ℝ) (hb : 1 < b) (hc : 0 < c)
     (hprob : ∀ T : TriadicCube d,
       μ {ω | T ∉ G ω} ≤ C * ENNReal.ofReal (Real.exp (-c * b ^ T.scale))) :
-    μ {ω | ∃ x ∈ A.vertices, ∃ Q R : TriadicCube d,
+    μ {ω | ∃ x ∈ V, ∃ Q R : TriadicCube d,
       x ∈ Q.vertices ∧ x ∈ R.vertices ∧ Q.IsMaximalStopping (G ω) ∧
         R.IsMaximalStopping (H ω) ∧ Q ≠ R} ≤
       max 1 (C * ∑' k : ℕ, ENNReal.ofReal (Real.exp (-c * (b - 1))) ^ k) *
@@ -177,7 +177,7 @@ theorem TriadicCube.measure_parent_stopping_discrepancy_le_stretched_linear {d :
       _ ≤ (((2 * 3 ^ (A.scale - (n + 1)) + 29) ^ d : ℕ) : ℝ≥0∞) * C *
           ENNReal.ofReal (Real.exp (-c * b ^ (n + 1))) *
           ∑' k : ℕ, ENNReal.ofReal (Real.exp (-c * (b - 1))) ^ k :=
-        measure_parent_stopping_discrepancy_le_stretched μ G H U A n hGH hlocal hdist C b c hb hc hprob
+        measure_parent_stopping_discrepancy_le_stretched μ G H U A V hVA n hGH hlocal hdist C b c hb hc hprob
       _ = B ^ d * (C * ∑' k : ℕ, ENNReal.ofReal (Real.exp (-c * (b - 1))) ^ k) * z ^ d := by
         rw [hz]
         simp only [B, Nat.cast_pow]
