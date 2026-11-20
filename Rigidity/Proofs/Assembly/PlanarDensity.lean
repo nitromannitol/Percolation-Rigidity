@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Assembly.Crossing
+import Rigidity.Proofs.Assembly.ProvedInputs
 import Rigidity.Proofs.Assembly.PlanarWellConnected
 import Rigidity.Proofs.S2.ClusterDensityFromDarioGu
 import Rigidity.Proofs.S2.PlanarRegularity
@@ -68,5 +68,19 @@ theorem fast_decay_of_wellConnected (p : unitInterval)
     (hJ : Rigidity.External.JordanCurveTheoremSphere) : FastDecayStmt p :=
   fast_decay p hpc hp1 hCorr hCQ hAD hAD1 hE hGQ hDG
     Rigidity.Percolation.wellConnected_input_two hJ
+
+
+/-- Theorem 1.3 with the proved planar connectivity and sphere separation inputs supplied. -/
+theorem fast_decay_of_planar_connectivity (p : unitInterval)
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hCorr : LatticeProb.External.SupercriticalBondCorrectorInput)
+    (hCQ : Rigidity.External.CorrectorQuantitativeInput)
+    (hAD : LatticeProb.External.ArmstrongDarioOrderZero)
+    (hAD1 : Rigidity.External.ArmstrongDarioOrderOneOriginTwo)
+    (hE : Rigidity.External.SupercriticalBondGreenColumnExistenceTwo)
+    (hGQ : LatticeProb.External.SupercriticalBondGreenQuantitative)
+    (hDG : Rigidity.External.ClusterDensityConcentrationInputTwo) : FastDecayStmt p :=
+  fast_decay_of_wellConnected p hpc hp1 hCorr hCQ hAD hAD1 hE hGQ hDG
+    Rigidity.Topology.jordan_curve_theorem_sphere
 
 end Rigidity.Assembly.WithPlanarDensity
