@@ -76,6 +76,65 @@ theorem horizontal_crossing_lifts_of_site_hom {ω : Configuration 2} {R m n : �
   · simpa only [Q, SimpleGraph.Walk.length_map, P, SimpleGraph.Walk.length_ofSupport,
       Nat.sub_add_cancel (List.length_pos_iff_ne_nil.2 hl.ne_nil)] using hWlen
 
+/-- Open-site walks preserve openness at their endpoints. -/
+theorem site_walk_end_open {η : PlanarCarrier → Bool} {u v : PlanarCarrier}
+    (w : (siteOpenGraph η).Walk u v) (hu : η u = true) : η v = true := by
+  induction w with
+  | nil => exact hu
+  | cons h w ih => exact ih h.2.2
+
+/-- A positive-width crossing lifted through an open-site homomorphism joins the distinguished
+channel vertices of its two endpoint blocks. -/
+theorem horizontal_crossing_lifts_anchors_of_site_hom {ω : Configuration 2} {R m n : ℕ}
+    (hR : 3210 ≤ R) (hm : 0 < m) (η : PlanarCarrier → Bool)
+    (φ : siteOpenGraph η →g siteOpenGraph (renormField R ω))
+    (hφ : ∀ z, η z = true → renormField R ω (φ z) = true)
+    {l : List (LatticeModels.Site 2)}
+    (hl : Menger.IsLinkWalk
+      (Menger.edgesIn (planarOpenSiteGraph η) (Finset.finite_toSet (rectangle m n)))
+      (↑(leftSide m n)) (↑(rightSide m n)) l) :
+    ∃ (hu : renormField R ω (φ (l.head hl.ne_nil 0, l.head hl.ne_nil 1)) = true)
+      (hv : renormField R ω (φ (l.getLast hl.ne_nil 0, l.getLast hl.ne_nil 1)) = true),
+      ∃ P : (openGraph ω).Walk (renormChannelAnchor hR hu) (renormChannelAnchor hR hv),
+        P.IsPath ∧ (∀ z ∈ P.support, z ∈ renormPathRegion R (l.map fun z => φ (z 0, z 1))) ∧
+        P.length < l.length * (2 * (11 * R / 10) + 1) ^ 2 := by
+  have hchain : l.IsChain (planarOpenSiteGraph η).Adj :=
+    hl.1.imp fun _ _ he => (Menger.mem_edgesIn.1 he).1
+  have hopen : η (l.head hl.ne_nil 0, l.head hl.ne_nil 1) = true := by
+    cases l with
+    | nil => exact (hl.ne_nil rfl).elim
+    | cons a t =>
+      cases t with
+      | nil =>
+        obtain ⟨x, hx, hxL⟩ := hl.2.1
+        obtain ⟨y, hy, hyR⟩ := hl.2.2
+        simp only [List.head?_cons, List.getLast?_singleton, Option.mem_def,
+          Option.some.injEq] at hx hy
+        subst x y
+        have h0 := (Finset.mem_filter.1 hxL).2
+        have h1 := (Finset.mem_filter.1 hyR).2
+        omega
+      | cons b t => exact (List.isChain_cons_cons.1 hchain).1.2.1
+  let P := SimpleGraph.Walk.ofSupport l hl.ne_nil hchain
+  let Q := (P.map (planarOpenSiteHom η)).map φ
+  have hu := hφ _ hopen
+  have hv := site_walk_end_open Q hu
+  obtain ⟨W, hWpath, hWsupport, hWlen⟩ := renorm_walk_lifts_anchors hR Q hu hv
+  refine ⟨hu, hv, W, hWpath, ?_, ?_⟩
+  · have hQsupport : Q.support = l.map (fun z => φ (z 0, z 1)) := by
+      change ((P.map (planarOpenSiteHom η)).map φ).support = _
+      rw [SimpleGraph.Walk.support_map, SimpleGraph.Walk.support_map]
+      change List.map _ (List.map _ (SimpleGraph.Walk.ofSupport l hl.ne_nil hchain).support) = _
+      rw [SimpleGraph.Walk.support_ofSupport, List.map_map]
+      rfl
+    rw [← hQsupport]
+    exact hWsupport
+  · have hQlen : Q.length + 1 = l.length := by
+      simp only [Q, SimpleGraph.Walk.length_map, P, SimpleGraph.Walk.length_ofSupport,
+        Nat.sub_add_cancel (List.length_pos_iff_ne_nil.2 hl.ne_nil)]
+    rw [hQlen] at hWlen
+    exact hWlen
+
 /-- A translated horizontal crossing lifts to an open lattice path through the translated
 blocks. -/
 theorem translated_crossing_lifts {ω : Configuration 2} {R m n : ℕ}
