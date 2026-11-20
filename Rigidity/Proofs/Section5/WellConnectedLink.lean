@@ -54,6 +54,30 @@ theorem mem_of_isGoodCluster_of_startsLongPath {ω : Configuration d} {x : Verte
   intro i hi k
   exact (hcoord i k).trans (by exact_mod_cast hi)
 
+/-- The subcube radius is at least one. -/
+theorem one_le_wcSubRadius (d : ℕ) {N : ℕ} (hN : 1 ≤ N) : 1 ≤ wcSubRadius d N := by
+  have hN1 : (1 : ℝ) ≤ (N : ℝ) ^ (1 / (10 * (d : ℝ)) ^ 2) :=
+    Real.one_le_rpow (by exact_mod_cast hN) (by positivity)
+  exact Nat.one_le_iff_ne_zero.mpr (Nat.ceil_pos.mpr (by positivity)).ne'
+
+/-- The subcube radius of a well-connected cube is at most a tenth of its radius. -/
+theorem wcSubRadius_le_div_ten {N : ℕ} (hN : 1 ≤ N)
+    (hsmall : (N : ℝ) ^ (1 / (10 * (d : ℝ)) ^ 2) ≤ N / 100) :
+    (wcSubRadius d N : ℝ) ≤ N / 10 := by
+  have hN1 : (1 : ℝ) ≤ (N : ℝ) ^ (1 / (10 * (d : ℝ)) ^ 2) :=
+    Real.one_le_rpow (by exact_mod_cast hN) (by positivity)
+  have := Nat.ceil_lt_add_one (show 0 ≤ (N : ℝ) ^ (1 / (10 * (d : ℝ)) ^ 2) / 2 by positivity)
+  unfold wcSubRadius
+  linarith
+
+/-- The subcube radius of a well-connected cube is smaller than its radius. -/
+theorem wcSubRadius_lt_of_isWellConnected {ω : Configuration d} {c : Vertex d} {N : ℕ}
+    (hN : 1 ≤ N) (hwc : IsWellConnected ω c N) : wcSubRadius d N < N := by
+  have h := wcSubRadius_le_div_ten hN hwc.1
+  have hN' : (0 : ℝ) < N := by exact_mod_cast hN
+  have : (wcSubRadius d N : ℝ) < N := by linarith
+  exact_mod_cast this
+
 /-- **Links in well-connected cubes.** In a well-connected cube `c + Q_N`, `N ≥ 1`, two vertices
 of the cube which start open paths of more than `M = ⌈N^δ/2⌉` steps are joined by an open path of
 at most `(2dN + 1)(2M + 1)^d` steps. -/
@@ -63,15 +87,9 @@ theorem exists_walk_of_isWellConnected_of_startsLongPath {ω : Configuration d} 
     (hyl : StartsLongPath ω y (wcSubRadius d N)) :
     ∃ p : (openGraph ω).Walk x y,
       p.length ≤ (2 * d * N + 1) * (2 * wcSubRadius d N + 1) ^ d := by
+  have hM := one_le_wcSubRadius d hN
+  have hMN := wcSubRadius_le_div_ten hN hwc.1
   obtain ⟨-, -, hgood⟩ := hwc
-  have hN1 : (1 : ℝ) ≤ (N : ℝ) ^ (1 / (10 * (d : ℝ)) ^ 2) :=
-    Real.one_le_rpow (by exact_mod_cast hN) (by positivity)
-  have hM : 1 ≤ wcSubRadius d N :=
-    Nat.one_le_iff_ne_zero.mpr (Nat.ceil_pos.mpr (by positivity)).ne'
-  have hMN : (wcSubRadius d N : ℝ) ≤ N / 10 := by
-    have := Nat.ceil_lt_add_one (show 0 ≤ (N : ℝ) ^ (1 / (10 * (d : ℝ)) ^ 2) / 2 by positivity)
-    unfold wcSubRadius
-    linarith
   have hV : ∀ z ∈ cubeAt c N, ∃ V, IsGoodCluster ω z (wcSubRadius d N) V :=
     fun z hz => hgood z _ (Nat.le_ceil _) hMN ⟨z, fun i => by simp, hz⟩
   choose! V hV using hV
