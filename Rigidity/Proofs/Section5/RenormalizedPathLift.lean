@@ -8,6 +8,7 @@ A walk of open renormalized sites carries an open lattice walk inside its enlarg
 -/
 
 open LatticeProb.Percolation Rigidity.Section5 Rigidity.Steps.Section5
+open scoped Classical
 
 namespace Rigidity.Proofs.Section5.Kesten
 
@@ -102,6 +103,46 @@ theorem card_disjoint_path_regions_meeting_le_nine {R : ℕ} {x : Vertex 2}
     obtain ⟨l, hl, rfl⟩ := Finset.mem_image.1 hz
     exact (hf l hl).2)
   rwa [Finset.card_image_of_injOn hinj] at hb
+
+/-- At most nine indexed, pairwise disjoint site paths can have regions containing a fixed
+lattice vertex. -/
+theorem card_disjoint_indexed_regions_meeting_le_nine {ι : Type*} {R : ℕ} {x : Vertex 2}
+    (I : Finset ι) (l : ι → List PlanarCarrier)
+    (hdisj : ∀ i ∈ I, ∀ j ∈ I, i ≠ j → ∀ z ∈ l i, z ∉ l j)
+    (hx : ∀ i ∈ I, x ∈ renormPathRegion R (l i)) : I.card ≤ 9 := by
+  classical
+  have hinj : Set.InjOn l (↑I : Set ι) := by
+    intro i hi j hj heq
+    by_contra hne
+    have hex : ∃ z, ∃ _ : z ∈ l i, x ∈ cubeAt (renormCentre R z) (11 * R / 10) := by
+      simpa only [renormPathRegion, Set.mem_iUnion] using hx i hi
+    obtain ⟨z, hz, _⟩ := hex
+    apply hdisj i hi j hj hne z hz
+    rw [← heq]
+    exact hz
+  have hsmall : (I.image l).card ≤ 9 := card_disjoint_path_regions_meeting_le_nine _ (by
+    intro a ha b hb hab z hz hz'
+    obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 ha
+    obtain ⟨j, hj, rfl⟩ := Finset.mem_image.1 hb
+    exact hdisj i hi j hj (fun h => hab (congrArg l h)) z hz hz') (by
+      intro a ha
+      obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 ha
+      exact hx i hi)
+  rwa [Finset.card_image_of_injOn hinj] at hsmall
+
+/-- A family of sets contained in regions of pairwise disjoint site paths has vertex
+congestion at most nine. -/
+theorem card_disjoint_lifts_containing_le_nine {ι : Type*} {R : ℕ} (I : Finset ι)
+    (l : ι → List PlanarCarrier) (A : ι → Set (Vertex 2))
+    (hdisj : ∀ i ∈ I, ∀ j ∈ I, i ≠ j → ∀ z ∈ l i, z ∉ l j)
+    (hA : ∀ i ∈ I, A i ⊆ renormPathRegion R (l i)) (x : Vertex 2) :
+    (I.filter fun i => x ∈ A i).card ≤ 9 := by
+  classical
+  apply card_disjoint_indexed_regions_meeting_le_nine _ l
+  · intro i hi j hj hne z hz
+    exact hdisj i (Finset.mem_filter.1 hi).1 j (Finset.mem_filter.1 hj).1 hne z hz
+  · intro i hi
+    exact hA i (Finset.mem_filter.1 hi).1 (Finset.mem_filter.1 hi).2
 
 /-- A channel start lies in its cube. -/
 theorem AnyChannel.mem_cube {ω : Configuration 2} {X : Finset (Vertex 2)}
