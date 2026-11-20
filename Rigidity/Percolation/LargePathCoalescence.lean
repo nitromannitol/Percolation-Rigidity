@@ -18,6 +18,11 @@ def IsSelectedOpenPath {d : ℕ} (ω : Configuration d) (B : Set (Vertex d))
   large n γ ∧ γ 0 ∈ B ∧
     ∀ i : Fin n, (openIn ω B).Adj (γ i.castSucc) (γ i.succ)
 
+/-- A region contains at least one selected open path. -/
+def HasSelectedOpenPath {d : ℕ} (ω : Configuration d) (B : Set (Vertex d))
+    (large : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop) : Prop :=
+  ∃ n γ, IsSelectedOpenPath ω B large n γ
+
 /-- Any two selected open paths in a region belong to the same component. -/
 def LargePathsCoalesce {d : ℕ} (ω : Configuration d) (B : Set (Vertex d))
     (large : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop) : Prop :=
@@ -37,6 +42,14 @@ theorem measurableSet_isSelectedOpenPath {d : ℕ} (B : Set (Vertex d))
   apply measurableSet_setOf.2
   exact measurable_const.and (measurable_const.and (Measurable.forall fun i =>
     measurableSet_setOf.1 (measurableSet_openIn_adj B (γ i.castSucc) (γ i.succ))))
+
+/-- Existence of a selected open path is measurable. -/
+theorem measurableSet_hasSelectedOpenPath {d : ℕ} (B : Set (Vertex d))
+    (large : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop) :
+    MeasurableSet {ω : Configuration d | HasSelectedOpenPath ω B large} := by
+  apply measurableSet_setOf.2
+  exact Measurable.exists fun n => Measurable.exists fun γ =>
+    measurableSet_setOf.1 (measurableSet_isSelectedOpenPath B large n γ)
 
 /-- Large-path coalescence is a measurable event. -/
 theorem measurableSet_largePathsCoalesce {d : ℕ} (B : Set (Vertex d))
@@ -70,6 +83,19 @@ theorem connectsSelectedPaths_of_coalescence {d : ℕ} {ω : Configuration d}
   intro n γ hlarge hstart hadj
   exact ⟨η 0, hη.2.1, hcoalesce n γ ⟨hlarge, hstart, hadj⟩ m η hη, hroot⟩
 
+/-- Coalescence and an anchor whenever a selected path exists connect all
+selected paths, including when there are no such paths. -/
+theorem connectsSelectedPaths_of_coalescence_or_empty {d : ℕ} {ω : Configuration d}
+    {B C : Set (Vertex d)} {root : Vertex d}
+    {large : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop}
+    (hcoalesce : LargePathsCoalesce ω B large)
+    (hanchor : HasSelectedOpenPath ω B large → HasAnchoredLargePath ω B C root large) :
+    ConnectsSelectedPaths ω B C root large := by
+  by_cases h : HasSelectedOpenPath ω B large
+  · exact connectsSelectedPaths_of_coalescence hcoalesce (hanchor h)
+  · intro n γ hlarge hstart hadj
+    exact (h ⟨n, γ, hlarge, hstart, hadj⟩).elim
+
 /-- Local crossability, large-path coalescence, and anchored paths give the
 well-connectedness event. -/
 theorem TriadicCube.wellConnectedIn_of_coalescence {d : ℕ} {Q : TriadicCube d}
@@ -81,12 +107,13 @@ theorem TriadicCube.wellConnectedIn_of_coalescence {d : ℕ} {Q : TriadicCube d}
       CrossableRegion ω (↑R.vertices) (fun i => ↑(R.lowerFace i))
         (fun i => ↑(R.upperFace i)) ∧
       LargePathsCoalesce ω (↑R.vertices) Q.largePath ∧
-      HasAnchoredLargePath ω (↑R.vertices) Q.vertices root Q.largePath) :
+      (HasSelectedOpenPath ω (↑R.vertices) Q.largePath →
+        HasAnchoredLargePath ω (↑R.vertices) Q.vertices root Q.largePath)) :
     Q.wellConnectedIn interior ω := by
   apply (Q.wellConnectedIn_iff interior ω).2
   refine ⟨root, hroot, ?_⟩
   intro R hR
   obtain ⟨hcross, hcoal, hanchor⟩ := htests R hR
-  exact ⟨hcross, connectsSelectedPaths_of_coalescence hcoal hanchor⟩
+  exact ⟨hcross, connectsSelectedPaths_of_coalescence_or_empty hcoal hanchor⟩
 
 end Rigidity.Percolation

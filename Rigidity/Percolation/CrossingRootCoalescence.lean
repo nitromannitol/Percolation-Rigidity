@@ -38,25 +38,27 @@ theorem HasAnchoredLargePath.of_reachable {d : ℕ} {ω : Configuration d}
   obtain ⟨n, γ, hγ, hroot⟩ := h
   exact ⟨n, γ, hγ, hreach.trans hroot⟩
 
-/-- A crossing root has a selected path anchored in the test cube. -/
+/-- If a selected path exists, a crossing root has an anchored path in the test cube. -/
 def TriadicCube.hasCrossingAnchor {d : ℕ} (Q : TriadicCube d) (R : IntegerCube d)
     (ω : Configuration d) : Prop :=
-  ∃ root, IsCrossingRoot ω Q.vertices
-      (fun i => ↑(Q.toIntegerCube.lowerFace i))
-      (fun i => ↑(Q.toIntegerCube.upperFace i)) root ∧
-    HasAnchoredLargePath ω (↑R.vertices) Q.vertices root Q.largePath
+  HasSelectedOpenPath ω (↑R.vertices) Q.largePath →
+    ∃ root, IsCrossingRoot ω Q.vertices
+        (fun i => ↑(Q.toIntegerCube.lowerFace i))
+        (fun i => ↑(Q.toIntegerCube.upperFace i)) root ∧
+      HasAnchoredLargePath ω (↑R.vertices) Q.vertices root Q.largePath
 
 /-- Existence of a crossing anchor is measurable. -/
 theorem TriadicCube.measurableSet_hasCrossingAnchor {d : ℕ}
     (Q : TriadicCube d) (R : IntegerCube d) :
     MeasurableSet {ω | Q.hasCrossingAnchor R ω} := by
   apply measurableSet_setOf.2
-  exact Measurable.exists fun root =>
-    (measurableSet_setOf.1 (measurableSet_isCrossingRoot Q.vertices
-      (fun i => ↑(Q.toIntegerCube.lowerFace i))
-      (fun i => ↑(Q.toIntegerCube.upperFace i)) root)).and
-    (measurableSet_setOf.1 (measurableSet_hasAnchoredLargePath
-      (↑R.vertices) Q.vertices root Q.largePath))
+  exact (measurableSet_setOf.1 (measurableSet_hasSelectedOpenPath
+    (↑R.vertices) Q.largePath)).imp (Measurable.exists fun root =>
+      (measurableSet_setOf.1 (measurableSet_isCrossingRoot Q.vertices
+        (fun i => ↑(Q.toIntegerCube.lowerFace i))
+        (fun i => ↑(Q.toIntegerCube.upperFace i)) root)).and
+      (measurableSet_setOf.1 (measurableSet_hasAnchoredLargePath
+        (↑R.vertices) Q.vertices root Q.largePath)))
 
 /-- Under crossing-root coalescence, a single crossing anchor suffices for
 all crossing roots in the definition of a good local test. -/
@@ -69,11 +71,13 @@ theorem TriadicCube.not_badCoalescenceTest_of_anchor {d : ℕ}
       (fun i => ↑(Q.toIntegerCube.lowerFace i))
       (fun i => ↑(Q.toIntegerCube.upperFace i)))
     (hanchor : Q.hasCrossingAnchor R ω) : ω ∉ Q.badCoalescenceTest R := by
-  obtain ⟨root, hroot, hpath⟩ := hanchor
   rintro (h | h | ⟨root', hroot', hn⟩)
   · exact h hcross
   · exact h hcoal
-  · exact hn (hpath.of_reachable (hroots root' root hroot' hroot))
+  · apply hn
+    intro hselected
+    obtain ⟨root, hroot, hpath⟩ := hanchor hselected
+    exact hpath.of_reachable (hroots root' root hroot' hroot)
 
 /-- A bad test is bounded by failures of crossability, local coalescence,
 crossing-root coalescence, and the existence of a crossing anchor. -/

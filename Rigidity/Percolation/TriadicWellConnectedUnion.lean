@@ -14,7 +14,8 @@ open LatticeProb.Percolation MeasureTheory Rigidity.External
 open scoped ENNReal
 
 /-- A test fails when it is not crossable, its large paths do not coalesce, or
-some ambient crossing root has no anchored large path in the test. -/
+some ambient crossing root has no anchored large path despite the existence
+of a selected path in the test. -/
 def TriadicCube.badCoalescenceTest {d : ℕ} (Q : TriadicCube d) (R : IntegerCube d) :
     Set (Configuration d) :=
   {ω | ¬ CrossableRegion ω (↑R.vertices) (fun i => ↑(R.lowerFace i))
@@ -23,7 +24,8 @@ def TriadicCube.badCoalescenceTest {d : ℕ} (Q : TriadicCube d) (R : IntegerCub
     ∃ root, IsCrossingRoot ω Q.vertices
       (fun i => ↑(Q.toIntegerCube.lowerFace i))
       (fun i => ↑(Q.toIntegerCube.upperFace i)) root ∧
-      ¬ HasAnchoredLargePath ω (↑R.vertices) Q.vertices root Q.largePath}
+      ¬ (HasSelectedOpenPath ω (↑R.vertices) Q.largePath →
+        HasAnchoredLargePath ω (↑R.vertices) Q.vertices root Q.largePath)}
 
 /-- A bad local test is a measurable event. -/
 theorem TriadicCube.measurableSet_badCoalescenceTest {d : ℕ}
@@ -36,8 +38,10 @@ theorem TriadicCube.measurableSet_badCoalescenceTest {d : ℕ}
         (measurableSet_setOf.1 (measurableSet_isCrossingRoot Q.vertices
           (fun i => ↑(Q.toIntegerCube.lowerFace i))
           (fun i => ↑(Q.toIntegerCube.upperFace i)) root)).and
-        (measurableSet_setOf.1 (measurableSet_hasAnchoredLargePath
-          (↑R.vertices) Q.vertices root Q.largePath)).not))
+        ((measurableSet_setOf.1 (measurableSet_hasSelectedOpenPath
+          (↑R.vertices) Q.largePath)).imp
+          (measurableSet_setOf.1 (measurableSet_hasAnchoredLargePath
+            (↑R.vertices) Q.vertices root Q.largePath))).not))
 
 /-- A uniform bound on bad local tests yields a finite union bound for failure
 of well-connectedness, with an explicit polynomial number of tests. -/
@@ -79,7 +83,8 @@ theorem TriadicCube.measure_not_wellConnectedIn_le {d : ℕ}
         ∃ r, IsCrossingRoot ω Q.vertices
           (fun i => ↑(Q.toIntegerCube.lowerFace i))
           (fun i => ↑(Q.toIntegerCube.upperFace i)) r ∧
-          ¬ HasAnchoredLargePath ω (↑R.vertices) Q.vertices r Q.largePath) at hh
+          ¬ (HasSelectedOpenPath ω (↑R.vertices) Q.largePath →
+            HasAnchoredLargePath ω (↑R.vertices) Q.vertices r Q.largePath)) at hh
       push Not at hh
       exact ⟨hh.1, hh.2.1, hh.2.2 root hroot⟩
     · exact Or.inl hc
