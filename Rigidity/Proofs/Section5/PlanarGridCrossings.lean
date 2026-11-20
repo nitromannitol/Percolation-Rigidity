@@ -48,4 +48,28 @@ theorem ae_eventually_disjoint_crossings_in_strips {ν : Measure (PlanarCarrier 
   · exact hj (Set.mem_iUnion.2 ⟨a, Set.mem_iUnion.2 ⟨ha, hbad⟩⟩)
   · exact hj' (Set.mem_iUnion.2 ⟨a, Set.mem_iUnion.2 ⟨ha, hbad⟩⟩)
 
+/-- The strip failure bounds are summable when the number of strips and their lengths grow
+at most as `2^j` and their widths are at least `j`. -/
+theorem summable_dyadic_strip_bounds (T : ℕ → Finset PlanarCarrier) (m n : ℕ → ℕ)
+    (hT : ∀ j, (T j).card ≤ 2 ^ j) (hm : ∀ j, m j ≤ 2 ^ j)
+    (hn : ∀ j, j ≤ n j) :
+    Summable fun j => 4 * ((T j).card : ℝ) * (m j + 1 : ℝ) * (1 / 8 : ℝ) ^ n j := by
+  have hg : Summable (fun j : ℕ => 8 * (1 / 2 : ℝ) ^ j) :=
+    (summable_geometric_of_lt_one (r := (1 / 2 : ℝ)) (by norm_num) (by norm_num)).mul_left 8
+  apply Summable.of_nonneg_of_le (fun j => by positivity) ?_ hg
+  intro j
+  have hT' : ((T j).card : ℝ) ≤ (2 : ℝ) ^ j := by exact_mod_cast hT j
+  have hm' : (m j : ℝ) ≤ (2 : ℝ) ^ j := by exact_mod_cast hm j
+  have hp : (1 : ℝ) ≤ (2 : ℝ) ^ j := one_le_pow₀ (by norm_num)
+  have hn' : (1 / 8 : ℝ) ^ n j ≤ (1 / 8 : ℝ) ^ j :=
+    pow_le_pow_of_le_one (by norm_num) (by norm_num) (hn j)
+  calc
+    _ ≤ 4 * (2 : ℝ) ^ j * (2 * (2 : ℝ) ^ j) * (1 / 8 : ℝ) ^ j := by
+      gcongr
+      linarith
+    _ = 8 * (((2 : ℝ) ^ j * 2 ^ j) * (1 / 8 : ℝ) ^ j) := by ring
+    _ = 8 * (1 / 2 : ℝ) ^ j := by
+      rw [← mul_pow, ← mul_pow]
+      norm_num
+
 end Rigidity.Proofs.Section5
