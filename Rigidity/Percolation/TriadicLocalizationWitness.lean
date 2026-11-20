@@ -20,7 +20,7 @@ theorem TriadicCube.exists_new_good_of_stopping_ne {d : ℕ}
     (hxQ : x ∈ Q.vertices) (hxR : x ∈ R.vertices)
     (hQ : Q.IsMaximalStopping G) (hR : R.IsMaximalStopping H) (hne : Q ≠ R) :
     ∃ T : TriadicCube d,
-      (T ∈ R.influence ∨ ∃ digits, T ∈ (Q.child digits).influence) ∧
+      (T ∈ R.influence ∨ 0 < Q.scale ∧ ∃ digits, T ∈ (Q.child digits).influence) ∧
         T ∉ G ∧ T ∈ H := by
   classical
   have hmono : ∀ S : TriadicCube d, S ∈ stableGood G → S ∈ stableGood H :=
@@ -51,7 +51,7 @@ theorem TriadicCube.exists_new_good_of_stopping_ne {d : ℕ}
       exact hnotstop ⟨hmono _ hQ.1.1, Or.inr ⟨digits, h⟩⟩
     simp only [stableGood, Set.mem_setOf_eq, Set.not_subset] at hbad
     obtain ⟨T, hT, hTG⟩ := hbad
-    exact ⟨T, Or.inr ⟨digits, hT⟩, hTG, hgoodH hT⟩
+    exact ⟨T, Or.inr ⟨by omega, digits, hT⟩, hTG, hgoodH hT⟩
   · simp only [stableGood, Set.mem_setOf_eq, Set.not_subset] at hstable
     obtain ⟨T, hT, hTG⟩ := hstable
     exact ⟨T, Or.inl hT, hTG, hR.1.1 hT⟩
