@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Section5.KestenLocalLink
+import Rigidity.Proofs.S3.ChemicalDistance
 
 /-!
 # Lifting renormalized site walks
@@ -186,5 +187,43 @@ theorem renorm_walk_lifts {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
   obtain ⟨j, hj, x, hx⟩ := exists_channel_of_renorm_open hR hu
   obtain ⟨j', hj', y, hy, hxy⟩ := renorm_walk_lifts_channel hR w j hj x hx
   exact ⟨x, hx.mem_cube, y, hy.mem_cube, hxy⟩
+
+/-- The lifted lattice path can be chosen self-avoiding, with length at most the number of
+visited sites times the volume of one enlarged block. -/
+theorem renorm_walk_lifts_short_path {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
+    {u v : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
+    (hu : renormField R ω u = true) :
+    ∃ x ∈ cubeAt (renormCentre R u) (11 * R / 10),
+      ∃ y ∈ cubeAt (renormCentre R v) (11 * R / 10),
+        ∃ P : (openGraph ω).Walk x y, P.IsPath ∧
+          (∀ z ∈ P.support, z ∈ renormPathRegion R w.support) ∧
+          P.length < (w.length + 1) * (2 * (11 * R / 10) + 1) ^ 2 := by
+  classical
+  obtain ⟨x, hx, y, hy, P, hP⟩ := renorm_walk_lifts hR w hu
+  let V := w.support.toFinset.biUnion fun z =>
+    Rigidity.Proofs.S3.cubeFinset (renormCentre R z) (11 * R / 10)
+  have hsub : P.bypass.support.toFinset ⊆ V := by
+    intro z hz
+    have hz' : z ∈ P.support := P.support_bypass_subset_support (List.mem_toFinset.1 hz)
+    have hzR := hP z hz'
+    simp only [renormPathRegion, Set.mem_iUnion] at hzR
+    obtain ⟨a, ha, hza⟩ := hzR
+    apply Finset.mem_biUnion.2
+    refine ⟨a, List.mem_toFinset.2 ha, ?_⟩
+    apply Rigidity.Proofs.S3.mem_cubeFinset.2
+    exact hza
+  have hcard : V.card ≤ w.support.length * (2 * (11 * R / 10) + 1) ^ 2 := by
+    calc
+      V.card ≤ w.support.toFinset.card * (2 * (11 * R / 10) + 1) ^ 2 :=
+        Finset.card_biUnion_le_card_mul _ _ _ fun z _ => by
+          rw [Rigidity.Proofs.S3.card_cubeFinset]
+      _ ≤ w.support.length * (2 * (11 * R / 10) + 1) ^ 2 :=
+        Nat.mul_le_mul_right _ (List.toFinset_card_le _)
+  have hlen := (Finset.card_le_card hsub).trans hcard
+  rw [List.toFinset_card_of_nodup P.bypass_isPath.support_nodup,
+    SimpleGraph.Walk.length_support, SimpleGraph.Walk.length_support] at hlen
+  refine ⟨x, hx, y, hy, P.bypass, P.bypass_isPath, ?_, by omega⟩
+  intro z hz
+  exact hP z (P.support_bypass_subset_support hz)
 
 end Rigidity.Proofs.Section5.Kesten
