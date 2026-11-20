@@ -182,4 +182,38 @@ theorem TriadicCube.eventually_measure_testCube_not_coalesces_le_exp_of_twoPoint
       ENNReal.ofReal_le_ofReal (hM₀ T.size hM)
     _ = _ := by congr 2; dsimp only [rate]; ring
 
+/-- Uniform full-slab two-point estimates give an exponential bound for
+failure of a cube-crossing component. -/
+theorem eventually_measure_no_crossingComponent_le_exp_of_twoPoint_slabs {d : ℕ}
+    (hd : 0 < d) (j i : Fin d) (hij : i ≠ j) (width : ℕ) (hwidth : 0 < width)
+    (p : unitInterval) (ρ c : ℝ) (hρ : 0 ≤ ρ) (hρ₁ : ρ ≤ 1) (hc : 0 < c)
+    (hcρ : c ≤ ρ) (hcroot : c ≤ (p : ℝ) * ρ ^ (2 * d))
+    (hctwo : c ≤ (p : ℝ) * ((p : ℝ) * ρ)) :
+    ∃ M : ℕ, ∀ Q : IntegerCube d, M ≤ Q.size →
+      (∀ a : Fin d, ∀ k : ℕ, (k + 1) * width ≤ Q.size →
+        ∀ x ∈ Q.slab a width k, ∀ y ∈ Q.slab a width k,
+          ρ ≤ (latticeBondLaw d p).real {ω | (openIn ω (Q.slab a width k)).Reachable x y}) →
+      (latticeBondLaw d p) {ω | ¬ HasCrossingComponent ω Q.vertices
+        (fun a => ↑(Q.lowerFace a)) (fun a => ↑(Q.upperFace a))} ≤
+        ENNReal.ofReal (Real.exp (-(((c / (2 * ((10 * d * width : ℕ) : ℝ))) / 2) *
+          (Q.size : ℝ)))) := by
+  have hmain := eventually_no_crossing_connecting_radius_le_exp hd j i hij width 1 hwidth
+    p ρ c hρ hρ₁ hc hcρ hcroot hctwo
+  obtain ⟨M, hM⟩ := Filter.eventually_atTop.mp hmain
+  refine ⟨max 1 M, ?_⟩
+  intro Q hsize hprob
+  have hQpos : 1 ≤ Q.size := le_trans (le_max_left _ _) hsize
+  have hfit : Q.size < 10 * d * Q.size := by nlinarith
+  have hcomp : Q.size ≤ 1 * Q.size := by simp only [one_mul, le_refl]
+  have hreal := hM Q.size (le_trans (le_max_right _ _) hsize) Q hQpos hfit hcomp hprob
+  apply (measure_mono ?_).trans
+    (show (latticeBondLaw d p) {ω | ¬ HasCrossingComponentConnectingPaths ω Q.vertices
+      (fun a => ↑(Q.lowerFace a)) (fun a => ↑(Q.upperFace a))
+      (fun n γ => ∀ z : Vertex d, ∃ b : Fin (n + 1),
+        (Q.size : ℤ) < 10 * ∑ k, |γ b k - z k|)} ≤ _ from ?_)
+  · intro ω hω hcross
+    exact hω hcross.crossing_and_coalescence.1
+  · rw [← ENNReal.ofReal_toReal (measure_ne_top (latticeBondLaw d p) _)]
+    exact ENNReal.ofReal_le_ofReal hreal
+
 end Rigidity.Percolation
