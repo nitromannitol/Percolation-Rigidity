@@ -58,4 +58,48 @@ theorem IntegerCube.exists_cube_in_intersection {d : ℕ}
         omega
       omega
 
+
+/-- Two equal-side cubes with nearby corners contain a prescribed smaller
+cube in their intersection. -/
+theorem IntegerCube.exists_cube_in_intersection_of_corner_dist {d : ℕ}
+    (Q R : IntegerCube d) (k : ℕ) (hsize : Q.size = R.size)
+    (hcorner : ∀ i, |Q.corner i - R.corner i| + (k : ℤ) ≤ Q.size) :
+    ∃ T : IntegerCube d, T.size = k ∧
+      (↑T.vertices : Set (Vertex d)) ⊆ Q.vertices ∧
+      (↑T.vertices : Set (Vertex d)) ⊆ R.vertices := by
+  let T : IntegerCube d := ⟨fun i => max (Q.corner i) (R.corner i), k⟩
+  refine ⟨T, rfl, ?_, ?_⟩
+  · intro x hx
+    change x ∈ T.vertices at hx
+    change x ∈ Q.vertices
+    rw [IntegerCube.mem_vertices] at hx ⊢
+    intro i
+    have hi := hx i
+    have hc := abs_le.mp (show |Q.corner i - R.corner i| ≤ (Q.size : ℤ) - k by
+      have := hcorner i
+      omega)
+    dsimp only [T] at hi
+    constructor
+    · exact le_trans (le_max_left _ _) hi.1
+    · have ht : max (Q.corner i) (R.corner i) + (k : ℤ) ≤
+          Q.corner i + (Q.size : ℤ) := by omega
+      omega
+  · intro x hx
+    change x ∈ T.vertices at hx
+    change x ∈ R.vertices
+    rw [IntegerCube.mem_vertices] at hx ⊢
+    intro i
+    have hi := hx i
+    have hc := abs_le.mp (show |Q.corner i - R.corner i| ≤ (Q.size : ℤ) - k by
+      have := hcorner i
+      omega)
+    dsimp only [T] at hi
+    constructor
+    · exact le_trans (le_max_right _ _) hi.1
+    · have ht : max (Q.corner i) (R.corner i) + (k : ℤ) ≤
+          R.corner i + (R.size : ℤ) := by
+        rw [← hsize]
+        omega
+      omega
+
 end Rigidity.Percolation
