@@ -18,6 +18,37 @@ theorem IsChannel.of_cube_subset {ω : Configuration 2} {T S : Set (Vertex 2)}
   obtain ⟨z, W, hW, hy, hz⟩ := h
   exact ⟨z, W, fun v hv => ⟨(hW v hv).1, hS (hW v hv).1.1⟩, hy, hz⟩
 
+/-- Any two channels of a very-good block are connected inside the block. -/
+theorem channels_reachable_in_cube {ω : Configuration 2} {R : ℕ} {c y y' : Vertex 2}
+    {j j' : ℕ} (hR : 3210 ≤ R) (hc : IsVeryGood ω c (11 * R / 10))
+    (hj : j < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10))
+    (hj' : j' < (2 * (11 * R / 10) + 1) / chanWidth (11 * R / 10))
+    (hy : AnyChannel ω ∅ c (11 * R / 10) j y)
+    (hy' : AnyChannel ω ∅ c (11 * R / 10) j' y') :
+    ReachIn ω (cubeAt c (11 * R / 10)) y y' := by
+  set r := 11 * R / 10
+  have hp := params (Cf := 0) (R := R) (by omega)
+  have hw : 1 ≤ chanWidth r := hp.2.1
+  have hr : r = R + R / 10 := hp.1
+  have hm : 2 * chanWidth r ≤ R / 10 := hp.2.2.1
+  have hN : 0 < (2 * r + 1) / chanWidth r := Nat.div_pos (by omega) (by omega)
+  let J := Finset.range ((2 * r + 1) / chanWidth r)
+  have hJ : ∀ j ∈ J, j < (2 * r + 1) / chanWidth r := fun j hj => Finset.mem_range.1 hj
+  have hcard : (∅ : Finset (Vertex 2)).card < J.card := by simpa [J] using hN
+  obtain ⟨jH, hjH, yH, hH⟩ := exists_unhit_channel hc.2.1 ∅ J hJ hw hcard
+  obtain ⟨jV, hjV, yV, hV⟩ := exists_unhit_channel hc.2.2 ∅ J hJ hw hcard
+  have hcross {i l : ℕ} {u v : Vertex 2}
+      (hu : IsChannel ω (↑(∅ : Finset (Vertex 2)))ᶜ c r (chanWidth r) i 0 1 u)
+      (hv : IsChannel ω (↑(∅ : Finset (Vertex 2)))ᶜ c r (chanWidth r) l 1 0 v)
+      (hi : i < (2 * r + 1) / chanWidth r) (hl : l < (2 * r + 1) / chanWidth r) :
+      ReachIn ω (cubeAt c r) u v :=
+    reachIn_same_cube (hu.of_cube_subset Set.Subset.rfl) (hv.of_cube_subset Set.Subset.rfl) hi hl
+  rcases hy with hy | hy <;> rcases hy' with hy' | hy'
+  · exact (hcross hy hV hj (hJ jV hjV)).trans (hcross hy' hV hj' (hJ jV hjV)).symm
+  · exact hcross hy hy' hj hj'
+  · exact (hcross hy' hy hj' hj).symm
+  · exact (hcross hH hy (hJ jH hjH) hj).symm.trans (hcross hH hy' (hJ jH hjH) hj')
+
 /-- Neighboring very-good blocks have channels joined inside their union. -/
 theorem linked_of_neighbours_in_union {ω : Configuration 2} {R : ℕ}
     {a b : Vertex 2} (hR : 3210 ≤ R)
