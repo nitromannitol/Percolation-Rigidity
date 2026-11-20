@@ -76,4 +76,33 @@ theorem exceptionalScale_exp_moment_of_decaying_moments {Ω : Type*} [Measurable
   obtain ⟨hae, hi, hm⟩ := h μ X hXm hInt hMom
   exact ⟨hae, θ, hθ, hi, hm⟩
 
+/-- The two usual expressions for a decreasing triadic scale agree. -/
+theorem triadic_decaying_scale_eq (K β : ℝ) (n : ℕ) :
+    K / ((3 : ℝ) ^ n) ^ β = K * (3 : ℝ) ^ (-(n : ℝ) * β) := by
+  rw [neg_mul, Real.rpow_neg (by norm_num : (0 : ℝ) ≤ 3),
+    Real.rpow_mul (by norm_num : (0 : ℝ) ≤ 3), Real.rpow_natCast]
+  exact div_eq_mul_inv _ _
+
+/-- Exponential moments at scales `K * 3 ^ (-nβ)` give a uniform
+stretched-exponential moment for the supremum of exceptional scales. -/
+theorem uniform_exceptionalScale_exp_moment_of_triadic_moments {Ω : Type*} [MeasurableSpace Ω]
+    (K s β : ℝ) (hK : 0 < K) (hs : 0 < s) (hβ : 0 < β) :
+    ∃ θ : ℝ, 0 < θ ∧ ∀ (μ : Measure Ω) [IsProbabilityMeasure μ] (X : ℕ → Ω → ℝ),
+      (∀ n, Measurable (X n)) →
+      (∀ n, Integrable (fun ω => Real.exp ((X n ω / (K * (3 : ℝ) ^ (-(n : ℝ) * β))) ^ s)) μ) →
+      (∀ n, (∫ ω, Real.exp ((X n ω / (K * (3 : ℝ) ^ (-(n : ℝ) * β))) ^ s) ∂μ) ≤ 2) →
+      let E : ℕ → Set Ω := fun n => {ω | 1 ≤ X n ω}
+      (∀ᵐ ω ∂μ, exceptionalScale E ω ≠ ∞) ∧
+        Integrable (fun ω => Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β))) μ ∧
+        (∫ ω, Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β)) ∂μ) ≤ 2 := by
+  obtain ⟨θ, hθ, h⟩ := uniform_exceptionalScale_exp_moment_of_decaying_moments
+    (Ω := Ω) K s β hK hs hβ
+  refine ⟨θ, hθ, ?_⟩
+  intro μ _ X hXm hInt hMom
+  apply h μ X hXm
+  · intro n
+    simpa only [triadic_decaying_scale_eq] using hInt n
+  · intro n
+    simpa only [triadic_decaying_scale_eq] using hMom n
+
 end Rigidity.Percolation
