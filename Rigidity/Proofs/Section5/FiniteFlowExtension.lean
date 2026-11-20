@@ -162,4 +162,38 @@ theorem exists_greenColumn_of_finite_logarithmic_flows
   exact truncatedComponentPotential_le_induced_flow_energy C hC y x T hy hxT θ _
     hθ hdiv henergy n
 
+/-- Fixed multiplicative and additive changes of scale in the logarithmic flow bound do not
+affect the existence of a planar Green column. -/
+theorem exists_greenColumn_of_finite_logarithmic_flows_scaled
+    {ω : LatticeProb.Percolation.Configuration 2} (C : LatticeProb.Percolation.OpenComponent ω)
+    (hC : C.supp.Infinite) (y : C) (A B R₀ : ℝ) (hA : 0 ≤ A) (hB : 1 ≤ B)
+    (hflow : ∀ x : C, R₀ ≤ Rigidity.Section5.eucl x.val →
+      ∃ (T : Finset C) (hy : y ∈ T) (hx : x ∈ T) (θ : T → T → ℝ),
+        IsFlow ((LatticeProb.Percolation.componentGraph C).induce (T : Set C)) θ ∧
+        (∀ z : T, divergence ((LatticeProb.Percolation.componentGraph C).induce (T : Set C)) θ z =
+          (if z = ⟨y, hy⟩ then 1 else 0) - (if z = ⟨x, hx⟩ then 1 else 0)) ∧
+        flowEnergyOn ((LatticeProb.Percolation.componentGraph C).induce (T : Set C))
+          (unitCond ((LatticeProb.Percolation.componentGraph C).induce (T : Set C))) Finset.univ θ ≤
+            2 * (A * Real.log (B * (Rigidity.Section5.eucl x.val + 1)))) :
+    ∃ g, LatticeProb.Percolation.IsGreenColumn 2 le_rfl C y g := by
+  refine exists_greenColumn_of_finite_logarithmic_flows C hC y (2 * A)
+    (max R₀ (max (2 * B) 2)) (by positivity) ?_
+  intro x hx
+  have hxR : R₀ ≤ Rigidity.Section5.eucl x.val := le_trans (le_max_left _ _) hx
+  have hxB : 2 * B ≤ Rigidity.Section5.eucl x.val :=
+    le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hx
+  have hx2 : 2 ≤ Rigidity.Section5.eucl x.val :=
+    le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hx
+  obtain ⟨T, hy, hxT, θ, hθ, hdiv, henergy⟩ := hflow x hxR
+  refine ⟨T, hy, hxT, θ, hθ, hdiv, henergy.trans ?_⟩
+  have hscale : B * (Rigidity.Section5.eucl x.val + 1) ≤
+      (Rigidity.Section5.eucl x.val) ^ 2 := by nlinarith
+  have hlog : Real.log (B * (Rigidity.Section5.eucl x.val + 1)) ≤
+      2 * Real.log (Rigidity.Section5.eucl x.val) := by
+    calc
+      _ ≤ Real.log ((Rigidity.Section5.eucl x.val) ^ 2) :=
+        Real.log_le_log (by positivity) hscale
+      _ = _ := by rw [Real.log_pow]; norm_num
+  nlinarith [mul_le_mul_of_nonneg_left hlog hA]
+
 end Rigidity.Proofs.Section5
