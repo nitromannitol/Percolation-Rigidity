@@ -19,7 +19,7 @@ arbitrarily high probability. -/
 theorem exists_faceSeed_many_boundaryCandidates {d : ℕ} [NeZero d]
     (p : unitInterval) (hp : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (i : Fin d) (t : ℕ) (ε : ℝ) (hε : 0 < ε) :
-    ∃ M n : ℕ, 0 < M ∧ 2 * M < n ∧
+    ∃ M n : ℕ, 0 < M ∧ 2 * M < n ∧ (2 * M + 1) ∣ n + 1 ∧
       ∀ R : Finset (Vertex d), centeredBondCubeFinset M ⊆ R →
         (R : Set (Vertex d)) ⊆ centeredBondCube n →
         (∀ x ∈ centeredCubeOrthantFace n i (fun _ => true), x ∉ R) →
@@ -31,11 +31,10 @@ theorem exists_faceSeed_many_boundaryCandidates {d : ℕ} [NeZero d]
   obtain ⟨M, hMpos, hM⟩ :=
     exists_seed_eventually_singleFieldFaceSuccess_of_supercritical p hp i (ε * c) (mul_pos hε hc)
   obtain ⟨N, hN⟩ := eventually_atTop.mp hM
-  let a := max N (M + 1)
+  obtain ⟨a, ha, hMa, halign⟩ := exists_large_aligned_offset M N (2 * M + 1) (by omega)
   let n := M + a
-  have ha : N ≤ a := le_max_left _ _
-  have hn : 2 * M < n := by dsimp [n, a]; omega
-  refine ⟨M, n, hMpos, hn, ?_⟩
+  have hn : 2 * M < n := by dsimp [n]; omega
+  refine ⟨M, n, hMpos, hn, halign, ?_⟩
   intro R hseed hR hface
   let face := centeredCubeOrthantFace n i (fun _ => true)
   let K := faceSeedTargets face (2 * M + 1) i n
