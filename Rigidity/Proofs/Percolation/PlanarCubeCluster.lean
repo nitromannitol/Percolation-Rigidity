@@ -6,8 +6,8 @@ import Rigidity.Proofs.Percolation.ClusterCoarsening
 
 A triadic cube `U` is resolved by the planar partition when it contains the partition cubes of its
 vertices. The anchors of all partition cubes inside a resolved cube are then joined by open paths
-inside `U`, and the cluster `C_*(U)` is the set of vertices of `U` joined inside `U` to the anchor of
-their partition cube (equivalently, to any anchor inside `U`).
+inside `U`, and the cluster `C_*(U)` is the set of vertices of `U` joined inside `U` to the anchor
+of their partition cube (equivalently, to any anchor inside `U`).
 
 For functions on `C_*(U)`, the coarsening error at a vertex and the coarse gradient across an edge
 are bounded by the variation over the open edges of `C_*(U)` inside the window of the partition
