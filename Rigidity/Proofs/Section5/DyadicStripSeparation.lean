@@ -188,4 +188,27 @@ theorem card_dyadic_vertical_regions_le_nine {η : PlanarCarrier → Bool} {j R 
   · intro i hi
     exact (Finset.mem_filter.1 hi).2
 
+/-- At most eighteen horizontal or vertical crossing regions of a translated dyadic grid
+contain a given lattice vertex. -/
+theorem card_dyadic_grid_regions_le_eighteen {η : PlanarCarrier → Bool} {j R : ℕ}
+    (c : PlanarCarrier)
+    (H V : dyadicStripStarts j → Finset (List (LatticeModels.Site 2)))
+    (hH : ∀ a : dyadicStripStarts j, Menger.IsLinkage
+      (Menger.edgesIn (planarOpenSiteGraph (translatePlanarField a η))
+        (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+      (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) (H a))
+    (hV : ∀ a : dyadicStripStarts j, Menger.IsLinkage
+      (Menger.edgesIn (planarOpenSiteGraph (translatePlanarField a (swapPlanarField η)))
+        (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+      (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) (V a))
+    (I : Finset (Σ a : dyadicStripStarts j, H a))
+    (J : Finset (Σ a : dyadicStripStarts j, V a)) (x : Vertex 2) :
+    (I.filter fun i => x ∈ renormPathRegion R
+      (i.2.1.map fun q => c + ((i.1 : PlanarCarrier) + (q 0, q 1)))).card +
+    (J.filter fun i => x ∈ renormPathRegion R
+      (i.2.1.map fun q => c + Prod.swap ((i.1 : PlanarCarrier) + (q 0, q 1)))).card ≤ 18 := by
+  have h₁ := card_dyadic_horizontal_regions_le_nine (R := R) c H hH I x
+  have h₂ := card_dyadic_vertical_regions_le_nine (R := R) c V hV J x
+  omega
+
 end Rigidity.Proofs.Section5.Kesten
