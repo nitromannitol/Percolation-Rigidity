@@ -152,4 +152,40 @@ theorem card_dyadic_horizontal_regions_le_nine {η : PlanarCarrier → Bool} {j 
   · intro i hi
     exact (Finset.mem_filter.1 hi).2
 
+/-- A common translation preserves disjointness of all vertical grid paths. -/
+theorem dyadic_vertical_grid_paths_disjoint_offset {η : PlanarCarrier → Bool} {j : ℕ}
+    (c : PlanarCarrier) (V : dyadicStripStarts j → Finset (List (LatticeModels.Site 2)))
+    (hV : ∀ a : dyadicStripStarts j, Menger.IsLinkage
+      (Menger.edgesIn (planarOpenSiteGraph (translatePlanarField a (swapPlanarField η)))
+        (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+      (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) (V a)) :
+    ∀ (i k : Σ a : dyadicStripStarts j, V a), i ≠ k → ∀ z ∈
+      (i.2.1.map fun q => c + Prod.swap ((i.1 : PlanarCarrier) + (q 0, q 1))), z ∉
+        (k.2.1.map fun q => c + Prod.swap ((k.1 : PlanarCarrier) + (q 0, q 1))) := by
+  intro i k hik z hz hz'
+  obtain ⟨x, hx, hzx⟩ := List.mem_map.1 hz
+  obtain ⟨y, hy, hzy⟩ := List.mem_map.1 hz'
+  have heq : (i.1 : PlanarCarrier) + (x 0, x 1) = (k.1 : PlanarCarrier) + (y 0, y 1) :=
+    Prod.swap_injective (add_left_cancel (hzx.trans hzy.symm))
+  apply dyadic_horizontal_grid_paths_disjoint V hV i k hik ((i.1 : PlanarCarrier) + (x 0, x 1))
+  · exact List.mem_map.2 ⟨x, hx, rfl⟩
+  · exact List.mem_map.2 ⟨y, hy, heq.symm⟩
+
+/-- Across all vertical strips, at most nine crossing regions contain a fixed lattice vertex. -/
+theorem card_dyadic_vertical_regions_le_nine {η : PlanarCarrier → Bool} {j R : ℕ}
+    (c : PlanarCarrier) (V : dyadicStripStarts j → Finset (List (LatticeModels.Site 2)))
+    (hV : ∀ a : dyadicStripStarts j, Menger.IsLinkage
+      (Menger.edgesIn (planarOpenSiteGraph (translatePlanarField a (swapPlanarField η)))
+        (Finset.finite_toSet (rectangle (2 ^ j) (j + 1))))
+      (↑(leftSide (2 ^ j) (j + 1))) (↑(rightSide (2 ^ j) (j + 1))) (V a))
+    (I : Finset (Σ a : dyadicStripStarts j, V a)) (x : Vertex 2) :
+    (I.filter fun i => x ∈ renormPathRegion R
+      (i.2.1.map fun q => c + Prod.swap ((i.1 : PlanarCarrier) + (q 0, q 1)))).card ≤ 9 := by
+  apply card_disjoint_indexed_regions_meeting_le_nine _
+    (fun i => i.2.1.map fun q => c + Prod.swap ((i.1 : PlanarCarrier) + (q 0, q 1)))
+  · intro i hi k hk hik z hz
+    exact dyadic_vertical_grid_paths_disjoint_offset c V hV i k hik z hz
+  · intro i hi
+    exact (Finset.mem_filter.1 hi).2
+
 end Rigidity.Proofs.Section5.Kesten
