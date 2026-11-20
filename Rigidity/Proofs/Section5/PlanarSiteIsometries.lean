@@ -109,4 +109,50 @@ theorem swapped_translated_crossing_lifts {ω : Configuration 2} {R m n : ℕ}
   exact horizontal_crossing_lifts_of_site_hom hR hm _
     ((swapOpenSiteHom _).comp (translateOpenSiteHom a _)) (fun _ h => h) hl
 
+/-- An injective relabeling of pairwise disjoint site paths preserves the ninefold bound on
+visited-block regions. -/
+theorem card_injective_path_regions_meeting_le_nine {V : Type*} {R : ℕ} {x : Vertex 2}
+    (f : V → PlanarCarrier) (hf : Function.Injective f) (L : Finset (List V))
+    (hdisj : ∀ l ∈ L, ∀ l' ∈ L, l ≠ l' → ∀ z ∈ l, z ∉ l')
+    (hx : ∀ l ∈ L, x ∈ renormPathRegion R (l.map f)) : L.card ≤ 9 := by
+  classical
+  have hmap : Function.Injective (List.map f) := List.map_injective_iff.2 hf
+  have hd : ∀ l ∈ L.image (List.map f), ∀ l' ∈ L.image (List.map f),
+      l ≠ l' → ∀ z ∈ l, z ∉ l' := by
+    intro l hl l' hl' hne z hz hz'
+    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hl
+    obtain ⟨b, hb, rfl⟩ := Finset.mem_image.1 hl'
+    obtain ⟨u, hu, rfl⟩ := List.mem_map.1 hz
+    obtain ⟨v, hv, huv⟩ := List.mem_map.1 hz'
+    have huv' : v = u := hf huv
+    subst v
+    exact hdisj a ha b hb (fun h => hne (congrArg (List.map f) h)) u hu hv
+  have hb := card_disjoint_path_regions_meeting_le_nine (L.image (List.map f)) hd (by
+    intro l hl
+    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hl
+    exact hx a ha)
+  rwa [Finset.card_image_of_injective _ hmap] at hb
+
+/-- Translated disjoint crossings have at most nine visited-block regions at any vertex. -/
+theorem card_translated_crossing_regions_meeting_le_nine {R : ℕ} {x : Vertex 2}
+    (a : PlanarCarrier) (L : Finset (List (LatticeModels.Site 2)))
+    (hdisj : ∀ l ∈ L, ∀ l' ∈ L, l ≠ l' → ∀ z ∈ l, z ∉ l')
+    (hx : ∀ l ∈ L, x ∈ renormPathRegion R (l.map fun z => a + (z 0, z 1))) : L.card ≤ 9 := by
+  apply card_injective_path_regions_meeting_le_nine (fun z => a + (z 0, z 1)) ?_ L hdisj hx
+  intro z w h
+  have h' : (z 0, z 1) = (w 0, w 1) := add_left_cancel h
+  exact LatticeModels.Site.eq_iff_two.2 ⟨congrArg Prod.fst h', congrArg Prod.snd h'⟩
+
+/-- The same bound holds when the translated crossings are coordinate-swapped. -/
+theorem card_swapped_crossing_regions_meeting_le_nine {R : ℕ} {x : Vertex 2}
+    (a : PlanarCarrier) (L : Finset (List (LatticeModels.Site 2)))
+    (hdisj : ∀ l ∈ L, ∀ l' ∈ L, l ≠ l' → ∀ z ∈ l, z ∉ l')
+    (hx : ∀ l ∈ L, x ∈ renormPathRegion R (l.map fun z => Prod.swap (a + (z 0, z 1)))) :
+    L.card ≤ 9 := by
+  have hinj : Function.Injective (fun z : LatticeModels.Site 2 => Prod.swap (a + (z 0, z 1))) := by
+    intro z w h
+    have h' : (z 0, z 1) = (w 0, w 1) := add_left_cancel (Prod.swap_injective h)
+    exact LatticeModels.Site.eq_iff_two.2 ⟨congrArg Prod.fst h', congrArg Prod.snd h'⟩
+  exact card_injective_path_regions_meeting_le_nine (R := R) (x := x) _ hinj L hdisj hx
+
 end Rigidity.Proofs.Section5.Kesten
