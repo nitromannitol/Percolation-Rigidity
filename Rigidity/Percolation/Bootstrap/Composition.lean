@@ -256,11 +256,6 @@ theorem bondMarkLaw_real_inter_localBonds (S : Set (Vertex d)) {A B : Set (BondM
   rw [hind, ENNReal.toReal_mul]
   rfl
 
-/-- The mark law is a probability measure. -/
-instance isProbabilityMeasure_bondMarkLaw : IsProbabilityMeasure (bondMarkLaw d) := by
-  dsimp only [bondMarkLaw]
-  infer_instance
-
 /-- Every threshold configuration is below the configuration with all bonds open. -/
 theorem thresholdBondMarks_le_allOpen (p : unitInterval) (ω : BondMarks d) :
     thresholdBondMarks p ω ≤ allOpen d :=
