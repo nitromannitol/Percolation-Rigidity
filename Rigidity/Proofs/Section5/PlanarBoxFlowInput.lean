@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Section5.PlanarBoxFlowGreen
 import Rigidity.Proofs.Section5.PlanarGreenUniqueness
-import Rigidity.Proofs.S6.PlanarLargestCluster
+import Rigidity.Proofs.S6.PlanarLargestClusterUnique
 
 /-!
 # Planar Green existence from box-cluster flows
@@ -18,7 +18,7 @@ namespace Rigidity.Proofs.Section5
 theorem greenColumnExistsTwo_of_largestBox_flows
     (hflow : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
       ∀ᵐ ω ∂latticeBondLaw 2 p, ∃ A : ℝ, 0 ≤ A ∧ ∀ᶠ n : ℕ in atTop,
-        ∀ V : Finset (Vertex 2), IsLargestBoxCluster ω n V →
+        ∃ V : Finset (Vertex 2), IsLargestBoxCluster ω n V ∧
           ∀ a b : V, ∃ θ : V → V → ℝ,
             IsFlow ((openGraph ω).induce (V : Set (Vertex 2))) θ ∧
             (∀ z : V, divergence ((openGraph ω).induce (V : Set (Vertex 2))) θ z =
@@ -29,18 +29,25 @@ theorem greenColumnExistsTwo_of_largestBox_flows
     Rigidity.External.SupercriticalBondGreenColumnExistsTwo := by
   intro p hp hp1 y
   filter_upwards [hflow p hp hp1, Rigidity.Proofs.S6.planar_largestBox_absorbs_infiniteCluster
-    p hp hp1] with ω hflows hboxes h hy
+    p hp hp1, Rigidity.Proofs.S6.ae_eventually_planar_largestBoxCluster_unique p hp hp1]
+    with ω hflows hboxes hunique h hy
   obtain ⟨A, hA, hflows⟩ := hflows
   obtain ⟨h', hboxes⟩ := hboxes
   have hh : h = h' := Subsingleton.elim _ _
   subst h'
   obtain ⟨N₁, hN₁⟩ := eventually_atTop.mp hflows
   obtain ⟨N₂, hN₂⟩ := eventually_atTop.mp hboxes
+  obtain ⟨N₃, hN₃⟩ := eventually_atTop.mp hunique
   apply exists_greenColumn_of_box_flows (uniqueInfiniteComponent h)
-    (uniqueInfiniteComponent_infinite h) ⟨y, hy⟩ A hA (max N₁ N₂)
+    (uniqueInfiniteComponent_infinite h) ⟨y, hy⟩ A hA (max N₁ (max N₂ N₃))
   intro n hn hn1
-  obtain ⟨V, hV, hsubset, hinner⟩ := hN₂ n ((le_max_right _ _).trans hn)
-  refine ⟨V, hsubset, ?_, hN₁ n ((le_max_left _ _).trans hn) V hV⟩
+  have hn₂ : N₂ ≤ n := (le_max_left _ _).trans ((le_max_right _ _).trans hn)
+  have hn₃ : N₃ ≤ n := (le_max_right _ _).trans ((le_max_right _ _).trans hn)
+  obtain ⟨V, hV, hsubset, hinner⟩ := hN₂ n hn₂
+  obtain ⟨W, hW, hWflow⟩ := hN₁ n ((le_max_left _ _).trans hn)
+  have heq : W = V := hN₃ n hn₃ W V hW hV
+  subst W
+  refine ⟨V, hsubset, ?_, hWflow⟩
   intro z hz
   exact hinner z.val hz z.property
 
