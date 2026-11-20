@@ -29,4 +29,25 @@ theorem HasCrossingComponentConnectingPaths.of_l1_radius {d : ℕ}
   intro z
   exact hdiam.exists_l1_far_from_center_at_scale ht z
 
+
+/-- The same conclusion holds if the radius threshold uses any scale at most
+`8 * t`, including the two scales of the subcube cover. -/
+theorem HasCrossingComponentConnectingPaths.of_l1_radius_le {d : ℕ}
+    {ω : Configuration d} {B : Set (Vertex d)} {lower upper : Fin d → Set (Vertex d)}
+    (t N : ℕ) (ht : 0 < t) (hN : N ≤ 8 * t)
+    (h : HasCrossingComponentConnectingPaths ω B lower upper
+      (fun n γ => ∀ z : Vertex d, ∃ i : Fin (n + 1),
+        (N : ℤ) < 10 * ∑ k, |γ i k - z k|)) :
+    HasCrossingComponentConnectingPaths ω B lower upper
+      (pathDiameterAtLeast (2 * (t : ℤ))) := by
+  obtain ⟨root, hroot, hpaths⟩ := h
+  refine ⟨root, hroot, ?_⟩
+  intro n γ hdiam hstart hadj
+  apply hpaths n γ ?_ hstart hadj
+  intro z
+  obtain ⟨i, hi⟩ := hdiam.exists_l1_far_from_center_at_scale ht z
+  refine ⟨i, ?_⟩
+  have hN' : (N : ℤ) ≤ 8 * (t : ℤ) := by exact_mod_cast hN
+  exact lt_of_le_of_lt hN' hi
+
 end Rigidity.Percolation
