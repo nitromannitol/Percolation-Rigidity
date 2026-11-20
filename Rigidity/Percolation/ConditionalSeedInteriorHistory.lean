@@ -106,4 +106,36 @@ theorem exists_conditional_padSeedExit_with_interior_history {d : ℕ} [NeZero d
     (measurableSet_markedPadSeedExit_exterior p M n i R hR hface β δ) hApos hsource.1
   exact ⟨heq.1, heq.2 ▸ hsource.2⟩
 
+/-- The conditional seed estimate also survives any positive-probability
+history on a bond set disjoint from the exterior exit support. -/
+theorem exists_conditional_padSeedExit_with_exterior_disjoint_history {d : ℕ} [NeZero d]
+    (p : unitInterval) (hp : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (i : Fin d) (ε δ : ℝ) (hε : 0 < ε) (hδ : 0 < δ) :
+    ∃ M n : ℕ, 0 < M ∧ 2 * M < n ∧
+      ∀ R : Finset (Vertex d), centeredBondCubeFinset M ⊆ R →
+        (R : Set (Vertex d)) ⊆ centeredBondCube n →
+        (∀ x ∈ centeredCubeOrthantFace n i (fun _ => true), x ∉ R) →
+        ∀ β : Bond d → unitInterval,
+          (∀ e ∈ vertexCutBondsIn R (centeredBondCube n), (β e : ℝ) + δ ≤ 1) →
+          ∀ (E : Set (Bond d)), Disjoint E (seedExitExteriorSupport M n i R) →
+          ∀ A : Set (BondMarks d), MeasurableSet[bondMarkSigma E] A →
+            0 < (bondMarkLaw d).real A →
+          let H := bondMarksAbove (vertexCutBondsIn R (centeredBondCube n)) β
+          let G := markedPadSeedExit p M n i R β δ
+          0 < (bondMarkLaw d).real (A ∩ H) ∧
+          1 - ε < (bondMarkLaw d).real ((A ∩ H) ∩ G) /
+            (bondMarkLaw d).real (A ∩ H) := by
+  obtain ⟨M, n, hM, hn, hbase⟩ :=
+    exists_conditional_markedPadSeedExit_of_pos p hp hp1 i ε δ hε hδ
+  refine ⟨M, n, hM, hn, ?_⟩
+  intro R hseed hR hface β hβ E hdisj A hA hApos
+  let H := bondMarksAbove (vertexCutBondsIn R (centeredBondCube n)) β
+  let G := markedPadSeedExit p M n i R β δ
+  have hsource := hbase R hseed hR hface β hβ
+  have heq := bondMarkLaw_real_conditional_inter_of_disjoint E
+    (seedExitExteriorSupport M n i R) hdisj A H G hA
+    (measurableSet_internalCutMarksAbove_exterior M n i R β)
+    (measurableSet_markedPadSeedExit_exterior p M n i R hR hface β δ) hApos hsource.1
+  exact ⟨heq.1, heq.2 ▸ hsource.2⟩
+
 end Rigidity.Percolation
