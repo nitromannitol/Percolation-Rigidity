@@ -20,6 +20,16 @@ to the collection of well-connected cubes. -/
 def TriadicCube.goodOfWellConnected {d : ℕ} (W : Set (TriadicCube d)) : Set (TriadicCube d) :=
   {Q | 0 < Q.scale ∧ Q ∈ W ∧ ∀ digits : Fin d → Fin 3, Q.child digits ∈ W}
 
+/-- A triadic cube has side length at least three exactly when its scale is positive. -/
+theorem TriadicCube.three_le_side_iff {d : ℕ} (Q : TriadicCube d) :
+    3 ≤ Q.side ↔ 0 < Q.scale := by
+  cases h : Q.scale with
+  | zero => simp only [side, h, pow_zero, not_lt_zero, iff_false]; norm_num
+  | succ n =>
+      have hp : (1 : ℤ) ≤ 3 ^ n := one_le_pow₀ (by norm_num)
+      simp only [side, h, pow_succ, Nat.zero_lt_succ, iff_true]
+      nlinarith
+
 /-- Goodness is measurable if well-connectedness is measurable. -/
 theorem TriadicCube.measurableSet_mem_goodOfWellConnected {d : ℕ} {Ω : Type*}
     [MeasurableSpace Ω] (W : Ω → Set (TriadicCube d))
