@@ -47,6 +47,29 @@ theorem dyadicStripStarts_nonempty {j : ℕ} (hj : 2 ≤ j) : (dyadicStripStarts
   rw [card_dyadicStripStarts]
   exact Nat.div_pos (hp j hj) (by omega)
 
+/-- Distinct dyadic strips have disjoint ranges in their narrow coordinate. -/
+theorem dyadicStripStarts_eq_of_overlap {j : ℕ} {a b : PlanarCarrier}
+    (ha : a ∈ dyadicStripStarts j) (hb : b ∈ dyadicStripStarts j) {t : ℤ}
+    (hta : a.2 ≤ t ∧ t ≤ a.2 + (j + 1 : ℤ))
+    (htb : b.2 ≤ t ∧ t ≤ b.2 + (j + 1 : ℤ)) : a = b := by
+  obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 ha
+  obtain ⟨k, hk, rfl⟩ := Finset.mem_image.1 hb
+  have hik : i = k := by
+    rcases lt_trichotomy i k with hik | hik | hik
+    · have hik' : (i : ℤ) + 1 ≤ k := by exact_mod_cast hik
+      have hm := mul_nonneg (show (0 : ℤ) ≤ (k : ℤ) - i - 1 by omega)
+        (show (0 : ℤ) ≤ (j : ℤ) + 2 by omega)
+      exfalso
+      nlinarith
+    · exact hik
+    · have hik' : (k : ℤ) + 1 ≤ i := by exact_mod_cast hik
+      have hm := mul_nonneg (show (0 : ℤ) ≤ (i : ℤ) - k - 1 by omega)
+        (show (0 : ℤ) ≤ (j : ℤ) + 2 by omega)
+      exfalso
+      nlinarith
+  subst k
+  rfl
+
 /-- The lower-left corner of the dyadic square centered at the origin. -/
 def dyadicCenteredOffset (j : ℕ) : PlanarCarrier :=
   (-((2 ^ j / 2 : ℕ) : ℤ), -((2 ^ j / 2 : ℕ) : ℤ))
