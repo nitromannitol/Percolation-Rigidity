@@ -127,4 +127,62 @@ theorem exists_slab_decay_rate {d : ℕ} (p : unitInterval) (ρ : ℝ)
   · exact (min_le_right _ _).trans (min_le_left _ _)
   · exact (min_le_right _ _).trans (min_le_right _ _)
 
+/-- A radius scale determines a valid number of complete slabs and satisfies
+the rounding conditions needed for the crossing estimate. -/
+theorem IntegerCube.radius_scale_slab_parameters {d : ℕ} (hd : 0 < d)
+    (Q : IntegerCube d) (width radius : ℕ) (hwidth : 0 < width)
+    (hradius : 10 * d * width ≤ radius) (hfit : radius < 10 * d * Q.size) :
+    let N := radius / (10 * d * width) - 1
+    0 < 1 * width ∧ (∀ n ≤ N, (1 + n) * width < Q.size) ∧
+      10 * d * ((N + 1) * width - 1) ≤ radius := by
+  let D := 10 * d * width
+  let K := radius / D
+  have hD : 0 < D := by dsimp only [D]; positivity
+  have hK : 0 < K := Nat.div_pos hradius hD
+  have hdiv := Nat.div_mul_le_self radius D
+  have hKsize : K * width < Q.size := by
+    by_contra h
+    have hge : Q.size ≤ K * width := by omega
+    have hmul := Nat.mul_le_mul_left (10 * d) hge
+    dsimp only [K, D] at hmul hdiv
+    nlinarith
+  let N := K - 1
+  have hN : N + 1 = K := Nat.sub_add_cancel hK
+  have hsize : ∀ n ≤ N, (1 + n) * width < Q.size := by
+    intro n hn
+    have hle : 1 + n ≤ K := by omega
+    exact lt_of_le_of_lt (Nat.mul_le_mul_right width hle) hKsize
+  have hround : 10 * d * ((N + 1) * width - 1) ≤ radius := by
+    rw [hN]
+    have hle : K * width - 1 ≤ K * width := Nat.sub_le _ _
+    have hmul := Nat.mul_le_mul_left (10 * d) hle
+    dsimp only [K, D] at hmul hdiv
+    nlinarith
+  exact ⟨by simpa using hwidth, hsize, hround⟩
+
+/-- At a radius scale fitting inside the cube, the conditional crossing bound
+has an exponential rate proportional to the number of full slabs at that scale. -/
+theorem IntegerCube.measureReal_no_crossing_connecting_radius_le_scaled_exp {d : ℕ}
+    (hd : 0 < d) (Q : IntegerCube d) (j i : Fin d) (hij : i ≠ j)
+    (width radius : ℕ) (hwidth : 0 < width)
+    (hradius : 10 * d * width ≤ radius) (hfit : radius < 10 * d * Q.size)
+    (p : unitInterval) (ρ c : ℝ) (hρ : 0 ≤ ρ) (hρ₁ : ρ ≤ 1) (hc : 0 < c)
+    (hcρ : c ≤ ρ) (hcroot : c ≤ (p : ℝ) * ρ ^ (2 * d))
+    (hctwo : c ≤ (p : ℝ) * ((p : ℝ) * ρ))
+    (hprob : ∀ t : Fin d, ∀ k : ℕ, (k + 1) * width ≤ Q.size →
+      ∀ x ∈ Q.slab t width k, ∀ y ∈ Q.slab t width k,
+        ρ ≤ (latticeBondLaw d p).real {ω | (openIn ω (Q.slab t width k)).Reachable x y}) :
+    (latticeBondLaw d p).real {ω | ¬ HasCrossingComponentConnectingPaths ω Q.vertices
+      (fun t => ↑(Q.lowerFace t)) (fun t => ↑(Q.upperFace t))
+      (fun n γ => ∀ z : Vertex d, ∃ a : Fin (n + 1),
+        (radius : ℤ) < 10 * ∑ k, |γ a k - z k|)} ≤
+      (1 + ((Q.lowerFace j).card : ℝ) +
+        ((d * Q.size : ℕ) : ℝ) * (Q.vertices.card : ℝ) ^ 2) *
+      Real.exp (-(c * ((radius / (10 * d * width) - 1 : ℕ) : ℝ))) := by
+  obtain ⟨hstart, hsize, hround⟩ := Q.radius_scale_slab_parameters hd width radius
+    hwidth hradius hfit
+  exact Q.measureReal_no_crossing_connecting_radius_le_exp hd j i hij width 1
+    (radius / (10 * d * width) - 1) radius hwidth hstart hsize hround
+    p ρ c hρ hρ₁ hc hcρ hcroot hctwo hprob
+
 end Rigidity.Percolation
