@@ -23,6 +23,40 @@ def markedRegionExit {d : ℕ} (p : unitInterval) (R : Finset (Vertex d))
       ∃ z ∈ K (thresholdBondMarks p ω), z ∈ D \ (R : Set (Vertex d)) ∧
         (openIn (thresholdBondMarks p ω) (D \ (R : Set (Vertex d)))).Reachable y z}
 
+/-- A marked exterior exit to a measurable finite target family is measurable. -/
+theorem measurableSet_markedRegionExit {d : ℕ} (p : unitInterval) (R : Finset (Vertex d))
+    (D : Set (Vertex d)) (K : Configuration d → Finset (Vertex d)) (hK : Measurable K)
+    (β : Bond d → unitInterval) (δ : ℝ) : MeasurableSet (markedRegionExit p R D K β δ) := by
+  have hp : Measurable (thresholdBondMarks (d := d) p) := by
+    apply measurable_pi_lambda
+    intro e
+    exact (measurable_markThreshold p).comp (measurable_pi_apply e)
+  have htargets : Measurable (fun ω : BondMarks d => K (thresholdBondMarks p ω)) := hK.comp hp
+  have heq : markedRegionExit p R D K β δ = ⋃ x ∈ R, ⋃ y ∈ D \ (R : Set (Vertex d)),
+      ⋃ hxy : (nearestNeighborGraph d).Adj x y,
+      {ω | (ω (bondOfAdjacent hxy) : ℝ) ≤ (β (bondOfAdjacent hxy) : ℝ) + δ} ∩
+      ⋃ z ∈ D \ (R : Set (Vertex d)), {ω | z ∈ K (thresholdBondMarks p ω)} ∩
+        {ω | (openIn (thresholdBondMarks p ω) (D \ (R : Set (Vertex d)))).Reachable y z} := by
+    ext ω
+    simp only [markedRegionExit, Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_inter_iff]
+    constructor
+    · rintro ⟨x, hx, y, hy, hxy, hopen, z, hz, hzout, hpath⟩
+      exact ⟨x, hx, y, hy, hxy, hopen, z, hzout, hz, hpath⟩
+    · rintro ⟨x, hx, y, hy, hxy, hopen, z, hzout, hz, hpath⟩
+      exact ⟨x, hx, y, hy, hxy, hopen, z, hz, hzout, hpath⟩
+  rw [heq]
+  refine MeasurableSet.iUnion fun x => MeasurableSet.iUnion fun _ =>
+    MeasurableSet.iUnion fun y => MeasurableSet.iUnion fun _ =>
+      MeasurableSet.iUnion fun hxy => ?_
+  apply MeasurableSet.inter
+  · have hc : Measurable (fun ω : BondMarks d => ω (bondOfAdjacent hxy)) := measurable_pi_apply _
+    have hc' : Measurable (fun ω : BondMarks d => (ω (bondOfAdjacent hxy) : ℝ)) :=
+      measurable_subtype_coe.comp hc
+    exact measurableSet_Iic.preimage hc'
+  · refine MeasurableSet.iUnion fun z => MeasurableSet.iUnion fun _ => ?_
+    exact (measurableSet_setOf.mpr ((measurable_finset_iff.mp htargets) z)).inter
+      ((measurableSet_openIn_reachable _ y z).preimage hp)
+
 /-- Moving all geometric data and thresholds by a lattice symmetry carries
 marked exterior exits to marked exterior exits. -/
 theorem latticeBondMarkEquiv_mem_markedRegionExit {d : ℕ} (p : unitInterval)
