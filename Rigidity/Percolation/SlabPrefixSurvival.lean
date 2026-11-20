@@ -167,4 +167,45 @@ theorem IntegerCube.measureReal_two_escapes_le {d : ℕ} (Q : IntegerCube d)
     (Q.slabPrefix_mono j width (Nat.le_add_right k₀ N) hz)
     (Q.slabPrefix_mono j width (Nat.le_add_right k₀ N) hz') hω.1 hω.2.1 hω.2.2
 
+/-- A finite union over starting vertices bounds the chance that some pair of
+disconnected components both escape a distant prefix. -/
+theorem IntegerCube.measureReal_exists_two_escapes_le {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) (width k₀ N : ℕ) (hwidth : 0 < width)
+    (hsize : ∀ n ≤ N, (k₀ + n) * width < Q.size)
+    (A : Finset (Vertex d)) (hA : (↑A : Set (Vertex d)) ⊆ Q.slabPrefix j width k₀)
+    (p : unitInterval) (δ : ℝ) (hδ : δ ≤ 1)
+    (hprob : ∀ n < N, ∀ y ∈ Q.slab j width (k₀ + n),
+      ∀ y' ∈ Q.slab j width (k₀ + n), δ ≤ (latticeBondLaw d p).real
+        {ω | (openIn ω (Q.slab j width (k₀ + n))).Reachable y y'}) :
+    (latticeBondLaw d p).real {ω | ∃ z ∈ A, ∃ z' ∈ A,
+      targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z ω ∧
+      targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z' ω ∧
+      ¬ (openIn ω Q.vertices).Reachable z z'} ≤
+      (A.card : ℝ) ^ 2 * (1 - (p : ℝ) * ((p : ℝ) * δ)) ^ N := by
+  classical
+  let E : Vertex d × Vertex d → Set (Configuration d) := fun zz => {ω |
+    targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) zz.1 ω ∧
+    targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) zz.2 ω ∧
+    ¬ (openIn ω Q.vertices).Reachable zz.1 zz.2}
+  have hcover : {ω | ∃ z ∈ A, ∃ z' ∈ A,
+      targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z ω ∧
+      targetConnection Q.vertices (Q.vertices \ Q.slabPrefix j width (k₀ + N)) z' ω ∧
+      ¬ (openIn ω Q.vertices).Reachable z z'} ⊆ ⋃ zz ∈ A.product A, E zz := by
+    rintro ω ⟨z, hz, z', hz', h⟩
+    exact Set.mem_iUnion₂.mpr ⟨(z, z'), Finset.mem_product.mpr ⟨hz, hz'⟩, h⟩
+  calc
+    _ ≤ (latticeBondLaw d p).real (⋃ zz ∈ A.product A, E zz) :=
+      measureReal_mono hcover (measure_ne_top _ _)
+    _ ≤ ∑ zz ∈ A.product A, (latticeBondLaw d p).real (E zz) :=
+      measureReal_biUnion_finset_le _ _
+    _ ≤ ∑ _zz ∈ A.product A, (1 - (p : ℝ) * ((p : ℝ) * δ)) ^ N := by
+      apply Finset.sum_le_sum
+      intro zz hzz
+      obtain ⟨hz, hz'⟩ := Finset.mem_product.mp hzz
+      exact Q.measureReal_two_escapes_le j width k₀ N hwidth hsize zz.1 zz.2
+        (hA hz) (hA hz') p δ hδ hprob
+    _ = _ := by
+      simp only [Finset.sum_const, nsmul_eq_mul, pow_two]
+      rw [Finset.product_eq_sprod, Finset.card_product, Nat.cast_mul]
+
 end Rigidity.Percolation
