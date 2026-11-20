@@ -1,5 +1,6 @@
 import Rigidity.Percolation.SlabFiniteEnergy
 import LatticeProb.Prob.Percolation.LatticeBondCritical
+import Mathlib.Probability.Independence.Process.Basic
 
 /-!
 # Parameters for bond sprinkling
@@ -167,5 +168,152 @@ theorem bondPairLaw_finite_layer_assignments (d : ℕ) (q r : unitInterval)
   · exact fun e _ => measurableSet_singleton (b e)
   · exact fun e _ => measurableSet_singleton (a e)
   · exact fun e _ => (measurableSet_singleton (a e)).prod (measurableSet_singleton (b e))
+
+/-- The restrictions of the two bond layers to the same finite set are
+independent. -/
+theorem bondPairLaw_indep_restrictions (d : ℕ) (q r : unitInterval) (s : Finset (Bond d)) :
+    IndepFun (fun ω (e : s) => (ω e).1) (fun ω (e : s) => (ω e).2) (bondPairLaw d q r) := by
+  classical
+  let X : (Bond d → Bool × Bool) → (s → Bool) := fun ω e => (ω e).1
+  let Y : (Bond d → Bool × Bool) → (s → Bool) := fun ω e => (ω e).2
+  have hX : Measurable X := by dsimp only [X]; fun_prop
+  have hY : Measurable Y := by dsimp only [Y]; fun_prop
+  have hB : Measurable (@baseBondConfiguration d) := by
+    apply measurable_pi_lambda
+    intro e
+    exact measurable_fst.comp (measurable_pi_apply e)
+  have hA : Measurable (@addedBondConfiguration d) := by
+    apply measurable_pi_lambda
+    intro e
+    exact measurable_snd.comp (measurable_pi_apply e)
+  have hres : Measurable (fun ω : Configuration d => fun e : s => ω e) := by fun_prop
+  haveI : IsProbabilityMeasure (bondPairLaw d q r) := by
+    dsimp only [bondPairLaw]
+    infer_instance
+  apply (indepFun_iff_map_prod_eq_prod_map_map hX.aemeasurable hY.aemeasurable).2
+  apply Measure.ext_of_singleton
+  rintro ⟨u, v⟩
+  let a : Configuration d := fun e => if he : e ∈ s then u ⟨e, he⟩ else false
+  let b : Configuration d := fun e => if he : e ∈ s then v ⟨e, he⟩ else false
+  have hpre : (fun ω => (X ω, Y ω)) ⁻¹' ({(u, v)} : Set ((s → Bool) × (s → Bool))) =
+      {ω | ∀ e ∈ s, (ω e).1 = a e ∧ (ω e).2 = b e} := by
+    ext ω
+    simp only [Set.mem_preimage, Set.mem_singleton_iff, Prod.mk.injEq, funext_iff,
+      X, Y, Set.mem_setOf_eq]
+    constructor
+    · rintro ⟨hu, hv⟩ e he
+      exact ⟨by simpa only [a, dif_pos he] using hu ⟨e, he⟩,
+        by simpa only [b, dif_pos he] using hv ⟨e, he⟩⟩
+    · intro h
+      exact ⟨fun e => by simpa only [a, dif_pos e.property] using (h e e.property).1,
+        fun e => by simpa only [b, dif_pos e.property] using (h e e.property).2⟩
+  have hbaseSet : (fun ω : Configuration d => fun e : s => ω e) ⁻¹' ({u} : Set (s → Bool)) =
+      {ω | ∀ e ∈ s, ω e = a e} := by
+    ext ω
+    simp only [Set.mem_preimage, Set.mem_singleton_iff, funext_iff, Set.mem_setOf_eq]
+    constructor
+    · intro h e he
+      simpa only [a, dif_pos he] using h ⟨e, he⟩
+    · intro h e
+      simpa only [a, dif_pos e.property] using h e e.property
+  have haddSet : (fun ω : Configuration d => fun e : s => ω e) ⁻¹' ({v} : Set (s → Bool)) =
+      {ω | ∀ e ∈ s, ω e = b e} := by
+    ext ω
+    simp only [Set.mem_preimage, Set.mem_singleton_iff, funext_iff, Set.mem_setOf_eq]
+    constructor
+    · intro h e he
+      simpa only [b, dif_pos he] using h ⟨e, he⟩
+    · intro h e
+      simpa only [b, dif_pos e.property] using h e e.property
+  have hbase : (bondPairLaw d q r).map X {u} =
+      latticeBondLaw d q {ω | ∀ e ∈ s, ω e = a e} := by
+    change (bondPairLaw d q r).map ((fun ω : Configuration d => fun e : s => ω e) ∘
+      baseBondConfiguration) {u} = _
+    rw [← Measure.map_map hres hB, bondPairLaw_map_base,
+      Measure.map_apply hres (measurableSet_singleton u), hbaseSet]
+  have hadd : (bondPairLaw d q r).map Y {v} =
+      latticeBondLaw d r {ω | ∀ e ∈ s, ω e = b e} := by
+    change (bondPairLaw d q r).map ((fun ω : Configuration d => fun e : s => ω e) ∘
+      addedBondConfiguration) {v} = _
+    rw [← Measure.map_map hres hA, bondPairLaw_map_added,
+      Measure.map_apply hres (measurableSet_singleton v), haddSet]
+  rw [Measure.map_apply (hX.prodMk hY) (measurableSet_singleton (u, v)), hpre,
+    ← Set.singleton_prod_singleton, Measure.prod_prod, hbase, hadd]
+  exact bondPairLaw_finite_layer_assignments d q r s a b
+
+/-- The base and added bond configurations are independent as full random
+fields. -/
+theorem bondPairLaw_indep_layers (d : ℕ) (q r : unitInterval) :
+    IndepFun baseBondConfiguration addedBondConfiguration (bondPairLaw d q r) := by
+  classical
+  haveI : IsProbabilityMeasure (bondPairLaw d q r) := by
+    dsimp only [bondPairLaw]
+    infer_instance
+  change IndepFun (fun ω : Bond d → Bool × Bool => fun e => (ω e).1)
+    (fun ω : Bond d → Bool × Bool => fun e => (ω e).2) _
+  have hX (e : Bond d) : Measurable (fun ω : Bond d → Bool × Bool => (ω e).1) :=
+    measurable_fst.comp (measurable_pi_apply e)
+  have hY (e : Bond d) : Measurable (fun ω : Bond d → Bool × Bool => (ω e).2) :=
+    measurable_snd.comp (measurable_pi_apply e)
+  refine IndepFun.process_indepFun_process hX hY ?_
+  intro I J
+  let S := I ∪ J
+  let left : (S → Bool) → (I → Bool) := fun f e => f ⟨e, Finset.mem_union_left J e.property⟩
+  let right : (S → Bool) → (J → Bool) := fun f e => f ⟨e, Finset.mem_union_right I e.property⟩
+  have hleft : Measurable left := by dsimp only [left]; fun_prop
+  have hright : Measurable right := by dsimp only [right]; fun_prop
+  have hind := (bondPairLaw_indep_restrictions d q r S).comp hleft hright
+  exact hind
+
+/-- The joint law of the two independent layers is the product of their
+canonical bond laws. -/
+theorem bondPairLaw_map_layers (d : ℕ) (q r : unitInterval) :
+    (bondPairLaw d q r).map (fun ω => (baseBondConfiguration ω, addedBondConfiguration ω)) =
+      (latticeBondLaw d q).prod (latticeBondLaw d r) := by
+  haveI : IsProbabilityMeasure (bondPairLaw d q r) := by
+    dsimp only [bondPairLaw]
+    infer_instance
+  have hB : Measurable (@baseBondConfiguration d) := by
+    apply measurable_pi_lambda
+    intro e
+    exact measurable_fst.comp (measurable_pi_apply e)
+  have hA : Measurable (@addedBondConfiguration d) := by
+    apply measurable_pi_lambda
+    intro e
+    exact measurable_snd.comp (measurable_pi_apply e)
+  rw [(bondPairLaw_indep_layers d q r).map_prod_eq_prod_map_map hB.aemeasurable hA.aemeasurable,
+    bondPairLaw_map_base, bondPairLaw_map_added]
+
+/-- The union of two independent canonical bond fields has the canonical law
+at the sprinkled density. -/
+theorem latticeBondLaw_prod_map_or (d : ℕ) (q r : unitInterval) :
+    ((latticeBondLaw d q).prod (latticeBondLaw d r)).map
+      (fun ω e => ω.1 e || ω.2 e) = latticeBondLaw d (sprinkledDensity q r) := by
+  have hB : Measurable (@baseBondConfiguration d) := by
+    apply measurable_pi_lambda
+    intro e
+    exact measurable_fst.comp (measurable_pi_apply e)
+  have hA : Measurable (@addedBondConfiguration d) := by
+    apply measurable_pi_lambda
+    intro e
+    exact measurable_snd.comp (measurable_pi_apply e)
+  have hpair : Measurable (fun ω => (baseBondConfiguration ω, addedBondConfiguration ω)) :=
+    hB.prodMk hA
+  have hor : Measurable (fun ω : Configuration d × Configuration d => fun e => ω.1 e || ω.2 e) := by
+    fun_prop
+  rw [← bondPairLaw_map_layers, Measure.map_map hor hpair]
+  exact bondPairLaw_map_sprinkled d q r
+
+/-- Any supercritical bond law can be realized as the union of an independent
+positive sprinkle and a lower-density field with positive percolation probability. -/
+theorem exists_supercritical_bond_sprinkling_coupling {d : ℕ} [NeZero d] (p : unitInterval)
+    (hp : criticalProbability d < (p : ℝ)) :
+    ∃ q r : unitInterval, 0 < theta d q ∧ (q : ℝ) < p ∧ 0 < (r : ℝ) ∧
+      ((latticeBondLaw d q).prod (latticeBondLaw d r)).map
+        (fun ω e => ω.1 e || ω.2 e) = latticeBondLaw d p := by
+  obtain ⟨q, r, hθ, hqp, hr, heq⟩ := exists_supercritical_bond_sprinkling p hp
+  have hdensity : sprinkledDensity q r = p := Subtype.ext heq
+  refine ⟨q, r, hθ, hqp, hr, ?_⟩
+  rw [latticeBondLaw_prod_map_or, hdensity]
 
 end Rigidity.Percolation
