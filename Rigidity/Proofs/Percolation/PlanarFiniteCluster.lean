@@ -2,6 +2,8 @@ import Rigidity.Proofs.Section5.ManyPaths
 import Rigidity.Proofs.Percolation.PlanarAnnulusTail
 import Rigidity.Proofs.Percolation.SupercriticalUniqueness
 import Rigidity.Proofs.S3.ChemicalDistance
+import LatticeProb.Prob.Percolation.LatticeBondTranslationLaw
+import LatticeProb.Prob.Percolation.OpenComponentTranslation
 
 /-!
 # Planar finite clusters and annulus crossings
@@ -180,5 +182,33 @@ theorem planar_finite_cluster_size_tail (p : unitInterval)
           Real.exp (-(c / 8 * Real.sqrt N))) := by
         apply ENNReal.ofReal_le_ofReal
         nlinarith [Real.exp_pos (2 * c), Real.exp_pos (-(c / 8 * Real.sqrt N))]
+
+/-- The finite-cluster size tail is uniform over the root vertex. -/
+theorem planar_finite_cluster_size_tail_at (p : unitInterval)
+    (hp : criticalProbability 2 < (p : ℝ)) :
+    ∃ C c : ℝ, 0 < C ∧ 0 < c ∧ ∀ (x : Vertex 2) (N : ℕ),
+      latticeBondLaw 2 p {ω |
+        ((openGraph ω).connectedComponentMk x).supp.Finite ∧
+        N ≤ ((openGraph ω).connectedComponentMk x).supp.ncard} ≤
+      ENNReal.ofReal (C * Real.exp (-(c * Real.sqrt N))) := by
+  obtain ⟨C, c, hC, hc, htail⟩ := planar_finite_cluster_size_tail p hp
+  refine ⟨C, c, hC, hc, fun x N => ?_⟩
+  have hpre : {ω : Configuration 2 |
+      ((openGraph ω).connectedComponentMk x).supp.Finite ∧
+      N ≤ ((openGraph ω).connectedComponentMk x).supp.ncard} =
+      configurationTranslation (-x) ⁻¹' {ω : Configuration 2 |
+        ((openGraph ω).connectedComponentMk 0).supp.Finite ∧
+        N ≤ ((openGraph ω).connectedComponentMk 0).supp.ncard} := by
+    ext ω
+    simp only [Set.mem_setOf_eq, Set.mem_preimage]
+    have hsupp : ((openGraph (configurationTranslation (-x) ω)).connectedComponentMk 0).supp =
+        (fun y : Vertex 2 => y + -x) '' ((openGraph ω).connectedComponentMk x).supp := by
+      have h := openComponentTranslation_supp (-x) ((openGraph ω).connectedComponentMk x)
+      simpa only [openComponentTranslation_mk, add_neg_cancel] using h
+    have hinj : Function.Injective (fun y : Vertex 2 => y + -x) := fun _ _ h => add_right_cancel h
+    rw [hsupp, Set.finite_image_iff hinj.injOn, Set.ncard_image_of_injective _ hinj]
+  rw [hpre, (measurePreserving_configurationTranslation p (-x)).measure_preimage_emb
+    (configurationTranslationMeasurableEquiv (-x)).measurableEmbedding]
+  exact htail N
 
 end Rigidity.Percolation
