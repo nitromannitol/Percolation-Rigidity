@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Section5.PlanarPotentialKernel
+import LatticeProb.Graph.HeatVanishing
 
 /-!
 # Passing to limits of potential kernels
@@ -19,6 +20,13 @@ theorem tendsto_componentLaplacian {d : ℕ} {ω : Configuration d} (C : OpenCom
   classical
   unfold componentLaplacian
   exact tendsto_finsetSum _ fun y _ => (h y).sub (h x)
+
+/-- Transition probabilities on an infinite open component tend to zero. -/
+theorem tendsto_componentHeat_zero {d : ℕ} {ω : Configuration d} (C : OpenComponent ω)
+    (hC : C.supp.Infinite) (x y : C) :
+    Tendsto (fun n : ℕ => LatticeProb.Graph.heat (componentGraph C) n x y) atTop (𝓝 0) := by
+  letI : Infinite C := Set.infinite_coe_iff.mpr hC
+  exact LatticeProb.Graph.heat_tendsto_zero C.connected_toSimpleGraph x y
 
 /-- A pointwise kernel limit inherits its limiting Laplacian. -/
 theorem componentLaplacian_eq_of_tendsto {d : ℕ} {ω : Configuration d} (C : OpenComponent ω)
