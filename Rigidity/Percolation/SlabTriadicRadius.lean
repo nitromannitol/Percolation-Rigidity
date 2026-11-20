@@ -113,4 +113,73 @@ theorem TriadicCube.measure_testCube_not_coalesces_le_of_twoPoint_slabs {d : ℕ
     · simpa only [f, if_neg ht, Nat.cast_mul, Nat.cast_ofNat] using
         (ht₀ t (by omega)).2 U hU (hslab U hUT)
 
+/-- Uniform full-slab two-point estimates on subcubes yield an exponential
+coalescence tail for sufficiently large triadic test cubes. -/
+theorem TriadicCube.eventually_measure_testCube_not_coalesces_le_exp_of_twoPoint_slabs {d : ℕ}
+    (hd : 0 < d) (j i : Fin d) (hij : i ≠ j) (width : ℕ) (hwidth : 0 < width)
+    (p : unitInterval) (ρ c : ℝ) (hρ : 0 ≤ ρ) (hρ₁ : ρ ≤ 1) (hc : 0 < c)
+    (hcρ : c ≤ ρ) (hcroot : c ≤ (p : ℝ) * ρ ^ (2 * d))
+    (hctwo : c ≤ (p : ℝ) * ((p : ℝ) * ρ)) :
+    ∃ M : ℕ, ∀ (Q : TriadicCube d) {interior : Set (Vertex d)}
+      (T : IntegerCube d), T ∈ Q.testCubes interior → M ≤ T.size →
+      (∀ U : IntegerCube d, (↑U.vertices : Set (Vertex d)) ⊆ T.vertices →
+        ∀ a : Fin d, ∀ k : ℕ, (k + 1) * width ≤ U.size →
+          ∀ x ∈ U.slab a width k, ∀ y ∈ U.slab a width k,
+            ρ ≤ (latticeBondLaw d p).real {ω | (openIn ω (U.slab a width k)).Reachable x y}) →
+      (latticeBondLaw d p) {ω | ¬ LargePathsCoalesce ω (↑T.vertices) Q.largePath} ≤
+        ENNReal.ofReal (Real.exp (-((((c / (2 * ((10 * d * width : ℕ) : ℝ))) / 2) / 20) *
+          (T.size : ℝ)))) := by
+  obtain ⟨t₀, hcoal⟩ := TriadicCube.measure_testCube_not_coalesces_le_of_twoPoint_slabs
+    hd j i hij width hwidth p ρ c hρ hρ₁ hc hcρ hcroot hctwo
+  let rate : ℝ := (c / (2 * ((10 * d * width : ℕ) : ℝ))) / 2
+  have hrate : 0 < rate := by dsimp only [rate]; positivity
+  have hsmall := eventually_mul_pow_mul_exp_le 2 (rate / 10) (by norm_num) (by positivity) d
+  have hsmallNat := (tendsto_natCast_atTop_atTop : Tendsto (fun n : ℕ => (n : ℝ))
+    atTop atTop).eventually hsmall
+  obtain ⟨M₀, hM₀⟩ := Filter.eventually_atTop.mp hsmallNat
+  refine ⟨max 61 (max (20 * t₀ + 40) M₀), ?_⟩
+  intro Q interior T hT hTsize hslab
+  have hsize : 61 ≤ T.size := le_trans (le_max_left _ _) hTsize
+  have hcut : 20 * t₀ + 40 ≤ T.size :=
+    le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hTsize
+  have hM : M₀ ≤ T.size := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hTsize
+  obtain ⟨t, ht, hTt, hbound⟩ := hcoal Q T hT hsize hslab
+  have ht₀ : ¬ t < t₀ := by omega
+  have hsize40 : 40 ≤ T.size := by omega
+  have hlin : T.size ≤ 40 * t := by omega
+  have hlin' : (T.size : ℝ) ≤ 40 * (t : ℝ) := by exact_mod_cast hlin
+  have htail : ENNReal.ofReal (Real.exp (-(rate * ((4 * t : ℕ) : ℝ)))) ≤
+      ENNReal.ofReal (Real.exp (-((rate / 10) * T.size))) := by
+    apply ENNReal.ofReal_le_ofReal
+    apply Real.exp_le_exp.mpr
+    push_cast
+    nlinarith
+  have hbound' : (latticeBondLaw d p) {ω | ¬ LargePathsCoalesce ω (↑T.vertices) Q.largePath} ≤
+      (T.size ^ d : ℕ) *
+        (ENNReal.ofReal (Real.exp (-(rate * ((4 * t : ℕ) : ℝ)))) +
+         ENNReal.ofReal (Real.exp (-(rate * ((4 * t : ℕ) : ℝ))))) := by
+    simpa only [if_neg ht₀, rate] using hbound
+  have heq : (T.size ^ d : ℝ≥0∞) *
+      (ENNReal.ofReal (Real.exp (-((rate / 10) * T.size))) +
+       ENNReal.ofReal (Real.exp (-((rate / 10) * T.size)))) =
+      ENNReal.ofReal (2 * (T.size : ℝ) ^ d * Real.exp (-((rate / 10) * T.size))) := by
+    rw [ENNReal.ofReal_mul (by positivity : (0 : ℝ) ≤ 2 * (T.size : ℝ) ^ d),
+      ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 2), ENNReal.ofReal_ofNat,
+      ENNReal.ofReal_pow (by positivity : (0 : ℝ) ≤ T.size), ENNReal.ofReal_natCast]
+    ring
+  calc
+    _ ≤ (T.size ^ d : ℕ) *
+        (ENNReal.ofReal (Real.exp (-(rate * ((4 * t : ℕ) : ℝ)))) +
+         ENNReal.ofReal (Real.exp (-(rate * ((4 * t : ℕ) : ℝ))))) := hbound'
+    _ ≤ (T.size ^ d : ℝ≥0∞) *
+        (ENNReal.ofReal (Real.exp (-((rate / 10) * T.size))) +
+         ENNReal.ofReal (Real.exp (-((rate / 10) * T.size)))) := by
+      rw [Nat.cast_pow]
+      gcongr
+    _ = ENNReal.ofReal (2 * (T.size : ℝ) ^ d *
+        Real.exp (-((rate / 10) * T.size))) := heq
+    _ ≤ ENNReal.ofReal (Real.exp (-((rate / 10 / 2) * T.size))) :=
+      ENNReal.ofReal_le_ofReal (hM₀ T.size hM)
+    _ = _ := by congr 2; dsimp only [rate]; ring
+
 end Rigidity.Percolation
