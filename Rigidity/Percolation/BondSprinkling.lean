@@ -316,4 +316,37 @@ theorem exists_supercritical_bond_sprinkling_coupling {d : ℕ} [NeZero d] (p : 
   refine ⟨q, r, hθ, hqp, hr, ?_⟩
   rw [latticeBondLaw_prod_map_or, hdensity]
 
+/-- The event that all bonds in a finite family are open. -/
+def allBondsOpen {d : ℕ} (s : Finset (Bond d)) : Set (Configuration d) :=
+  {ω | ∀ e ∈ s, ω e = true}
+
+/-- A finite family of bonds is entirely open with probability `p` raised to
+its cardinality. -/
+theorem latticeBondLaw_allBondsOpen {d : ℕ} (p : unitInterval) (s : Finset (Bond d)) :
+    latticeBondLaw d p (allBondsOpen s) = ENNReal.ofReal (p : ℝ) ^ s.card := by
+  have heq : allBondsOpen s = (↑s : Set (Bond d)).pi (fun _ => ({true} : Set Bool)) := by
+    ext ω
+    simp only [allBondsOpen, Set.mem_setOf_eq, Set.mem_pi, Finset.mem_coe, Set.mem_singleton_iff]
+  have hpoint : ∀ e : Bond d, (bernoulliMeasure true false p) {true} = ENNReal.ofReal (p : ℝ) := by
+    intro e
+    have h := congrArg (fun μ : Measure Bool => μ {true}) (latticeBondLaw_map_eval p e)
+    rw [Measure.map_apply (measurable_pi_apply e) (measurableSet_singleton true)] at h
+    exact h.symm.trans (latticeBondLaw_open p e)
+  rw [heq, latticeBondLaw, Measure.infinitePi_pi]
+  · simp only [Finset.prod_const]
+    by_cases hs : s.Nonempty
+    · obtain ⟨e, _⟩ := hs
+      rw [hpoint e]
+    · have hs0 : s = ∅ := Finset.not_nonempty_iff_eq_empty.mp hs
+      simp only [hs0, Finset.card_empty, pow_zero]
+  · exact fun _ _ => measurableSet_singleton true
+
+/-- Every prescribed finite family of bonds is entirely open with positive
+probability at positive bond density. -/
+theorem latticeBondLaw_allBondsOpen_pos {d : ℕ} (p : unitInterval)
+    (hp : 0 < (p : ℝ)) (s : Finset (Bond d)) :
+    0 < latticeBondLaw d p (allBondsOpen s) := by
+  rw [latticeBondLaw_allBondsOpen]
+  exact ENNReal.pow_pos (ENNReal.ofReal_pos.mpr hp) _
+
 end Rigidity.Percolation
