@@ -14,6 +14,12 @@ namespace Rigidity.Percolation
 open LatticeProb.Percolation MeasureTheory ProbabilityTheory Rigidity.External
 open scoped MeasureTheory
 
+/-- An integer lattice rectangle has finitely many vertices. -/
+theorem finite_latticeRectangle {d : ℕ} (lo hi : Vertex d) :
+    (latticeRectangle lo hi).Finite := by
+  simpa only [latticeRectangle, Set.mem_Ico] using
+    (Set.Finite.pi' (fun i : Fin d => Set.finite_Ico (lo i) (hi i)))
+
 /-- Every two vertices of a fully open lattice rectangle are connected inside it. -/
 theorem reachable_openIn_rectangle_of_fullyOpenRegion {d : ℕ} {ω : Configuration d}
     (lo hi : Vertex d) (hseed : ω ∈ fullyOpenRegion (latticeRectangle lo hi))
@@ -134,8 +140,8 @@ uniform bound on its internal bonds gives a conditional lower bound for their
 connection in the sprinkled field. -/
 theorem condExp_indicator_lower_of_base_rectangle_selection {d : ℕ} {ι : Type*}
     [Countable ι] (q r : unitInterval) (lo hi x y : ι → Vertex d)
-    (hU : ∀ i, (latticeRectangle (lo i) (hi i)).Finite) (N : ℕ)
-    (hN : ∀ i, (finite_localBonds (hU i)).toFinset.card ≤ N)
+    (N : ℕ) (hN : ∀ i,
+      (finite_localBonds (finite_latticeRectangle (lo i) (hi i))).toFinset.card ≤ N)
     (hx : ∀ i, x i ∈ latticeRectangle (lo i) (hi i))
     (hy : ∀ i, y i ∈ latticeRectangle (lo i) (hi i))
     (A : ι → Set (Bond d → Bool × Bool)) {G : Set (Bond d → Bool × Bool)}
@@ -159,7 +165,8 @@ theorem condExp_indicator_lower_of_base_rectangle_selection {d : ℕ} {ι : Type
     exact (hbase.comap_le _ (hA i)).inter
       (hsprinkle (measurableSet_openIn_reachable _ _ _))
   apply condExp_indicator_lower_of_bounded_base_seed_selection q r
-    (fun i => latticeRectangle (lo i) (hi i)) hU N hN A hA hG hC hcover
+    (fun i => latticeRectangle (lo i) (hi i))
+    (fun i => finite_latticeRectangle (lo i) (hi i)) N hN A hA hG hC hcover
   intro i ω hω
   refine Set.mem_iUnion.mpr ⟨i, hω.1, ?_⟩
   exact reachable_sprinkled_rectangle_of_added_seed (lo i) (hi i) hω.2 (hx i) (hy i)
