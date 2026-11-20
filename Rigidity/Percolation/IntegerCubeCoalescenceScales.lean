@@ -30,12 +30,12 @@ theorem IntegerCube.measure_not_coalesces_le_at_compatible_scales {d : ℕ}
     (large : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop)
     (hdiam : ∀ n γ, large n γ → pathDiameterAtLeast (Q.size / 10 : ℕ) n γ)
     (μ : Measure (Configuration d)) (a b : ℕ → ℝ≥0∞)
-    (ha : ∀ t : ℕ, ∀ T : IntegerCube d, T.size = 20 * t + 1 →
+    (ha : ∀ t : ℕ, 3 ≤ t → ∀ T : IntegerCube d, T.size = 20 * t + 1 →
       (↑T.vertices : Set (Vertex d)) ⊆ Q.vertices →
       μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑T.vertices)
         (fun i => ↑(T.lowerFace i)) (fun i => ↑(T.upperFace i))
         (pathDiameterAtLeast (2 * (t : ℤ)))} ≤ a t)
-    (hb : ∀ t : ℕ, ∀ T : IntegerCube d, T.size = 10 * t + 1 →
+    (hb : ∀ t : ℕ, 3 ≤ t → ∀ T : IntegerCube d, T.size = 10 * t + 1 →
       (↑T.vertices : Set (Vertex d)) ⊆ Q.vertices →
       μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑T.vertices)
         (fun i => ↑(T.lowerFace i)) (fun i => ↑(T.upperFace i))
@@ -60,7 +60,7 @@ theorem IntegerCube.measure_not_coalesces_le_at_compatible_scales {d : ℕ}
     exact ⟨i, j, k, hbound'.trans hk⟩
   have h := Q.measure_not_coalesces_le_of_crossing_paths hd (20 * t + 1)
     (10 * t + 1) (2 * (t : ℤ)) hR hsR' hks hRk' hsQ large hdiam' μ (a t) (b t)
-    (ha t) (hb t)
+    (ha t ht) (hb t ht)
   simpa only [Q.card_vertices] using h
 
 end Rigidity.Percolation

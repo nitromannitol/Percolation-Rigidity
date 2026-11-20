@@ -33,12 +33,12 @@ theorem TriadicCube.measure_testCube_not_coalesces_le {d : ℕ}
     (hd : 0 < d) (Q : TriadicCube d) {interior : Set (Vertex d)}
     (T : IntegerCube d) (hT : T ∈ Q.testCubes interior) (hsize : 61 ≤ T.size)
     (μ : Measure (Configuration d)) (a b : ℕ → ℝ≥0∞)
-    (ha : ∀ t : ℕ, ∀ U : IntegerCube d, U.size = 20 * t + 1 →
+    (ha : ∀ t : ℕ, 3 ≤ t → ∀ U : IntegerCube d, U.size = 20 * t + 1 →
       (↑U.vertices : Set (Vertex d)) ⊆ T.vertices →
       μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑U.vertices)
         (fun i => ↑(U.lowerFace i)) (fun i => ↑(U.upperFace i))
         (pathDiameterAtLeast (2 * (t : ℤ)))} ≤ a t)
-    (hb : ∀ t : ℕ, ∀ U : IntegerCube d, U.size = 10 * t + 1 →
+    (hb : ∀ t : ℕ, 3 ≤ t → ∀ U : IntegerCube d, U.size = 10 * t + 1 →
       (↑U.vertices : Set (Vertex d)) ⊆ T.vertices →
       μ {ω | ¬ HasCrossingComponentConnectingPaths ω (↑U.vertices)
         (fun i => ↑(U.lowerFace i)) (fun i => ↑(U.upperFace i))
