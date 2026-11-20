@@ -33,4 +33,20 @@ theorem ae_eventually_planar_renormalized_strip_crossings {p : unitInterval}
     T m n k hm hn hk hs
   exact ae_of_ae_map hmeas.aemeasurable h
 
+/-- Dyadic strip families of logarithmic width have the same almost-sure crossings. -/
+theorem ae_eventually_planar_renormalized_dyadic_strip_crossings {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ (T : ℕ → Finset PlanarCarrier) (m n k : ℕ → ℕ),
+      (∀ j, 0 < m j) → (∀ j, 0 < n j) → (∀ j, 2 * k j ≤ n j) →
+      (∀ j, (T j).card ≤ 2 ^ j) → (∀ j, m j ≤ 2 ^ j) → (∀ j, j ≤ n j) →
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ᶠ j : ℕ in atTop,
+        (∀ a ∈ T j, translatePlanarField a (Rigidity.Section5.renormField R ω) ∉
+          disjointCrossingFailure (m j) (n j) (k j)) ∧
+        ∀ a ∈ T j, translatePlanarField a
+          (swapPlanarField (Rigidity.Section5.renormField R ω)) ∉
+            disjointCrossingFailure (m j) (n j) (k j) := by
+  filter_upwards [ae_eventually_planar_renormalized_strip_crossings hpc] with R hR
+    T m n k hm hn hk hT hm' hn'
+  exact hR T m n k hm hn hk (summable_dyadic_strip_bounds T m n hT hm' hn')
+
 end Rigidity.Proofs.Section5
