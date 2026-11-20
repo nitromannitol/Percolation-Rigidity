@@ -1,5 +1,5 @@
 import Rigidity.Percolation.SlabCube
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+import Mathlib.MeasureTheory.Function.ConditionalExpectation.Indicator
 
 /-!
 # Conditional decay for slab exploration
@@ -97,5 +97,48 @@ theorem measureReal_le_pow_one_sub_of_condExp_success {Ω : Type*}
   intro n
   exact condExp_indicator_le_one_sub_of_disjoint μ (hm n)
     (hm (n + 1) _ (hG (n + 1))) (hC n) (hdisj n) δ (hcond n)
+
+
+/-- A past-measurable choice among countably many candidate events preserves a
+uniform conditional lower bound on their probabilities. -/
+theorem condExp_indicator_lower_of_measurable_selection {Ω ι : Type*} [Countable ι]
+    [m₀ : MeasurableSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ]
+    {m : MeasurableSpace Ω} (hm : m ≤ m₀) (A B : ι → Set Ω) {G C : Set Ω}
+    (hA : ∀ i, MeasurableSet[m] (A i))
+    (hB : ∀ i, @MeasurableSet Ω m₀ (B i)) (hC : @MeasurableSet Ω m₀ C)
+    (hG : @MeasurableSet Ω m₀ G) (hcover : G ⊆ ⋃ i, A i)
+    (hsubset : ∀ i, A i ∩ B i ⊆ C) (δ : ℝ)
+    (hprob : ∀ i, ∀ᵐ ω ∂μ,
+      δ ≤ μ[(B i).indicator (fun _ => (1 : ℝ)) | m] ω) :
+    ∀ᵐ ω ∂μ.restrict G, δ ≤ μ[C.indicator (fun _ => (1 : ℝ)) | m] ω := by
+  have hCint : Integrable (C.indicator (fun _ => (1 : ℝ))) μ :=
+    (integrable_const 1).indicator hC
+  have hbound : ∀ i, ∀ᵐ ω ∂μ,
+      ω ∈ A i → μ[(B i).indicator (fun _ => (1 : ℝ)) | m] ω ≤
+        μ[C.indicator (fun _ => (1 : ℝ)) | m] ω := by
+    intro i
+    have hBi : Integrable ((B i).indicator (fun _ => (1 : ℝ))) μ :=
+      (integrable_const 1).indicator (hB i)
+    have hpoint : (A i).indicator ((B i).indicator (fun _ => (1 : ℝ))) ≤ᵐ[μ]
+        C.indicator (fun _ => (1 : ℝ)) := by
+      filter_upwards [] with ω
+      by_cases ha : ω ∈ A i <;> by_cases hb : ω ∈ B i <;> by_cases hc : ω ∈ C
+      · simp [ha, hb, hc]
+      · exact (hc (hsubset i ⟨ha, hb⟩)).elim
+      · simp [ha, hb, hc]
+      · simp [ha, hb, hc]
+      · simp [ha, hc]
+      · simp [ha, hc]
+      · simp [ha, hc]
+      · simp [ha, hc]
+    have hmono := condExp_mono (m := m) (hBi.indicator (hm _ (hA i))) hCint hpoint
+    have heq := condExp_indicator hBi (hA i)
+    filter_upwards [hmono, heq] with ω h₁ h₂ ha
+    rw [h₂] at h₁
+    simpa only [Set.indicator_of_mem ha] using h₁
+  filter_upwards [ae_restrict_of_ae (ae_all_iff.mpr hbound),
+    ae_restrict_of_ae (ae_all_iff.mpr hprob), ae_restrict_mem hG] with ω hb hp hω
+  obtain ⟨i, hi⟩ := Set.mem_iUnion.mp (hcover hω)
+  exact (hp i).trans (hb i hi)
 
 end Rigidity.Percolation
