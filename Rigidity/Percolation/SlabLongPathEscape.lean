@@ -81,4 +81,65 @@ theorem IntegerCube.measureReal_disconnected_path_spanning_prefixes_le {d : ℕ}
   apply (measureReal_mono hcover (measure_ne_top _ _)).trans
   exact Q.measureReal_exists_two_escapes_le j width k₀ N hwidth hsize A hA p ρ hρ hprob
 
+/-- Vertices separated by `N + 1` slab widths span `N` consecutive slabs,
+starting at the first slab boundary beyond the lower vertex. -/
+theorem IntegerCube.exists_prefixes_between_vertices {d : ℕ} (Q : IntegerCube d)
+    (j : Fin d) (width N : ℕ) (hwidth : 0 < width) {x y : Vertex d}
+    (hx : x ∈ Q.vertices) (hy : y ∈ Q.vertices)
+    (hgap : ((N + 1) * width : ℕ) ≤ y j - x j) :
+    ∃ k₀, 0 < k₀ * width ∧ (k₀ + N) * width < Q.size ∧
+      x ∈ Q.slabPrefix j width k₀ ∧ y ∉ Q.slabPrefix j width (k₀ + N) := by
+  let a : ℕ := (x j - Q.corner j).toNat
+  let k₀ : ℕ := a / width + 1
+  have hxj := (Q.mem_vertices x).mp hx j
+  have hyj := (Q.mem_vertices y).mp hy j
+  have ha : (a : ℤ) = x j - Q.corner j := by
+    exact Int.toNat_of_nonneg (by omega)
+  have hdiv := Nat.mod_add_div a width
+  have hmod : a % width < width := Nat.mod_lt _ hwidth
+  have hklo : a < k₀ * width := by
+    dsimp only [k₀]
+    nlinarith
+  have hkhi : k₀ * width ≤ a + width := by
+    dsimp only [k₀]
+    nlinarith [Nat.zero_le (a % width)]
+  have hkpos : 0 < k₀ * width := lt_of_le_of_lt (Nat.zero_le a) hklo
+  have hbound : (k₀ + N) * width ≤ a + (N + 1) * width := by nlinarith
+  have hbound' : (((k₀ + N) * width : ℕ) : ℤ) ≤
+      (a : ℤ) + (((N + 1) * width : ℕ) : ℤ) := by exact_mod_cast hbound
+  have hklo' : (a : ℤ) < ((k₀ * width : ℕ) : ℤ) := by exact_mod_cast hklo
+  have hlast : (((k₀ + N) * width : ℕ) : ℤ) < Q.size := by omega
+  have hsize : (k₀ + N) * width < Q.size := by exact_mod_cast hlast
+  refine ⟨k₀, hkpos, hsize, ⟨hx, ?_⟩, ?_⟩
+  · omega
+  · intro hyP
+    have hyP' := hyP.2
+    omega
+
+/-- Every path with sufficiently large coordinate diameter spans a sequence of
+`N` slabs in one coordinate direction. -/
+theorem IntegerCube.exists_prefixes_spanned_by_path {d : ℕ} (Q : IntegerCube d)
+    (width N : ℕ) (hwidth : 0 < width) {ω : Configuration d}
+    {n : ℕ} {γ : Fin (n + 1) → Vertex d}
+    (hγ : IsSelectedOpenPath ω Q.vertices
+      (pathDiameterAtLeast (((N + 1) * width : ℕ) : ℤ)) n γ) :
+    ∃ j k₀, 0 < k₀ * width ∧ (k₀ + N) * width < Q.size ∧
+      (∃ a, γ a ∈ Q.slabPrefix j width k₀) ∧
+      ∃ b, γ b ∉ Q.slabPrefix j width (k₀ + N) := by
+  obtain ⟨a, b, j, hdiam⟩ := hγ.1
+  by_cases hab : γ a j ≤ γ b j
+  · have hgap : (((N + 1) * width : ℕ) : ℤ) ≤ γ b j - γ a j := by
+      rw [abs_of_nonpos (sub_nonpos.mpr hab)] at hdiam
+      omega
+    obtain ⟨k₀, hkpos, hksize, ha, hb⟩ :=
+      Q.exists_prefixes_between_vertices j width N hwidth (hγ.mem_region a) (hγ.mem_region b) hgap
+    exact ⟨j, k₀, hkpos, hksize, ⟨a, ha⟩, ⟨b, hb⟩⟩
+  · have hba : γ b j ≤ γ a j := le_of_not_ge hab
+    have hgap : (((N + 1) * width : ℕ) : ℤ) ≤ γ a j - γ b j := by
+      rw [abs_of_nonneg (sub_nonneg.mpr hba)] at hdiam
+      exact hdiam
+    obtain ⟨k₀, hkpos, hksize, hb, ha⟩ :=
+      Q.exists_prefixes_between_vertices j width N hwidth (hγ.mem_region b) (hγ.mem_region a) hgap
+    exact ⟨j, k₀, hkpos, hksize, ⟨b, hb⟩, ⟨a, ha⟩⟩
+
 end Rigidity.Percolation
