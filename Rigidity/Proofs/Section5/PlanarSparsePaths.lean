@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Section5.SiteRectangleCrossings
+import Rigidity.Proofs.Section5.PlanarFieldTranslation
 import Rigidity.Proofs.Section5.PlanarRenormalizedDomination
 
 /-!
@@ -80,5 +80,25 @@ theorem planar_renormalized_disjoint_crossings {p : unitInterval}
     Measure.isProbabilityMeasure_map (renormFieldMeasurableStep R).aemeasurable
   exact measure_no_disjoint_open_crossings_le (renormFieldOneDependentStep p R) hsmall m n k
     hm hn hk
+
+/-- At sufficiently large block scales, a finite family of translated rectangles all have
+many disjoint crossings, except on an event with an explicit exponential bound. -/
+theorem planar_renormalized_disjoint_crossings_translates {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ (T : Finset PlanarCarrier) (m n k : ℕ),
+      0 < m → 0 < n → 2 * k ≤ n →
+      ((latticeBondLaw 2 p).map (renormField R))
+        (⋃ a ∈ T, translatePlanarField a ⁻¹'
+          {η | ¬∃ L : Finset (List (LatticeModels.Site 2)), Menger.IsLinkage
+            (Menger.edgesIn (planarOpenSiteGraph η)
+              (Finset.finite_toSet (Percolation.Literature.rectangle m n)))
+            (↑(Percolation.Literature.leftSide m n))
+            (↑(Percolation.Literature.rightSide m n)) L ∧ L.card = k}) ≤
+        ENNReal.ofReal (4 * (T.card : ℝ) * (m + 1 : ℝ) * (1 / 8 : ℝ) ^ n) := by
+  filter_upwards [planar_renormalized_closed_marginal hpc] with R hsmall T m n k hm hn hk
+  haveI : IsProbabilityMeasure ((latticeBondLaw 2 p).map (renormField R)) :=
+    Measure.isProbabilityMeasure_map (renormFieldMeasurableStep R).aemeasurable
+  exact measure_exists_no_disjoint_crossings_translate_le
+    (renormFieldOneDependentStep p R) hsmall T m n k hm hn hk
 
 end Rigidity.Proofs.Section5
