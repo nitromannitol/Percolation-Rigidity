@@ -71,4 +71,39 @@ theorem abs_infiniteClusterCount_resampleBond_le (m : ℕ) (k : Vertex d)
       _ ≤ _ := Finset.sum_le_sum fun y _ => Finset.card_union_le _ _
   exact_mod_cast hcard
 
+/-- A nonzero resampling influence is witnessed by a finite component meeting both the
+counting cube and the resampled bond, in the original or resampled configuration. -/
+theorem nonzero_influence_reaches_finite_component (m : ℕ) (k : Vertex d)
+    (ω η : Configuration d) (e : Bond d)
+    (hne : infiniteClusterCount (triadicCube d m k) ω ≠
+      infiniteClusterCount (triadicCube d m k) (resampleBond ω η e)) :
+    ∃ x ∈ triadicCube d m k, ∃ y ∈ e.val,
+      ((openGraph ω).Reachable x y ∧ ((openGraph ω).connectedComponentMk y).supp.Finite) ∨
+      ((openGraph (resampleBond ω η e)).Reachable x y ∧
+        ((openGraph (resampleBond ω η e)).connectedComponentMk y).supp.Finite) := by
+  classical
+  let S := (infiniteClusterTrace m k ω \ infiniteClusterTrace m k (resampleBond ω η e)) ∪
+    (infiniteClusterTrace m k (resampleBond ω η e) \ infiniteClusterTrace m k ω)
+  have hS : S.Nonempty := by
+    by_contra h
+    have hz : S.card = 0 := Finset.card_eq_zero.mpr (Finset.not_nonempty_iff_eq_empty.mp h)
+    have habs := abs_infiniteClusterCount_resampleBond m k ω η e
+    change |_ - _| = (S.card : ℝ) at habs
+    rw [hz, Nat.cast_zero, abs_eq_zero, sub_eq_zero] at habs
+    apply hne
+    exact_mod_cast habs
+  obtain ⟨x, hx⟩ := hS
+  have hxQ : x ∈ triadicCube d m k := by
+    have hx' : x ∈ triadicCubeFinset d m k := by
+      simp only [S, Finset.mem_union, Finset.mem_sdiff, infiniteClusterTrace,
+        Finset.mem_filter] at hx
+      rcases hx with ⟨⟨h, _⟩, _⟩ | ⟨⟨h, _⟩, _⟩ <;> exact h
+    rw [← coe_triadicCubeFinset]
+    exact hx'
+  rcases changed_trace_vertex_reaches_finite_component m k ω η e hx with h | h
+  · obtain ⟨y, hy, hxy, hfin⟩ := h
+    exact ⟨x, hxQ, y, hy, Or.inl ⟨hxy, hfin⟩⟩
+  · obtain ⟨y, hy, hxy, hfin⟩ := h
+    exact ⟨x, hxQ, y, hy, Or.inr ⟨hxy, hfin⟩⟩
+
 end Rigidity.Proofs.S2
