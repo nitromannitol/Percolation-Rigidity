@@ -65,4 +65,35 @@ theorem condExp_indicator_lower_of_fresh_attachment {d : ℕ} {ι : Type*}
   · rw [measureReal_bond_open_inter p (e i) (heE i) (hB i)]
     exact mul_le_mul_of_nonneg_left (hprob i) p.property.1
 
+/-- Two distinct fresh attachment bonds and an independent slab event give a
+conditional success probability at least `p * (p * δ)`. -/
+theorem condExp_indicator_lower_of_two_fresh_attachments {d : ℕ} {ι : Type*}
+    [Countable ι] (p : unitInterval) (F : Set (Bond d)) (E : ι → Set (Bond d))
+    (e₁ e₂ : ι → Bond d) (hE : ∀ i, Disjoint (E i) F)
+    (he₁F : ∀ i, e₁ i ∉ F) (he₂F : ∀ i, e₂ i ∉ F)
+    (he₁E : ∀ i, e₁ i ∉ E i) (he₂E : ∀ i, e₂ i ∉ E i)
+    (hne : ∀ i, e₁ i ≠ e₂ i)
+    (A B : ι → Set (Configuration d)) {G C : Set (Configuration d)}
+    (hA : ∀ i, MeasurableSet[bondSigma F] (A i))
+    (hB : ∀ i, MeasurableSet[bondSigma (E i)] (B i))
+    (hC : MeasurableSet C) (hG : MeasurableSet G) (hcover : G ⊆ ⋃ i, A i)
+    (hsubset : ∀ i, A i ∩ ({ω | ω (e₁ i) = true} ∩
+      ({ω | ω (e₂ i) = true} ∩ B i)) ⊆ C)
+    (δ : ℝ) (hprob : ∀ i, δ ≤ (latticeBondLaw d p).real (B i)) :
+    ∀ᵐ ω ∂(latticeBondLaw d p).restrict G,
+      (p : ℝ) * ((p : ℝ) * δ) ≤
+        (latticeBondLaw d p)[C.indicator (fun _ => (1 : ℝ)) | bondSigma F] ω := by
+  apply condExp_indicator_lower_of_fresh_attachment p F (fun i => {e₂ i} ∪ E i) e₁
+    (fun i => ?_) he₁F (fun i => ?_) A
+    (fun i => {ω | ω (e₂ i) = true} ∩ B i) hA (fun i => ?_)
+    hC hG hcover hsubset ((p : ℝ) * δ) (fun i => ?_)
+  · exact Set.disjoint_union_left.mpr
+      ⟨by simpa only [Set.disjoint_singleton_left] using he₂F i, hE i⟩
+  · simp only [Set.mem_union, Set.mem_singleton_iff, not_or]
+    exact ⟨hne i, he₁E i⟩
+  · exact (bondSigma_mono Set.subset_union_left _ (measurableSet_bond_open (e₂ i))).inter
+      (bondSigma_mono Set.subset_union_right _ (hB i))
+  · rw [measureReal_bond_open_inter p (e₂ i) (he₂E i) (hB i)]
+    exact mul_le_mul_of_nonneg_left (hprob i) p.property.1
+
 end Rigidity.Percolation
