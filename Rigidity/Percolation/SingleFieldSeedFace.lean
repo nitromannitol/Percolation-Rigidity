@@ -90,4 +90,20 @@ theorem exists_seed_eventually_singleFieldFaceSuccess {d : ℕ} (q r : unitInter
   exact measureReal_mono (seedReachableFaceSuccess_subset_sprinkled _ _ _ _ _ _)
     (measure_ne_top _ _)
 
+/-- Above the critical probability, a centered seed connects to an outward
+open trial with arbitrarily high probability on every sufficiently large
+positive orthant face. -/
+theorem exists_seed_eventually_singleFieldFaceSuccess_of_supercritical {d : ℕ} [NeZero d]
+    (p : unitInterval) (hp : criticalProbability d < (p : ℝ)) (i : Fin d)
+    (η : ℝ) (hη : 0 < η) :
+    ∃ M : ℕ, ∀ᶠ n in atTop,
+      1 - η < (latticeBondLaw d p).real (singleFieldSeedFaceSuccess
+        (centeredBondCube (M + n)) (centeredBondCubeFinset M)
+        (centeredCubeOrthantFace (M + n) i (fun _ => true)) (2 * M + 1) i (M + n)) := by
+  obtain ⟨q, r, hθ, hqp, hr, hsum⟩ := exists_supercritical_bond_sprinkling p hp
+  have hq : (q : ℝ) < 1 := hqp.trans_le p.property.2
+  have hdensity : sprinkledDensity q r = p := Subtype.ext hsum
+  simpa only [hdensity] using
+    exists_seed_eventually_singleFieldFaceSuccess q r hq hθ hr i η hη
+
 end Rigidity.Percolation
