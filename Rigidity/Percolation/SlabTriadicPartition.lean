@@ -60,7 +60,8 @@ theorem triadic_partition_estimates_of_twoPoint_slabs {d : ℕ}
     (fun Q => Q.threeQuarterCube.vertices) M C (rate / 2) hC (by positivity) hlarge
 
 /-- A single finite width has a uniform positive two-point connection bound
-in every complete slab of every integer cube. -/
+in every complete slab of every integer cube. For `d = 2`, such a bound
+requires `p = 1` because a fixed-width strip has arbitrarily many disjoint cuts. -/
 def UniformCubeSlabConnectivity (d : ℕ) (p : unitInterval) : Prop :=
   ∃ width : ℕ, 0 < width ∧ ∃ ρ : ℝ, 0 < ρ ∧
     ∀ U : IntegerCube d, ∀ a : Fin d, ∀ k : ℕ, (k + 1) * width ≤ U.size →
