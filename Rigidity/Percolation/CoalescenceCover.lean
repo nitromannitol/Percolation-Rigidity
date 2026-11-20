@@ -81,4 +81,44 @@ theorem largePathsCoalesce_of_connected_cover {d : ℕ} {ι : Type*}
   exact hγξ.trans ((selectedPaths_reachable_of_connected_cover G B D small
     hBD hcoal hpath hbridge (hconnected i j) hξ hζ).trans hηζ.symm)
 
+/-- A crossing cube inside a region supplies a selected path whose coordinate
+diameter is at least any threshold below its side length. -/
+theorem IntegerCube.hasSelectedOpenPath_of_crossing_subset {d : ℕ}
+    (hd : 0 < d) (T : IntegerCube d) (threshold : ℤ)
+    (hthreshold : threshold ≤ (T.size : ℤ) - 1)
+    {ω : Configuration d} {B : Set (Vertex d)}
+    (hTB : (↑T.vertices : Set (Vertex d)) ⊆ B)
+    (hcross : HasCrossingComponent ω (↑T.vertices)
+      (fun i => ↑(T.lowerFace i)) (fun i => ↑(T.upperFace i))) :
+    HasSelectedOpenPath ω B (pathDiameterAtLeast threshold) := by
+  obtain ⟨root, hroot⟩ := hcross
+  obtain ⟨n, γ, hγ, _⟩ := T.exists_diameter_path_of_crossingRoot hd threshold
+    hthreshold hroot
+  exact ⟨n, γ, hγ.mono_region hTB⟩
+
+/-- Crossing cubes in neighboring overlaps provide the bridges needed to glue
+their local coalescence estimates. -/
+theorem largePathsCoalesce_of_connected_crossing_cover {d : ℕ} {ι : Type*}
+    (hd : 0 < d) {ω : Configuration d} (G : SimpleGraph ι)
+    (B : ι → Set (Vertex d)) (D : Set (Vertex d)) (threshold : ℤ)
+    (large : (n : ℕ) → (Fin (n + 1) → Vertex d) → Prop)
+    (hBD : ∀ i, B i ⊆ D)
+    (hcoal : ∀ i, LargePathsCoalesce ω (B i) (pathDiameterAtLeast threshold))
+    (hpath : ∀ i, HasSelectedOpenPath ω (B i) (pathDiameterAtLeast threshold))
+    (hoverlap : ∀ i j, G.Adj i j → ∃ T : IntegerCube d,
+      threshold ≤ (T.size : ℤ) - 1 ∧
+      (↑T.vertices : Set (Vertex d)) ⊆ B i ∩ B j ∧
+      HasCrossingComponent ω (↑T.vertices)
+        (fun k => ↑(T.lowerFace k)) (fun k => ↑(T.upperFace k)))
+    (hconnected : ∀ i j, G.Reachable i j)
+    (hsegment : ∀ n γ, IsSelectedOpenPath ω D large n γ →
+      ∃ i m η, IsSelectedOpenPath ω (B i) (pathDiameterAtLeast threshold) m η ∧
+        (openIn ω D).Reachable (γ 0) (η 0)) :
+    LargePathsCoalesce ω D large := by
+  apply largePathsCoalesce_of_connected_cover G B D (pathDiameterAtLeast threshold) large
+    hBD hcoal hpath ?_ hconnected hsegment
+  intro i j hij
+  obtain ⟨T, hthreshold, hT, hcross⟩ := hoverlap i j hij
+  exact T.hasSelectedOpenPath_of_crossing_subset hd threshold hthreshold hT hcross
+
 end Rigidity.Percolation
