@@ -131,21 +131,15 @@ theorem fluxPairing_eq_clusterForm {U : TriadicCube 2} (p : Fin 2 → ℝ) (w : 
     ring
   · rfl
 
-/-- **Affine boundary values** (Armstrong and Dario, Lemma 4.2). The maximizer of `ν(U, p)`
-coincides with `x ↦ p · x + c` at the boundary vertices of the cluster, for some constant `c`. -/
-theorem exists_planarNu_maximizer_affine (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
-    (hU : PlanarResolved ω U) (p : Fin 2 → ℝ) :
-    ∃ v ∈ clusterHarmonic ω U, (∀ w ∈ clusterHarmonic ω U,
-        clusterForm ω U w v = fluxPairing ω U p w) ∧
-      planarNu ω U p = clusterForm ω U v v / 2 / U.volume ∧
-      ∃ c : ℝ, ∀ x : ↥(clusterVertices ω U), ¬ U.IsInterior x.1 →
-        v x = ∑ i, p i * (x.1 i : ℝ) + c := by
-  obtain ⟨v, hv, hvar, hν⟩ := exists_planarNu_maximizer (ω := ω) (U := U) p
-  refine ⟨v, hv, hvar, ?_, ?_⟩
-  · rw [hν, ← hvar v hv]
-    ring
+/-- **Affine boundary values** (Armstrong and Dario, Lemma 4.2). A function of `A_*(U)` solving
+the first-variation equation of `ν(U, p)` coincides with `x ↦ p · x + c` at the boundary vertices
+of the cluster, for some constant `c`. -/
+theorem exists_affine_boundary_of_variation (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
+    (hU : PlanarResolved ω U) (p : Fin 2 → ℝ) {v : ClusterFun ω U}
+    (hvar : ∀ w ∈ clusterHarmonic ω U, clusterForm ω U w v = fluxPairing ω U p w) :
+    ∃ c : ℝ, ∀ x : ↥(clusterVertices ω U), ¬ U.IsInterior x.1 →
+      v x = ∑ i, p i * (x.1 i : ℝ) + c := by
   set a := clusterAffine ω U p
-  -- `v - a` is orthogonal to `A_*(U)`
   have horth : ∀ w ∈ clusterHarmonic ω U, clusterForm ω U w (v - a) = 0 := by
     intro w hw
     rw [map_sub, hvar w hw, fluxPairing_eq_clusterForm, sub_self]
@@ -156,7 +150,6 @@ theorem exists_planarNu_maximizer_affine (hP : PlanarPartitionEvent ω) {U : Tri
     rw [LinearMap.map_sub₂] at h1
     rw [clusterForm_symm (v - a) w, h3] at h1
     linarith
-  -- `w` is constant on the cluster
   by_cases hne : Nonempty ↥(clusterVertices ω U)
   · obtain ⟨z⟩ := hne
     refine ⟨w z, fun x hx => ?_⟩
@@ -170,6 +163,30 @@ theorem exists_planarNu_maximizer_affine (hP : PlanarPartitionEvent ω) {U : Tri
     rw [this, hwx]
     rfl
   · exact ⟨0, fun x _ => absurd ⟨x⟩ hne⟩
+
+/-- The maximizer of `ν(U, p)`: its energy is `2 |U| ν(U, p)` and it is affine at the boundary
+vertices of the cluster. -/
+theorem exists_planarNu_maximizer_affine (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
+    (hU : PlanarResolved ω U) (p : Fin 2 → ℝ) :
+    ∃ v ∈ clusterHarmonic ω U, (∀ w ∈ clusterHarmonic ω U,
+        clusterForm ω U w v = fluxPairing ω U p w) ∧
+      planarNu ω U p = clusterForm ω U v v / 2 / U.volume ∧
+      ∃ c : ℝ, ∀ x : ↥(clusterVertices ω U), ¬ U.IsInterior x.1 →
+        v x = ∑ i, p i * (x.1 i : ℝ) + c := by
+  obtain ⟨v, hv, hvar, hν⟩ := exists_planarNu_maximizer (ω := ω) (U := U) p
+  refine ⟨v, hv, hvar, ?_, exists_affine_boundary_of_variation hP hU p hvar⟩
+  rw [hν, ← hvar v hv]
+  ring
+
+/-- Any solution of the first-variation equation of `ν(U, p)` has energy at most
+`2 |U| ν(U, p)`. -/
+theorem clusterForm_le_of_variation {U : TriadicCube 2} (p : Fin 2 → ℝ) {v : ClusterFun ω U}
+    (hv : v ∈ clusterHarmonic ω U)
+    (hvar : ∀ w ∈ clusterHarmonic ω U, clusterForm ω U w v = fluxPairing ω U p w) :
+    clusterForm ω U v v ≤ 2 * U.volume * planarNu ω U p := by
+  have h := le_planarNu p hv
+  rw [← hvar v hv, div_le_iff₀ U.volume_pos] at h
+  linarith
 
 /-- **Dirichlet principle** (Armstrong and Dario, (4.7)). `ν(U, p) |U|` is at most half the
 energy of any function on the cluster equal to `x ↦ p · x` up to a function vanishing at the
