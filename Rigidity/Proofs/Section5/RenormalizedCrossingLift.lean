@@ -67,4 +67,32 @@ theorem horizontal_crossing_lifts {ω : Configuration 2} {R m n : ℕ} (hR : 321
   · simpa only [Q, SimpleGraph.Walk.length_map, P, SimpleGraph.Walk.length_ofSupport,
       Nat.sub_add_cancel (List.length_pos_iff_ne_nil.2 hl.ne_nil)] using hWlen
 
+/-- At most nine regions of pairwise disjoint lattice-represented site paths can contain the
+same lattice vertex. -/
+theorem card_disjoint_crossing_regions_meeting_le_nine {R : ℕ} {x : Vertex 2}
+    (L : Finset (List (LatticeModels.Site 2)))
+    (hdisj : ∀ l ∈ L, ∀ l' ∈ L, l ≠ l' → ∀ z ∈ l, z ∉ l')
+    (hx : ∀ l ∈ L, x ∈ renormPathRegion R (l.map fun z => (z 0, z 1))) : L.card ≤ 9 := by
+  classical
+  let f : LatticeModels.Site 2 → PlanarCarrier := fun z => (z 0, z 1)
+  have hf : Function.Injective f := by
+    intro a b hab
+    exact LatticeModels.Site.eq_iff_two.2 ⟨congrArg Prod.fst hab, congrArg Prod.snd hab⟩
+  have hmap : Function.Injective (List.map f) := List.map_injective_iff.2 hf
+  have hd : ∀ l ∈ L.image (List.map f), ∀ l' ∈ L.image (List.map f),
+      l ≠ l' → ∀ z ∈ l, z ∉ l' := by
+    intro l hl l' hl' hne z hz hz'
+    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hl
+    obtain ⟨b, hb, rfl⟩ := Finset.mem_image.1 hl'
+    obtain ⟨u, hu, rfl⟩ := List.mem_map.1 hz
+    obtain ⟨v, hv, huv⟩ := List.mem_map.1 hz'
+    have huv' : v = u := hf huv
+    subst v
+    exact hdisj a ha b hb (fun h => hne (congrArg (List.map f) h)) u hu hv
+  have hb := card_disjoint_path_regions_meeting_le_nine (L.image (List.map f)) hd (by
+    intro l hl
+    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.1 hl
+    exact hx a ha)
+  rwa [Finset.card_image_of_injective _ hmap] at hb
+
 end Rigidity.Proofs.Section5.Kesten
