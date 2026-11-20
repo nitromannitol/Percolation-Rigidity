@@ -67,4 +67,28 @@ theorem measure_exists_sparse_star_path_le {ν : Measure (PlanarCarrier → Bool
         norm_num
         nlinarith
 
+/-- A connection across a vertical distance `N` through closed sites and at most `N / 2`
+exceptional sites has exponentially small probability. -/
+theorem measure_exists_star_connection_with_exceptions_le {ν : Measure (PlanarCarrier → Bool)}
+    [IsProbabilityMeasure ν] (hν : KDependentPlanar 1 ν)
+    (hcl : ∀ z, ν {η | η z = false} ≤ ENNReal.ofReal ((1 / 144 : ℝ) ^ 18))
+    (T : Finset PlanarCarrier) {N : ℕ} (hN : 0 < N) :
+    ν {η | ∃ (F : Finset PlanarCarrier) (u : PlanarCarrier) (_ : u ∈ T) (v : PlanarCarrier),
+        2 * F.card ≤ N ∧ (N : ℤ) ≤ |u.2 - v.2| ∧
+        (starGraphOn ({s | η s = false} ∪ ↑F)).Reachable u v} ≤
+      ENNReal.ofReal (4 * (T.card : ℝ) * (1 / 8 : ℝ) ^ N) := by
+  apply (measure_mono ?_).trans (measure_exists_sparse_star_path_le hν hcl T N)
+  rintro η ⟨F, u, hu, v, hF, huv, ⟨w⟩⟩
+  let p := w.bypass
+  have hp : p.IsPath := w.bypass_isPath
+  have hdist : |u.2 - v.2| ≤ (p.length : ℤ) := (abs_sub_le_length_starGraphOn p).2
+  have hlen : N ≤ p.length := by exact_mod_cast huv.trans hdist
+  have hpos : 0 < p.length := lt_of_lt_of_le hN hlen
+  have hcnt := countP_support_le p hp hpos
+  have hsparse : 2 * p.support.countP η ≤ p.length := by omega
+  simp only [Set.mem_iUnion, Set.mem_setOf_eq]
+  refine ⟨p.length - N, u, hu, p.support, ?_, hp.support_nodup, ?_⟩
+  · simpa only [Nat.add_sub_of_le hlen] using support_mem_starWalkLists_of_starGraphOn p
+  · simpa only [Nat.add_sub_of_le hlen] using hsparse
+
 end Rigidity.Proofs.Section5
