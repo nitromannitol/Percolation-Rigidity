@@ -83,6 +83,42 @@ theorem site_walk_end_open {η : PlanarCarrier → Bool} {u v : PlanarCarrier}
   | nil => exact hu
   | cons h w ih => exact ih h.2.2
 
+/-- Two sites visited by an open renormalized walk have their channel anchors connected by
+a short open path inside the blocks visited by the original walk. -/
+theorem visited_anchors_connected {ω : Configuration 2} {R : ℕ} (hR : 3210 ≤ R)
+    {u v z z' : PlanarCarrier} (w : (siteOpenGraph (renormField R ω)).Walk u v)
+    (hu : renormField R ω u = true) (hz : z ∈ w.support) (hz' : z' ∈ w.support) :
+    ∃ (hzo : renormField R ω z = true) (hz'o : renormField R ω z' = true),
+      ∃ P : (openGraph ω).Walk (renormChannelAnchor hR hzo) (renormChannelAnchor hR hz'o),
+        P.IsPath ∧ (∀ x ∈ P.support, x ∈ renormPathRegion R w.support) ∧
+        P.length < (2 * w.length + 1) * (2 * (11 * R / 10) + 1) ^ 2 := by
+  let p := w.takeUntil z hz
+  let q := w.takeUntil z' hz'
+  let t := p.reverse.append q
+  have hzo : renormField R ω z = true := site_walk_end_open p hu
+  have hz'o : renormField R ω z' = true := site_walk_end_open q hu
+  have hsub : t.support ⊆ w.support := by
+    intro a ha
+    rcases (SimpleGraph.Walk.mem_support_append_iff p.reverse q).1 ha with ha | ha
+    · apply w.support_takeUntil_subset_support hz
+      simpa only [SimpleGraph.Walk.support_reverse, List.mem_reverse] using ha
+    · exact w.support_takeUntil_subset_support hz' ha
+  have hlen : t.length ≤ 2 * w.length := by
+    have h₁ := w.length_takeUntil_le_length hz
+    have h₂ := w.length_takeUntil_le_length hz'
+    change p.length ≤ w.length at h₁
+    change q.length ≤ w.length at h₂
+    simp only [t, SimpleGraph.Walk.length_append, SimpleGraph.Walk.length_reverse]
+    omega
+  obtain ⟨P, hP, hPsub, hPlen⟩ := renorm_walk_lifts_anchors hR t hzo hz'o
+  refine ⟨hzo, hz'o, P, hP, ?_, ?_⟩
+  · intro x hx
+    have hx' := hPsub x hx
+    simp only [renormPathRegion, Set.mem_iUnion] at hx' ⊢
+    obtain ⟨a, ha, hxa⟩ := hx'
+    exact ⟨a, hsub ha, hxa⟩
+  · exact hPlen.trans_le (Nat.mul_le_mul_right _ (by omega))
+
 /-- A positive-width crossing lifted through an open-site homomorphism joins the distinguished
 channel vertices of its two endpoint blocks. -/
 theorem horizontal_crossing_lifts_anchors_of_site_hom {ω : Configuration 2} {R m n : ℕ}
