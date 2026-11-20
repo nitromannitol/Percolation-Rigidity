@@ -94,4 +94,20 @@ theorem condExp_indicator_lower_of_base_seed_selection {d : ℕ} {ι : Type*}
   rw [hω]
   exact hprob i
 
+/-- Uniformly bounded finite seeds chosen from the base field have an explicit
+positive conditional probability at positive sprinkling density. -/
+theorem condExp_indicator_lower_of_bounded_base_seed_selection {d : ℕ} {ι : Type*}
+    [Countable ι] (q r : unitInterval) (U : ι → Set (Vertex d))
+    (hU : ∀ i, (U i).Finite) (N : ℕ)
+    (hN : ∀ i, (finite_localBonds (hU i)).toFinset.card ≤ N)
+    (A : ι → Set (Bond d → Bool × Bool)) {G C : Set (Bond d → Bool × Bool)}
+    (hA : ∀ i, MeasurableSet[baseBondSigma d] (A i))
+    (hG : MeasurableSet G) (hC : MeasurableSet C) (hcover : G ⊆ ⋃ i, A i)
+    (hsubset : ∀ i, A i ∩ (addedBondConfiguration ⁻¹' fullyOpenRegion (U i)) ⊆ C) :
+    ∀ᵐ ω ∂(bondPairLaw d q r).restrict G,
+      (r : ℝ) ^ N ≤
+        (bondPairLaw d q r)[C.indicator (fun _ => (1 : ℝ)) | baseBondSigma d] ω :=
+  condExp_indicator_lower_of_base_seed_selection q r U A hA hG hC hcover hsubset
+    ((r : ℝ) ^ N) (fun i => latticeBondLaw_real_fullyOpenRegion_lower r (U i) (hU i) N (hN i))
+
 end Rigidity.Percolation

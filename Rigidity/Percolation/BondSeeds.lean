@@ -47,6 +47,24 @@ theorem latticeBondLaw_fullyOpenRegion_pos {d : ℕ} (p : unitInterval)
   rw [latticeBondLaw_fullyOpenRegion p U hU]
   exact ENNReal.pow_pos (ENNReal.ofReal_pos.mpr hp) _
 
+/-- The real-valued probability of a finite seed is the corresponding power
+of the bond density. -/
+theorem latticeBondLaw_real_fullyOpenRegion {d : ℕ} (p : unitInterval)
+    (U : Set (Vertex d)) (hU : U.Finite) :
+    (latticeBondLaw d p).real (fullyOpenRegion U) =
+      (p : ℝ) ^ (finite_localBonds hU).toFinset.card := by
+  rw [measureReal_def, latticeBondLaw_fullyOpenRegion p U hU, ENNReal.toReal_pow,
+    ENNReal.toReal_ofReal p.property.1]
+
+/-- A uniform bound on the number of internal bonds gives a uniform lower
+bound on the probability of a finite seed. -/
+theorem latticeBondLaw_real_fullyOpenRegion_lower {d : ℕ} (p : unitInterval)
+    (U : Set (Vertex d)) (hU : U.Finite) (N : ℕ)
+    (hN : (finite_localBonds hU).toFinset.card ≤ N) :
+    (p : ℝ) ^ N ≤ (latticeBondLaw d p).real (fullyOpenRegion U) := by
+  rw [latticeBondLaw_real_fullyOpenRegion p U hU]
+  exact pow_le_pow_of_le_one p.property.1 p.property.2 hN
+
 /-- Opening every internal bond preserves all paths of the fully open graph
 inside the region. -/
 theorem reachable_openIn_of_fullyOpenRegion {d : ℕ} {ω : Configuration d}
