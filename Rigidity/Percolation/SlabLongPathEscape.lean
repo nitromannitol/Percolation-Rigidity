@@ -147,7 +147,7 @@ large coordinate diameter is disconnected from a cube-crossing component. -/
 theorem IntegerCube.measureReal_disconnected_large_path_le_of_twoPoint_slabs {d : ℕ}
     (Q : IntegerCube d) (width N : ℕ) (hwidth : 0 < width) (p : unitInterval)
     (ρ : ℝ) (hρ : ρ ≤ 1)
-    (hprob : ∀ j : Fin d, ∀ k : ℕ, k * width < Q.size →
+    (hprob : ∀ j : Fin d, ∀ k : ℕ, (k + 1) * width ≤ Q.size →
       ∀ x ∈ Q.slab j width k, ∀ y ∈ Q.slab j width k,
         ρ ≤ (latticeBondLaw d p).real {ω | (openIn ω (Q.slab j width k)).Reachable x y}) :
     (latticeBondLaw d p).real {ω | ∃ root,
@@ -191,7 +191,9 @@ theorem IntegerCube.measureReal_disconnected_large_path_le_of_twoPoint_slabs {d 
           ∀ y ∈ Q.slab j width (k.val + n), ρ ≤ (latticeBondLaw d p).real
             {ω | (openIn ω (Q.slab j width (k.val + n))).Reachable x y} := by
         intro n hn
-        exact hprob j (k.val + n) (hsize n (Nat.le_of_lt hn))
+        apply hprob j (k.val + n)
+        have hnle : k.val + n + 1 ≤ k.val + N := by omega
+        exact (Nat.mul_le_mul_right width hnle).trans (Nat.le_of_lt hk.2)
       have hcard : ((Q.vertices.filter fun x => x ∈ Q.slabPrefix j width k.val).card : ℝ) ≤
           Q.vertices.card := by
         exact_mod_cast Finset.card_filter_le _ _
