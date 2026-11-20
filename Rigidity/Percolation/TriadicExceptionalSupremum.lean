@@ -56,15 +56,17 @@ theorem ae_exceptionalScale_ne_top {Ω : Type*} [MeasurableSpace Ω]
 
 /-- The real supremum of exceptional lengths has a stretched-exponential
 moment under a uniform stretched-exponential bound for their events. -/
-theorem exceptionalScale_exp_moment {Ω : Type*} [MeasurableSpace Ω]
-    (μ : Measure Ω) [IsProbabilityMeasure μ] (E : ℕ → Set Ω)
-    (hEm : ∀ n, MeasurableSet (E n)) (C : ℝ≥0∞) (hC : C ≠ ∞)
-    (s c : ℝ) (hs : 0 < s) (hc : 0 < c)
-    (hE : ∀ n : ℕ, μ (E n) ≤ C * ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ n) ^ s))) :
-    ∃ θ : ℝ, 0 < θ ∧
+theorem uniform_exceptionalScale_exp_moment {Ω : Type*} [MeasurableSpace Ω]
+    (C : ℝ≥0∞) (hC : C ≠ ∞) (s c : ℝ) (hs : 0 < s) (hc : 0 < c) :
+    ∃ θ : ℝ, 0 < θ ∧ ∀ (μ : Measure Ω) [IsProbabilityMeasure μ] (E : ℕ → Set Ω),
+      (∀ n, MeasurableSet (E n)) →
+      (∀ n : ℕ, μ (E n) ≤ C * ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ n) ^ s))) →
       Integrable (fun ω => Real.exp (((exceptionalScale E ω).toReal / θ) ^ s)) μ ∧
-      (∫ ω, Real.exp (((exceptionalScale E ω).toReal / θ) ^ s) ∂μ) ≤ 2 := by
+        (∫ ω, Real.exp (((exceptionalScale E ω).toReal / θ) ^ s) ∂μ) ≤ 2 := by
   classical
+  obtain ⟨θ, hθ, hmoment⟩ := uniform_exp_moment_of_exceptional_scales (Ω := Ω) C hC s c hs hc
+  refine ⟨3 * θ, by positivity, ?_⟩
+  intro μ _ E hEm hE
   let M : Ω → ℝ := fun ω => (exceptionalScale E ω).toReal / 3
   have hMm : Measurable M := (ENNReal.measurable_toReal.comp (measurable_exceptionalScale E hEm)).div_const _
   have hM0 (ω : Ω) : 0 ≤ M ω := div_nonneg ENNReal.toReal_nonneg (by norm_num)
@@ -88,9 +90,8 @@ theorem exceptionalScale_exp_moment {Ω : Type*} [MeasurableSpace Ω]
       exact le_of_lt ((ENNReal.ofReal_lt_ofReal_iff (by positivity)).mp hn)
     · rw [if_neg hmem] at hn
       exact (not_lt_zero hn).elim
-  obtain ⟨θ, hθ, hi, hb⟩ := exp_moment_of_exceptional_scales μ E C hC s c hs hc hE
-    M hMm hM0 hbound
-  refine ⟨3 * θ, by positivity, ?_, ?_⟩
+  obtain ⟨hi, hb⟩ := hmoment μ E hE M hMm hM0 hbound
+  refine ⟨?_, ?_⟩
   · convert hi using 1
     funext ω
     dsimp only [M]
@@ -102,5 +103,18 @@ theorem exceptionalScale_exp_moment {Ω : Type*} [MeasurableSpace Ω]
     dsimp only [M]
     congr 2
     ring
+
+/-- The real supremum of exceptional lengths has a stretched-exponential
+moment under a uniform stretched-exponential bound for their events. -/
+theorem exceptionalScale_exp_moment {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (E : ℕ → Set Ω)
+    (hEm : ∀ n, MeasurableSet (E n)) (C : ℝ≥0∞) (hC : C ≠ ∞)
+    (s c : ℝ) (hs : 0 < s) (hc : 0 < c)
+    (hE : ∀ n : ℕ, μ (E n) ≤ C * ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ n) ^ s))) :
+    ∃ θ : ℝ, 0 < θ ∧
+      Integrable (fun ω => Real.exp (((exceptionalScale E ω).toReal / θ) ^ s)) μ ∧
+      (∫ ω, Real.exp (((exceptionalScale E ω).toReal / θ) ^ s) ∂μ) ≤ 2 := by
+  obtain ⟨θ, hθ, h⟩ := uniform_exceptionalScale_exp_moment (Ω := Ω) C hC s c hs hc
+  exact ⟨θ, hθ, h μ E hEm hE⟩
 
 end Rigidity.Percolation

@@ -15,20 +15,24 @@ open scoped ENNReal
 
 /-- Exponential moments at scales `K * 3 ^ (-n * β)` imply a stretched
 exponential moment for the supremum of indices where the variable reaches one. -/
-theorem exceptionalScale_exp_moment_of_decaying_moments {Ω : Type*} [MeasurableSpace Ω]
-    (μ : Measure Ω) [IsProbabilityMeasure μ] (X : ℕ → Ω → ℝ)
-    (hXm : ∀ n, Measurable (X n)) (K s β : ℝ) (hK : 0 < K) (hs : 0 < s) (hβ : 0 < β)
-    (hInt : ∀ n, Integrable (fun ω => Real.exp ((X n ω / (K / ((3 : ℝ) ^ n) ^ β)) ^ s)) μ)
-    (hMom : ∀ n, (∫ ω, Real.exp ((X n ω / (K / ((3 : ℝ) ^ n) ^ β)) ^ s) ∂μ) ≤ 2) :
-    let E : ℕ → Set Ω := fun n => {ω | 1 ≤ X n ω}
-    (∀ᵐ ω ∂μ, exceptionalScale E ω ≠ ∞) ∧
-    ∃ θ : ℝ, 0 < θ ∧
-      Integrable (fun ω => Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β))) μ ∧
-      (∫ ω, Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β)) ∂μ) ≤ 2 := by
-  let E : ℕ → Set Ω := fun n => {ω | 1 ≤ X n ω}
+theorem uniform_exceptionalScale_exp_moment_of_decaying_moments {Ω : Type*} [MeasurableSpace Ω]
+    (K s β : ℝ) (hK : 0 < K) (hs : 0 < s) (hβ : 0 < β) :
+    ∃ θ : ℝ, 0 < θ ∧ ∀ (μ : Measure Ω) [IsProbabilityMeasure μ] (X : ℕ → Ω → ℝ),
+      (∀ n, Measurable (X n)) →
+      (∀ n, Integrable (fun ω => Real.exp ((X n ω / (K / ((3 : ℝ) ^ n) ^ β)) ^ s)) μ) →
+      (∀ n, (∫ ω, Real.exp ((X n ω / (K / ((3 : ℝ) ^ n) ^ β)) ^ s) ∂μ) ≤ 2) →
+      let E : ℕ → Set Ω := fun n => {ω | 1 ≤ X n ω}
+      (∀ᵐ ω ∂μ, exceptionalScale E ω ≠ ∞) ∧
+        Integrable (fun ω => Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β))) μ ∧
+        (∫ ω, Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β)) ∂μ) ≤ 2 := by
   let c : ℝ := (K ^ s)⁻¹
   have hc : 0 < c := inv_pos.mpr (Real.rpow_pos_of_pos hK s)
   have hsβ : 0 < s * β := mul_pos hs hβ
+  obtain ⟨θ, hθ, hmoment⟩ := uniform_exceptionalScale_exp_moment (Ω := Ω)
+    2 (by simp) (s * β) c hsβ hc
+  refine ⟨θ, hθ, ?_⟩
+  intro μ _ X hXm hInt hMom
+  let E : ℕ → Set Ω := fun n => {ω | 1 ≤ X n ω}
   have hEm : ∀ n, MeasurableSet (E n) := fun n => measurableSet_le measurable_const (hXm n)
   have hE : ∀ n : ℕ, μ (E n) ≤ (2 : ℝ≥0∞) *
       ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ n) ^ (s * β))) := by
@@ -53,6 +57,23 @@ theorem exceptionalScale_exp_moment_of_decaying_moments {Ω : Type*} [Measurable
       (Real.one_lt_rpow (by norm_num) hsβ) hc
     intro n
     simpa only [Real.rpow_pow_comm (by norm_num : (0 : ℝ) ≤ 3)] using hE n
-  · exact exceptionalScale_exp_moment μ E hEm 2 (by simp) (s * β) c hsβ hc hE
+  · exact hmoment μ E hEm hE
+
+/-- The exceptional scale has a finite stretched-exponential moment under
+decaying exponential-moment estimates. -/
+theorem exceptionalScale_exp_moment_of_decaying_moments {Ω : Type*} [MeasurableSpace Ω]
+    (μ : Measure Ω) [IsProbabilityMeasure μ] (X : ℕ → Ω → ℝ)
+    (hXm : ∀ n, Measurable (X n)) (K s β : ℝ) (hK : 0 < K) (hs : 0 < s) (hβ : 0 < β)
+    (hInt : ∀ n, Integrable (fun ω => Real.exp ((X n ω / (K / ((3 : ℝ) ^ n) ^ β)) ^ s)) μ)
+    (hMom : ∀ n, (∫ ω, Real.exp ((X n ω / (K / ((3 : ℝ) ^ n) ^ β)) ^ s) ∂μ) ≤ 2) :
+    let E : ℕ → Set Ω := fun n => {ω | 1 ≤ X n ω}
+    (∀ᵐ ω ∂μ, exceptionalScale E ω ≠ ∞) ∧
+    ∃ θ : ℝ, 0 < θ ∧
+      Integrable (fun ω => Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β))) μ ∧
+      (∫ ω, Real.exp (((exceptionalScale E ω).toReal / θ) ^ (s * β)) ∂μ) ≤ 2 := by
+  obtain ⟨θ, hθ, h⟩ := uniform_exceptionalScale_exp_moment_of_decaying_moments
+    (Ω := Ω) K s β hK hs hβ
+  obtain ⟨hae, hi, hm⟩ := h μ X hXm hInt hMom
+  exact ⟨hae, θ, hθ, hi, hm⟩
 
 end Rigidity.Percolation
