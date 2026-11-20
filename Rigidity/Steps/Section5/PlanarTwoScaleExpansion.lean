@@ -67,7 +67,6 @@ theorem twoScaleExpansion_of_planar_inputs {p : unitInterval}
   filter_upwards [hU, hRae, hΛae, hMae, ae_all_iff.2 hM6ae, Rigidity.Proofs.Section5.greenSymmetry_two hGQ hpc hp1]
     with ω hω hV hΛω hMω h6ω hsymω
   refine ⟨hω, fun hmass G hG ℓ hℓ => ?_⟩
-  -- the flow of Lemma 5.6 on the connecting set `V`
   obtain ⟨V, hVc, hVf, hVR⟩ := hV hω
   have hsum : ∑ y ∈ V, (f y.val : ℝ) = 0 := by
     have h1 : mass (uniqueInfiniteComponent hω) f = ∑ y ∈ V, f y.val :=
@@ -80,7 +79,6 @@ theorem twoScaleExpansion_of_planar_inputs {p : unitInterval}
     Finset.mem_product.mpr ⟨(hsupp a b h).2.1, (hsupp a b h).2.2⟩
   have hSb : ∀ k : (uniqueInfiniteComponent hω) → ℝ, ∑ᶠ a, (f a.val : ℝ) * k a =
       (1 / 2) * ∑ e ∈ V ×ˢ V, F e.1 e.2 * (k e.1 - k e.2) := hS F _ (V ×ˢ V) hanti hSF hdiv
-  -- the normalization of the Green function
   obtain ⟨K, hK⟩ := hsymω hω G hG
   refine ⟨∑ᶠ y : (uniqueInfiniteComponent hω), (f y.val : ℝ) * K y, fun x hx => ?_⟩
   set Dx : Fin 2 → ℝ := fun i =>
@@ -113,7 +111,6 @@ theorem twoScaleExpansion_of_planar_inputs {p : unitInterval}
     simp only [hTm]
     linear_combination F e.1 e.2 * (hK x e.1 - hK x e.2)
   rw [hid]
-  -- the minimal scale at `x`
   have hcond := hMω x.val (by rwa [latticeL1Dist_zero])
   rw [latticeL1Dist_zero] at hcond
   have c0 := hcond 0
@@ -168,7 +165,6 @@ theorem twoScaleExpansion_of_planar_inputs {p : unitInterval}
     rw [hErr]
     exact add_nonneg (div_nonneg (by linarith) (pow_nonneg hτ0.le _))
       (div_nonneg h1 (pow_nonneg hτ0.le _))
-  -- the bound on each edge
   have hedgeb : ∀ e ∈ V ×ˢ V, |F e.1 e.2| * |Tm e| ≤ n * mf * Err := by
     intro e _
     by_cases hFe : F e.1 e.2 = 0
