@@ -139,6 +139,32 @@ theorem exists_slab_attachment_of_reachable {d : ℕ} {ω : Configuration d}
   have hnn := (openGraph_adj_iff ω edge.fst edge.snd).mp hadj.1
   exact ⟨edge.fst, hxC.1, edge.snd, hyS, hnn.1, hxC.2, hnn.2⟩
 
+/-- Disconnected explored components entering the fresh region use distinct
+boundary bonds. -/
+theorem exists_distinct_slab_attachments_of_reachable {d : ℕ} {ω : Configuration d}
+    {P S D : Set (Vertex d)} (hPS : Disjoint P S) (hDS : D ⊆ P ∪ S)
+    {z z' w w' : Vertex d} (hz : z ∈ P) (hz' : z' ∈ P)
+    (hw : w ∈ S) (hw' : w' ∈ S)
+    (hzw : (openIn ω D).Reachable z w) (hz'w' : (openIn ω D).Reachable z' w')
+    (hsep : ¬ (openIn ω P).Reachable z z') :
+    ∃ x ∈ P, ∃ y ∈ S, ∃ hxy : (nearestNeighborGraph d).Adj x y,
+    ∃ x' ∈ P, ∃ y' ∈ S, ∃ hx'y' : (nearestNeighborGraph d).Adj x' y',
+      (openIn ω P).Reachable z x ∧ (openIn ω P).Reachable z' x' ∧
+      ω (bondOfAdjacent hxy) = true ∧ ω (bondOfAdjacent hx'y') = true ∧
+      bondOfAdjacent hxy ≠ bondOfAdjacent hx'y' := by
+  obtain ⟨x, hx, y, hy, hxy, hzx, hopen⟩ :=
+    exists_slab_attachment_of_reachable hPS hDS hz hw hzw
+  obtain ⟨x', hx', y', hy', hx'y', hz'x', hopen'⟩ :=
+    exists_slab_attachment_of_reachable hPS hDS hz' hw' hz'w'
+  refine ⟨x, hx, y, hy, hxy, x', hx', y', hy', hx'y', hzx, hz'x', hopen, hopen', ?_⟩
+  intro heq
+  have hedge : s(x, y) = s(x', y') := congrArg Subtype.val heq
+  rcases Sym2.eq_iff.mp hedge with ⟨hxx', _⟩ | ⟨hxy', _⟩
+  · subst x'
+    exact hsep (hzx.trans hz'x'.symm)
+  · subst y'
+    exact Set.disjoint_left.mp hPS hx hy'
+
 /-- If an explored root reaches one of the candidate boundary vertices, then
 the conditional probability that it crosses the ambient region is at least
 `p * δ`, provided every corresponding fresh-slab root crosses with probability
