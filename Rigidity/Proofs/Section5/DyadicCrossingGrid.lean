@@ -19,6 +19,34 @@ theorem dyadicStripStarts_fst_eq_zero {j : ℕ} {a : PlanarCarrier} (ha : a ∈ 
   obtain ⟨i, hi, rfl⟩ := Finset.mem_image.1 ha
   rfl
 
+/-- The number of dyadic strips is the integer quotient of side length by strip spacing. -/
+theorem card_dyadicStripStarts (j : ℕ) : (dyadicStripStarts j).card = 2 ^ j / (j + 2) := by
+  classical
+  rw [dyadicStripStarts, Finset.card_image_of_injective, Finset.card_range]
+  intro a b h
+  have hs := congrArg Prod.snd h
+  have hs' : (a : ℤ) * (j + 2) = (b : ℤ) * (j + 2) := hs
+  have hj : (j : ℤ) + 2 ≠ 0 := by omega
+  exact_mod_cast (mul_right_cancel₀ hj hs')
+
+/-- Every dyadic square of side length at least four contains one of the chosen strips. -/
+theorem dyadicStripStarts_nonempty {j : ℕ} (hj : 2 ≤ j) : (dyadicStripStarts j).Nonempty := by
+  have hp : ∀ n : ℕ, 2 ≤ n → n + 2 ≤ 2 ^ n := by
+    intro n hn
+    induction n with
+    | zero => omega
+    | succ n ih =>
+      by_cases hn' : 2 ≤ n
+      · have h := ih hn'
+        rw [pow_succ]
+        omega
+      · have : n = 1 := by omega
+        subst n
+        norm_num
+  apply Finset.card_pos.1
+  rw [card_dyadicStripStarts]
+  exact Nat.div_pos (hp j hj) (by omega)
+
 /-- The lower-left corner of the dyadic square centered at the origin. -/
 def dyadicCenteredOffset (j : ℕ) : PlanarCarrier :=
   (-((2 ^ j / 2 : ℕ) : ℤ), -((2 ^ j / 2 : ℕ) : ℤ))
