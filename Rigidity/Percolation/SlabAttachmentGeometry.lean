@@ -13,6 +13,7 @@ Two such bonds join two previously explored components through the slab.
 namespace Rigidity.Percolation
 
 open LatticeProb.Percolation MeasureTheory Rigidity.External
+open scoped MeasureTheory
 
 /-- Reachability between vertices of a finite region depends only on its
 internal bonds. -/
@@ -64,6 +65,17 @@ theorem measurableSet_isCrossingRoot_bondSigma {d : ℕ} (B : Set (Vertex d))
     (measurableSet_targetConnection_bondSigma B (lower i) hB hx).inter
       (measurableSet_targetConnection_bondSigma B (upper i) hB hx)
 
+/-- A bond crossing between disjoint vertex regions is internal to neither. -/
+theorem bondOfAdjacent_not_mem_localBonds {d : ℕ} {P S : Set (Vertex d)}
+    (hPS : Disjoint P S) {x y : Vertex d} (hx : x ∈ P) (hy : y ∈ S)
+    (hxy : (nearestNeighborGraph d).Adj x y) :
+    bondOfAdjacent hxy ∉ localBonds P ∧ bondOfAdjacent hxy ∉ localBonds S := by
+  constructor
+  · intro h
+    exact Set.disjoint_left.mp hPS (h y (Sym2.mem_mk_right x y)) hy
+  · intro h
+    exact Set.disjoint_left.mp hPS hx (h x (Sym2.mem_mk_left x y))
+
 /-- An open boundary bond joins a past path to a slab path in the ambient
 region. -/
 theorem reachable_openIn_of_slab_attachment {d : ℕ} {ω : Configuration d}
@@ -76,6 +88,18 @@ theorem reachable_openIn_of_slab_attachment {d : ℕ} {ω : Configuration d}
     ⟨(openGraph_adj_iff ω x y).mpr ⟨hxy, hopen⟩, hPD hx, hSD hy⟩
   exact ((reachable_openIn_mono hPD hzx).trans hbond.reachable).trans
     (reachable_openIn_mono hSD hyw)
+
+/-- A vertex connected to a crossing root in a larger region also connects to
+all of the marked faces. -/
+theorem IsCrossingRoot.of_reachable_in_larger_region {d : ℕ} {ω : Configuration d}
+    {S D : Set (Vertex d)} {lower upper : Fin d → Set (Vertex d)}
+    {y z : Vertex d} (hroot : IsCrossingRoot ω S lower upper y) (hSD : S ⊆ D)
+    (hz : z ∈ D) (hzy : (openIn ω D).Reachable z y) :
+    IsCrossingRoot ω D lower upper z := by
+  refine ⟨hz, fun i => ?_⟩
+  obtain ⟨⟨a, haS, ha, hya⟩, ⟨b, hbS, hb, hyb⟩⟩ := hroot.2 i
+  exact ⟨⟨a, hSD haS, ha, hzy.trans (reachable_openIn_mono hSD hya)⟩,
+    ⟨b, hSD hbS, hb, hzy.trans (reachable_openIn_mono hSD hyb)⟩⟩
 
 /-- Two open boundary bonds and a slab path join the past components of their
 endpoints in the ambient region. -/
@@ -92,5 +116,44 @@ theorem reachable_openIn_of_two_slab_attachments {d : ℕ} {ω : Configuration d
   have hright := reachable_openIn_of_slab_attachment hPD hSD hx' hy' hx'y' hopen'
     hz'x' (SimpleGraph.Reachable.refl y')
   exact hleft.trans hright.symm
+
+/-- If an explored root reaches one of the candidate boundary vertices, then
+the conditional probability that it crosses the ambient region is at least
+`p * δ`, provided every corresponding fresh-slab root crosses with probability
+at least `δ`. -/
+theorem condExp_crossingRoot_lower_of_slab_attachments {d : ℕ} {ι : Type*}
+    [Countable ι] (p : unitInterval) (P S D : Set (Vertex d))
+    (hP : P.Finite) (hS : S.Finite) (hPS : Disjoint P S)
+    (hPD : P ⊆ D) (hSD : S ⊆ D) (z : Vertex d) (hz : z ∈ P)
+    (x y : ι → Vertex d) (hx : ∀ i, x i ∈ P) (hy : ∀ i, y i ∈ S)
+    (hxy : ∀ i, (nearestNeighborGraph d).Adj (x i) (y i))
+    (lower upper : Fin d → Set (Vertex d)) (δ : ℝ)
+    (hprob : ∀ i, δ ≤ (latticeBondLaw d p).real
+      {ω | IsCrossingRoot ω S lower upper (y i)}) :
+    ∀ᵐ ω ∂(latticeBondLaw d p).restrict
+      (⋃ i, {ω | (openIn ω P).Reachable z (x i)}),
+      (p : ℝ) * δ ≤ (latticeBondLaw d p)[
+        ({ω | IsCrossingRoot ω D lower upper z} : Set (Configuration d)).indicator
+          (fun _ => (1 : ℝ)) |
+          bondSigma (localBonds P)] ω := by
+  let A : ι → Set (Configuration d) := fun i => {ω | (openIn ω P).Reachable z (x i)}
+  let B : ι → Set (Configuration d) := fun i => {ω | IsCrossingRoot ω S lower upper (y i)}
+  have hA : ∀ i, MeasurableSet[bondSigma (localBonds P)] (A i) := fun i =>
+    measurableSet_reachable_openIn_bondSigma P hP hz (hx i)
+  have hB : ∀ i, MeasurableSet[bondSigma (localBonds S)] (B i) := fun i =>
+    measurableSet_isCrossingRoot_bondSigma S lower upper hS (hy i)
+  have hG : MeasurableSet (⋃ i, A i) :=
+    bondSigma_le (localBonds P) _ (MeasurableSet.iUnion hA)
+  apply condExp_indicator_lower_of_fresh_attachment p (localBonds P)
+    (fun _ => localBonds S) (fun i => bondOfAdjacent (hxy i))
+    (fun _ => (disjoint_localBonds hPS).symm)
+    (fun i => (bondOfAdjacent_not_mem_localBonds hPS (hx i) (hy i) (hxy i)).1)
+    (fun i => (bondOfAdjacent_not_mem_localBonds hPS (hx i) (hy i) (hxy i)).2)
+    A B hA hB (measurableSet_isCrossingRoot D lower upper z) hG
+    (Set.Subset.refl _) (fun i => ?_) δ hprob
+  rintro ω ⟨hzx, hopen, hroot⟩
+  have hzy := reachable_openIn_of_slab_attachment hPD hSD (hx i) (hy i) (hxy i)
+    hopen hzx (SimpleGraph.Reachable.refl (y i))
+  exact hroot.of_reachable_in_larger_region hSD (hPD hz) hzy
 
 end Rigidity.Percolation
