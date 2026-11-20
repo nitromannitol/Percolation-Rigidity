@@ -32,11 +32,12 @@ theorem mem_edges_of_walkFlow_ne_zero {V : Type} {G : SimpleGraph V} {a b : V}
 
 /-- An average of path flows is bounded edgewise by its edge-use fraction. -/
 theorem abs_average_pathFlow_le_edge_fraction {V ι : Type} {G : SimpleGraph V}
-    {a b : V} (s : Finset ι) (p : ι → G.Walk a b)
+    {a b : V} (s : Finset ι) (hs : s.Nonempty) (p : ι → G.Walk a b)
     (hp : ∀ i ∈ s, (p i).IsPath) (x y : V) :
     |(∑ i ∈ s, walkFlow (p i) x y) / s.card| ≤
       ((s.filter fun i => s(x, y) ∈ (p i).edges).card : ℝ) / s.card := by
-  have hcard : (0 : ℝ) ≤ s.card := Nat.cast_nonneg _
+  have hcardpos : (0 : ℝ) < s.card := by exact_mod_cast hs.card_pos
+  have hcard : (0 : ℝ) ≤ s.card := hcardpos.le
   rw [abs_div, abs_of_nonneg hcard]
   apply div_le_div_of_nonneg_right _ hcard
   calc
@@ -89,7 +90,7 @@ theorem exists_flow_energy_le_path_edge_fractions {V ι : Type} [Fintype V]
   apply Finset.sum_le_sum
   intro y hy
   have hadj : G.Adj x y := (SimpleGraph.mem_neighborFinset _ _ _).mp hy
-  have hload := abs_average_pathFlow_le_edge_fraction s p hp x y
+  have hload := abs_average_pathFlow_le_edge_fraction s hs p hp x y
   have hnonneg : 0 ≤ ((s.filter fun i => s(x, y) ∈ (p i).edges).card : ℝ) / s.card :=
     div_nonneg (Nat.cast_nonneg _) (Nat.cast_nonneg _)
   have hsquare : θ x y ^ 2 ≤
