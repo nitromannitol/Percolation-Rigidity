@@ -10,7 +10,8 @@ import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 For `f : ℂ → ℝ` harmonic in a neighbourhood of the closed disc `B̄_ρ(c)`,
 `∫_{B_ρ(c)} f = π ρ² f(c)` (`integral_ball_eq_of_harmonicOnNhd`): the mean value property on
-circles (`HarmonicOnNhd.circleAverage_eq`) integrated in polar coordinates.
+circles (`HarmonicOnNhd.circleAverage_eq`) integrated in polar coordinates. Hence
+`π ρ² f(c)² ≤ ∫_{B_ρ(c)} f²` (`sq_mul_le_integral_sq_of_harmonicOnNhd`).
 -/
 
 open MeasureTheory Metric Real Set
@@ -109,5 +110,46 @@ theorem integral_ball_eq_of_harmonicOnNhd {f : ℂ → ℝ} {c : ℂ} {ρ : ℝ}
   rw [setIntegral_congr_fun measurableSet_Ioo hin, integral_mul_const,
     ← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hρ.le, integral_id]
   ring
+
+theorem volume_real_ball_complex (c : ℂ) {ρ : ℝ} (hρ : 0 < ρ) :
+    volume.real (ball c ρ) = π * ρ ^ 2 := by
+  have h := integral_ball_eq_of_harmonicOnNhd (f := fun _ : ℂ => (1 : ℝ)) (c := c) hρ
+    (InnerProductSpace.harmonicOnNhd_const 1)
+  rw [setIntegral_const, smul_eq_mul, mul_one, mul_one] at h
+  exact h
+
+/-- **Pointwise bound by the square average.** For `g` harmonic in a neighbourhood of
+`B̄_ρ(y)`, `π ρ² g(y)² ≤ ∫_{B_ρ(y)} g²`. -/
+theorem sq_mul_le_integral_sq_of_harmonicOnNhd {g : ℂ → ℝ} {y : ℂ} {ρ : ℝ} (hρ : 0 < ρ)
+    (hg : InnerProductSpace.HarmonicOnNhd g (closedBall y ρ)) :
+    g y ^ 2 * (π * ρ ^ 2) ≤ ∫ x in ball y ρ, g x ^ 2 := by
+  have hgc : ContinuousOn g (closedBall y ρ) := fun x hx =>
+    (hg x hx).1.continuousAt.continuousWithinAt
+  have hK := isCompact_closedBall y ρ
+  have hint1 : IntegrableOn g (ball y ρ) :=
+    (hgc.integrableOn_compact hK).mono_set ball_subset_closedBall
+  have hint2 : IntegrableOn (fun x => g x ^ 2) (ball y ρ) :=
+    ((hgc.pow 2).integrableOn_compact hK).mono_set ball_subset_closedBall
+  have hint0 : IntegrableOn (fun _ : ℂ => (1 : ℝ)) (ball y ρ) :=
+    integrableOn_const (measure_ball_lt_top (μ := volume)).ne
+  have hmv : ∫ x in ball y ρ, g x = π * ρ ^ 2 * g y := integral_ball_eq_of_harmonicOnNhd hρ hg
+  have hvol := volume_real_ball_complex y hρ
+  have h0 : 0 ≤ ∫ x in ball y ρ, (g x - g y) ^ 2 :=
+    setIntegral_nonneg measurableSet_ball fun _ _ => sq_nonneg _
+  have i1 : IntegrableOn (fun x => g x ^ 2 - 2 * g y * g x) (ball y ρ) :=
+    hint2.sub (hint1.const_mul _)
+  have i2 : IntegrableOn (fun x => 2 * g y * g x) (ball y ρ) := hint1.const_mul _
+  have i3 : IntegrableOn (fun _ : ℂ => g y ^ 2) (ball y ρ) :=
+    integrableOn_const (measure_ball_lt_top (μ := volume)).ne
+  have e : (fun x => (g x - g y) ^ 2) = fun x => (g x ^ 2 - 2 * g y * g x) + g y ^ 2 := by
+    funext x; ring
+  have hexp : ∫ x in ball y ρ, (g x - g y) ^ 2 =
+      (∫ x in ball y ρ, g x ^ 2) - 2 * g y * (∫ x in ball y ρ, g x) +
+        g y ^ 2 * volume.real (ball y ρ) := by
+    rw [e, integral_add i1 i3, integral_sub hint2 i2, integral_const_mul, setIntegral_const,
+      smul_eq_mul]
+    ring
+  rw [hexp, hmv, hvol] at h0
+  nlinarith
 
 end Rigidity.Proofs.Regularity
