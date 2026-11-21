@@ -438,4 +438,35 @@ theorem harmonicRegularity_latticeHarmonicClass [NeZero d] (z : Vertex d) (R : �
   rw [componentBallSeminorm_apply]
   exact ballExcess_le_latticeHRConst_mul z hrR hv hXs hsr w.2
 
+theorem latticeHRConst_nonneg (d : ℕ) [NeZero d] : 0 ≤ latticeHRConst d := by
+  have hX : 0 ≤ latticeHRScale d := by unfold latticeHRScale; positivity
+  rw [latticeHRConst]; positivity
+
+theorem zero_mem_latticeHarmonicClass [NeZero d] (z : Vertex d) (r : ℝ) :
+    (0 : latticeComponent d → ℝ) ∈ latticeHarmonicClass z r :=
+  ⟨fun _ => 0, fun _ => rfl, fun y _ => by simp [latticeLaplacian]⟩
+
+/-- **Armstrong–Dario, Lemma 7.2 (`k = 0`), for lattice harmonic functions on the balls of the
+lattice**: with `Ā(B_r)` the lattice harmonic functions on `B_r(z)`, whose excess decay is
+`harmonicRegularity_latticeHarmonicClass`, only the harmonic approximation hypothesis remains. -/
+theorem armstrongDario_lemma_7_2_zero_latticeHarmonic (d : ℕ) [NeZero d] {A α : ℝ} (hA : 2 ≤ A)
+    (hα : 0 < α) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (z : Vertex d) (R X E : ℝ) (u : latticeComponent d → ℝ),
+      1 ≤ X → max (latticeHRScale d) (24 * Real.sqrt d) ≤ X → X ≤ R / A → 0 ≤ E →
+      HarmonicApproximation (componentBallSeminorm (latticeComponent d) z)
+        (latticeHarmonicClass z) (clusterConstants (latticeComponent d)) A α X R E u →
+      ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+        ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterConstants (latticeComponent d)) r u ≤
+          C * (r / R) * ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterConstants (latticeComponent d)) R u +
+          C * r ^ (1 - α) * (ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterConstants (latticeComponent d)) R u / R + E / r) := by
+  have hd : 0 < d := Nat.pos_of_ne_zero (NeZero.ne d)
+  obtain ⟨C, hC, h⟩ := armstrongDario_lemma_7_2_zero_lattice d hd hA hα (latticeHRConst_nonneg d)
+  refine ⟨C, hC, fun z R X E u hX hXs hXR hE happ => ?_⟩
+  exact h z (latticeHarmonicClass z) R X E u hX hXR hE ((le_max_right _ _).trans hXs)
+    ((harmonicRegularity_latticeHarmonicClass z R).of_le _ ((le_max_left _ _).trans hXs))
+    (fun r _ _ => ⟨0, zero_mem_latticeHarmonicClass z r⟩) happ
+
 end Rigidity.Proofs.Regularity
