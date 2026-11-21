@@ -97,6 +97,11 @@ further = {
         ['Rigidity.Proofs.Section5.planar_greenColumn_exists',
          'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero',
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_planar_estimates'],
+    'Green columns for d >= 3 and the Green-column input from the planar order-zero estimate':
+        ['Rigidity.Green.latticeIsoperimetry',
+         'Rigidity.Green.greenColumnExistence_of_three_le',
+         'Rigidity.Green.supercriticalBondGreenColumnExistence_of_two',
+         'Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

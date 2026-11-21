@@ -17,7 +17,8 @@ included as compiled PDFs.
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
 hypotheses. Six of these twelve inputs, among them Proposition 2.3 and the concentration of the
-density of the infinite cluster, are also proved in Lean, and Theorem 6.5 is proved with no
+density of the infinite cluster, are also proved in Lean, the Green-column input is proved for
+`d ≥ 3` and follows from the planar order-zero estimate, and Theorem 6.5 is proved with no
 literature hypothesis (see
 [Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
 literature: four of them (Proposition 2.3,
@@ -298,6 +299,12 @@ and derives the uniqueness from order-zero regularity. This existence is proved
 five planar inputs: the qualitative and quantitative corrector estimates, order-zero and order-one
 regularity, and the quantitative Green estimate; see
 [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2).
+
+The Green-column input `SupercriticalBondGreenColumnExistence` is proved for `d ≥ 3`
+([`Rigidity.Green.greenColumnExistence_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean)),
+and [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean)
+derives it in every dimension from the planar order-zero estimate `ArmstrongDarioOrderZeroTwo`; see
+[Green columns for d ≥ 3](#green-columns-for-d--3).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -626,12 +633,71 @@ partition square leaves `V(x)`; they are counted through the boundary vertices o
 deterministic multiple `λp` of the slope in place of the random slope of AD
 (`PlanarNuLowerBound.lean`). No code is copied from another repository.
 
+## Green columns for d ≥ 3
+
+For `d ≥ 3` and `𝔭_c(d) < p < 1`, almost surely every vertex `y` of the infinite cluster is the
+pole of exactly one Green column: a function `g` on the cluster with `−Δg = δ_y` that tends to zero
+at infinity. Dario and Gu state the existence and uniqueness of Green columns without proof (DG,
+p. 4 and p. 58). With the planar case of the previous section, the Green-column input
+`SupercriticalBondGreenColumnExistence` follows from the planar order-zero estimate alone.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.latticeIsoperimetry`](Rigidity/Proofs/Green/LatticeIsoperimetry.lean) | for `d ≥ 2`, every finite `F ⊆ ℤᵈ` has at least `\|F\|^{(d−1)/d}` boundary edges. |
+| [`Rigidity.Green.greenColumnExistence_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | for `d ≥ 3`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster there is exactly one Green column with pole `y`. |
+| [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_two`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from its planar case `SupercriticalBondGreenColumnExistenceTwo`. |
+| [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from `ArmstrongDarioOrderZeroTwo`. |
+
+The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+are in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/).
+
+1. **Isoperimetry of `ℤᵈ`** (`LatticeIsoperimetry.lean`). The lattice `ℓ¹` Sobolev inequality
+   `LatticeHC.sum_rpow_le_sum_abs_grad` (see [Copied code](#copied-code)) applied to the indicator
+   of `F`.
+2. **Isoperimetry of the cluster in a cube** (`CoarseIsoperimetry.lean`,
+   `ClusterIsoperimetryWellConnected.lean`). Almost surely, for all large `R` the cube `y + Q_{2R}`
+   is well-connected (Proposition 2.3, proved), so every cube `z + Q_M` of radius
+   `M = ⌈(2R)^θ⌉`, `θ = 1/(10d)²`, meeting it is a good subcube, with largest cluster `V_z`. Every
+   vertex `x` of the infinite cluster lies in `V_x`, and `V_z` meets `V_{z ± e_j}`. For a finite set
+   `A` of vertices of the cluster in `y + Q_R`, let `F` be the set of `z` with `∅ ≠ V_z ⊆ A` and `P`
+   the set of `z` for which `V_z` meets `A` without lying in it. Then `|A| ≤ |F| + |P|`; each
+   `z ∈ P` gives a boundary edge of `A` with inner vertex in `z + Q_M`, so
+   `|P| ≤ (2M + 1)ᵈ |∂A|`; and a lattice neighbour outside `F` of a point of `F` lies in `P`, so
+   `|∂F| ≤ 2d |P|`. The isoperimetry of `ℤᵈ` applied to `F` gives
+   `|∂A| ≥ |A|^{(d−1)/d} / (4d (2M + 1)ᵈ) ≥ κ R^{−1/(100d)} |A|^{(d−1)/d}` for every nonempty `A`.
+3. **Faber–Krahn inequalities** (`Cheeger.lean`, `ClusterIsoperimetry.lean`). A discrete co-area
+   inequality turns an isoperimetric inequality on a set into the Faber–Krahn inequality
+   `a Σ_Ω g² ≤ |Ω|^{2/d} Σ |∇g|²` for the functions `g` supported in `Ω` inside it (the Cheeger
+   inequality for the first Dirichlet eigenvalue). On the graph ball of radius `R` around `y`, which
+   lies in `y + Q_R`, the constant is `a₀ R^{−1/(50d)}`.
+4. **On-diagonal decay** (`LocalNash.lean`). The Faber–Krahn inequality gives a Nash inequality,
+   and the decrease of `‖p_n(x, ·)‖²` gives `p_{2N}(x, x) ≤ deg(x) (c N)^{−d/2}` when the ball of
+   radius `N` around `x` lies in the Faber–Krahn domain.
+5. **Green functions** (`HeatDomination.lean`, `ClusterFaberKrahn.lean`, `TransientGreen.lean`,
+   `ClusterGreenColumn.lean`). By the Cauchy–Schwarz inequality and reversibility,
+   `p_n(x, y) ≤ K n^{−(d/2)(1 − 1/(50d))}` for `n ≥ max(n₀, dist(x, y))`, which is summable for
+   `d ≥ 3`. Then `g = Σ_n p_n(·, y) / deg(y)` solves `−Δg = δ_y` and tends to zero at infinity, and
+   the maximum principle gives the uniqueness.
+
+**Departures from Dario and Gu.** Dario and Gu state the existence and uniqueness of Green columns
+without proof; the Gaussian bounds of M. T. Barlow (*Random walks on supercritical percolation
+clusters*, Ann. Probab. 32 (2004)) for the heat kernel of the cluster, which give them, are not used.
+The Lean proof follows the route of P. Mathieu and E. Remy (*Isoperimetry and heat kernel decay on
+percolation clusters*, Ann. Probab. 32 (2004)), isoperimetry, Faber–Krahn, Nash and on-diagonal
+decay, with two changes: the isoperimetric inequality of the cluster is proved by one coarse
+graining by good subcubes, with the polynomial loss `R^{−1/(100d)}` in place of the sharp inequality
+for sets of size at least a power of `log R`, and only on-diagonal bounds, combined by the
+Cauchy–Schwarz inequality, are used. The decay exponent `(d/2)(1 − 1/(50d)) > 1` is enough for
+`d ≥ 3`. The lattice Sobolev inequality is copied from Lattice-High-Contrast-Homogenization and the
+step inequality of `LocalNash.lean` is adapted from Lattice-Probability; see
+[Copied code](#copied-code).
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 67 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 71 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -641,11 +707,12 @@ deterministic multiple `λp` of the slope in place of the random slope of AD
   the four theorems of
   [Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2),
   the two forms of Theorem 1.3 from dimension-two inputs, `WithPlanarInputs.fast_decay` and
-  `WithPlanarInputs.fast_decay_of_green_exists`, and the three theorems of
-  [Density concentration in every dimension](#density-concentration-in-every-dimension), and the
+  `WithPlanarInputs.fast_decay_of_green_exists`, the three theorems of
+  [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
-  [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2).
-  Each of the 67 reports lists exactly `propext`, `Classical.choice` and
+  [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
+  and the four theorems of [Green columns for d ≥ 3](#green-columns-for-d--3).
+  Each of the 71 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -676,10 +743,10 @@ deterministic multiple `λp` of the slope in place of the random slope of AD
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 854 Lean files with 150,233 lines, on top of mathlib and
-Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,205 lines; see
+`Rigidity/` and `Rigidity.lean`: 913 Lean files with 160,287 lines, on top of mathlib and
+Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (121 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (129 lines) are counted separately.
 
 ## Building
 
@@ -748,6 +815,7 @@ Rigidity/
       Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
+    Green/                    Green columns of the cluster for d ≥ 3
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
     Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)
@@ -779,9 +847,10 @@ tooling and review process are disclosed in [`formalization.yaml`](formalization
 
 Some modules are copied from other repositories, with attribution, and not through a Lake
 dependency. Each copied file starts with a header naming its source repository, file and commit.
-The headers of the modules from formal-math, openai/math and Leonardo Bonanno's repository also
-state the changes made; the modules from Lattice-Probability are adapted from the named revision,
-and the headers of the four planar modules adapted from its revision `7512f4fb` state the changes.
+The headers of the modules from formal-math, openai/math, Leonardo Bonanno's repository and
+Lattice-High-Contrast-Homogenization also state the changes made; the modules from
+Lattice-Probability are adapted from the named revision, and the headers of the five modules
+adapted from its revision `7512f4fb` state the changes.
 
 | Source | Commit | Files in this repository |
 | --- | --- | --- |
@@ -790,7 +859,8 @@ and the headers of the four planar modules adapted from its revision `7512f4fb` 
 | Leonardo Bonanno, [lean-formalizations](https://github.com/leobon12/lean-formalizations/tree/31e748330ee154d5f41537c4b01f71b8a5510c2d) (no licence stated upstream) | `31e748330ee154d5f41537c4b01f71b8a5510c2d` | `Rigidity/Vendor/BonannoPerc/`: `Basic`, `Duality`, `DualityMain`, `Exclusive`, `ExclusiveMain`, `Paths`, `Peierls`, `StepSum`, from the files of the same names in `LQGMetric/Perc/` |
 | [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/c21955fb1c127db67c43b995f47db4543f88f9fd) (Apache License 2.0) | `c21955fb1c127db67c43b995f47db4543f88f9fd` | the 12 modules under `Rigidity/Proofs/Topology/PlanarJordan/`, which are based on Leonardo Bonanno's lean-formalizations and on R. Kirov's [jordan_pick](https://github.com/rkirov/jordan_pick/tree/b3c9b7cf7358bf81a077d78ad67e6e8247869ddd) (Apache License 2.0) |
 | [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/a6fae9f9df6a47c15e338b928807feb20d9da4b0) (Apache License 2.0) | `a6fae9f9df6a47c15e338b928807feb20d9da4b0` | `Rigidity/Proofs/Percolation/Kesten/`: `EdgeCrossing`, `DualDecayRectangle`, `RigidityCrossingAdapter` |
-| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069) (Apache License 2.0) | `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069` | `Rigidity/Support/PlanarOrderZeroGradient.lean`, `Rigidity/Support/PlanarGreenQuantitativeField.lean`, `Rigidity/Proofs/S3/PlanarCorrectorValid.lean`, `Rigidity/Proofs/S3/PlanarGreenColumn.lean`: theorems of the modules `LatticeOrderZeroApproximation`, `LatticeOrderZeroTranslation`, `LatticeOrderZeroGradient`, `GreenQuantitativeField`, `MeasurableRootedPlane` and `GreenColumnEvent` of `LatticeProb/Prob/Percolation/`, specialized to `d = 2` |
+| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069) (Apache License 2.0) | `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069` | `Rigidity/Support/PlanarOrderZeroGradient.lean`, `Rigidity/Support/PlanarGreenQuantitativeField.lean`, `Rigidity/Proofs/S3/PlanarCorrectorValid.lean`, `Rigidity/Proofs/S3/PlanarGreenColumn.lean`: theorems of the modules `LatticeOrderZeroApproximation`, `LatticeOrderZeroTranslation`, `LatticeOrderZeroGradient`, `GreenQuantitativeField`, `MeasurableRootedPlane` and `GreenColumnEvent` of `LatticeProb/Prob/Percolation/`, specialized to `d = 2`; `Rigidity/Proofs/Green/LocalNash.lean`: `heat_step_of_faberKrahnOn`, adapted from `heat_step` of `LatticeProb/Graph/OnDiagonal.lean` |
+| Lattice-High-Contrast-Homogenization (a private repository; Apache License 2.0, text in [`Rigidity/Vendor/LHCH/LICENSE`](Rigidity/Vendor/LHCH/LICENSE)) | `f47a932a9f7a07e1692bfe4aae564d02e8ca0944` | the 48 modules under `Rigidity/Vendor/LHCH/`, from the files of the same paths under `LatticeHC/` |
 
 The repository of Leonardo Bonanno does not state a licence, and none is claimed here for the
 modules copied from it.

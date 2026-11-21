@@ -13,14 +13,16 @@ import Rigidity.Proofs.Assembly.PlanarInputs
 import Rigidity.Proofs.Assembly.Unconditional
 import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
+import Rigidity.Proofs.Green.SupercriticalGreenColumn
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
 clusters for `d ≥ 3`, Proposition 2.3 in every dimension, Proposition 2.3 and the density
 concentration for `d = 2`, Theorem 6.5 with every literature input proved, Theorem 1.3 from its
 dimension-two inputs, the density concentration in every dimension with Proposition 2.6 and
-Theorem 1.3 without it as a hypothesis, and the existence of planar Green columns with Theorem 1.3
-from five dimension-two inputs; `scripts/check_axioms.py` checks it.
+Theorem 1.3 without it as a hypothesis, the existence of planar Green columns with Theorem 1.3
+from five dimension-two inputs, and the Green columns for `d ≥ 3` with the Green-column input from
+the planar order-zero estimate; `scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
@@ -119,3 +121,9 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Section5.planar_greenColumn_exists
 #print axioms Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_planar_estimates
+
+-- Green columns for d ≥ 3, and the Green-column input from the planar order-zero estimate
+#print axioms Rigidity.Green.latticeIsoperimetry
+#print axioms Rigidity.Green.greenColumnExistence_of_three_le
+#print axioms Rigidity.Green.supercriticalBondGreenColumnExistence_of_two
+#print axioms Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo

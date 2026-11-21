@@ -50,13 +50,19 @@ sources:
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
     relationship: "assumes"
-    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs. Proposition A.1, also stated as a literature input, is proved (next entry)."
+    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs. Proposition A.1, also stated as a literature input, is proved, and so is the existence and uniqueness of the Green's function for d >= 3 (next two entries)."
   - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
     location: "Appendix A, Proposition A.1"
     relationship: "independently-proves"
     note: "Proposition A.1, the concentration of the density of the infinite cluster in triadic cubes (Rigidity.External.ClusterDensityConcentrationInput), is proved in every dimension (Rigidity.Proofs.S2.cluster_density_concentration), with an iteration of the Efron-Stein variance inequality over the moments in place of the exponential Efron-Stein inequality of the source and, for d >= 3, with the exponential decay of the radius of finite clusters in place of the volume tail of Kesten and Zhang, at the exponent 1/(floor((3d+3)/2)+1) >= 2(d-1)/(3d^2+2d-1) for d >= 3 and 1/7 >= 2/15 for d = 2 (README, Proposition 2.3 and the density concentration for d = 2, and Density concentration in every dimension)."
+  - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
+    authors: ["Paul Dario", "Chenlin Gu"]
+    type: "paper"
+    location: "p. 4, around (1.8), and p. 58"
+    relationship: "independently-proves"
+    note: "The existence and uniqueness of the Green's function of the infinite cluster (LatticeProb.External.SupercriticalBondGreenColumnExistence), stated there without proof, is proved for d >= 3 (Rigidity.Green.greenColumnExistence_of_three_le) by the route of Mathieu and Remy, isoperimetry, Faber-Krahn, Nash and on-diagonal decay, with an isoperimetric inequality of the cluster of polynomial loss R^(-1/(100d)) from one coarse graining by good subcubes, in place of the Gaussian bounds of Barlow; with the planar case, Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo derives the input from the planar order-zero estimate (README, Green columns for d >= 3)."
   - title: "Percolation"
     authors: ["Geoffrey Grimmett"]
     type: "book"
@@ -109,11 +115,19 @@ sources:
     type: "paper"
     relationship: "independently-proves"
     note: "Proc. R. Soc. Lond. A 430 (1990), 439-457. The theorem is proved for bond percolation in d >= 3, in the finite-volume form of a uniform two-point bound in the slabs of cubes, by the route of Contreras's dissertation."
+  - title: "Isoperimetry and heat kernel decay on percolation clusters"
+    authors: ["Pierre Mathieu", "Elisabeth Remy"]
+    type: "paper"
+    relationship: "adapts"
+    note: "Ann. Probab. 32 (2004). Its route from the isoperimetric inequality of the cluster to the decay of the heat kernel is followed, with cruder constants, for the Green columns in d >= 3 (README, Green columns for d >= 3)."
 
 related_formalizations:
   - id: "https://github.com/nitromannitol/Lattice-Probability"
     relationship: "builds-on"
-    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and Rigidity/Proofs/Percolation/Kesten/, and four planar modules specialized to d = 2 (Rigidity/Support/PlanarOrderZeroGradient.lean, Rigidity/Support/PlanarGreenQuantitativeField.lean, Rigidity/Proofs/S3/PlanarCorrectorValid.lean, Rigidity/Proofs/S3/PlanarGreenColumn.lean, from its revision 7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069), are adapted from it (see README, Copied code)."
+    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and Rigidity/Proofs/Percolation/Kesten/, and four planar modules specialized to d = 2 (Rigidity/Support/PlanarOrderZeroGradient.lean, Rigidity/Support/PlanarGreenQuantitativeField.lean, Rigidity/Proofs/S3/PlanarCorrectorValid.lean, Rigidity/Proofs/S3/PlanarGreenColumn.lean, from its revision 7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069), and the step inequality heat_step_of_faberKrahnOn of Rigidity/Proofs/Green/LocalNash.lean, from LatticeProb/Graph/OnDiagonal.lean at the same revision, are adapted from it (see README, Copied code)."
+  - id: "https://github.com/nitromannitol/Lattice-High-Contrast-Homogenization"
+    relationship: "adapts"
+    note: "A private repository. The 48 modules under Rigidity/Vendor/LHCH/ are copied from LatticeHC/ at commit f47a932a9f7a07e1692bfe4aae564d02e8ca0944 (Apache-2.0), with its LICENSE; its lattice l1 Sobolev inequality gives the isoperimetric inequality of Z^d (Rigidity.Green.latticeIsoperimetry)."
   - id: "https://github.com/anthropics/formal-math"
     relationship: "adapts"
     note: "The 53 modules under Rigidity/Vendor/FormalMathPercolation/ are copied from its percolation/ project at commit 795efb86f191735c5481675763537cfb4ff37e55 (Apache-2.0), with its LICENSE and NOTICE."
@@ -155,7 +169,10 @@ status:
     (Rigidity.Proofs.Section5.planar_greenColumn_exists); with the planar order-zero estimate it gives
     the planar Green-column input, and
     Rigidity.Assembly.WithPlanarInputs.fast_decay_of_planar_estimates derives Theorem 1.3 from five
-    planar inputs (the corrector, regularity and quantitative Green estimates in d = 2). The library
+    planar inputs (the corrector, regularity and quantitative Green estimates in d = 2). For d >= 3
+    the Green-column input is proved (Rigidity.Green.greenColumnExistence_of_three_le), and
+    Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo derives it from the planar
+    order-zero estimate. The library
     also declares Rigidity.External.AntalPisztoraChemicalDistance, which no numbered result uses.
   main_results:
     - declaration: "Rigidity.Assembly.Main.lipschitz"
