@@ -93,7 +93,8 @@ theorem armstrongDario_lemma_7_2 (k : ℕ) {A α γ CV CP CH : ℝ} (hA : 2 ≤ 
             mul_le_mul_of_nonneg_right (by linarith) (div_nonneg hE hr0.le)
           nlinarith
         linarith)
-    have h1 : S₁ * (r / R) ^ (k + 1) * ballExcess N Pk R u ≤ C * (r / R) ^ (k + 1) * ballExcess N Pk R u :=
+    have h1 : S₁ * (r / R) ^ (k + 1) * ballExcess N Pk R u ≤
+        C * (r / R) ^ (k + 1) * ballExcess N Pk R u :=
       mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hC1 hrR2) hDR
     have h2 : S₂ * r ^ (1 - α) * (K'' * (ballExcess N P₀ R u / R + E / r)) ≤
         C * r ^ (1 - α) * (ballExcess N P₀ R u / R + E / r) := by
