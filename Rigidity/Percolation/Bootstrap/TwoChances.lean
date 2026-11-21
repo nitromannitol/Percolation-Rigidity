@@ -14,9 +14,9 @@ is joined inside its subregion with conditional probability at least `π`, and t
 admissible except with conditional probability `ε`, then `S` and `T` are joined with conditional
 probability at least `(1 - ε)(1 - (1 - π)²)`.
 
-This is the repaired form of Lemma 2.4.1 of D. Contreras, *Percolation on graphs of polynomial
-growth*, ETH Zürich dissertation (2022): the zones make the conditioning of the traces exactly the
-conditioning of the recursion, and each bond is sprinkled at most once.
+This is Lemma 2.4.1 of D. Contreras, *Percolation on graphs of polynomial growth*, ETH Zürich
+dissertation (2022), in a form with zones: the zones make the conditioning of the traces exactly
+the conditioning of the recursion, and each bond is sprinkled at most once.
 -/
 
 noncomputable section

@@ -1,7 +1,7 @@
 /-
 Copied from Leonardo Bonanno's lean-formalizations (https://github.com/leobon12/lean-formalizations),
 commit 31e748330ee154d5f41537c4b01f71b8a5510c2d, file `LQGMetric/Perc/Basic.lean`.
-Changes: module paths of the imports.
+Changes: none apart from this header.
 -/
 import Mathlib.Logic.Relation
 import Mathlib.Data.Int.Interval

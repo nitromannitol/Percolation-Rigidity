@@ -90,11 +90,32 @@ sources:
     type: "paper"
     relationship: "assumes"
     note: "SIAM J. Comput. 37 (2007). Lemma 3.3 enters as a literature input."
+  - title: "Percolation on graphs of polynomial growth"
+    authors: ["Daniel Contreras"]
+    type: "dissertation"
+    id: "doi:10.3929/ethz-b-000585148"
+    location: "Chapter 2: Theorem 2.1.2, Lemmas 2.3.2-2.3.5 and 2.4.1"
+    relationship: "adapts"
+    note: "ETH Zürich, 2022. Its bootstrap proof of the theorem of Grimmett and Marstrand is formalized for bond percolation in d >= 3, with Lemma 2.4.1 proved in a form with zones, and is followed by a static renormalization in slabs (see README, Slab connectivity above the critical point)."
+  - title: "The supercritical phase of percolation is well behaved"
+    authors: ["Geoffrey R. Grimmett", "John M. Marstrand"]
+    type: "paper"
+    relationship: "independently-proves"
+    note: "Proc. R. Soc. Lond. A 430 (1990), 439-457. The theorem is proved for bond percolation in d >= 3, in the finite-volume form of a uniform two-point bound in the slabs of cubes, by the route of Contreras's dissertation."
 
 related_formalizations:
   - id: "https://github.com/nitromannitol/Lattice-Probability"
     relationship: "builds-on"
-    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency."
+    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and Rigidity/Proofs/Percolation/Kesten/ are adapted from it (see README, Copied code)."
+  - id: "https://github.com/anthropics/formal-math"
+    relationship: "adapts"
+    note: "The 53 modules under Rigidity/Vendor/FormalMathPercolation/ are copied from its percolation/ project at commit 795efb86f191735c5481675763537cfb4ff37e55 (Apache-2.0), with its LICENSE and NOTICE."
+  - id: "https://github.com/openai/math"
+    relationship: "adapts"
+    note: "The 44 modules under Rigidity/Vendor/CriticalPercolation/ are copied from lean/OAI/Probability/CriticalPercolation/ at commit 4eaee87548250b2682affda7d05d947c05554bae (Apache-2.0), with its LICENSE."
+  - id: "https://github.com/leobon12/lean-formalizations"
+    relationship: "adapts"
+    note: "The 8 modules under Rigidity/Vendor/BonannoPerc/ are copied from LQGMetric/Perc/ at commit 31e748330ee154d5f41537c4b01f71b8a5510c2d, with attribution; the upstream repository states no licence and none is claimed. The modules of Rigidity/Proofs/Topology/PlanarJordan/ are also based on it."
 
 status:
   scope: >-
@@ -268,4 +289,5 @@ review:
     external peer review.
 
 acknowledgements: >-
-  Built on Lean 4, Mathlib, Lake, Lattice-Probability and leanprover/comparator.
+  Built on Lean 4, Mathlib, Lake, Lattice-Probability and leanprover/comparator, with modules copied
+  from anthropics/formal-math, openai/math and Leonardo Bonanno's lean-formalizations.

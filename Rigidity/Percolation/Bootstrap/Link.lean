@@ -6,9 +6,10 @@ import Rigidity.Percolation.Bootstrap.Iteration
 Above criticality, for every `ε > 0` there is a seed radius `u` such that, at arbitrarily large
 scales `m`, every left seed and every right seed of scale `m` are joined inside `Q_{6m}` with
 probability at least `1 - ε`. This is Theorem 2.1.2 of D. Contreras, *Percolation on graphs of
-polynomial growth*, ETH Zürich dissertation (2022), proved by the repaired bootstrap: the levels
-`p_s < p₀ < p = p₀ + δ` are fixed, the conditioning is at level `p₀` at every scale and every
-bond is sprinkled at most once, so the number of scales is unrestricted.
+polynomial growth*, ETH Zürich dissertation (2022), proved by the bootstrap with zones of
+`Bootstrap/TwoChances.lean`: the levels `p_s < p₀ < p = p₀ + δ` are fixed, the conditioning is
+at level `p₀` at every scale and every bond is sprinkled at most once, so the number of scales is
+unrestricted.
 -/
 
 noncomputable section

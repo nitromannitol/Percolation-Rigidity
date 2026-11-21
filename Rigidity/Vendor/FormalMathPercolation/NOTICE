@@ -4,7 +4,9 @@ Copyright 2026 Anthropic, PBC
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
 
-Author and maintainer: Justin Leder.
+Responsible author and maintainer: Justin Leder. The Lean sources in this repository were written by an
+AI system (Anthropic's Claude models) working autonomously under his direction. See README.md,
+"Provenance and review status".
 
 This product depends on, but does not include, Lean 4 (https://github.com/leanprover/lean4) and
 mathlib4 with its standard dependency set -- fetched by the build tool from their public repositories at the

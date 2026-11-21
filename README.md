@@ -281,7 +281,10 @@ with probability at least `1 − C exp(−c Nˢ)`, with `s` depending on `d` onl
 paper cites for it (Pisztora, Theorem 3.2; Penrose and Pisztora, Theorem 5; Antal and Pisztora, (2.24))
 state single-scale forms. The statement follows from Couronné and Messikh, Theorem 5, (7), p. 8
 (`d = 2`), and from Pisztora's box estimate, his Theorems 1.2 and 3.1 as recalled by Penrose and
-Pisztora, p. 35 (`d ≥ 3`), by a union bound over the subcubes, with `s = 1/(d(10d)²)`.
+Pisztora, p. 35 (`d ≥ 3`), by a union bound over the subcubes, with `s = 1/(d(10d)²)`. For
+`d ≥ 3`, Pisztora's estimate holds above the threshold of percolation in slabs, which equals
+`𝔭_c(d)` by the theorem of Grimmett and Marstrand; that theorem is proved, in a finite-volume form,
+in [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point).
 
 Each input was checked against its source in an independent model review. Page numbers refer to the
 arXiv versions listed below. AD: S. Armstrong and P. Dario, *Elliptic regularity and quantitative
@@ -310,6 +313,70 @@ pinned commit (five of these files are not on its `main` branch). Eight results 
 input: Lemma 2.1, Proposition 4.1, Lemmas 4.2 to 4.6 and Proposition 6.4.
 The library also declares `Rigidity.External.AntalPisztoraChemicalDistance` (Antal and Pisztora,
 Theorem 1.1), which no numbered result uses.
+
+## Slab connectivity above the critical point
+
+For `d ≥ 3`, the theorem of Grimmett and Marstrand (G. R. Grimmett and J. M. Marstrand, *The
+supercritical phase of percolation is well behaved*, Proc. R. Soc. Lond. A 430 (1990), 439–457;
+Grimmett, Chapter 7) is proved for bond percolation, in the finite-volume form that the coarse
+graining uses.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt`](Rigidity/Percolation/Blocks/SlabConnectivity.lean) | If `3 ≤ d` and `criticalProbability d < p`, then `UniformCubeSlabConnectivity d p`. |
+
+The proposition `UniformCubeSlabConnectivity d p`, defined in
+[`Rigidity/Percolation/SlabTriadicPartition.lean`](Rigidity/Percolation/SlabTriadicPartition.lean),
+states that there are a width `w ≥ 1` and a constant `ρ > 0` such that for every cube
+`U = c + [0, n)ᵈ`, every direction `a` and every `k` with `(k + 1) w ≤ n`, any two vertices of the
+slab `{x ∈ U : c_a + k w ≤ x_a < c_a + (k + 1) w}` are joined by an open path inside the slab with
+probability at least `ρ`. The theorem depends on exactly `propext`, `Classical.choice` and
+`Quot.sound`. The same file derives from this bound the triadic stopping partition with its
+exponential size moment and its localization bound
+(`Rigidity.Percolation.triadic_partition_estimates_of_uniformCubeSlabConnectivity`). The literature
+inputs `WellConnectedInput` and `ClusterDensityConcentrationInput` remain hypotheses.
+
+The proof follows Chapter 2 of D. Contreras, *Percolation on graphs of polynomial growth*, ETH
+Zürich dissertation (2022), doi:10.3929/ethz-b-000585148, which proves the theorem of Grimmett and
+Marstrand by a bootstrap, and concludes by a static renormalization in slabs. The files are in
+[`Rigidity/Percolation/Bootstrap/`](Rigidity/Percolation/Bootstrap/) and
+[`Rigidity/Percolation/Blocks/`](Rigidity/Percolation/Blocks/).
+
+1. **Local inputs** (`Bootstrap/LocalInputs.lean`), from the formal-math library (see
+   [Copied code](#copied-code)): the uniqueness zone and the fact that large finite sets meet the
+   infinite cluster (S. Martineau and V. Tassion, *Locality of percolation for abelian Cayley
+   graphs*, Ann. Probab. 45 (2017), proof of Lemma 3.7 and Lemma 3.6), and the connection of a large
+   cube to each face orthant of a larger cube (Grimmett, (7.14)–(7.16)).
+2. **Seeds and sprinkling** (dissertation, Lemmas 2.3.2–2.3.5): a seed is joined to each face
+   orthant of a large cube (`Bootstrap/SeedFaceLink.lean`); connection estimates compose by
+   sprinkling (`Bootstrap/SprinkledExit.lean`, `Bootstrap/Composition.lean`); and a left seed of
+   scale `3m'` reaches the anchors of the two subregions of scale `m'` (`Bootstrap/Relay.lean`,
+   `Bootstrap/AnchorReach.lean`).
+3. **Bootstrap** (dissertation, Theorem 2.1.2): above `𝔭_c(d)`, for every `ε > 0` there is a seed
+   radius such that at arbitrarily large scales `m` every left seed and every right seed of scale
+   `m` are joined inside `Q_{6m}` with probability at least `1 − ε`
+   (`Rigidity.Percolation.exists_seed_link`, `Bootstrap/Link.lean`). The step from scale `m'` to
+   scale `3m'` is `Bootstrap/Recursion.lean`, and its iteration `Bootstrap/Iteration.lean`.
+4. **Static renormalization.** In a slab box with two long sides and thin sides `12m + 1`, blocks
+   centred on a square grid of mesh `10m` are good when the uniqueness zone holds at the centre and
+   the block is linked to its four neighbours (`Blocks/LinkEvents.lean`, `Blocks/SlabBlocks.lean`).
+   The good blocks form a dependent site percolation of finite range and high density on a
+   rectangle of `ℤ²`. The Peierls bound for such percolation, from Leonardo Bonanno's library (see
+   [Copied code](#copied-code)), and a recursion over quadrants join any two vertices of the slab
+   box with probability bounded below, uniformly in the size of the box
+   (`Blocks/GridPeierls.lean`, `Blocks/SlabTwoPoint.lean`). Two vertices of a slab of a cube are
+   joined through `d` intermediate vertices, changing one coordinate at a time inside a slab box,
+   by Harris' inequality; small cubes are handled by finite energy (`Blocks/SlabConnectivity.lean`).
+
+**Departure from the dissertation.** The probabilistic step of the bootstrap, Lemma 2.4.1, is proved
+in a form with zones (`Bootstrap/TwoChances.lean`). Each of the two seeds lies in a zone of its
+region and is conditioned to have its cut inside the zone closed at the level `p₀`. The two clusters
+are explored, at the level `p₀` raised to `q = p₀ + δ` on the cut from the seed only, inside two
+disjoint regions that meet the two subregions of the smaller scale exactly in their zones, and the
+traces of the clusters in these zones are conditioned in the same way as the seeds. The recursion is
+over seeds with this conditioning (`BootGood`, `Bootstrap/Recursion.lean`), so the conditioning of
+the traces is the conditioning at the smaller scale. The levels `p₀` and `q` are the same at every
+scale and each bond is sprinkled at most once, so the number of scales is not restricted.
 
 ## Guarantees
 
@@ -350,8 +417,9 @@ Theorem 1.1), which no numbered result uses.
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 237 Lean files with 64,912 lines, on top of mathlib and
-Lattice-Probability. The comparator pairs (15 files, 5,052 lines) and the axiom report
+`Rigidity/` and `Rigidity.lean`: 638 Lean files with 123,103 lines, on top of mathlib and
+Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,210 lines; see
+[Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
 `RigidityAudit/Axioms.lean` (78 lines) are counted separately.
 
 ## Building
@@ -418,7 +486,10 @@ Rigidity/
   Proofs/                     the proofs of the steps
     Assembly/                 the numbered results, composed from the steps
       Main.lean               the main theorems, from the regime and the literature inputs only
+  Percolation/                supercritical estimates in boxes and slabs for the literature inputs
+    Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
   Support/                    definitions and lemmas used by the frozen results
+  Vendor/                     modules copied from other repositories (see Copied code)
 RigidityAudit/
   Axioms.lean                 the axiom report of every numbered result
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
@@ -441,6 +512,23 @@ under the direction of Ahmed Bou-Rabee. Every proof is checked by the Lean kerne
 tooling and review process are disclosed in [`formalization.yaml`](formalization.yaml), following the
 [mathlib-initiative](https://github.com/mathlib-initiative/formalization.yaml) standard.
 
+## Copied code
+
+Some modules are copied from other repositories, with attribution, and not through a Lake
+dependency. Each copied file starts with a header naming its source repository, file and commit
+and the changes made.
+
+| Source | Commit | Files in this repository |
+| --- | --- | --- |
+| [anthropics/formal-math](https://github.com/anthropics/formal-math/tree/795efb86f191735c5481675763537cfb4ff37e55/percolation), the `percolation/` project (Apache License 2.0; its `LICENSE` and `NOTICE` are kept verbatim in [`Rigidity/Vendor/FormalMathPercolation/`](Rigidity/Vendor/FormalMathPercolation/)) | `795efb86f191735c5481675763537cfb4ff37e55` | the 53 modules under `Rigidity/Vendor/FormalMathPercolation/`, from the files of the same paths under `percolation/Percolation/` |
+| [openai/math](https://github.com/openai/math/tree/4eaee87548250b2682affda7d05d947c05554bae) (Apache License 2.0; text in [`Rigidity/Vendor/CriticalPercolation/LICENSE`](Rigidity/Vendor/CriticalPercolation/LICENSE)) | `4eaee87548250b2682affda7d05d947c05554bae` | the 44 modules under `Rigidity/Vendor/CriticalPercolation/`, from `lean/OAI/Probability/CriticalPercolation/` |
+| Leonardo Bonanno, [lean-formalizations](https://github.com/leobon12/lean-formalizations/tree/31e748330ee154d5f41537c4b01f71b8a5510c2d) (no licence stated upstream) | `31e748330ee154d5f41537c4b01f71b8a5510c2d` | `Rigidity/Vendor/BonannoPerc/`: `Basic`, `Duality`, `DualityMain`, `Exclusive`, `ExclusiveMain`, `Paths`, `Peierls`, `StepSum`, from the files of the same names in `LQGMetric/Perc/` |
+| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/c21955fb1c127db67c43b995f47db4543f88f9fd) (Apache License 2.0) | `c21955fb1c127db67c43b995f47db4543f88f9fd` | the 12 modules under `Rigidity/Proofs/Topology/PlanarJordan/`, which are based on Leonardo Bonanno's lean-formalizations and on R. Kirov's [jordan_pick](https://github.com/rkirov/jordan_pick/tree/b3c9b7cf7358bf81a077d78ad67e6e8247869ddd) (Apache License 2.0) |
+| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/a6fae9f9df6a47c15e338b928807feb20d9da4b0) (Apache License 2.0) | `a6fae9f9df6a47c15e338b928807feb20d9da4b0` | `Rigidity/Proofs/Percolation/Kesten/`: `EdgeCrossing`, `DualDecayRectangle`, `RigidityCrossingAdapter` |
+
+The repository of Leonardo Bonanno does not state a licence, and none is claimed here for the
+modules copied from it.
+
 ## Authors and citation
 
 The paper is by **Ahmed Bou-Rabee**, **William Cooperman** and **Paul Dario**. The Lean development
@@ -450,6 +538,7 @@ the library [Lattice-Probability](https://github.com/nitromannitol/Lattice-Proba
 
 ## License
 
-The Lean development is licensed under the Apache License 2.0; see [`LICENSE`](LICENSE). The paper
+The Lean development is licensed under the Apache License 2.0; see [`LICENSE`](LICENSE). The
+copied modules listed in [Copied code](#copied-code) keep the terms of their sources. The paper
 sources in [`paper/`](paper/) are included with the permission of the paper's authors and are not
 covered by the Apache license.
