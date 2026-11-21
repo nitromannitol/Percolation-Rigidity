@@ -51,6 +51,28 @@ noncomputable def innerEdgeEnergy (c : Edge d → ℝ) (Q : IntegerCube d) (v : 
   ∑ j : Fin d, ∑ x ∈ Q.vertices.filter (fun x => x + unit j ∈ Q.vertices),
     c (x, j) * (v (x + unit j) - v x) ^ 2
 
+/-- **Energy of a function on one tile**: if `v = ℓ` and `v(x + e_j) = ℓ'_j(x + e_j)` along the
+edges with nonzero conductance leaving `T` through its upper faces, then the energy of `v` on the
+edges from `T` is at most its inner energy plus `Λ` times the squared jumps `ℓ'_j − ℓ`. -/
+theorem sum_tile_energy_le (c : Edge d → ℝ) {Λ : ℝ} (hcΛ : ∀ e, c e ≤ Λ) (T : IntegerCube d)
+    (v ℓ : Vertex d → ℝ) (ℓ' : Fin d → Vertex d → ℝ)
+    (hface : ∀ j : Fin d, ∀ x ∈ T.upperFace j, c (x, j) ≠ 0 →
+      v x = ℓ x ∧ v (x + unit j) = ℓ' j (x + unit j)) :
+    ∑ x ∈ T.vertices, ∑ j : Fin d, c (x, j) * (v (x + unit j) - v x) ^ 2 ≤
+      innerEdgeEnergy c T v +
+        Λ * ∑ j : Fin d, ∑ x ∈ T.upperFace j, (ℓ' j (x + unit j) - ℓ x) ^ 2 := by
+  rw [Finset.sum_comm, innerEdgeEnergy, Finset.mul_sum, ← Finset.sum_add_distrib]
+  refine Finset.sum_le_sum fun j _ => ?_
+  rw [sum_vertices_eq_sum_inner_add_sum_upperFace _ j, Finset.mul_sum]
+  refine add_le_add le_rfl (Finset.sum_le_sum fun x hx => ?_)
+  by_cases hc : c (x, j) = 0
+  · rw [hc, zero_mul]
+    have hΛ : 0 ≤ Λ := hc ▸ hcΛ (x, j)
+    positivity
+  · obtain ⟨h1, h2⟩ := hface j x hx hc
+    rw [h1, h2]
+    exact mul_le_mul_of_nonneg_right (hcΛ _) (sq_nonneg _)
+
 /-- **Energy of a patched function**: the energy of `ṽ` on the tiled cube is at most the sum of
 its energies inside the tiles plus `Λ` times the squared jumps of the affine functions across the
 faces. -/
@@ -72,19 +94,9 @@ theorem edgeEnergy_le_sum_tiles (c : Edge d → ℝ) {Λ : ℝ} (hcΛ : ∀ e, c
           c (x, j) * (v (x + unit j) - v x) ^ 2 ≤
         innerEdgeEnergy c (cornerCube (z + (N : ℤ) • i) N) v +
           Λ * ∑ j : Fin d, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).upperFace j,
-            (ℓ (z + (N : ℤ) • i + (N : ℤ) • unit j) (x + unit j) - ℓ (z + (N : ℤ) • i) x) ^ 2 := by
-    intro i hi
-    rw [Finset.sum_comm, innerEdgeEnergy, Finset.mul_sum, ← Finset.sum_add_distrib]
-    refine Finset.sum_le_sum fun j _ => ?_
-    rw [sum_vertices_eq_sum_inner_add_sum_upperFace _ j, Finset.mul_sum]
-    refine add_le_add le_rfl (Finset.sum_le_sum fun x hx => ?_)
-    by_cases hc : c (x, j) = 0
-    · rw [hc, zero_mul]
-      have hΛ : 0 ≤ Λ := hc ▸ hcΛ (x, j)
-      positivity
-    · obtain ⟨h1, h2⟩ := hface i hi j x hx hc
-      rw [h1, h2]
-      exact mul_le_mul_of_nonneg_right (hcΛ _) (sq_nonneg _)
+            (ℓ (z + (N : ℤ) • i + (N : ℤ) • unit j) (x + unit j) - ℓ (z + (N : ℤ) • i) x) ^ 2 :=
+    fun i hi => sum_tile_energy_le c hcΛ _ v _ (fun j => ℓ (z + (N : ℤ) • i + (N : ℤ) • unit j))
+      (hface i hi)
   refine (Finset.sum_le_sum key).trans (le_of_eq ?_)
   rw [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_comm (s := (cornerCube 0 M).vertices)]
 
