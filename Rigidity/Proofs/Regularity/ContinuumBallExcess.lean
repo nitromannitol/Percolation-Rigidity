@@ -108,4 +108,133 @@ theorem radiusMonotone_continuumBallSeminorm [NeZero d] (z : EuclideanSpace ℝ 
   rw [e]
   exact div_le_div_of_nonneg_right (ballL2_mono z hsr f) (Real.sqrt_nonneg _)
 
+instance isFiniteMeasure_restrict_ball (c : EuclideanSpace ℝ (Fin d)) (R : ℝ) :
+    IsFiniteMeasure (volume.restrict (ball c R)) :=
+  isFiniteMeasure_restrict.2 measure_ball_lt_top.ne
+
+theorem sqrt_toReal_eq (x : ENNReal) : Real.sqrt x.toReal = (x ^ (2 : ENNReal).toReal⁻¹).toReal := by
+  rw [← ENNReal.toReal_rpow, Real.sqrt_eq_rpow]
+  norm_num
+
+/-- **Upper bound by the supremum.** -/
+theorem continuumBallSeminorm_le_of_abs_le (z : EuclideanSpace ℝ (Fin d)) {s M : ℝ} (hM : 0 ≤ M)
+    (f : locallySqIntegrable d) (hf : ∀ x ∈ ball z s, |(f : _ → ℝ) x| ≤ M) :
+    continuumBallSeminorm z s f ≤ M := by
+  rcases (ENNReal.toReal_nonneg (a := volume (ball z s))).eq_or_lt with h0 | hpos
+  · rw [continuumBallSeminorm_apply, ballVolume, ← h0, Real.sqrt_zero, div_zero]; exact hM
+  have hae : ∀ᵐ x ∂(volume.restrict (ball z s)), ‖(f : _ → ℝ) x‖ ≤ M :=
+    ae_restrict_of_forall_mem measurableSet_ball fun x hx => by
+      rw [Real.norm_eq_abs]; exact hf x hx
+  have h1 := eLpNorm_le_of_ae_bound (p := 2) hae
+  rw [Measure.restrict_apply_univ] at h1
+  have hfin : volume (ball z s) ^ (2 : ENNReal).toReal⁻¹ * ENNReal.ofReal M ≠ ⊤ :=
+    ENNReal.mul_ne_top (ENNReal.rpow_ne_top_of_nonneg (by norm_num) measure_ball_lt_top.ne)
+      ENNReal.ofReal_ne_top
+  have h2 := ENNReal.toReal_mono hfin h1
+  rw [ENNReal.toReal_mul, ENNReal.toReal_ofReal hM, ← sqrt_toReal_eq] at h2
+  rw [continuumBallSeminorm_apply, ballVolume, div_le_iff₀ (Real.sqrt_pos.2 hpos)]
+  calc ballL2 z s f ≤ Real.sqrt (volume (ball z s)).toReal * M := h2
+    _ = M * Real.sqrt (volume (ball z s)).toReal := mul_comm _ _
+
+/-- **Lower bound on a subset.** -/
+theorem le_continuumBallSeminorm (z : EuclideanSpace ℝ (Fin d)) {s m : ℝ}
+    {S : Set (EuclideanSpace ℝ (Fin d))} (hS : MeasurableSet S) (hSB : S ⊆ ball z s) (hm : 0 ≤ m)
+    (f : locallySqIntegrable d)
+    (hf : ∀ x ∈ S, m ≤ |(f : EuclideanSpace ℝ (Fin d) → ℝ) x|) :
+    m * Real.sqrt ((volume S).toReal / ballVolume z s) ≤ continuumBallSeminorm z s f := by
+  set g : EuclideanSpace ℝ (Fin d) → ℝ := f.val with hg
+  have hae : ∀ᵐ x ∂(volume.restrict S), ‖(fun _ : EuclideanSpace ℝ (Fin d) => m) x‖ ≤ ‖g x‖ :=
+    ae_restrict_of_forall_mem hS fun x hx => by
+      rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hm]; exact hf x hx
+  have h1 : eLpNorm (fun _ : EuclideanSpace ℝ (Fin d) => m) 2 (volume.restrict S) ≤
+      eLpNorm g 2 (volume.restrict S) := eLpNorm_mono_ae hae
+  have h1' : eLpNorm g 2 (volume.restrict S) ≤ eLpNorm g 2 (volume.restrict (ball z s)) :=
+    eLpNorm_mono_measure g (Measure.restrict_mono hSB le_rfl)
+  have h3 : eLpNorm (fun _ : EuclideanSpace ℝ (Fin d) => m) 2 (volume.restrict S) =
+      ‖m‖ₑ * volume S ^ (1 / (2 : ENNReal).toReal) := by
+    rw [eLpNorm_const' _ (by norm_num) (by norm_num), Measure.restrict_apply_univ]
+  have h2 := ENNReal.toReal_mono (f.2 z s).eLpNorm_ne_top ((h3 ▸ h1).trans h1')
+  have hm' : ‖m‖ₑ.toReal = m := by simp [abs_of_nonneg hm]
+  rw [ENNReal.toReal_mul, one_div, ← sqrt_toReal_eq, hm'] at h2
+  have hV : 0 ≤ ballVolume z s := ENNReal.toReal_nonneg
+  rw [continuumBallSeminorm_apply, Real.sqrt_div' _ hV, ← mul_div_assoc]
+  exact div_le_div_of_nonneg_right h2 (Real.sqrt_nonneg _)
+
+theorem memLp_affine (a : ℝ) (p c : EuclideanSpace ℝ (Fin d)) (R : ℝ) :
+    MemLp (fun x => a + inner ℝ p x) 2 (volume.restrict (ball c R)) := by
+  refine MemLp.of_bound
+    (continuous_const.add (continuous_const.inner continuous_id)).aestronglyMeasurable
+    (|a| + ‖p‖ * (‖c‖ + |R|)) ?_
+  refine ae_restrict_of_forall_mem measurableSet_ball fun x hx => ?_
+  rw [Real.norm_eq_abs]
+  have hx' : ‖x‖ ≤ ‖c‖ + |R| := by
+    have h1 : ‖x - c‖ < R := by rw [← dist_eq_norm]; exact mem_ball.1 hx
+    calc ‖x‖ = ‖(x - c) + c‖ := by rw [sub_add_cancel]
+      _ ≤ ‖x - c‖ + ‖c‖ := norm_add_le _ _
+      _ ≤ ‖c‖ + |R| := by linarith [le_abs_self R]
+  calc |a + inner ℝ p x| ≤ |a| + |inner ℝ p x| := abs_add_le _ _
+    _ ≤ |a| + ‖p‖ * ‖x‖ := by linarith [abs_real_inner_le_norm p x]
+    _ ≤ |a| + ‖p‖ * (‖c‖ + |R|) := by
+        have := mul_le_mul_of_nonneg_left hx' (norm_nonneg p); linarith
+
+/-- The affine function `x ↦ a + ⟪p, x⟫` as an element of `locallySqIntegrable d`. -/
+noncomputable def continuumAffineFun (a : ℝ) (p : EuclideanSpace ℝ (Fin d)) :
+    locallySqIntegrable d :=
+  ⟨fun x => a + inner ℝ p x, fun c R => memLp_affine a p c R⟩
+
+@[simp] theorem continuumAffineFun_apply (a : ℝ) (p x : EuclideanSpace ℝ (Fin d)) :
+    (continuumAffineFun a p : EuclideanSpace ℝ (Fin d) → ℝ) x = a + inner ℝ p x :=
+  rfl
+
+/-- The constant functions, `Ā_0`. -/
+def continuumConstants (d : ℕ) : AddSubgroup (locallySqIntegrable d) where
+  carrier := {f | ∃ a : ℝ, ∀ x, (f : EuclideanSpace ℝ (Fin d) → ℝ) x = a}
+  add_mem' := by
+    rintro f g ⟨a, ha⟩ ⟨b, hb⟩
+    exact ⟨a + b, fun x => by simp only [AddSubgroup.coe_add, Pi.add_apply, ha, hb]⟩
+  zero_mem' := ⟨0, fun _ => rfl⟩
+  neg_mem' := by
+    rintro f ⟨a, ha⟩
+    exact ⟨-a, fun x => by simp only [AddSubgroup.coe_neg, Pi.neg_apply, ha]⟩
+
+/-- The affine functions, `Ā_1`. -/
+def continuumAffine (d : ℕ) : AddSubgroup (locallySqIntegrable d) where
+  carrier := {f | ∃ (a : ℝ) (p : EuclideanSpace ℝ (Fin d)),
+    ∀ x, (f : EuclideanSpace ℝ (Fin d) → ℝ) x = a + inner ℝ p x}
+  add_mem' := by
+    rintro f g ⟨a, p, ha⟩ ⟨b, q, hb⟩
+    refine ⟨a + b, p + q, fun x => ?_⟩
+    simp only [AddSubgroup.coe_add, Pi.add_apply, ha, hb, inner_add_left]
+    ring
+  zero_mem' := ⟨0, 0, fun _ => by simp⟩
+  neg_mem' := by
+    rintro f ⟨a, p, ha⟩
+    refine ⟨-a, -p, fun x => ?_⟩
+    simp only [AddSubgroup.coe_neg, Pi.neg_apply, ha, inner_neg_left]
+    ring
+
+theorem continuumConstants_le_continuumAffine : continuumConstants d ≤ continuumAffine d := by
+  rintro f ⟨a, ha⟩
+  exact ⟨a, 0, fun x => by simp [ha]⟩
+
+/-- The excess of `x ↦ a + ⟪p, x⟫` over constants on `B_ρ(z)` is at most `‖p‖ ρ`. -/
+theorem ballExcess_continuumAffine_le (z : EuclideanSpace ℝ (Fin d)) {ρ a : ℝ}
+    {p : EuclideanSpace ℝ (Fin d)} (hρ : 0 ≤ ρ) {w : locallySqIntegrable d}
+    (hw : ∀ x, (w : EuclideanSpace ℝ (Fin d) → ℝ) x = a + inner ℝ p x) :
+    ballExcess (continuumBallSeminorm z) (continuumConstants d) ρ w ≤ ‖p‖ * ρ := by
+  have hc : continuumAffineFun (a + inner ℝ p z) 0 ∈ continuumConstants d :=
+    ⟨a + inner ℝ p z, fun x => by simp⟩
+  refine (ballExcess_le _ _ hc).trans ?_
+  apply continuumBallSeminorm_le_of_abs_le z (by positivity)
+  intro x hx
+  have e : ((w - continuumAffineFun (a + inner ℝ p z) 0 : locallySqIntegrable d) :
+      EuclideanSpace ℝ (Fin d) → ℝ) x = inner ℝ p (x - z) := by
+    simp only [AddSubgroup.coe_sub, Pi.sub_apply, hw, continuumAffineFun_apply, inner_zero_left,
+      add_zero, inner_sub_right]
+    ring
+  rw [e]
+  calc |inner ℝ p (x - z)| ≤ ‖p‖ * ‖x - z‖ := abs_real_inner_le_norm _ _
+    _ ≤ ‖p‖ * ρ := mul_le_mul_of_nonneg_left
+        (by rw [← dist_eq_norm]; exact (mem_ball.1 hx).le) (norm_nonneg _)
+
 end Rigidity.Proofs.Regularity
