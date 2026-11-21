@@ -170,4 +170,53 @@ theorem integral_sq_latticeStep_le_sum (f : (Fin d → ℤ) → ℝ) (z : Euclid
   exact setIntegral_mono_set hint (Filter.Eventually.of_forall fun _ => sq_nonneg _)
     hsub.eventuallyLE
 
+theorem abs_latticePointOf_sub_le (x : EuclideanSpace ℝ (Fin d)) (i : Fin d) :
+    |(latticePointOf x i : ℝ) - x i| ≤ 1 / 2 := by
+  have h1 := Int.floor_le (x i + 1 / 2)
+  have h2 := Int.lt_floor_add_one (x i + 1 / 2)
+  rw [abs_le]
+  simp only [latticePointOf]
+  constructor <;> linarith
+
+/-- The lattice point of `x` is within `√d / 2` of `x`. -/
+theorem dist_latticePointOf_le (x : EuclideanSpace ℝ (Fin d)) :
+    dist (LatticeProb.Percolation.latticeEuclideanEmbedding (latticePointOf x)) x ≤
+      Real.sqrt d / 2 := by
+  rw [EuclideanSpace.dist_eq]
+  have h : ∑ i, dist ((LatticeProb.Percolation.latticeEuclideanEmbedding (latticePointOf x)) i)
+      (x i) ^ 2 ≤ ∑ _i : Fin d, (1 / 2 : ℝ) ^ 2 := by
+    refine Finset.sum_le_sum fun i _ => ?_
+    rw [Real.dist_eq]
+    have e : (LatticeProb.Percolation.latticeEuclideanEmbedding (latticePointOf x)) i =
+        (latticePointOf x i : ℝ) := rfl
+    rw [e]
+    exact pow_le_pow_left₀ (abs_nonneg _) (abs_latticePointOf_sub_le x i) 2
+  rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] at h
+  calc Real.sqrt (∑ i, dist ((LatticeProb.Percolation.latticeEuclideanEmbedding
+          (latticePointOf x)) i) (x i) ^ 2)
+      ≤ Real.sqrt (d * (1 / 2) ^ 2) := Real.sqrt_le_sqrt h
+    _ = Real.sqrt d / 2 := by
+        rw [Real.sqrt_mul (Nat.cast_nonneg d), Real.sqrt_sq (by norm_num)]; ring
+
+theorem latticeCube_subset_ball {k : Fin d → ℤ} {z : EuclideanSpace ℝ (Fin d)} {r : ℝ}
+    (h : dist (LatticeProb.Percolation.latticeEuclideanEmbedding k) z + Real.sqrt d / 2 < r) :
+    latticeCube k ⊆ ball z r := by
+  intro x hx
+  have hxk : latticePointOf x = k := Set.mem_singleton_iff.1 hx
+  have h1 := dist_latticePointOf_le x
+  rw [hxk] at h1
+  rw [mem_ball]
+  calc dist x z ≤ dist x (LatticeProb.Percolation.latticeEuclideanEmbedding k) +
+        dist (LatticeProb.Percolation.latticeEuclideanEmbedding k) z := dist_triangle _ _ _
+    _ < r := by rw [dist_comm] at h1; linarith
+
+theorem dist_latticePointOf_lt_of_mem_ball {x z : EuclideanSpace ℝ (Fin d)} {r : ℝ}
+    (hx : x ∈ ball z r) :
+    dist (LatticeProb.Percolation.latticeEuclideanEmbedding (latticePointOf x)) z <
+      r + Real.sqrt d / 2 := by
+  have h1 := dist_latticePointOf_le x
+  have h2 := mem_ball.1 hx
+  linarith [dist_triangle
+    (LatticeProb.Percolation.latticeEuclideanEmbedding (latticePointOf x)) x z]
+
 end Rigidity.Proofs.Regularity
