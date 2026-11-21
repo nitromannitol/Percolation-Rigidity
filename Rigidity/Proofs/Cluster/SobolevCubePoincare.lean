@@ -11,7 +11,8 @@ import Rigidity.Vendor.LHCH.Support.Analysis.CubePoincare
 # The `L^p` Poincaré inequality on a lattice cube
 
 For every lattice cube `B = z + {0, …, L}^d`, every real `p ≥ 1` and every `g`,
-`∑_{x ∈ B} |g(x) - ḡ|^p ≤ d^{p-1} L^{p-1} (L + 1) ∑_{x ∈ B} ∑_i [x + e_i ∈ B] |g(x + e_i) - g(x)|^p`,
+`∑_{x ∈ B} |g(x) - ḡ|^p ≤ d^{p-1} L^{p-1} (L + 1) ∑_{x ∈ B}
+∑_i [x + e_i ∈ B] |g(x + e_i) - g(x)|^p`,
 with `ḡ` the average of `g` over `B`: bound `|g(x) - ḡ|^p` by the mean of `|g(x) - g(y)|^p`,
 telescope `g(x) - g(y)` through the hybrids that take the first `k` coordinates from `y`, and bound
 each one-dimensional difference by the `p`-energy on its line.

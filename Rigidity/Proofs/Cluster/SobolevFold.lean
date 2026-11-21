@@ -261,7 +261,8 @@ theorem IntegerCube.abs_cutoff_add_unit_sub_le (B : IntegerCube d) (hB : 0 < B.s
     {x : Vertex d} (j : Fin d) (hx : x ∈ B.triple.vertices) :
     |B.cutoff (x + LatticeProb.unit j) - B.cutoff x| ≤ 1 / B.size := by
   rw [IntegerCube.mem_triple_vertices] at hx
-  have hP : ∏ i ∈ Finset.univ.erase j, cutoffCoord B.size ((x + LatticeProb.unit j) i - B.corner i) =
+  have hP : ∏ i ∈ Finset.univ.erase j,
+      cutoffCoord B.size ((x + LatticeProb.unit j) i - B.corner i) =
       ∏ i ∈ Finset.univ.erase j, cutoffCoord B.size (x i - B.corner i) :=
     Finset.prod_congr rfl fun i hi => by
       rw [add_unit_apply, if_neg (Finset.ne_of_mem_erase hi), add_zero]

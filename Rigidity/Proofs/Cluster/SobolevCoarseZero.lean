@@ -10,7 +10,8 @@ boundary of the cube: the usual Sobolev inequality on `ℤ^d` with zero boundary
 domain satisfies the lattice Sobolev inequality with zero boundary values, with exponents
 `1 ≤ t ≤ s`, Lemma 3.2 with constant `A` and weights `a`, and Lemma 3.3 with constant `B` and
 weights `b`,
-`∑_{x ∈ C_*(U)} |w(x)|^s ≤ 2^{s-1} (A + S B^{s/t}) (∑_z (a(z)^{t/s} + b(z)) |∇w 1_{a≠0}|^t(z))^{s/t}`
+`∑_{x ∈ C_*(U)} |w(x)|^s ≤ 2^{s-1} (A + S B^{s/t})
+(∑_z (a(z)^{t/s} + b(z)) |∇w 1_{a≠0}|^t(z))^{s/t}`
 whenever `[w]_𝒫` vanishes at the vertices of the domain having a lattice neighbour outside it.
 For the partition into good cubes in dimension `d ≥ 2` with `s > d/(d-1)` and `t = s_* = sd/(s+d)`
 the hypothesis on the domain holds by the lattice Sobolev inequality with zero boundary values.
