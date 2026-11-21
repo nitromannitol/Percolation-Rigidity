@@ -52,17 +52,17 @@ open scoped Classical in
 a unique maximal stopping cube of `G` and no cube outside `G` of scale at least `J` is near the
 cube `Q_m`, then `∑_{x ∈ Q_m} size(x)^τ ≤ 3^{d m} + ∑_{j < J} 3^{τ (j + 1)} (22 · 3^j + 1)^d N_j`,
 where `size` is the stopping size and `N_j` the number of cubes of scale `j` outside `G` with index
-in `nearIndices d m j`. -/
+in `nearIndicesAt R m j`. -/
 theorem sum_stoppingSize_pow_le {G : Set (TriadicCube d)}
     (hPG : ∀ x : Vertex d, ∃! Q : TriadicCube d, x ∈ Q.vertices ∧ Q.IsMaximalStopping G)
-    (m J τ : ℕ)
+    (R : TriadicCube d) (m J τ : ℕ) (hRm : R.scale = m)
     (hfar : ∀ T : TriadicCube d, J ≤ T.scale → T ∉ G →
-      ∀ x ∈ (⟨m, 0⟩ : TriadicCube d).vertices, ¬ ∀ i, |x i - T.center i| ≤ 11 * T.side) :
-    ∑ x ∈ (⟨m, 0⟩ : TriadicCube d).toIntegerCube.vertices, TriadicCube.stoppingSize G x ^ τ ≤
+      ∀ x ∈ R.vertices, ¬ ∀ i, |x i - T.center i| ≤ 11 * T.side) :
+    ∑ x ∈ R.toIntegerCube.vertices, TriadicCube.stoppingSize G x ^ τ ≤
       (3 : ℝ) ^ (d * m) + ∑ j ∈ Finset.range J, (3 : ℝ) ^ (τ * (j + 1)) *
         (22 * (3 : ℝ) ^ j + 1) ^ d *
-        ((nearIndices d m j).filter fun ι => (⟨j, ι⟩ : TriadicCube d) ∉ G).card := by
-  set A := (⟨m, 0⟩ : TriadicCube d).toIntegerCube.vertices with hAdef
+        ((nearIndicesAt R m j).filter fun ι => (⟨j, ι⟩ : TriadicCube d) ∉ G).card := by
+  set A := R.toIntegerCube.vertices with hAdef
   let near : Vertex d → ℕ → (Fin d → ℤ) → Prop := fun x j ι =>
     (⟨j, ι⟩ : TriadicCube d) ∉ G ∧
       ∀ i, |x i - (⟨j, ι⟩ : TriadicCube d).center i| ≤ 11 * (3 : ℤ) ^ j
@@ -73,14 +73,14 @@ theorem sum_stoppingSize_pow_le {G : Set (TriadicCube d)}
     split_ifs <;> positivity
   -- each vertex is charged to a bad cube near it
   have hstep : ∀ x ∈ A, TriadicCube.stoppingSize G x ^ τ ≤
-      1 + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndices d m j, F x j ι := by
+      1 + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndicesAt R m j, F x j ι := by
     intro x hxA
-    have hx : x ∈ (⟨m, 0⟩ : TriadicCube d).vertices :=
-      ((⟨m, 0⟩ : TriadicCube d).mem_toIntegerCube_vertices x).1 hxA
+    have hx : x ∈ R.vertices :=
+      (R.mem_toIntegerCube_vertices x).1 hxA
     obtain ⟨Q, ⟨hxQ, hQ⟩, -⟩ := hPG x
     have hsize : TriadicCube.stoppingSize G x ^ τ = (3 : ℝ) ^ (τ * Q.scale) := by
       rw [TriadicCube.stoppingSize_eq_of_mem hxQ hQ, ← pow_mul, mul_comm]
-    have hsum0 : 0 ≤ ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndices d m j, F x j ι :=
+    have hsum0 : 0 ≤ ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndicesAt R m j, F x j ι :=
       Finset.sum_nonneg fun j _ => Finset.sum_nonneg fun ι _ => hF0 x j ι
     rw [hsize]
     rcases Nat.eq_zero_or_pos Q.scale with h0 | hpos
@@ -92,17 +92,17 @@ theorem sum_stoppingSize_pow_le {G : Set (TriadicCube d)}
       by_contra h
       exact hfar T (not_lt.1 h) hTbad x hx hTnear
     have hTeq : (⟨T.scale, T.index⟩ : TriadicCube d) = T := rfl
-    have hι := index_mem_nearIndices hx hTnear
+    have hι := index_mem_nearIndicesAt hRm.le hx hTnear
     have hterm : F x T.scale T.index = (3 : ℝ) ^ (τ * (T.scale + 1)) := by
       simp only [F, near, hTeq]
       rw [if_pos ⟨hTbad, hTnear⟩]
     calc (3 : ℝ) ^ (τ * Q.scale) ≤ (3 : ℝ) ^ (τ * (T.scale + 1)) :=
           pow_le_pow_right₀ (by norm_num) (Nat.mul_le_mul_left _ hTscale)
       _ = F x T.scale T.index := hterm.symm
-      _ ≤ ∑ ι ∈ nearIndices d m T.scale, F x T.scale ι :=
+      _ ≤ ∑ ι ∈ nearIndicesAt R m T.scale, F x T.scale ι :=
           Finset.single_le_sum (fun ι _ => hF0 x _ ι) hι
-      _ ≤ ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndices d m j, F x j ι :=
-          Finset.single_le_sum (f := fun j => ∑ ι ∈ nearIndices d m j, F x j ι)
+      _ ≤ ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndicesAt R m j, F x j ι :=
+          Finset.single_le_sum (f := fun j => ∑ ι ∈ nearIndicesAt R m j, F x j ι)
             (fun j _ => Finset.sum_nonneg fun ι _ => hF0 x j ι) (Finset.mem_range.2 hTJ)
   -- each bad cube is charged by few vertices
   have hcharge : ∀ j ι, ∑ x ∈ A, F x j ι ≤
@@ -132,20 +132,21 @@ theorem sum_stoppingSize_pow_le {G : Set (TriadicCube d)}
       rw [if_neg (fun h => hbad h.1)]
   have hcardA : ((A.card : ℕ) : ℝ) = (3 : ℝ) ^ (d * m) := by
     rw [hAdef, IntegerCube.card_vertices]
-    change (((3 ^ m) ^ d : ℕ) : ℝ) = _
+    change (((3 ^ R.scale) ^ d : ℕ) : ℝ) = _
+    rw [hRm]
     push_cast
     rw [← pow_mul, mul_comm]
   calc ∑ x ∈ A, TriadicCube.stoppingSize G x ^ τ
-      ≤ ∑ x ∈ A, (1 + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndices d m j, F x j ι) :=
+      ≤ ∑ x ∈ A, (1 + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndicesAt R m j, F x j ι) :=
         Finset.sum_le_sum hstep
-    _ = (3 : ℝ) ^ (d * m) + ∑ x ∈ A, ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndices d m j, F x j ι := by
+    _ = (3 : ℝ) ^ (d * m) + ∑ x ∈ A, ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndicesAt R m j, F x j ι := by
         rw [Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul, mul_one, hcardA]
-    _ = (3 : ℝ) ^ (d * m) + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndices d m j, ∑ x ∈ A, F x j ι := by
+    _ = (3 : ℝ) ^ (d * m) + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndicesAt R m j, ∑ x ∈ A, F x j ι := by
         congr 1
         rw [Finset.sum_comm]
         refine Finset.sum_congr rfl fun j _ => ?_
         rw [Finset.sum_comm]
-    _ ≤ (3 : ℝ) ^ (d * m) + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndices d m j,
+    _ ≤ (3 : ℝ) ^ (d * m) + ∑ j ∈ Finset.range J, ∑ ι ∈ nearIndicesAt R m j,
           (if (⟨j, ι⟩ : TriadicCube d) ∉ G then
             (3 : ℝ) ^ (τ * (j + 1)) * (22 * (3 : ℝ) ^ j + 1) ^ d else 0) := by
         gcongr with j _ ι _
@@ -159,15 +160,15 @@ theorem sum_stoppingSize_pow_le {G : Set (TriadicCube d)}
 open scoped Classical in
 /-- The number of cubes of scale `j` near the cube of scale `m` centred at the origin, with
 index of residues `r`, satisfying a predicate. -/
-noncomputable def classCount (bad : TriadicCube d → Prop) (m j : ℕ) (r : Fin d → Fin 3) : ℕ :=
-  (((nearIndices d m j).subtype fun ι => residue ι = r).filter
+noncomputable def classCount (bad : TriadicCube d → Prop) (R : TriadicCube d) (m j : ℕ) (r : Fin d → Fin 3) : ℕ :=
+  (((nearIndicesAt R m j).subtype fun ι => residue ι = r).filter
     fun ι => bad (⟨j, ι.1⟩ : TriadicCube d)).card
 
 open scoped Classical in
 /-- The cubes near the cube of scale `m` satisfying a predicate split into residue classes. -/
-theorem card_filter_eq_sum_classCount (bad : TriadicCube d → Prop) (m j : ℕ) :
-    ((nearIndices d m j).filter fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card =
-      ∑ r : Fin d → Fin 3, classCount bad m j r := by
+theorem card_filter_eq_sum_classCount (bad : TriadicCube d → Prop) (R : TriadicCube d) (m j : ℕ) :
+    ((nearIndicesAt R m j).filter fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card =
+      ∑ r : Fin d → Fin 3, classCount bad R m j r := by
   rw [Finset.card_eq_sum_card_fiberwise (f := residue) (t := Finset.univ)
     (fun _ _ => Finset.mem_coe.2 (Finset.mem_univ _))]
   refine Finset.sum_congr rfl fun r _ => ?_
@@ -187,17 +188,17 @@ open scoped Classical in
 class has fewer than `3^{e_j}` cubes of scale `j` near `Q_m` satisfying `bad`,
 `e_j = d (m - j) - (τ + 1)(j + 1)`, then
 `∑_{j < J} 3^{τ (j + 1)} (22 · 3^j + 1)^d N_j ≤ (j0 · 575ᵈ · 3^{τ j0} + 69ᵈ) 3^{d m}`. -/
-theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (m J j0 τ : ℕ) (hJm : J ≤ m)
+theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (R : TriadicCube d) (m J j0 τ : ℕ) (hJm : J ≤ m)
     (hexp : ∀ j < J, (τ + 1) * (j + 1) + d * j ≤ d * m)
     (hmid : ∀ j, j0 ≤ j → j < J → ∀ r,
-      classCount bad m j r < 3 ^ (d * (m - j) - (τ + 1) * (j + 1))) :
+      classCount bad R m j r < 3 ^ (d * (m - j) - (τ + 1) * (j + 1))) :
     ∑ j ∈ Finset.range J, (3 : ℝ) ^ (τ * (j + 1)) * (22 * (3 : ℝ) ^ j + 1) ^ d *
-        ((nearIndices d m j).filter fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card ≤
+        ((nearIndicesAt R m j).filter fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card ≤
       ((j0 : ℝ) * 575 ^ d * 3 ^ (τ * j0) + 69 ^ d) * 3 ^ (d * m) := by
   set g : ℕ → ℝ := fun j => if j < j0 then 575 ^ d * 3 ^ (τ * j0) * 3 ^ (d * m)
     else 69 ^ d * 3 ^ (d * m) * (1 / 3) ^ (j + 1) with hgdef
   have hterm : ∀ j ∈ Finset.range J, (3 : ℝ) ^ (τ * (j + 1)) * (22 * (3 : ℝ) ^ j + 1) ^ d *
-      (((nearIndices d m j).filter
+      (((nearIndicesAt R m j).filter
         fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card : ℝ) ≤ g j := by
     intro j hj
     have hjJ := Finset.mem_range.1 hj
@@ -209,13 +210,13 @@ theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (m J j0 τ : ℕ
     by_cases hj0 : j < j0
     · rw [hgdef]
       simp only [if_pos hj0]
-      have hN : (((nearIndices d m j).filter
+      have hN : (((nearIndicesAt R m j).filter
           fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card : ℝ) ≤
           (25 * (3 : ℝ) ^ (m - j)) ^ d := by
-        have h1 : (((nearIndices d m j).filter
+        have h1 : (((nearIndicesAt R m j).filter
             fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card : ℝ) ≤
-            (nearIndices d m j).card := by exact_mod_cast Finset.card_filter_le _ _
-        rw [card_nearIndices] at h1
+            (nearIndicesAt R m j).card := by exact_mod_cast Finset.card_filter_le _ _
+        rw [card_nearIndicesAt] at h1
         refine h1.trans ?_
         have h3 : (1 : ℝ) ≤ 3 ^ (m - j) := one_le_pow₀ (by norm_num)
         gcongr
@@ -223,7 +224,7 @@ theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (m J j0 τ : ℕ
       have hτ : (3 : ℝ) ^ (τ * (j + 1)) ≤ 3 ^ (τ * j0) :=
         pow_le_pow_right₀ (by norm_num) (Nat.mul_le_mul_left _ hj0)
       calc (3 : ℝ) ^ (τ * (j + 1)) * (22 * (3 : ℝ) ^ j + 1) ^ d *
-            (((nearIndices d m j).filter
+            (((nearIndicesAt R m j).filter
               fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card : ℝ)
           ≤ 3 ^ (τ * j0) * (23 * 3 ^ j) ^ d * (25 * (3 : ℝ) ^ (m - j)) ^ d := by
             gcongr
@@ -236,12 +237,12 @@ theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (m J j0 τ : ℕ
       simp only [if_neg hj0]
       have hj0' : j0 ≤ j := not_lt.1 hj0
       set e := d * (m - j) - (τ + 1) * (j + 1) with hedef
-      have hN : (((nearIndices d m j).filter
+      have hN : (((nearIndicesAt R m j).filter
           fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card : ℝ) ≤
           3 ^ d * 3 ^ e := by
         rw [card_filter_eq_sum_classCount bad]
         push_cast
-        calc ∑ r : Fin d → Fin 3, (classCount bad m j r : ℝ)
+        calc ∑ r : Fin d → Fin 3, (classCount bad R m j r : ℝ)
             ≤ ∑ _r : Fin d → Fin 3, (3 : ℝ) ^ e :=
               Finset.sum_le_sum fun r _ => by
                 have := hmid j hj0' hjJ r
@@ -266,7 +267,7 @@ theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (m J j0 τ : ℕ
           mul_one]
         ring_nf
       calc (3 : ℝ) ^ (τ * (j + 1)) * (22 * (3 : ℝ) ^ j + 1) ^ d *
-            (((nearIndices d m j).filter
+            (((nearIndicesAt R m j).filter
               fun ι => bad (⟨j, ι⟩ : TriadicCube d)).card : ℝ)
           ≤ 3 ^ (τ * (j + 1)) * (23 * 3 ^ j) ^ d * (3 ^ d * 3 ^ e) := by gcongr
         _ = 69 ^ d * ((3 : ℝ) ^ (τ * (j + 1)) * (3 ^ j) ^ d * 3 ^ e) := by

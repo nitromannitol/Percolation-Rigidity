@@ -58,14 +58,14 @@ scale `m` occur with probability at most `(e N a / k)^k`, `N = (2 · 3^{m-j} + 2
 theorem measure_le_classCount_le (p : unitInterval) (G : Configuration d → Set (TriadicCube d))
     (hloc : ∀ T : TriadicCube d,
       MeasurableSet[localEdgeSigma T.centeredTriple] {ω | T ∉ G ω})
-    {a : ℝ} (ha : 0 ≤ a) {m j : ℕ}
+    {a : ℝ} (ha : 0 ≤ a) {R : TriadicCube d} {m j : ℕ}
     (hq : ∀ ι : Fin d → ℤ,
       latticeBondLaw d p {ω | (⟨j, ι⟩ : TriadicCube d) ∉ G ω} ≤ ENNReal.ofReal a)
     (r : Fin d → Fin 3) {k : ℕ} (hk : 0 < k) :
-    latticeBondLaw d p {ω | k ≤ classCount (fun T => T ∉ G ω) m j r} ≤
+    latticeBondLaw d p {ω | k ≤ classCount (fun T => T ∉ G ω) R m j r} ≤
       ENNReal.ofReal ((Real.exp 1 * (2 * (3 : ℝ) ^ (m - j) + 23) ^ d * a / k) ^ k) := by
   classical
-  set s := (nearIndices d m j).subtype fun ι => residue ι = r with hsdef
+  set s := (nearIndicesAt R m j).subtype fun ι => residue ι = r with hsdef
   have hsep : Pairwise fun ι ι' : {ι : Fin d → ℤ // residue ι = r} =>
       Disjoint (⟨j, ι.1⟩ : TriadicCube d).centeredTriple
         (⟨j, ι'.1⟩ : TriadicCube d).centeredTriple := by
@@ -75,8 +75,8 @@ theorem measure_le_classCount_le (p : unitInterval) (G : Configuration d → Set
   have h := measure_le_card_notMem_le p G hloc (fun ι : {ι : Fin d → ℤ // residue ι = r} =>
     (⟨j, ι.1⟩ : TriadicCube d)) hsep s (ENNReal.ofReal a) (fun ι _ => hq ι.1) k
   have hscard : (s.card : ℝ) ≤ (2 * (3 : ℝ) ^ (m - j) + 23) ^ d := by
-    rw [← card_nearIndices d m j]
-    have : s.card ≤ (nearIndices d m j).card := by
+    rw [← card_nearIndicesAt R m j]
+    have : s.card ≤ (nearIndicesAt R m j).card := by
       rw [hsdef, Finset.card_subtype]
       exact Finset.card_filter_le _ _
     exact_mod_cast this
@@ -96,18 +96,18 @@ theorem measure_classCount_ge_le (p : unitInterval) (G : Configuration d → Set
       MeasurableSet[localEdgeSigma T.centeredTriple] {ω | T ∉ G ω})
     {C1 c s0 : ℝ} (hC1 : 0 ≤ C1)
     (hq : ∀ T : TriadicCube d, latticeBondLaw d p {ω | T ∉ G ω} ≤
-      ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0))) {m j τ : ℕ}
+      ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0))) {R : TriadicCube d} {m j τ : ℕ}
     (hj : Real.exp 1 * 25 ^ d * C1 * (3 : ℝ) ^ ((τ + 1) * (j + 1)) *
       Real.exp (-c * ((3 : ℝ) ^ j) ^ s0) ≤ Real.exp (-1))
     (hexp : (τ + 1) * (j + 1) ≤ d * (m - j)) (r : Fin d → Fin 3) :
     latticeBondLaw d p {ω | 3 ^ (d * (m - j) - (τ + 1) * (j + 1)) ≤
-        classCount (fun T => T ∉ G ω) m j r} ≤
+        classCount (fun T => T ∉ G ω) R m j r} ≤
       ENNReal.ofReal (Real.exp (-(3 : ℝ) ^ (d * (m - j) - (τ + 1) * (j + 1)))) := by
   set e := d * (m - j) - (τ + 1) * (j + 1) with hedef
   set a : ℝ := C1 * Real.exp (-c * ((3 : ℝ) ^ j) ^ s0) with hadef
   have ha : 0 ≤ a := by positivity
   have hk : 0 < 3 ^ e := by positivity
-  have h := measure_le_classCount_le p G hloc ha (m := m) (fun ι => hq _) r hk
+  have h := measure_le_classCount_le p G hloc ha (R := R) (m := m) (fun ι => hq _) r hk
   refine h.trans (ENNReal.ofReal_le_ofReal ?_)
   have hde : d * (m - j) = e + (τ + 1) * (j + 1) := by omega
   have hN : (2 * (3 : ℝ) ^ (m - j) + 23) ^ d ≤ 25 ^ d * (3 ^ e * 3 ^ ((τ + 1) * (j + 1))) := by
@@ -141,50 +141,51 @@ most `25ᵈ 3^{d m} C exp(-c 3^{J s}) ∑_k exp(-c (3^s - 1))^k`. -/
 theorem measure_exists_notMem_near_le (p : unitInterval) (G : Configuration d → Set (TriadicCube d))
     {C1 c s0 : ℝ} (hC1 : 0 ≤ C1) (hc : 0 < c) (hs0 : 0 < s0)
     (hq : ∀ T : TriadicCube d, latticeBondLaw d p {ω | T ∉ G ω} ≤
-      ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0))) (m J : ℕ) :
+      ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0))) (R : TriadicCube d) (m J : ℕ)
+    (hRm : R.scale ≤ m) :
     latticeBondLaw d p {ω | ∃ T : TriadicCube d, J ≤ T.scale ∧ T ∉ G ω ∧
-        ∃ x ∈ (originCube d m).vertices, ∀ i, |x i - T.center i| ≤ 11 * T.side} ≤
+        ∃ x ∈ R.vertices, ∀ i, |x i - T.center i| ≤ 11 * T.side} ≤
       ENNReal.ofReal (25 ^ d * 3 ^ (d * m) * C1) *
         ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ s0) ^ J)) *
         ∑' k : ℕ, ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ s0 - 1))) ^ k := by
   classical
   let B : ℕ → Set (Configuration d) := fun n =>
-    ⋃ ι ∈ nearIndices d m n, {ω | (⟨n, ι⟩ : TriadicCube d) ∉ G ω}
+    ⋃ ι ∈ nearIndicesAt R m n, {ω | (⟨n, ι⟩ : TriadicCube d) ∉ G ω}
   have hsub : {ω | ∃ T : TriadicCube d, J ≤ T.scale ∧ T ∉ G ω ∧
-      ∃ x ∈ (originCube d m).vertices, ∀ i, |x i - T.center i| ≤ 11 * T.side} ⊆
+      ∃ x ∈ R.vertices, ∀ i, |x i - T.center i| ≤ 11 * T.side} ⊆
       {ω | ∃ n : ℕ, J ≤ n ∧ ω ∈ B n} := by
     rintro ω ⟨T, hJ, hbad, x, hx, hnear⟩
     refine ⟨T.scale, hJ, ?_⟩
     simp only [B, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop]
-    exact ⟨T.index, index_mem_nearIndices hx hnear, hbad⟩
+    exact ⟨T.index, index_mem_nearIndicesAt hRm hx hnear, hbad⟩
   have hB : ∀ n : ℕ, latticeBondLaw d p (B n) ≤
       ENNReal.ofReal (25 ^ d * 3 ^ (d * m) * C1) *
         ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ s0) ^ n)) := by
     intro n
     have hcomm : ((3 : ℝ) ^ n) ^ s0 = ((3 : ℝ) ^ s0) ^ n :=
       (Real.rpow_pow_comm (show (0 : ℝ) ≤ 3 by norm_num) s0 n).symm
-    have hcard : ((nearIndices d m n).card : ℝ) ≤ 25 ^ d * 3 ^ (d * m) := by
-      rw [card_nearIndices]
+    have hcard : ((nearIndicesAt R m n).card : ℝ) ≤ 25 ^ d * 3 ^ (d * m) := by
+      rw [card_nearIndicesAt]
       have h1 : (1 : ℝ) ≤ 3 ^ (m - n) := one_le_pow₀ (by norm_num)
       have h2 : (3 : ℝ) ^ (m - n) ≤ 3 ^ m := pow_le_pow_right₀ (by norm_num) (Nat.sub_le _ _)
       calc (2 * (3 : ℝ) ^ (m - n) + 23) ^ d ≤ (25 * 3 ^ m) ^ d := by gcongr; linarith
         _ = 25 ^ d * 3 ^ (d * m) := by rw [mul_pow, ← pow_mul, mul_comm m d]
     calc latticeBondLaw d p (B n)
-        ≤ ∑ ι ∈ nearIndices d m n, latticeBondLaw d p {ω | (⟨n, ι⟩ : TriadicCube d) ∉ G ω} :=
+        ≤ ∑ ι ∈ nearIndicesAt R m n, latticeBondLaw d p {ω | (⟨n, ι⟩ : TriadicCube d) ∉ G ω} :=
           measure_biUnion_finset_le _ _
-      _ ≤ ∑ _ι ∈ nearIndices d m n,
+      _ ≤ ∑ _ι ∈ nearIndicesAt R m n,
             ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ s0) ^ n)) :=
           Finset.sum_le_sum fun ι _ => by
             have := hq (⟨n, ι⟩ : TriadicCube d)
             rwa [show (⟨n, ι⟩ : TriadicCube d).scale = n from rfl, hcomm] at this
-      _ = ENNReal.ofReal ((nearIndices d m n).card *
+      _ = ENNReal.ofReal ((nearIndicesAt R m n).card *
             (C1 * Real.exp (-c * ((3 : ℝ) ^ s0) ^ n))) := by
           rw [Finset.sum_const, nsmul_eq_mul, ← ENNReal.ofReal_natCast,
             ← ENNReal.ofReal_mul (Nat.cast_nonneg _)]
       _ ≤ ENNReal.ofReal (25 ^ d * 3 ^ (d * m) * C1 * Real.exp (-c * ((3 : ℝ) ^ s0) ^ n)) := by
           apply ENNReal.ofReal_le_ofReal
           have he : 0 ≤ C1 * Real.exp (-c * ((3 : ℝ) ^ s0) ^ n) := by positivity
-          calc ((nearIndices d m n).card : ℝ) * (C1 * Real.exp (-c * ((3 : ℝ) ^ s0) ^ n))
+          calc ((nearIndicesAt R m n).card : ℝ) * (C1 * Real.exp (-c * ((3 : ℝ) ^ s0) ^ n))
               ≤ 25 ^ d * 3 ^ (d * m) * (C1 * Real.exp (-c * ((3 : ℝ) ^ s0) ^ n)) :=
                 mul_le_mul_of_nonneg_right hcard he
             _ = _ := by ring
