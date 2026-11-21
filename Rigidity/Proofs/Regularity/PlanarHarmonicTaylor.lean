@@ -136,4 +136,19 @@ theorem abs_sub_taylor_le_of_harmonicOnNhd {f : ℂ → ℝ} {c : ℂ} {R M : �
     _ ≤ K * t * ‖x - c‖ := hmv
     _ = 128 * M * ‖x - c‖ ^ 2 / R ^ 2 := by rw [hK, ht]; ring
 
+/-- The first-order Taylor expansion of a planar harmonic function, for every bound `M ≥ 0`. -/
+theorem abs_sub_taylor_le_of_harmonicOnNhd' {f : ℂ → ℝ} {c : ℂ} {R M : ℝ} (hR : 0 < R)
+    (hM : 0 ≤ M) (hf : InnerProductSpace.HarmonicOnNhd f (ball c R))
+    (hfM : ∀ y ∈ ball c R, |f y| ≤ M) :
+    ∃ q : ℂ, ∀ x ∈ ball c (R / 4),
+      |f x - f c - (q * (x - c)).re| ≤ 128 * M * ‖x - c‖ ^ 2 / R ^ 2 := by
+  rcases hM.eq_or_lt with h0 | hpos
+  · refine ⟨0, fun x hx => ?_⟩
+    have hx' : x ∈ ball c R := ball_subset_ball (by linarith) hx
+    have h1 : f x = 0 := abs_nonpos_iff.1 (h0 ▸ hfM x hx')
+    have h2 : f c = 0 := abs_nonpos_iff.1 (h0 ▸ hfM c (mem_ball_self hR))
+    rw [h1, h2, ← h0]
+    simp
+  · exact abs_sub_taylor_le_of_harmonicOnNhd hR hpos hf hfM
+
 end Rigidity.Proofs.Regularity
