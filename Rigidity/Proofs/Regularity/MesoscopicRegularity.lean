@@ -13,7 +13,8 @@ Armstrong and Dario (arXiv:1609.09431v2), Lemma 7.3, state the outcome of Lemma 
 `δ = α`, for `k = 0, 1` on the balls of the infinite cluster
 (`armstrongDario_lemma_7_3_zero_infiniteCluster`, `armstrongDario_lemma_7_3_one_infiniteCluster`)
 and for lattice harmonic functions on the balls of the lattice
-(`armstrongDario_lemma_7_3_zero_latticeHarmonic`, `armstrongDario_lemma_7_3_one_latticeHarmonic`).
+(`armstrongDario_lemma_7_3_zero_latticeHarmonic`, `armstrongDario_lemma_7_3_one_latticeHarmonic`),
+with one constant at the origin for `k = 0` (`armstrongDario_orderZero_origin_latticeHarmonic`).
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -187,5 +188,30 @@ theorem armstrongDario_lemma_7_3_zero_latticeHarmonic (d : ℕ) [NeZero d] {A α
   have h2 := mul_rpow_one_sub_mul_le (α := α) hC.le hr1 hR hE
     (ballExcess_le_componentBallL2 _ z (clusterConstants _) R u) hRE
   linarith
+
+/-- **Order-zero regularity at the origin for lattice harmonic functions on the balls of the
+lattice**: one constant `φ` with `‖u - φ‖_{L̲²(B_r)} ≤ C (r / R) B` for `r ∈ [X ∨ C, R / 2]`, for
+every `B > 0` bounding `D_0(R) + R E`, with the excess decay of order one proved: only the
+harmonic approximation hypothesis remains. -/
+theorem armstrongDario_orderZero_origin_latticeHarmonic (d : ℕ) [NeZero d] {A α : ℝ}
+    (hA : 2 ≤ A) (hα : 0 < α) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (z : Vertex d) (R X E : ℝ) (u : latticeComponent d → ℝ),
+      1 ≤ X → max (latticeHRScale d) (24 * Real.sqrt d) ≤ X → X ≤ R / A → 0 ≤ E →
+      HarmonicApproximation (componentBallSeminorm (latticeComponent d) z)
+        (latticeHarmonicClass z) (clusterConstants (latticeComponent d)) A α X R E u →
+      ∀ B : ℝ, 0 < B →
+        ballExcess (componentBallSeminorm (latticeComponent d) z)
+          (clusterConstants (latticeComponent d)) R u + R * E ≤ B →
+        ∃ φ ∈ clusterConstants (latticeComponent d), ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+          componentBallL2 (latticeComponent d) z r (u - φ) ≤ C * (r / R) * B := by
+  have hd : 0 < d := Nat.pos_of_ne_zero (NeZero.ne d)
+  obtain ⟨C, hC, h⟩ := armstrongDario_orderZero_origin_of_clusterCubeDensity d hd hA hα one_pos
+    (latticeHRConst_nonneg d)
+  refine ⟨C, hC, fun z R X E u hX hXs hXR hE happ B hB hBu => ?_⟩
+  exact h (allOpen d) (latticeComponent d) z (latticeHarmonicClass z) R X E 1 u hX hXR hE
+    (by rw [max_eq_right le_rfl, mul_one]; exact (le_max_right _ _).trans hXs)
+    (clusterCubeDensity_latticeComponent z _ 1)
+    ((harmonicRegularity_latticeHarmonicClass z R).of_le _ ((le_max_left _ _).trans hXs))
+    (fun r _ _ => ⟨0, zero_mem_latticeHarmonicClass z r⟩) happ B hB hBu
 
 end Rigidity.Proofs.Regularity
