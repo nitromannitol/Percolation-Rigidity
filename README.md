@@ -286,7 +286,10 @@ These six planar forms are stated in
 The planar well-connectedness and cluster-density concentration estimates are supplied by
 [`wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) and
 [`planar_cluster_density_concentration`](Rigidity/Proofs/S2/PlanarDensityConcentration.lean).
-The variant `fast_decay_of_green_exists` derives Green-column uniqueness from order-zero regularity.
+The variant `fast_decay_of_green_exists` assumes, in place of the planar Green-column existence and
+uniqueness, only the existence `Rigidity.External.SupercriticalBondGreenColumnExistsTwo`, stated in
+[`Rigidity/Proofs/Section5/PlanarGreenUniqueness.lean`](Rigidity/Proofs/Section5/PlanarGreenUniqueness.lean),
+and derives the uniqueness from order-zero regularity.
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -487,8 +490,9 @@ The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.soun
    endpoints of the bond, before and after resampling. These sizes have stretched-exponential
    tails, because a loop of the infinite cluster in an annulus, obtained from rectangle crossings,
    encloses every finite cluster that meets the inner square (`ClusterDensityInfluenceBound.lean`,
-   `Rigidity/Proofs/Percolation/PlanarFiniteCluster.lean`). The Efron–Stein inequality for the product of the Bernoulli bonds, applied to the powers of the
-   centred density `X`, gives for `n ≥ 2` the recursion
+   `Rigidity/Proofs/Percolation/PlanarFiniteCluster.lean`). The Efron–Stein inequality for the
+   product of the Bernoulli bonds, applied to the powers of the centred density `X`, gives for
+   `n ≥ 2` the recursion
    `E|X|^{2n} ≤ (E|X|ⁿ)² + C n^{14} 3^{−2m} (E|X|^{2n})^{(n−1)/n}`
    (`Rigidity.Proofs.S2.planar_density_moment_recursion`). Solving it bounds the tail of `X` at
    the scale `C 3^{−m}` with the exponent `1/7`, which gives the stated exponent `2/15`. Dario and
@@ -542,7 +546,7 @@ The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.soun
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 805 Lean files with 138,658 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 805 Lean files with 138,678 lines, on top of mathlib and
 Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,205 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
 `RigidityAudit/Axioms.lean` (107 lines) are counted separately.
@@ -644,7 +648,8 @@ tooling and review process are disclosed in [`formalization.yaml`](formalization
 Some modules are copied from other repositories, with attribution, and not through a Lake
 dependency. Each copied file starts with a header naming its source repository, file and commit.
 The headers of the modules from formal-math, openai/math and Leonardo Bonanno's repository also
-state the changes made; the modules from Lattice-Probability are adapted from the named revision.
+state the changes made; the modules from Lattice-Probability are adapted from the named revision,
+and the headers of the four planar modules adapted from its revision `7512f4fb` state the changes.
 
 | Source | Commit | Files in this repository |
 | --- | --- | --- |
@@ -653,6 +658,7 @@ state the changes made; the modules from Lattice-Probability are adapted from th
 | Leonardo Bonanno, [lean-formalizations](https://github.com/leobon12/lean-formalizations/tree/31e748330ee154d5f41537c4b01f71b8a5510c2d) (no licence stated upstream) | `31e748330ee154d5f41537c4b01f71b8a5510c2d` | `Rigidity/Vendor/BonannoPerc/`: `Basic`, `Duality`, `DualityMain`, `Exclusive`, `ExclusiveMain`, `Paths`, `Peierls`, `StepSum`, from the files of the same names in `LQGMetric/Perc/` |
 | [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/c21955fb1c127db67c43b995f47db4543f88f9fd) (Apache License 2.0) | `c21955fb1c127db67c43b995f47db4543f88f9fd` | the 12 modules under `Rigidity/Proofs/Topology/PlanarJordan/`, which are based on Leonardo Bonanno's lean-formalizations and on R. Kirov's [jordan_pick](https://github.com/rkirov/jordan_pick/tree/b3c9b7cf7358bf81a077d78ad67e6e8247869ddd) (Apache License 2.0) |
 | [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/a6fae9f9df6a47c15e338b928807feb20d9da4b0) (Apache License 2.0) | `a6fae9f9df6a47c15e338b928807feb20d9da4b0` | `Rigidity/Proofs/Percolation/Kesten/`: `EdgeCrossing`, `DualDecayRectangle`, `RigidityCrossingAdapter` |
+| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069) (Apache License 2.0) | `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069` | `Rigidity/Support/PlanarOrderZeroGradient.lean`, `Rigidity/Support/PlanarGreenQuantitativeField.lean`, `Rigidity/Proofs/S3/PlanarCorrectorValid.lean`, `Rigidity/Proofs/S3/PlanarGreenColumn.lean`: theorems of the modules `LatticeOrderZeroApproximation`, `LatticeOrderZeroTranslation`, `LatticeOrderZeroGradient`, `GreenQuantitativeField`, `MeasurableRootedPlane` and `GreenColumnEvent` of `LatticeProb/Prob/Percolation/`, specialized to `d = 2` |
 
 The repository of Leonardo Bonanno does not state a licence, and none is claimed here for the
 modules copied from it.

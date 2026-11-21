@@ -107,7 +107,7 @@ sources:
 related_formalizations:
   - id: "https://github.com/nitromannitol/Lattice-Probability"
     relationship: "builds-on"
-    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and Rigidity/Proofs/Percolation/Kesten/ are adapted from it (see README, Copied code)."
+    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and Rigidity/Proofs/Percolation/Kesten/, and four planar modules specialized to d = 2 (Rigidity/Support/PlanarOrderZeroGradient.lean, Rigidity/Support/PlanarGreenQuantitativeField.lean, Rigidity/Proofs/S3/PlanarCorrectorValid.lean, Rigidity/Proofs/S3/PlanarGreenColumn.lean, from its revision 7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069), are adapted from it (see README, Copied code)."
   - id: "https://github.com/anthropics/formal-math"
     relationship: "adapts"
     note: "The 53 modules under Rigidity/Vendor/FormalMathPercolation/ are copied from its percolation/ project at commit 795efb86f191735c5481675763537cfb4ff37e55 (Apache-2.0), with its LICENSE and NOTICE."

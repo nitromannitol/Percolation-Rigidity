@@ -1,3 +1,7 @@
+/- Adapted from Lattice-Probability, revision 7512f4fb, module
+   LatticeProb.Prob.Percolation.MeasurableRootedPlane (`exists_measurable_corrector_valid_set`).
+   Changes: specialized to d = 2, from the planar input `SupercriticalBondCorrectorInputTwo` in
+   place of `SupercriticalBondCorrectorInput`; the theorem carries the suffix `_two`. -/
 import Rigidity.External.PlanarInputs
 import LatticeProb.Prob.Percolation.MeasurableRootedPlane
 

@@ -1,3 +1,7 @@
+/- Adapted from Lattice-Probability, revision 7512f4fb, module
+   LatticeProb.Prob.Percolation.GreenColumnEvent (`ae_unique_green_column_for_all_poles`).
+   Changes: specialized to d = 2, from the planar input `SupercriticalBondGreenColumnExistenceTwo`
+   in place of `SupercriticalBondGreenColumnExistence`; the theorem carries the suffix `_two`. -/
 import Rigidity.External.PlanarInputs
 import LatticeProb.Prob.Percolation.GreenColumnEvent
 
