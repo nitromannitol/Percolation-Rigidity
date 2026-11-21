@@ -183,4 +183,68 @@ theorem sum_abs_grad_boundaryInterpolation_rpow_le (P : CoarseData d ω) {B : Fi
         refine mul_le_mul_of_nonneg_left ?_ (by positivity)
         linarith [hE, hF]
 
+/-- **Armstrong–Dario, Lemma 6.4 (iii), on the lattice**: for `B ⊆ C_*`, `1 ≤ s < p`, the
+bounded-overlap hypotheses of Lemmas 3.2 and 3.3 and a normalization `V > 0` (the volume
+`|□_m|`), the normalized `L^s` norm of `∇w̃` is at most
+`3^{s-1} (d 2^{s/2} C₃^s 𝔐_{sd−1} + 2 d C₂^s 𝔐_{sd}) (V⁻¹ Σ_{C_*} |∇u 1_{a≠0}|^p)^{s/p}`,
+where `𝔐_a = (V⁻¹ Σ_{z ∈ C_*} size(□_𝒫(z))^{a p/(p − s)})^{1 − s/p}` are the moments of the
+partition sizes and `C₃ = 2 d N K 3^{md} 2√d`, `C₂ = N' K' 3^{m'd} 2√d` the constants of
+Lemmas 3.3 and 3.2. -/
+theorem sum_abs_grad_boundaryInterpolation_rpow_div_le (P : CoarseData d ω)
+    {B : Finset (Vertex d)} (hB : B ⊆ P.cluster) (u : Vertex d → ℝ) {K N m K' N' m' : ℕ}
+    (h3 : P.PairOverlap K N m) (hK : 1 ≤ K) (hN : 1 ≤ N) (h2 : P.RegionOverlap K' N' m')
+    (hK' : 1 ≤ K') (hN' : 1 ≤ N') (hd : 1 ≤ d) {s p : ℝ} (hs : 1 ≤ s) (hsp : s < p) {V : ℝ}
+    (hV : 0 < V) :
+    (∑ x ∈ P.domain, ∑ j : Fin d, (if x + unit j ∈ P.domain then
+        |boundaryInterpolation P B u (x + unit j) - boundaryInterpolation P B u x| ^ s
+        else 0)) / V ≤
+      (3 : ℝ) ^ (s - 1) * ((d : ℝ) * (2 : ℝ) ^ (s / 2) *
+          (2 * (d : ℝ) * N * K * 3 ^ (m * d) * (2 * √(d : ℝ))) ^ s *
+          ((∑ z ∈ P.cluster, (((3 : ℝ) ^ (P.part z).scale) ^ (s * d - 1)) ^ (p / (p - s))) /
+            V) ^ (1 - s / p) +
+        2 * d * ((N' : ℝ) * K' * 3 ^ (m' * d) * (2 * √(d : ℝ))) ^ s *
+          ((∑ z ∈ P.cluster, (((3 : ℝ) ^ (P.part z).scale) ^ (s * d)) ^ (p / (p - s))) /
+            V) ^ (1 - s / p)) *
+        ((∑ z ∈ P.cluster, gradNormIn (openGraph ω) P.cluster u z ^ p) / V) ^ (s / p) := by
+  have hs0 : 0 < s := by linarith
+  set G : Vertex d → ℝ := fun z => gradNormIn (openGraph ω) P.cluster u z
+  have hG : ∀ z, 0 ≤ G z := fun z => gradNormIn_nonneg _ _ _ _
+  have hGabs : ∀ z (t : ℝ), |G z| ^ t = G z ^ t := fun z t => by rw [abs_of_nonneg (hG z)]
+  have hstep := sum_abs_grad_boundaryInterpolation_rpow_le P hB u hs
+  have hL3 := P.sum_gradNormIn_coarsen_rpow_le h3 hK hN hd u hs
+  have hL2 := P.sum_abs_sub_coarsen_rpow_le h2 hK' hN' u hs
+  have hW3 := sum_mul_rpow_div_le P.cluster (fun z => ((3 : ℝ) ^ (P.part z).scale) ^ (s * d - 1))
+    G (fun z _ => by positivity) hs0 hsp hV
+  have hW2 := sum_mul_rpow_div_le P.cluster (fun z => ((3 : ℝ) ^ (P.part z).scale) ^ (s * d))
+    G (fun z _ => by positivity) hs0 hsp hV
+  simp only [hGabs] at hW3 hW2
+  set C₃ : ℝ := (2 * (d : ℝ) * N * K * 3 ^ (m * d) * (2 * √(d : ℝ))) ^ s
+  set C₂ : ℝ := ((N' : ℝ) * K' * 3 ^ (m' * d) * (2 * √(d : ℝ))) ^ s
+  set S₃ : ℝ := ∑ z ∈ P.cluster, ((3 : ℝ) ^ (P.part z).scale) ^ (s * d - 1) * G z ^ s
+  set S₂ : ℝ := ∑ z ∈ P.cluster, ((3 : ℝ) ^ (P.part z).scale) ^ (s * d) * G z ^ s
+  have hC₃ : 0 ≤ C₃ := by positivity
+  have hC₂ : 0 ≤ C₂ := by positivity
+  have h3s : 0 ≤ (3 : ℝ) ^ (s - 1) := by positivity
+  have hA : 0 ≤ (d : ℝ) * (2 : ℝ) ^ (s / 2) := by positivity
+  calc (∑ x ∈ P.domain, ∑ j : Fin d, (if x + unit j ∈ P.domain then
+        |boundaryInterpolation P B u (x + unit j) - boundaryInterpolation P B u x| ^ s
+        else 0)) / V
+      ≤ (3 : ℝ) ^ (s - 1) * ((d : ℝ) * (2 : ℝ) ^ (s / 2) * (C₃ * S₃) + 2 * d * (C₂ * S₂)) / V := by
+        refine div_le_div_of_nonneg_right (hstep.trans ?_) hV.le
+        refine mul_le_mul_of_nonneg_left (add_le_add ?_ ?_) h3s
+        · exact mul_le_mul_of_nonneg_left hL3 hA
+        · exact mul_le_mul_of_nonneg_left hL2 (by positivity)
+    _ = (3 : ℝ) ^ (s - 1) * ((d : ℝ) * (2 : ℝ) ^ (s / 2) * C₃ * (S₃ / V) +
+          2 * d * C₂ * (S₂ / V)) := by
+        field_simp
+    _ ≤ _ := by
+        rw [mul_assoc ((3 : ℝ) ^ (s - 1))]
+        refine mul_le_mul_of_nonneg_left ?_ h3s
+        rw [add_mul]
+        refine add_le_add ?_ ?_
+        · rw [mul_assoc ((d : ℝ) * (2 : ℝ) ^ (s / 2) * C₃)]
+          exact mul_le_mul_of_nonneg_left hW3 (by positivity)
+        · rw [mul_assoc (2 * (d : ℝ) * C₂)]
+          exact mul_le_mul_of_nonneg_left hW2 (by positivity)
+
 end Rigidity.Dirichlet
