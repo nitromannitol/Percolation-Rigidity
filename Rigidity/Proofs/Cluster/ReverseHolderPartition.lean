@@ -89,4 +89,72 @@ theorem reverse_holder_partition (hd : 2 ≤ d) {S : ℝ} (hS : 0 ≤ S) :
     (Finset.filter_subset _ _) (fun x hx => (Finset.mem_filter.mp hx).2) hclosed _
     (fun z => by positivity) hK0 hCG hst (hK ω hP Q hU hLS) hgood u hu
 
+/-- The center of the central subcube of the triadic cube `⟨m + 1, c⟩`. -/
+def centralPoint (m : ℕ) (c : Vertex d) : Vertex d := fun i => 3 ^ (m + 1) * c i
+
+theorem center_centralPoint (m : ℕ) (c : Vertex d) : center m (centralPoint m c) = centralPoint m c := by
+  have h1 := two_mul_halfSide_add_one m
+  have h2 := halfSide_nonneg m
+  have hs : (0 : ℤ) < 3 ^ m := by positivity
+  have hidx : idx m (centralPoint m c) = fun i => 3 * c i := by
+    funext i
+    simp only [idx, centralPoint]
+    refine ediv_eq_of_le_of_lt hs ?_ ?_
+    · rw [pow_succ]
+      nlinarith
+    · rw [pow_succ]
+      nlinarith
+  funext i
+  simp only [center, hidx, centralPoint, pow_succ]
+  ring
+
+/-- The triadic cube `⟨m + 1, c⟩` is the triple of its central subcube `cube m (3^{m+1} c)`. -/
+theorem triadicCube_vertices_eq_enl_centralPoint (m : ℕ) (c y : Vertex d) :
+    y ∈ (⟨m + 1, c⟩ : TriadicCube d).vertices ↔ y ∈ enl 1 m (centralPoint m c) := by
+  rw [enl, mem_box, center_centralPoint]
+  simp only [TriadicCube.vertices, TriadicCube.side, Set.mem_setOf_eq]
+  have h1 := two_mul_halfSide_add_one (m + 1)
+  refine forall_congr' fun i => ?_
+  simp only [centralPoint]
+  generalize y i - 3 ^ (m + 1) * c i = a
+  rw [abs_mul, abs_two]
+  constructor <;> intro h <;> omega
+
+/-- **Reverse Hölder inequality on the crossing cluster of a resolved triadic cube** (Armstrong–Dario,
+Lemma 3.6, deterministic part, for the partition into good cubes), for every triadic cube
+`⟨m + 1, c⟩` and its central subcube `cube m (3^{m+1} c)`. -/
+theorem reverse_holder_partition_cube (hd : 2 ≤ d) {S : ℝ} (hS : 0 ≤ S) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∀ (ω : Configuration d) (hP : PartitionEvent ω) (m : ℕ) (c : Vertex d)
+      (hU : PartitionResolved ω ⟨m + 1, c⟩),
+      LatticeSobolevOn (⟨m + 1, c⟩ : TriadicCube d).toIntegerCube.vertices 2 (lowerSobolevTwo d) S →
+      ∀ {CG s t : ℝ}, 0 ≤ CG → s.HolderConjugate t →
+      ∑ z ∈ crossingClusterVertices ω ⟨m + 1, c⟩,
+          ((3 : ℝ) ^ (partitionCoarseData (by omega) hP ⟨m + 1, c⟩ hU).reachScale z) ^
+            (2 * (d : ℝ) * s) ≤ CG * (3 : ℝ) ^ ((m + 1) * d) →
+      ∀ u : Vertex d → ℝ, (∀ x ∈ crossingClusterVertices ω ⟨m + 1, c⟩,
+          (∀ y, (openGraph ω).Adj x y → y ∈ crossingClusterVertices ω ⟨m + 1, c⟩) →
+            openLaplacian ω u x = 0) →
+      (1 / (3 : ℝ) ^ (m * d)) * ∑ x ∈ (crossingClusterVertices ω ⟨m + 1, c⟩).filter
+          (· ∈ cube m (centralPoint m c)),
+          clusterGradSq ω (crossingClusterVertices ω ⟨m + 1, c⟩) u x ≤
+        8 * d * K * CG ^ (2 / (s * lowerSobolevTwo d)) * (3 : ℝ) ^ (d + 2) *
+          ((1 / (3 : ℝ) ^ ((m + 1) * d)) * ∑ x ∈ crossingClusterVertices ω ⟨m + 1, c⟩,
+            clusterGradSq ω (crossingClusterVertices ω ⟨m + 1, c⟩) u x ^
+              (t * lowerSobolevTwo d / 2)) ^ (2 / (t * lowerSobolevTwo d)) := by
+  obtain ⟨K, hK0, hK⟩ := clusterSobolevTwo_of_latticeSobolevOn (d := d) hd hS
+  refine ⟨K, hK0, ?_⟩
+  intro ω hP m c hU hLS CG s t hCG hst hgood u hu
+  set Q : TriadicCube d := ⟨m + 1, c⟩ with hQ
+  set U := crossingClusterVertices ω Q with hUdef
+  have hclosed : ∀ z ∈ U, ∀ y, (openGraph ω).Adj z y → y ∈ enl 1 m (centralPoint m c) →
+      y ∈ U := by
+    intro z hz y hadj hy
+    have hyQ : y ∈ Q.vertices := (triadicCube_vertices_eq_enl_centralPoint m c y).mpr hy
+    rw [hUdef, mem_crossingClusterVertices] at hz ⊢
+    exact mem_crossingCluster_of_adj hz hadj hyQ
+  exact reverse_holder_triadic ω (by omega) m (centralPoint m c) U
+    (U.filter (· ∈ cube m (centralPoint m c))) (Finset.filter_subset _ _)
+    (fun x hx => (Finset.mem_filter.mp hx).2) hclosed _ (fun z => by positivity) hK0 hCG hst
+    (hK ω hP Q hU hLS) hgood u hu
+
 end Rigidity.Proofs.Cluster
