@@ -255,4 +255,63 @@ theorem sum_sq_mul_secondDiff_le {γ : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 16
         ring
   linarith
 
+/-- Sedrakyan's inequality: `(a₁ + a₂)²/(m₁ + m₂) ≤ a₁²/m₁ + a₂²/m₂` for `m₁, m₂ > 0`. -/
+theorem sq_add_div_add_le {a₁ a₂ m₁ m₂ : ℝ} (hm₁ : 0 < m₁) (hm₂ : 0 < m₂) :
+    (a₁ + a₂) ^ 2 / (m₁ + m₂) ≤ a₁ ^ 2 / m₁ + a₂ ^ 2 / m₂ := by
+  rw [div_add_div _ _ hm₁.ne' hm₂.ne', div_le_div_iff₀ (by positivity) (by positivity)]
+  nlinarith [sq_nonneg (a₁ * m₂ - a₂ * m₁), mul_pos hm₁ hm₂]
+
+/-- **The two-sided weight**: at a point at distance `s + 1` from the left end and `r + 1` from the
+right end of a segment, the weight `Ω = w(dist to the left) + w(dist to the right)` takes the
+values `Ω_{-} = w_s + w_{r+2}`, `Ω_0 = w_{s+1} + w_{r+1}`, `Ω_{+} = w_{s+2} + w_r`, and its
+gradient ratios on the two adjacent edges are bounded by `4γ` times its second difference. -/
+theorem twoSided_ratio_add_le {γ : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 16) (s r : ℕ) :
+    ((hardyWeight γ (s + 2) + hardyWeight γ r) -
+        (hardyWeight γ (s + 1) + hardyWeight γ (r + 1))) ^ 2 /
+        (((hardyWeight γ (s + 1) + hardyWeight γ (r + 1)) +
+          (hardyWeight γ (s + 2) + hardyWeight γ r)) / 2) +
+      ((hardyWeight γ (s + 1) + hardyWeight γ (r + 1)) -
+          (hardyWeight γ s + hardyWeight γ (r + 2))) ^ 2 /
+        (((hardyWeight γ s + hardyWeight γ (r + 2)) +
+          (hardyWeight γ (s + 1) + hardyWeight γ (r + 1))) / 2) ≤
+      4 * γ * ((hardyWeight γ (s + 2) + hardyWeight γ r) +
+        (hardyWeight γ s + hardyWeight γ (r + 2)) -
+          2 * (hardyWeight γ (s + 1) + hardyWeight γ (r + 1))) := by
+  have hγ1 : γ < 1 := by linarith
+  have hm : ∀ t, 0 < hardyEdgeWeight γ t := hardyEdgeWeight_pos hγ1
+  have h1 := sq_add_div_add_le (a₁ := hardyWeight γ (s + 2) - hardyWeight γ (s + 1))
+    (a₂ := hardyWeight γ r - hardyWeight γ (r + 1)) (hm (s + 1)) (hm r)
+  have h2 := sq_add_div_add_le (a₁ := hardyWeight γ (s + 1) - hardyWeight γ s)
+    (a₂ := hardyWeight γ (r + 1) - hardyWeight γ (r + 2)) (hm s) (hm (r + 1))
+  have hL := hardyRatio_add_le hγ0 hγ s
+  have hR := hardyRatio_add_le hγ0 hγ r
+  unfold hardyRatio hardyEdgeWeight at hL hR
+  unfold hardyEdgeWeight at h1 h2
+  have e1 : ((hardyWeight γ (s + 2) + hardyWeight γ r) -
+      (hardyWeight γ (s + 1) + hardyWeight γ (r + 1))) ^ 2 /
+        (((hardyWeight γ (s + 1) + hardyWeight γ (r + 1)) +
+          (hardyWeight γ (s + 2) + hardyWeight γ r)) / 2) =
+      (hardyWeight γ (s + 2) - hardyWeight γ (s + 1) +
+          (hardyWeight γ r - hardyWeight γ (r + 1))) ^ 2 /
+        ((hardyWeight γ (s + 1) + hardyWeight γ (s + 1 + 1)) / 2 +
+          (hardyWeight γ r + hardyWeight γ (r + 1)) / 2) := by
+    congr 1 <;> ring
+  have e2 : ((hardyWeight γ (s + 1) + hardyWeight γ (r + 1)) -
+      (hardyWeight γ s + hardyWeight γ (r + 2))) ^ 2 /
+        (((hardyWeight γ s + hardyWeight γ (r + 2)) +
+          (hardyWeight γ (s + 1) + hardyWeight γ (r + 1))) / 2) =
+      (hardyWeight γ (s + 1) - hardyWeight γ s +
+          (hardyWeight γ (r + 1) - hardyWeight γ (r + 2))) ^ 2 /
+        ((hardyWeight γ s + hardyWeight γ (s + 1)) / 2 +
+          (hardyWeight γ (r + 1) + hardyWeight γ (r + 1 + 1)) / 2) := by
+    congr 1 <;> ring
+  rw [e1, e2]
+  have hsq1 : (hardyWeight γ r - hardyWeight γ (r + 1)) ^ 2 =
+      (hardyWeight γ (r + 1) - hardyWeight γ r) ^ 2 := by ring
+  have hsq2 : (hardyWeight γ (r + 1) - hardyWeight γ (r + 2)) ^ 2 =
+      (hardyWeight γ (r + 1 + 1) - hardyWeight γ (r + 1)) ^ 2 := by ring
+  rw [hsq1] at h1
+  rw [hsq2] at h2
+  linarith
+
 end Rigidity.Dirichlet
