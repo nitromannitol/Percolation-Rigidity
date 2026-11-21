@@ -72,6 +72,12 @@ cited = {'Proposition 2.3', 'Theorem 2.4', 'Theorem 2.5', 'Lemma 2.13', 'Lemma 2
 further = {
     'Slab connectivity (Grimmett and Marstrand, d >= 3)':
         ['Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt'],
+    'Proposition 2.3 for d >= 3 and its reduction to d = 2':
+        ['Rigidity.Percolation.wellConnected_of_three_le',
+         'Rigidity.Percolation.wellConnectedInput_of_planar'],
+    'Finite clusters (d >= 3)':
+        ['Rigidity.Percolation.exists_finite_cluster_radius_le',
+         'Rigidity.Percolation.exists_finite_cluster_card_le'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

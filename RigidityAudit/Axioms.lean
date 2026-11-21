@@ -8,9 +8,11 @@ import Rigidity.Proofs.Assembly.Section5b
 import Rigidity.Proofs.Assembly.Section5d
 import Rigidity.Proofs.Assembly.Section5e
 import Rigidity.Percolation.Blocks.SlabConnectivity
+import Rigidity.Percolation.Pisztora.FiniteClusters
 
-/-! The axiom report of every numbered result of the paper, and of the slab connectivity theorem
-of Grimmett and Marstrand for `d ≥ 3`; `scripts/check_axioms.py` checks it.
+/-! The axiom report of every numbered result of the paper, and of the results proved for `d ≥ 3`:
+the slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
+clusters; `scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
@@ -81,3 +83,9 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 
 -- Slab connectivity above the critical point (Grimmett and Marstrand, d ≥ 3)
 #print axioms Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt
+
+-- Proposition 2.3 for d ≥ 3, its reduction to d = 2, and finite clusters for d ≥ 3
+#print axioms Rigidity.Percolation.wellConnected_of_three_le
+#print axioms Rigidity.Percolation.wellConnectedInput_of_planar
+#print axioms Rigidity.Percolation.exists_finite_cluster_radius_le
+#print axioms Rigidity.Percolation.exists_finite_cluster_card_le

@@ -284,7 +284,11 @@ state single-scale forms. The statement follows from Couronné and Messikh, Theo
 Pisztora, p. 35 (`d ≥ 3`), by a union bound over the subcubes, with `s = 1/(d(10d)²)`. For
 `d ≥ 3`, Pisztora's estimate holds above the threshold of percolation in slabs, which equals
 `𝔭_c(d)` by the theorem of Grimmett and Marstrand; that theorem is proved, in a finite-volume form,
-in [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point).
+in [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point). For
+`d ≥ 3` the statement of `WellConnectedInput` is proved, with the box estimate replaced by crossing
+estimates from slab connectivity; see
+[Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3).
+The input therefore reduces to its case `d = 2`.
 
 Each input was checked against its source in an independent model review. Page numbers refer to the
 arXiv versions listed below. AD: S. Armstrong and P. Dario, *Elliptic regularity and quantitative
@@ -334,8 +338,8 @@ probability at least `ρ`. The theorem depends on exactly `propext`, `Classical.
 `Quot.sound`, and its axiom report is checked with those of the numbered results. The same file
 derives from this bound the triadic stopping partition with its exponential size moment and its
 localization bound
-(`Rigidity.Percolation.triadic_partition_estimates_of_uniformCubeSlabConnectivity`). The literature
-inputs `WellConnectedInput` and `ClusterDensityConcentrationInput` remain hypotheses.
+(`Rigidity.Percolation.triadic_partition_estimates_of_uniformCubeSlabConnectivity`), and the next
+section derives from it Proposition 2.3 for `d ≥ 3`.
 
 Steps 1 to 3 below follow Chapter 2 of D. Contreras, *Percolation on graphs of polynomial growth*,
 ETH Zürich dissertation (2022), doi:10.3929/ethz-b-000585148, which proves the theorem of Grimmett
@@ -380,17 +384,59 @@ over seeds with this conditioning (`BootGood`, `Bootstrap/Recursion.lean`), so t
 the traces is the conditioning at the smaller scale. The levels `p₀` and `q` are the same at every
 scale and each bond is sprinkled at most once, so the number of scales is not restricted.
 
+## Well-connected cubes and finite clusters for d ≥ 3
+
+For `d ≥ 3` and `𝔭_c(d) < p`, slab connectivity gives Proposition 2.3 of the paper and the
+exponential decay of the radius of finite clusters (Grimmett, Theorem (8.21), due to J. T. Chayes,
+L. Chayes, G. R. Grimmett, H. Kesten and R. H. Schonmann, *The correlation length for the
+high-density phase of Bernoulli percolation*, Ann. Probab. 17 (1989), 1277–1302).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.wellConnected_of_three_le`](Rigidity/Percolation/Pisztora/WellConnected.lean) | If `3 ≤ d` and `criticalProbability d < p`, there are `c, C, s > 0` such that every cube `x + Q_N` fails to be well-connected with probability at most `C exp(−c Nˢ)`: the statement of `WellConnectedInput` at `d`, here with `s = 1/(100d³)` and without the hypothesis `p < 1`. |
+| [`Rigidity.Percolation.wellConnectedInput_of_planar`](Rigidity/Percolation/Pisztora/WellConnected.lean) | The case `d = 2` of `WellConnectedInput` implies `WellConnectedInput`. |
+| [`Rigidity.Percolation.exists_finite_cluster_radius_le`](Rigidity/Percolation/Pisztora/FiniteClusters.lean) | If `3 ≤ d` and `criticalProbability d < p`, the open cluster of `x` is finite and reaches `ℓ^∞`-distance `l` from `x` with probability at most `C exp(−c l)`, for all `x` and `l`. |
+| [`Rigidity.Percolation.exists_finite_cluster_card_le`](Rigidity/Percolation/Pisztora/FiniteClusters.lean) | Under the same hypotheses, the open cluster of `x` is finite with at least `n` vertices with probability at most `C exp(−c n^{1/d})`. |
+
+The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`.
+
+1. **Crossing estimate** (`Rigidity.Percolation.crossing_fail_le`, `Pisztora/CubeEstimates.lean`).
+   From the slab bound, a cube of side `n` has, for `10dw ≤ r < 10dn`, a crossing component joined
+   inside the cube to every open path that leaves each `ℓ¹`-ball of radius `r/10`, except with
+   probability at most `(d + 2)(n + 1)^{2d+1} exp(−c(⌊r/(10dw)⌋ − 1))`. The proof explores the
+   slabs of the cube one at a time (`Rigidity/Percolation/SlabRadiusCrossing.lean` and the modules
+   it imports).
+2. **Good cubes** (`Pisztora/GoodSubcube.lean`, `Pisztora/WellConnected.lean`). In `z + Q_M` take
+   `t = ⌊M^{1/d}/(4 · 100^{1/d})⌋` and `r = 8t`. The crossing component is a largest cluster and
+   contains every open path with at least `M/100` steps, because every other cluster has fewer than
+   `(4t)^d ≤ M/100` vertices. So `z + Q_M` is good and crossing outside an event of probability at
+   most `K exp(−κ M^{1/d})` (`Rigidity.Percolation.exists_not_goodSubcube_le`). A union bound over
+   the cube `x + Q_N` and the at most `(4N + 1)^d (N + 1)` cubes `z + Q_M` that meet it with
+   `N^{1/(10d)²}/2 ≤ M ≤ N/10` gives the statement. This is the derivation stated with the input,
+   with Pisztora's box estimate replaced by the crossing estimate.
+3. **Finite clusters** (`Pisztora/FiniteClusters.lean`). If `2t < l` and, for every `k`, the cube
+   `x + Q_{M_k}`, `M_k = 2^{k+1} t`, has a crossing root joined inside it to every open path of
+   coordinate diameter at least `M_k`, then the open path from `x` to distance `l` joins `x` to the
+   first root, and a crossing path of the `k`-th cube, of diameter `M_{k+1}`, joins the `k`-th root
+   to the next one; the cluster of `x` then meets every face of every cube and is infinite. By the
+   crossing estimate the `k`-th condition fails with probability at most `A exp(−κ 2^k t)`, and the
+   sum over `k` gives the bound. This route through the crossing estimate departs from the proof of
+   Chayes, Chayes, Grimmett, Kesten and Schonmann. The volume bound follows, since a cluster of
+   `ℓ^∞`-radius less than `l` has at most `(2l)^d` vertices.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 51 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 55 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
-  2.5, Lemma 2.14), and the slab connectivity theorem of
-  [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point). Each of
-  the 51 reports lists exactly `propext`, `Classical.choice` and
+  2.5, Lemma 2.14), the slab connectivity theorem of
+  [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point), and the
+  four theorems of
+  [Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3).
+  Each of the 55 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -421,10 +467,10 @@ scale and each bond is sprinkled at most once, so the number of scales is not re
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 638 Lean files with 123,099 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 640 Lean files with 123,861 lines, on top of mathlib and
 Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,205 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (83 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (91 lines) are counted separately.
 
 ## Building
 
@@ -492,10 +538,11 @@ Rigidity/
       Main.lean               the main theorems, from the regime and the literature inputs only
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
+    Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)
   Support/                    definitions and lemmas used by the frozen results
   Vendor/                     modules copied from other repositories (see Copied code)
 RigidityAudit/
-  Axioms.lean                 the axiom report of every numbered result and of the slab connectivity
+  Axioms.lean                 the axiom report of every numbered result and of the results for d ≥ 3
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
 paper/                        the arXiv v2 source and the corrected draft (LaTeX and PDF), figures,

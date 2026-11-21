@@ -54,7 +54,7 @@ sources:
     authors: ["Geoffrey Grimmett"]
     type: "book"
     relationship: "assumes"
-    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2."
+    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2. Theorem (8.21), the exponential decay of the radius of finite clusters, is proved for d >= 3 by a route through crossing estimates (README, Well-connected cubes and finite clusters for d >= 3)."
   - title: "Density and uniqueness in percolation"
     authors: ["Robert M. Burton", "Michael Keane"]
     type: "paper"
@@ -64,7 +64,7 @@ sources:
     authors: ["Agoston Pisztora"]
     type: "paper"
     relationship: "assumes"
-    note: "Probab. Theory Related Fields 104 (1996). The box estimate of Theorems 1.2 and 3.1, as recalled by Penrose and Pisztora (Adv. Appl. Probab. 28 (1996), p. 35), gives Proposition 2.3 of the paper for d >= 3 by a union bound; Proposition 2.3 is a literature input."
+    note: "Probab. Theory Related Fields 104 (1996). The box estimate of Theorems 1.2 and 3.1, as recalled by Penrose and Pisztora (Adv. Appl. Probab. 28 (1996), p. 35), gives Proposition 2.3 of the paper for d >= 3 by a union bound. For d >= 3 Proposition 2.3 is proved, with this estimate replaced by crossing estimates from slab connectivity (README, Well-connected cubes and finite clusters for d >= 3); the input reduces to its case d = 2."
   - title: "Surface order large deviations for 2D FK-percolation and Potts models"
     authors: ["Olivier Couronné", "Reda Jürg Messikh"]
     type: "paper"
@@ -282,7 +282,7 @@ review:
     in an independent model review. Eleven inputs are stated in their sources; the twelfth,
     Proposition 2.3 of the paper (WellConnectedInput), is stated by its cited sources only in
     single-scale forms and follows from Couronné and Messikh (d = 2) and Pisztora (d >= 3) by a union
-    bound. The inputs remain assumptions. The author fixed the scope, the
+    bound; its case d >= 3 is now proved in Lean. The inputs remain assumptions. The author fixed the scope, the
     corrections and the policy for literature inputs, but did not review every Lean statement personally.
     The statements of Theorems 1.1, 1.2, 1.3 and 6.5, and of the literature inputs they use, are also
     checked against self-contained challenge files by the comparator. This is a model review, not
