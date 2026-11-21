@@ -9,7 +9,10 @@ homogenized solution agrees with that of `w` on `Q`, gives the energy estimate (
 for the energies of the edges inside `Q` (`innerEdgeEnergy_patch_dirichletSolution_div_le`), with
 the mesoscopic hypotheses stated for the homogenized solution of `w` and all sums of `w` over the
 edges inside `Q`. Together with `innerEdgeEnergy_dirichletSolution_div_le_of_mu_test` (Lemma 6.2)
-both comparisons are for the same energy, as needed in the chain of Proposition 6.1.
+both comparisons are for the same energy, as needed in the chain of Proposition 6.1. The energy of
+the homogenized solution on the edges inside `Q` is at most that of its datum (the Dirichlet
+principle, `innerEdgeEnergy_dirichletSolution_le`), which bounds the face term of the estimate by
+`Λ/λ` times the squared gradient of the datum (`sum_sq_inner_grad_dirichletSolution_le`).
 -/
 
 open Finset LatticeProb LatticeHC
@@ -258,5 +261,61 @@ theorem innerEdgeEnergy_patch_dirichletSolution_div_le (hd : 0 < d) (a : Fin d �
       simp only [patch]
       rw [hagree x hx]]
   exact innerEdgeEnergy_le_edgeEnergy c hc0 Q _
+
+theorem innerEdgeEnergy_eq_sum_ite (c : Edge d → ℝ) (Q : IntegerCube d) (g : Vertex d → ℝ) :
+    innerEdgeEnergy c Q g = ∑ x ∈ Q.vertices, ∑ k : Fin d,
+      (if x + unit k ∈ Q.vertices then c (x, k) * (g (x + unit k) - g x) ^ 2 else 0) := by
+  rw [innerEdgeEnergy, Finset.sum_comm]
+  exact Finset.sum_congr rfl fun k _ => Finset.sum_filter _ _
+
+/-- **The Dirichlet principle on the edges inside `Q`.** -/
+theorem innerEdgeEnergy_dirichletSolution_le (hd : 1 ≤ d) (a : Fin d → ℝ) (ha : ∀ k, 0 < a k)
+    (Q : IntegerCube d) (w : Vertex d → ℝ) :
+    innerEdgeEnergy (constCond a) Q (dirichletSolution (constCond a) (cubeInterior Q) w) ≤
+      innerEdgeEnergy (constCond a) Q w := by
+  rw [← edgeEnergy_dirichletSolution_comp_cubeProj a Q w]
+  refine (edgeEnergy_dirichletSolution_le hd (constCond a) (fun e => ha e.2)
+    (coversEdges_cubeInterior Q) (fun y => w (cubeProj Q y)) (fun y => w (cubeProj Q y))
+    fun _ _ => rfl).trans (le_of_eq ?_)
+  rw [edgeEnergy, innerEdgeEnergy_eq_sum_ite]
+  exact sum_weighted_sq_grad_comp_cubeProj a Q (Finset.Subset.refl _) w
+
+/-- **The squared gradient of the homogenized solution inside `Q`**: for `λ ≤ a_k ≤ Λ`,
+`Σ_Q Σ_k [inner] (∇_k u_hom)² ≤ (Λ/λ) Σ_Q Σ_k [inner] (∇_k w)²`. -/
+theorem sum_sq_inner_grad_dirichletSolution_le (hd : 1 ≤ d) (a : Fin d → ℝ) {lam Λ : ℝ}
+    (hlam : 0 < lam) (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) (Q : IntegerCube d) (w : Vertex d → ℝ) :
+    ∑ x ∈ Q.vertices, ∑ k : Fin d, (if x + unit k ∈ Q.vertices then
+        (dirichletSolution (constCond a) (cubeInterior Q) w (x + unit k) -
+          dirichletSolution (constCond a) (cubeInterior Q) w x) ^ 2 else 0) ≤
+      Λ / lam * ∑ x ∈ Q.vertices, ∑ k : Fin d,
+        (if x + unit k ∈ Q.vertices then (w (x + unit k) - w x) ^ 2 else 0) := by
+  set u := dirichletSolution (constCond a) (cubeInterior Q) w
+  have hapos : ∀ k, 0 < a k := fun k => hlam.trans_le (ha k).1
+  have hP := innerEdgeEnergy_dirichletSolution_le hd a hapos Q w
+  rw [innerEdgeEnergy_eq_sum_ite, innerEdgeEnergy_eq_sum_ite] at hP
+  have h1 : lam * ∑ x ∈ Q.vertices, ∑ k : Fin d, (if x + unit k ∈ Q.vertices then
+      (u (x + unit k) - u x) ^ 2 else 0) ≤
+      ∑ x ∈ Q.vertices, ∑ k : Fin d, (if x + unit k ∈ Q.vertices then
+        constCond a (x, k) * (u (x + unit k) - u x) ^ 2 else 0) := by
+    rw [Finset.mul_sum]
+    refine Finset.sum_le_sum fun x _ => ?_
+    rw [Finset.mul_sum]
+    refine Finset.sum_le_sum fun k _ => ?_
+    split_ifs
+    · exact mul_le_mul_of_nonneg_right (ha k).1 (sq_nonneg _)
+    · rw [mul_zero]
+  have h2 : ∑ x ∈ Q.vertices, ∑ k : Fin d, (if x + unit k ∈ Q.vertices then
+      constCond a (x, k) * (w (x + unit k) - w x) ^ 2 else 0) ≤
+      Λ * ∑ x ∈ Q.vertices, ∑ k : Fin d,
+        (if x + unit k ∈ Q.vertices then (w (x + unit k) - w x) ^ 2 else 0) := by
+    rw [Finset.mul_sum]
+    refine Finset.sum_le_sum fun x _ => ?_
+    rw [Finset.mul_sum]
+    refine Finset.sum_le_sum fun k _ => ?_
+    split_ifs
+    · exact mul_le_mul_of_nonneg_right (ha k).2 (sq_nonneg _)
+    · rw [mul_zero]
+  rw [div_mul_eq_mul_div, le_div_iff₀ hlam, mul_comm]
+  linarith
 
 end Rigidity.Dirichlet
