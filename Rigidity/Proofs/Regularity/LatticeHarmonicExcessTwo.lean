@@ -345,4 +345,152 @@ theorem abs_sub_harmonicTaylor_two_le (hd : 0 < d) (f : (Fin d → ℤ) → ℝ)
   calc |(f x - T) + D| ≤ |f x - T| + |D| := abs_add_le _ _
     _ ≤ _ := add_le_add h1 (h2.trans h3)
 
+/-- The coefficient of `sq_fwd_fwd_fwd_le` at the scale `m`. -/
+noncomputable def thirdDiffCoeff (d m : ℕ) : ℝ :=
+  secondDiffCoeff d m * (16 * d / ((4 * (4 ^ d * (2 * m)) + 6 : ℕ) : ℝ) ^ 2)
+
+theorem thirdDiffCoeff_nonneg (d m : ℕ) : 0 ≤ thirdDiffCoeff d m := by
+  have := secondDiffCoeff_nonneg d m
+  unfold thirdDiffCoeff; positivity
+
+theorem corner_mem_supBox (z : Fin d → ℤ) (n : ℕ) : (fun i => z i - n) ∈ supBox z n := by
+  simp only [supBox, Fintype.mem_piFinset, mem_Icc]
+  intro i; omega
+
+theorem sub_unit_mem_supBox {z c : Fin d → ℤ} {n : ℕ} (hc : c ∈ supBox z n) (a : Fin d) :
+    c - unit a ∈ supBox z (n + 1) := by
+  rw [mem_supBox_iff_supDist_le] at hc ⊢
+  have e : c - unit a = c + (-1 : ℤ) • unit a := by rw [neg_smul, one_smul, sub_eq_add_neg]
+  rw [e]
+  exact (supDist_add_unit_le c z a (-1) (by norm_num)).trans (by omega)
+
+/-- **Excess decay of order two below the interior scale.** -/
+theorem ballExcess_two_le_of_latticeHarmonic [NeZero d] (z : Vertex d) {r s : ℝ} {m : ℕ}
+    (hm : 0 < m) (hbox : Real.sqrt d * ((4 * (4 * (4 ^ d * (2 * m)) + 4) + 5 : ℕ) : ℝ) < r)
+    (hsm : s + 1 ≤ m) (hs1 : 1 ≤ s) {v : latticeComponent d → ℝ}
+    (hv : v ∈ latticeHarmonicClass z r) {w : latticeComponent d → ℝ}
+    (hw : w ∈ latticeHarmonicQuadratic d) :
+    ballExcess (componentBallSeminorm (latticeComponent d) z) (latticeHarmonicQuadratic d) s v ≤
+      d * ((d + 1) * d + 1) * (2 * s) ^ 3 * Real.sqrt (thirdDiffCoeff d m *
+        (((componentEuclideanBall (latticeComponent d) z r).card : ℝ) *
+          componentBallL2 (latticeComponent d) z r (v - w) ^ 2)) := by
+  classical
+  have hd : 0 < d := Nat.pos_of_ne_zero (NeZero.ne d)
+  obtain ⟨F, hvF, hF⟩ := hv
+  have hW := hw.2
+  set f : (Fin d → ℤ) → ℝ := fun y => F y - latticeExt w y with hfdef
+  have hsd : 0 ≤ Real.sqrt d := Real.sqrt_nonneg _
+  have hf : ∀ x ∈ supBox z (4 * (4 * (4 ^ d * (2 * m)) + 4) + 5), latticeLaplacian f x = 0 := by
+    intro x hx
+    rw [hfdef, latticeLaplacian_sub, hW x, sub_zero]
+    exact hF x ((dist_le_of_mem_supBox hx).trans_lt hbox)
+  have hs0 : 0 ≤ s := by linarith
+  set n := ⌊s⌋₊ with hn
+  have hns : (n : ℝ) ≤ s := Nat.floor_le hs0
+  have hnm : n + 1 ≤ m := by
+    have : ((n + 1 : ℕ) : ℝ) ≤ m := by push_cast; linarith
+    exact_mod_cast this
+  set M := Real.sqrt (thirdDiffCoeff d m *
+    ∑ y ∈ supBox z (2 * (4 * (4 ^ d * (2 * m)) + 6) + 2), f y ^ 2) with hMdef
+  have hM0 : 0 ≤ M := Real.sqrt_nonneg _
+  have hM : ∀ y ∈ supBox z m, ∀ a b e, |fwd e (fwd a (fwd b f)) y| ≤ M := by
+    intro y hy a b e
+    apply Real.abs_le_sqrt
+    have := sq_fwd_fwd_fwd_le f z hm hf a b e hy
+    rw [thirdDiffCoeff, mul_assoc]
+    exact this
+  set c : Fin d → ℤ := fun i => z i - n with hc
+  have hcn : c ∈ supBox z n := corner_mem_supBox z n
+  have hρm : m ≤ 4 ^ d * (2 * m) := by
+    have := Nat.one_le_pow d 4 (by norm_num); nlinarith
+  have hΔc : latticeLaplacian f c = 0 := hf c (by
+    rw [mem_supBox_iff_supDist_le] at hcn ⊢; omega)
+  have hMc : ∀ a, |fwd a (fwd a (fwd a f)) (c - unit a)| ≤ M := fun a =>
+    hM _ (by
+      have := sub_unit_mem_supBox hcn a
+      rw [mem_supBox_iff_supDist_le] at this ⊢; omega) a a a
+  -- the harmonic quadratic and affine parts of the expansion at `c`
+  set g : (Fin d → ℤ) → ℝ := fun y => f y - halfQuad (hessAt f c) c y with hg
+  set q : EuclideanSpace ℝ (Fin d) := WithLp.toLp 2 fun i => fwd i g c with hq
+  set α := (f c - halfQuad (hessAt f c) c c) - ∑ i, (c i : ℝ) * fwd i g c with hα
+  have hQ : (fun x : latticeComponent d => halfQuad (harmHess f c) c x.val) ∈
+      latticeHarmonicQuadratic d :=
+    ⟨halfQuad_mem_clusterQuadratic (harmHess f c) c,
+      fun y => latticeLaplacian_halfQuad_harmHess hd f c y⟩
+  have hA : (fun x : latticeComponent d => α + inner ℝ q (latticeEuclideanEmbedding x.val)) ∈
+      latticeHarmonicQuadratic d :=
+    clusterAffine_le_latticeHarmonicQuadratic ⟨α, q, fun _ => rfl⟩
+  have hsum := (latticeHarmonicQuadratic d).add_mem ((latticeHarmonicQuadratic d).add_mem hw hQ) hA
+  refine (ballExcess_le _ _ hsum).trans ?_
+  rw [componentBallSeminorm_apply]
+  have hbound : 0 ≤ d * (d + 1) * ((2 * n : ℕ) : ℝ) ^ 2 * (d * ((2 * n : ℕ) : ℝ) * M) +
+      d * ((2 * n : ℕ) : ℝ) ^ 2 * M := by positivity
+  refine (componentBallL2_le_of_abs_le (latticeComponent d) z s hbound ?_).trans ?_
+  · intro x hx
+    have hxz := abs_sub_le_floor_of_mem_ball hx
+    have hcx : ∀ i, c i ≤ x.val i := fun i => by
+      have := abs_le.1 (hxz i); simp only [hc]; rw [← hn] at this; omega
+    have hs2 : ∀ i, x.val i - c i ≤ (2 * n : ℕ) := fun i => by
+      have := abs_le.1 (hxz i); simp only [hc]; rw [← hn] at this; push_cast; omega
+    have htay := abs_sub_harmonicTaylor_two_le hd f hcx hs2 hM0 (fun y hy a b e => hM y (by
+      rw [mem_supBox_iff_supDist_le]
+      simp only [supDist, Finset.sup_le_iff, mem_univ, true_implies]
+      intro i
+      have h1 := hy i
+      have h2 := abs_le.1 (hxz i)
+      simp only [hc] at h1
+      rw [← hn] at h2
+      omega) a b e) hMc hΔc
+    have hinner : inner ℝ q (latticeEuclideanEmbedding x.val) =
+        ∑ i, (x.val i : ℝ) * fwd i g c := by
+      rw [inner_eq_sum]
+      exact sum_congr rfl fun i _ => mul_comm _ _
+    have hsplit : ∑ i, ((x.val i - c i : ℤ) : ℝ) * fwd i g c =
+        ∑ i, (x.val i : ℝ) * fwd i g c - ∑ i, (c i : ℝ) * fwd i g c := by
+      rw [← sum_sub_distrib]
+      exact sum_congr rfl fun i _ => by push_cast; ring
+    have hfx : f x.val = F x.val - w x := rfl
+    have hval : (v - (w + (fun x : latticeComponent d => halfQuad (harmHess f c) c x.val) +
+        fun x : latticeComponent d => α + inner ℝ q (latticeEuclideanEmbedding x.val))) x =
+        f x.val - (halfQuad (harmHess f c) c x.val + (f c - halfQuad (hessAt f c) c c) +
+          ∑ i, ((x.val i - c i : ℤ) : ℝ) * fwd i g c) := by
+      show v x - (w x + halfQuad (harmHess f c) c x.val +
+        (α + inner ℝ q (latticeEuclideanEmbedding x.val))) = _
+      rw [hvF, hinner, hsplit, hfx, hα]
+      ring
+    rw [hval]
+    exact htay
+  · have hd0 : (0 : ℝ) ≤ d := Nat.cast_nonneg d
+    have ht : ((2 * n : ℕ) : ℝ) ≤ 2 * s := by push_cast; linarith
+    have ht0 : (0 : ℝ) ≤ ((2 * n : ℕ) : ℝ) := Nat.cast_nonneg _
+    have h3 : ((2 * n : ℕ) : ℝ) ^ 3 ≤ (2 * s) ^ 3 := pow_le_pow_left₀ ht0 ht 3
+    have h2 : ((2 * n : ℕ) : ℝ) ^ 2 ≤ (2 * s) ^ 3 :=
+      (pow_le_pow_left₀ ht0 ht 2).trans (pow_le_pow_right₀ (by linarith) (by norm_num))
+    have hle : d * (d + 1) * ((2 * n : ℕ) : ℝ) ^ 2 * (d * ((2 * n : ℕ) : ℝ) * M) +
+        d * ((2 * n : ℕ) : ℝ) ^ 2 * M ≤ d * ((d + 1) * d + 1) * (2 * s) ^ 3 * M := by
+      have e1 : d * (d + 1) * ((2 * n : ℕ) : ℝ) ^ 2 * (d * ((2 * n : ℕ) : ℝ) * M) +
+          d * ((2 * n : ℕ) : ℝ) ^ 2 * M = (d * (d + 1) * d * M) * ((2 * n : ℕ) : ℝ) ^ 3 +
+            (d * M) * ((2 * n : ℕ) : ℝ) ^ 2 := by ring
+      have e2 : d * ((d + 1) * d + 1) * (2 * s) ^ 3 * M =
+          (d * (d + 1) * d * M) * (2 * s) ^ 3 + (d * M) * (2 * s) ^ 3 := by ring
+      rw [e1, e2]
+      exact add_le_add (mul_le_mul_of_nonneg_left h3 (by positivity))
+        (mul_le_mul_of_nonneg_left h2 (by positivity))
+    have hMle : M ≤ Real.sqrt (thirdDiffCoeff d m *
+        (((componentEuclideanBall (latticeComponent d) z r).card : ℝ) *
+          componentBallL2 (latticeComponent d) z r (v - w) ^ 2)) := by
+      apply Real.sqrt_le_sqrt
+      apply mul_le_mul_of_nonneg_left _ (thirdDiffCoeff_nonneg d m)
+      rw [← sum_sq_eq_card_mul_componentBallL2_sq]
+      have hL : Real.sqrt d * ((2 * (4 * (4 ^ d * (2 * m)) + 6) + 2 : ℕ) : ℝ) < r := by
+        refine lt_of_le_of_lt (mul_le_mul_of_nonneg_left ?_ hsd) hbox
+        exact_mod_cast (by omega : 2 * (4 * (4 ^ d * (2 * m)) + 6) + 2 ≤
+          4 * (4 * (4 ^ d * (2 * m)) + 4) + 5)
+      have hball := sum_sq_supBox_le_ball z hL f
+      refine hball.trans (le_of_eq (sum_congr rfl fun x _ => ?_))
+      rw [Pi.sub_apply, hvF]
+      rfl
+    calc _ ≤ d * ((d + 1) * d + 1) * (2 * s) ^ 3 * M := hle
+      _ ≤ _ := mul_le_mul_of_nonneg_left hMle (by positivity)
+
 end Rigidity.Proofs.Regularity
