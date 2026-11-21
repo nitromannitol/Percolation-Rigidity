@@ -143,4 +143,169 @@ theorem le_card_filter_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex 
   rw [Finset.mem_filter, mem_componentEuclideanBall]
   exact ⟨hin x.val hx.2, hP x (dist_le_of_mem_triadicCube_round m w hx.2)⟩
 
+/-- **Volume comparison of cluster balls** from the density in cubes. -/
+theorem clusterBallVolumeComparison_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex d)
+    {ℓ R κ : ℝ} (hd : 0 < d) (hκ : 0 < κ) (hcube : ClusterCubeDensity C z ℓ R κ) :
+    ClusterBallVolumeComparison C z (6 * Real.sqrt d * max ℓ 1) R
+      ((5 * (6 * Real.sqrt d)) ^ d / κ) := by
+  classical
+  intro s r hs hsr hrR
+  have hsd : 0 < Real.sqrt d := Real.sqrt_pos.2 (Nat.cast_pos.2 hd)
+  have hmax1 : 1 ≤ max ℓ 1 := le_max_right _ _
+  have hs6 : 6 * Real.sqrt d ≤ s := by nlinarith
+  have hsℓ : 6 * Real.sqrt d * ℓ ≤ s :=
+    (mul_le_mul_of_nonneg_left (le_max_left _ _) (by positivity)).trans hs
+  have hs0 : 0 < s := by linarith
+  have hsd1 : 1 ≤ Real.sqrt d := Real.one_le_sqrt.2 (Nat.one_le_cast.2 hd)
+  have hs1 : 1 ≤ s := by linarith
+  have hx : 1 ≤ s / (2 * Real.sqrt d) := by rw [le_div_iff₀ (by positivity)]; linarith
+  obtain ⟨m, hm1, hm2⟩ := exists_nat_pow_near hx (by norm_num : (1 : ℝ) < 3)
+  have h3m : s / (6 * Real.sqrt d) < 3 ^ m := by
+    rw [pow_succ] at hm2
+    rw [div_lt_iff₀ (by positivity)]
+    rw [div_lt_iff₀ (by positivity)] at hm2
+    linarith
+  have hℓ : ℓ ≤ 3 ^ m := by
+    refine le_trans ?_ h3m.le
+    rw [le_div_iff₀ (by positivity)]; linarith
+  have hw : dist (latticeEuclideanEmbedding z) (latticeEuclideanEmbedding z) +
+      Real.sqrt d * 3 ^ m < s := by
+    rw [dist_self, zero_add]
+    rw [le_div_iff₀ (by positivity)] at hm1
+    linarith
+  have hcount := le_card_filter_of_clusterCubeDensity C z hcube hℓ hw (hsr.trans hrR)
+    (fun _ => True) fun _ _ => trivial
+  rw [Finset.filter_true] at hcount
+  have hr1 : 1 ≤ r := hs1.trans hsr
+  have h1 : ((componentEuclideanBall C z r).card : ℝ) ≤ (5 * r) ^ d :=
+    (card_componentEuclideanBall_le C z (by linarith)).trans
+      (pow_le_pow_left₀ (by linarith) (by linarith) d)
+  have h2 : (5 * r) ^ d = (5 * (6 * Real.sqrt d)) ^ d * (r / s) ^ d *
+      (s / (6 * Real.sqrt d)) ^ d := by
+    rw [← mul_pow, ← mul_pow]
+    congr 1
+    field_simp
+  have h3 : (s / (6 * Real.sqrt d)) ^ d ≤ (3 ^ m) ^ d :=
+    pow_le_pow_left₀ (by positivity) h3m.le d
+  have h4 : (3 : ℝ) ^ (d * m) = (3 ^ m) ^ d := by rw [show d * m = m * d from mul_comm d m, pow_mul]
+  rw [h4] at hcount
+  have hA : 0 ≤ (5 * (6 * Real.sqrt d)) ^ d * (r / s) ^ d := by positivity
+  calc ((componentEuclideanBall C z r).card : ℝ)
+      ≤ (5 * (6 * Real.sqrt d)) ^ d * (r / s) ^ d * (3 ^ m) ^ d := by
+        rw [h2] at h1
+        exact h1.trans (mul_le_mul_of_nonneg_left h3 hA)
+    _ = (5 * (6 * Real.sqrt d)) ^ d / κ * (r / s) ^ d * (κ * (3 ^ m) ^ d) := by
+        field_simp
+    _ ≤ (5 * (6 * Real.sqrt d)) ^ d / κ * (r / s) ^ d *
+        ((componentEuclideanBall C z s).card : ℝ) :=
+        mul_le_mul_of_nonneg_left hcount (by positivity)
+
+theorem inner_smul_inv_norm_self (p : EuclideanSpace ℝ (Fin d)) (c : ℝ) :
+    inner ℝ p ((c * ‖p‖⁻¹) • p) = c * ‖p‖ := by
+  rw [real_inner_smul_right, real_inner_self_eq_norm_sq]
+  rcases eq_or_ne ‖p‖ 0 with h | h
+  · rw [h]; simp
+  · field_simp
+
+theorem norm_smul_inv_norm_self_le (p : EuclideanSpace ℝ (Fin d)) {c : ℝ} (hc : 0 ≤ c) :
+    ‖(c * ‖p‖⁻¹) • p‖ ≤ c := by
+  rw [norm_smul, Real.norm_eq_abs, abs_mul, abs_of_nonneg hc, abs_inv, abs_norm]
+  rcases eq_or_ne ‖p‖ 0 with h | h
+  · rw [h]; simp [hc]
+  · rw [mul_assoc, inv_mul_cancel₀ h, mul_one]
+
+/-- **Cap density of cluster balls** from the density in cubes. -/
+theorem clusterBallCapDensity_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex d)
+    {ℓ R κ : ℝ} (hd : 0 < d) (hκ : 0 < κ) (hcube : ClusterCubeDensity C z ℓ R κ) :
+    ClusterBallCapDensity C z (24 * Real.sqrt d * max ℓ 1) R
+      (κ / (5 * (24 * Real.sqrt d)) ^ d) := by
+  classical
+  intro ρ hρ hρR
+  have hsd : 0 < Real.sqrt d := Real.sqrt_pos.2 (Nat.cast_pos.2 hd)
+  have hsd1 : 1 ≤ Real.sqrt d := Real.one_le_sqrt.2 (Nat.one_le_cast.2 hd)
+  have hmax1 : 1 ≤ max ℓ 1 := le_max_right _ _
+  have hρ24 : 24 * Real.sqrt d ≤ ρ := by nlinarith
+  have hρℓ : 24 * Real.sqrt d * ℓ ≤ ρ :=
+    (mul_le_mul_of_nonneg_left (le_max_left _ _) (by positivity)).trans hρ
+  have hρ0 : 0 < ρ := by linarith
+  have hρ1 : 1 ≤ ρ := by nlinarith
+  have hx : 1 ≤ ρ / (8 * Real.sqrt d) := by rw [le_div_iff₀ (by positivity)]; linarith
+  obtain ⟨m, hm1, hm2⟩ := exists_nat_pow_near hx (by norm_num : (1 : ℝ) < 3)
+  have h3m : ρ / (24 * Real.sqrt d) < 3 ^ m := by
+    rw [pow_succ] at hm2
+    rw [div_lt_iff₀ (by positivity)]
+    rw [div_lt_iff₀ (by positivity)] at hm2
+    linarith
+  have hℓ : ℓ ≤ 3 ^ m := by
+    refine le_trans ?_ h3m.le
+    rw [le_div_iff₀ (by positivity)]; linarith
+  have hsm : Real.sqrt d * 3 ^ m ≤ ρ / 8 := by
+    rw [le_div_iff₀ (by positivity)] at hm1
+    linarith
+  -- the count in a cap
+  have hcap : ∀ σ : ℝ, |σ| = 1 → ∀ p : EuclideanSpace ℝ (Fin d),
+      κ * 3 ^ (d * m) ≤ ((componentEuclideanBall C z ρ).filter fun x =>
+        ‖p‖ * ρ / 2 ≤ σ * inner ℝ p (latticeEuclideanEmbedding x.val -
+          latticeEuclideanEmbedding z)).card := by
+    intro σ hσ p
+    set w := latticeEuclideanEmbedding z + ((σ * (3 * ρ / 4)) * ‖p‖⁻¹) • p with hw
+    have hwz : dist w (latticeEuclideanEmbedding z) ≤ 3 * ρ / 4 := by
+      rw [hw, dist_eq_norm, add_sub_cancel_left]
+      calc ‖((σ * (3 * ρ / 4)) * ‖p‖⁻¹) • p‖ = |σ| * ‖((3 * ρ / 4) * ‖p‖⁻¹) • p‖ := by
+            rw [mul_assoc, ← smul_smul, norm_smul, Real.norm_eq_abs]
+        _ ≤ 3 * ρ / 4 := by
+            rw [hσ, one_mul]; exact norm_smul_inv_norm_self_le p (by positivity)
+    refine le_card_filter_of_clusterCubeDensity C z hcube hℓ (by linarith) hρR _ ?_
+    intro x hx
+    have hsplit : inner ℝ p (latticeEuclideanEmbedding x.val - latticeEuclideanEmbedding z) =
+        σ * (3 * ρ / 4) * ‖p‖ + inner ℝ p (latticeEuclideanEmbedding x.val - w) := by
+      have : latticeEuclideanEmbedding x.val - latticeEuclideanEmbedding z =
+          ((σ * (3 * ρ / 4)) * ‖p‖⁻¹) • p + (latticeEuclideanEmbedding x.val - w) := by
+        rw [hw]; abel
+      rw [this, inner_add_right, inner_smul_inv_norm_self]
+    have hcs : |inner ℝ p (latticeEuclideanEmbedding x.val - w)| ≤ ‖p‖ * (ρ / 8) := by
+      refine (abs_real_inner_le_norm _ _).trans (mul_le_mul_of_nonneg_left ?_ (norm_nonneg _))
+      rw [← dist_eq_norm]; linarith
+    rw [hsplit, mul_add, ← mul_assoc, ← mul_assoc, ← abs_mul_abs_self σ, hσ]
+    have hσi : |σ * inner ℝ p (latticeEuclideanEmbedding x.val - w)| ≤ ‖p‖ * (ρ / 8) := by
+      rw [abs_mul, hσ, one_mul]; exact hcs
+    have := (abs_le.1 hσi).1
+    nlinarith [mul_nonneg hρ0.le (norm_nonneg p)]
+  have hplus := hcap 1 abs_one
+  have hminus := hcap (-1) (by simp)
+  have hpos : 0 < (componentEuclideanBall C z ρ).card := by
+    have h0 := hplus 0
+    have : (0 : ℝ) < ((componentEuclideanBall C z ρ).card : ℝ) :=
+      (by positivity : (0 : ℝ) < κ * 3 ^ (d * m)).trans_le
+        (h0.trans (Nat.cast_le.2 (Finset.card_filter_le _ _)))
+    exact_mod_cast this
+  have hball : (κ / (5 * (24 * Real.sqrt d)) ^ d) *
+      ((componentEuclideanBall C z ρ).card : ℝ) ≤ κ * 3 ^ (d * m) := by
+    have h1 : ((componentEuclideanBall C z ρ).card : ℝ) ≤ (5 * ρ) ^ d :=
+      (card_componentEuclideanBall_le C z hρ0.le).trans
+        (pow_le_pow_left₀ (by linarith) (by linarith) d)
+    have h2 : (κ / (5 * (24 * Real.sqrt d)) ^ d) * (5 * ρ) ^ d =
+        κ * (ρ / (24 * Real.sqrt d)) ^ d := by
+      rw [div_mul_eq_mul_div, mul_div_assoc, ← div_pow]
+      congr 2
+      field_simp
+    have h3 : (ρ / (24 * Real.sqrt d)) ^ d ≤ (3 : ℝ) ^ (d * m) := by
+      rw [show d * m = m * d from mul_comm d m, pow_mul]
+      exact pow_le_pow_left₀ (by positivity) h3m.le d
+    calc (κ / (5 * (24 * Real.sqrt d)) ^ d) * ((componentEuclideanBall C z ρ).card : ℝ)
+        ≤ (κ / (5 * (24 * Real.sqrt d)) ^ d) * (5 * ρ) ^ d :=
+          mul_le_mul_of_nonneg_left h1 (by positivity)
+      _ = κ * (ρ / (24 * Real.sqrt d)) ^ d := h2
+      _ ≤ κ * 3 ^ (d * m) := mul_le_mul_of_nonneg_left h3 hκ.le
+  refine ⟨hpos, fun p => ⟨?_, ?_⟩⟩
+  · refine hball.trans ((hplus p).trans (le_of_eq ?_))
+    congr 2
+    ext x
+    simp
+  · refine hball.trans ((hminus p).trans (le_of_eq ?_))
+    congr 2
+    ext x
+    simp only [Finset.mem_filter, neg_mul, one_mul]
+    constructor <;> intro h <;> refine ⟨h.1, by linarith [h.2]⟩
+
 end Rigidity.Proofs.Regularity
