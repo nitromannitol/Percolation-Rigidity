@@ -11,7 +11,7 @@ project:
     that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov chain on
     the largest cluster of a box of radius n mixes in time of order n^d log n (Theorem 6.5). All 43
     numbered results that the paper proves are proved in Lean, from twelve results of the literature
-    that enter as explicit hypotheses; five of these inputs are also proved in Lean, and Theorem 6.5
+    that enter as explicit hypotheses; six of these inputs are also proved in Lean, and Theorem 6.5
     is proved with no literature hypothesis. The other five numbered results are quoted from the
     literature. Theorems 1.1, 1.2, 1.3 and 6.5 are independently checked by the comparator pairs
     under RigidityAudit/.
@@ -50,12 +50,18 @@ sources:
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
     relationship: "assumes"
-    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof), Proposition 2.12 and Proposition A.1 enter as literature inputs. Proposition A.1 is proved for d = 2, with an iteration of the Efron-Stein variance inequality over the moments in place of the concentration inequality of the source (README, Proposition 2.3 and the density concentration for d = 2)."
+    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs. Proposition A.1, also stated as a literature input, is proved (next entry)."
+  - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
+    authors: ["Paul Dario", "Chenlin Gu"]
+    type: "paper"
+    location: "Appendix A, Proposition A.1"
+    relationship: "independently-proves"
+    note: "Proposition A.1, the concentration of the density of the infinite cluster in triadic cubes (Rigidity.External.ClusterDensityConcentrationInput), is proved in every dimension (Rigidity.Proofs.S2.cluster_density_concentration), with an iteration of the Efron-Stein variance inequality over the moments in place of the exponential Efron-Stein inequality of the source and, for d >= 3, with the exponential decay of the radius of finite clusters in place of the volume tail of Kesten and Zhang, at the exponent 1/(floor((3d+3)/2)+1) >= 2(d-1)/(3d^2+2d-1) for d >= 3 and 1/7 >= 2/15 for d = 2 (README, Proposition 2.3 and the density concentration for d = 2, and Density concentration in every dimension)."
   - title: "Percolation"
     authors: ["Geoffrey Grimmett"]
     type: "book"
     relationship: "assumes"
-    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2. Theorem (8.21), the exponential decay of the radius of finite clusters, is proved for d >= 3 by a route through crossing estimates (README, Well-connected cubes and finite clusters for d >= 3)."
+    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2. Theorem (8.21), the exponential decay of the radius of finite clusters, is proved for d >= 3 by a route through crossing estimates (README, Well-connected cubes and finite clusters for d >= 3); it replaces the tail of Kesten and Zhang in the proof of the density concentration for d >= 3."
   - title: "Density and uniqueness in percolation"
     authors: ["Robert M. Burton", "Michael Keane"]
     type: "paper"
@@ -140,12 +146,11 @@ status:
     Twelve results of the literature are stated as propositions, seven in Rigidity/External/ and five
     in the directory LatticeProb/External/ of Lattice-Probability, each with its source in its
     docstring. They enter as explicit hypotheses of the theorems that use them, not as axioms;
-    README.md lists them with the results that use them. Five of them are proved in Lean
+    README.md lists them with the results that use them. Six of them are proved in Lean
     (Rigidity.Percolation.supercritical_bond_uniqueness, Rigidity.Smoothing.micciancio_regev_smoothing,
-    Rigidity.Percolation.kesten_rectangle_crossing, Rigidity.Topology.jordan_curve_theorem_sphere and
-    Rigidity.Percolation.wellConnected_input), and so is the case d = 2 of
-    Rigidity.External.ClusterDensityConcentrationInput
-    (Rigidity.Proofs.S2.planar_cluster_density_concentration). The library also declares
+    Rigidity.Percolation.kesten_rectangle_crossing, Rigidity.Topology.jordan_curve_theorem_sphere,
+    Rigidity.Percolation.wellConnected_input and Rigidity.Proofs.S2.cluster_density_concentration,
+    which proves Rigidity.External.ClusterDensityConcentrationInput). The library also declares
     Rigidity.External.AntalPisztoraChemicalDistance, which no numbered result uses.
   main_results:
     - declaration: "Rigidity.Assembly.Main.lipschitz"
@@ -295,8 +300,8 @@ review:
     in an independent model review. Eleven inputs are stated in their sources; the twelfth,
     Proposition 2.3 of the paper (WellConnectedInput), is stated by its cited sources only in
     single-scale forms and follows from Couronné and Messikh (d = 2) and Pisztora (d >= 3) by a union
-    bound; it is now proved in Lean in every dimension. Five inputs are proved in Lean, and the case
-    d = 2 of a sixth; the other inputs remain assumptions. The author fixed the scope, the
+    bound; it is now proved in Lean in every dimension. Six inputs are proved in Lean; the other six
+    remain assumptions. The author fixed the scope, the
     corrections and the policy for literature inputs, but did not review every Lean statement personally.
     The statements of Theorems 1.1, 1.2, 1.3 and 6.5, and of the literature inputs they use, are also
     checked against self-contained challenge files by the comparator. This is a model review, not
