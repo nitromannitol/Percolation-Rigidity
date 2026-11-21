@@ -281,27 +281,13 @@ private theorem sum_range_ite_succ_lt (L : ℕ) (h : ℕ → ℝ) :
   simp only [Finset.mem_filter, Finset.mem_range]
   omega
 
-/-- **The planar lattice Sobolev inequality on a square**: for every function `f` on a lattice
-square `B`, `∑_{x ∈ B} (f x - (f)_B)² ≤ 4 (∑_{x ∈ B} |∇f|(x))²`, with `|∇f|(x)` the magnitude of
-the lattice gradient on `B`. -/
-theorem IntegerCube.latticeSobolevOn_two (B : IntegerCube 2) (hB : 0 < B.size) :
-    LatticeSobolevOn B.vertices 2 1 4 := by
-  intro f
-  have hcard : (B.vertices.card : ℝ) = ((range B.size ×ˢ range B.size).card : ℝ) := by
-    rw [IntegerCube.card_vertices_eq, Finset.card_product, Finset.card_range]
-    push_cast
-    ring
-  have hmean : (∑ y ∈ B.vertices, f y) / B.vertices.card =
-      (∑ q ∈ range B.size ×ˢ range B.size, f (B.gridPoint q)) /
-        (range B.size ×ˢ range B.size).card := by
-    rw [B.sum_vertices_eq_sum_grid f, hcard]
-  have hvar : ∑ x ∈ B.vertices, |f x - (∑ y ∈ B.vertices, f y) / B.vertices.card| ^ (2 : ℝ) =
-      ∑ p ∈ range B.size ×ˢ range B.size, (f (B.gridPoint p) -
-        (∑ q ∈ range B.size ×ˢ range B.size, f (B.gridPoint q)) /
-          (range B.size ×ˢ range B.size).card) ^ 2 := by
-    rw [hmean, B.sum_vertices_eq_sum_grid]
-    refine Finset.sum_congr rfl fun p _ => ?_
-    rw [Real.rpow_two, sq_abs]
+/-- The row and column variations of a function on a lattice square are at most `√8` times the
+sum of the magnitudes of its lattice gradient on the square. -/
+theorem IntegerCube.sum_gridVar_le_sum_gradNormIn (B : IntegerCube 2) (f : Vertex 2 → ℝ) :
+    ∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k +
+      ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a ≤
+      √(2 * ((2 * 2 : ℕ) : ℝ)) *
+        ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x := by
   -- the two forward increments at a vertex
   have hE : ∀ x : Vertex 2,
       ((if x + LatticeProb.unit (0 : Fin 2) ∈ B.vertices then
@@ -392,6 +378,30 @@ theorem IntegerCube.latticeSobolevOn_two (B : IntegerCube 2) (hB : 0 < B.size) :
           |f x - f (x + LatticeProb.unit (1 : Fin 2))| else 0)), Finset.mul_sum]
     refine Finset.sum_le_sum fun x _ => (hE x).trans ?_
     exact sum_abs_adj_le_gradNormIn _ _ _ _ (LatticeProb.Graph.Zd.degree_eq x).le
+  exact hgrad
+
+/-- **The planar lattice Sobolev inequality on a square**: for every function `f` on a lattice
+square `B`, `∑_{x ∈ B} (f x - (f)_B)² ≤ 4 (∑_{x ∈ B} |∇f|(x))²`, with `|∇f|(x)` the magnitude of
+the lattice gradient on `B`. -/
+theorem IntegerCube.latticeSobolevOn_two (B : IntegerCube 2) (hB : 0 < B.size) :
+    LatticeSobolevOn B.vertices 2 1 4 := by
+  intro f
+  have hcard : (B.vertices.card : ℝ) = ((range B.size ×ˢ range B.size).card : ℝ) := by
+    rw [IntegerCube.card_vertices_eq, Finset.card_product, Finset.card_range]
+    push_cast
+    ring
+  have hmean : (∑ y ∈ B.vertices, f y) / B.vertices.card =
+      (∑ q ∈ range B.size ×ˢ range B.size, f (B.gridPoint q)) /
+        (range B.size ×ˢ range B.size).card := by
+    rw [B.sum_vertices_eq_sum_grid f, hcard]
+  have hvar : ∑ x ∈ B.vertices, |f x - (∑ y ∈ B.vertices, f y) / B.vertices.card| ^ (2 : ℝ) =
+      ∑ p ∈ range B.size ×ˢ range B.size, (f (B.gridPoint p) -
+        (∑ q ∈ range B.size ×ˢ range B.size, f (B.gridPoint q)) /
+          (range B.size ×ˢ range B.size).card) ^ 2 := by
+    rw [hmean, B.sum_vertices_eq_sum_grid]
+    refine Finset.sum_congr rfl fun p _ => ?_
+    rw [Real.rpow_two, sq_abs]
+  have hgrad := B.sum_gridVar_le_sum_gradNormIn f
   have hX0 : 0 ≤ ∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k +
       ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a :=
     add_nonneg (Finset.sum_nonneg fun _ _ => gridRowVar_nonneg _ _ _)
@@ -412,5 +422,68 @@ theorem IntegerCube.latticeSobolevOn_two (B : IntegerCube 2) (hB : 0 < B.size) :
     _ = 4 * (∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x) ^ 2 := by
         rw [mul_pow, h8]
         ring
+
+/-- **The planar grid Sobolev inequality with zero boundary values.** If `F` vanishes on the first
+row and on the first column of `{0, …, L-1}²`, then
+`∑_p F(p)² ≤ (∑_k rowVar k) (∑_a colVar a)`. -/
+theorem sum_sq_le_grid_of_eq_zero (L : ℕ) (F : ℕ × ℕ → ℝ) (hrow : ∀ k < L, F (0, k) = 0)
+    (hcol : ∀ a < L, F (a, 0) = 0) :
+    ∑ p ∈ range L ×ˢ range L, F p ^ 2 ≤
+      (∑ k ∈ range L, gridRowVar F L k) * ∑ a ∈ range L, gridColVar F L a := by
+  have hpt : ∀ p ∈ range L ×ˢ range L, F p ^ 2 ≤ gridRowVar F L p.2 * gridColVar F L p.1 := by
+    rintro ⟨a, k⟩ hp
+    rw [Finset.mem_product, Finset.mem_range, Finset.mem_range] at hp
+    have hL : 0 < L := by omega
+    have h1 : |F (a, k)| ≤ gridRowVar F L k := by
+      have h := abs_sub_le_sum_range_abs_sub (fun b => F (b, k)) hp.1 hL
+      simpa [hrow k hp.2, gridRowVar] using h
+    have h2 : |F (a, k)| ≤ gridColVar F L a := by
+      have h := abs_sub_le_sum_range_abs_sub (fun b => F (a, b)) hp.2 hL
+      simpa [hcol a hp.1, gridColVar] using h
+    rw [← sq_abs, sq]
+    exact mul_le_mul h1 h2 (abs_nonneg _) (gridRowVar_nonneg _ _ _)
+  calc ∑ p ∈ range L ×ˢ range L, F p ^ 2
+      ≤ ∑ p ∈ range L ×ˢ range L, gridRowVar F L p.2 * gridColVar F L p.1 :=
+        Finset.sum_le_sum hpt
+    _ = _ := by rw [Finset.sum_product, Finset.sum_mul_sum, Finset.sum_comm]
+
+/-- **The planar lattice Sobolev inequality with zero boundary values**: a function on a lattice
+square vanishing on its lower faces satisfies `∑_{x ∈ B} f(x)² ≤ 2 (∑_{x ∈ B} |∇f|(x))²`. -/
+theorem IntegerCube.sum_sq_le_of_eq_zero_on_lowerFaces (B : IntegerCube 2) (f : Vertex 2 → ℝ)
+    (h0 : ∀ x ∈ B.lowerFace 0, f x = 0) (h1 : ∀ x ∈ B.lowerFace 1, f x = 0) :
+    ∑ x ∈ B.vertices, f x ^ 2 ≤
+      2 * (∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x) ^ 2 := by
+  have hrow : ∀ k < B.size, f (B.gridPoint (0, k)) = 0 := by
+    intro k hk
+    refine h0 _ ((IntegerCube.mem_lowerFace _ _ _).2 ⟨IntegerCube.gridPoint_mem ?_, ?_⟩)
+    · rw [Finset.mem_product, Finset.mem_range, Finset.mem_range]
+      omega
+    · rw [B.gridPoint_apply_zero]
+      simp
+  have hcol : ∀ a < B.size, f (B.gridPoint (a, 0)) = 0 := by
+    intro a ha
+    refine h1 _ ((IntegerCube.mem_lowerFace _ _ _).2 ⟨IntegerCube.gridPoint_mem ?_, ?_⟩)
+    · rw [Finset.mem_product, Finset.mem_range, Finset.mem_range]
+      omega
+    · rw [B.gridPoint_apply_one]
+      simp
+  have hgrid := sum_sq_le_grid_of_eq_zero B.size (fun p => f (B.gridPoint p)) hrow hcol
+  have hgrad := B.sum_gridVar_le_sum_gradNormIn f
+  have hR0 : 0 ≤ ∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k :=
+    Finset.sum_nonneg fun _ _ => gridRowVar_nonneg _ _ _
+  have hC0 : 0 ≤ ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a :=
+    Finset.sum_nonneg fun _ _ => gridColVar_nonneg _ _ _
+  have h8 : (√(2 * ((2 * 2 : ℕ) : ℝ))) ^ 2 = 8 := by
+    rw [Real.sq_sqrt (by positivity)]
+    norm_num
+  rw [B.sum_vertices_eq_sum_grid]
+  refine hgrid.trans ?_
+  set a := ∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k
+  set c := ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a
+  set Y := ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x
+  have hsq : (a + c) ^ 2 ≤ (√(2 * ((2 * 2 : ℕ) : ℝ)) * Y) ^ 2 :=
+    pow_le_pow_left₀ (add_nonneg hR0 hC0) hgrad 2
+  rw [mul_pow, h8] at hsq
+  nlinarith [sq_nonneg (a - c)]
 
 end Rigidity.Percolation
