@@ -104,4 +104,57 @@ theorem exists_planarOmegaD_le_pow_of_decay {p : unitInterval}
     hρ₉ hρμ (planarTau_nonneg p) h1' h2' h3'
   exact ⟨K, l, hl0, hl1, N, hK⟩
 
+/-- **Geometric decay of `τ_n` from the bound of Lemma 5.9** (Armstrong and Dario, Step 4 of the
+proof of Lemma 5.10, in dimension two): `c τ_n ≤ D_n - D_{n+1} + C εₙ`. -/
+theorem exists_planarTau_le_pow_of_decay {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) {C₉ σ₉ ρ₉ : ℝ} {N₉ : ℕ} (hC₉ : 0 ≤ C₉) (hσ₉ : 0 ≤ σ₉)
+    (hσ₉1 : σ₉ < 1) (hρ₉ : 0 ≤ ρ₉) (hρ₉1 : ρ₉ < 1)
+    (h59 : ∀ n, N₉ ≤ n → planarOmegaD p n ≤
+      C₉ * σ₉ ^ n + C₉ * ∑ l ∈ Finset.range (n + 1), ρ₉ ^ (n - l) * planarTau p l) :
+    ∃ K l : ℝ, 0 < l ∧ l < 1 ∧ ∃ N : ℕ, ∀ n, N ≤ n → planarTau p n ≤ K * l ^ n := by
+  obtain ⟨K₁, l₁, hl₁0, hl₁1, N₁, hD⟩ :=
+    exists_planarOmegaD_le_pow_of_decay hpc hC₉ hσ₉ hσ₉1 hρ₉ hρ₉1 h59
+  obtain ⟨c, hc, C₁, hC₁, c', hc', N₂, h1⟩ := exists_planarOmegaD_succ_le hpc
+  obtain ⟨C₂, hC₂, N₃, h2⟩ := exists_neg_le_planarOmegaD hpc
+  have hsq3 : 1 < Real.sqrt 3 := by
+    rw [show (1 : ℝ) = Real.sqrt 1 from Real.sqrt_one.symm]
+    exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+  have hr1 : 1 / Real.sqrt 3 < 1 := (div_lt_one (by positivity)).2 hsq3
+  have he1 : Real.exp (-c') < 1 := by simpa using Real.exp_lt_exp.2 (neg_lt_zero.2 hc')
+  set σ := max l₁ (max (1 / Real.sqrt 3) (Real.exp (-c'))) with hσdef
+  have hσ1 : σ < 1 := max_lt hl₁1 (max_lt hr1 he1)
+  have hσ0 : 0 < σ := lt_of_lt_of_le hl₁0 (le_max_left _ _)
+  have hlσ : l₁ ≤ σ := le_max_left _ _
+  have hrσ : 1 / Real.sqrt 3 ≤ σ := le_max_of_le_right (le_max_left _ _)
+  have heσ : Real.exp (-c') ≤ σ := le_max_of_le_right (le_max_right _ _)
+  refine ⟨(max K₁ 0 + C₂ + 2 * C₁) / c, σ, hσ0, hσ1, max N₁ (max N₂ N₃), fun n hn => ?_⟩
+  have hn1 : N₁ ≤ n := le_trans (le_max_left _ _) hn
+  have hn2 : N₂ ≤ n := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hn
+  have hn3 : N₃ ≤ n := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hn
+  have a1 := h1 n hn2
+  have a2 := hD n hn1
+  have a3 := h2 (n + 1) (by omega)
+  have he := planarError_le_two_mul_pow hc' hrσ heσ n
+  have hσn : 0 ≤ σ ^ n := pow_nonneg hσ0.le n
+  have b1 : K₁ * l₁ ^ n ≤ max K₁ 0 * σ ^ n := by
+    have : l₁ ^ n ≤ σ ^ n := pow_le_pow_left₀ hl₁0.le hlσ n
+    have hl : 0 ≤ l₁ ^ n := pow_nonneg hl₁0.le n
+    calc K₁ * l₁ ^ n ≤ max K₁ 0 * l₁ ^ n := mul_le_mul_of_nonneg_right (le_max_left _ _) hl
+      _ ≤ max K₁ 0 * σ ^ n := mul_le_mul_of_nonneg_left this (le_max_right _ _)
+  have b2 : C₂ * (1 / Real.sqrt ((3 : ℝ) ^ (n + 1))) ≤ C₂ * σ ^ n := by
+    refine mul_le_mul_of_nonneg_left ?_ hC₂
+    rw [sqrt_three_pow, ← one_div_pow]
+    calc (1 / Real.sqrt 3) ^ (n + 1) ≤ σ ^ (n + 1) := pow_le_pow_left₀ (by positivity) hrσ _
+      _ ≤ σ ^ n := pow_le_pow_of_le_one hσ0.le hσ1.le (Nat.le_succ n)
+  have b3 : C₁ * (1 / Real.sqrt ((3 : ℝ) ^ n) + Real.exp (-c' * (3 : ℝ) ^ n)) ≤
+      2 * C₁ * σ ^ n := by
+    have := mul_le_mul_of_nonneg_left he hC₁
+    linarith
+  have key : c * planarTau p n ≤ (max K₁ 0 + C₂ + 2 * C₁) * σ ^ n := by
+    have : (max K₁ 0 + C₂ + 2 * C₁) * σ ^ n = max K₁ 0 * σ ^ n + C₂ * σ ^ n + 2 * C₁ * σ ^ n := by
+      ring
+    linarith
+  rw [div_mul_eq_mul_div, le_div_iff₀ hc]
+  linarith
+
 end Rigidity.Percolation
