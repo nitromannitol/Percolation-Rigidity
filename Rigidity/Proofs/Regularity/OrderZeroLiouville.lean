@@ -11,7 +11,8 @@ dimension one, and a function harmonic in `B_R` is approximated on every `B_r`,
 approximating functions are constants (as in `armstrongDario_orderZero_origin_cluster`), the first
 part follows from the second: for `u ∈ 𝒜_0` the distance of `u` to the constants on `B_r` is at most
 `C r ‖u‖_{L̲²(B_R)} / R → 0`, so `u` is constant on every ball, hence constant
-(`harmonicGrowthSpace_zero_eq_span_of_decay`, `finrank_harmonicGrowthSpace_zero_of_decay`).
+(`harmonicGrowthSpace_zero_eq_span_of_decay`, `finrank_harmonicGrowthSpace_zero_of_decay`), and
+the decay with constants gives the full order-zero statement (`orderZero_regularity_of_decay`).
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -160,5 +161,24 @@ theorem finrank_harmonicGrowthSpace_zero_of_decay (C : OpenComponent ω) [Nonemp
     simp at this
   rw [h]
   exact ⟨inferInstance, finrank_span_singleton hne⟩
+
+/-- **The order-zero regularity on a cluster from the decay with constants**: the conclusion of
+Armstrong–Dario, Theorem 2 (iii) for `k = 0` on the cluster `C` centred at `0` (the form of
+`Rigidity.External.ArmstrongDarioOrderZeroTwo` for one configuration): `𝒜_0` has dimension one and
+every function harmonic in `B_R`, `R ≥ 2 X`, is within `K (r / R) ‖u‖_{L̲²(B_R)}` of an element of
+`𝒜_0` on every `B_r`, `X ≤ r ≤ R / 2`. -/
+theorem orderZero_regularity_of_decay (C : OpenComponent ω) [Nonempty C] {X K : ℝ}
+    (hdecay : ∀ R : ℝ, 2 * X ≤ R → ∀ u : C → ℝ, IsHarmonicInBall C R u →
+      ∃ c : ℝ, ∀ r : ℝ, X ≤ r → r ≤ R / 2 →
+        componentBallL2 C 0 r (u - fun _ => c) ≤ K * (r / R) * componentBallL2 C 0 R u) :
+    FiniteDimensional ℝ (harmonicGrowthSpace C 0) ∧
+      Module.finrank ℝ (harmonicGrowthSpace C 0) = 1 ∧
+      ∀ R : ℝ, 2 * X ≤ R → ∀ u : C → ℝ, IsHarmonicInBall C R u →
+        ∃ φ : C → ℝ, φ ∈ harmonicGrowthSpace C 0 ∧ ∀ r : ℝ, X ≤ r → r ≤ R / 2 →
+          componentBallL2 C 0 r (u - φ) ≤ K * (r / R) * componentBallL2 C 0 R u := by
+  obtain ⟨h1, h2⟩ := finrank_harmonicGrowthSpace_zero_of_decay C hdecay
+  refine ⟨h1, h2, fun R hR u hu => ?_⟩
+  obtain ⟨c, hc⟩ := hdecay R hR u hu
+  exact ⟨fun _ => c, const_mem_harmonicGrowthSpace C 0 c, hc⟩
 
 end Rigidity.Proofs.Regularity
