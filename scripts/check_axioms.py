@@ -93,6 +93,10 @@ further = {
         ['Rigidity.Proofs.S2.cluster_density_concentration',
          'Rigidity.Assembly.WithProvedDensity.green_gradient_homogenization',
          'Rigidity.Assembly.WithProvedDensity.fast_decay'],
+    'Planar Green-column existence and Theorem 1.3 from five dimension-two inputs':
+        ['Rigidity.Proofs.Section5.planar_greenColumn_exists',
+         'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_planar_estimates'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

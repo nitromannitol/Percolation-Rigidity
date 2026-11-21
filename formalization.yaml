@@ -150,8 +150,13 @@ status:
     (Rigidity.Percolation.supercritical_bond_uniqueness, Rigidity.Smoothing.micciancio_regev_smoothing,
     Rigidity.Percolation.kesten_rectangle_crossing, Rigidity.Topology.jordan_curve_theorem_sphere,
     Rigidity.Percolation.wellConnected_input and Rigidity.Proofs.S2.cluster_density_concentration,
-    which proves Rigidity.External.ClusterDensityConcentrationInput). The library also declares
-    Rigidity.External.AntalPisztoraChemicalDistance, which no numbered result uses.
+    which proves Rigidity.External.ClusterDensityConcentrationInput). In dimension two the existence
+    of Green columns, which Dario and Gu state without proof, is also proved
+    (Rigidity.Proofs.Section5.planar_greenColumn_exists); with the planar order-zero estimate it gives
+    the planar Green-column input, and
+    Rigidity.Assembly.WithPlanarInputs.fast_decay_of_planar_estimates derives Theorem 1.3 from five
+    planar inputs (the corrector, regularity and quantitative Green estimates in d = 2). The library
+    also declares Rigidity.External.AntalPisztoraChemicalDistance, which no numbered result uses.
   main_results:
     - declaration: "Rigidity.Assembly.Main.lipschitz"
       file: "Rigidity/Proofs/Assembly/Main.lean"
@@ -287,7 +292,11 @@ fidelity:
     the conditioning event and its lower bound on an outer measure; its printed proof has a gap,
     repaired in the corrected draft. Lemma 5.28 is stated for every edge (x_0, x_1) of the infinite
     cluster as in the proof of Lemma 5.27. Theorem 1.2 is proved directly, and Lemmas 4.7 and 4.9 are
-    derived from it.
+    derived from it. Where the Lean proof of a literature input or of a step toward one departs from
+    its source, README.md records the departure: for the density concentration and the planar Green
+    columns (Dario and Gu), and for the planar partition into good cubes and the subadditive
+    quantities (Armstrong and Dario, Lemmas 3.2 and 3.3 replaced by paths inside windows of the
+    ninefold squares, the set W of Lemma 4.8 made precise, and (4.14) proved in expectation).
 
 review:
   status: "model review"

@@ -292,7 +292,12 @@ The planar well-connectedness and cluster-density concentration estimates are su
 The variant `fast_decay_of_green_exists` assumes, in place of the planar Green-column existence and
 uniqueness, only the existence `Rigidity.External.SupercriticalBondGreenColumnExistsTwo`, stated in
 [`Rigidity/Proofs/Section5/PlanarGreenUniqueness.lean`](Rigidity/Proofs/Section5/PlanarGreenUniqueness.lean),
-and derives the uniqueness from order-zero regularity.
+and derives the uniqueness from order-zero regularity. This existence is proved
+([`planar_greenColumn_exists`](Rigidity/Proofs/Section5/PlanarGreenExistence.lean)), so
+[`fast_decay_of_planar_estimates`](Rigidity/Proofs/Assembly/PlanarGreenInputs.lean) assumes only
+five planar inputs: the qualitative and quantitative corrector estimates, order-zero and order-one
+regularity, and the quantitative Green estimate; see
+[Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -562,12 +567,71 @@ source, and it derives the stated exponent from them. The case `d = 2` is the pl
 previous section. The modules for `d ≥ 3` and every `d` follow the planar modules of the previous
 section; no code is copied from another repository.
 
+## Green columns and the coarse-grained cluster for d = 2
+
+For `d = 2` and `𝔭_c(2) < p < 1`, almost surely every vertex of the infinite cluster is the pole of
+a Green column. Dario and Gu state the existence of Green columns without proof (DG, p. 4 and
+p. 58); the Lean proof derives it from Kesten's rectangle-crossing estimate and Proposition 2.3,
+both proved. With the planar order-zero estimate, which gives the uniqueness, it supplies the
+planar Green-column input, and Theorem 1.3 follows from five planar inputs.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Section5.planar_greenColumn_exists`](Rigidity/Proofs/Section5/PlanarGreenExistence.lean) | `SupercriticalBondGreenColumnExistsTwo`: for each vertex `y`, almost surely, if `y` is in the infinite cluster there is a function `g` on the cluster with `−Δg = δ_y`, `g(y) = 0` and `g(x) = o(|x|)`. |
+| [`Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero`](Rigidity/Proofs/Assembly/PlanarGreenInputs.lean) | `SupercriticalBondGreenColumnExistenceTwo`, the existence and uniqueness of planar Green columns, from `ArmstrongDarioOrderZeroTwo`. |
+| [`Rigidity.Assembly.WithPlanarInputs.fast_decay_of_planar_estimates`](Rigidity/Proofs/Assembly/PlanarGreenInputs.lean) | Theorem 1.3, with the hypotheses `SupercriticalBondCorrectorInputTwo`, `CorrectorQuantitativeInputTwo`, `ArmstrongDarioOrderZeroTwo`, `ArmstrongDarioOrderOneOriginTwo` and `SupercriticalBondGreenQuantitativeTwo`. |
+
+The three theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`.
+
+1. **Green columns** ([`Rigidity/Proofs/Section5/PlanarGreenExistence.lean`](Rigidity/Proofs/Section5/PlanarGreenExistence.lean)
+   and the modules `CrossingFlow`, `PlanarCrossingEvents`, `PlanarPotentialSublinear`,
+   `WalkFamilyFlow` and `WellConnectedLink` of the same directory). The truncated potentials
+   `Σ_{t<n} (p_t(y, y) − p_t(x, y)) / deg y` are bounded by the energy of any unit flow from `y` to
+   `x` in the cluster, so a limit point is a Green column as soon as such flows exist with energy
+   `o(|x|)`. At the scale `L = 4ᵐ` with `4|x|_∞ ≤ L < 16|x|_∞`, almost surely for all large `m`,
+   the thin rectangles of width `m²` in `[−L, L]²` have open crossings in their long direction and
+   the well-connected cubes of side `m^q` join them; `2ᵐ` parallel crossings carry a unit flow from
+   `y` to `x` with energy at most `624 · 2ᵐ m^{3q+4} = o(4ᵐ)`. The effective resistance between `y`
+   and `x` is therefore `o(|x|)`; the logarithmic bound on the resistance is not used. Two Green
+   columns differ by a sublinear harmonic function, which is constant by the order-zero estimate
+   and vanishes at `y`.
+2. **The coarse-grained cluster** ([`Rigidity/Proofs/Percolation/`](Rigidity/Proofs/Percolation/),
+   from `PlanarTriadicMesh.lean` to `PlanarNuLowerBound.lean`, with `ClusterCoarsening.lean` and
+   `QuadraticVariation.lean`). The first steps of the proof of Theorem 2 of AD, from which
+   Theorems 2.4 and 2.5 are quoted, are proved in the plane: the partition of `ℤ²` into good
+   triadic squares (AD, Proposition 2.1), from strip meshes and Kesten crossings, with all moments
+   of the sizes of its squares finite; the coarsening of functions on the cluster by the anchors of
+   the partition squares, with its local error bounds; and the subadditive quantities `μ(U, q)` and
+   `ν(U, p)` on the cluster `C_*(U)` of a resolved triadic square `U` of side `L`: their first and
+   second variations (AD, Lemmas 4.1 and 4.2), the comparison of `μ` and `ν` ((4.11), Corollary 4.6
+   and Lemma 4.7), the bounds `E[−μ(U, q)] ≤ C|q|₁²` ((4.15)) and
+   `E[(μ(U, q) + |q|²/18)⁺] ≤ C|q|₁²/√L`, the subadditivity of `μ` and `ν` over the resolved
+   subsquares of side `3ⁿ` up to errors of expectation at most `C|q|₁²|U|/√(3ⁿ)` (Lemma 4.8, (4.17)
+   and (4.18)), and the lower bound `c|p|² ≤ E[ν(U, p)] + C|p|₁²/√L` ((4.14)). The planar
+   corrector and regularity inputs remain hypotheses.
+
+**Departures from Dario and Gu and from Armstrong and Dario.** The existence of Green columns,
+stated by Dario and Gu without proof, is proved by the effective-resistance argument above. AD,
+Lemmas 3.2 and 3.3, use paths from a vertex of the cluster of a partition cube to its anchor inside
+the neighbouring cubes of the partition, which they assert without proof; in the plane the Lean
+proof joins the vertices of `C_*(U)` and the anchors of adjacent partition squares by open paths
+inside windows contained in `U` and in the square of side `9s` around the partition square of side
+`s` (`PlanarWindows.lean`, `PlanarCubeCluster.lean`), and it bounds the weights of the coarsened
+gradient through the reach, the overlap of these squares (`PlanarCoarseWeights.lean`,
+`PlanarReachMoments.lean`), whose moments are all finite. In the proof of (4.18), the set `W` of
+edges near the boundaries of the subcubes `z + □ₙ` is the set of exceptional vertices: those whose
+subsquare `V(x)` of side `3ⁿ` is not resolved, or for which the square of side `9s` around their
+partition square leaves `V(x)`; they are counted through the boundary vertices of `V(x)`
+(`PlanarNuSubadditiveMoments.lean`). The lower bound (4.14) is proved in expectation, with a
+deterministic multiple `λp` of the slope in place of the random slope of AD
+(`PlanarNuLowerBound.lean`). No code is copied from another repository.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 64 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 67 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -578,8 +642,10 @@ section; no code is copied from another repository.
   [Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2),
   the two forms of Theorem 1.3 from dimension-two inputs, `WithPlanarInputs.fast_decay` and
   `WithPlanarInputs.fast_decay_of_green_exists`, and the three theorems of
-  [Density concentration in every dimension](#density-concentration-in-every-dimension).
-  Each of the 64 reports lists exactly `propext`, `Classical.choice` and
+  [Density concentration in every dimension](#density-concentration-in-every-dimension), and the
+  three theorems of
+  [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2).
+  Each of the 67 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -610,10 +676,10 @@ section; no code is copied from another repository.
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 815 Lean files with 140,790 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 854 Lean files with 150,233 lines, on top of mathlib and
 Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,205 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (114 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (121 lines) are counted separately.
 
 ## Building
 
@@ -681,6 +747,7 @@ Rigidity/
       Main.lean               the main theorems, from the regime and the literature inputs only
       Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
+      PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
     Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)
