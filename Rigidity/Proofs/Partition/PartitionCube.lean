@@ -113,7 +113,7 @@ theorem partitionCube_scales_close (hP : PartitionEvent ω) {x y : Vertex d}
     (partitionCube_spec hP x).1 (partitionCube_spec hP y).1 hnear
 
 /-- Lattice neighbours are at `ℓ∞` distance at most one. -/
-theorem abs_sub_le_one_of_nearestNeighbor_adj {x y : Vertex d}
+theorem abs_sub_coord_le_one_of_adj {x y : Vertex d}
     (h : (nearestNeighborGraph d).Adj x y) (i : Fin d) : |x i - y i| ≤ 1 := by
   obtain ⟨j, hj | hj⟩ := h <;> subst hj <;>
     by_cases hij : i = j <;> simp [LatticeProb.unit, hij]
