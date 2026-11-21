@@ -132,4 +132,188 @@ theorem abs_supDist_sub_le_one {x y : Fin d → ℤ} (hy : y ∈ nbrFinset x) (z
     rw [abs_le]
     constructor <;> linarith
 
+/-- Sums over the neighbours of `x`, direction by direction. -/
+theorem sum_nbrFinset (F : (Fin d → ℤ) → ℝ) (x : Fin d → ℤ) :
+    ∑ y ∈ nbrFinset x, F y = ∑ i, (F (x + unit i) + F (x - unit i)) := by
+  classical
+  rw [nbrFinset, sum_biUnion]
+  · exact sum_congr rfl fun i _ => sum_pair (unit_add_ne_sub x i)
+  · intro i _ j _ hij
+    simp only [Function.onFun, Finset.disjoint_left, Finset.mem_insert, Finset.mem_singleton]
+    rintro a (rfl | rfl) (h | h) <;>
+      · have h1 := congrFun h i
+        have h2 := congrFun h j
+        simp [unit, Pi.single_eq_same, Pi.single_eq_of_ne, hij] at h1 h2
+
+/-- Translating a sum of a nonnegative function into a larger finset. -/
+theorem sum_comp_add_le {S T : Finset (Fin d → ℤ)} (F : (Fin d → ℤ) → ℝ) (hF : ∀ y, 0 ≤ F y)
+    (v : Fin d → ℤ) (hST : ∀ x ∈ S, x + v ∈ T) : ∑ x ∈ S, F (x + v) ≤ ∑ y ∈ T, F y := by
+  classical
+  rw [← sum_image (f := F) (g := fun x => x + v) fun x _ y _ h => add_right_cancel h]
+  exact sum_le_sum_of_subset_of_nonneg (fun y hy => by
+    obtain ⟨x, hx, rfl⟩ := mem_image.1 hy; exact hST x hx) fun y _ _ => hF y
+
+theorem supDist_le_of_mem_nbrFinset {x y z : Fin d → ℤ} (hy : y ∈ nbrFinset x) :
+    supDist y z ≤ supDist x z + 1 := by
+  have h := abs_supDist_sub_le_one hy z
+  have : (supDist y z : ℝ) ≤ supDist x z + 1 := by linarith [(abs_le.1 h).2]
+  exact_mod_cast this
+
+/-- The cutoff `η = min 1 (max 0 ((2m - |x - z|_∞) / m))`. -/
+noncomputable def boxCutoff (z : Fin d → ℤ) (m : ℕ) (x : Fin d → ℤ) : ℝ :=
+  min 1 (max 0 ((2 * (m : ℝ) - supDist x z) / m))
+
+theorem boxCutoff_eq_one {z x : Fin d → ℤ} {m : ℕ} (hm : 0 < m) (hx : supDist x z ≤ m) :
+    boxCutoff z m x = 1 := by
+  have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+  have hx' : (supDist x z : ℝ) ≤ m := by exact_mod_cast hx
+  have : 1 ≤ (2 * (m : ℝ) - supDist x z) / m := by rw [le_div_iff₀ hm']; linarith
+  rw [boxCutoff, min_eq_left (this.trans (le_max_right _ _))]
+
+theorem boxCutoff_eq_zero {z x : Fin d → ℤ} {m : ℕ} (hm : 0 < m) (hx : 2 * m ≤ supDist x z) :
+    boxCutoff z m x = 0 := by
+  have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+  have hx' : 2 * (m : ℝ) ≤ supDist x z := by exact_mod_cast hx
+  have : (2 * (m : ℝ) - supDist x z) / m ≤ 0 := div_nonpos_of_nonpos_of_nonneg (by linarith) hm'.le
+  rw [boxCutoff, max_eq_left this, min_eq_right zero_le_one]
+
+theorem abs_boxCutoff_sub_le {z x y : Fin d → ℤ} {m : ℕ} (hm : 0 < m) (hy : y ∈ nbrFinset x) :
+    |boxCutoff z m y - boxCutoff z m x| ≤ 1 / m := by
+  have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+  have h1 := abs_min_sub_min_le_max (1 : ℝ) (max 0 ((2 * (m : ℝ) - supDist y z) / m)) 1
+    (max 0 ((2 * (m : ℝ) - supDist x z) / m))
+  rw [sub_self, abs_zero] at h1
+  have h2 := abs_max_sub_max_le_abs ((2 * (m : ℝ) - supDist y z) / m)
+    ((2 * (m : ℝ) - supDist x z) / m) 0
+  rw [max_comm _ (0 : ℝ), max_comm ((2 * (m : ℝ) - supDist x z) / m) 0] at h2
+  have h3 : |(2 * (m : ℝ) - supDist y z) / m - (2 * (m : ℝ) - supDist x z) / m| ≤ 1 / m := by
+    rw [← sub_div, abs_div, abs_of_pos hm', div_le_div_iff_of_pos_right hm']
+    have := abs_supDist_sub_le_one hy z
+    rw [abs_sub_comm] at this
+    calc |2 * (m : ℝ) - supDist y z - (2 * m - supDist x z)| = |(supDist x z : ℝ) - supDist y z| :=
+          by ring_nf
+      _ ≤ 1 := this
+  unfold boxCutoff
+  calc |min 1 (max 0 ((2 * (m : ℝ) - supDist y z) / m)) -
+        min 1 (max 0 ((2 * (m : ℝ) - supDist x z) / m))|
+      ≤ max 0 |max 0 ((2 * (m : ℝ) - supDist y z) / m) -
+          max 0 ((2 * (m : ℝ) - supDist x z) / m)| := h1
+    _ ≤ 1 / m := max_le (by positivity) (h2.trans h3)
+
+theorem boxCutoff_nonneg (z x : Fin d → ℤ) (m : ℕ) : 0 ≤ boxCutoff z m x :=
+  le_min zero_le_one (le_max_left _ _)
+
+/-- **Caccioppoli inequality** for lattice harmonic functions on sup-norm boxes:
+`∑_{x ∈ Q_m} ∑ᵢ (D_i f(x))² ≤ 16 d / m² ∑_{x ∈ Q_{2m+2}} f(x)²` if `Δ f = 0` on `Q_{2m}`. -/
+theorem caccioppoli_supBox (f : (Fin d → ℤ) → ℝ) (z : Fin d → ℤ) {m : ℕ} (hm : 0 < m)
+    (hharm : ∀ x ∈ supBox z (2 * m), latticeLaplacian f x = 0) :
+    ∑ x ∈ supBox z m, ∑ i, (f (x + unit i) - f x) ^ 2 ≤
+      16 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 := by
+  classical
+  have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+  set η := boxCutoff z m with hη
+  set S := supBox z (2 * m + 1)
+  set B := supBox z (2 * m)
+  have hBS : B ⊆ S := fun x hx => by
+    rw [mem_supBox_iff_supDist_le] at hx ⊢; omega
+  have hnb : ∀ x ∈ B, ∀ y, (lattice d).Adj x y → y ∈ S := by
+    intro x hx y hy
+    have hy' : y ∈ nbrFinset x := Graph.Zd.mem_nbrFinset.2 (Graph.Zd.adj_iff.1 hy)
+    rw [mem_supBox_iff_supDist_le] at hx ⊢
+    have := supDist_le_of_mem_nbrFinset (z := z) hy'
+    omega
+  have htest : ∀ x, x ∉ B → f x * η x ^ 2 = 0 := by
+    intro x hx
+    rw [mem_supBox_iff_supDist_le, not_le] at hx
+    rw [hη, boxCutoff_eq_zero hm (by omega)]; ring
+  have hf : ∀ x ∈ B, Network.netLaplacian (lattice d) (Network.unitCond (lattice d)) f x = 0 :=
+    fun x hx => by rw [netLaplacian_lattice]; exact hharm x hx
+  have key := Network.caccioppoli_of_support Network.isCond_unitCond S B f η hf htest hBS hnb
+  have hc : ∀ x, ∀ y ∈ (lattice d).neighborFinset x, Network.unitCond (lattice d) x y = 1 := by
+    intro x y hy
+    rw [Network.unitCond, if_pos ((SimpleGraph.mem_neighborFinset _ _ _).1 hy)]
+  -- the left side
+  have hlow : ∑ x ∈ supBox z m, ∑ i, (f (x + unit i) - f x) ^ 2 ≤
+      ∑ x ∈ S, ∑ y ∈ (lattice d).neighborFinset x,
+        Network.unitCond (lattice d) x y * (f x - f y) ^ 2 * η x ^ 2 := by
+    have hsub : supBox z m ⊆ S := fun x hx => by
+      rw [mem_supBox_iff_supDist_le] at hx ⊢; omega
+    refine le_trans ?_ (sum_le_sum_of_subset_of_nonneg hsub fun x _ _ => sum_nonneg fun y hy =>
+      by rw [hc x y hy]; positivity)
+    refine sum_le_sum fun x hx => ?_
+    rw [mem_supBox_iff_supDist_le] at hx
+    have hη1 : η x = 1 := boxCutoff_eq_one hm hx
+    have e : ∑ y ∈ (lattice d).neighborFinset x,
+        Network.unitCond (lattice d) x y * (f x - f y) ^ 2 * η x ^ 2 =
+          ∑ y ∈ (lattice d).neighborFinset x, (f x - f y) ^ 2 :=
+      sum_congr rfl fun y hy => by rw [hc x y hy, hη1]; ring
+    rw [e, Graph.Zd.neighborFinset_eq, sum_nbrFinset]
+    refine sum_le_sum fun i _ => ?_
+    have := sq_nonneg (f x - f (x - unit i))
+    nlinarith [sq_nonneg (f x - f (x + unit i))]
+  -- the right side
+  have hup : ∑ x ∈ S, ∑ y ∈ (lattice d).neighborFinset x,
+        Network.unitCond (lattice d) x y * (f x ^ 2 + f y ^ 2) * (η x - η y) ^ 2 ≤
+      4 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 := by
+    have hpt : ∀ x ∈ S, ∑ y ∈ (lattice d).neighborFinset x,
+        Network.unitCond (lattice d) x y * (f x ^ 2 + f y ^ 2) * (η x - η y) ^ 2 ≤
+          1 / (m : ℝ) ^ 2 * ∑ i, (2 * f x ^ 2 + f (x + unit i) ^ 2 + f (x - unit i) ^ 2) := by
+      intro x _
+      rw [Graph.Zd.neighborFinset_eq]
+      have hb : ∀ y ∈ nbrFinset x, Network.unitCond (lattice d) x y * (f x ^ 2 + f y ^ 2) *
+          (η x - η y) ^ 2 ≤ 1 / (m : ℝ) ^ 2 * (f x ^ 2 + f y ^ 2) := by
+        intro y hy
+        rw [hc x y (by rw [Graph.Zd.neighborFinset_eq]; exact hy), one_mul]
+        have h1 := abs_boxCutoff_sub_le (z := z) hm hy
+        have h2 : (η x - η y) ^ 2 ≤ (1 / (m : ℝ)) ^ 2 := by
+          rw [← sq_abs, abs_sub_comm]
+          exact pow_le_pow_left₀ (abs_nonneg _) h1 2
+        rw [div_pow, one_pow] at h2
+        rw [mul_comm (1 / (m : ℝ) ^ 2)]
+        exact mul_le_mul_of_nonneg_left h2 (by positivity)
+      refine (sum_le_sum hb).trans (le_of_eq ?_)
+      rw [← mul_sum, sum_nbrFinset]
+      congr 1
+      refine sum_congr rfl fun i _ => ?_
+      ring
+    refine (sum_le_sum hpt).trans ?_
+    rw [← mul_sum, sum_comm]
+    have hS2 : ∀ x ∈ S, x ∈ supBox z (2 * m + 2) := fun x hx => by
+      rw [mem_supBox_iff_supDist_le] at hx ⊢; omega
+    have hshift : ∀ (v : Fin d → ℤ), v ∈ nbrFinset 0 → ∀ x ∈ S, x + v ∈ supBox z (2 * m + 2) := by
+      intro v hv x hx
+      rw [mem_supBox_iff_supDist_le] at hx ⊢
+      have hv' : x + v ∈ nbrFinset x := by
+        obtain ⟨i, h | h⟩ := Graph.Zd.mem_nbrFinset.1 hv
+        · exact Graph.Zd.mem_nbrFinset.2 ⟨i, Or.inl (by rw [h, zero_add])⟩
+        · exact Graph.Zd.mem_nbrFinset.2 ⟨i, Or.inr (by rw [h, zero_sub, ← sub_eq_add_neg])⟩
+      have := supDist_le_of_mem_nbrFinset (z := z) hv'
+      omega
+    have hT := sum_le_sum_of_subset_of_nonneg (f := fun x => f x ^ 2) (fun x hx => hS2 x hx)
+      fun x _ _ => sq_nonneg (f x)
+    have hplus : ∀ i, ∑ x ∈ S, f (x + unit i) ^ 2 ≤ ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 :=
+      fun i => sum_comp_add_le (fun y => f y ^ 2) (fun y => sq_nonneg _) _
+        (hshift _ (Graph.Zd.mem_nbrFinset.2 ⟨i, Or.inl (zero_add _).symm⟩))
+    have hminus : ∀ i, ∑ x ∈ S, f (x - unit i) ^ 2 ≤ ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 := by
+      intro i
+      have := sum_comp_add_le (S := S) (fun y => f y ^ 2) (fun y => sq_nonneg _) (-unit i)
+        (hshift _ (Graph.Zd.mem_nbrFinset.2 ⟨i, Or.inr (by rw [zero_sub])⟩))
+      simpa only [← sub_eq_add_neg] using this
+    have htot : ∑ i : Fin d, ∑ x ∈ S, (2 * f x ^ 2 + f (x + unit i) ^ 2 + f (x - unit i) ^ 2) ≤
+        ∑ _i : Fin d, 4 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 :=
+      sum_le_sum fun i _ => by
+        rw [sum_add_distrib, sum_add_distrib, ← mul_sum]
+        linarith [hplus i, hminus i]
+    rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul] at htot
+    have hm2 : 0 ≤ 1 / (m : ℝ) ^ 2 := by positivity
+    calc 1 / (m : ℝ) ^ 2 * ∑ i : Fin d, ∑ x ∈ S,
+          (2 * f x ^ 2 + f (x + unit i) ^ 2 + f (x - unit i) ^ 2)
+        ≤ 1 / (m : ℝ) ^ 2 * (d * (4 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2)) :=
+          mul_le_mul_of_nonneg_left htot hm2
+      _ = 4 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 := by ring
+  have := key.trans (mul_le_mul_of_nonneg_left hup (by norm_num : (0 : ℝ) ≤ 4))
+  calc ∑ x ∈ supBox z m, ∑ i, (f (x + unit i) - f x) ^ 2 ≤ _ := hlow
+    _ ≤ 4 * (4 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2) := this
+    _ = 16 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 := by ring
+
 end Rigidity.Proofs.Regularity
