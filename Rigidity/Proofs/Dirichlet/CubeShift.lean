@@ -5,7 +5,8 @@ import Rigidity.Proofs.Dirichlet.CubeStokes
 
 Two cubes of side `N` with corners `x` and `y` differ in at most `Σ_i |x_i − y_i| N^{d-1}` points
 each way. By Cauchy–Schwarz on the symmetric difference,
-`(N^{-d} (Σ_{x + □} h − Σ_{y + □} h))² ≤ (2 Σ_i |x_i − y_i| / N) N^{-d} (Σ_{x + □} h² + Σ_{y + □} h²)`.
+`(N^{-d} (Σ_{x + □} h − Σ_{y + □} h))² ≤
+  (2 Σ_i |x_i − y_i| / N) N^{-d} (Σ_{x + □} h² + Σ_{y + □} h²)`.
 
 This is Step 4 of the proof of Armstrong–Dario, Lemma 6.2: the mesoscopic averages
 `p(x) = |□_n|^{-1} Σ_{x + □_n} ∇w` at points at distance at most `3^k` differ by
@@ -35,7 +36,8 @@ theorem card_Ico_sdiff_Ico_le (a b : ℤ) (N : ℕ) :
   rw [Int.card_Ico, Int.card_Ico]
   omega
 
-/-- **Points of one cube missing from a translate**: `#(x + □ \ y + □) ≤ Σ_i |x_i − y_i| N^{d-1}`. -/
+/-- **Points of one cube missing from a translate**:
+`#(x + □ \ y + □) ≤ Σ_i |x_i − y_i| N^{d-1}`. -/
 theorem card_cornerCube_sdiff_le (x y : Vertex d) (N : ℕ) :
     #((cornerCube x N).vertices \ (cornerCube y N).vertices) ≤
       (∑ i, (x i - y i).natAbs) * N ^ (d - 1) := by

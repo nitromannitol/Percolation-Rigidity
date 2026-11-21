@@ -158,8 +158,8 @@ theorem coversEdges_cubeInterior (Q : IntegerCube d) :
 /-- **The homogenized half of Armstrong–Dario, Lemma 6.2, on the lattice**: for constant
 conductances `0 < a_k ≤ Λ`, the homogenized solution `u_hom` with datum `w` on the cube `Q`
 (of side `L`) satisfies, for `N, r ≥ 1`, `s ≥ 2` and `B ⊇ Q + {0, …, N − 1}^d`,
-`L^{-d} E_hom(u_hom) ≤ L^{-d} Σ_{Q ∖ layer} Σ_k a_k p_k² +
-  Λ (2d(r + 1)/L)^{1 − 2/s} (d^{s/2−1} 3^{s−1} (1 + 2^s + d^s (N/r)^s) L^{-d} Σ_B Σ_k |∇_k w|^s)^{2/s}`,
+`L^{-d} E_hom(u_hom) ≤ L^{-d} Σ_{Q ∖ layer} Σ_k a_k p_k² + Λ (2d(r + 1)/L)^{1 − 2/s}
+  (d^{s/2−1} 3^{s−1} (1 + 2^s + d^s (N/r)^s) L^{-d} Σ_B Σ_k |∇_k w|^s)^{2/s}`,
 with `p_k(x) = ⟨∇_k w⟩_{x + □_N}` the mesoscopic slopes and the layer of width `r + 1`. -/
 theorem edgeEnergy_dirichletSolution_div_le (hd : 1 ≤ d) (a : Fin d → ℝ) (ha : ∀ k, 0 < a k)
     {Λ : ℝ} (haΛ : ∀ k, a k ≤ Λ) (Q : IntegerCube d) (hL : 0 < Q.size) {N r : ℕ} (hN : 0 < N)
