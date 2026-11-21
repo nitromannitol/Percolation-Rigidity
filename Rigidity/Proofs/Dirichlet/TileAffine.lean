@@ -55,6 +55,28 @@ theorem cubeAffine_add_unit_sub (N : ℕ) (g : Vertex d → ℝ) (y x : Vertex d
   · intro h
     exact absurd (Finset.mem_univ j) h
 
+/-- Across the upper face `j` of the tile with index `i` lies the tile with index `i + e_j`. -/
+theorem add_unit_mem_of_mem_upperFace {N : ℕ} (hN : 0 < N) (z : Vertex d) {i : Vertex d}
+    {j : Fin d} {x : Vertex d} (hx : x ∈ (cornerCube (z + (N : ℤ) • i) N).upperFace j) :
+    x + unit j ∈ (cornerCube (z + (N : ℤ) • (i + unit j)) N).lowerFace j := by
+  have hxT := (IntegerCube.mem_upperFace _ j x).mp hx
+  have h1 := (IntegerCube.mem_vertices _ x).mp hxT.1
+  have h2 := hxT.2
+  simp only [cornerCube, Pi.add_apply, Pi.smul_apply, smul_eq_mul] at h1 h2
+  rw [IntegerCube.mem_lowerFace, IntegerCube.mem_vertices]
+  simp only [cornerCube, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+  have hNz : (1 : ℤ) ≤ N := by exact_mod_cast hN
+  refine ⟨fun k => ?_, ?_⟩
+  · by_cases hk : k = j
+    · subst hk
+      simp only [unit, Pi.single_eq_same]
+      constructor <;> nlinarith
+    · simp only [unit, Pi.single_eq_of_ne hk]
+      have := h1 k
+      constructor <;> nlinarith
+  · simp only [unit, Pi.single_eq_same]
+    linarith
+
 /-- **The faces**: on the upper face `j` of a tile, `ℓ̃` is the affine approximation of the tile,
 and across the face it is the affine approximation of the next tile. -/
 theorem tileAffine_upperFace {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (z : Vertex d)
@@ -65,22 +87,34 @@ theorem tileAffine_upperFace {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (z : 
         cubeAffine N g (z + (N : ℤ) • i + (N : ℤ) • unit j) (x + unit j) := by
   have hxT := (IntegerCube.mem_upperFace _ j x).mp hx
   refine ⟨tileAffine_eq_of_mem hN g z hxT.1, ?_⟩
-  have hmem : x + unit j ∈ (cornerCube (z + (N : ℤ) • (i + unit j)) N).vertices := by
-    have h1 := (IntegerCube.mem_vertices _ x).mp hxT.1
-    have h2 := hxT.2
-    simp only [cornerCube, Pi.add_apply, Pi.smul_apply, smul_eq_mul] at h1 h2
-    rw [IntegerCube.mem_vertices]
-    intro k
-    simp only [cornerCube, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
-    have hNz : (1 : ℤ) ≤ N := by exact_mod_cast hN
-    by_cases hk : k = j
-    · subst hk
-      simp only [unit, Pi.single_eq_same]
-      constructor <;> nlinarith
-    · simp only [unit, Pi.single_eq_of_ne hk]
-      have := h1 k
-      constructor <;> nlinarith
+  have hmem := ((IntegerCube.mem_lowerFace _ j _).mp (add_unit_mem_of_mem_upperFace hN z hx)).1
   rw [tileAffine_eq_of_mem hN g z hmem, smul_add, add_assoc]
+
+/-- **The face hypothesis of Lemma 6.3 from the faces of the tiles**: if `ṽ = ℓ_{y_i}` on the
+upper and lower faces of every tile (`v_y ∈ ℓ_y + 𝒞₀`) and `ṽ = ℓ̃` off the tiled cube, then
+`ṽ` agrees with the affine approximations across every face. -/
+theorem face_of_eq_cubeAffine_on_faces {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (z : Vertex d)
+    (M : ℕ) (v : Vertex d → ℝ)
+    (hfaces : ∀ i ∈ (cornerCube 0 M).vertices, ∀ j : Fin d,
+      ∀ x ∈ (cornerCube (z + (N : ℤ) • i) N).upperFace j ∪
+          (cornerCube (z + (N : ℤ) • i) N).lowerFace j,
+        v x = cubeAffine N g (z + (N : ℤ) • i) x)
+    (hout : ∀ x, x ∉ (cornerCube z (M * N)).vertices → v x = tileAffine N g z x)
+    {i : Vertex d} (hi : i ∈ (cornerCube 0 M).vertices) {j : Fin d} {x : Vertex d}
+    (hx : x ∈ (cornerCube (z + (N : ℤ) • i) N).upperFace j) :
+    v x = cubeAffine N g (z + (N : ℤ) • i) x ∧
+      v (x + unit j) = cubeAffine N g (z + (N : ℤ) • i + (N : ℤ) • unit j) (x + unit j) := by
+  refine ⟨hfaces i hi j x (Finset.mem_union_left _ hx), ?_⟩
+  have hlow := add_unit_mem_of_mem_upperFace hN z hx
+  have hmem := ((IntegerCube.mem_lowerFace _ j _).mp hlow).1
+  by_cases hT : x + unit j ∈ (cornerCube z (M * N)).vertices
+  · obtain ⟨i', hi', hxi'⟩ := exists_mem_tile hN z M hT
+    have hii : i' = i + unit j :=
+      (tileIndex_eq_of_mem hN z hxi').symm.trans (tileIndex_eq_of_mem hN z hmem)
+    subst hii
+    rw [hfaces _ hi' j _ (Finset.mem_union_right _ hlow), smul_add, add_assoc]
+  · rw [hout _ hT]
+    exact (tileAffine_upperFace hN g z hx).2
 
 /-- **The tiles**: for constant conductances `a_k ≥ 0`, the inner energy of `ℓ̃` on a tile is at
 most `N^d Σ_k a_k p_k(y_i)²`. -/
