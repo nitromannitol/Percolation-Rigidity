@@ -3,6 +3,7 @@ import Mathlib.Analysis.SpecialFunctions.PolarCoord
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 import Mathlib.MeasureTheory.Group.Integral
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # Mean value property of planar harmonic functions on discs
@@ -77,5 +78,36 @@ theorem integral_Ioo_polar_eq_circleAverage (f : ℂ → ℝ) (c : ℂ) (t : ℝ
   rw [show -π + 2 * π = π by ring, zero_add] at h
   rw [h, circleAverage_def, smul_eq_mul]
   field_simp
+
+/-- **Mean value property on discs.** -/
+theorem integral_ball_eq_of_harmonicOnNhd {f : ℂ → ℝ} {c : ℂ} {ρ : ℝ} (hρ : 0 < ρ)
+    (hf : InnerProductSpace.HarmonicOnNhd f (closedBall c ρ)) :
+    ∫ x in ball c ρ, f x = π * ρ ^ 2 * f c := by
+  rw [integral_ball_eq_integral_indicator_add, integral_indicator_ball_eq_polar]
+  have hfc : ContinuousOn f (closedBall c ρ) := fun x hx =>
+    (hf x hx).1.continuousAt.continuousWithinAt
+  set G : ℝ × ℝ → ℝ := fun p => p.1 * f (Complex.polarCoord.symm p + c) with hGdef
+  have hcont : ContinuousOn G (Icc 0 ρ ×ˢ Icc (-π) π) := by
+    refine continuous_fst.continuousOn.mul (hfc.comp
+      ((continuous_polarCoord_symm_complex.add continuous_const).continuousOn) ?_)
+    intro p hp
+    rw [mem_closedBall, dist_eq_norm, add_sub_cancel_right, Complex.norm_polarCoord_symm,
+      abs_of_nonneg hp.1.1]
+    exact hp.1.2
+  have hint : IntegrableOn G (Ioo 0 ρ ×ˢ Ioo (-π) π) (volume.prod volume) := by
+    rw [← Measure.volume_eq_prod]
+    exact (hcont.integrableOn_compact (isCompact_Icc.prod isCompact_Icc)).mono_set
+      (prod_mono Ioo_subset_Icc_self Ioo_subset_Icc_self)
+  rw [Measure.volume_eq_prod, setIntegral_prod G hint]
+  have hin : ∀ t ∈ Ioo 0 ρ, ∫ θ in Ioo (-π) π, G (t, θ) = t * (2 * π * f c) := by
+    intro t ht
+    simp only [hGdef]
+    rw [integral_const_mul, integral_Ioo_polar_eq_circleAverage]
+    have hsub : closedBall c |t| ⊆ closedBall c ρ :=
+      closedBall_subset_closedBall (by rw [abs_of_pos ht.1]; exact ht.2.le)
+    rw [HarmonicOnNhd.circleAverage_eq (f := f) fun x hx => hf x (hsub hx)]
+  rw [setIntegral_congr_fun measurableSet_Ioo hin, integral_mul_const,
+    ← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hρ.le, integral_id]
+  ring
 
 end Rigidity.Proofs.Regularity
