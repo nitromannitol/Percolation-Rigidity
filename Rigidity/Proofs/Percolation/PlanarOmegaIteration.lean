@@ -3,13 +3,13 @@ import Mathlib.Analysis.SpecificLimits.Basic
 /-!
 # The iteration of the decay of `ω`
 
-This file proves the iteration step in the proof of Lemma 5.9 of Armstrong and Dario (Steps 1-3), as
+This file proves the iteration step in the proof of Lemma 5.10 of Armstrong and Dario (Steps 1-3), as
 a statement about real sequences. Let `D_n` be bounded below by `-C σⁿ`, decrease along `τ_n ≥ 0`
 up to `C σⁿ`:
 
 `D_{n+1} ≤ D_n - c τ_n + C σⁿ`,
 
-and be controlled by the weighted past of `τ` (the conclusion of Lemma 5.8):
+and be controlled by the weighted past of `τ` (the conclusion of Lemma 5.9):
 
 `D_n ≤ C σⁿ + C ∑_{l ≤ n} ρ^{n-l} τ_l`.
 
@@ -110,7 +110,7 @@ theorem geomConv_succ_eq_shift (μ : ℝ) (D : ℕ → ℝ) (n : ℕ) :
     rw [geomConv_succ μ D (n + 1), ih, geomConv_succ μ (fun k => D (k + 1)) n]
     ring
 
-/-- **The iteration of the decay of `ω`** (Armstrong and Dario, proof of Lemma 5.9, Steps 1-3, for
+/-- **The iteration of the decay of `ω`** (Armstrong and Dario, proof of Lemma 5.10, Steps 1-3, for
 real sequences). -/
 theorem exists_le_mul_pow_of_omega_iteration {D τ : ℕ → ℝ} {c C ρ σ μ : ℝ} (hc : 0 < c)
     (hC : 0 ≤ C) (hσ0 : 0 ≤ σ) (hσμ : σ < μ) (hμ1 : μ < 1) (hρ0 : 0 ≤ ρ) (hρμ : ρ ≤ μ ^ 2)
@@ -314,8 +314,8 @@ theorem exists_le_mul_pow_of_omega_iteration {D τ : ℕ → ℝ} {c C ρ σ μ 
     linarith
 
 /-- **The iteration of the decay of `ω` from a starting scale** (Armstrong and Dario, proof of
-Lemma 5.9, Steps 1-3): the hypotheses are required only from a scale `N` on, and the control by the
-past of `τ` is the one of Lemma 5.8, with the sum over all `l ≤ n`. -/
+Lemma 5.10, Steps 1-3): the hypotheses are required only from a scale `N` on, and the control by the
+past of `τ` is the one of Lemma 5.9, with the sum over all `l ≤ n`. -/
 theorem exists_le_mul_pow_of_omega_iteration_of_ge {D τ : ℕ → ℝ} {c C ρ σ μ : ℝ} (N : ℕ)
     (hc : 0 < c) (hC : 0 ≤ C) (hσ0 : 0 ≤ σ) (hσμ : σ < μ) (hμ1 : μ < 1) (hρ0 : 0 ≤ ρ)
     (hρμ : ρ ≤ μ ^ 2) (hτ : ∀ n, 0 ≤ τ n)

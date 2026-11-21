@@ -10,8 +10,8 @@ minimizer `u_q` of `μ(U, q)` is the polarization of `-|U| μ(U, ·)`:
 `ℓ_p(u_q) = -|U| (μ(U, p + q) - μ(U, p) - μ(U, q))`.
 
 In other words, the spatial average of the coarsened gradient of `u(·, U, q)` is `-∇μ(U, ·)(q)`;
-this is the identity behind the definition of the finite-volume matrices `ā_{□_n}⁻¹` used in
-Lemmas 5.6 and 5.8 of Armstrong and Dario.
+this is the identity behind display (5.23) of Armstrong and Dario for the finite-volume matrices
+`ā_{□_n}⁻¹` of Definition 5.6.
 -/
 
 open LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5

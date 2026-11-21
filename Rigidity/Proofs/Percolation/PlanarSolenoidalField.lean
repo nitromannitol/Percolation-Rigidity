@@ -3,7 +3,7 @@ import Rigidity.Proofs.Percolation.PlanarCubeEnergy
 /-!
 # A bounded solenoidal lattice vector field equal to a constant on a triadic cube
 
-Step 1 of the proof of Lemma 5.6 of Armstrong and Dario constructs, for a unit direction `e`, a
+Step 1 of the proof of Lemma 5.7 of Armstrong and Dario constructs, for a unit direction `e`, a
 bounded vector field on the lattice edges which equals `e` on the cube `□_n`, vanishes far away,
 and is almost divergence free, by discretizing a smooth divergence-free continuum field. In
 dimension two we take instead the discrete curl of a stream function on the plaquettes: for

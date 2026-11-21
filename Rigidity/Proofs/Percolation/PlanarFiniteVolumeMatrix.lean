@@ -5,13 +5,13 @@ import Rigidity.Proofs.Percolation.PlanarCoarseGradientMean
 
 The expectation `E[-μ(□_n, ·)]` is a quadratic form; we write it as `(1/2) q · ā_{□_n}⁻¹ q` with
 the symmetric matrix `ā_{□_n}⁻¹` of its polarization (Armstrong and Dario, Section 5, the matrices
-`ā_{□_n}` of Lemmas 5.6, 5.8 and 5.9, in dimension two). By the identity for the coarse pairing of
+`ā_{□_n}` of Definition 5.6, display (5.21), in dimension two). By the identity for the coarse pairing of
 the minimizer of `μ`, the expected spatial average of the coarsened gradient of `u(·, □_n, q)` is
 `ā_{□_n}⁻¹ q`:
 
 `E[|□_n|⁻¹ ℓ_p(u(·, □_n, q)); P, □_n res] = p · ā_{□_n}⁻¹ q`,
 
-which is the centering in Lemma 5.6 of Armstrong and Dario.
+which is display (5.23) of Armstrong and Dario, the centering in Lemma 5.7.
 -/
 
 open MeasureTheory Filter Topology LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -59,7 +59,7 @@ theorem planarMuMean_polarization {p : unitInterval} (hpc : criticalProbability 
   ring
 
 /-- **The expected spatial average of the coarsened gradient** (Armstrong and Dario, the centering
-`ā_{□_n}⁻¹ q` in Lemma 5.6, in dimension two):
+`ā_{□_n}⁻¹ q` in Lemma 5.7, display (5.23), in dimension two):
 `E[|□_n|⁻¹ ℓ_r(u(·, □_n, q)); P, □_n res] = r · ā_{□_n}⁻¹ q`. -/
 theorem integral_coarsePairing_planarMuMinimizer {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (n : ℕ) (r q : Fin 2 → ℝ) :
