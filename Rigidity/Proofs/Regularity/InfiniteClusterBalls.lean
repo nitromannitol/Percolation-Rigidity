@@ -36,7 +36,7 @@ theorem infiniteCluster_ballVolume_capDensity [NeZero d] (hd : 2 ≤ d) (p : uni
           ClusterBallCapDensity (uniqueInfiniteComponent h) z (M ω) R δ := by
   have hd0 : 0 < d := Nat.pos_of_ne_zero (NeZero.ne d)
   obtain ⟨s, C, hs, hC, hcube⟩ := exists_clusterCubeDensity_of_concentration hd p
-    (cluster_density_concentration d hd p hpc hp1)
+    (cluster_density_concentration d hd p hpc hp1) (24 * Real.sqrt d)
   rcases (theta_nonneg d p).eq_or_lt with hθ0 | hθ
   · refine ⟨s, C, 1, 1, hs, hC, one_pos, one_pos, fun z => ?_⟩
     obtain ⟨M, hMm, hM0, hMos, -⟩ := hcube z

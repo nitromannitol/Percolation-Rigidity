@@ -88,7 +88,8 @@ theorem le_of_forall_pos_le_add_mul {a b c : ℝ} (hc : 0 ≤ c) (h : ∀ η : �
   linarith
 
 /-- **Halving step.** Along the radii `θ^i ρ₀`, the normalized excess
-`T i = D(θ^i ρ₀) / (θ^i ρ₀) ^ j` over `P` satisfies `T (i + 1) ≤ T i / 2 + B Γ (θ^i ρ₀) ^ (1 - α - j)`
+`T i = D(θ^i ρ₀) / (θ^i ρ₀) ^ j` over `P` satisfies
+`T (i + 1) ≤ T i / 2 + B Γ (θ^i ρ₀) ^ (1 - α - j)`
 when `u` is within `(θ^i ρ₀) ^ (1 - α) Γ` of `Abar (θ^i ρ₀)`. -/
 theorem ballExcess_halving_step (P : AddSubgroup F) {Abar : ℝ → Set F} {j : ℕ}
     {X R CV CH γ α θ Γ ρ₀ : ℝ} (hX0 : 0 < X) (hCV : 0 ≤ CV) (hCH : 0 ≤ CH)

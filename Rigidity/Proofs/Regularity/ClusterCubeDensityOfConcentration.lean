@@ -7,13 +7,13 @@ import Rigidity.Proofs.Regularity.ClusterBallGeometry
 From the concentration of the density of the infinite cluster in triadic cubes (Dario–Gu,
 Proposition A.1, `Rigidity.External.ClusterDensityConcentrationAt`), for every centre `z` there is a
 minimal scale `M(z) ≤ O_s(C)` such that almost surely every triadic cube of size `3^m ≥ M(z)` inside
-the ball `B_{24 √d 3^m}(z)` carries at least `θ(p)/2 · 3^{d m}` vertices of the infinite cluster
+the ball `B_{Λ 3^m}(z)` carries at least `θ(p)/2 · 3^{d m}` vertices of the infinite cluster
 (`exists_clusterCubeDensity_of_concentration`): the hypothesis `ClusterCubeDensity` of
 `Rigidity.Proofs.Regularity.ClusterBallGeometry`, which gives the volume comparison and the cap
 density of the balls of the infinite cluster used in the iteration of Armstrong–Dario, Lemma 7.2.
 
 The proof is the union bound of `Rigidity.Proofs.S2.clusterDensityInputFaithfulAt_of_concentration`
-over the `(48 d + 5)^d` triadic cubes of size `3^m` whose indices are within `24 d + 2` of
+over the `(2 W + 1)^d` triadic cubes of size `3^m` whose indices are within `W = ⌈Λ⌉₊ + 1` of
 `⌊z / 3^m⌋`, followed by `Rigidity.Proofs.S2.exists_minimalScale_of_summable`.
 -/
 
@@ -23,30 +23,29 @@ open MeasureTheory LatticeProb LatticeProb.Percolation Rigidity.External Rigidit
 
 variable {d : ℕ}
 
-/-- The `(48 d + 5)^d` triadic cubes `□_m(3^m k)` with `|kᵢ - ⌊zᵢ / 3^m⌋| ≤ 24 d + 2`. -/
-noncomputable def localCubes (z : Vertex d) (m : ℕ) : Finset (Vertex d) :=
-  Fintype.piFinset fun i =>
-    Finset.Icc (z i / 3 ^ m - (24 * (d : ℤ) + 2)) (z i / 3 ^ m + (24 * (d : ℤ) + 2))
+/-- The `(2 W + 1)^d` triadic cubes `□_m(3^m k)` with `|kᵢ - ⌊zᵢ / 3^m⌋| ≤ W`. -/
+noncomputable def localCubes (W : ℕ) (z : Vertex d) (m : ℕ) : Finset (Vertex d) :=
+  Fintype.piFinset fun i => Finset.Icc (z i / 3 ^ m - W) (z i / 3 ^ m + W)
 
-theorem card_localCubes (z : Vertex d) (m : ℕ) : (localCubes z m).card = (48 * d + 5) ^ d := by
+theorem card_localCubes (W : ℕ) (z : Vertex d) (m : ℕ) :
+    (localCubes W z m).card = (2 * W + 1) ^ d := by
   rw [localCubes, Fintype.card_piFinset]
-  have hc : ∀ i, (Finset.Icc (z i / 3 ^ m - (24 * (d : ℤ) + 2))
-      (z i / 3 ^ m + (24 * (d : ℤ) + 2))).card = 48 * d + 5 := by
+  have hc : ∀ i, (Finset.Icc (z i / 3 ^ m - W) (z i / 3 ^ m + W)).card = 2 * W + 1 := by
     intro i
     rw [Int.card_Icc]
-    have e : z i / 3 ^ m + (24 * (d : ℤ) + 2) + 1 - (z i / 3 ^ m - (24 * (d : ℤ) + 2)) =
-        ((48 * d + 5 : ℕ) : ℤ) := by push_cast; ring
+    have e : z i / 3 ^ m + W + 1 - (z i / 3 ^ m - W) = ((2 * W + 1 : ℕ) : ℤ) := by
+      push_cast; ring
     rw [e, Int.toNat_natCast]
   simp only [hc, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
 
-/-- A triadic cube of size `3^m` inside `B_{24 √d 3^m}(z)` is one of the `localCubes z m`. -/
-theorem mem_localCubes_of_dist_lt [NeZero d] {z : Vertex d} {m : ℕ} {k : Vertex d}
-    (hk : ∀ y ∈ triadicCube d m k, dist (latticeEuclideanEmbedding y) (latticeEuclideanEmbedding z) <
-      24 * Real.sqrt d * 3 ^ m) : k ∈ localCubes z m := by
+/-- A triadic cube of size `3^m` inside `B_{Λ 3^m}(z)` is one of the `localCubes (⌈Λ⌉₊ + 1) z m`. -/
+theorem mem_localCubes_of_dist_lt {Λ : ℝ} {z : Vertex d} {m : ℕ} {k : Vertex d}
+    (hk : ∀ y ∈ triadicCube d m k,
+      dist (latticeEuclideanEmbedding y) (latticeEuclideanEmbedding z) < Λ * 3 ^ m) :
+    k ∈ localCubes (⌈Λ⌉₊ + 1) z m := by
   have h3 : (0 : ℤ) < 3 ^ m := by positivity
   have h3' : (0 : ℝ) < 3 ^ m := by positivity
-  have hd1 : (1 : ℝ) ≤ d := by exact_mod_cast Nat.one_le_iff_ne_zero.2 (NeZero.ne d)
-  have hsd : Real.sqrt d ≤ d := Real.sqrt_le_iff.2 ⟨by linarith, by nlinarith⟩
+  have hΛ : Λ ≤ (⌈Λ⌉₊ : ℝ) := Nat.le_ceil Λ
   set y : Vertex d := fun j => 3 ^ m * k j with hy
   have hyQ : y ∈ triadicCube d m k := by
     intro i
@@ -70,17 +69,18 @@ theorem mem_localCubes_of_dist_lt [NeZero d] {z : Vertex d} {m : ℕ} {k : Verte
   have hr1R : (r : ℝ) < 3 ^ m := by exact_mod_cast hr1
   rw [hzR] at hi
   have hb := abs_lt.1 hi
-  have hup : ((k i - q : ℤ) : ℝ) < 24 * d + 1 := by
+  have hup : ((k i - q : ℤ) : ℝ) < (⌈Λ⌉₊ : ℝ) + 1 := by
     push_cast
-    have : 3 ^ m * ((k i : ℝ) - q) < 3 ^ m * (24 * d + 1) := by nlinarith
+    have : 3 ^ m * ((k i : ℝ) - q) < 3 ^ m * ((⌈Λ⌉₊ : ℝ) + 1) := by nlinarith
     exact lt_of_mul_lt_mul_left this h3'.le
-  have hlow : -(24 * (d : ℝ) + 1) < ((k i - q : ℤ) : ℝ) := by
+  have hlow : -((⌈Λ⌉₊ : ℝ) + 1) < ((k i - q : ℤ) : ℝ) := by
     push_cast
-    have : 3 ^ m * (-(24 * (d : ℝ) + 1)) < 3 ^ m * ((k i : ℝ) - q) := by nlinarith
+    have : 3 ^ m * (-((⌈Λ⌉₊ : ℝ) + 1)) < 3 ^ m * ((k i : ℝ) - q) := by nlinarith
     exact lt_of_mul_lt_mul_left this h3'.le
-  have hup' : k i - q < 24 * (d : ℤ) + 1 := by exact_mod_cast hup
-  have hlow' : -(24 * (d : ℤ) + 1) < k i - q := by exact_mod_cast hlow
+  have hup' : k i - q < (⌈Λ⌉₊ : ℤ) + 1 := by exact_mod_cast hup
+  have hlow' : -((⌈Λ⌉₊ : ℤ) + 1) < k i - q := by exact_mod_cast hlow
   rw [Finset.mem_Icc]
+  push_cast
   constructor <;> omega
 
 /-- The vertices of the infinite cluster in a triadic cube inside `B_ρ(z)` are counted by
@@ -110,14 +110,14 @@ theorem infiniteClusterCount_le_card_clusterCubePoints {ω : Configuration d}
     _ ≤ S.card := Finset.card_image_le
 
 /-- **Density of the infinite cluster in cubes above a minimal scale**, from Dario–Gu,
-Proposition A.1: almost surely every triadic cube of size `3^m ≥ M(z)` inside `B_{24 √d 3^m}(z)`
-carries at least `θ(p)/2 · 3^{d m}` vertices of the infinite cluster. -/
+Proposition A.1: for every `Λ`, almost surely every triadic cube of size `3^m ≥ M(z)` inside
+`B_{Λ 3^m}(z)` carries at least `θ(p)/2 · 3^{d m}` vertices of the infinite cluster. -/
 theorem exists_clusterCubeDensity_of_concentration [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
-    (hDG : ClusterDensityConcentrationAt d p) :
+    (hDG : ClusterDensityConcentrationAt d p) (Λ : ℝ) :
     ∃ s C : ℝ, 0 < s ∧ 0 < C ∧ ∀ z : Vertex d,
       ∃ M : Configuration d → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond d p M s C ∧
       ∀ᵐ ω ∂latticeBondLaw d p, ∀ h : HasUniqueInfiniteOpenComponent ω,
-        ClusterCubeDensity (uniqueInfiniteComponent h) z (M ω) (theta d p / 2) := by
+        ClusterCubeDensity (uniqueInfiniteComponent h) z Λ (M ω) (theta d p / 2) := by
   obtain ⟨C, hC, hX⟩ := hDG
   rcases (theta_nonneg d p).eq_or_lt with hθ0 | hθ
   · refine ⟨1, 1 * 3 ^ ((1 : ℝ) / 1), one_pos, by positivity, fun z =>
@@ -143,9 +143,10 @@ theorem exists_clusterCubeDensity_of_concentration [NeZero d] (hd : 2 ≤ d) (p 
   obtain ⟨B, hBdef⟩ : ∃ B : ℝ, B = (theta d p / (2 * C)) ^ s₀ := ⟨_, rfl⟩
   have hB : 0 < B := by rw [hBdef]; exact Real.rpow_pos_of_pos (by positivity) _
   obtain ⟨b, hbdef⟩ : ∃ b : ℕ → ℝ, b = fun m : ℕ =>
-      (((48 * d + 5) ^ d : ℕ) : ℝ) * (2 * Real.exp (-(B * Real.exp (t * m) ^ 2))) := ⟨_, rfl⟩
+      (((2 * (⌈Λ⌉₊ + 1) + 1) ^ d : ℕ) : ℝ) * (2 * Real.exp (-(B * Real.exp (t * m) ^ 2))) :=
+    ⟨_, rfl⟩
   have hbm : ∀ m, b m =
-      (((48 * d + 5) ^ d : ℕ) : ℝ) * (2 * Real.exp (-(B * Real.exp (t * m) ^ 2))) :=
+      (((2 * (⌈Λ⌉₊ + 1) + 1) ^ d : ℕ) : ℝ) * (2 * Real.exp (-(B * Real.exp (t * m) ^ 2))) :=
     fun m => by rw [hbdef]
   have hb0 : ∀ m, 0 ≤ b m := fun m => by rw [hbm]; positivity
   have hE : ∀ (m : ℕ) (k : Vertex d), latticeBondLaw d p (badCubeEvent d m k (theta d p)) ≤
@@ -153,17 +154,18 @@ theorem exists_clusterCubeDensity_of_concentration [NeZero d] (hd : 2 ≤ d) (p 
     intro m k
     have h := measure_badCubeEvent_le hC hs₀ hθ m k (hX' m k)
     rwa [← hsdef, ← htdef, ← hBdef] at h
-  have hBad : ∀ z m, latticeBondLaw d p (⋃ k ∈ localCubes z m, badCubeEvent d m k (theta d p)) ≤
+  have hBad : ∀ z m, latticeBondLaw d p
+      (⋃ k ∈ localCubes (⌈Λ⌉₊ + 1) z m, badCubeEvent d m k (theta d p)) ≤
       ENNReal.ofReal (b m) := by
     intro z m
     refine (measure_biUnion_finset_le _ _).trans ?_
     refine (Finset.sum_le_sum fun k _ => hE m k).trans ?_
     rw [Finset.sum_const, card_localCubes, nsmul_eq_mul, hbm,
-      ENNReal.ofReal_mul (p := (((48 * d + 5) ^ d : ℕ) : ℝ)) (Nat.cast_nonneg _),
+      ENNReal.ofReal_mul (p := (((2 * (⌈Λ⌉₊ + 1) + 1) ^ d : ℕ) : ℝ)) (Nat.cast_nonneg _),
       ENNReal.ofReal_natCast]
   have hsum : Summable fun m => b m * Real.exp ((1 * 3 ^ (m + 1)) ^ s) := by
     have h := (summable_exp_mul_sub_sq ((3 * 1) ^ s) B t hB ht).mul_left
-      (2 * (((48 * d + 5) ^ d : ℕ) : ℝ))
+      (2 * (((2 * (⌈Λ⌉₊ + 1) + 1) ^ d : ℕ) : ℝ))
     refine h.congr fun m => ?_
     rw [hbm, scale_exponent_eq zero_le_one m, ← htdef, sub_eq_add_neg, Real.exp_add]
     ring
@@ -176,7 +178,7 @@ theorem exists_clusterCubeDensity_of_concentration [NeZero d] (hd : 2 ≤ d) (p 
   refine ⟨s, 1 * A ^ (1 / s), hs, mul_pos one_pos (Real.rpow_pos_of_pos (by linarith) _),
     fun z => ?_⟩
   obtain ⟨M, hMm, hM0, hint, hle, hae⟩ := exists_minimalScale_of_summable (latticeBondLaw d p)
-    (fun m => ⋃ k ∈ localCubes z m, badCubeEvent d m k (theta d p))
+    (fun m => ⋃ k ∈ localCubes (⌈Λ⌉₊ + 1) z m, badCubeEvent d m k (theta d p))
     (fun m => Finset.measurableSet_biUnion _ fun k _ => measurableSet_badCubeEvent m k _)
     one_pos b hb0 (hBad z) hsum
   have e : (fun ω => Real.exp (Real.rpow (max (M ω / 1) 0) s)) = fun ω => Real.exp (M ω ^ s) := by
