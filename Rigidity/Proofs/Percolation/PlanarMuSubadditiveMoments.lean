@@ -10,7 +10,7 @@ Since `E[S_F] ≤ C |U| / 3 ^ n` and `E[S] ≤ C |U|`,
 
 `E[(∑_{x ∈ U} 1{V(x) resolved} μ(V(x), q) - |U| μ(U, q))⁺] ≤ C |q|₁² |U| / 3 ^ (n / 2)`
 
-uniformly in `U` and `n` (Armstrong and Dario, Lemma 4.8, (4.17), in expectation).
+uniformly in `U` and `n` (Armstrong and Dario, Lemma 4.8, (4.32), in expectation).
 -/
 
 open MeasureTheory LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -289,7 +289,7 @@ theorem lintegral_exceptionalReachBound_le {p : unitInterval} {C₆ C₁₂ : �
                   TriadicCube.volume, scale_scaleCube]
       _ = _ := by rw [Finset.sum_const, nsmul_eq_mul]
 
-/-- **Expected error in the subadditivity of `μ`** (Armstrong and Dario, Lemma 4.8, (4.17), in
+/-- **Expected error in the subadditivity of `μ`** (Armstrong and Dario, Lemma 4.8, (4.32), in
 expectation). -/
 theorem exists_lintegral_sum_planarMu_subcubes_sub_le {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :

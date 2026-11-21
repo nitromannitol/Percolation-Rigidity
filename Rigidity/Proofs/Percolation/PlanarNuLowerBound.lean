@@ -14,7 +14,7 @@ Since `E[-μ(U, λ p)] ≤ C λ² |p|₁²` and the boundary terms have expectat
 
 `c |p|² ≤ E[ν(U, p); partition event, U resolved] + C |p|₁² / √L`
 
-(Armstrong and Dario, Lemma 4.7, (4.14), in expectation; the deterministic `λ` replaces the random
+(Armstrong and Dario, Lemma 4.7, (4.31), in expectation; the deterministic `λ` replaces the random
 choice of `q` made there, which is possible after taking expectations).
 -/
 
@@ -493,7 +493,7 @@ theorem nu_lower_algebra {c₄ c₆ X P₁ L : ℝ} (hc₄ : 0 ≤ c₄) (hX : 0
   have h5 : 0 ≤ lam ^ 2 * X := by positivity
   nlinarith
 
-/-- **Expected lower bound for `ν`** (Armstrong and Dario, Lemma 4.7, (4.14), in expectation). -/
+/-- **Expected lower bound for `ν`** (Armstrong and Dario, Lemma 4.7, (4.31), in expectation). -/
 theorem exists_lintegral_planarNu_ge {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ c : ℝ, 0 < c ∧ ∃ C : ℝ≥0∞, C ≠ ∞ ∧ ∀ (U : TriadicCube 2) (ξ : Fin 2 → ℝ),

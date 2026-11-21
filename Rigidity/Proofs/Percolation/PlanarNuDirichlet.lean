@@ -9,7 +9,7 @@ boundary vertices of the cluster (those with a lattice neighbour outside `U`) ar
 flux pairing is the Dirichlet form against the affine function `x ↦ p · x`. Consequently the
 maximizer of `ν(U, p)` is affine with slope `p` on the boundary vertices, up to a constant, and
 `ν(U, p) |U| = B v v / 2` is the least energy of a function with these boundary values
-(Armstrong and Dario, Lemma 4.2 and (4.7)).
+(Armstrong and Dario, Lemma 4.3 and (4.7)).
 -/
 
 open LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -51,7 +51,7 @@ noncomputable def clusterZeroBoundary (ω : Configuration 2) (U : TriadicCube 2)
   smul_mem' c h hh x hx := by simp [hh x hx]
 
 /-- **Orthogonality** of functions vanishing on the boundary to `A_*(U)` (Armstrong and Dario,
-(4.4)). -/
+(4.1)). -/
 theorem clusterForm_eq_zero_of_mem {U : TriadicCube 2} {h u : ClusterFun ω U}
     (hh : h ∈ clusterZeroBoundary ω U) (hu : u ∈ clusterHarmonic ω U) :
     clusterForm ω U h u = 0 := by
@@ -131,7 +131,7 @@ theorem fluxPairing_eq_clusterForm {U : TriadicCube 2} (p : Fin 2 → ℝ) (w : 
     ring
   · rfl
 
-/-- **Affine boundary values** (Armstrong and Dario, Lemma 4.2). A function of `A_*(U)` solving
+/-- **Affine boundary values** (Armstrong and Dario, Lemma 4.3). A function of `A_*(U)` solving
 the first-variation equation of `ν(U, p)` coincides with `x ↦ p · x + c` at the boundary vertices
 of the cluster, for some constant `c`. -/
 theorem exists_affine_boundary_of_variation (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
@@ -188,7 +188,7 @@ theorem clusterForm_le_of_variation {U : TriadicCube 2} (p : Fin 2 → ℝ) {v :
   rw [← hvar v hv, div_le_iff₀ U.volume_pos] at h
   linarith
 
-/-- **Dirichlet principle** (Armstrong and Dario, (4.7)). `ν(U, p) |U|` is at most half the
+/-- **Dirichlet principle** (Armstrong and Dario, Lemma 4.3). `ν(U, p) |U|` is at most half the
 energy of any function on the cluster equal to `x ↦ p · x` up to a function vanishing at the
 boundary vertices. -/
 theorem planarNu_le_of_affine_boundary {U : TriadicCube 2} (p : Fin 2 → ℝ)

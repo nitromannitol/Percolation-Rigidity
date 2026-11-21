@@ -7,7 +7,7 @@ For the minimizer `u` of `μ(U, q)` and the maximizer `v` of `ν(U, p)`,
 
 `ν(U, p) |U| - μ(U, q) |U| - ℓ_q v = B (v - u) (v - u) / 2`
 
-(Armstrong and Dario, (4.11)). Combined with the boundary expansion of `ℓ_q v`, this gives the
+(Armstrong and Dario, (4.8)). Combined with the boundary expansion of `ℓ_q v`, this gives the
 comparison `μ(U, q) ≤ ν(U, p) - p · q` up to boundary errors, and with `p = q / 9` the lower bound
 `-μ(U, q) ≥ |q|² / 18` up to boundary errors (Armstrong and Dario, Corollary 4.6 and Lemma 4.7).
 -/
@@ -19,7 +19,7 @@ namespace Rigidity.Percolation
 
 variable {ω : Configuration 2}
 
-/-- **The comparison identity** (Armstrong and Dario, (4.11)). -/
+/-- **The comparison identity** (Armstrong and Dario, (4.8)). -/
 theorem planarNu_sub_planarMu_eq {U : TriadicCube 2} (p q : Fin 2 → ℝ) {u v : ClusterFun ω U}
     (hu : u ∈ clusterHarmonic ω U)
     (hvar_u : ∀ w ∈ clusterHarmonic ω U, clusterForm ω U w u = coarsePairing ω U q w)

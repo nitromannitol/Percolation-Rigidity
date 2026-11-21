@@ -13,7 +13,7 @@ unresolved one:
 `∑_{x ∈ U} 1{V(x) resolved} μ(V(x), q) ≤ |U| μ(U, q) + ∑_{e ∈ E'} q · ∇[u](e)`,
 
 where `V(x)` is the subcube of scale `n` containing `x` and `E'` the set of these exceptional
-edges (Armstrong and Dario, Lemma 4.8, (4.17)).
+edges (Armstrong and Dario, Lemma 4.8, (4.32)).
 -/
 
 open LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -161,7 +161,7 @@ theorem volume_eq_card (V : TriadicCube 2) :
   rw [← pow_mul, mul_comm, pow_mul]
   norm_num
 
-/-- **Subadditivity of `μ`** (planar form of Armstrong and Dario, Lemma 4.8, (4.17)). -/
+/-- **Subadditivity of `μ`** (planar form of Armstrong and Dario, Lemma 4.8, (4.32)). -/
 theorem sum_planarMu_subcubes_le (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
     (hU : PlanarResolved ω U) {n : ℕ} (hn : n ≤ U.scale) (q : Fin 2 → ℝ) :
     ∃ u ∈ clusterHarmonic ω U, (∀ w ∈ clusterHarmonic ω U,

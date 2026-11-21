@@ -12,7 +12,7 @@ which do not lie in the cluster of a resolved subcube:
 `|U| ν(U, p) ≤ ∑_{x ∈ U} 1{V(x) resolved} ν(V(x), p) + F_p^{exc}(v)`,
 
 where `F_p^{exc}` is the flux pairing over these exceptional open edges (Armstrong and Dario,
-Lemma 4.8, (4.18)).
+Lemma 4.8, (4.33)).
 -/
 
 open LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -137,7 +137,7 @@ theorem sum_fluxPairing_restrictExt {U : TriadicCube 2} {n : ℕ} (hn : n ≤ U.
     rw [if_neg]
     exact fun h => hc ⟨h.1, h.2.1⟩
 
-/-- **Subadditivity of `ν`** (planar form of Armstrong and Dario, Lemma 4.8, (4.18)). -/
+/-- **Subadditivity of `ν`** (planar form of Armstrong and Dario, Lemma 4.8, (4.33)). -/
 theorem planarNu_le_sum_subcubes (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
     {n : ℕ} (hn : n ≤ U.scale) (p : Fin 2 → ℝ) :
     ∃ v ∈ clusterHarmonic ω U, (∀ w ∈ clusterHarmonic ω U,

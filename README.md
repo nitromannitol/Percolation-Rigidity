@@ -603,11 +603,11 @@ The three theorems depend on exactly `propext`, `Classical.choice` and `Quot.sou
    of the sizes of its squares finite; the coarsening of functions on the cluster by the anchors of
    the partition squares, with its local error bounds; and the subadditive quantities `μ(U, q)` and
    `ν(U, p)` on the cluster `C_*(U)` of a resolved triadic square `U` of side `L`: their first and
-   second variations (AD, Lemmas 4.1 and 4.2), the comparison of `μ` and `ν` ((4.11), Corollary 4.6
-   and Lemma 4.7), the bounds `E[−μ(U, q)] ≤ C|q|₁²` ((4.15)) and
+   second variations (AD, Lemmas 4.2 and 4.3), the comparison of `μ` and `ν` ((4.8), Corollary 4.6
+   and Lemma 4.7), the bounds `E[−μ(U, q)] ≤ C|q|₁²` ((4.12), in expectation) and
    `E[(μ(U, q) + |q|²/18)⁺] ≤ C|q|₁²/√L`, the subadditivity of `μ` and `ν` over the resolved
-   subsquares of side `3ⁿ` up to errors of expectation at most `C|q|₁²|U|/√(3ⁿ)` (Lemma 4.8, (4.17)
-   and (4.18)), and the lower bound `c|p|² ≤ E[ν(U, p)] + C|p|₁²/√L` ((4.14)). The planar
+   subsquares of side `3ⁿ` up to errors of expectation at most `C|q|₁²|U|/√(3ⁿ)` (Lemma 4.8, (4.32)
+   and (4.33)), and the lower bound `c|p|² ≤ E[ν(U, p)] + C|p|₁²/√L` ((4.31)). The planar
    corrector and regularity inputs remain hypotheses.
 
 **Departures from Dario and Gu and from Armstrong and Dario.** The existence of Green columns,
@@ -618,11 +618,11 @@ proof joins the vertices of `C_*(U)` and the anchors of adjacent partition squar
 inside windows contained in `U` and in the square of side `9s` around the partition square of side
 `s` (`PlanarWindows.lean`, `PlanarCubeCluster.lean`), and it bounds the weights of the coarsened
 gradient through the reach, the overlap of these squares (`PlanarCoarseWeights.lean`,
-`PlanarReachMoments.lean`), whose moments are all finite. In the proof of (4.18), the set `W` of
+`PlanarReachMoments.lean`), whose moments are all finite. In the proof of (4.33), the set `W` of
 edges near the boundaries of the subcubes `z + □ₙ` is the set of exceptional vertices: those whose
 subsquare `V(x)` of side `3ⁿ` is not resolved, or for which the square of side `9s` around their
 partition square leaves `V(x)`; they are counted through the boundary vertices of `V(x)`
-(`PlanarNuSubadditiveMoments.lean`). The lower bound (4.14) is proved in expectation, with a
+(`PlanarNuSubadditiveMoments.lean`). The lower bound (4.31) is proved in expectation, with a
 deterministic multiple `λp` of the slope in place of the random slope of AD
 (`PlanarNuLowerBound.lean`). No code is copied from another repository.
 

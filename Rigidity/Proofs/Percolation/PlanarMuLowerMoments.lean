@@ -9,7 +9,7 @@ of the partition cube of a vertex is at most the reach there. With the moment bo
 
 `E[(μ(U, q) + |q|² / 18)⁺; partition event, U resolved] ≤ C |q|₁² / √L`
 
-uniformly in `U` (Armstrong and Dario, Lemma 4.7, (4.13) in expectation).
+uniformly in `U` (Armstrong and Dario, Lemma 4.7, (4.30) in expectation).
 -/
 
 open MeasureTheory LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5

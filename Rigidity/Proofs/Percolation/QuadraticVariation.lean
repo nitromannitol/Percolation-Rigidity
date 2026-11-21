@@ -9,7 +9,7 @@ space and `ℓ` a linear functional vanishing on the null space of `B`. Then the
 `B w u = ℓ w` for all `w`, and the excess over the minimum is `B (w - u) (w - u) / 2`.
 
 These are the first and second variations used for the subadditive energy quantities of
-Armstrong and Dario (Lemma 4.1).
+Armstrong and Dario (Lemma 4.2).
 -/
 
 namespace LinearMap.BilinForm

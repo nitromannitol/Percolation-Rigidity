@@ -296,7 +296,7 @@ fidelity:
     its source, README.md records the departure: for the density concentration and the planar Green
     columns (Dario and Gu), and for the planar partition into good cubes and the subadditive
     quantities (Armstrong and Dario, Lemmas 3.2 and 3.3 replaced by paths inside windows of the
-    ninefold squares, the set W of Lemma 4.8 made precise, and (4.14) proved in expectation).
+    ninefold squares, the set W of Lemma 4.8 made precise, and (4.31) proved in expectation).
 
 review:
   status: "model review"

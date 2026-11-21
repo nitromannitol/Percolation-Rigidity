@@ -11,7 +11,7 @@ gives
 `-μ(U, q) ≤ 9 (|q₁| + |q₂|) ^ 2 ∑_{a ∈ C_*(U)} W(a) ^ 2 / |U|`,
 
 where `W(a)` counts the lattice edges of `U` whose window contains `a` (Armstrong and Dario,
-Lemma 4.3, bound for `μ`, with windows in place of neighbouring partition cubes). Each window lies
+Lemma 4.4, bound for `μ`, with windows in place of neighbouring partition cubes). Each window lies
 in the square of side `9s` around one of the two partition cubes of the edge, so `W(a)` is at most
 four times the number of vertices of `U` whose partition cube has its square of side `9s` around
 `a`.
@@ -295,7 +295,7 @@ theorem le_of_le_mul_of_sq_le {B Q X T : ℝ} (hB : 0 ≤ B) (hT : 0 ≤ T) (h1 
     nlinarith
   exact le_of_mul_le_mul_right h4 hBpos
 
-/-- **Upper bound for `-μ`** (planar form of Armstrong and Dario, Lemma 4.3). -/
+/-- **Upper bound for `-μ`** (planar form of Armstrong and Dario, Lemma 4.4). -/
 theorem neg_planarMu_le (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
     (hU : PlanarResolved ω U) (q : Fin 2 → ℝ) :
     -planarMu ω U q ≤

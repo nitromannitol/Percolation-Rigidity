@@ -8,7 +8,7 @@ The coarse weight at a vertex is at most four times the number of partition cube
 square of side `9s` contains it, hence at most `484` times the square of the reach. With the
 moment bound for the reach, the upper bound for `-μ` gives
 `E[-μ(U, q); partition event, U resolved] ≤ C (|q₁| + |q₂|) ^ 2` uniformly in `U`
-(Armstrong and Dario, (4.15)).
+(Armstrong and Dario, (4.12), in expectation).
 -/
 
 open MeasureTheory LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -93,7 +93,7 @@ theorem card_toIntegerCube_vertices (U : TriadicCube 2) :
   rw [ENNReal.ofReal_pow (by norm_num), ← pow_mul, mul_comm, pow_mul]
   norm_num
 
-/-- **Expected size of `-μ`** (Armstrong and Dario, (4.15)). -/
+/-- **Expected size of `-μ`** (Armstrong and Dario, (4.12), in expectation). -/
 theorem exists_lintegral_neg_planarMu_le {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ C : ℝ≥0∞, C ≠ ∞ ∧ ∀ (U : TriadicCube 2) (q : Fin 2 → ℝ),

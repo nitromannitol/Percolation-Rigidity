@@ -19,7 +19,7 @@ of `V(x)`. By the overlap bound for these squares and the moments of the reach,
 
 `E[(|U| ν(U, p) - ∑_{x ∈ U} 1{V(x) resolved} ν(V(x), p))⁺] ≤ C |p|₁² |U| / 3 ^ (n / 2)`
 
-uniformly in `U` and `n` (Armstrong and Dario, Lemma 4.8, (4.18), in expectation; the set `W` of
+uniformly in `U` and `n` (Armstrong and Dario, Lemma 4.8, (4.33), in expectation; the set `W` of
 the proof there is the set of exceptional vertices).
 -/
 
@@ -440,7 +440,7 @@ theorem lintegral_exceptionalCountBound_le {p : unitInterval} {C₂ C₆ : ℝ�
                 exact mul_le_mul_of_nonneg_right hcard zero_le
       _ = _ := by rw [Finset.sum_const, nsmul_eq_mul]
 
-/-- **Expected error in the subadditivity of `ν`** (Armstrong and Dario, Lemma 4.8, (4.18), in
+/-- **Expected error in the subadditivity of `ν`** (Armstrong and Dario, Lemma 4.8, (4.33), in
 expectation). -/
 theorem exists_lintegral_planarNu_sub_sum_subcubes_le {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :

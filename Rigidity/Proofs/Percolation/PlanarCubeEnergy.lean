@@ -353,7 +353,7 @@ theorem TriadicCube.volume_pos (U : TriadicCube 2) : 0 < U.volume := by
   unfold TriadicCube.volume
   positivity
 
-/-- **First and second variations for `μ`** (Armstrong and Dario, Lemma 4.1). On the partition
+/-- **First and second variations for `μ`** (Armstrong and Dario, Lemma 4.2). On the partition
 event and for a resolved cube, `μ(U, q)` is attained at a function `u ∈ A_*(U)` solving
 `B w u = ℓ_q w` for all `w ∈ A_*(U)`. -/
 theorem exists_planarMu_minimizer (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
@@ -377,7 +377,7 @@ theorem exists_planarMu_minimizer (hP : PlanarPartitionEvent ω) {U : TriadicCub
     exact ciInf_le ⟨f ⟨u, hu⟩, by rintro _ ⟨w, rfl⟩; rw [hfu]; exact hle w⟩ _
   · exact le_ciInf hle
 
-/-- **First and second variations for `ν`** (Armstrong and Dario, Lemma 4.1). On the partition
+/-- **First and second variations for `ν`** (Armstrong and Dario, Lemma 4.2). On the partition
 event and for a resolved cube, `ν(U, p)` is attained at a function `v ∈ A_*(U)` solving
 `B w v = F_p w` for all `w ∈ A_*(U)`. -/
 theorem exists_planarNu_maximizer {U : TriadicCube 2} (p : Fin 2 → ℝ) :

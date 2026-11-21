@@ -6,7 +6,7 @@ import Rigidity.Percolation.IntegerCubeCoalescenceScales
 
 `μ(U, q) ≤ 0 ≤ ν(U, p)`, both being compared with the zero function, and
 `ν(U, p) ≤ (9 / 4) (|p₁| + |p₂|) ^ 2` by Young's inequality on each open edge (Armstrong and
-Dario, Lemma 4.3, bound for `ν`).
+Dario, Lemma 4.4, bound for `ν`).
 -/
 
 open LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -98,7 +98,7 @@ theorem card_clusterVertices_le (U : TriadicCube 2) :
   rw [h2] at h1
   exact_mod_cast h1
 
-/-- **Upper bound for `ν`** (Armstrong and Dario, Lemma 4.3). -/
+/-- **Upper bound for `ν`** (Armstrong and Dario, Lemma 4.4). -/
 theorem planarNu_le {U : TriadicCube 2} (p : Fin 2 → ℝ) :
     planarNu ω U p ≤ 9 / 4 * (|p 0| + |p 1|) ^ 2 := by
   obtain ⟨v, -, -, hν⟩ := exists_planarNu_maximizer (ω := ω) (U := U) p
