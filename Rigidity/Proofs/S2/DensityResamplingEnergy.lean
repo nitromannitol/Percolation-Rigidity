@@ -23,6 +23,10 @@ count of a triadic cube of size `3^m` are summable over the bonds, with sum at m
 `C r^β (3^m + 1)^d`. -/
 def DensityInfluenceRootBound (d : ℕ) (p : unitInterval) (β : ℕ) : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (r : ℕ), 1 ≤ r → ∀ (m : ℕ) (k : Vertex d),
+    (∀ e : Bond d, Integrable (fun q : Configuration d × Configuration d =>
+      |(infiniteClusterCount (triadicCube d m k) q.1 : ℝ) -
+        (infiniteClusterCount (triadicCube d m k) (resampleBond q.1 q.2 e) : ℝ)| ^ (2 * r))
+      ((latticeBondLaw d p).prod (latticeBondLaw d p))) ∧
     Summable (fun e : Bond d => (∫ q : Configuration d × Configuration d,
       |(infiniteClusterCount (triadicCube d m k) q.1 : ℝ) -
         (infiniteClusterCount (triadicCube d m k) (resampleBond q.1 q.2 e) : ℝ)| ^ (2 * r)
@@ -57,12 +61,12 @@ theorem density_resampling_energy_moments (h : DensityInfluenceRootBound d p β)
   let f (e : Bond d) (q : Configuration d × Configuration d) : ℝ :=
     |(infiniteClusterCount (triadicCube d m k) q.1 : ℝ) -
       (infiniteClusterCount (triadicCube d m k) (resampleBond q.1 q.2 e) : ℝ)| ^ 2
-  obtain ⟨hsum, hbound⟩ := hroots r hr m k
+  obtain ⟨hint, hsum, hbound⟩ := hroots r hr m k
   have hm (e : Bond d) : Measurable (f e) := (measurable_count_influence m k e).pow_const 2
   have hnonneg (e : Bond d) (q : Configuration d × Configuration d) : 0 ≤ f e q := by
     dsimp [f]; positivity
   have hint' (e : Bond d) : Integrable (fun q => f e q ^ r) μ := by
-    simpa only [f, ← pow_mul] using integrable_count_influence_pow p m k e (2 * r)
+    simpa only [f, ← pow_mul] using hint e
   have hsum' : Summable (fun e : Bond d => (∫ q, f e q ^ r ∂μ) ^ (1 / (r : ℝ))) := by
     simpa only [f, ← pow_mul] using hsum
   obtain ⟨Y, hY, hYsum, hYnorm⟩ :=

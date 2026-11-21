@@ -132,7 +132,8 @@ theorem influence_factorial_root_growth_dim (hd : 1 ≤ d) (a A a' A' B : ℝ)
 theorem DensityInfluenceRootBound.mono {p : unitInterval} {β β' : ℕ} (hββ' : β ≤ β')
     (h : DensityInfluenceRootBound d p β) : DensityInfluenceRootBound d p β' := by
   obtain ⟨C, hC, hbound⟩ := h
-  refine ⟨C, hC, fun r hr m k => ⟨(hbound r hr m k).1, (hbound r hr m k).2.trans ?_⟩⟩
+  refine ⟨C, hC, fun r hr m k =>
+    ⟨(hbound r hr m k).1, (hbound r hr m k).2.1, (hbound r hr m k).2.2.trans ?_⟩⟩
   have hr1 : (1 : ℝ) ≤ r := by exact_mod_cast hr
   have hpow : (r : ℝ) ^ β ≤ (r : ℝ) ^ β' := pow_le_pow_right₀ hr1 hββ'
   exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hpow hC.le) (by positivity)
@@ -203,7 +204,7 @@ theorem densityInfluenceRootBound_of_three_le [NeZero d] (hd : 3 ≤ d) {p : uni
           mul_le_mul_of_nonneg_right hTK (Real.exp_pos _).le)
   obtain ⟨_, hfs, hsum⟩ := Rigidity.Percolation.summable_bond_shells_exp_rpow z R f K c t
     hK.le hc ht hf hglobal hdecay
-  refine ⟨hfs, hsum.trans ?_⟩
+  refine ⟨fun e => (hmoment m k e s hs).1, hfs, hsum.trans ?_⟩
   change 2 * d * 3 ^ d * ((R : ℝ) + 1) ^ d * K ^ t * (1 + ∑' n, q n) ≤
     C * (r : ℝ) ^ (3 * d + 2) * ((R : ℝ) + 1) ^ d
   have hprod : K ^ t * (1 + ∑' n, q n) ≤
