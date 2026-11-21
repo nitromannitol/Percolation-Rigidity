@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Partition.PartitionCube
+import Rigidity.Proofs.Partition.Measurability
 import Rigidity.Proofs.Percolation.PlanarTriadicPartition
 import Rigidity.Percolation.SlabTriadicPartition
 import Rigidity.Percolation.Blocks.SlabConnectivity
@@ -22,23 +22,6 @@ open LatticeProb.Percolation MeasureTheory Rigidity.External
 open scoped ENNReal
 
 variable {d : ℕ}
-
-/-- Membership in the well-connected cubes of scale at least two is measurable. -/
-theorem TriadicCube.measurableSet_mem_wellConnectedCubes (Q : TriadicCube d) :
-    MeasurableSet {ω : Configuration d | Q ∈ TriadicCube.wellConnectedCubes ω} := by
-  by_cases h : 2 ≤ Q.scale
-  · have heq : {ω : Configuration d | Q ∈ TriadicCube.wellConnectedCubes ω} =
-        {ω | Q.wellConnectedIn Q.threeQuarterCube.vertices ω} := by
-      ext ω
-      simp only [TriadicCube.wellConnectedCubes, Set.mem_setOf_eq, h, true_and]
-    rw [heq]
-    exact Q.measurableSet_wellConnectedIn _
-  · have heq : {ω : Configuration d | Q ∈ TriadicCube.wellConnectedCubes ω} = ∅ := by
-      ext ω
-      simp only [TriadicCube.wellConnectedCubes, Set.mem_setOf_eq, h, false_and,
-        Set.mem_empty_iff_false]
-    rw [heq]
-    exact MeasurableSet.empty
 
 /-- **Armstrong and Dario, Proposition 2.1, for the good cubes.** An exponential estimate for the
 failure of well-connectedness of large cubes gives, almost surely, the partition into good
