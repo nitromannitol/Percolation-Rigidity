@@ -1,14 +1,18 @@
 import Rigidity.Proofs.Regularity.LatticeHarmonicExcess
 
 /-!
-# Second-order approximation of lattice harmonic functions
+# Excess decay of order two of lattice harmonic functions
 
-Ingredients of the excess decay of order two (`HarmonicRegularity` with `j = 2`) of lattice
-harmonic functions on the balls of the lattice: forward differences commute
-(`fwd_comm`), the second forward differences of the quadratic form
-`Q₀(y) = ½ q_H(y - c)` are the constants `(H_{ab} + H_{ba}) / 2` (`fwd_fwd_halfQuad`), and the
-third forward differences of a harmonic function are bounded on a box by its square sum on a
-larger box (`sq_fwd_fwd_fwd_le`).
+For `F` harmonic on `B_r(z)` and a lattice harmonic quadratic function `w`
+(`latticeHarmonicQuadratic`), `f = F - w` is harmonic and its third forward differences are bounded
+on `Q_m(z)` by `m^{-d/2 - 3}` times its `ℓ²` norm on `B_r(z)` (`sq_fwd_fwd_fwd_le`). The
+second-order Taylor expansion at the corner `c` (`abs_sub_taylor_two_le`) has the quadratic part
+`½ q_H(y - c)` with `H` the second differences at `c`; the trace of `H` is a sum of third
+differences (`sum_hessAt_eq`), so the trace-free part `harmHess f c` gives a lattice harmonic
+quadratic function with an error of the same order (`abs_sub_harmonicTaylor_two_le`). This yields
+the excess decay of order two (`harmonicRegularity_two_latticeHarmonicClass`) and, with the order
+one decay, Lemma 7.2 of Armstrong and Dario for `k = 1` for lattice harmonic functions with only the
+harmonic approximation hypothesis (`armstrongDario_lemma_7_2_one_latticeHarmonic`).
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -695,5 +699,42 @@ theorem harmonicRegularity_two_latticeHarmonicClass [NeZero d] (z : Vertex d) (R
   refine le_ciInf fun w => ?_
   rw [componentBallSeminorm_apply]
   exact ballExcess_le_latticeHRConstTwo_mul z hrR hv hXs hsr w.2
+
+/-- **Armstrong–Dario, Lemma 7.2 (`k = 1`), for lattice harmonic functions on the balls of the
+lattice**: with `Ā(B_r)` the lattice harmonic functions on `B_r(z)` and `Ā_2` the lattice harmonic
+quadratic functions, whose excess decay of orders one and two is proved above, only the harmonic
+approximation hypothesis remains. -/
+theorem armstrongDario_lemma_7_2_one_latticeHarmonic (d : ℕ) [NeZero d] {A α : ℝ} (hA : 2 ≤ A)
+    (hα : 0 < α) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (z : Vertex d) (R X E : ℝ) (u : latticeComponent d → ℝ),
+      1 ≤ X →
+      max (latticeHRScale d) (max (latticeHRScaleTwo d) (quadLocality d (capFraction d 1))) ≤ X →
+      X ≤ R / A → 0 ≤ E →
+      HarmonicApproximation (componentBallSeminorm (latticeComponent d) z)
+        (latticeHarmonicClass z) (clusterConstants (latticeComponent d)) A α X R E u →
+      ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+        ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterAffine (latticeComponent d)) r u ≤
+          C * (r / R) ^ 2 * ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterAffine (latticeComponent d)) R u +
+          C * r ^ (1 - α) * (ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterConstants (latticeComponent d)) R u / R + E / r) := by
+  have hd : 0 < d := Nat.pos_of_ne_zero (NeZero.ne d)
+  have hCH : 0 ≤ max (latticeHRConst d) (latticeHRConstTwo d) :=
+    (latticeHRConst_nonneg d).trans (le_max_left _ _)
+  obtain ⟨C, hC, h⟩ := armstrongDario_lemma_7_2_one_lattice d hd hA hα hCH
+  refine ⟨C, hC, fun z R X E u hX hXs hXR hE happ => ?_⟩
+  have hX0 : 0 < X := by linarith
+  have hX1 : latticeHRScale d ≤ X := (le_max_left _ _).trans hXs
+  have hX2 : latticeHRScaleTwo d ≤ X := (le_max_left _ _).trans ((le_max_right _ _).trans hXs)
+  have hXq : quadLocality d (capFraction d 1) ≤ X :=
+    (le_max_right _ _).trans ((le_max_right _ _).trans hXs)
+  exact h z (latticeHarmonicQuadratic d) (latticeHarmonicClass z) R X E u
+    clusterAffine_le_latticeHarmonicQuadratic latticeHarmonicQuadratic_le_clusterQuadratic hX hXR
+    hE hXq (((harmonicRegularity_latticeHarmonicClass z R).of_le _ hX1).mono_const
+      (le_max_left _ _) hX0)
+    (((harmonicRegularity_two_latticeHarmonicClass z R).of_le _ hX2).mono_const
+      (le_max_right _ _) hX0)
+    (fun r _ _ => ⟨0, zero_mem_latticeHarmonicClass z r⟩) happ
 
 end Rigidity.Proofs.Regularity
