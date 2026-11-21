@@ -138,4 +138,88 @@ theorem sum_sq_grad_comp_cubeProj (Q : IntegerCube d) (w : Vertex d → ℝ) :
   · rw [cubeProj_of_mem Q h]
   · rw [cubeProj_add_unit_of_not_mem Q hy h, sub_self, zero_pow two_ne_zero]
 
+/-- The cubes `x + □_N` with `x` in the trimmed cube off its layer, and their steps `e_k`, lie
+in `Q`. -/
+theorem mem_of_mem_cornerCube_of_mem_trim (Q : IntegerCube d) {N r : ℕ} {x y : Vertex d}
+    (hx : x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1))
+    (hy : y ∈ (cornerCube x N).vertices) (k : Fin d) :
+    y ∈ Q.vertices ∧ y + unit k ∈ Q.vertices := by
+  obtain ⟨hxT, hxL⟩ := Finset.mem_sdiff.mp hx
+  have hnot : ∀ i, ¬(x i < (trimCube Q N).corner i + ((r + 1 : ℕ) : ℤ) ∨
+      (trimCube Q N).corner i + ((trimCube Q N).size : ℤ) ≤ x i + ((r + 1 : ℕ) : ℤ)) :=
+    fun i h => hxL (Finset.mem_filter.mpr ⟨hxT, i, h⟩)
+  rw [IntegerCube.mem_vertices] at hxT hy
+  simp only [trimCube, cornerCube] at hxT hy hnot
+  constructor
+  · rw [IntegerCube.mem_vertices]
+    intro i
+    have h1 := hxT i
+    have h2 := hy i
+    have h3 := hnot i
+    push Not at h3
+    constructor <;> omega
+  · rw [IntegerCube.mem_vertices]
+    intro i
+    rw [add_unit_apply]
+    have h1 := hxT i
+    have h2 := hy i
+    have h3 := hnot i
+    push Not at h3
+    split_ifs <;> constructor <;> omega
+
+/-- **Lemma 6.2, homogenized side, on the edges inside `Q`.** -/
+theorem innerEdgeEnergy_dirichletSolution_div_le_of_mu_test (hd : 1 ≤ d) (a : Fin d → ℝ)
+    (ha : ∀ k, 0 < a k) {Λ : ℝ} (haΛ : ∀ k, a k ≤ Λ) (Q : IntegerCube d) (hL : 0 < Q.size)
+    {N r : ℕ} (hN : 0 < N) (hr : 0 < r) (w : Vertex d → ℝ) {s : ℝ} (hs : 2 ≤ s)
+    (μ δ e : Vertex d → ℝ) (he : ∀ y, 0 ≤ e y)
+    (htest : ∀ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1),
+      μ x ≤ (∑ y ∈ (cornerCube x N).vertices, e y) / (N : ℝ) ^ d / 2 -
+        ∑ k, a k * cubeSlope N w x k * cubeEdgeSlope N w x k)
+    (hconv : ∀ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1),
+      |(∑ k, (a k * cubeSlope N w x k) ^ 2 / a k) / 2 + μ x| ≤ δ x) :
+    innerEdgeEnergy (constCond a) Q (dirichletSolution (constCond a) (cubeInterior Q) w) /
+        (Q.size : ℝ) ^ d ≤
+      (∑ y ∈ Q.vertices, e y +
+          2 * ∑ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1), δ x +
+          2 * (Λ / √(N : ℝ) * ∑ y ∈ Q.vertices, ∑ k : Fin d,
+            (if y + unit k ∈ Q.vertices then (w (y + unit k) - w y) ^ 2 else 0))) /
+            (Q.size : ℝ) ^ d +
+        Λ * ((2 * d * ((r + 1 + N : ℕ) : ℝ) / Q.size) ^ (1 - 2 / s) *
+          ((d : ℝ) ^ (s / 2 - 1) *
+            ((1 + (3 : ℝ) ^ (s - 1) * (1 + 2 ^ s + (d : ℝ) ^ s * ((N : ℝ) / r) ^ s)) *
+              ∑ y ∈ Q.vertices, ∑ k : Fin d,
+                (if y + unit k ∈ Q.vertices then |w (y + unit k) - w y| ^ s else 0)) /
+                (Q.size : ℝ) ^ d) ^ (2 / s)) := by
+  set w' : Vertex d → ℝ := fun y => w (cubeProj Q y) with hw'
+  have hslope : ∀ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1), ∀ k,
+      cubeSlope N w' x k = cubeSlope N w x k := by
+    intro x hx k
+    simp only [cubeSlope, cubeAverage]
+    congr 1
+    refine Finset.sum_congr rfl fun y hy => ?_
+    have h := mem_of_mem_cornerCube_of_mem_trim Q hx hy k
+    simp only [hw']
+    rw [cubeProj_of_mem Q h.1, cubeProj_of_mem Q h.2]
+  have hedge : ∀ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1), ∀ k,
+      cubeEdgeSlope N w' x k = cubeEdgeSlope N w x k := by
+    intro x hx k
+    simp only [cubeEdgeSlope]
+    congr 1
+    refine Finset.sum_congr rfl fun y hy => ?_
+    have h := mem_of_mem_cornerCube_of_mem_trim Q hx (Finset.mem_filter.mp hy).1 k
+    simp only [hw']
+    rw [cubeProj_of_mem Q h.1, cubeProj_of_mem Q h.2]
+  have key := edgeEnergy_dirichletSolution_div_le_of_mu_test_trim hd a ha haΛ Q hL hN hr w' hs μ
+    δ e he
+    (fun x hx => by
+      simp only [hslope x hx, hedge x hx]
+      exact htest x hx)
+    (fun x hx => by
+      simp only [hslope x hx]
+      exact hconv x hx)
+  have hs0 : 0 < s := by linarith
+  simp only [hw', edgeEnergy_dirichletSolution_comp_cubeProj, sum_sq_grad_comp_cubeProj,
+    sum_abs_grad_comp_cubeProj_rpow Q w hs0] at key
+  exact key
+
 end Rigidity.Dirichlet
