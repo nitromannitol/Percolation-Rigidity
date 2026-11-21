@@ -126,6 +126,58 @@ theorem partition_estimates [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
   obtain ⟨n₀, C, c, hC, hc, hlarge⟩ := exists_wellConnectedIn_large_scale hd hpc
   exact partition_estimates_of_large_scale (by omega) _ n₀ C c hC hc hlarge
 
+/-- A large-scale well-connectedness estimate gives an exponential bound on the probability that
+a triadic cube is not good. -/
+theorem exists_measure_not_mem_goodCubes_le_of_large_scale (μ : Measure (Configuration d))
+    [IsProbabilityMeasure μ] (n₀ : ℕ) (C c : ℝ) (hC : 0 ≤ C) (hc : 0 < c)
+    (hlarge : ∀ Q : TriadicCube d, n₀ ≤ Q.scale →
+      μ {ω | ¬ Q.wellConnectedIn Q.threeQuarterCube.vertices ω} ≤
+        ENNReal.ofReal (C * Real.exp (-c * (3 : ℝ) ^ Q.scale))) :
+    ∃ C' c' : ℝ, 0 ≤ C' ∧ 0 < c' ∧ ∀ Q : TriadicCube d,
+      μ {ω | Q ∉ TriadicCube.goodCubes ω} ≤
+        ENNReal.ofReal (C' * Real.exp (-c' * (3 : ℝ) ^ Q.scale)) := by
+  have hlarge' : ∀ Q : TriadicCube d, max n₀ 2 ≤ Q.scale →
+      μ {ω | Q ∉ TriadicCube.wellConnectedCubes ω} ≤
+        ENNReal.ofReal (C * Real.exp (-c * (3 : ℝ) ^ Q.scale)) := by
+    intro Q hQ
+    have h2 : 2 ≤ Q.scale := le_of_max_le_right hQ
+    have heq : {ω | Q ∉ TriadicCube.wellConnectedCubes ω} =
+        {ω | ¬ Q.wellConnectedIn Q.threeQuarterCube.vertices ω} := by
+      ext ω
+      simp only [TriadicCube.wellConnectedCubes, Set.mem_setOf_eq, h2, true_and]
+    rw [heq]
+    exact hlarge Q (le_of_max_le_left hQ)
+  have hall := TriadicCube.measure_le_exp_of_large_scale μ
+    (fun Q => {ω | Q ∉ TriadicCube.wellConnectedCubes ω}) (max n₀ 2) C c hC hc hlarge'
+  set B : ℝ := C + Real.exp (c * (3 : ℝ) ^ (max n₀ 2)) with hBdef
+  have hB : 0 ≤ B := by positivity
+  have hgood := TriadicCube.measure_not_mem_goodOfWellConnected_le μ
+    TriadicCube.wellConnectedCubes (ENNReal.ofReal B) c hc (fun Q => by
+      rw [← ENNReal.ofReal_mul hB]
+      exact hall Q)
+  refine ⟨max (Real.exp (c / 3)) ((1 + 3 ^ d) * B), c / 3, by positivity, by positivity,
+    fun Q => (hgood Q).trans ?_⟩
+  rw [ENNReal.ofReal_mul (by positivity)]
+  gcongr
+  apply max_le
+  · exact ENNReal.ofReal_le_ofReal (le_max_left _ _)
+  · have h1 : ((1 : ℝ≥0∞) + 3 ^ d) = ENNReal.ofReal (1 + 3 ^ d) := by
+      rw [ENNReal.ofReal_add (by norm_num) (by positivity), ENNReal.ofReal_one,
+        ENNReal.ofReal_pow (by norm_num), ENNReal.ofReal_ofNat]
+    rw [h1, ← ENNReal.ofReal_mul (by positivity)]
+    exact ENNReal.ofReal_le_ofReal (le_max_right _ _)
+
+/-- **Armstrong and Dario, Lemma 2.7**, for the good cubes of supercritical bond percolation on
+`ℤᵈ`, `d ≥ 2`: a triadic cube of scale `n` fails to be good with probability at most
+`C exp(-c 3ⁿ)`. -/
+theorem exists_measure_not_mem_goodCubes_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ C c : ℝ, 0 ≤ C ∧ 0 < c ∧ ∀ Q : TriadicCube d,
+      latticeBondLaw d p {ω | Q ∉ TriadicCube.goodCubes ω} ≤
+        ENNReal.ofReal (C * Real.exp (-c * (3 : ℝ) ^ Q.scale)) := by
+  obtain ⟨n₀, C, c, hC, hc, hlarge⟩ := exists_wellConnectedIn_large_scale hd hpc
+  exact exists_measure_not_mem_goodCubes_le_of_large_scale _ n₀ C c hC hc hlarge
+
 /-- **The partition into good cubes** exists almost surely for supercritical bond percolation on
 `ℤᵈ`, `d ≥ 2`. -/
 theorem ae_partitionEvent [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
