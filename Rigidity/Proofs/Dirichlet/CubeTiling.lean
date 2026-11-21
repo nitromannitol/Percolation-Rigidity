@@ -74,4 +74,36 @@ theorem sum_cornerCube_mul {K : ℕ} (hK : 0 < K) (z : Vertex d) (M : ℕ)
   · intro x _
     rfl
 
+/-- **Sums over all translates of a cube**: for `F ≥ 0` and `B ⊇ A + {0, …, N − 1}^d`,
+`Σ_{x∈A} Σ_{y ∈ x + □} F(y) ≤ N^d Σ_{y∈B} F(y)`; each point of `B` lies in at most `N^d` of the
+translated cubes. With all translates in place of a mesh, this is the counting in Step 3 of the
+proof of Armstrong–Dario, Lemma 6.2, on the lattice. -/
+theorem sum_translates_le (A B : Finset (Vertex d)) (N : ℕ) (F : Vertex d → ℝ)
+    (hF : ∀ y, 0 ≤ F y) (hB : ∀ x ∈ A, ∀ o ∈ (cornerCube 0 N).vertices, x + o ∈ B) :
+    ∑ x ∈ A, ∑ y ∈ (cornerCube x N).vertices, F y ≤
+      (N : ℝ) ^ d * ∑ y ∈ B, F y := by
+  classical
+  have hshift : ∀ x, ∑ y ∈ (cornerCube x N).vertices, F y =
+      ∑ o ∈ (cornerCube 0 N).vertices, F (o + x) := by
+    intro x
+    have h := sum_cornerCube_add (0 : Vertex d) x N F
+    rwa [zero_add] at h
+  simp only [hshift]
+  rw [Finset.sum_comm]
+  have hcard : ((cornerCube (0 : Vertex d) N).vertices.card : ℝ) = (N : ℝ) ^ d := by
+    rw [card_vertices]
+    simp [cornerCube]
+  calc ∑ o ∈ (cornerCube 0 N).vertices, ∑ x ∈ A, F (o + x)
+      ≤ ∑ _o ∈ (cornerCube (0 : Vertex d) N).vertices, ∑ y ∈ B, F y := by
+        refine Finset.sum_le_sum fun o ho => ?_
+        calc ∑ x ∈ A, F (o + x) = ∑ y ∈ A.map (addRightEmbedding o), F y := by
+              rw [Finset.sum_map]
+              exact Finset.sum_congr rfl fun x _ => by rw [addRightEmbedding_apply, add_comm]
+          _ ≤ ∑ y ∈ B, F y := by
+              refine Finset.sum_le_sum_of_subset_of_nonneg (fun y hy => ?_) fun y _ _ => hF y
+              obtain ⟨x, hx, rfl⟩ := Finset.mem_map.mp hy
+              exact hB x hx o ho
+    _ = (N : ℝ) ^ d * ∑ y ∈ B, F y := by
+        rw [Finset.sum_const, nsmul_eq_mul, hcard]
+
 end Rigidity.Dirichlet
