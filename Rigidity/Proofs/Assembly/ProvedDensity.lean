@@ -7,8 +7,9 @@ import Rigidity.Proofs.S2.ClusterDensityConcentration
 
 The concentration of the density of the infinite cluster (Dario–Gu, Proposition A.1,
 `Rigidity.External.ClusterDensityConcentrationInput`) is proved in every dimension
-(`Rigidity.Proofs.S2.cluster_density_concentration`). Proposition 2.6 therefore no longer takes it
-as a hypothesis, and neither does Theorem 1.3, which also uses the proved Proposition 2.3.
+(`Rigidity.Proofs.S2.cluster_density_concentration`). The versions of Proposition 2.6 and
+Theorem 1.3 below therefore do not take it as a hypothesis; Theorem 1.3 also uses the proved
+Proposition 2.3.
 -/
 
 namespace Rigidity.Assembly.WithProvedDensity

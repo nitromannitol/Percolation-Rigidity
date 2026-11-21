@@ -507,8 +507,8 @@ The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.soun
 For `d ≥ 3` and `𝔭_c(d) < p`, the finite-cluster estimates of
 [Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3)
 give the density concentration of Dario and Gu, Proposition A.1. With the case `d = 2` of the
-previous section, `ClusterDensityConcentrationInput` is proved, and Proposition 2.6 and Theorem 1.3
-no longer take it as a hypothesis.
+previous section, `ClusterDensityConcentrationInput` is proved, and the versions of Proposition 2.6
+and Theorem 1.3 in `Rigidity.Assembly.WithProvedDensity` do not take it as a hypothesis.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -540,7 +540,8 @@ are in [`Rigidity/Proofs/S2/`](Rigidity/Proofs/S2/), from `DensityResamplingEner
    `E|X|^{2n} ≤ (E|X|ⁿ)² + C n^{2γ+2} 3^{−dm} (E|X|^{2n})^{(n−1)/n}`
    (`Rigidity.Proofs.S2.density_moment_recursion`), hence `‖X‖_{Lⁿ} ≤ C n^{γ+1} 3^{−dm/2}` and
    `|X| ≤ O_s(C 3^{−dm/2})` for every `0 < s ≤ 1/(γ + 1)`
-   (`Rigidity.Proofs.S2.clusterDensityConcentrationAt_of_rootBound`). For `d ≥ 3` the Lean proof
+   (`Rigidity.Proofs.S2.isOsBond_density_of_rootBound`; at the exponent of the source,
+   `Rigidity.Proofs.S2.clusterDensityConcentrationAt_of_rootBound`). For `d ≥ 3` the Lean proof
    takes `γ = ⌊(3d + 3)/2⌋`, so that `2γ ≥ 3d + 2`; since `2(γ + 1) ≤ 3d + 5`, the exponent
    `1/(γ + 1)` is at least `2(d − 1)/(3d² + 2d − 1)` (for `d = 3`, `1/7 ≥ 1/8`).
 
