@@ -5,14 +5,15 @@ import Rigidity.Proofs.Cluster.CoarseInequalities
 
 Armstrong and Dario (Proposition 3.4) deduce the Sobolev inequality on the cluster from the
 Sobolev inequality on the lattice applied to the coarsening `[w]_𝒫`, Lemma 3.2 for `w - [w]_𝒫` and
-Lemma 3.3 for `∇[w]_𝒫`. This file proves the deduction for coarse-graining data in the case
-`∑_{C_*(U)} w = 0`. If the lattice Sobolev–Poincaré inequality
-`∑_{x ∈ D} |f(x) - (f)_D|^s ≤ S (∑_{x ∈ D} |∇f|^t(x))^{s/t}` holds on the domain `D`, Lemma 3.2
-holds for `w` with exponent `s`, constant `A` and weights `a`, and Lemma 3.3 holds for `w` with
-exponent `t ≤ s`, constant `B` and weights `b`, then
+Lemma 3.3 for `∇[w]_𝒫`. This file proves the deduction for coarse-graining data in the cases
+`∑_{C_*(U)} w = 0` and `∑_{cl_𝒫(U)} [w]_𝒫 = 0` of Armstrong and Dario. If the lattice
+Sobolev–Poincaré inequality `∑_{x ∈ D} |f(x) - (f)_D|^s ≤ S (∑_{x ∈ D} |∇f|^t(x))^{s/t}` holds
+on the domain `D`, Lemma 3.2 holds for `w` with exponent `s`, constant `A` and weights `a`, and
+Lemma 3.3 holds for `w` with exponent `t ≤ s`, constant `B` and weights `b`, then
 `∑_{x ∈ C_*(U)} |w(x)|^s ≤ c (A + S B^{s/t}) (∑_z (a(z)^{t/s} + b(z)) |∇w 1_{a≠0}|^t(z))^{s/t}`
-with `c = 2^{s-1}(1 + 2^{s-1} + 4^{s-1})`. The last step of Armstrong and Dario,
-`∑ a_i^{s/t} ≤ (∑ a_i)^{s/t}`, turns the weights `a` of Lemma 3.2 into `a^{t/s}`.
+with `c = 2^{s-1}(1 + 2^{s-1} + 4^{s-1})`, and `c = 2^{s-1}` in the second case. The last step of
+Armstrong and Dario, `∑ a_i^{s/t} ≤ (∑ a_i)^{s/t}`, turns the weights `a` of Lemma 3.2 into
+`a^{t/s}`.
 -/
 
 open LatticeProb.Percolation
@@ -230,6 +231,97 @@ theorem sum_rpow_le_of_latticeSobolevOn {s t A B S : ℝ} (hs : 1 ≤ s) (ht : 1
           ((A + S * B ^ (s / t)) * W ^ (s / t)) :=
         mul_le_mul_of_nonneg_left (by nlinarith [hUW, hVW]) (by positivity)
     _ = _ := by ring
+
+/-- **Armstrong and Dario, Proposition 3.4, from the lattice Sobolev inequality** (case
+`∑_{cl_𝒫(U)} [w]_𝒫 = 0`). -/
+theorem sum_rpow_le_of_latticeSobolevOn_of_sum_coarsen {s t A B S : ℝ} (hs : 1 ≤ s)
+    (ht : 1 ≤ t) (hts : t ≤ s) (hA : 0 ≤ A) (hB : 0 ≤ B) (hS : 0 ≤ S) {a b : Vertex d → ℝ}
+    (ha : ∀ z, 0 ≤ a z) (hb : ∀ z, 0 ≤ b z) (hLS : LatticeSobolevOn P.domain s t S)
+    (w : Vertex d → ℝ)
+    (h32 : ∑ x ∈ P.cluster, |w x - P.coarsen w x| ^ s ≤
+      A * ∑ z ∈ P.cluster, a z * gradNormIn (openGraph ω) P.cluster w z ^ s)
+    (h33 : ∑ x ∈ P.domain, gradNormIn (nearestNeighborGraph d) P.domain (P.coarsen w) x ^ t ≤
+      B * ∑ z ∈ P.cluster, b z * gradNormIn (openGraph ω) P.cluster w z ^ t)
+    (hw : ∑ x ∈ P.domain, P.coarsen w x = 0) :
+    ∑ x ∈ P.cluster, |w x| ^ s ≤
+      2 ^ (s - 1) * (A + S * B ^ (s / t)) *
+        (∑ z ∈ P.cluster, (a z ^ (t / s) + b z) *
+          gradNormIn (openGraph ω) P.cluster w z ^ t) ^ (s / t) := by
+  have hs0 : 0 < s := by linarith
+  have ht0 : 0 < t := by linarith
+  have hsne : s ≠ 0 := hs0.ne'
+  have htne : t ≠ 0 := ht0.ne'
+  have hst : 1 ≤ s / t := by rw [le_div_iff₀ ht0]; linarith
+  have hg0 : ∀ z, 0 ≤ gradNormIn (openGraph ω) P.cluster w z := fun z =>
+    gradNormIn_nonneg _ _ _ _
+  obtain ⟨W, hW⟩ : ∃ W : ℝ, W = ∑ z ∈ P.cluster, (a z ^ (t / s) + b z) *
+      gradNormIn (openGraph ω) P.cluster w z ^ t := ⟨_, rfl⟩
+  rw [← hW]
+  have hW0 : 0 ≤ W := by
+    rw [hW]
+    exact Finset.sum_nonneg fun z _ => mul_nonneg (add_nonneg (Real.rpow_nonneg (ha z) _) (hb z))
+      (Real.rpow_nonneg (hg0 z) _)
+  have hc0 : (0 : ℝ) ≤ 2 ^ (s - 1) := by positivity
+  have hUW : ∑ x ∈ P.cluster, |w x - P.coarsen w x| ^ s ≤ A * W ^ (s / t) := by
+    refine h32.trans (mul_le_mul_of_nonneg_left ?_ hA)
+    calc ∑ z ∈ P.cluster, a z * gradNormIn (openGraph ω) P.cluster w z ^ s
+        = ∑ z ∈ P.cluster, (a z ^ (t / s) * gradNormIn (openGraph ω) P.cluster w z ^ t) ^ (s / t) :=
+          Finset.sum_congr rfl fun z _ => by
+            have e1 : (a z ^ (t / s)) ^ (s / t) = a z := by
+              rw [← Real.rpow_mul (ha z), show t / s * (s / t) = 1 by field_simp, Real.rpow_one]
+            have e2 : (gradNormIn (openGraph ω) P.cluster w z ^ t) ^ (s / t) =
+                gradNormIn (openGraph ω) P.cluster w z ^ s := by
+              rw [← Real.rpow_mul (hg0 z), show t * (s / t) = s by field_simp]
+            rw [Real.mul_rpow (Real.rpow_nonneg (ha z) _) (Real.rpow_nonneg (hg0 z) _), e1, e2]
+      _ ≤ (∑ z ∈ P.cluster, a z ^ (t / s) * gradNormIn (openGraph ω) P.cluster w z ^ t) ^ (s / t) :=
+          sum_rpow_le_rpow_sum _ _ hst fun z _ =>
+            mul_nonneg (Real.rpow_nonneg (ha z) _) (Real.rpow_nonneg (hg0 z) _)
+      _ ≤ W ^ (s / t) := by
+          rw [hW]
+          refine Real.rpow_le_rpow (Finset.sum_nonneg fun z _ =>
+            mul_nonneg (Real.rpow_nonneg (ha z) _) (Real.rpow_nonneg (hg0 z) _))
+            (Finset.sum_le_sum fun z _ => mul_le_mul_of_nonneg_right
+              (le_add_of_nonneg_right (hb z)) (Real.rpow_nonneg (hg0 z) _)) (by linarith)
+  have hVW : ∑ x ∈ P.cluster, |P.coarsen w x| ^ s ≤ S * B ^ (s / t) * W ^ (s / t) := by
+    have h1 : ∑ x ∈ P.cluster, |P.coarsen w x| ^ s ≤
+        ∑ x ∈ P.domain, |P.coarsen w x - (∑ y ∈ P.domain, P.coarsen w y) / P.domain.card| ^ s := by
+      rw [hw, zero_div]
+      simp only [sub_zero]
+      exact Finset.sum_le_sum_of_subset_of_nonneg P.cluster_subset fun _ _ _ =>
+        Real.rpow_nonneg (abs_nonneg _) _
+    have h3 : (∑ x ∈ P.domain, gradNormIn (nearestNeighborGraph d) P.domain (P.coarsen w) x ^ t) ^
+        (s / t) ≤ (B * W) ^ (s / t) := by
+      refine Real.rpow_le_rpow (Finset.sum_nonneg fun x _ =>
+        Real.rpow_nonneg (gradNormIn_nonneg _ _ _ _) _) (h33.trans ?_) (by linarith)
+      rw [hW]
+      exact mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun z _ => mul_le_mul_of_nonneg_right
+        (le_add_of_nonneg_left (Real.rpow_nonneg (ha z) _)) (Real.rpow_nonneg (hg0 z) _)) hB
+    rw [Real.mul_rpow hB hW0] at h3
+    calc ∑ x ∈ P.cluster, |P.coarsen w x| ^ s
+        ≤ ∑ x ∈ P.domain, |P.coarsen w x - (∑ y ∈ P.domain, P.coarsen w y) / P.domain.card| ^ s :=
+          h1
+      _ ≤ S * (∑ x ∈ P.domain,
+            gradNormIn (nearestNeighborGraph d) P.domain (P.coarsen w) x ^ t) ^ (s / t) :=
+          hLS (P.coarsen w)
+      _ ≤ S * (B ^ (s / t) * W ^ (s / t)) := mul_le_mul_of_nonneg_left h3 hS
+      _ = S * B ^ (s / t) * W ^ (s / t) := by ring
+  have hpt : ∀ x ∈ P.cluster, |w x| ^ s ≤
+      2 ^ (s - 1) * (|w x - P.coarsen w x| ^ s + |P.coarsen w x| ^ s) := by
+    intro x _
+    have e : w x = (w x - P.coarsen w x) + P.coarsen w x := by ring
+    calc |w x| ^ s = |(w x - P.coarsen w x) + P.coarsen w x| ^ s := by rw [← e]
+      _ ≤ (|w x - P.coarsen w x| + |P.coarsen w x|) ^ s :=
+          Real.rpow_le_rpow (abs_nonneg _) (abs_add_le _ _) (by linarith)
+      _ ≤ _ := add_rpow_le_two_rpow_mul (abs_nonneg _) (abs_nonneg _) hs
+  calc ∑ x ∈ P.cluster, |w x| ^ s
+      ≤ ∑ x ∈ P.cluster, 2 ^ (s - 1) * (|w x - P.coarsen w x| ^ s + |P.coarsen w x| ^ s) :=
+        Finset.sum_le_sum hpt
+    _ = 2 ^ (s - 1) * (∑ x ∈ P.cluster, |w x - P.coarsen w x| ^ s +
+          ∑ x ∈ P.cluster, |P.coarsen w x| ^ s) := by
+        rw [← Finset.mul_sum, Finset.sum_add_distrib]
+    _ ≤ 2 ^ (s - 1) * (A * W ^ (s / t) + S * B ^ (s / t) * W ^ (s / t)) :=
+        mul_le_mul_of_nonneg_left (add_le_add hUW hVW) hc0
+    _ = 2 ^ (s - 1) * (A + S * B ^ (s / t)) * W ^ (s / t) := by ring
 
 end CoarseData
 

@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Cluster.PartitionCoarseData
 import Rigidity.Proofs.Partition.Measurability
-import Rigidity.Proofs.Percolation.PlanarReachMoments
+import Rigidity.Percolation.TriadicStoppingSize
 
 /-!
 # Moments of the reach of the partition into good cubes
@@ -20,6 +20,33 @@ open scoped ENNReal Classical Nat
 namespace Rigidity.Percolation
 
 variable {d : ℕ}
+
+/-- The elementary bound `3 ^ (m s) · 2 exp (-3 ^ s / θ) ≤ 2 θ ^ (m + 1) (m + 1)! / 3 ^ s`. -/
+private theorem reach_three_pow_mul_exp_neg_le {θ : ℝ} (hθ : 0 < θ) (m s : ℕ) :
+    (3 : ℝ) ^ (m * s) * (2 * Real.exp (-((3 : ℝ) ^ s / θ))) ≤
+      2 * θ ^ (m + 1) * (m + 1)! * (1 / 3) ^ s := by
+  set T : ℝ := (3 : ℝ) ^ s with hT
+  have hTpos : 0 < T := by positivity
+  set x := T / θ with hx
+  have hxpos : 0 < x := div_pos hTpos hθ
+  have he : x ^ (m + 1) / (m + 1)! ≤ Real.exp x := Real.pow_div_factorial_le_exp x hxpos.le _
+  have hfac : (0 : ℝ) < (m + 1)! := by exact_mod_cast Nat.factorial_pos _
+  have key : T ^ (m + 1) ≤ (m + 1)! * θ ^ (m + 1) * Real.exp x := by
+    rw [div_le_iff₀ hfac, hx, div_pow] at he
+    have hθp : 0 < θ ^ (m + 1) := by positivity
+    rw [div_le_iff₀ hθp] at he
+    calc T ^ (m + 1) ≤ Real.exp (T / θ) * (m + 1)! * θ ^ (m + 1) := he
+      _ = (m + 1)! * θ ^ (m + 1) * Real.exp x := by rw [hx]; ring
+  have hexp : 0 < Real.exp x := Real.exp_pos x
+  rw [Real.exp_neg, pow_mul', one_div, inv_pow, ← hT]
+  rw [show T ^ m * (2 * (Real.exp x)⁻¹) = 2 * T ^ (m + 1) * ((Real.exp x)⁻¹ * T⁻¹) by
+    field_simp
+    ring]
+  calc 2 * T ^ (m + 1) * ((Real.exp x)⁻¹ * T⁻¹)
+      ≤ 2 * ((m + 1)! * θ ^ (m + 1) * Real.exp x) * ((Real.exp x)⁻¹ * T⁻¹) := by
+        gcongr
+    _ = 2 * θ ^ (m + 1) * (m + 1)! * T⁻¹ := by
+        field_simp
 
 /-- The reach of the partition at `z`: the largest side of a partition cube whose
 `3s`-neighbourhood contains `z`. -/
@@ -193,7 +220,7 @@ theorem exists_lintegral_partitionReach_pow_le (μ : Measure (Configuration d))
     · simp only [hz, and_false, if_false, lintegral_zero, le_refl]
   have hb : ∀ s : ℕ, b s ≤ ENNReal.ofReal K * 3⁻¹ ^ s := by
     intro s
-    have hreal := three_pow_mul_exp_neg_le hθ (n + 1) s
+    have hreal := reach_three_pow_mul_exp_neg_le hθ (n + 1) s
     calc b s = ENNReal.ofReal ((3 : ℝ) ^ ((n + 1) * s) * (2 * Real.exp (-((3 : ℝ) ^ s / θ)))) := by
           simp only [b]
           rw [ENNReal.ofReal_mul (p := (3 : ℝ) ^ ((n + 1) * s)) (by positivity),
