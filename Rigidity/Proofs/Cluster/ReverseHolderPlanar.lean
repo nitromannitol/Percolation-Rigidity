@@ -13,8 +13,8 @@ edge (`mem_clusterVertices_of_adj_mem`), and the Sobolev inequality on `U` (Prop
 coarse-graining data. The remaining hypotheses of `planar_reverse_holder_cube_of_moment` are:
 
 * `□_{m+1}` is resolved by the planar partition;
-* the moment bound `∑_{z ∈ U} ((3^{ρ(z)})² + 3^{ρ'(z)})^s ≤ C_G |□_{m+1}|` (in the source, the scale
-  condition `3^m ≥ 𝓜_{4s}(𝒫)`);
+* the moment bound `∑_{z ∈ U} ((3^{ρ(z)})² + 3^{ρ'(z)})^s ≤ C_G |□_{m+1}|` of the reach scales (the
+  source states the scale condition `3^m ≥ 𝓜_{2sd}(𝒫)` with the sizes of the partition cubes);
 * `u` is harmonic on `U`.
 -/
 
