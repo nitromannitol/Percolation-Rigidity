@@ -171,7 +171,8 @@ theorem exists_events_sum_pow_partitionCube_le [NeZero d] (hd : 2 ≤ d) {p : un
     with hCtot
   have hCtot_ne : Ctot ≠ ∞ :=
     ENNReal.add_ne_top.2 ⟨ENNReal.mul_ne_top ENNReal.ofReal_ne_top hG, ENNReal.ofReal_ne_top⟩
-  have hE : ∀ m, μ (E m) ≤ Ctot * ENNReal.ofReal (Real.exp (-c' * ((3 : ℝ) ^ m) ^ ((1 : ℝ) / K))) := by
+  have hE : ∀ m, μ (E m) ≤
+      Ctot * ENNReal.ofReal (Real.exp (-c' * ((3 : ℝ) ^ m) ^ ((1 : ℝ) / K))) := by
     intro m
     set x : ℝ := ((3 : ℝ) ^ m) ^ ((1 : ℝ) / K) with hxdef
     have hx0 : 0 ≤ x := by positivity

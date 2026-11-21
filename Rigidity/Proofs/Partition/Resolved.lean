@@ -262,7 +262,8 @@ theorem reachable_partitionAnchor_of_mem_crossingCluster (hd : 0 < d) (hP : Part
   have hchild := hrP.crossingCluster_child_subset hd hPs Q.digit
   rw [Q.parent_child] at hchild
   have hra : (openIn ω Q.parent.vertices).Reachable rP (partitionAnchor ω x) := hchild hanchor
-  have hsub1 : (↑R.vertices : Set (Vertex d)) ⊆ U.vertices ∩ (Q.parent.vertices ∪ cubeAt x (N - 1)) :=
+  have hsub1 : (↑R.vertices : Set (Vertex d)) ⊆
+      U.vertices ∩ (Q.parent.vertices ∪ cubeAt x (N - 1)) :=
     fun y hy => ⟨hRU hy, Or.inr (hRcube hy)⟩
   have hsub2 : Q.parent.vertices ⊆ U.vertices ∩ (Q.parent.vertices ∪ cubeAt x (N - 1)) :=
     fun y hy => ⟨hPU hy, Or.inl hy⟩

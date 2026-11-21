@@ -76,13 +76,15 @@ theorem isCrossingRoot_translation_iff (c : Vertex d) (ω : Configuration d)
       refine ⟨y - c, (hB.sub_mem_iff y).2 hyB, ((hl i).sub_mem_iff y).2 hyl, ?_⟩
       rwa [openIn_reachable_translation_sub_iff c ω hB, add_sub_cancel_right] at hry
     · rintro ⟨y, hyB, hyl, hry⟩
-      exact ⟨y + c, (hB y).2 hyB, (hl i y).2 hyl, (openIn_reachable_translation_iff c ω hB r y).2 hry⟩
+      exact ⟨y + c, (hB y).2 hyB, (hl i y).2 hyl,
+        (openIn_reachable_translation_iff c ω hB r y).2 hry⟩
   · constructor
     · rintro ⟨y, hyB, hyu, hry⟩
       refine ⟨y - c, (hB.sub_mem_iff y).2 hyB, ((hu i).sub_mem_iff y).2 hyu, ?_⟩
       rwa [openIn_reachable_translation_sub_iff c ω hB, add_sub_cancel_right] at hry
     · rintro ⟨y, hyB, hyu, hry⟩
-      exact ⟨y + c, (hB y).2 hyB, (hu i y).2 hyu, (openIn_reachable_translation_iff c ω hB r y).2 hry⟩
+      exact ⟨y + c, (hB y).2 hyB, (hu i y).2 hyu,
+        (openIn_reachable_translation_iff c ω hB r y).2 hry⟩
 
 /-- Crossability moves with a translation of the configuration. -/
 theorem crossableRegion_translation_iff (c : Vertex d) (ω : Configuration d)

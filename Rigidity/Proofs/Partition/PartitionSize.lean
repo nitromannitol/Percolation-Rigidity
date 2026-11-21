@@ -4,10 +4,10 @@ import Rigidity.Percolation.TriadicStochasticBound
 /-!
 # The size of the partition cubes
 
-Armstrong and Dario, the first bound displayed after Definition 2.9: the size of the partition cube of a
-vertex satisfies `size(𝒫(x)) ≤ 𝒪₁(C)` uniformly in `x`, in the tail form of the stochastic
-notation: `P[size(𝒫(x)) > t θ] ≤ exp(-t)` for every `t ≥ 1`. The size is the stopping size, the
-side of the partition cube on the partition event.
+Armstrong and Dario, the first bound displayed after Definition 2.9: the size of the partition
+cube of a vertex satisfies `size(𝒫(x)) ≤ 𝒪₁(C)` uniformly in `x`, in the tail form of the
+stochastic notation: `P[size(𝒫(x)) > t θ] ≤ exp(-t)` for every `t ≥ 1`. The size is the stopping
+size, the side of the partition cube on the partition event.
 -/
 
 namespace Rigidity.Percolation

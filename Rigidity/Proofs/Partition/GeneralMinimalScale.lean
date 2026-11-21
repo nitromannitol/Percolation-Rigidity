@@ -258,7 +258,8 @@ theorem exists_large_scale_exp_rpow_le (A c s0 : ℝ) (hA : 0 ≤ A) (hc : 0 < c
 `P exp(-c y) ≤ (N! / (c/6)^N) exp(-(c/6) x)`. -/
 theorem mul_exp_neg_le_of_le_pow {P x y c : ℝ} {N : ℕ} (hx0 : 0 ≤ x) (hP : P ≤ x ^ N)
     (hxy : x ≤ 3 * y) (hc : 0 < c) :
-    P * Real.exp (-c * y) ≤ ((N.factorial : ℝ) / (c / 3 / 2) ^ N) * Real.exp (-(c / 3 / 2) * x) := by
+    P * Real.exp (-c * y) ≤
+      ((N.factorial : ℝ) / (c / 3 / 2) ^ N) * Real.exp (-(c / 3 / 2) * x) := by
   have hexp : Real.exp (-c * y) ≤ Real.exp (-(c / 3) * x) := by
     apply Real.exp_le_exp.2
     nlinarith
