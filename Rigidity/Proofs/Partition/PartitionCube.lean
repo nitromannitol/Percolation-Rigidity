@@ -10,9 +10,9 @@ partition `𝒫` of Armstrong and Dario (Proposition 2.1 and Definition 2.9) is 
 is every triadic cube containing a partition cube (property (i) of Proposition 2.1); partition
 cubes containing neighbouring vertices differ by at most one scale (property (ii)).
 
-The anchor `z̄(Q)` of a cube is a point of its crossing cluster, chosen when the crossing cluster
-is nonempty. Armstrong and Dario fix the point closest to the centre; any point of the crossing
-cluster serves in what follows.
+The anchor `z̄(Q)` of a cube is, as in Armstrong and Dario (Definition 3.1), the point of its
+crossing cluster closest to the centre of the cube in the `ℓ∞` norm, ties broken by the
+lexicographic order; it is the centre when the crossing cluster is empty.
 -/
 
 namespace Rigidity.Percolation
@@ -118,19 +118,67 @@ theorem abs_sub_le_one_of_nearestNeighbor_adj {x y : Vertex d}
   obtain ⟨j, hj | hj⟩ := h <;> subst hj <;>
     by_cases hij : i = j <;> simp [LatticeProb.unit, hij]
 
-/-- The anchor of a cube: a point of its crossing cluster, when the crossing cluster is
-nonempty. -/
+/-- The vertices of a triadic cube form a finite set. -/
+theorem TriadicCube.finite_vertices (Q : TriadicCube d) : Q.vertices.Finite :=
+  Q.toIntegerCube.vertices.finite_toSet.subset fun x hx =>
+    Finset.mem_coe.2 ((Q.mem_toIntegerCube_vertices x).2 hx)
+
+/-- The order of candidate anchors of a cube: `ℓ∞` distance to the centre, then lexicographic
+order. -/
+def TriadicCube.anchorKey (Q : TriadicCube d) (y : Vertex d) : ℕ ×ₗ Lex (Fin d → ℤ) :=
+  toLex (Finset.univ.sup fun i => (y i - Q.center i).natAbs, toLex y)
+
+theorem TriadicCube.anchorKey_injective (Q : TriadicCube d) : Function.Injective Q.anchorKey := by
+  intro y z h
+  have h2 := congrArg (fun p => (ofLex p).2) h
+  simpa [TriadicCube.anchorKey] using h2
+
+/-- A minimizer of the anchor order over the crossing cluster. -/
+def TriadicCube.IsAnchor (ω : Configuration d) (Q : TriadicCube d) (y : Vertex d) : Prop :=
+  y ∈ Q.crossingCluster ω ∧ ∀ z ∈ Q.crossingCluster ω, Q.anchorKey y ≤ Q.anchorKey z
+
+/-- The anchor order has a unique minimizer over a nonempty crossing cluster. -/
+theorem TriadicCube.existsUnique_isAnchor {Q : TriadicCube d}
+    (h : (Q.crossingCluster ω).Nonempty) : ∃! y, Q.IsAnchor ω y := by
+  obtain ⟨y, hy, hmin⟩ := Set.exists_min_image _ Q.anchorKey
+    (Q.finite_vertices.subset (Q.crossingCluster_subset ω)) h
+  refine ⟨y, ⟨hy, hmin⟩, fun z hz => Q.anchorKey_injective (le_antisymm (hz.2 y hy) (hmin z hz.1))⟩
+
+/-- The anchor `z̄(Q)` of a cube (Armstrong and Dario, Definition 3.1): the point of its
+crossing cluster closest to its centre in the `ℓ∞` norm, ties broken lexicographically, and the
+centre when the crossing cluster is empty. -/
 noncomputable def TriadicCube.anchor (ω : Configuration d) (Q : TriadicCube d) : Vertex d :=
-  if h : (Q.crossingCluster ω).Nonempty then h.some else Q.center
+  if h : ∃ y, Q.IsAnchor ω y then Classical.choose h else Q.center
+
+/-- The anchor of a cube with a nonempty crossing cluster minimizes the anchor order. -/
+theorem TriadicCube.isAnchor_anchor {Q : TriadicCube d} (h : (Q.crossingCluster ω).Nonempty) :
+    Q.IsAnchor ω (Q.anchor ω) := by
+  have he : ∃ y, Q.IsAnchor ω y := (TriadicCube.existsUnique_isAnchor h).exists
+  unfold TriadicCube.anchor
+  rw [dif_pos he]
+  exact Classical.choose_spec he
+
+/-- The anchor of a cube with a nonempty crossing cluster is its unique minimizer. -/
+theorem TriadicCube.anchor_eq_iff {Q : TriadicCube d} (h : (Q.crossingCluster ω).Nonempty)
+    (y : Vertex d) : Q.anchor ω = y ↔ Q.IsAnchor ω y :=
+  ⟨fun hy => hy ▸ TriadicCube.isAnchor_anchor h,
+    fun hy => (TriadicCube.existsUnique_isAnchor h).unique (TriadicCube.isAnchor_anchor h) hy⟩
+
+/-- The anchor of a cube with an empty crossing cluster is its centre. -/
+theorem TriadicCube.anchor_of_crossingCluster_eq_empty {Q : TriadicCube d}
+    (h : Q.crossingCluster ω = ∅) : Q.anchor ω = Q.center := by
+  have hne : ¬ ∃ y, Q.IsAnchor ω y := by
+    rintro ⟨y, hy, -⟩
+    rw [h] at hy
+    exact hy
+  unfold TriadicCube.anchor
+  rw [dif_neg hne]
 
 /-- The anchor of a well-connected cube lies in its crossing cluster. -/
 theorem TriadicCube.anchor_mem_crossingCluster {Q : TriadicCube d}
     (hQ : Q ∈ wellConnectedCubes ω) : Q.anchor ω ∈ Q.crossingCluster ω := by
   obtain ⟨root, hroot⟩ := (Q.wellConnectedIn_threeQuarter_iff ω).1 hQ.2
-  have h : (Q.crossingCluster ω).Nonempty := ⟨root, hroot.mem_crossingCluster⟩
-  unfold TriadicCube.anchor
-  rw [dif_pos h]
-  exact h.some_mem
+  exact (TriadicCube.isAnchor_anchor ⟨root, hroot.mem_crossingCluster⟩).1
 
 /-- The anchor `z̄(𝒫(x))` of the partition cube of a vertex. -/
 noncomputable def partitionAnchor (ω : Configuration d) (x : Vertex d) : Vertex d :=

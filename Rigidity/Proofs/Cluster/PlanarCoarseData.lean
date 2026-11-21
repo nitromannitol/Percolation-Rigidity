@@ -23,6 +23,15 @@ namespace Rigidity.Percolation
 
 variable {ω : Configuration 2}
 
+theorem joinedWithin_iff_reachIn {S : Set (Vertex 2)} {x y : Vertex 2} :
+    JoinedWithin ω S x y ↔ ReachIn ω S x y :=
+  Iff.rfl
+
+theorem edgeVariationIn_eq_sum_vertexVariation {d : ℕ} (ω : Configuration d)
+    (S : Finset (Vertex d)) (w : Vertex d → ℝ) :
+    edgeVariationIn ω S w = ∑ x ∈ S, vertexVariation ω S w x :=
+  rfl
+
 private theorem planar_abs_sub_le_one_of_adj {d : ℕ} {u v : Vertex d}
     (h : (nearestNeighborGraph d).Adj u v) (k : Fin d) : |u k - v k| ≤ 1 := by
   obtain ⟨l, hl | hl⟩ := h <;> subst hl <;> by_cases hkl : k = l <;> simp [LatticeProb.unit, hkl]

@@ -24,11 +24,6 @@ open LatticeProb.Percolation Rigidity.External
 
 variable {d : ℕ} {ω : Configuration d}
 
-/-- The vertices of a triadic cube form a finite set. -/
-theorem TriadicCube.finite_vertices (Q : TriadicCube d) : Q.vertices.Finite :=
-  Q.toIntegerCube.vertices.finite_toSet.subset fun x hx =>
-    Finset.mem_coe.2 ((Q.mem_toIntegerCube_vertices x).2 hx)
-
 /-- The anchors of the partition cubes of lattice neighbours are joined inside the union of the
 two partition cubes. -/
 theorem reachable_partitionAnchor_of_adj (hd : 0 < d) (hP : PartitionEvent ω) {x y : Vertex d}

@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Percolation.ClusterCoarsening
+import Rigidity.Percolation.IntegerCube
 
 /-!
 # Coarse-graining data on a cluster
@@ -22,7 +22,7 @@ from `□_𝒫(x)`, respectively `□_𝒫(x) ∪ □_𝒫(y)`. The file also de
 (1.4)) and proves the elementary bounds between it and the sum of the increments at `x`.
 -/
 
-open LatticeProb.Percolation Rigidity.Proofs.Section5
+open LatticeProb.Percolation
 open scoped Classical
 
 namespace Rigidity.Percolation
@@ -32,10 +32,6 @@ variable {d : ℕ}
 /-- `x` and `y` are joined by an open path inside `S`. -/
 def JoinedWithin (ω : Configuration d) (S : Set (Vertex d)) (x y : Vertex d) : Prop :=
   ∃ W : (openGraph ω).Walk x y, ∀ v ∈ W.support, v ∈ S
-
-theorem joinedWithin_iff_reachIn {ω : Configuration 2} {S : Set (Vertex 2)} {x y : Vertex 2} :
-    JoinedWithin ω S x y ↔ ReachIn ω S x y :=
-  Iff.rfl
 
 theorem JoinedWithin.symm {ω : Configuration d} {S : Set (Vertex d)} {x y : Vertex d}
     (h : JoinedWithin ω S x y) : JoinedWithin ω S y x := by
@@ -61,9 +57,16 @@ theorem vertexVariation_mono (ω : Configuration d) {S T : Finset (Vertex d)} (h
     (w : Vertex d → ℝ) (x : Vertex d) : vertexVariation ω S w x ≤ vertexVariation ω T w x :=
   Finset.sum_le_sum_of_subset_of_nonneg hST fun _ _ _ => by split_ifs <;> positivity
 
-theorem edgeVariationIn_eq_sum_vertexVariation (ω : Configuration d) (S : Finset (Vertex d))
-    (w : Vertex d → ℝ) : edgeVariationIn ω S w = ∑ x ∈ S, vertexVariation ω S w x :=
-  rfl
+/-- The oscillation along a walk is at most the sum of the increments along its darts. -/
+private theorem abs_sub_le_sum_darts_of_walk {ω : Configuration d} (w : Vertex d → ℝ)
+    {u v : Vertex d} (p : (openGraph ω).Walk u v) :
+    |w u - w v| ≤ (p.darts.map fun e => |w e.fst - w e.snd|).sum := by
+  induction p with
+  | nil => simp
+  | @cons a b c h p ih =>
+    simp only [SimpleGraph.Walk.darts_cons, List.map_cons, List.sum_cons]
+    calc |w a - w c| ≤ |w a - w b| + |w b - w c| := abs_sub_le _ _ _
+      _ ≤ _ := add_le_add le_rfl ih
 
 /-- **Oscillation along an open path.** If two vertices are joined by an open path inside a finite
 set `S`, the difference of a function at them is at most the sum over `z ∈ S` of its increments
@@ -77,7 +80,7 @@ theorem abs_sub_le_sum_vertexVariation {ω : Configuration d} (S : Finset (Verte
     Finset.mem_coe.1 (hW z (W.support_bypass_subset_support hz))
   have hnodup : P.darts.Nodup :=
     SimpleGraph.Walk.darts_nodup_of_support_nodup W.bypass_isPath.support_nodup
-  refine (abs_sub_le_sum_darts w P).trans ?_
+  refine (abs_sub_le_sum_darts_of_walk w P).trans ?_
   set g : Vertex d × Vertex d → ℝ := fun q =>
     if (openGraph ω).Adj q.1 q.2 then |w q.1 - w q.2| else 0
   have hsum : (P.darts.map fun e => |w e.fst - w e.snd|).sum =
