@@ -1,0 +1,77 @@
+import Rigidity.Proofs.Dirichlet.CubeStokes
+
+/-!
+# Tiling a lattice cube by subcubes
+
+The cube with corner `z` and side `M K` is the disjoint union of the `M^d` cubes with corners
+`z + K i`, `i ∈ {0, …, M − 1}^d`, and side `K`, so a sum over it is the sum over the subcubes of
+the sums over them. This is the partition of `□°_int` into the mesh cubes `y + □_k`
+(`y ∈ 3^k ℤ^d`) in Step 4 of the proof of Armstrong–Dario, Lemma 6.2, and into the mesoscopic
+cubes `y + □_n` in the proof of Lemma 6.3.
+-/
+
+open Finset LatticeProb
+
+namespace Rigidity.Dirichlet
+
+open Rigidity.Percolation LatticeProb.Percolation
+
+variable {d : ℕ}
+
+/-- **Sums over a cube are sums over its subcubes.** -/
+theorem sum_cornerCube_mul {K : ℕ} (hK : 0 < K) (z : Vertex d) (M : ℕ)
+    (F : Vertex d → ℝ) :
+    ∑ x ∈ (cornerCube z (M * K)).vertices, F x =
+      ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (K : ℤ) • i) K).vertices, F x := by
+  classical
+  have hK' : (0 : ℤ) < K := by exact_mod_cast hK
+  rw [Finset.sum_sigma']
+  refine (Finset.sum_bij' (fun x _ => (⟨fun t => (x t - z t) / K, x⟩ : Σ _ : Vertex d, Vertex d))
+    (fun p _ => p.2) ?_ ?_ ?_ ?_ ?_)
+  · intro x hx
+    rw [IntegerCube.mem_vertices] at hx
+    simp only [cornerCube] at hx
+    refine Finset.mem_sigma.mpr ⟨?_, ?_⟩
+    · rw [IntegerCube.mem_vertices]
+      intro t
+      simp only [cornerCube, Pi.zero_apply, zero_add]
+      have h1 := hx t
+      push_cast at h1
+      refine ⟨Int.ediv_nonneg (by linarith) hK'.le, Int.ediv_lt_of_lt_mul hK' (by linarith)⟩
+    · rw [IntegerCube.mem_vertices]
+      intro t
+      simp only [cornerCube, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+      have h2 := Int.mul_ediv_add_emod (x t - z t) K
+      have h3 := Int.emod_nonneg (x t - z t) hK'.ne'
+      have h4 := Int.emod_lt_of_pos (x t - z t) hK'
+      constructor <;> linarith
+  · intro p hp
+    obtain ⟨hi, hx⟩ := Finset.mem_sigma.mp hp
+    rw [IntegerCube.mem_vertices] at hi hx ⊢
+    intro t
+    simp only [cornerCube, Pi.zero_apply, zero_add, Pi.add_apply, Pi.smul_apply,
+      smul_eq_mul] at hi hx ⊢
+    have h1 := hi t
+    have h2 := hx t
+    push_cast
+    constructor
+    · nlinarith
+    · have : (K : ℤ) * p.1 t + K ≤ (M : ℤ) * K := by nlinarith
+      nlinarith
+  · intro x _
+    rfl
+  · intro p hp
+    obtain ⟨hi, hx⟩ := Finset.mem_sigma.mp hp
+    rw [IntegerCube.mem_vertices] at hi hx
+    simp only [cornerCube, Pi.zero_apply, zero_add, Pi.add_apply, Pi.smul_apply,
+      smul_eq_mul] at hi hx
+    have hfst : (fun t => (p.2 t - z t) / K) = p.1 := by
+      funext t
+      have h2 := hx t
+      exact ((Int.ediv_emod_unique (a := p.2 t - z t) (r := p.2 t - z t - K * p.1 t)
+        (q := p.1 t) hK').mpr ⟨by ring, by linarith [h2.1], by linarith [h2.2]⟩).1
+    exact Sigma.ext hfst HEq.rfl
+  · intro x _
+    rfl
+
+end Rigidity.Dirichlet
