@@ -404,4 +404,127 @@ theorem sum_sq_mixedDiff_le (f : (Fin d → ℤ) → ℝ) (z : Fin d → ℤ) (S
             positivity
           nlinarith [mul_le_mul_of_nonneg_left h16 hP]
 
+theorem card_latticeBox_univ (x₀ : Fin d → ℤ) (n : ℕ) :
+    (latticeBox Finset.univ x₀ n).card = (n + 1) ^ d := by
+  rw [latticeBox, Fintype.card_piFinset]
+  simp only [mem_univ, if_true, Int.card_Icc]
+  have : ∀ i : Fin d, (x₀ i + n + 1 - x₀ i).toNat = n + 1 := fun i => by omega
+  simp [this]
+
+theorem latticeBox_univ_subset_supBox {z x₀ : Fin d → ℤ} {m : ℕ} (hx : x₀ ∈ supBox z m) :
+    latticeBox Finset.univ x₀ m ⊆ supBox z (2 * m) := by
+  intro y hy
+  rw [mem_latticeBox] at hy
+  simp only [supBox, Fintype.mem_piFinset, mem_Icc] at hx ⊢
+  intro i
+  obtain ⟨h1, h2⟩ := (hy i).1 (mem_univ i)
+  obtain ⟨h3, h4⟩ := hx i
+  push_cast
+  constructor <;> omega
+
+theorem coeff_interior_le {M q X Y : ℝ} (hM : 1 ≤ M) (hq : M ≤ q) (hX : 0 ≤ X) (t k : ℕ)
+    (hXY : X ^ k ≤ Y) :
+    (M⁻¹ ^ t) ^ 2 * M ^ (t + k) * (X ^ k / q ^ (2 * k)) ≤ Y / M ^ (t + k) := by
+  have hM0 : 0 < M := by linarith
+  have hq0 : 0 < q := by linarith
+  have e : (M⁻¹ ^ t) ^ 2 * M ^ (t + k) * (X ^ k / q ^ (2 * k)) =
+      (M ^ (2 * k) / q ^ (2 * k)) * (X ^ k / M ^ (t + k)) := by
+    rw [inv_pow]
+    field_simp
+    ring
+  rw [e]
+  have h1 : M ^ (2 * k) / q ^ (2 * k) ≤ 1 := by
+    rw [div_le_one (by positivity)]
+    exact pow_le_pow_left₀ hM0.le hq _
+  have h2 : X ^ k / M ^ (t + k) ≤ Y / M ^ (t + k) :=
+    div_le_div_of_nonneg_right hXY (by positivity)
+  calc M ^ (2 * k) / q ^ (2 * k) * (X ^ k / M ^ (t + k)) ≤ 1 * (Y / M ^ (t + k)) :=
+        mul_le_mul h1 h2 (by positivity) zero_le_one
+    _ = Y / M ^ (t + k) := one_mul _
+
+/-- **Interior bound of lattice harmonic functions**: for `g` harmonic on `Q_{2·4^d m}(z)` and
+`x₀ ∈ Q_m(z)`, `g(x₀)² ≤ 4^d (64 d)^d (m + 1)^{-d} ∑_{Q_{2·4^d m}} g²`. -/
+theorem sq_le_of_latticeHarmonic (g : (Fin d → ℤ) → ℝ) (z : Fin d → ℤ) {m : ℕ} (hm : 0 < m)
+    (hg : ∀ x ∈ supBox z (4 ^ d * (2 * m)), latticeLaplacian g x = 0) {x₀ : Fin d → ℤ}
+    (hx₀ : x₀ ∈ supBox z m) :
+    g x₀ ^ 2 ≤ 4 ^ d * (64 * d) ^ d / ((m : ℝ) + 1) ^ d *
+      ∑ x ∈ supBox z (4 ^ d * (2 * m)), g x ^ 2 := by
+  classical
+  have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+  set c := ((m : ℝ) + 1)⁻¹ with hc
+  set Q := supBox z (4 ^ d * (2 * m))
+  set A := ∑ x ∈ Q, g x ^ 2 with hA
+  have hA0 : 0 ≤ A := sum_nonneg fun _ _ => sq_nonneg _
+  have hsob := abs_le_sum_mixedDiff m Finset.univ g x₀
+  rw [card_univ, Fintype.card_fin] at hsob
+  set a : Finset (Fin d) → ℝ := fun S => c ^ (d - S.card) *
+    ∑ y ∈ latticeBox Finset.univ x₀ m, |mixedDiff S g y| with ha
+  -- each term
+  have hterm : ∀ S ∈ (Finset.univ : Finset (Fin d)).powerset,
+      a S ^ 2 ≤ (64 * d) ^ d / ((m : ℝ) + 1) ^ d * A := by
+    intro S _
+    have hSd : S.card ≤ d := by
+      have := card_le_card (subset_univ S); rwa [card_univ, Fintype.card_fin] at this
+    have hcs := sq_sum_le_card_mul_sum_sq (s := latticeBox Finset.univ x₀ m)
+      (f := fun y => |mixedDiff S g y|)
+    simp only [sq_abs] at hcs
+    rw [card_latticeBox_univ] at hcs
+    have hsub : ∑ y ∈ latticeBox Finset.univ x₀ m, (mixedDiff S g y) ^ 2 ≤
+        ∑ y ∈ supBox z (2 * m), (mixedDiff S g y) ^ 2 :=
+      sum_le_sum_of_subset_of_nonneg (latticeBox_univ_subset_supBox hx₀) fun _ _ _ => sq_nonneg _
+    have hQ : 4 ^ S.card * (2 * m) ≤ 4 ^ d * (2 * m) :=
+      Nat.mul_le_mul_right _ (Nat.pow_le_pow_right (by norm_num) hSd)
+    have hcac := sum_sq_mixedDiff_le g z S (2 * m) (by omega) (fun x hx => hg x (by
+      rw [mem_supBox_iff_supDist_le] at hx ⊢; omega))
+    have hmono : ∑ x ∈ supBox z (4 ^ S.card * (2 * m)), g x ^ 2 ≤ A :=
+      sum_le_sum_of_subset_of_nonneg (fun x hx => by
+        rw [mem_supBox_iff_supDist_le] at hx ⊢; omega) fun _ _ _ => sq_nonneg _
+    have hB : ∑ y ∈ latticeBox Finset.univ x₀ m, (mixedDiff S g y) ^ 2 ≤
+        (64 * d) ^ S.card / (((2 * m : ℕ) : ℝ)) ^ (2 * S.card) * A :=
+      hsub.trans (hcac.trans (mul_le_mul_of_nonneg_left hmono (by positivity)))
+    have hcpos : 0 ≤ c := by positivity
+    calc a S ^ 2 = (c ^ (d - S.card)) ^ 2 *
+          (∑ y ∈ latticeBox Finset.univ x₀ m, |mixedDiff S g y|) ^ 2 := by rw [ha]; ring
+      _ ≤ (c ^ (d - S.card)) ^ 2 * ((((m + 1) ^ d : ℕ) : ℝ) *
+          ∑ y ∈ latticeBox Finset.univ x₀ m, (mixedDiff S g y) ^ 2) :=
+          mul_le_mul_of_nonneg_left hcs (by positivity)
+      _ ≤ (c ^ (d - S.card)) ^ 2 * ((((m + 1) ^ d : ℕ) : ℝ) *
+          ((64 * d) ^ S.card / (((2 * m : ℕ) : ℝ)) ^ (2 * S.card) * A)) :=
+          mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hB (by positivity))
+            (by positivity)
+      _ ≤ (64 * d) ^ d / ((m : ℝ) + 1) ^ d * A := by
+          rw [← mul_assoc, ← mul_assoc]
+          apply mul_le_mul_of_nonneg_right _ hA0
+          push_cast
+          have h64 : (64 * (d : ℝ)) ^ S.card ≤ (64 * d) ^ d := by
+            rcases Nat.eq_zero_or_pos d with hd | hd
+            · have : S.card = 0 := by omega
+              rw [this, hd]
+            · have : (1 : ℝ) ≤ d := Nat.one_le_cast.2 hd
+              exact pow_le_pow_right₀ (by linarith) hSd
+          have hdt : d = (d - S.card) + S.card := by omega
+          have key := coeff_interior_le (M := (m : ℝ) + 1) (q := 2 * (m : ℝ)) (X := 64 * d)
+            (Y := (64 * d) ^ d) (by linarith) (by
+              have : (1 : ℝ) ≤ m := Nat.one_le_cast.2 hm
+              linarith) (by positivity) (d - S.card) S.card h64
+          rw [← hdt] at key
+          rw [hc]
+          exact key
+  have hcardp : ((Finset.univ : Finset (Fin d)).powerset.card : ℝ) = 2 ^ d := by
+    rw [card_powerset, card_univ, Fintype.card_fin]; push_cast; ring
+  have h1 := sq_sum_le_card_mul_sum_sq (s := (Finset.univ : Finset (Fin d)).powerset) (f := a)
+  have h2 := sum_le_sum hterm
+  rw [sum_const, nsmul_eq_mul, hcardp] at h2
+  rw [hcardp] at h1
+  have habs : g x₀ ^ 2 ≤ (∑ S ∈ (Finset.univ : Finset (Fin d)).powerset, a S) ^ 2 := by
+    rw [← sq_abs]
+    exact pow_le_pow_left₀ (abs_nonneg _) hsob 2
+  calc g x₀ ^ 2 ≤ _ := habs
+    _ ≤ 2 ^ d * ∑ S ∈ (Finset.univ : Finset (Fin d)).powerset, a S ^ 2 := h1
+    _ ≤ 2 ^ d * (2 ^ d * ((64 * d) ^ d / ((m : ℝ) + 1) ^ d * A)) :=
+        mul_le_mul_of_nonneg_left h2 (by positivity)
+    _ = 4 ^ d * (64 * d) ^ d / ((m : ℝ) + 1) ^ d * A := by
+        rw [show (4 : ℝ) ^ d = 2 ^ d * 2 ^ d by rw [← mul_pow]; norm_num]
+        ring
+
 end Rigidity.Proofs.Regularity
