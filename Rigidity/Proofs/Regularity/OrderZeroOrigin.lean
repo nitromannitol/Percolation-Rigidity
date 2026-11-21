@@ -9,8 +9,9 @@ Armstrong and Dario, *Elliptic regularity and quantitative homogenization on per
 constants on each ball `B_r`, `r ∈ [X ∨ C, R / 2]`, by
 `C (r / R) D_0(R) + C r ^ (1 - α) (D_0(R) / R + E / r)`. For `r ≥ 1` both error terms are at most
 `(r / R) (D_0(R) + R E)`, so the excess decays linearly in `r / R`, and the Campanato argument
-of `Rigidity.Proofs.Regularity.SinglePolynomial` gives one constant `φ` with `‖u - φ‖_{L̲²(B_r)} ≤ C (r / R) (D_0(R) + R E)` for all these radii: the
-form of the order-zero regularity (Theorem 2 (iii), `k = 0`) at the origin.
+of `Rigidity.Proofs.Regularity.SinglePolynomial` gives one constant `φ` with
+`‖u - φ‖_{L̲²(B_r)} ≤ C (r / R) (D_0(R) + R E)` for all these radii: the form of the order-zero
+regularity (Theorem 2 (iii), `k = 0`) at the origin.
 
 The result `armstrongDario_orderZero_origin` is stated in the abstract setting of
 `Rigidity.Proofs.Regularity.BallExcess`, for any bound `B > 0` of `D_0(R) + R E`; it uses in
