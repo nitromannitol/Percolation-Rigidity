@@ -68,7 +68,8 @@ results = {
     'Theorem 6.5': ['Rigidity.Assembly.Main.slowMixing'],
 }
 cited = {'Proposition 2.3', 'Theorem 2.4', 'Theorem 2.5', 'Lemma 2.13', 'Lemma 2.14'}
-# Further proved results that are not numbered results of the paper.
+# Further proved results: results that are not numbered results of the paper, proofs of literature
+# inputs, and forms of the main theorems with fewer hypotheses.
 further = {
     'Slab connectivity (Grimmett and Marstrand, d >= 3)':
         ['Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt'],
@@ -78,6 +79,16 @@ further = {
     'Finite clusters (d >= 3)':
         ['Rigidity.Percolation.exists_finite_cluster_radius_le',
          'Rigidity.Percolation.exists_finite_cluster_card_le'],
+    'Proposition 2.3 in every dimension':
+        ['Rigidity.Percolation.wellConnected_input'],
+    'Proposition 2.3 and the density concentration (d = 2)':
+        ['Rigidity.Percolation.wellConnected_input_two',
+         'Rigidity.Proofs.S2.planar_cluster_density_concentration'],
+    'Theorem 6.5 with every literature input proved':
+        ['Rigidity.Assembly.Unconditional.slow_mixing'],
+    'Theorem 1.3 from its dimension-two inputs':
+        ['Rigidity.Assembly.WithPlanarInputs.fast_decay',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
