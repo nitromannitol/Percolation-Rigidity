@@ -7,7 +7,8 @@ Armstrong and Dario (Section 3.1) compare a function `w` on the cluster `C_*(U)`
 coarsening `[w]_𝒫(x) = w(z̄(□_𝒫(x)))`, the value at the anchor of the partition cube of `x`. The
 comparison uses only the following structure, recorded here in every dimension:
 * a finite domain (the closure `cl_𝒫(U)`) containing a finite cluster;
-* a partition cube `part x` containing `x` and contained in the domain;
+* a partition cube `part x` containing `x` and contained in the domain, equal to the partition
+  cube of each of its vertices;
 * an anchor in the cluster and in the partition cube, depending only on the partition cube;
 * for each vertex `x` of the cluster, a region `region x` such that `x` is joined to its anchor
   by an open path inside `region x ∩ C_*(U)`;
@@ -18,7 +19,7 @@ comparison uses only the following structure, recorded here in every dimension:
 In Armstrong and Dario these regions are the union of the partition cubes at distance at most one
 from `□_𝒫(x)`, respectively `□_𝒫(x) ∪ □_𝒫(y)`. The file also defines the magnitude
 `|F|(x) = ((1/2) ∑_{y ∼ x} |F(x, y)|²)^{1/2}` of a gradient on a domain (Armstrong and Dario,
-(2.5)) and proves the elementary bounds between it and the sum of the increments at `x`.
+(1.4)) and proves the elementary bounds between it and the sum of the increments at `x`.
 -/
 
 open LatticeProb.Percolation Rigidity.Proofs.Section5
@@ -103,7 +104,7 @@ theorem abs_sub_le_sum_vertexVariation {ω : Configuration d} (S : Finset (Verte
         rfl
 
 /-- The magnitude `|∇f|(x) = ((1/2) ∑_{y ∈ S, y ∼ x} (f x - f y)²)^{1/2}` of the gradient of `f`
-at `x`, for the graph `G` on the domain `S` (Armstrong and Dario, (2.5)). With `G` the open graph
+at `x`, for the graph `G` on the domain `S` (Armstrong and Dario, (1.4)). With `G` the open graph
 this is `|∇w 1_{a ≠ 0}|(x)`; with `G` the lattice it is `|∇f|(x)`. -/
 noncomputable def gradNormIn (G : SimpleGraph (Vertex d)) (S : Finset (Vertex d))
     (f : Vertex d → ℝ) (x : Vertex d) : ℝ :=
@@ -217,6 +218,7 @@ structure CoarseData (d : ℕ) (ω : Configuration d) where
   part : Vertex d → TriadicCube d
   mem_part : ∀ x ∈ domain, x ∈ (part x).vertices
   part_subset : ∀ x ∈ domain, (part x).vertices ⊆ domain
+  part_eq_of_mem : ∀ x ∈ domain, ∀ y ∈ (part x).vertices, part y = part x
   /-- The anchor `z̄(□_𝒫(x))`. -/
   anchor : Vertex d → Vertex d
   anchor_congr : ∀ x y, part x = part y → anchor x = anchor y
