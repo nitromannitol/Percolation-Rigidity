@@ -20,7 +20,7 @@ theorem mem_vertexCutBonds_iff {d : ℕ} (R : Finset (Vertex d)) (e : Bond d) :
   constructor
   · intro he
     obtain ⟨x, hx, he⟩ := Finset.mem_biUnion.mp he
-    unfold outgoingBonds at he
+    unfold regionOutgoingBonds at he
     obtain ⟨y, hy, heq⟩ := Finset.mem_image.mp he
     simp only [Finset.mem_filter, Finset.mem_attach, true_and] at hy
     have hynot : y.val ∉ R := hy

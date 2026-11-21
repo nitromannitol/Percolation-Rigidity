@@ -36,7 +36,7 @@ theorem exists_of_mem_vertexCutBondsIn {R : Finset (Vertex d)} {W : Set (Vertex 
   classical
   obtain ⟨hcut, hloc⟩ := Finset.mem_filter.1 he
   obtain ⟨x, hx, hxe⟩ := Finset.mem_biUnion.1 hcut
-  unfold outgoingBonds at hxe
+  unfold regionOutgoingBonds at hxe
   obtain ⟨y, hy, rfl⟩ := Finset.mem_image.1 hxe
   have hyR : y.1 ∉ (R : Set (Vertex d)) := by
     simp only [Finset.mem_filter] at hy

@@ -15,24 +15,24 @@ open LatticeProb.Percolation MeasureTheory ProbabilityTheory Rigidity.External
 /-- The finite set of lattice bonds leaving a finite vertex set. -/
 noncomputable def vertexCutBonds {d : ℕ} (R : Finset (Vertex d)) : Finset (Bond d) := by
   classical
-  exact R.biUnion (outgoingBonds (R : Set (Vertex d)))
+  exact R.biUnion (regionOutgoingBonds (R : Set (Vertex d)))
 
 /-- Every bond from the explored set to its exterior lies in its cut. -/
 theorem bondOfAdjacent_mem_vertexCutBonds {d : ℕ} (R : Finset (Vertex d))
     {x y : Vertex d} (hx : x ∈ R) (hy : y ∉ R)
     (hxy : (nearestNeighborGraph d).Adj x y) : bondOfAdjacent hxy ∈ vertexCutBonds R := by
   classical
-  change bondOfAdjacent hxy ∈ R.biUnion (outgoingBonds (R : Set (Vertex d)))
+  change bondOfAdjacent hxy ∈ R.biUnion (regionOutgoingBonds (R : Set (Vertex d)))
   apply Finset.mem_biUnion.mpr
   refine ⟨x, hx, ?_⟩
-  exact bondOfAdjacent_mem_outgoingBonds (R : Set (Vertex d)) hy hxy
+  exact bondOfAdjacent_mem_regionOutgoingBonds (R : Set (Vertex d)) hy hxy
 
 /-- A bond in a vertex cut has an endpoint in the explored set. -/
 theorem exists_mem_of_mem_vertexCutBonds {d : ℕ} (R : Finset (Vertex d))
     {e : Bond d} (he : e ∈ vertexCutBonds R) : ∃ x ∈ R, x ∈ e.val := by
   classical
   obtain ⟨x, hx, he⟩ := Finset.mem_biUnion.mp he
-  unfold outgoingBonds at he
+  unfold regionOutgoingBonds at he
   obtain ⟨y, _, rfl⟩ := Finset.mem_image.mp he
   exact ⟨x, hx, Sym2.mem_mk_left x y.val⟩
 
