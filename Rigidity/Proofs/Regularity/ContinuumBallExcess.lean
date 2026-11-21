@@ -237,4 +237,95 @@ theorem ballExcess_continuumAffine_le (z : EuclideanSpace ℝ (Fin d)) {ρ a : �
     _ ≤ ‖p‖ * ρ := mul_le_mul_of_nonneg_left
         (by rw [← dist_eq_norm]; exact (mem_ball.1 hx).le) (norm_nonneg _)
 
+theorem ballVolume_ratio [NeZero d] (z c : EuclideanSpace ℝ (Fin d)) {ρ t : ℝ} (hρ : 0 < ρ)
+    (ht : 0 < t) : (volume (ball c t)).toReal / ballVolume z ρ = (t / ρ) ^ d := by
+  have h1 : (volume (ball c t)).toReal = ballVolume c t := rfl
+  have hV := unitBallVolume_pos (d := d)
+  rw [h1, ballVolume_eq c ht, ballVolume_eq z hρ, div_pow]
+  field_simp
+
+/-- The excess of `x ↦ a + ⟪p, x⟫` over constants on `B_ρ(z)` is at least `2^{-d} ‖p‖ ρ / 4`:
+on the ball `B_{ρ/4}(z ± ρ p / (2 ‖p‖))` the affine function stays `‖p‖ ρ / 4` away from any
+constant on one side. -/
+theorem le_ballExcess_continuumAffine [NeZero d] (z : EuclideanSpace ℝ (Fin d)) {ρ a : ℝ}
+    {p : EuclideanSpace ℝ (Fin d)} (hρ : 0 < ρ) {w : locallySqIntegrable d}
+    (hw : ∀ x, (w : EuclideanSpace ℝ (Fin d) → ℝ) x = a + inner ℝ p x) :
+    ‖p‖ * ρ / 4 * (1 / 2) ^ d ≤
+      ballExcess (continuumBallSeminorm z) (continuumConstants d) ρ w := by
+  apply le_ballExcess
+  rintro c ⟨b, hb⟩
+  rcases eq_or_ne p 0 with rfl | hp
+  · rw [norm_zero, zero_mul, zero_div, zero_mul]; exact apply_nonneg _ _
+  have hpn : 0 < ‖p‖ := norm_pos_iff.2 hp
+  set t := a + inner ℝ p z - b with ht
+  set v : EuclideanSpace ℝ (Fin d) := (ρ / (2 * ‖p‖)) • p with hv
+  have hvn : ‖v‖ = ρ / 2 := by
+    rw [hv, norm_smul, Real.norm_eq_abs, abs_of_pos (by positivity)]; field_simp
+  have hpv : inner ℝ p v = ‖p‖ * ρ / 2 := by
+    rw [hv, real_inner_smul_right, real_inner_self_eq_norm_sq]; field_simp
+  obtain ⟨σ, hσ, hσt⟩ : ∃ σ : ℝ, (σ = 1 ∨ σ = -1) ∧ 0 ≤ σ * t := by
+    rcases le_total 0 t with h | h
+    · exact ⟨1, Or.inl rfl, by linarith⟩
+    · exact ⟨-1, Or.inr rfl, by linarith⟩
+  have hσ2 : σ * σ = 1 := by rcases hσ with rfl | rfl <;> norm_num
+  have hσabs : |σ| = 1 := by rcases hσ with rfl | rfl <;> norm_num
+  have hSB : ball (z + σ • v) (ρ / 4) ⊆ ball z ρ := by
+    intro x hx
+    rw [mem_ball] at hx ⊢
+    have h1 : dist (z + σ • v) z = ρ / 2 := by
+      rw [dist_eq_norm, add_sub_cancel_left, norm_smul, Real.norm_eq_abs, hσabs, one_mul, hvn]
+    calc dist x z ≤ dist x (z + σ • v) + dist (z + σ • v) z := dist_triangle _ _ _
+      _ < ρ / 4 + ρ / 2 := by rw [h1]; linarith
+      _ ≤ ρ := by linarith
+  have hval : ∀ x ∈ ball (z + σ • v) (ρ / 4),
+      ‖p‖ * ρ / 4 ≤ |((w - c : locallySqIntegrable d) : EuclideanSpace ℝ (Fin d) → ℝ) x| := by
+    intro x hx
+    set y := inner ℝ p (x - (z + σ • v)) with hy
+    have e : ((w - c : locallySqIntegrable d) : EuclideanSpace ℝ (Fin d) → ℝ) x =
+        t + σ * inner ℝ p v + y := by
+      simp only [AddSubgroup.coe_sub, Pi.sub_apply, hw, hb, ht, hy, inner_sub_right,
+        inner_add_right, real_inner_smul_right]
+      ring
+    rw [e]
+    have hy1 : |y| ≤ ‖p‖ * (ρ / 4) := by
+      refine (abs_real_inner_le_norm _ _).trans (mul_le_mul_of_nonneg_left ?_ (norm_nonneg _))
+      rw [← dist_eq_norm]; exact (mem_ball.1 hx).le
+    have h3 : |σ * y| ≤ ‖p‖ * (ρ / 4) := by rw [abs_mul, hσabs, one_mul]; exact hy1
+    have h4 : -(‖p‖ * (ρ / 4)) ≤ σ * y := (abs_le.1 h3).1
+    have h2 : σ * (t + σ * inner ℝ p v + y) = σ * t + inner ℝ p v + σ * y := by
+      have : σ * (σ * inner ℝ p v) = (σ * σ) * inner ℝ p v := by ring
+      rw [mul_add, mul_add, this, hσ2, one_mul]
+    have h5 : ‖p‖ * ρ / 4 ≤ σ * (t + σ * inner ℝ p v + y) := by
+      rw [h2, hpv]; linarith
+    calc ‖p‖ * ρ / 4 ≤ σ * (t + σ * inner ℝ p v + y) := h5
+      _ ≤ |σ * (t + σ * inner ℝ p v + y)| := le_abs_self _
+      _ = |t + σ * inner ℝ p v + y| := by rw [abs_mul, hσabs, one_mul]
+  have hlow := le_continuumBallSeminorm z measurableSet_ball hSB (by positivity) (w - c) hval
+  rw [ballVolume_ratio z _ hρ (by positivity : (0 : ℝ) < ρ / 4)] at hlow
+  have hq : Real.sqrt ((ρ / 4 / ρ) ^ d) = (1 / 2) ^ d := by
+    have e1 : ρ / 4 / ρ = ((1 : ℝ) / 2) ^ 2 := by field_simp; norm_num
+    rw [e1, ← pow_mul, mul_comm, pow_mul, Real.sqrt_sq (by positivity)]
+  rw [hq] at hlow
+  exact hlow
+
+/-- **Polynomial comparison for affine functions on Euclidean balls**, with `CP = 4 · 2^d`. -/
+theorem polynomialComparison_continuumAffine [NeZero d] (z : EuclideanSpace ℝ (Fin d)) {X R : ℝ}
+    (hX : 0 < X) :
+    PolynomialComparison (continuumBallSeminorm z) (continuumConstants d) (continuumAffine d) 1
+      X R (4 * 2 ^ d) := by
+  rintro w ⟨a, p, hw⟩ ρ ρ' hXρ hρρ' _
+  have hρ : 0 < ρ := hX.trans_le hXρ
+  have hρ' : 0 < ρ' := hρ.trans_le hρρ'
+  have hup := ballExcess_continuumAffine_le z hρ.le hw
+  have hlow := le_ballExcess_continuumAffine z hρ' hw
+  rw [pow_one]
+  have h2 : (2 : ℝ) ^ d * (1 / 2) ^ d = 1 := by rw [← mul_pow]; norm_num
+  have e : ‖p‖ * ρ = 4 * 2 ^ d * (ρ / ρ') * (‖p‖ * ρ' / 4 * (1 / 2) ^ d) := by
+    have h3 : 4 * 2 ^ d * (ρ / ρ') * (‖p‖ * ρ' / 4 * (1 / 2) ^ d) =
+        (2 ^ d * (1 / 2) ^ d) * (ρ / ρ' * ρ') * ‖p‖ := by ring
+    rw [h3, h2, div_mul_cancel₀ ρ hρ'.ne']; ring
+  calc ballExcess (continuumBallSeminorm z) (continuumConstants d) ρ w ≤ ‖p‖ * ρ := hup
+    _ = 4 * 2 ^ d * (ρ / ρ') * (‖p‖ * ρ' / 4 * (1 / 2) ^ d) := e
+    _ ≤ _ := mul_le_mul_of_nonneg_left hlow (by positivity)
+
 end Rigidity.Proofs.Regularity
