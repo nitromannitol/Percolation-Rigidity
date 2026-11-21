@@ -52,6 +52,29 @@ theorem quadratic_le_of_mu_test (a p G : Fin d → ℝ) (ha : ∀ k, 0 < a k) {�
   have := neg_abs_le (∑ k, (a k * p k) * (G k - p k))
   linarith
 
+/-- **The `μ` test with the coordinatewise defect**: under the hypotheses of
+`quadratic_le_of_mu_test`, `p · ā p ≤ E + 2 δ + 2 Σ_k |a_k p_k| |G_k − p_k|`. -/
+theorem quadratic_le_of_mu_test' (a p G : Fin d → ℝ) (ha : ∀ k, 0 < a k) {μ E δ : ℝ}
+    (htest : μ ≤ E / 2 - ∑ k, a k * p k * G k)
+    (hconv : |(∑ k, (a k * p k) ^ 2 / a k) / 2 + μ| ≤ δ) :
+    ∑ k, a k * p k ^ 2 ≤ E + 2 * δ + 2 * ∑ k, |a k * p k| * |G k - p k| := by
+  have hq : ∑ k, (a k * p k) ^ 2 / a k = ∑ k, a k * p k ^ 2 :=
+    Finset.sum_congr rfl fun k _ => by
+      have := (ha k).ne'
+      field_simp
+  rw [hq] at hconv
+  have hsplit : ∑ k, a k * p k * G k = ∑ k, a k * p k ^ 2 + ∑ k, (a k * p k) * (G k - p k) := by
+    rw [← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun k _ => by ring
+  have habs : -(∑ k, |a k * p k| * |G k - p k|) ≤ ∑ k, (a k * p k) * (G k - p k) := by
+    rw [← Finset.sum_neg_distrib]
+    refine Finset.sum_le_sum fun k _ => ?_
+    rw [← abs_mul]
+    exact neg_abs_le _
+  have hlow := (abs_le.mp hconv).1
+  rw [hsplit] at htest
+  linarith
+
 /-- **First variation along a line**: if `J(t) = −B t²/2 + L t` is maximal at `t = 1`, then
 `B = L`. -/
 theorem eq_of_isMaxOn_line {B L : ℝ} (h : ∀ t : ℝ, -(B * t ^ 2) / 2 + L * t ≤ -B / 2 + L) :
