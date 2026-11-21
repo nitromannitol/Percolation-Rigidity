@@ -256,4 +256,62 @@ theorem polynomialGrowth_clusterConstants (C : OpenComponent ω) (z : Vertex d) 
     componentBallL2_const C z r c (hne r (hXρ.trans hρr) hrR),
     componentBallL2_const C z ρ c (hne ρ hXρ (hρr.trans hrR)), pow_zero, one_mul, one_mul]
 
+/-- Under `ClusterBallCapDensity` with `δ > 0`, the affine functions on the cluster satisfy
+`PolynomialGrowth` with `k = 1` and constant `2 / √δ`: on `B_r(z)` the function
+`c + ⟪p, x - z⟫` is at most `|c| + ‖p‖ r`, and its normalized norm on `B_ρ(z)` is at least
+`√δ (|c| + ‖p‖ ρ) / 2`. -/
+theorem polynomialGrowth_clusterAffine (C : OpenComponent ω) (z : Vertex d) {X R δ : ℝ}
+    (hX : 0 < X) (hδ : 0 < δ) (hcap : ClusterBallCapDensity C z X R δ) :
+    PolynomialGrowth (componentBallSeminorm C z) (clusterAffine C) 1 X R (2 / Real.sqrt δ) := by
+  rintro w ⟨a, p, hw⟩ ρ r hXρ hρr hrR
+  have hρ0 : 0 < ρ := hX.trans_le hXρ
+  have hr0 : 0 < r := hρ0.trans_le hρr
+  have hsδ : 0 < Real.sqrt δ := Real.sqrt_pos.2 hδ
+  set c := a + inner ℝ p (latticeEuclideanEmbedding z) with hc
+  have hwc : ∀ x : C, w x = c + inner ℝ p (latticeEuclideanEmbedding x.val -
+      latticeEuclideanEmbedding z) := by
+    intro x; rw [hw, hc, inner_sub_right]; ring
+  have hup : componentBallL2 C z r w ≤ |c| + ‖p‖ * r := by
+    apply componentBallL2_le_of_abs_le C z r (by positivity)
+    intro x hx
+    rw [mem_componentEuclideanBall, dist_eq_norm] at hx
+    rw [hwc]
+    calc |c + inner ℝ p (latticeEuclideanEmbedding x.val - latticeEuclideanEmbedding z)|
+        ≤ |c| + |inner ℝ p (latticeEuclideanEmbedding x.val - latticeEuclideanEmbedding z)| :=
+          abs_add_le _ _
+      _ ≤ |c| + ‖p‖ * r := by
+          gcongr
+          exact (abs_real_inner_le_norm _ _).trans
+            (mul_le_mul_of_nonneg_left hx.le (norm_nonneg _))
+  obtain ⟨hcard, hcaps⟩ := hcap ρ hXρ (hρr.trans hrR)
+  obtain ⟨hplus, hminus⟩ := hcaps p
+  have hm : 0 ≤ (|c| + ‖p‖ * ρ) / 2 := by positivity
+  have hlow : Real.sqrt δ * ((|c| + ‖p‖ * ρ) / 2) ≤ componentBallL2 C z ρ w := by
+    rcases le_or_gt 0 c with hc0 | hc0
+    · refine le_componentBallL2_of_subset C z ρ hm hδ.le hcard (Finset.filter_subset _ _) ?_
+        hplus
+      intro x hx
+      rw [Finset.mem_filter] at hx
+      rw [hwc, abs_of_nonneg hc0]
+      refine le_abs.2 (Or.inl ?_)
+      have := norm_nonneg p
+      nlinarith [hx.2, mul_nonneg (norm_nonneg p) hρ0.le]
+    · refine le_componentBallL2_of_subset C z ρ hm hδ.le hcard (Finset.filter_subset _ _) ?_
+        hminus
+      intro x hx
+      rw [Finset.mem_filter] at hx
+      rw [hwc, abs_of_neg hc0]
+      refine le_abs.2 (Or.inr ?_)
+      nlinarith [hx.2, mul_nonneg (norm_nonneg p) hρ0.le]
+  rw [componentBallSeminorm_apply, componentBallSeminorm_apply, pow_one]
+  have hratio : 1 ≤ r / ρ := (one_le_div hρ0).2 hρr
+  calc componentBallL2 C z r w ≤ |c| + ‖p‖ * r := hup
+    _ ≤ r / ρ * (|c| + ‖p‖ * ρ) := by
+        have e : r / ρ * (‖p‖ * ρ) = ‖p‖ * r := by field_simp
+        nlinarith [abs_nonneg c]
+    _ = 2 / Real.sqrt δ * (r / ρ) * (Real.sqrt δ * ((|c| + ‖p‖ * ρ) / 2)) := by
+        field_simp
+    _ ≤ 2 / Real.sqrt δ * (r / ρ) * componentBallL2 C z ρ w :=
+        mul_le_mul_of_nonneg_left hlow (by positivity)
+
 end Rigidity.Proofs.Regularity
