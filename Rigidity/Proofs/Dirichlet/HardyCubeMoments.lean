@@ -131,4 +131,86 @@ theorem sum_Ico_toNat_sub' (z : ℤ) (N : ℕ) (H : ℕ → ℝ) :
   · intro t _
     rfl
 
+/-- `Σ_{s<N} w_s^q ≤ N^{1−γq}/(1 − γq)` for `0 ≤ γ`, `1 ≤ q`, `γ q < 1`. -/
+theorem sum_range_hardyWeight_rpow_le {γ q : ℝ} (hγ0 : 0 ≤ γ) (hγ1 : γ < 1) (hq : 1 ≤ q)
+    (hγq : γ * q < 1) (N : ℕ) :
+    ∑ s ∈ Finset.range N, hardyWeight γ s ^ q ≤ (N : ℝ) ^ (1 - γ * q) / (1 - γ * q) := by
+  refine le_trans (Finset.sum_le_sum fun s _ => ?_)
+    (sum_range_rpow_neg_le (β := γ * q) (by positivity) hγq N)
+  calc hardyWeight γ s ^ q ≤ (((s : ℝ) + 1) ^ (-γ)) ^ q :=
+        Real.rpow_le_rpow (hardyWeight_pos hγ1 s).le (hardyWeight_le_rpow hγ0 hγ1 s)
+          (by linarith)
+    _ = ((s : ℝ) + 1) ^ (-(γ * q)) := by
+        rw [← Real.rpow_mul (by positivity)]
+        ring_nf
+
+/-- **Moments of the Hardy weight of a cube**: for `d ≥ 1`, `0 < γ ≤ 1/16`, `q ≥ 1`, `γ q < 1`,
+`Σ_{x∈Q} W_Q(x)^q ≤ (2d)^q N^{d−1} N^{1−γq}/(1 − γq)`. -/
+theorem sum_cubeHardyWeight_rpow_le {γ q : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 16) (hq : 1 ≤ q)
+    (hγq : γ * q < 1) (hd : 0 < d) (Q : IntegerCube d) :
+    ∑ x ∈ Q.vertices, cubeHardyWeight γ Q x ^ q ≤
+      (2 * (d : ℝ)) ^ q * (Q.size : ℝ) ^ (d - 1) *
+        ((Q.size : ℝ) ^ (1 - γ * q) / (1 - γ * q)) := by
+  have hγ1 : γ < 1 := by linarith
+  set A : Fin d → Vertex d → ℝ := fun j x => hardyWeight γ (x j - Q.corner j).toNat
+  set B : Fin d → Vertex d → ℝ := fun j x => hardyWeight γ (Q.corner j + Q.size - 1 - x j).toNat
+  set M : ℝ := (Q.size : ℝ) ^ (1 - γ * q) / (1 - γ * q)
+  have hA0 : ∀ j x, 0 ≤ A j x := fun j x => (hardyWeight_pos hγ1 _).le
+  have hB0 : ∀ j x, 0 ≤ B j x := fun j x => (hardyWeight_pos hγ1 _).le
+  -- pointwise power mean
+  have hpt : ∀ x, cubeHardyWeight γ Q x ^ q ≤
+      (2 * (d : ℝ)) ^ (q - 1) * ∑ j : Fin d, (A j x ^ q + B j x ^ q) := by
+    intro x
+    have hW : cubeHardyWeight γ Q x = ∑ j : Fin d, (A j x + B j x) := rfl
+    have h1 := abs_sum_rpow_le (Finset.univ : Finset (Fin d)) (fun j => A j x + B j x) hq
+    rw [Finset.card_univ, Fintype.card_fin] at h1
+    have h2 : ∀ j : Fin d, |A j x + B j x| ^ q ≤ (2 : ℝ) ^ (q - 1) * (A j x ^ q + B j x ^ q) := by
+      intro j
+      have h := abs_sum_rpow_le (Finset.univ : Finset (Fin 2)) ![A j x, B j x] hq
+      simp only [Finset.card_univ, Fintype.card_fin, Fin.sum_univ_two, Matrix.cons_val_zero,
+        Matrix.cons_val_one, Nat.cast_ofNat] at h
+      rwa [abs_of_nonneg (hA0 j x), abs_of_nonneg (hB0 j x)] at h
+    rw [hW, ← abs_of_nonneg (Finset.sum_nonneg fun j _ => add_nonneg (hA0 j x) (hB0 j x))]
+    calc |∑ j : Fin d, (A j x + B j x)| ^ q
+        ≤ (d : ℝ) ^ (q - 1) * ∑ j : Fin d, |A j x + B j x| ^ q := h1
+      _ ≤ (d : ℝ) ^ (q - 1) * ∑ j : Fin d, (2 : ℝ) ^ (q - 1) * (A j x ^ q + B j x ^ q) :=
+          mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun j _ => h2 j) (by positivity)
+      _ = (2 * (d : ℝ)) ^ (q - 1) * ∑ j : Fin d, (A j x ^ q + B j x ^ q) := by
+          rw [← Finset.mul_sum, ← mul_assoc, Real.mul_rpow (by norm_num) (Nat.cast_nonneg d),
+            mul_comm ((d : ℝ) ^ (q - 1))]
+  -- the slice sums
+  have hAsum : ∀ j : Fin d, ∑ x ∈ Q.vertices, A j x ^ q ≤ (Q.size : ℝ) ^ (d - 1) * M := by
+    intro j
+    refine (sum_vertices_comp_coord_le Q j (fun t => hardyWeight γ (t - Q.corner j).toNat ^ q)
+      fun t => Real.rpow_nonneg (hardyWeight_pos hγ1 _).le _).trans ?_
+    rw [sum_Ico_toNat_sub (Q.corner j) Q.size (fun s => hardyWeight γ s ^ q)]
+    exact mul_le_mul_of_nonneg_left (sum_range_hardyWeight_rpow_le hγ0.le hγ1 hq hγq _)
+      (by positivity)
+  have hBsum : ∀ j : Fin d, ∑ x ∈ Q.vertices, B j x ^ q ≤ (Q.size : ℝ) ^ (d - 1) * M := by
+    intro j
+    refine (sum_vertices_comp_coord_le Q j
+      (fun t => hardyWeight γ (Q.corner j + Q.size - 1 - t).toNat ^ q)
+      fun t => Real.rpow_nonneg (hardyWeight_pos hγ1 _).le _).trans ?_
+    rw [sum_Ico_toNat_sub' (Q.corner j) Q.size (fun s => hardyWeight γ s ^ q)]
+    exact mul_le_mul_of_nonneg_left (sum_range_hardyWeight_rpow_le hγ0.le hγ1 hq hγq _)
+      (by positivity)
+  have hd0 : (0 : ℝ) < d := by exact_mod_cast hd
+  have hd' : (0 : ℝ) < 2 * d := by linarith
+  calc ∑ x ∈ Q.vertices, cubeHardyWeight γ Q x ^ q
+      ≤ ∑ x ∈ Q.vertices, (2 * (d : ℝ)) ^ (q - 1) * ∑ j : Fin d, (A j x ^ q + B j x ^ q) :=
+        Finset.sum_le_sum fun x _ => hpt x
+    _ = (2 * (d : ℝ)) ^ (q - 1) * ∑ j : Fin d,
+          (∑ x ∈ Q.vertices, A j x ^ q + ∑ x ∈ Q.vertices, B j x ^ q) := by
+        rw [← Finset.mul_sum, Finset.sum_comm]
+        simp only [Finset.sum_add_distrib]
+    _ ≤ (2 * (d : ℝ)) ^ (q - 1) * ∑ _j : Fin d,
+          ((Q.size : ℝ) ^ (d - 1) * M + (Q.size : ℝ) ^ (d - 1) * M) :=
+        mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun j _ => add_le_add (hAsum j) (hBsum j))
+          (by positivity)
+    _ = (2 * (d : ℝ)) ^ q * (Q.size : ℝ) ^ (d - 1) * M := by
+        rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+          Real.rpow_sub_one hd'.ne']
+        field_simp
+        ring
+
 end Rigidity.Dirichlet
