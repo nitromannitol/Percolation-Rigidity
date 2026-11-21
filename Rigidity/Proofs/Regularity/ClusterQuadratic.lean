@@ -192,4 +192,108 @@ theorem exists_le_abs_quadForm (M : Matrix (Fin d) (Fin d) ℝ) (i j : Fin d) :
   have := abs_nonneg (symEntry M i j)
   linarith
 
+theorem inner_eq_sum (u w : EuclideanSpace ℝ (Fin d)) : inner ℝ u w = ∑ i, u i * w i := by
+  simp only [PiLp.inner_apply, RCLike.inner_apply, conj_trivial]
+  exact Finset.sum_congr rfl fun i _ => mul_comm _ _
+
+/-- The vector `π(v)` with `quadPolar M u v = ⟪u, π(v)⟫`. -/
+noncomputable def polarVec (M : Matrix (Fin d) (Fin d) ℝ) (v : EuclideanSpace ℝ (Fin d)) :
+    EuclideanSpace ℝ (Fin d) :=
+  WithLp.toLp 2 fun i => ∑ j, (M i j + M j i) * v j
+
+theorem quadPolar_eq_inner (M : Matrix (Fin d) (Fin d) ℝ) (u v : EuclideanSpace ℝ (Fin d)) :
+    quadPolar M u v = inner ℝ u (polarVec M v) := by
+  rw [quadPolar_eq_symEntry, inner_eq_sum]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  have : (polarVec M v) i = ∑ j, (M i j + M j i) * v j := rfl
+  rw [this, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun j _ => ?_
+  simp only [symEntry]
+  ring
+
+/-- `q(y) = q(y - z) + q(z) + ⟪y - z, π(z)⟫`. -/
+theorem quadForm_eq_sub (M : Matrix (Fin d) (Fin d) ℝ) (y z : EuclideanSpace ℝ (Fin d)) :
+    quadForm M y = quadForm M (y - z) + quadForm M z + inner ℝ (y - z) (polarVec M z) := by
+  rw [← quadPolar_eq_inner, ← quadForm_add, sub_add_cancel]
+
+/-- The restrictions to a cluster of the quadratic functions `x ↦ a + ⟪p, x⟫ + q_M(x)` of `ℝ^d`. -/
+def clusterQuadratic {ω : Configuration d} (C : OpenComponent ω) : AddSubgroup (C → ℝ) where
+  carrier := {f | ∃ (a : ℝ) (p : EuclideanSpace ℝ (Fin d)) (M : Matrix (Fin d) (Fin d) ℝ),
+    ∀ x, f x = a + inner ℝ p (latticeEuclideanEmbedding x.val) +
+      quadForm M (latticeEuclideanEmbedding x.val)}
+  add_mem' := by
+    rintro f g ⟨a, p, M, ha⟩ ⟨b, q, N, hb⟩
+    refine ⟨a + b, p + q, M + N, fun x => ?_⟩
+    simp only [Pi.add_apply, ha, hb, inner_add_left, quadForm, Matrix.add_apply, add_mul,
+      Finset.sum_add_distrib]
+    ring
+  zero_mem' := ⟨0, 0, 0, fun _ => by simp [quadForm]⟩
+  neg_mem' := by
+    rintro f ⟨a, p, M, ha⟩
+    refine ⟨-a, -p, -M, fun x => ?_⟩
+    simp only [Pi.neg_apply, ha, inner_neg_left, quadForm, Matrix.neg_apply, neg_mul,
+      Finset.sum_neg_distrib]
+    ring
+
+theorem clusterAffine_le_clusterQuadratic {ω : Configuration d} (C : OpenComponent ω) :
+    clusterAffine C ≤ clusterQuadratic C := by
+  rintro f ⟨a, p, ha⟩
+  exact ⟨a, p, 0, fun x => by simp [ha, quadForm]⟩
+
+variable {ω : Configuration d}
+
+/-- The excess over the affine functions of a quadratic function on the cluster ball of radius
+`ρ` is at most `d m ρ²`, `m` a bound on the symmetric part of its matrix. -/
+theorem ballExcess_clusterQuadratic_le (C : OpenComponent ω) (z : Vertex d) {ρ : ℝ}
+    {w : C → ℝ} {a : ℝ} {p : EuclideanSpace ℝ (Fin d)} {M : Matrix (Fin d) (Fin d) ℝ}
+    (hw : ∀ x, w x = a + inner ℝ p (latticeEuclideanEmbedding x.val) +
+      quadForm M (latticeEuclideanEmbedding x.val))
+    {m : ℝ} (hm0 : 0 ≤ m) (hm : ∀ i j, |symEntry M i j| ≤ m) :
+    ballExcess (componentBallSeminorm C z) (clusterAffine C) ρ w ≤ d * m * ρ ^ 2 := by
+  set z₀ := latticeEuclideanEmbedding z
+  have hmem : (fun x : C => w x - quadForm M (latticeEuclideanEmbedding x.val - z₀)) ∈
+      clusterAffine C := by
+    refine ⟨a + quadForm M z₀ - inner ℝ z₀ (polarVec M z₀), p + polarVec M z₀, fun x => ?_⟩
+    show w x - quadForm M (latticeEuclideanEmbedding x.val - z₀) = _
+    rw [hw, quadForm_eq_sub M _ z₀, inner_add_left, inner_sub_left,
+      real_inner_comm (latticeEuclideanEmbedding x.val) (polarVec M z₀)]
+    ring
+  refine (ballExcess_le _ _ hmem).trans ?_
+  rw [componentBallSeminorm_apply]
+  apply componentBallL2_le_of_abs_le C z ρ (by positivity)
+  intro x hx
+  rw [mem_componentEuclideanBall, dist_eq_norm] at hx
+  have e : (w - fun x : C => w x - quadForm M (latticeEuclideanEmbedding x.val - z₀)) x =
+      quadForm M (latticeEuclideanEmbedding x.val - z₀) := by simp
+  rw [e]
+  refine (abs_quadForm_le M hm0 hm _).trans ?_
+  have := pow_le_pow_left₀ (norm_nonneg _) hx.le 2
+  have h0 : 0 ≤ (d : ℝ) * m := by positivity
+  nlinarith
+
+/-- Under `ClusterBallCapDensity` at the radius `ρ`, the normalized norm of `c + ⟪p, x - z⟫` on
+the cluster ball of radius `ρ` is at least `√δ (|c| + ‖p‖ ρ) / 2`. -/
+theorem le_componentBallL2_affine (C : OpenComponent ω) (z : Vertex d) {X R δ ρ : ℝ}
+    (hδ : 0 < δ) (hcap : ClusterBallCapDensity C z X R δ) (hXρ : X ≤ ρ) (hρR : ρ ≤ R)
+    (hρ0 : 0 < ρ) (c : ℝ) (p : EuclideanSpace ℝ (Fin d)) :
+    Real.sqrt δ * ((|c| + ‖p‖ * ρ) / 2) ≤ componentBallL2 C z ρ (fun x =>
+      c + inner ℝ p (latticeEuclideanEmbedding x.val - latticeEuclideanEmbedding z)) := by
+  obtain ⟨hcard, hcaps⟩ := hcap ρ hXρ hρR
+  obtain ⟨hplus, hminus⟩ := hcaps p
+  have hm : 0 ≤ (|c| + ‖p‖ * ρ) / 2 := by positivity
+  rcases le_or_gt 0 c with hc0 | hc0
+  · refine le_componentBallL2_of_subset C z ρ hm hδ.le hcard (Finset.filter_subset _ _) ?_ hplus
+    intro x hx
+    rw [Finset.mem_filter] at hx
+    rw [abs_of_nonneg hc0]
+    refine le_abs.2 (Or.inl ?_)
+    nlinarith [hx.2, mul_nonneg (norm_nonneg p) hρ0.le]
+  · refine le_componentBallL2_of_subset C z ρ hm hδ.le hcard (Finset.filter_subset _ _) ?_
+      hminus
+    intro x hx
+    rw [Finset.mem_filter] at hx
+    rw [abs_of_neg hc0]
+    refine le_abs.2 (Or.inr ?_)
+    nlinarith [hx.2, mul_nonneg (norm_nonneg p) hρ0.le]
+
 end Rigidity.Proofs.Regularity
