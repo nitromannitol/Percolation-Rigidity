@@ -112,4 +112,41 @@ theorem cubeAffine_eq {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (y x : Verte
   simp only [mul_sub, Finset.sum_sub_distrib]
   ring
 
+/-- **Affine approximations across a face**: for neighbouring cubes `y` and `y' = y + N e_j`,
+`ℓ_{y'}(x + e_j) − ℓ_y(x) = (ζ(y') − ζ(y) − N p_j(y)) +
+  Σ_k (p_k(y') − p_k(y)) ((x + e_j − y')_k − (N − 1)/2) + p_j(y)`. -/
+theorem cubeAffine_neighbour_sub {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (y x : Vertex d)
+    (j : Fin d) :
+    cubeAffine N g (y + (N : ℤ) • unit j) (x + unit j) - cubeAffine N g y x =
+      (cubeAverage N g (y + (N : ℤ) • unit j) - cubeAverage N g y - N * cubeSlope N g y j) +
+      ∑ k, (cubeSlope N g (y + (N : ℤ) • unit j) k - cubeSlope N g y k) *
+        ((((x + unit j) k - (y + (N : ℤ) • unit j) k : ℤ) : ℝ) - ((N : ℝ) - 1) / 2) +
+      cubeSlope N g y j := by
+  classical
+  rw [cubeAffine_eq hN, cubeAffine_eq hN]
+  set p' := cubeSlope N g (y + (N : ℤ) • unit j)
+  set p := cubeSlope N g y
+  set c' : Fin d → ℝ := fun k =>
+    (((x + unit j) k - (y + (N : ℤ) • unit j) k : ℤ) : ℝ) - ((N : ℝ) - 1) / 2
+  set c : Fin d → ℝ := fun k => ((x k - y k : ℤ) : ℝ) - ((N : ℝ) - 1) / 2
+  have hcc : ∀ k, c' k - c k = if k = j then 1 - (N : ℝ) else 0 := by
+    intro k
+    simp only [c', c, add_unit_apply]
+    have hy : (y + (N : ℤ) • unit j) k = y k + if k = j then (N : ℤ) else 0 := by
+      simp [unit, Pi.single_apply]
+    rw [hy]
+    split_ifs <;> push_cast <;> ring
+  have hdiff : ∑ k, p k * (c' k - c k) = p j * (1 - N) := by
+    simp only [hcc, mul_ite, mul_zero]
+    rw [Finset.sum_ite_eq' Finset.univ j, if_pos (Finset.mem_univ j)]
+  have key : ∑ k, p' k * c' k - ∑ k, p k * c k =
+      ∑ k, (p' k - p k) * c' k + ∑ k, p k * (c' k - c k) := by
+    rw [← Finset.sum_sub_distrib, ← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun k _ => by ring
+  have e1 : ∑ k, p' k * ((((x + unit j) k - (y + (N : ℤ) • unit j) k : ℤ) : ℝ) -
+      ((N : ℝ) - 1) / 2) = ∑ k, p' k * c' k := rfl
+  have e2 : ∑ k, p k * (((x k - y k : ℤ) : ℝ) - ((N : ℝ) - 1) / 2) = ∑ k, p k * c k := rfl
+  rw [e1, e2]
+  linarith [key, hdiff]
+
 end Rigidity.Dirichlet
