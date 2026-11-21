@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Dirichlet.AffineApproximation
 import Rigidity.Proofs.Dirichlet.CubeTiling
+import Rigidity.Proofs.Dirichlet.Averages
 
 /-!
 # Mesoscopic affine approximations on a tiled cube
@@ -43,5 +44,25 @@ theorem exists_sum_tiles_sq_sub_cubeAffine_le :
   split_ifs
   · exact le_rfl
   · exact sq_nonneg _
+
+/-- **Convexity on the tiles** (Armstrong–Dario (6.36), summed over the mesoscopic cubes of
+Lemma 6.3): for `a_k ≥ 0`, the quadratic forms of the mesoscopic slopes at the corners of the
+tiles, weighted by the tile volume `N^d`, are at most the energy of `g` on the tiled cube:
+`Σ_i N^d Σ_k a_k p_k(y_i)² ≤ Σ_{x} Σ_k a_k (∇_k g(x))²`. -/
+theorem sum_tiles_cubeSlope_sq_le (a : Fin d → ℝ) (ha : ∀ k, 0 ≤ a k) (z : Vertex d) (M : ℕ)
+    {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) :
+    ∑ i ∈ (cornerCube 0 M).vertices, (N : ℝ) ^ d *
+        ∑ k : Fin d, a k * cubeSlope N g (z + (N : ℤ) • i) k ^ 2 ≤
+      ∑ x ∈ (cornerCube z (M * N)).vertices, ∑ k : Fin d, a k * (g (x + unit k) - g x) ^ 2 := by
+  rw [sum_cornerCube_mul hN z M]
+  refine Finset.sum_le_sum fun i _ => ?_
+  set T := (cornerCube (z + (N : ℤ) • i) N).vertices
+  have hT : (#T : ℝ) = (N : ℝ) ^ d := by
+    rw [card_vertices]
+    simp [cornerCube]
+  have h := card_mul_sum_quadratic_avg_le T a ha (fun x k => g (x + unit k) - g x)
+  rw [hT] at h
+  refine le_trans (le_of_eq ?_) h
+  congr 1
 
 end Rigidity.Dirichlet
