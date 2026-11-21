@@ -24,8 +24,9 @@ We prove it in four steps.
   and varying by at most one along edges.
 * `caccioppoli_cluster`: the open graph of a bond configuration of `ℤ^d` restricted to a finite set
   `U`, unit conductances on the open edges, `ρ` the sup-norm distance to `V`; the constant is `8d`.
-  The sup-norm distance is the smallest of the usual distances on `ℤ^d`, so the hypothesis
-  `dist(V, ∂_𝐚 U) ≥ r` is required in its weakest form.
+  The distance of Armstrong and Dario is the `ℓ^∞` distance of the coordinates, `supDist`. For
+  conductances in `{0} ∪ [λ, 1]`, `caccioppoli_of_distance` (degree `Δ = 2d`) gives the constant
+  `C(λ) = 8d/λ`; the open graph has `λ = 1`.
 -/
 
 namespace Rigidity.Proofs.Cluster
@@ -148,7 +149,8 @@ the edges of a graph of degrees at most `Δ`, let `ρ` vanish on `W ⊆ S` and v
 edges, and let `u` be harmonic at the vertices `x ∈ S` with `ρ x < r`, whose neighbours lie in `S`.
 Then `λ ∑_{x ∈ W} ∑_{y ∼ x} (u x - u y)² ≤ (8Δ/r²) ∑ u²` over the vertices of `S` outside the
 interior of `W`. -/
-theorem caccioppoli_of_distance [DecidableEq V] {c : V → V → ℝ} (hc : IsCond G c) {lam r : ℝ} {Δ : ℕ}
+theorem caccioppoli_of_distance [DecidableEq V] {c : V → V → ℝ} (hc : IsCond G c) {lam r : ℝ}
+    {Δ : ℕ}
     (hlam : ∀ x y, G.Adj x y → lam ≤ c x y) (hc1 : ∀ x y, c x y ≤ 1) (hr : 0 < r)
     (hdeg : ∀ x, G.degree x ≤ Δ) (S W : Finset V) (u ρ : V → ℝ)
     (hρlip : ∀ x y, G.Adj x y → |ρ x - ρ y| ≤ 1) (hρW : ∀ x ∈ W, ρ x = 0) (hWS : W ⊆ S)
