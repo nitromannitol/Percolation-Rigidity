@@ -189,7 +189,6 @@ theorem edgeEnergy_dirichletSolution_div_le_trim (hd : 1 ≤ d) (a : Fin d → �
       exact Finset.sum_le_sum fun k _ => mul_le_mul_of_nonneg_right (haΛ k) (sq_nonneg _)
   -- the layer
   set g : Vertex d → ℝ := fun x => √(∑ k : Fin d, (u (x + unit k) - u x) ^ 2) with hg
-  have hs1 : 1 ≤ s / 2 := by linarith
   have hg2 : ∀ x, g x ^ 2 = ∑ k : Fin d, (u (x + unit k) - u x) ^ 2 := fun x => by
     rw [hg, Real.sq_sqrt (Finset.sum_nonneg fun k _ => sq_nonneg _)]
   have hhol := sum_sq_div_le_card_div_rpow_mul (Finset.sdiff_subset (s := Q.vertices) (t := A'))
@@ -203,26 +202,8 @@ theorem edgeEnergy_dirichletSolution_div_le_trim (hd : 1 ≤ d) (a : Fin d → �
   have hcard : (#(Q.vertices \ A') : ℝ) / (Q.size : ℝ) ^ d ≤
       2 * d * ((r + 1 + N : ℕ) : ℝ) / Q.size :=
     (div_le_div_of_nonneg_right hcard0 hV.le).trans (card_cubeLayer_div_le Q hL _)
-  have hgs : ∀ x, |g x| ^ s ≤ (d : ℝ) ^ (s / 2 - 1) * ∑ k : Fin d, |u (x + unit k) - u x| ^ s := by
-    intro x
-    have hY : 0 ≤ ∑ k : Fin d, (u (x + unit k) - u x) ^ 2 :=
-      Finset.sum_nonneg fun k _ => sq_nonneg _
-    have h1 : |g x| ^ s = (∑ k : Fin d, (u (x + unit k) - u x) ^ 2) ^ (s / 2) := by
-      rw [abs_of_nonneg (Real.sqrt_nonneg _), Real.sqrt_eq_rpow, ← Real.rpow_mul hY]
-      congr 1
-      ring
-    have h2 := Real.rpow_sum_le_const_mul_sum_rpow_of_nonneg (Finset.univ : Finset (Fin d)) hs1
-      (f := fun k => (u (x + unit k) - u x) ^ 2) fun k _ => sq_nonneg _
-    rw [Finset.card_univ, Fintype.card_fin] at h2
-    have h3 : ∀ k : Fin d, ((u (x + unit k) - u x) ^ 2) ^ (s / 2) = |u (x + unit k) - u x| ^ s :=
-      fun k => by
-        rw [← sq_abs, ← Real.rpow_natCast, ← Real.rpow_mul (abs_nonneg _)]
-        congr 1
-        push_cast
-        ring
-    simp only [h3] at h2
-    rw [h1]
-    exact h2
+  have hgs : ∀ x, |g x| ^ s ≤ (d : ℝ) ^ (s / 2 - 1) * ∑ k : Fin d, |u (x + unit k) - u x| ^ s :=
+    fun x => abs_sqrt_sum_sq_rpow_le (fun k => u (x + unit k) - u x) hs
   have hmeso := sum_abs_grad_mesoInterpolation_trimCube_rpow_le Q hN hr w (s := s) (by linarith)
   have hsum : ∑ x ∈ Q.vertices, |g x| ^ s ≤ (d : ℝ) ^ (s / 2 - 1) *
       ((1 + (3 : ℝ) ^ (s - 1) * (1 + 2 ^ s + (d : ℝ) ^ s * ((N : ℝ) / r) ^ s)) *
