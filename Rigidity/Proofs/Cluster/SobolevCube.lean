@@ -3,7 +3,7 @@ import Rigidity.Proofs.Cluster.SobolevFold
 /-!
 # The lattice Sobolev–Poincaré inequality on integer cubes
 
-For `d ≥ 2`, `s > d/(d-1)` and `s_* = sd/(s+d)` there is a constant `S(d, s)` such that every
+For `d ≥ 2`, `s ≥ d/(d-1)` and `s_* = sd/(s+d)` there is a constant `S(d, s)` such that every
 integer cube `B` satisfies
 `∑_{x ∈ B} |f(x) - (f)_B|^s ≤ S (∑_{x ∈ B} |∇f|^{s_*}(x))^{s/s_*}`,
 the usual Sobolev inequality on `ℤ^d` used by Armstrong and Dario in the proof of
@@ -28,15 +28,15 @@ theorem gradNormIn_sub_const (G : SimpleGraph (Vertex d)) (S : Finset (Vertex d)
     gradNormIn G S (fun y => f y - c) x = gradNormIn G S f x := by
   simp only [gradNormIn, sub_sub_sub_cancel_right]
 
-/-- **The lattice Sobolev–Poincaré inequality on integer cubes.** For `d ≥ 2`, `s > d/(d-1)` and
+/-- **The lattice Sobolev–Poincaré inequality on integer cubes.** For `d ≥ 2`, `s ≥ d/(d-1)` and
 `t = sd/(s+d)`, there is `S ≥ 0` such that every integer cube of positive side satisfies
 `LatticeSobolevOn B.vertices s t S`. -/
 theorem IntegerCube.exists_latticeSobolevOn (hd : 2 ≤ d) {s t : ℝ}
-    (hs : (d : ℝ) / (d - 1) < s) (ht : t = s * d / (s + d)) :
+    (hs : (d : ℝ) / (d - 1) ≤ s) (ht : t = s * d / (s + d)) :
     ∃ S : ℝ, 0 ≤ S ∧ ∀ B : IntegerCube d, 0 < B.size → LatticeSobolevOn B.vertices s t S := by
   have hd1 : (1 : ℝ) < d := by exact_mod_cast hd
   have hdm : (0 : ℝ) < d - 1 := by linarith
-  have hsd : (d : ℝ) < s * (d - 1) := by rwa [div_lt_iff₀ hdm] at hs
+  have hsd : (d : ℝ) ≤ s * (d - 1) := by rwa [div_le_iff₀ hdm] at hs
   have hs0 : 0 < s := by nlinarith
   have hsd0 : 0 < s + d := by linarith
   have ht1 : 1 ≤ t := by

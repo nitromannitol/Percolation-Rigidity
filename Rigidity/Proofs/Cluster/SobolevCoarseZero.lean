@@ -13,7 +13,7 @@ weights `b`,
 `∑_{x ∈ C_*(U)} |w(x)|^s ≤ 2^{s-1} (A + S B^{s/t})
 (∑_z (a(z)^{t/s} + b(z)) |∇w 1_{a≠0}|^t(z))^{s/t}`
 whenever `[w]_𝒫` vanishes at the vertices of the domain having a lattice neighbour outside it.
-For the partition into good cubes in dimension `d ≥ 2` with `s > d/(d-1)` and `t = s_* = sd/(s+d)`
+For the partition into good cubes in dimension `d ≥ 2` with `s ≥ d/(d-1)` and `t = s_* = sd/(s+d)`
 the hypothesis on the domain holds by the lattice Sobolev inequality with zero boundary values.
 Armstrong and Dario state the condition as `[w]_𝒫 = 0` on the `𝐚`-boundary of the cube; the
 lattice Sobolev inequality they apply needs it on the lattice boundary, which is used here.
@@ -35,8 +35,8 @@ def LatticeSobolevZeroOn (D : Finset (Vertex d)) (s t S : ℝ) : Prop :=
       S * (∑ x ∈ D, gradNormIn (nearestNeighborGraph d) D f x ^ t) ^ (s / t)
 
 /-- The lattice Sobolev inequality with zero boundary values holds on every finite domain of
-`ℤ^d`, `d ≥ 2`, for `s > d/(d-1)` and `t = sd/(s+d)`, with a constant depending on `d` and `s`. -/
-theorem exists_latticeSobolevZeroOn (hd : 2 ≤ d) {s t : ℝ} (hs : (d : ℝ) / (d - 1) < s)
+`ℤ^d`, `d ≥ 2`, for `s ≥ d/(d-1)` and `t = sd/(s+d)`, with a constant depending on `d` and `s`. -/
+theorem exists_latticeSobolevZeroOn (hd : 2 ≤ d) {s t : ℝ} (hs : (d : ℝ) / (d - 1) ≤ s)
     (ht : t = s * d / (s + d)) :
     ∃ S : ℝ, 0 ≤ S ∧ ∀ D : Finset (Vertex d), LatticeSobolevZeroOn D s t S :=
   exists_sum_rpow_le_of_eq_zero_on_boundary hd hs ht
@@ -136,13 +136,13 @@ theorem sum_rpow_le_of_latticeSobolevZeroOn {s t A B S : ℝ} (hs : 1 ≤ s) (ht
 end CoarseData
 
 /-- **Armstrong and Dario, Proposition 3.4, for the partition into good cubes** (case
-`[w]_𝒫 = 0` on the boundary of the cube). For `d ≥ 2`, `s > d/(d-1)` and `t = s_* = sd/(s+d)`
+`[w]_𝒫 = 0` on the boundary of the cube). For `d ≥ 2`, `s ≥ d/(d-1)` and `t = s_* = sd/(s+d)`
 there is `K(d, s)` with
 `∑_{x ∈ C_*(U)} |w(x)|^s ≤ K (∑_{z ∈ C_*(U)} (3^{ρ(z)})^{td} |∇w 1_{a≠0}|^t(z))^{s/t}`
 for every cube `U` resolved by the partition and every `w` whose coarsening vanishes at the
 vertices of `U` having a lattice neighbour outside `U`, with `ρ` the reach scale. -/
 theorem exists_partition_sum_rpow_le_of_coarsen_eq_zero (hd : 2 ≤ d) {s t : ℝ}
-    (hs : (d : ℝ) / (d - 1) < s) (ht : t = s * d / (s + d)) :
+    (hs : (d : ℝ) / (d - 1) ≤ s) (ht : t = s * d / (s + d)) :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ (ω : Configuration d) (hP : PartitionEvent ω) (U : TriadicCube d)
       (hU : PartitionResolved ω U) (w : Vertex d → ℝ),
       (∀ x ∈ U.toIntegerCube.vertices, ∀ y, (nearestNeighborGraph d).Adj x y →
@@ -154,7 +154,7 @@ theorem exists_partition_sum_rpow_le_of_coarsen_eq_zero (hd : 2 ≤ d) {s t : �
   have hd0 : 0 < d := by omega
   have hd1 : (1 : ℝ) < d := by exact_mod_cast hd
   have hdm : (0 : ℝ) < d - 1 := by linarith
-  have hsd : (d : ℝ) < s * (d - 1) := by rwa [div_lt_iff₀ hdm] at hs
+  have hsd : (d : ℝ) ≤ s * (d - 1) := by rwa [div_le_iff₀ hdm] at hs
   have hs0 : 0 < s := by nlinarith
   have hs1 : 1 ≤ s := by nlinarith
   have hsd0 : 0 < s + d := by linarith

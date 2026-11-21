@@ -4,7 +4,7 @@ import Rigidity.Vendor.LHCH.Support.Analysis.WeightedSobolev
 /-!
 # The lattice Sobolev inequality with zero boundary values
 
-For `d ≥ 2`, `s > d/(d-1)` and `s_* = sd/(s+d)`, there is a constant `S(d, s)` such that for every
+For `d ≥ 2`, `s ≥ d/(d-1)` and `s_* = sd/(s+d)`, there is a constant `S(d, s)` such that for every
 finite set `D ⊆ ℤ^d` and every `f` vanishing on the lattice boundary of `D` (the vertices of `D`
 with a lattice neighbour outside `D`),
 `∑_{x ∈ D} |f(x)|^s ≤ S (∑_{x ∈ D} |∇f|^{s_*}(x))^{s/s_*}`,
@@ -35,11 +35,11 @@ theorem abs_sub_le_sqrt_two_mul_gradNormIn (G : SimpleGraph (Vertex d)) (S : Fin
   rw [gradNormIn, ← Real.sqrt_mul (by norm_num), ← Real.sqrt_sq_eq_abs]
   exact Real.sqrt_le_sqrt (by linarith)
 
-/-- **The lattice Sobolev inequality with zero boundary values.** For `d ≥ 2`, `s > d/(d-1)` and
-`t = sd/(s+d)`, there is `S ≥ 0` such that for every finite `D ⊆ ℤ^d` and every `f` vanishing at
+/-- The lattice Sobolev inequality with zero boundary values for `d ≥ 2`, `s > d/(d-1)` and
+`t = sd/(s+d)`: there is `S ≥ 0` such that for every finite `D ⊆ ℤ^d` and every `f` vanishing at
 the vertices of `D` having a lattice neighbour outside `D`,
 `∑_{x ∈ D} |f(x)|^s ≤ S (∑_{x ∈ D} |∇f|^t(x))^{s/t}`. -/
-theorem exists_sum_rpow_le_of_eq_zero_on_boundary (hd : 2 ≤ d) {s t : ℝ}
+theorem exists_sum_rpow_le_of_eq_zero_on_boundary_of_lt (hd : 2 ≤ d) {s t : ℝ}
     (hs : (d : ℝ) / (d - 1) < s) (ht : t = s * d / (s + d)) :
     ∃ S : ℝ, 0 ≤ S ∧ ∀ (D : Finset (Vertex d)) (f : Vertex d → ℝ),
       (∀ x ∈ D, ∀ y, (nearestNeighborGraph d).Adj x y → y ∉ D → f x = 0) →
@@ -245,5 +245,93 @@ theorem exists_sum_rpow_le_of_eq_zero_on_boundary (hd : 2 ≤ d) {s t : ℝ}
           ← Real.rpow_mul (mul_nonneg hc₂0 hG0), Real.mul_rpow hc₂0 hG0,
           show 1 / t * s = s / t by ring]
         ring
+
+/-- **The lattice Sobolev inequality with zero boundary values at the endpoint** `s = d/(d-1)`,
+`t = 1`: for every finite `D ⊆ ℤ^d`, `d ≥ 2`, and every `f` vanishing at the vertices of `D`
+having a lattice neighbour outside `D`,
+`∑_{x ∈ D} |f(x)|^{d/(d-1)} ≤ (√2 d)^{d/(d-1)} (∑_{x ∈ D} |∇f|(x))^{d/(d-1)}`. -/
+theorem sum_rpow_le_of_eq_zero_on_boundary_endpoint (hd : 2 ≤ d) (D : Finset (Vertex d))
+    (f : Vertex d → ℝ)
+    (hf : ∀ x ∈ D, ∀ y, (nearestNeighborGraph d).Adj x y → y ∉ D → f x = 0) :
+    ∑ x ∈ D, |f x| ^ ((d : ℝ) / (d - 1)) ≤
+      (√2 * d) ^ ((d : ℝ) / (d - 1)) *
+        (∑ x ∈ D, gradNormIn (nearestNeighborGraph d) D f x) ^ ((d : ℝ) / (d - 1)) := by
+  have hd1 : (1 : ℝ) < d := by exact_mod_cast hd
+  have hdm : (0 : ℝ) < d - 1 := by linarith
+  have hd0 : (0 : ℝ) < d := by linarith
+  have hp0 : (0 : ℝ) < d / (d - 1) := div_pos hd0 hdm
+  have hadj : ∀ (x : Vertex d) (j : Fin d),
+      (nearestNeighborGraph d).Adj x (x + LatticeProb.unit j) := fun x j => ⟨j, Or.inl rfl⟩
+  obtain ⟨v, hv⟩ : ∃ v : Vertex d → ℝ, v = fun x => if x ∈ D then f x else 0 := ⟨_, rfl⟩
+  have hv0 : ∀ x, x ∉ D → v x = 0 := fun x hx => by simp [hv, hx]
+  have hvS : ∀ x (j : Fin d), v (x + LatticeProb.unit j) ≠ v x → x ∈ D := by
+    intro x j hne
+    by_contra hx
+    apply hne
+    rw [hv0 x hx]
+    by_cases hxj : x + LatticeProb.unit j ∈ D
+    · have h0 := hf _ hxj x (hadj x j).symm hx
+      simp [hv, hxj, h0]
+    · exact hv0 _ hxj
+  have hGN := LatticeHC.sum_rpow_le_sum_abs_grad hd D D v hv0 hvS
+  have hleft : ∑ x ∈ D, |v x| ^ ((d : ℝ) / (d - 1)) = ∑ x ∈ D, |f x| ^ ((d : ℝ) / (d - 1)) :=
+    Finset.sum_congr rfl fun x hx => by simp only [hv, hx, if_true]
+  have hpt : ∀ x ∈ D, ∑ j : Fin d, |v (x + LatticeProb.unit j) - v x| ≤
+      √2 * d * gradNormIn (nearestNeighborGraph d) D f x := by
+    intro x hx
+    have hterm : ∀ j : Fin d, |v (x + LatticeProb.unit j) - v x| ≤
+        √2 * gradNormIn (nearestNeighborGraph d) D f x := by
+      intro j
+      by_cases hxj : x + LatticeProb.unit j ∈ D
+      · simp only [hv, hx, hxj, if_true]
+        rw [abs_sub_comm]
+        exact abs_sub_le_sqrt_two_mul_gradNormIn _ _ _ hxj (hadj x j)
+      · have h0 := hf x hx _ (hadj x j) hxj
+        simp only [hv, hx, hxj, if_true, if_false, h0, sub_zero, abs_zero]
+        exact mul_nonneg (Real.sqrt_nonneg _) (gradNormIn_nonneg _ _ _ _)
+    calc ∑ j : Fin d, |v (x + LatticeProb.unit j) - v x|
+        ≤ ∑ _j : Fin d, √2 * gradNormIn (nearestNeighborGraph d) D f x :=
+          Finset.sum_le_sum fun j _ => hterm j
+      _ = √2 * d * gradNormIn (nearestNeighborGraph d) D f x := by
+          rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
+          ring
+  have hR : ∑ x ∈ D, ∑ j : Fin d, |v (x + LatticeProb.unit j) - v x| ≤
+      √2 * d * ∑ x ∈ D, gradNormIn (nearestNeighborGraph d) D f x := by
+    rw [Finset.mul_sum]
+    exact Finset.sum_le_sum hpt
+  rw [hleft] at hGN
+  have hM0 : 0 ≤ ∑ x ∈ D, |f x| ^ ((d : ℝ) / (d - 1)) :=
+    Finset.sum_nonneg fun _ _ => Real.rpow_nonneg (abs_nonneg _) _
+  have h1 := Real.rpow_le_rpow (Real.rpow_nonneg hM0 _) (hGN.trans hR) hp0.le
+  rw [← Real.rpow_mul hM0, show ((d : ℝ) - 1) / d * (d / (d - 1)) = 1 by field_simp,
+    Real.rpow_one, Real.mul_rpow (by positivity)
+      (Finset.sum_nonneg fun x _ => gradNormIn_nonneg _ _ _ _)] at h1
+  exact h1
+
+/-- **The lattice Sobolev inequality with zero boundary values.** For `d ≥ 2`, `s ≥ d/(d-1)` and
+`t = sd/(s+d)`, there is `S ≥ 0` such that for every finite `D ⊆ ℤ^d` and every `f` vanishing at
+the vertices of `D` having a lattice neighbour outside `D`,
+`∑_{x ∈ D} |f(x)|^s ≤ S (∑_{x ∈ D} |∇f|^t(x))^{s/t}`. -/
+theorem exists_sum_rpow_le_of_eq_zero_on_boundary (hd : 2 ≤ d) {s t : ℝ}
+    (hs : (d : ℝ) / (d - 1) ≤ s) (ht : t = s * d / (s + d)) :
+    ∃ S : ℝ, 0 ≤ S ∧ ∀ (D : Finset (Vertex d)) (f : Vertex d → ℝ),
+      (∀ x ∈ D, ∀ y, (nearestNeighborGraph d).Adj x y → y ∉ D → f x = 0) →
+      ∑ x ∈ D, |f x| ^ s ≤
+        S * (∑ x ∈ D, gradNormIn (nearestNeighborGraph d) D f x ^ t) ^ (s / t) := by
+  rcases hs.lt_or_eq with hs | hs
+  · exact exists_sum_rpow_le_of_eq_zero_on_boundary_of_lt hd hs ht
+  have hd1 : (1 : ℝ) < d := by exact_mod_cast hd
+  have hdm : (0 : ℝ) < d - 1 := by linarith
+  have hd0 : (0 : ℝ) < d := by linarith
+  subst hs
+  have ht1 : t = 1 := by
+    have hne : (d : ℝ) / (d - 1) + d ≠ 0 := by positivity
+    rw [ht, div_eq_one_iff_eq hne]
+    field_simp
+    ring
+  subst ht1
+  refine ⟨(√2 * d) ^ ((d : ℝ) / (d - 1)), by positivity, fun D f hf => ?_⟩
+  simp only [Real.rpow_one, div_one]
+  exact sum_rpow_le_of_eq_zero_on_boundary_endpoint hd D f hf
 
 end Rigidity.Percolation
