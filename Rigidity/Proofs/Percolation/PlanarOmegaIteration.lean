@@ -118,7 +118,7 @@ theorem exists_le_mul_pow_of_omega_iteration {D τ : ℕ → ℝ} {c C ρ σ μ 
     (h1 : ∀ n, D (n + 1) ≤ D n - c * τ n + C * σ ^ n)
     (h2 : ∀ n, -(C * σ ^ n) ≤ D n)
     (h3 : ∀ n, D n ≤ C * σ ^ n + C * ∑ l ∈ range (n + 1), ρ ^ (n - l) * τ l) :
-    ∃ K l : ℝ, 0 ≤ l ∧ l < 1 ∧ ∀ n, D n ≤ K * l ^ n := by
+    ∃ K l : ℝ, 0 < l ∧ l < 1 ∧ ∀ n, D n ≤ K * l ^ n := by
   -- normalized constants
   set C₀ := C + 1 with hC₀def
   have hC₀ : 0 < C₀ := by linarith
@@ -254,7 +254,8 @@ theorem exists_le_mul_pow_of_omega_iteration {D τ : ℕ → ℝ} {c C ρ σ μ 
   have hl1 : l < 1 := by
     rw [hldef]
     linarith [max_lt hθ1 hμ1]
-  have hl0 : 0 ≤ l := hμ0.le.trans hμl
+  have hl0' : 0 < l := hμ0.trans_le hμl
+  have hl0 : 0 ≤ l := hl0'.le
   set M := max (max (D 0) (K₀ / (l - θ))) 0 with hMdef
   have hM0 : 0 ≤ M := le_max_right _ _
   have hMD : D 0 ≤ M := (le_max_left _ _).trans (le_max_left _ _)
@@ -279,7 +280,7 @@ theorem exists_le_mul_pow_of_omega_iteration {D τ : ℕ → ℝ} {c C ρ σ μ 
       rw [pow_succ]
       nlinarith
   -- back to `D`
-  refine ⟨M + C₀ / (μ - σ), l, hl0, hl1, fun n => ?_⟩
+  refine ⟨M + C₀ / (μ - σ), l, hl0', hl1, fun n => ?_⟩
   have hC₀μσ : 0 ≤ C₀ / (μ - σ) := by positivity
   cases n with
   | zero =>
@@ -311,5 +312,81 @@ theorem exists_le_mul_pow_of_omega_iteration {D τ : ℕ → ℝ} {c C ρ σ μ 
       linarith
     rw [f1, add_mul]
     linarith
+
+/-- **The iteration of the decay of `ω` from a starting scale** (Armstrong and Dario, proof of
+Lemma 5.9, Steps 1-3): the hypotheses are required only from a scale `N` on, and the control by the
+past of `τ` is the one of Lemma 5.8, with the sum over all `l ≤ n`. -/
+theorem exists_le_mul_pow_of_omega_iteration_of_ge {D τ : ℕ → ℝ} {c C ρ σ μ : ℝ} (N : ℕ)
+    (hc : 0 < c) (hC : 0 ≤ C) (hσ0 : 0 ≤ σ) (hσμ : σ < μ) (hμ1 : μ < 1) (hρ0 : 0 ≤ ρ)
+    (hρμ : ρ ≤ μ ^ 2) (hτ : ∀ n, 0 ≤ τ n)
+    (h1 : ∀ n, N ≤ n → D (n + 1) ≤ D n - c * τ n + C * σ ^ n)
+    (h2 : ∀ n, N ≤ n → -(C * σ ^ n) ≤ D n)
+    (h3 : ∀ n, N ≤ n → D n ≤ C * σ ^ n + C * ∑ l ∈ range (n + 1), ρ ^ (n - l) * τ l) :
+    ∃ K l : ℝ, 0 < l ∧ l < 1 ∧ ∀ n, N ≤ n → D n ≤ K * l ^ n := by
+  have hμ0 : 0 < μ := lt_of_le_of_lt hσ0 hσμ
+  have hρμ' : ρ < μ := lt_of_le_of_lt hρμ (by nlinarith)
+  set σ' := max σ ρ with hσ'
+  have hσ'0 : 0 ≤ σ' := le_max_of_le_left hσ0
+  have hσ'μ : σ' < μ := max_lt hσμ hρμ'
+  have hσ'1 : σ' ≤ 1 := (hσ'μ.trans hμ1).le
+  set B := ∑ l ∈ range N, ρ ^ (N - l) * τ l with hB
+  have hB0 : 0 ≤ B := sum_nonneg fun l _ => mul_nonneg (pow_nonneg hρ0 _) (hτ l)
+  set C' := C + C * B with hC'
+  have hC'0 : 0 ≤ C' := by positivity
+  have hσj : ∀ j, C * σ ^ (N + j) ≤ C * σ' ^ j := fun j => by
+    have a : σ ^ (N + j) ≤ σ ^ j := by
+      rw [pow_add]
+      have : σ ^ N ≤ 1 := pow_le_one₀ hσ0 (hσμ.trans hμ1).le
+      have := pow_nonneg hσ0 j
+      nlinarith
+    have b : σ ^ j ≤ σ' ^ j := pow_le_pow_left₀ hσ0 (le_max_left _ _) j
+    exact mul_le_mul_of_nonneg_left (a.trans b) hC
+  have hC'j : ∀ j, C * σ' ^ j ≤ C' * σ' ^ j := fun j => by
+    have := pow_nonneg hσ'0 j
+    have : 0 ≤ C * B * σ' ^ j := by positivity
+    rw [hC']
+    nlinarith
+  obtain ⟨K, l, hl0, hl1, hK⟩ := exists_le_mul_pow_of_omega_iteration (D := fun j => D (N + j))
+    (τ := fun j => τ (N + j)) (C := C') (ρ := ρ) (σ := σ') (μ := μ) hc hC'0 hσ'0 hσ'μ hμ1 hρ0 hρμ
+    (fun j => hτ _) (fun j => by
+      have := h1 (N + j) (Nat.le_add_right N j)
+      simp only [← add_assoc]
+      linarith [hσj j, hC'j j])
+    (fun j => by
+      have := h2 (N + j) (Nat.le_add_right N j)
+      linarith [hσj j, hC'j j])
+    (fun j => by
+      have h := h3 (N + j) (Nat.le_add_right N j)
+      have hsplit : ∑ l ∈ range (N + j + 1), ρ ^ (N + j - l) * τ l =
+          ρ ^ j * B + ∑ i ∈ range (j + 1), ρ ^ (j - i) * τ (N + i) := by
+        rw [show N + j + 1 = N + (j + 1) by ring, sum_range_add, hB, mul_sum]
+        congr 1
+        · refine sum_congr rfl fun l hl => ?_
+          have hl' := mem_range.1 hl
+          rw [show N + j - l = j + (N - l) by omega, pow_add]
+          ring
+        · refine sum_congr rfl fun i hi => ?_
+          rw [show N + j - (N + i) = j - i by omega]
+      rw [hsplit] at h
+      have hρj : ρ ^ j ≤ σ' ^ j := pow_le_pow_left₀ hρ0 (le_max_right _ _) j
+      have hS : 0 ≤ ∑ i ∈ range (j + 1), ρ ^ (j - i) * τ (N + i) :=
+        sum_nonneg fun i _ => mul_nonneg (pow_nonneg hρ0 _) (hτ _)
+      have e1 : C * (ρ ^ j * B) ≤ C * B * σ' ^ j := by
+        have := mul_le_mul_of_nonneg_left hρj (mul_nonneg hC hB0)
+        nlinarith
+      have hσ'j := pow_nonneg hσ'0 j
+      have e2 : C * ∑ i ∈ range (j + 1), ρ ^ (j - i) * τ (N + i) ≤
+          C' * ∑ i ∈ range (j + 1), ρ ^ (j - i) * τ (N + i) := by
+        have : C ≤ C' := by rw [hC']; nlinarith
+        exact mul_le_mul_of_nonneg_right this hS
+      have := hσj j
+      rw [hC'] at e2 ⊢
+      nlinarith)
+  refine ⟨K / l ^ N, l, hl0, hl1, fun n hn => ?_⟩
+  obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le hn
+  have := hK j
+  rw [pow_add, div_mul_eq_mul_div, mul_comm (l ^ N), ← mul_assoc, mul_div_assoc,
+    div_self (pow_ne_zero N hl0.ne'), mul_one]
+  exact this
 
 end Rigidity.Percolation
