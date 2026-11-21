@@ -49,7 +49,8 @@ theorem card_enl_succ (j k : ℕ) (x : Vertex d) :
 /-- **Vitali's selection.** In a finite family, if the enlargement `E a` meets `E b` and `a` has the
 smaller scale, then `Q a ⊆ E' b`; then a subfamily with pairwise disjoint enlargements has the
 property that every `Q a` lies in some `E' b` of it. -/
-theorem exists_vitali_subfamily {α V : Type*} [DecidableEq α] [DecidableEq V] (sc : α → ℕ) (E Q E' : α → Finset V) :
+theorem exists_vitali_subfamily {α V : Type*} [DecidableEq α] [DecidableEq V] (sc : α → ℕ)
+    (E Q E' : α → Finset V) :
     ∀ F : Finset α, (∀ a ∈ F, (E a).Nonempty) →
       (∀ a ∈ F, ∀ b ∈ F, sc a ≤ sc b → (E a ∩ E b).Nonempty → Q a ⊆ E' b) →
       ∃ S ⊆ F, (∀ a ∈ S, ∀ b ∈ S, a ≠ b → Disjoint (E a) (E b)) ∧

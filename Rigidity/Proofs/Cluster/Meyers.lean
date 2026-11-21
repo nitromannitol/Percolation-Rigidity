@@ -5,7 +5,7 @@ import Mathlib.Analysis.MeanInequalitiesPow
 # The Meyers estimate on clusters, deterministic part
 
 Armstrong–Dario, *Elliptic regularity and quantitative homogenization on percolation clusters*
-(Comm. Pure Appl. Math. 2018), Proposition 3.8, estimate (3.29) [the bound on `ME_ε(□_m)`]: there
+(Comm. Pure Appl. Math. 2018), Proposition 3.8 (the bound on `ME_ε(□_m)`): there
 are `ε > 0` and `t < ∞` such that, above the minimal scale of the partition `𝓡` on whose cubes the
 reverse Hölder inequality of Lemma 3.6 holds,
 
@@ -181,7 +181,8 @@ theorem sum_cellAvg_rpow_le {s : Vertex d → ℕ} (hcell : ∀ x, ∀ z ∈ cub
     {T : Finset (Vertex d)} (hT : ∀ z ∈ T, cube (s z) z ⊆ T) :
     ∑ z ∈ T, cellAvg s G θ z ^ (1 / θ) ≤ ∑ z ∈ T, G z := by
   have hp : 1 ≤ 1 / θ := by rw [le_div_iff₀ hθ, one_mul]; exact hθ1
-  have h1 : ∀ z ∈ T, cellAvg s G θ z ^ (1 / θ) ≤ (∑ w ∈ cube (s z) z, G w) / (cube (s z) z).card := by
+  have h1 : ∀ z ∈ T, cellAvg s G θ z ^ (1 / θ) ≤
+      (∑ w ∈ cube (s z) z, G w) / (cube (s z) z).card := by
     intro z _
     have := avg_rpow_le_avg_rpow (S := cube (s z) z) ⟨z, mem_cube_self _ z⟩
       (h := fun w => G w ^ θ) (fun w _ => Real.rpow_nonneg (hG w) _) hp

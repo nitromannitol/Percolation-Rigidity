@@ -126,7 +126,8 @@ noncomputable def cube (k : ℕ) (x : Vertex d) : Finset (Vertex d) := box (cent
 
 /-- The enlargement of side `3^{k+j}` of the triadic cube of scale `k` containing `x`, with the same
 center. -/
-noncomputable def enl (j k : ℕ) (x : Vertex d) : Finset (Vertex d) := box (center k x) (halfSide (k + j))
+noncomputable def enl (j k : ℕ) (x : Vertex d) : Finset (Vertex d) :=
+  box (center k x) (halfSide (k + j))
 
 theorem mem_cube_iff {k : ℕ} {x y : Vertex d} : y ∈ cube k x ↔ idx k y = idx k x := by
   rw [cube, mem_box, funext_iff]
@@ -160,7 +161,8 @@ theorem idx_succ (k : ℕ) (x : Vertex d) (i : Fin d) : idx (k + 1) x i = (idx k
   have hp1 : p * 3 ≤ q + 1 := Int.ediv_mul_le _ (by norm_num)
   have hp2 : q + 1 < (p + 1) * 3 := Int.lt_ediv_add_one_mul_self _ (by norm_num)
   have hp1' : (3 * p - 1) * 3 ^ k ≤ q * 3 ^ k := mul_le_mul_of_nonneg_right (by linarith) hs.le
-  have hp2' : (q + 1) * 3 ^ k ≤ (3 * p + 2) * 3 ^ k := mul_le_mul_of_nonneg_right (by linarith) hs.le
+  have hp2' : (q + 1) * 3 ^ k ≤ (3 * p + 2) * 3 ^ k :=
+    mul_le_mul_of_nonneg_right (by linarith) hs.le
   unfold idx
   rw [halfSide, pow_succ]
   refine ediv_eq_of_le_of_lt (by positivity) ?_ ?_ <;> nlinarith
