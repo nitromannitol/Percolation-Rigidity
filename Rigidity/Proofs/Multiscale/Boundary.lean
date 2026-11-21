@@ -281,7 +281,8 @@ theorem sum_sq_blockMean_sub_gradSum_le (c : Site d) {L : ℕ} (hL : 1 ≤ L) (v
   rw [hca]
   calc ∑ j : Fin d, (blockMean c L F j - K * gradSum (halfOpenCube c L) v j) ^ 2
       ≤ ∑ j : Fin d, K ^ 2 * (4 * B) *
-          ∑ e ∈ (edgesOf c L).filter (fun e => e.2 = j), F e ^ 2 := Finset.sum_le_sum fun j _ => hj j
+          ∑ e ∈ (edgesOf c L).filter (fun e => e.2 = j), F e ^ 2 :=
+        Finset.sum_le_sum fun j _ => hj j
     _ = K ^ 2 * (4 * B) * ∑ e ∈ edgesOf c L, F e ^ 2 := by rw [← Finset.mul_sum, hsum]
     _ ≤ K ^ 2 * (4 * B) * (2 ^ d * ∑ e ∈ edgesOf c L, faceWeight c L e * F e ^ 2) :=
         mul_le_mul_of_nonneg_left hw (by positivity)

@@ -8,7 +8,8 @@ Armstrong–Dario, *Elliptic regularity and quantitative homogenization on perco
 `n, m ∈ ℕ` with `n ∈ [m/2, m]` there is `C(d) < ∞` such that for every `u : ℤ^d ∩ □_m → ℝ`,
 
 `‖u - (u)_{□_m}‖_{L̲²(ℤ^d ∩ □_m)} ≤ C 3^n ‖∇u‖_{L̲²(ℤ^d ∩ □_m)}
-  + C Σ_{k=n}^{m-1} 3^k (|3^k ℤ^d ∩ □_m|⁻¹ Σ_{y ∈ 3^k ℤ^d ∩ □_m} | |□_k|⁻¹ ⟨∇u⟩_{ℤ^d ∩ (y + □_k)} |²)^{1/2}`.
+  + C Σ_{k=n}^{m-1} 3^k (|3^k ℤ^d ∩ □_m|⁻¹ Σ_{y ∈ 3^k ℤ^d ∩ □_m}
+      | |□_k|⁻¹ ⟨∇u⟩_{ℤ^d ∩ (y + □_k)} |²)^{1/2}`.
 
 Conventions.
 * `□_m = (-3^m/2, 3^m/2)^d ⊆ ℝ^d`; it is stated here for every triadic cube `3^m z + □_m`,
@@ -75,7 +76,8 @@ def subcubeGradMeanSq (m : ℕ) (z : Vertex d) (k : ℕ) (u : Vertex d → ℝ) 
 /-- **Discrete multiscale Poincaré inequality** (Armstrong–Dario 2018, Proposition 8.2): there is
 `C(d) < ∞` such that for all `n, m ∈ ℕ` with `n ∈ [m/2, m]`, every triadic cube `3^m z + □_m` and
 every `u`,
-`‖u - (u)_{□_m}‖_{L̲²} ≤ C 3^n ‖∇u‖_{L̲²} + C Σ_{k=n}^{m-1} 3^k (subcubeGradMeanSq m z k u)^{1/2}`. -/
+`‖u - (u)_{□_m}‖_{L̲²} ≤ C 3^n ‖∇u‖_{L̲²} + C Σ_{k=n}^{m-1} 3^k (subcubeGradMeanSq m z k u)^{1/2}`.
+-/
 def MultiscalePoincare (d : ℕ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∀ m n : ℕ, (m : ℝ) / 2 ≤ n → n ≤ m → ∀ (z : Vertex d) (u : Vertex d → ℝ),
     Real.sqrt (((cube m z).card : ℝ)⁻¹ *
