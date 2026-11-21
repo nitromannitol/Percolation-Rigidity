@@ -5,8 +5,8 @@ import Rigidity.Proofs.Regularity.ClusterKIterationOne
 # Lemma 7.2 of Armstrong–Dario on balls of the lattice
 
 The whole lattice `ℤ^d` is the open component `latticeComponent d` of the configuration in which
-every bond is open. Its density in every triadic cube is one (`clusterCubeDensity_latticeComponent`),
-so the balls of the lattice satisfy all the properties of the normalized `L²` norms and of the
+every bond is open. Its density in every triadic cube is one
+(`clusterCubeDensity_latticeComponent`), so the balls of the lattice satisfy all the properties of the normalized `L²` norms and of the
 polynomials used in the iteration of Armstrong–Dario, Lemma 7.2 (arXiv:1609.09431v2), with
 deterministic constants and no minimal scale beyond a multiple of `√d`
 (`armstrongDario_lemma_7_2_zero_lattice`, `armstrongDario_lemma_7_2_one_lattice`). This is the
