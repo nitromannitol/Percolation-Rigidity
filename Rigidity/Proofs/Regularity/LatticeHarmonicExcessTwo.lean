@@ -229,4 +229,120 @@ theorem clusterAffine_le_latticeHarmonicQuadratic [NeZero d] :
     funext y; simp only [latticeExt, hv]
   rw [this, latticeLaplacian_affine]
 
+theorem HarmonicRegularity.mono_const {F : Type*} [AddCommGroup F] {N : ℝ → AddGroupSeminorm F}
+    {Abar : ℝ → Set F} {P : AddSubgroup F} {j : ℕ} {X R CH CH' : ℝ}
+    (h : HarmonicRegularity N Abar P j X R CH) (hCH : CH ≤ CH') (hX : 0 < X) :
+    HarmonicRegularity N Abar P j X R CH' := by
+  intro r hrR v hv s hXs hsr
+  have hs : 0 < s := hX.trans_le hXs
+  have hr : 0 < r := by linarith
+  refine (h r hrR v hv s hXs hsr).trans ?_
+  apply mul_le_mul_of_nonneg_right _ (ballExcess_nonneg N P r v)
+  exact mul_le_mul_of_nonneg_right hCH (by positivity)
+
+/-- The trace of the second differences at `c` of a function harmonic at `c` is a sum of third
+differences. -/
+theorem sum_hessAt_eq (f : (Fin d → ℤ) → ℝ) (c : Fin d → ℤ) (hΔ : latticeLaplacian f c = 0) :
+    ∑ a, hessAt f c a a = ∑ a, fwd a (fwd a (fwd a f)) (c - unit a) := by
+  have e : ∀ a, fwd a (fwd a (fwd a f)) (c - unit a) =
+      hessAt f c a a - (f (c + unit a) + f (c - unit a) - 2 * f c) := by
+    intro a
+    simp only [fwd, hessAt, sub_add_cancel]
+    ring
+  rw [sum_congr rfl fun a _ => e a, sum_sub_distrib]
+  simp only [latticeLaplacian] at hΔ
+  rw [hΔ, sub_zero]
+
+/-- The trace-free part `H - (tr H / d) I` of the second differences at `c`. -/
+noncomputable def harmHess (f : (Fin d → ℤ) → ℝ) (c : Fin d → ℤ) : Matrix (Fin d) (Fin d) ℝ :=
+  hessAt f c - Matrix.diagonal fun _ => (∑ a, hessAt f c a a) / d
+
+theorem latticeLaplacian_halfQuad_harmHess (hd : 0 < d) (f : (Fin d → ℤ) → ℝ)
+    (c x : Fin d → ℤ) : latticeLaplacian (halfQuad (harmHess f c) c) x = 0 := by
+  rw [latticeLaplacian_halfQuad]
+  simp only [harmHess, Matrix.sub_apply, Matrix.diagonal_apply_eq, sum_sub_distrib, sum_const,
+    card_univ, Fintype.card_fin, nsmul_eq_mul]
+  have : (d : ℝ) ≠ 0 := by exact_mod_cast hd.ne'
+  field_simp
+  ring
+
+theorem quadForm_sub_matrix (M M' : Matrix (Fin d) (Fin d) ℝ) (v : EuclideanSpace ℝ (Fin d)) :
+    quadForm (M - M') v = quadForm M v - quadForm M' v := by
+  simp only [quadForm, Matrix.sub_apply, sub_mul, sum_sub_distrib]
+
+theorem quadForm_diagonal (t : ℝ) (v : EuclideanSpace ℝ (Fin d)) :
+    quadForm (Matrix.diagonal fun _ => t) v = t * ∑ i, v i ^ 2 := by
+  simp only [quadForm, Matrix.diagonal_apply, ite_mul, zero_mul, sum_ite_eq, mem_univ, if_true,
+    mul_sum]
+  exact sum_congr rfl fun i _ => by ring
+
+/-- Removing the trace changes the quadratic part by at most `|t| d S²` on `[c, c + S 𝟙]`. -/
+theorem abs_halfQuad_sub_le (H : Matrix (Fin d) (Fin d) ℝ) (t : ℝ) {c x : Fin d → ℤ}
+    (hcx : ∀ i, c i ≤ x i) {S : ℕ} (hs : ∀ i, x i - c i ≤ S) :
+    |halfQuad H c x - halfQuad (H - Matrix.diagonal fun _ => t) c x| ≤ |t| * (d * S ^ 2) := by
+  simp only [halfQuad]
+  rw [quadForm_sub_matrix, quadForm_diagonal]
+  have hcomp : ∀ i, (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) i =
+      ((x i - c i : ℤ) : ℝ) := fun i => by
+    rw [← latticeEuclideanEmbedding_sub]; rfl
+  have hsum : ∑ i, (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) i ^ 2 ≤
+      d * S ^ 2 := by
+    calc _ ≤ ∑ _i : Fin d, ((S : ℝ)) ^ 2 := by
+          refine sum_le_sum fun i _ => ?_
+          rw [hcomp]
+          have h0 : (0 : ℝ) ≤ ((x i - c i : ℤ) : ℝ) := by
+            have := hcx i; exact_mod_cast (by omega : (0 : ℤ) ≤ x i - c i)
+          have h1 : ((x i - c i : ℤ) : ℝ) ≤ S := by exact_mod_cast hs i
+          exact pow_le_pow_left₀ h0 h1 2
+      _ = d * S ^ 2 := by rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]
+  have hsum0 : 0 ≤ ∑ i, (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) i ^ 2 :=
+    sum_nonneg fun _ _ => sq_nonneg _
+  have e : quadForm H (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) / 2 -
+      (quadForm H (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) -
+        t * ∑ i, (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) i ^ 2) / 2 =
+      (t * ∑ i, (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) i ^ 2) / 2 := by ring
+  rw [e, abs_div, abs_mul, abs_of_nonneg hsum0, abs_two]
+  have : |t| * ∑ i, (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) i ^ 2 ≤
+      |t| * (d * S ^ 2) := mul_le_mul_of_nonneg_left hsum (abs_nonneg t)
+  have h0 : 0 ≤ |t| * ∑ i, (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) i ^ 2 :=
+    mul_nonneg (abs_nonneg t) hsum0
+  linarith
+
+/-- **Second-order harmonic Taylor expansion on the lattice**: the quadratic part is the trace-free
+`½ q_{H'}(y - c)`, `H' = harmHess f c`, which is lattice harmonic. -/
+theorem abs_sub_harmonicTaylor_two_le (hd : 0 < d) (f : (Fin d → ℤ) → ℝ) {c x : Fin d → ℤ}
+    (hcx : ∀ i, c i ≤ x i) {S : ℕ} (hs : ∀ i, x i - c i ≤ S) {M₃ : ℝ} (hM₀ : 0 ≤ M₃)
+    (hM : ∀ y : Fin d → ℤ, (∀ i, c i ≤ y i ∧ y i ≤ x i) →
+      ∀ a b e, |fwd e (fwd a (fwd b f)) y| ≤ M₃)
+    (hMc : ∀ a, |fwd a (fwd a (fwd a f)) (c - unit a)| ≤ M₃) (hΔ : latticeLaplacian f c = 0) :
+    |f x - (halfQuad (harmHess f c) c x + (f c - halfQuad (hessAt f c) c c) +
+        ∑ i, ((x i - c i : ℤ) : ℝ) * fwd i (fun y => f y - halfQuad (hessAt f c) c y) c)| ≤
+      d * (d + 1) * S ^ 2 * (d * S * M₃) + d * S ^ 2 * M₃ := by
+  have h1 := abs_sub_taylor_two_le f hcx hs hM₀ hM
+  have h2 := abs_halfQuad_sub_le (hessAt f c) ((∑ a, hessAt f c a a) / d) hcx hs (x := x)
+  have htr : |(∑ a, hessAt f c a a) / d| ≤ M₃ := by
+    rw [sum_hessAt_eq f c hΔ, abs_div, Nat.abs_cast]
+    have hd' : (0 : ℝ) < d := by exact_mod_cast hd
+    rw [div_le_iff₀ hd']
+    calc |∑ a, fwd a (fwd a (fwd a f)) (c - unit a)|
+        ≤ ∑ a, |fwd a (fwd a (fwd a f)) (c - unit a)| := abs_sum_le_sum_abs _ _
+      _ ≤ ∑ _a : Fin d, M₃ := sum_le_sum fun a _ => hMc a
+      _ = M₃ * d := by rw [sum_const, card_univ, Fintype.card_fin, nsmul_eq_mul]; ring
+  have h3 : |(∑ a, hessAt f c a a) / d| * (d * S ^ 2) ≤ d * S ^ 2 * M₃ := by
+    have := mul_le_mul_of_nonneg_right htr (by positivity : (0 : ℝ) ≤ d * S ^ 2)
+    linarith
+  have e : harmHess f c = hessAt f c - Matrix.diagonal fun _ => (∑ a, hessAt f c a a) / d := rfl
+  rw [e]
+  set T := halfQuad (hessAt f c) c x + (f c - halfQuad (hessAt f c) c c) +
+    ∑ i, ((x i - c i : ℤ) : ℝ) * fwd i (fun y => f y - halfQuad (hessAt f c) c y) c with hT
+  set D := halfQuad (hessAt f c) c x -
+    halfQuad (hessAt f c - Matrix.diagonal fun _ => (∑ a, hessAt f c a a) / d) c x with hD
+  have e2 : f x - (halfQuad (hessAt f c - Matrix.diagonal fun _ => (∑ a, hessAt f c a a) / d) c x +
+      (f c - halfQuad (hessAt f c) c c) +
+      ∑ i, ((x i - c i : ℤ) : ℝ) * fwd i (fun y => f y - halfQuad (hessAt f c) c y) c) =
+      (f x - T) + D := by rw [hT, hD]; ring
+  rw [e2]
+  calc |(f x - T) + D| ≤ |f x - T| + |D| := abs_add_le _ _
+    _ ≤ _ := add_le_add h1 (h2.trans h3)
+
 end Rigidity.Proofs.Regularity
