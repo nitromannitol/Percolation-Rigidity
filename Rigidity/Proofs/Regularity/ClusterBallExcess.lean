@@ -1,5 +1,5 @@
 import LatticeProb.Prob.Percolation.LatticeClusterL2Triangle
-import Rigidity.Proofs.Regularity.BallExcess
+import Rigidity.Proofs.Regularity.SinglePolynomial
 
 /-!
 # Cluster balls as a family of ball seminorms
@@ -244,5 +244,16 @@ theorem polynomialComparison_componentBallSeminorm (C : OpenComponent ω) (z : V
     _ ≤ 2 / Real.sqrt δ * (ρ / ρ') *
         ballExcess (componentBallSeminorm C z) (clusterConstants C) ρ' w :=
         mul_le_mul_of_nonneg_left hlow (by positivity)
+
+/-- On nonempty cluster balls the normalized norm of a constant is its absolute value, so the
+constants satisfy `PolynomialGrowth` with `k = 0` and constant `1`. -/
+theorem polynomialGrowth_clusterConstants (C : OpenComponent ω) (z : Vertex d) {X R : ℝ}
+    (hne : ∀ ρ : ℝ, X ≤ ρ → ρ ≤ R → (componentEuclideanBall C z ρ).Nonempty) :
+    PolynomialGrowth (componentBallSeminorm C z) (clusterConstants C) 0 X R 1 := by
+  rintro w ⟨c, hc⟩ ρ r hXρ hρr hrR
+  have hw : w = fun _ => c := funext hc
+  rw [hw, componentBallSeminorm_apply, componentBallSeminorm_apply,
+    componentBallL2_const C z r c (hne r (hXρ.trans hρr) hrR),
+    componentBallL2_const C z ρ c (hne ρ hXρ (hρr.trans hrR)), pow_zero, one_mul, one_mul]
 
 end Rigidity.Proofs.Regularity
