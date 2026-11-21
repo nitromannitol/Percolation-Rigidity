@@ -86,7 +86,7 @@ theorem TriadicCube.toIntegerCube_mem_planarSquares (Q : TriadicCube 2) :
 
 /-- An open walk from inside a region to outside it leaves the region along an open edge from a
 vertex joined to its start inside the region. -/
-theorem exists_exit_of_walk {S : Set (Vertex 2)} {x y : Vertex 2} (hx : x ∈ S) (hy : y ∉ S)
+theorem exists_reachIn_exit_of_walk {S : Set (Vertex 2)} {x y : Vertex 2} (hx : x ∈ S) (hy : y ∉ S)
     (W : (openGraph ω).Walk x y) :
     ∃ u v, ReachIn ω S x u ∧ (openGraph ω).Adj u v ∧ v ∉ S := by
   induction W with
@@ -172,7 +172,7 @@ theorem TriadicCube.reachIn_anchor_of_infinite {Q : TriadicCube 2} {a : Vertex 2
     (SimpleGraph.ConnectedComponent.eq.mp
       ((SimpleGraph.ConnectedComponent.mem_supp_iff _ _).mp hy)).symm
   obtain ⟨W⟩ := hr
-  obtain ⟨u, v, hxu, huv, hv⟩ := exists_exit_of_walk hxN hyN W
+  obtain ⟨u, v, hxu, huv, hv⟩ := exists_reachIn_exit_of_walk hxN hyN W
   have huN : u ∈ N := hxu.end_mem
   rw [TriadicCube.mem_ninefold] at huN hv
   push Not at hv
