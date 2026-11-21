@@ -112,7 +112,8 @@ instance isFiniteMeasure_restrict_ball (c : EuclideanSpace ℝ (Fin d)) (R : ℝ
     IsFiniteMeasure (volume.restrict (ball c R)) :=
   isFiniteMeasure_restrict.2 measure_ball_lt_top.ne
 
-theorem sqrt_toReal_eq (x : ENNReal) : Real.sqrt x.toReal = (x ^ (2 : ENNReal).toReal⁻¹).toReal := by
+theorem sqrt_toReal_eq (x : ENNReal) :
+    Real.sqrt x.toReal = (x ^ (2 : ENNReal).toReal⁻¹).toReal := by
   rw [← ENNReal.toReal_rpow, Real.sqrt_eq_rpow]
   norm_num
 
