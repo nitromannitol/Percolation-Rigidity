@@ -89,6 +89,10 @@ further = {
     'Theorem 1.3 from its dimension-two inputs':
         ['Rigidity.Assembly.WithPlanarInputs.fast_decay',
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists'],
+    'Density concentration in every dimension':
+        ['Rigidity.Proofs.S2.cluster_density_concentration',
+         'Rigidity.Assembly.WithProvedDensity.green_gradient_homogenization',
+         'Rigidity.Assembly.WithProvedDensity.fast_decay'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
