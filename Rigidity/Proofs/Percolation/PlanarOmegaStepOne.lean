@@ -16,7 +16,7 @@ and `E[ν]`. These are almost nonnegative quadratic forms, and comparing their s
 
 `D_{n+1} ≤ D_n - c τ_n + C (3^(-n/2) + exp (-c' 3ⁿ))`
 
-(display (5.45) of Armstrong and Dario, in dimension two).
+(the inequality of Step 1 of the proof of Lemma 5.10 of Armstrong and Dario, in dimension two).
 -/
 
 open MeasureTheory LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -64,8 +64,8 @@ theorem add_two_mul_nonneg_of_neg_le {g : (Fin 2 → ℝ) → ℝ} {K : ℝ}
   have h2 := mul_le_mul_of_nonneg_left (abs_add_abs_sq_le q) hK
   linarith
 
-/-- **The decrease of `D_n` along `τ_n`** (Armstrong and Dario, display (5.45), in dimension
-two). -/
+/-- **The decrease of `D_n` along `τ_n`** (Armstrong and Dario, Step 1 of the proof of Lemma 5.10,
+in dimension two). -/
 theorem exists_planarOmegaD_succ_le {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ c : ℝ, 0 < c ∧ ∃ C : ℝ, 0 ≤ C ∧ ∃ c' : ℝ, 0 < c' ∧ ∃ N : ℕ, ∀ n, N ≤ n →
       planarOmegaD p (n + 1) ≤ planarOmegaD p n - c * planarTau p n +
