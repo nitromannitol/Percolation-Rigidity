@@ -12,7 +12,9 @@ With the datum `w̃ = boundaryInterpolation 𝒫 B u` and `Q ⊆ cl_𝒫`, the t
 `L^{-d} E_c(ũ) ≤ L^{-d} E_hom(u_hom) + L^{-d} (6 N^d Σ δ + 3 F + 6 Λ d ρ^{-2} (X + Y))
   + (2 + 3Λ/λ) (2 Λ (2d(D + ρ + N + 1)/L)^{1 − 2/t} + C_γ ((D + ρ + N + 1)/L)^γ)
   (d^{t/2−1} 𝔅_t)^{2/t}`
-(`innerEdgeEnergy_patch_div_le_of_coarse`).
+(`innerEdgeEnergy_patch_div_le_of_coarse`). The `L²` estimate (iii) reads
+`L^{-d} Σ_U (ũ − u_hom)² ≤ 2 L^{-d} Σ_i Σ (ṽ − ℓ_{y_i})² + 2 C N⁴ r^{-2} (Λ/λ) 𝔅₂`
+(`exists_sum_sq_patch_sub_div_le_of_coarse`).
 -/
 
 open Finset LatticeProb LatticeHC LatticeProb.Percolation
@@ -187,6 +189,133 @@ theorem innerEdgeEnergy_patch_div_le_of_coarse (hd : 0 < d) (a : Fin d → ℝ) 
         ((((D + ρ + N : ℕ) : ℝ) + 1) / Q.size) ^ γ * ((d : ℝ) ^ (t / 2 - 1) * 𝔅) ^ (2 / t) := by
     ring
   rw [e]
+  linarith
+
+theorem cornerCube_mul_subset_succ (z : Vertex d) (M N : ℕ) :
+    (cornerCube z (M * N)).vertices ⊆ (cornerCube z ((M + 1) * N)).vertices := by
+  intro x hx
+  rw [IntegerCube.mem_vertices] at hx ⊢
+  intro k
+  have h := hx k
+  simp only [cornerCube] at h ⊢
+  have : ((M * N : ℕ) : ℤ) ≤ ((M + 1) * N : ℕ) := by
+    exact_mod_cast Nat.mul_le_mul_right N (Nat.le_succ M)
+  exact ⟨h.1, h.2.trans_le (by linarith)⟩
+
+/-- **Lemma 6.3 (iii) on the edges inside `Q`.** -/
+theorem exists_sum_sq_patch_sub_le_inner (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ}
+    (hlam : 0 < lam) (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (Q : IntegerCube d) (w : Vertex d → ℝ) (r : ℕ), 0 < r →
+      ∀ (z : Vertex d) (M N : ℕ), 0 < N →
+      (cornerCube z ((M + 1) * N)).vertices ⊆ (shrinkCube Q (r + 3)).vertices →
+      ∀ (ρ : ℕ) (U : Finset (Vertex d)), U ⊆ Q.vertices → ∀ v : Vertex d → ℝ,
+      ∑ x ∈ U, (patch (cubeCutoff (cornerCube z (M * N)) ρ) v
+          (dirichletSolution (constCond a) (cubeInterior Q) w) x -
+            dirichletSolution (constCond a) (cubeInterior Q) w x) ^ 2 ≤
+        2 * ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+            (v x - cubeAffine N (dirichletSolution (constCond a) (cubeInterior Q) w)
+              (z + (N : ℤ) • i) x) ^ 2 +
+          2 * (C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 * (Λ / lam * ∑ x ∈ Q.vertices, ∑ k : Fin d,
+            (if x + unit k ∈ Q.vertices then (w (x + unit k) - w x) ^ 2 else 0))) := by
+  obtain ⟨C, hC, hbound⟩ := exists_sum_sq_patch_cubeCutoff_sub_le hd a hlam ha
+  refine ⟨C, hC, fun Q w r hr z M N hN hsub ρ U hU v => ?_⟩
+  have hd1 : 1 ≤ d := hd
+  have hapos : ∀ k, 0 < a k := fun k => hlam.trans_le (ha k).1
+  set w' : Vertex d → ℝ := fun y => w (cubeProj Q y)
+  set u' := dirichletSolution (constCond a) (cubeInterior Q) w'
+  set u := dirichletSolution (constCond a) (cubeInterior Q) w
+  have hagree : ∀ x ∈ Q.vertices, u' x = u x := fun x hx => dirichletSolution_comp_cubeProj _ Q w hx
+  have hu' : ∀ x ∈ (shrinkCube Q 1).vertices, condLaplacian (constCond a) u' x = 0 :=
+    fun x hx => condLaplacian_dirichletSolution hd1 (constCond a) (fun e => hapos e.2) _ w' x
+      (shrinkCube_one_vertices_subset_cubeInterior Q hx)
+  have htile : ∀ i ∈ (cornerCube 0 (M + 1)).vertices,
+      ∀ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices, ∀ k : Fin d,
+        x ∈ Q.vertices ∧ x + unit k ∈ Q.vertices := fun i hi x hx k =>
+    add_unit_mem_of_mem_shrinkCube Q (by omega) (hsub (tile_subset z (M + 1) hi hx)) k
+  have haff : ∀ i ∈ (cornerCube 0 (M + 1)).vertices, ∀ x,
+      cubeAffine N u' (z + (N : ℤ) • i) x = cubeAffine N u (z + (N : ℤ) • i) x :=
+    fun i hi => cubeAffine_congr (fun x hx => hagree x (htile i hi x hx ⟨0, hd⟩).1)
+      (fun x hx k => hagree _ (htile i hi x hx k).2)
+  have h := hbound Q u' hu' r hr z M N hN
+    ((cornerCube_mul_subset_succ z M N).trans hsub) ρ U v
+  have hL : ∑ x ∈ U, (patch (cubeCutoff (cornerCube z (M * N)) ρ) v u' x - u' x) ^ 2 =
+      ∑ x ∈ U, (patch (cubeCutoff (cornerCube z (M * N)) ρ) v u x - u x) ^ 2 :=
+    Finset.sum_congr rfl fun x hx => by simp only [patch]; rw [hagree x (hU hx)]
+  have hX : ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+      (v x - cubeAffine N u' (z + (N : ℤ) • i) x) ^ 2 =
+      ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+        (v x - cubeAffine N u (z + (N : ℤ) • i) x) ^ 2 :=
+    Finset.sum_congr rfl fun i hi => Finset.sum_congr rfl fun x _ => by
+      rw [haff i (mem_cornerCube_succ hi)]
+  have hE : ∑ x ∈ Q.vertices, ∑ j : Fin d, (u' (x + unit j) - u' x) ^ 2 ≤
+      Λ / lam * ∑ x ∈ Q.vertices, ∑ k : Fin d,
+        (if x + unit k ∈ Q.vertices then (w (x + unit k) - w x) ^ 2 else 0) := by
+    rw [sum_sq_grad_dirichletSolution_comp_cubeProj]
+    exact sum_sq_inner_grad_dirichletSolution_le hd1 a hlam ha Q w
+  rw [hL, hX] at h
+  have hc : 0 ≤ C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 := by positivity
+  have := mul_le_mul_of_nonneg_left hE hc
+  linarith
+
+/-- **Lemma 6.3 (iii) with the boundary interpolation**, normalized. -/
+theorem exists_sum_sq_patch_sub_div_le_of_coarse (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ}
+    (hlam : 0 < lam) (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (Q : IntegerCube d), 0 < Q.size → ∀ (P : CoarseData d ω)
+      {B : Finset (Vertex d)}, B ⊆ P.cluster → ∀ (u : Vertex d → ℝ) {K N₃ m K' N' m' : ℕ},
+      P.PairOverlap K N₃ m → 1 ≤ K → 1 ≤ N₃ → P.RegionOverlap K' N' m' → 1 ≤ K' → 1 ≤ N' →
+      Q.vertices ⊆ P.domain → ∀ {p : ℝ}, 2 < p → ∀ (r : ℕ), 0 < r →
+      ∀ (z : Vertex d) (M N : ℕ), 0 < N →
+      (cornerCube z ((M + 1) * N)).vertices ⊆ (shrinkCube Q (r + 3)).vertices →
+      ∀ (ρ : ℕ) (U : Finset (Vertex d)), U ⊆ Q.vertices → ∀ v : Vertex d → ℝ,
+      (∑ x ∈ U, (patch (cubeCutoff (cornerCube z (M * N)) ρ) v
+          (dirichletSolution (constCond a) (cubeInterior Q) (boundaryInterpolation P B u)) x -
+            dirichletSolution (constCond a) (cubeInterior Q) (boundaryInterpolation P B u) x) ^ 2) /
+          (Q.size : ℝ) ^ d ≤
+        2 * ((∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+            (v x - cubeAffine N (dirichletSolution (constCond a) (cubeInterior Q)
+              (boundaryInterpolation P B u)) (z + (N : ℤ) • i) x) ^ 2) / (Q.size : ℝ) ^ d) +
+          2 * (C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 * (Λ / lam *
+            interpolationGradBound P K N₃ m K' N' m' 2 p ((Q.size : ℝ) ^ d) u)) := by
+  obtain ⟨C, hC, hbound⟩ := exists_sum_sq_patch_sub_le_inner hd a hlam ha
+  refine ⟨C, hC, fun Q hL P B hB u K N₃ m K' N' m' h3 hK hN₃ h2 hK' hN' hQ p hp r hr z M N hN
+    hsub ρ U hU v => ?_⟩
+  have hV : (0 : ℝ) < (Q.size : ℝ) ^ d := by positivity
+  have hΛ : 0 ≤ Λ := (hlam.le.trans (ha ⟨0, hd⟩).1).trans (ha ⟨0, hd⟩).2
+  set w := boundaryInterpolation P B u
+  have h := hbound Q w r hr z M N hN hsub ρ U hU v
+  have hb2 := sum_abs_grad_boundaryInterpolation_inner_div_le P hB u h3 hK hN₃ h2 hK' hN'
+    (Nat.one_le_iff_ne_zero.mpr hd.ne') (s := 2) (p := p) (by norm_num) hp hV Q hQ
+  have hsq : ∑ y ∈ Q.vertices, ∑ k : Fin d,
+      (if y + unit k ∈ Q.vertices then (w (y + unit k) - w y) ^ 2 else 0) =
+      ∑ y ∈ Q.vertices, ∑ k : Fin d,
+        (if y + unit k ∈ Q.vertices then |w (y + unit k) - w y| ^ (2 : ℝ) else 0) :=
+    Finset.sum_congr rfl fun y _ => Finset.sum_congr rfl fun k _ => by
+      split_ifs
+      · rw [Real.rpow_two, sq_abs]
+      · rfl
+  rw [← hsq] at hb2
+  have h2' := div_le_div_of_nonneg_right h hV.le
+  have hc : 0 ≤ C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 * (Λ / lam) := by positivity
+  have h3' := mul_le_mul_of_nonneg_left hb2 hc
+  have e : (2 * ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+        (v x - cubeAffine N (dirichletSolution (constCond a) (cubeInterior Q) w)
+          (z + (N : ℤ) • i) x) ^ 2 +
+      2 * (C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 * (Λ / lam * ∑ x ∈ Q.vertices, ∑ k : Fin d,
+        (if x + unit k ∈ Q.vertices then (w (x + unit k) - w x) ^ 2 else 0)))) /
+        (Q.size : ℝ) ^ d =
+      2 * ((∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+        (v x - cubeAffine N (dirichletSolution (constCond a) (cubeInterior Q) w)
+          (z + (N : ℤ) • i) x) ^ 2) / (Q.size : ℝ) ^ d) +
+      2 * (C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 * (Λ / lam) * ((∑ x ∈ Q.vertices, ∑ k : Fin d,
+        (if x + unit k ∈ Q.vertices then (w (x + unit k) - w x) ^ 2 else 0)) /
+          (Q.size : ℝ) ^ d)) := by
+    field_simp
+  rw [e] at h2'
+  have e2 : C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 * (Λ / lam *
+      interpolationGradBound P K N₃ m K' N' m' 2 p ((Q.size : ℝ) ^ d) u) =
+      C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 * (Λ / lam) *
+        interpolationGradBound P K N₃ m K' N' m' 2 p ((Q.size : ℝ) ^ d) u := by ring
+  rw [e2]
   linarith
 
 end Rigidity.Dirichlet
