@@ -30,7 +30,7 @@ theorem reachable_partitionAnchor_of_adj (hd : 0 < d) (hP : PartitionEvent ω) {
     (hxy : (nearestNeighborGraph d).Adj x y) :
     (openIn ω ((partitionCube ω x).vertices ∪ (partitionCube ω y).vertices)).Reachable
       (partitionAnchor ω x) (partitionAnchor ω y) := by
-  have hclose := partitionCube_scales_close hP (abs_sub_le_one_of_nearestNeighbor_adj hxy)
+  have hclose := partitionCube_scales_close hP (abs_sub_le_one_of_adj_lattice hxy)
   rcases le_total (partitionCube ω x).scale (partitionCube ω y).scale with h | h
   · exact TriadicCube.reachable_of_mem_goodCubes hd (partitionCube_mem_goodCubes hP x)
       (partitionCube_mem_goodCubes hP y) h hclose.2 (mem_partitionCube hP x)
