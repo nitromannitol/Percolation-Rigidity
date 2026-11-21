@@ -105,4 +105,123 @@ theorem osBound_of_lintegral_exp_half_le {Ω : Type*} [MeasurableSpace Ω] {P : 
       exact ENNReal.ofReal_le_ofReal (Real.exp_le_exp.mpr
         (by nlinarith [mul_nonneg hA (sub_nonneg.2 htp)]))
 
+/-- **Finite sums of `𝒪_s` variables for `0 < s ≤ 1`.** There is `C(s)` such that for every
+probability measure and finite family with positive scales `θ i`, `X i ≤ 𝒪_s(θ i)` for all `i`
+implies `∑ i, X i ≤ 𝒪_s(C ∑ i, θ i)`, independently of the number of summands. -/
+theorem osBound_sum_of_le_one {s : ℝ} (hs : 0 < s) (hs1 : s ≤ 1) :
+    ∃ C > 0, ∀ {Ω : Type*} [MeasurableSpace Ω]
+      (P : Measure Ω) [IsProbabilityMeasure P] (ι : Type*) [Fintype ι]
+      (X : ι → Ω → ℝ) (θ : ι → ℝ), (∀ i, Measurable (X i)) →
+      (∀ i, 0 < θ i) → (∀ i, OsBound P s (θ i) (X i)) →
+      OsBound P s (C * ∑ i, θ i) (fun ω => ∑ i, X i ω) := by
+  set b : ℝ := (2 / s) ^ s⁻¹ with hbdef
+  have hb : 0 < b := Real.rpow_pos_of_pos (by positivity) _
+  have hbs' : b ^ s = 2 / s := Real.rpow_inv_rpow (by positivity) hs.ne'
+  have hbs : 2 * (1 - s) / s ≤ b ^ s := by
+    rw [hbs']
+    exact div_le_div_of_nonneg_right (by linarith) hs.le
+  set A : ℝ := b ^ s / 2 + 2 with hAdef
+  have hA : 0 ≤ A := by positivity
+  refine ⟨(2 * A + 2) ^ s⁻¹, Real.rpow_pos_of_pos (by linarith) _, ?_⟩
+  intro Ω _ P _ ι _ X θ hm hθ hX
+  classical
+  rcases isEmpty_or_nonempty ι with hι | hι
+  · intro t _
+    simp
+  let W := ∑ i, θ i
+  have hWpos : 0 < W := Finset.sum_pos (fun i _ => hθ i) Finset.univ_nonempty
+  have hW0 : W ≠ 0 := hWpos.ne'
+  let w (i : ι) := θ i / W
+  let Z (i : ι) (ω : Ω) := max (X i ω) 0 / θ i
+  let Y (ω : Ω) := ∑ i, w i * Z i ω
+  have hw (i : ι) : 0 ≤ w i := div_nonneg (hθ i).le hWpos.le
+  have hw_sum : ∑ i, w i = 1 := by
+    dsimp [w]
+    rw [← Finset.sum_div, div_self hW0]
+  have hZ (i : ι) (ω : Ω) : 0 ≤ Z i ω := div_nonneg (le_max_right _ _) (hθ i).le
+  have hY (ω : Ω) : 0 ≤ Y ω := Finset.sum_nonneg (fun i _ => mul_nonneg (hw i) (hZ i ω))
+  have hmoment (i : ι) :
+      ∫⁻ ω, ENNReal.ofReal (Real.exp (Z i ω ^ s / 2)) ∂P ≤
+        ENNReal.ofReal (Real.exp 2) :=
+    ((hX i).normalized_rpow hs (hθ i)).lintegral_exp_half
+      (by fun_prop) (fun ω => Real.rpow_nonneg (hZ i ω) _)
+  have hshift (i : ι) :
+      ∫⁻ ω, ENNReal.ofReal (Real.exp ((Z i ω + b) ^ s / 2)) ∂P ≤
+        ENNReal.ofReal (Real.exp A) := by
+    calc ∫⁻ ω, ENNReal.ofReal (Real.exp ((Z i ω + b) ^ s / 2)) ∂P
+        ≤ ∫⁻ ω, ENNReal.ofReal (Real.exp (b ^ s / 2)) *
+            ENNReal.ofReal (Real.exp (Z i ω ^ s / 2)) ∂P := by
+          apply lintegral_mono
+          intro ω
+          dsimp only
+          rw [← ENNReal.ofReal_mul (Real.exp_nonneg _), ← Real.exp_add]
+          apply ENNReal.ofReal_le_ofReal
+          apply Real.exp_le_exp.2
+          have := Real.rpow_add_le_add_rpow (hZ i ω) hb.le hs.le hs1
+          linarith
+      _ = ENNReal.ofReal (Real.exp (b ^ s / 2)) *
+            ∫⁻ ω, ENNReal.ofReal (Real.exp (Z i ω ^ s / 2)) ∂P :=
+          lintegral_const_mul _ (by fun_prop)
+      _ ≤ ENNReal.ofReal (Real.exp (b ^ s / 2)) * ENNReal.ofReal (Real.exp 2) :=
+          mul_le_mul' le_rfl (hmoment i)
+      _ = ENNReal.ofReal (Real.exp A) := by
+          rw [← ENNReal.ofReal_mul (Real.exp_nonneg _), ← Real.exp_add]
+  have hconv := convexOn_exp_add_rpow hs hb hbs
+  have hmomentY : ∫⁻ ω, ENNReal.ofReal (Real.exp (Y ω ^ s / 2)) ∂P ≤
+      ENNReal.ofReal (Real.exp A) := by
+    calc
+      _ ≤ ∫⁻ ω, ∑ i, ENNReal.ofReal (w i) *
+          ENNReal.ofReal (Real.exp ((Z i ω + b) ^ s / 2)) ∂P := by
+        apply lintegral_mono
+        intro ω
+        have hj := hconv.map_sum_le (t := Finset.univ) (fun i _ => hw i) hw_sum
+          (fun i _ => hZ i ω)
+        have hjreal : Real.exp ((Y ω + b) ^ s / 2) ≤
+            ∑ i, w i * Real.exp ((Z i ω + b) ^ s / 2) := by
+          simpa only [smul_eq_mul] using hj
+        have hYb : Real.exp (Y ω ^ s / 2) ≤ Real.exp ((Y ω + b) ^ s / 2) := by
+          apply Real.exp_le_exp.2
+          have := Real.rpow_le_rpow (hY ω) (by linarith : Y ω ≤ Y ω + b) hs.le
+          linarith
+        calc
+          _ ≤ ENNReal.ofReal (∑ i, w i * Real.exp ((Z i ω + b) ^ s / 2)) :=
+            ENNReal.ofReal_le_ofReal (hYb.trans hjreal)
+          _ = _ := by
+            rw [ENNReal.ofReal_sum_of_nonneg
+              (fun i _ => mul_nonneg (hw i) (Real.exp_nonneg _))]
+            apply Finset.sum_congr rfl
+            intro i _
+            exact ENNReal.ofReal_mul (hw i)
+      _ = ∑ i, ENNReal.ofReal (w i) *
+          ∫⁻ ω, ENNReal.ofReal (Real.exp ((Z i ω + b) ^ s / 2)) ∂P := by
+        rw [lintegral_finsetSum _ (fun i _ => by fun_prop)]
+        congr 1
+        ext i
+        exact lintegral_const_mul _ (by fun_prop)
+      _ ≤ ∑ i, ENNReal.ofReal (w i) * ENNReal.ofReal (Real.exp A) :=
+        Finset.sum_le_sum (fun i _ => mul_le_mul' le_rfl (hshift i))
+      _ = ENNReal.ofReal (Real.exp A) := by
+        rw [← Finset.sum_mul, ← ENNReal.ofReal_sum_of_nonneg (fun i _ => hw i), hw_sum]
+        simp only [ENNReal.ofReal_one, one_mul]
+  have hbound := osBound_of_lintegral_exp_half_le hs hA (by fun_prop) hY hmomentY
+  intro t ht
+  apply le_trans (measure_mono ?_) (hbound t ht)
+  intro ω hωtail
+  have hsum : ∑ i, X i ω ≤ W * Y ω := by
+    dsimp [Y]
+    rw [Finset.mul_sum]
+    apply Finset.sum_le_sum
+    intro i _
+    have heq : W * (w i * Z i ω) = max (X i ω) 0 := by
+      dsimp [w, Z]
+      field_simp [hW0, (hθ i).ne']
+    rw [heq]
+    exact le_max_left _ _
+  change t * ((2 * A + 2) ^ s⁻¹ * W) < max (∑ i, X i ω) 0 at hωtail
+  change t * (2 * A + 2) ^ s⁻¹ < max (Y ω) 0
+  rw [max_eq_left (hY ω)]
+  have hmax := max_le hsum (mul_nonneg hWpos.le (hY ω))
+  exact (mul_lt_mul_iff_right₀ hWpos).mp (by
+    simpa only [mul_assoc, mul_comm W] using hωtail.trans_le hmax)
+
 end Rigidity.Percolation
