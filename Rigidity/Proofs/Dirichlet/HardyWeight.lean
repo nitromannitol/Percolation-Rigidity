@@ -1,0 +1,152 @@
+import Mathlib
+
+/-!
+# A discrete Hardy inequality with power-type weights
+
+For `0 < γ ≤ 1/16` the weight `w_0 = 1`, `w_{t+1} = w_t (1 − γ/(t + 1))` behaves like `(t + 1)^{-γ}`
+and satisfies exact identities: `∇w_t = −γ w_t/(t + 1)` and
+`Δw_{t+1} = w_{t+2} + w_t − 2 w_{t+1} = γ (1 + γ) w_{t+1} / ((t + 2)(t + 1 − γ)) > 0`. With the
+edge averages `w̄_t = (w_t + w_{t+1})/2` and `R_t = (∇w_t)²/w̄_t`, the pointwise inequality
+`R_{t+1} + R_t ≤ 4γ Δw_{t+1}` and summation by parts give the one-dimensional Hardy inequality
+`Σ_{t} φ_{t+1}² Δw_{t+1} ≤ 8γ Σ_t w̄_t (φ_{t+1} − φ_t)²` for `φ_0 = φ_{m+1} = 0`.
+
+This is the one-dimensional ingredient of a weighted energy estimate near the boundary of a cube
+for the discrete homogenized Dirichlet problem, which replaces the global Meyers estimate used
+in Armstrong–Dario, Lemma 6.3, Step 3, to show that the energy of the homogenized solution in a
+thin boundary layer is small.
+-/
+
+namespace Rigidity.Dirichlet
+
+/-- The weight `w_0 = 1`, `w_{t+1} = w_t (1 − γ/(t + 1))`. -/
+noncomputable def hardyWeight (γ : ℝ) : ℕ → ℝ
+  | 0 => 1
+  | t + 1 => hardyWeight γ t * (1 - γ / ((t : ℝ) + 1))
+
+theorem hardyWeight_zero (γ : ℝ) : hardyWeight γ 0 = 1 := rfl
+
+theorem hardyWeight_succ (γ : ℝ) (t : ℕ) :
+    hardyWeight γ (t + 1) = hardyWeight γ t * (1 - γ / ((t : ℝ) + 1)) := rfl
+
+theorem one_sub_div_pos {γ : ℝ} (hγ : γ < 1) (t : ℕ) : 0 < 1 - γ / ((t : ℝ) + 1) := by
+  have ht : (0 : ℝ) < (t : ℝ) + 1 := by positivity
+  rw [sub_pos, div_lt_one ht]
+  have : (1 : ℝ) ≤ (t : ℝ) + 1 := by linarith [(Nat.cast_nonneg t : (0 : ℝ) ≤ t)]
+  linarith
+
+theorem hardyWeight_pos {γ : ℝ} (hγ : γ < 1) (t : ℕ) : 0 < hardyWeight γ t := by
+  induction t with
+  | zero => simp [hardyWeight_zero]
+  | succ t ih => rw [hardyWeight_succ]; exact mul_pos ih (one_sub_div_pos hγ t)
+
+theorem hardyWeight_succ_le {γ : ℝ} (hγ0 : 0 ≤ γ) (hγ : γ < 1) (t : ℕ) :
+    hardyWeight γ (t + 1) ≤ hardyWeight γ t := by
+  rw [hardyWeight_succ]
+  have h1 : 1 - γ / ((t : ℝ) + 1) ≤ 1 := by
+    have : 0 ≤ γ / ((t : ℝ) + 1) := by positivity
+    linarith
+  calc hardyWeight γ t * (1 - γ / ((t : ℝ) + 1)) ≤ hardyWeight γ t * 1 :=
+        mul_le_mul_of_nonneg_left h1 (hardyWeight_pos hγ t).le
+    _ = hardyWeight γ t := mul_one _
+
+/-- `∇w_t = −γ w_t/(t + 1)`. -/
+theorem hardyWeight_succ_sub (γ : ℝ) (t : ℕ) :
+    hardyWeight γ (t + 1) - hardyWeight γ t = -(γ * hardyWeight γ t / ((t : ℝ) + 1)) := by
+  rw [hardyWeight_succ]
+  ring
+
+/-- The second difference: `w_{t+2} + w_t − 2 w_{t+1} = γ (1 + γ) w_t / ((t + 1)(t + 2))`. -/
+theorem hardyWeight_secondDiff (γ : ℝ) (t : ℕ) :
+    hardyWeight γ (t + 2) + hardyWeight γ t - 2 * hardyWeight γ (t + 1) =
+      γ * (1 + γ) * hardyWeight γ t / (((t : ℝ) + 1) * ((t : ℝ) + 2)) := by
+  have h2 : hardyWeight γ (t + 2) = hardyWeight γ (t + 1) * (1 - γ / (((t + 1 : ℕ) : ℝ) + 1)) :=
+    hardyWeight_succ γ (t + 1)
+  rw [h2, hardyWeight_succ]
+  push_cast
+  have ht1 : (t : ℝ) + 1 ≠ 0 := by positivity
+  have ht2 : (t : ℝ) + 1 + 1 ≠ 0 := by positivity
+  have ht2' : (t : ℝ) + 2 ≠ 0 := by positivity
+  field_simp
+  ring
+
+/-- The edge average `w̄_t = (w_t + w_{t+1})/2`. -/
+noncomputable def hardyEdgeWeight (γ : ℝ) (t : ℕ) : ℝ :=
+  (hardyWeight γ t + hardyWeight γ (t + 1)) / 2
+
+theorem hardyEdgeWeight_pos {γ : ℝ} (hγ : γ < 1) (t : ℕ) : 0 < hardyEdgeWeight γ t := by
+  have := hardyWeight_pos hγ t
+  have := hardyWeight_pos hγ (t + 1)
+  unfold hardyEdgeWeight
+  positivity
+
+/-- The ratio `R_t = (∇w_t)²/w̄_t`. -/
+noncomputable def hardyRatio (γ : ℝ) (t : ℕ) : ℝ :=
+  (hardyWeight γ (t + 1) - hardyWeight γ t) ^ 2 / hardyEdgeWeight γ t
+
+/-- **The pointwise inequality** `R_{t+1} + R_t ≤ 4γ Δw_{t+1}` for `0 < γ ≤ 1/16`. -/
+theorem hardyRatio_add_le {γ : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 16) (t : ℕ) :
+    hardyRatio γ (t + 1) + hardyRatio γ t ≤
+      4 * γ * (hardyWeight γ (t + 2) + hardyWeight γ t - 2 * hardyWeight γ (t + 1)) := by
+  have hγ1 : γ < 1 := by linarith
+  set w := hardyWeight γ t with hw
+  have hw0 : 0 < w := hardyWeight_pos hγ1 t
+  have hT0 : (0 : ℝ) ≤ (t : ℝ) := Nat.cast_nonneg t
+  have h1 : hardyWeight γ (t + 1) = w * (((t : ℝ) + 1 - γ) / ((t : ℝ) + 1)) := by
+    rw [hardyWeight_succ, ← hw]
+    congr 1
+    field_simp
+  have h2 : hardyWeight γ (t + 2) =
+      w * (((t : ℝ) + 1 - γ) / ((t : ℝ) + 1)) * (((t : ℝ) + 2 - γ) / ((t : ℝ) + 2)) := by
+    have : hardyWeight γ (t + 2) = hardyWeight γ (t + 1) * (1 - γ / (((t + 1 : ℕ) : ℝ) + 1)) :=
+      hardyWeight_succ γ (t + 1)
+    rw [this, h1]
+    congr 1
+    push_cast
+    field_simp
+    ring
+  have hT1 : (t : ℝ) + 1 ≠ 0 := by positivity
+  have hT2 : (t : ℝ) + 2 ≠ 0 := by positivity
+  have hA : (t : ℝ) + 1 - γ ≠ 0 := by linarith
+  have hB : 2 * (t : ℝ) + 2 - γ ≠ 0 := by linarith
+  have hC : 2 * (t : ℝ) + 4 - γ ≠ 0 := by linarith
+  have hw0' : w ≠ 0 := hw0.ne'
+  have eR0 : hardyRatio γ t = 2 * γ ^ 2 * w / (((t : ℝ) + 1) * (2 * (t : ℝ) + 2 - γ)) := by
+    unfold hardyRatio hardyEdgeWeight
+    rw [h1, ← hw]
+    field_simp
+    ring
+  have eR1 : hardyRatio γ (t + 1) =
+      2 * γ ^ 2 * w * ((t : ℝ) + 1 - γ) /
+        (((t : ℝ) + 1) * ((t : ℝ) + 2) * (2 * (t : ℝ) + 4 - γ)) := by
+    unfold hardyRatio hardyEdgeWeight
+    rw [show t + 1 + 1 = t + 2 by ring, h1, h2]
+    field_simp
+    ring
+  have eD : hardyWeight γ (t + 2) + hardyWeight γ t - 2 * hardyWeight γ (t + 1) =
+      γ * (1 + γ) * w / (((t : ℝ) + 1) * ((t : ℝ) + 2)) := by
+    rw [hardyWeight_secondDiff, ← hw]
+  set K : ℝ := 2 * γ ^ 2 * w / (((t : ℝ) + 1) * ((t : ℝ) + 2)) with hK
+  have hK0 : 0 < K := by positivity
+  have hsplit : 2 * γ ^ 2 * w * ((t : ℝ) + 1 - γ) /
+        (((t : ℝ) + 1) * ((t : ℝ) + 2) * (2 * (t : ℝ) + 4 - γ)) +
+      2 * γ ^ 2 * w / (((t : ℝ) + 1) * (2 * (t : ℝ) + 2 - γ)) =
+      K * (((t : ℝ) + 1 - γ) / (2 * (t : ℝ) + 4 - γ) +
+        ((t : ℝ) + 2) / (2 * (t : ℝ) + 2 - γ)) := by
+    rw [hK]
+    field_simp
+  have hrhs : 4 * γ * (γ * (1 + γ) * w / (((t : ℝ) + 1) * ((t : ℝ) + 2))) =
+      K * (2 * (1 + γ)) := by
+    rw [hK]
+    field_simp
+    ring
+  have f1 : ((t : ℝ) + 1 - γ) / (2 * (t : ℝ) + 4 - γ) ≤ 1 / 2 := by
+    rw [div_le_iff₀ (by linarith)]
+    linarith
+  have f2 : ((t : ℝ) + 2) / (2 * (t : ℝ) + 2 - γ) ≤ 3 / 2 := by
+    rw [div_le_iff₀ (by linarith)]
+    linarith
+  rw [eR0, eR1, eD, hsplit, hrhs]
+  refine mul_le_mul_of_nonneg_left ?_ hK0.le
+  linarith
+
+end Rigidity.Dirichlet
