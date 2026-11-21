@@ -741,12 +741,117 @@ Departures from Armstrong and Dario:
   gradient of `ℓ_ξ` over a subcube, where AD write `ξ`; the difference adds at most `(m − n)|ξ|` to
   the right side.
 
+## Partitions into good cubes and functional inequalities on the cluster
+
+The proof of Theorem 2 of AD, from which Theorems 2.4 and 2.5 are quoted, starts from a random
+partition of `ℤᵈ` into good triadic cubes (AD, §2) and from functional and elliptic inequalities on
+the cluster above the scale of this partition (AD, §3). For every `d ≥ 2` and `𝔭_c(d) < p < 1`, the
+partition and its stochastic integrability are proved, and so are the deterministic parts of the
+inequalities of §3, which take the Sobolev inequality of the lattice cube as a hypothesis when
+`d ≥ 3`.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.partition_estimates`](Rigidity/Proofs/Partition/AlmostSure.lean) | AD Proposition 2.1 for the good cubes: almost surely every vertex lies in exactly one maximal stopping cube `□_𝒫(x)` of the partition `𝒫`, `E[exp(size(□_𝒫(x))/θ)] ≤ 2` for every vertex `x`, and the partition is approximately local. |
+| [`Rigidity.Percolation.partition_estimates_general`](Rigidity/Proofs/Partition/GeneralPartition.lean) | AD Proposition 2.1 for any random collection of good cubes whose failure probabilities are at most `C exp(−c 3^{ns})`, with `E[exp((size/θ)^s)] ≤ 2`. |
+| [`Rigidity.Percolation.exists_minimalScale`](Rigidity/Proofs/Partition/MinimalScaleCombined.lean) | AD Proposition 2.4 for `𝒫`: for every `t ∈ ℕ` there are `C` and a measurable random scale `M` with a stretched exponential moment such that, almost surely, `M < 3ᵐ` implies `Λ_t(□_m) ≤ C` and that every vertex of `□_m` lies in a partition cube of size at most `3^{dm/(d+t)}`. |
+| [`Rigidity.Percolation.exists_minimalScale_general`](Rigidity/Proofs/Partition/GeneralPartition.lean) | AD Proposition 2.4 for a random collection of good cubes satisfying AD (2.1) and (2.2) with `0 < s ≤ 1`. |
+| [`Rigidity.Percolation.exists_measure_not_mem_goodCubes_le`](Rigidity/Proofs/Partition/AlmostSure.lean) | AD Lemma 2.7: a triadic cube of scale `n` fails to be good with probability at most `C exp(−c 3ⁿ)`. |
+| [`Rigidity.Percolation.TriadicCube.reachable_of_mem_goodCubes`](Rigidity/Proofs/Partition/Adjacent.lean) | AD Lemma 2.8: the crossing clusters of two good cubes containing lattice neighbours, whose scales are equal or differ by one, are joined by an open path inside the union of the two cubes. |
+| [`Rigidity.Percolation.reachable_partitionAnchor_of_walk`](Rigidity/Proofs/Partition/Paths.lean) | AD Corollary 2.10: along every lattice walk from `x` to `y`, the anchors of `□_𝒫(x)` and `□_𝒫(y)` are joined by an open path inside the union of the partition cubes of the vertices of the walk. |
+| [`Rigidity.Percolation.partition_sum_abs_sub_coarseAnchor_rpow_le`](Rigidity/Proofs/Cluster/PartitionCoarseData.lean) | AD Lemma 3.2 on a triadic cube `U` resolved by the partition, for `1 ≤ s < ∞`: `Σ_{x ∈ C_*(U)} \|w(x) − [w]_𝒫(x)\|^s ≤ C^s Σ_{z ∈ C_*(U)} 3^{sdρ(z)} \|∇w 1_{𝐚≠0}\|^s(z)`, with `ρ(z) ≥ scale(□_𝒫(z))` the reach scale. |
+| [`Rigidity.Percolation.partition_sum_gradNormIn_coarseAnchor_rpow_le`](Rigidity/Proofs/Cluster/PartitionCoarseData.lean) | AD Lemma 3.3 on a resolved cube `U`, for `1 ≤ s < ∞`: `Σ_{x ∈ U} \|∇[w]_𝒫\|^s(x) ≤ C^s Σ_{z ∈ C_*(U)} size(□_𝒫(z))^{sd−1} \|∇w 1_{𝐚≠0}\|^s(z)`. |
+| [`Rigidity.Percolation.exists_partition_sum_rpow_le_of_latticeSobolevOn`](Rigidity/Proofs/Cluster/PartitionSobolev.lean) | AD Proposition 3.4 on a resolved cube `U`, for `1 ≤ t ≤ s` and `w` of mean zero on `C_*(U)`, given the Sobolev inequality `Σ_U \|f − (f)_U\|^s ≤ S (Σ_U \|∇f\|^t)^{s/t}` of the lattice cube: `Σ_{C_*(U)} \|w\|^s ≤ K (Σ_{z ∈ C_*(U)} 3^{tdρ(z)} \|∇w 1_{𝐚≠0}\|^t(z))^{s/t}`. |
+| [`Rigidity.Percolation.exists_partition_sum_sq_le_two`](Rigidity/Proofs/Cluster/PartitionSobolevTwo.lean) | AD Proposition 3.4 for `d = 2`, `s = 2` and `t = 1`, the Sobolev inequality of the planar lattice square being proved. |
+| [`Rigidity.Proofs.Cluster.caccioppoli_cluster`](Rigidity/Proofs/Cluster/Caccioppoli.lean) | AD Lemma 3.5: if `V ⊆ U`, every point of `U` with an open edge leaving `U` is at `ℓ∞` distance at least `r > 0` from `V`, and `u` is harmonic at the points of `U` all of whose open edges stay in `U`, then `Σ_V \|∇u 1_{𝐚≠0}\|² ≤ (8d/r²) Σ_{U ∖ int V} u²`. |
+| [`Rigidity.Proofs.Cluster.reverse_holder_partition_cube`](Rigidity/Proofs/Cluster/ReverseHolderPartition.lean) | AD Lemma 3.6, deterministic part: on the crossing cluster of a resolved triadic cube `□` of scale `m + 1`, given the Sobolev inequality of the lattice cube with exponents `2` and `2_* = 2d/(d+2)` and `Σ_{C_*(□)} 3^{2dsρ} ≤ C_G \|□\|`, every `u` harmonic on `C_*(□)` has `3^{−md} Σ_{C_*(□) ∩ □'} \|∇u\|² ≤ C (\|□\|⁻¹ Σ_{C_*(□)} \|∇u\|^{t2_*})^{2/(t2_*)}`, `□'` the central subcube and `1/s + 1/t = 1`. |
+| [`Rigidity.Proofs.Cluster.gehring_triadic`](Rigidity/Proofs/Cluster/Gehring.lean) | Gehring's lemma on the triadic cubes of `ℤᵈ`: for `0 < θ < 1`, a reverse Hölder inequality `avg_Q g ≤ A (avg_{Q^j} g^θ)^{1/θ}` on every subcube `Q` of `□` whose enlargement `Q^j` lies in `3□` gives `ε > 0` with `avg_□ g^{1+ε} ≤ C (avg_{3□} g)^{1+ε}`. |
+| [`Rigidity.Proofs.Cluster.meyers_cluster`](Rigidity/Proofs/Cluster/MeyersCluster.lean) | AD Proposition 3.8, deterministic part: for `u` harmonic on `U₀` and a partition of `3□` into triadic cells of comparable neighbouring sizes, if the triadic cubes `□'` above the cells carry sets `U' ⊆ U₀ ∩ 3□'` with the Sobolev inequality and a moment bound, and `Σ_{x ∈ □} size(x)^t ≤ K\|□\|`, then `E = \|∇u 1_{𝐚≠0}\|²` has `avg_□ E^{1+ε/2} ≤ C (avg_{3□} E)^{1+ε/2}`. |
+
+The fifteen theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+are in [`Rigidity/Proofs/Partition/`](Rigidity/Proofs/Partition/) and
+[`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/).
+
+1. **Good cubes and the partition** (`CrossingCluster.lean`, `Adjacent.lean`, `PartitionCube.lean`,
+   `AlmostSure.lean`, `GeneralPartition.lean`, `Measurability.lean`, `GoodCubesLocal.lean`). A
+   triadic cube of scale at least two is well-connected when it is well-connected relative to its
+   rounded three-quarter cube, the notion of the proof of Proposition 2.3; its crossing cluster
+   `C_*(Q)` is the union of the open components of `Q` meeting all its faces (AD, Definition 2.5),
+   which is then the component of a root. A cube is good when it and its children are well-connected
+   (AD, Definition 2.6). Proposition 2.3 bounds the probability that a cube is not good (AD,
+   Lemma 2.7), and the stopping-time construction of AD gives the partition `𝒫` into maximal good
+   cubes, with its exponential moments, its approximate locality and the measurability of its
+   cubes and anchors (AD, Proposition 2.1, for `𝒫` and for a general collection of good cubes).
+2. **Paths** (`Adjacent.lean`, `Paths.lean`, `Resolved.lean`, `Local.lean`, `SetCluster.lean`). Two
+   good cubes of comparable scales containing lattice neighbours have joined crossing clusters
+   (AD, Lemma 2.8), which joins the anchors of the partition cubes along every lattice walk (AD,
+   Corollary 2.10). On a cube `U` resolved by the partition (every partition cube meeting `U` lies in
+   `U`), every vertex of `C_*(U)` is joined to the anchor of its partition cube by an open path inside
+   `C_*(U)` and the `⌈s/10⌉`-neighbourhood of that cube of side `s`.
+3. **Minimal scales** (`MinimalScale*.lean`, `Lambda*.lean`, `BadCubes.lean`, `PartitionSize.lean`,
+   `StochasticAverage.lean`, `Resolution.lean`). Counting the bad cubes at every scale bounds the sums
+   `Σ_{x ∈ □_m} size(□_𝒫(x))^τ` and `Λ_t(□_m)` above a random scale with a stretched exponential
+   moment (AD, Proposition 2.4), and bounds the probability that a cube is not resolved.
+4. **Coarsening** (`Rigidity/Proofs/Cluster/`: `CoarseData.lean`, `CoarseInequalities.lean`,
+   `CoarseNear.lean`, `CoarseReach.lean`, `PartitionCoarseData.lean`, `PartitionReach*.lean`). The
+   coarsened function `[w]_𝒫(x) = w(z̄(□_𝒫(x)))` (AD, Definition 3.1) is compared with `w` along the
+   paths of step 2 and its gradient along the paths of Lemma 2.8, which gives Lemmas 3.2 and 3.3 of
+   AD with the weights described below; every moment of the reach of the partition is finite.
+5. **Sobolev inequality** (`CoarseSobolev.lean`, `PartitionSobolev.lean`, `PlanarLatticeSobolev.lean`,
+   `PartitionSobolevTwo.lean`). Lemmas 3.2 and 3.3 and the Sobolev inequality of the lattice cube
+   applied to `[w]_𝒫` give AD, Proposition 3.4, for functions of mean zero on `C_*(U)`; in the plane
+   the lattice inequality from `ℓ¹` to `ℓ²` is proved by comparing the values along rows and columns.
+6. **Caccioppoli, reverse Hölder, Gehring and Meyers** (`Caccioppoli.lean`, `ReverseHolder*.lean`,
+   `Gehring*.lean`, `Meyers*.lean`). The Caccioppoli inequality on a cluster (AD, Lemma 3.5) uses the
+   local Caccioppoli inequality `caccioppoli_of_support` of Lattice-Probability; with the Sobolev
+   inequality it gives the reverse Hölder inequality (AD, Lemma 3.6). Gehring's lemma on triadic
+   cubes, from a Vitali covering, level sets and the layer-cake formula, applied to the energy
+   averaged over the cells of a partition, gives the Meyers estimate (AD, Proposition 3.8).
+
+Departures from Armstrong and Dario:
+
+- **Good cubes.** Cubes of side three are not well-connected in the Lean definition, so good cubes
+  have scale at least three: the test cubes of a cube of side three are single points, and the
+  uniqueness of the crossing cluster and Lemma 2.8 need not hold for it. The anchor is the point of
+  `C_*(Q)` closest to the centre of `Q` in the `ℓ∞` norm, with ties broken lexicographically (AD,
+  Definition 3.1); AD, §2, use the Manhattan distance inside the middle child.
+- **Paths and the weights of Lemma 3.2.** The proof of AD, Lemma 3.2, joins a vertex to its anchor
+  inside the partition cubes at distance at most one from its own, from the identity
+  `C_*(□_{n+1}(z)) ∩ □_n(z) = C_∞ ∩ □_n(z)` stated after AD, Definition 2.9, which need not hold at
+  the vertices near the boundary of `□_n(z)`. The Lean proof uses the paths of step 2, inside the
+  `⌈s/10⌉`-neighbourhood of the partition cube; this neighbourhood can meet much smaller partition
+  cubes, so the weight `size(□_𝒫(z))^{sd}` of Lemma 3.2 becomes `3^{sdρ(z)}`, where the reach scale
+  `ρ(z) ≥ scale(□_𝒫(z))` is the largest scale of a partition cube whose connecting paths may pass through `z`.
+  Lemma 3.3 keeps the weights of AD. Lemmas 3.2 and 3.3 and Proposition 3.4 are proved on cubes
+  resolved by the partition, and Proposition 3.4 for functions with `Σ_{C_*(U)} w = 0` or
+  `Σ_{C_*(U)} [w]_𝒫 = 0`, with the weight `3^{tdρ(z)}`; the cases with zero boundary values are not
+  proved.
+- **The Sobolev inequality of the lattice cube** is a hypothesis of Proposition 3.4 and of the
+  reverse Hölder and Meyers estimates, except for `d = 2` with exponents `2` and `1`, where it is
+  proved.
+- **Proposition 2.4** is proved by counting bad cubes, with a stretched exponential moment of some
+  order `r > 0` for the minimal scale in place of every `r < sd/(d + t + s)`. The bound
+  `Λ_t(U, 𝒮) ≤ O_{s/t}(C)` stated after the proof of AD, Proposition 2.1, is proved in the form
+  `O_{s/(t+d)}(C)`, uniformly in `U` (`LambdaOs.lean`); the order `s/t` cannot hold uniformly when
+  `U` is a single vertex, and AD do not use it.
+- **Caccioppoli inequality.** Unit conductances, the `ℓ∞` distance of AD, and the constant `8d`;
+  for conductances in `[λ, 1]` the constant is `8d/λ` (`caccioppoli_of_distance`).
+- **Gehring's lemma.** AD obtain the discrete Gehring lemma from the continuum one by affine
+  interpolation; the Lean proof proves it on triadic cubes of `ℤᵈ` directly. The reverse Hölder
+  inequality of Step 1 of the proof of AD, Proposition 3.8, is used on the cubes inside `□_{m+1}`
+  only, which is all the local Gehring lemma needs, with the energy on `C_*(□_{m+1}) ∩ □`. The
+  moment exponent of the Meyers estimate is `t = (2 + ε)(1 + ε)(d + 1)/ε`, twice that of AD.
+- **Deterministic parts.** Lemma 3.6 and Proposition 3.8 are proved for every configuration, with
+  the Sobolev inequality, the moment bounds and, for the Meyers estimate, the clusters of the
+  triadic cubes as hypotheses; the probability bounds of Lemma 3.6 and Proposition 3.8 and the
+  partition `ℛ` of AD, Definition 3.7, are not proved here.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 76 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 91 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -760,9 +865,10 @@ Departures from Armstrong and Dario:
   [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
-  the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), and the two theorems of
-  [Multiscale Poincaré inequality](#multiscale-poincaré-inequality).
-  Each of the 76 reports lists exactly `propext`, `Classical.choice` and
+  the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the two theorems of
+  [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), and the fifteen theorems of
+  [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster).
+  Each of the 91 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -793,10 +899,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 926 Lean files with 162,848 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 989 Lean files with 176,888 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (141 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (172 lines) are counted separately.
 
 ## Building
 
@@ -865,8 +971,10 @@ Rigidity/
       Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
+    Cluster/                  the coarse-grained and elliptic inequalities on the cluster of Armstrong and Dario (AD §3)
     Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3
     Multiscale/               the multiscale Poincaré inequality of Armstrong and Dario (Proposition A.2)
+    Partition/                the partition of ℤᵈ into good triadic cubes of Armstrong and Dario (AD §2)
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
     Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)

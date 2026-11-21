@@ -314,9 +314,15 @@ fidelity:
     and the Green columns and heat kernel bounds for d >= 3 (Dario and Gu), and for the planar partition
     into good cubes and the subadditive quantities (Armstrong and Dario, Lemmas 3.2 and 3.3 replaced by
     paths inside windows of the ninefold squares, the set W of Lemma 4.8 made precise, and (4.31) proved
-    in expectation), and for the multiscale Poincaré inequality (Armstrong and Dario, Proposition A.2,
+    in expectation), for the multiscale Poincaré inequality (Armstrong and Dario, Proposition A.2,
     proved from the lattice multiscale Poincaré inequality of the copied
-    Lattice-High-Contrast-Homogenization modules instead of the continuum one).
+    Lattice-High-Contrast-Homogenization modules instead of the continuum one), and for the partition
+    into good cubes and the inequalities on the cluster in every dimension (Armstrong and Dario, §§2-3:
+    good cubes of scale at least three, the weight of Lemma 3.2 through the reach scale of the
+    partition, Lemmas 3.2 and 3.3 and Proposition 3.4 on resolved cubes and for functions of mean zero,
+    the Sobolev inequality of the lattice cube a hypothesis for d >= 3, Proposition 2.4 by counting bad
+    cubes, Gehring's lemma proved on triadic cubes, and Lemma 3.6 and Proposition 3.8 in their
+    deterministic parts).
 
 review:
   status: "model review"

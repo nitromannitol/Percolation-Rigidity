@@ -16,6 +16,17 @@ import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
 import Rigidity.Proofs.Green.SupercriticalGreenBounds
 import Rigidity.Proofs.Multiscale.Affine
+import Rigidity.Proofs.Partition.AlmostSure
+import Rigidity.Proofs.Partition.GeneralPartition
+import Rigidity.Proofs.Partition.MinimalScaleCombined
+import Rigidity.Proofs.Partition.Paths
+import Rigidity.Proofs.Cluster.PartitionCoarseData
+import Rigidity.Proofs.Cluster.PartitionSobolev
+import Rigidity.Proofs.Cluster.PartitionSobolevTwo
+import Rigidity.Proofs.Cluster.Caccioppoli
+import Rigidity.Proofs.Cluster.ReverseHolderPartition
+import Rigidity.Proofs.Cluster.Gehring
+import Rigidity.Proofs.Cluster.MeyersCluster
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -24,9 +35,10 @@ concentration for `d = 2`, Theorem 6.5 with every literature input proved, Theor
 dimension-two inputs, the density concentration in every dimension with Proposition 2.6 and
 Theorem 1.3 without it as a hypothesis, the existence of planar Green columns with Theorem 1.3
 from five dimension-two inputs, the Green columns for `d ≥ 3` with the Green-column input from the
-planar order-zero estimate and the heat kernel and Green column bounds, and the multiscale Poincaré
-inequality of Armstrong and Dario (Proposition A.2) with its affine form; `scripts/check_axioms.py`
-checks it.
+planar order-zero estimate and the heat kernel and Green column bounds, the multiscale Poincaré
+inequality of Armstrong and Dario (Proposition A.2) with its affine form, and the partition into
+good cubes and the functional and elliptic inequalities on the cluster of Armstrong and Dario
+(§§2–3); `scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
@@ -139,3 +151,22 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 -- The multiscale Poincaré inequality of Armstrong and Dario (Proposition A.2) and its affine form
 #print axioms Rigidity.Proofs.Multiscale.multiscalePoincare_holds
 #print axioms Rigidity.Proofs.Multiscale.exists_multiscalePoincare_affine
+
+-- The partition into good cubes of Armstrong and Dario (Propositions 2.1 and 2.4, Lemmas 2.7 and 2.8,
+-- Corollary 2.10) and the inequalities on the cluster (Lemmas 3.2, 3.3, 3.5 and 3.6, Proposition 3.4,
+-- a Gehring lemma on triadic cubes and Proposition 3.8)
+#print axioms Rigidity.Percolation.partition_estimates
+#print axioms Rigidity.Percolation.partition_estimates_general
+#print axioms Rigidity.Percolation.exists_minimalScale
+#print axioms Rigidity.Percolation.exists_minimalScale_general
+#print axioms Rigidity.Percolation.exists_measure_not_mem_goodCubes_le
+#print axioms Rigidity.Percolation.TriadicCube.reachable_of_mem_goodCubes
+#print axioms Rigidity.Percolation.reachable_partitionAnchor_of_walk
+#print axioms Rigidity.Percolation.partition_sum_abs_sub_coarseAnchor_rpow_le
+#print axioms Rigidity.Percolation.partition_sum_gradNormIn_coarseAnchor_rpow_le
+#print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_latticeSobolevOn
+#print axioms Rigidity.Percolation.exists_partition_sum_sq_le_two
+#print axioms Rigidity.Proofs.Cluster.caccioppoli_cluster
+#print axioms Rigidity.Proofs.Cluster.reverse_holder_partition_cube
+#print axioms Rigidity.Proofs.Cluster.gehring_triadic
+#print axioms Rigidity.Proofs.Cluster.meyers_cluster

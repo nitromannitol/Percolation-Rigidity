@@ -109,6 +109,22 @@ further = {
     'the multiscale Poincare inequality of Armstrong and Dario (Proposition A.2) and its affine form':
         ['Rigidity.Proofs.Multiscale.multiscalePoincare_holds',
          'Rigidity.Proofs.Multiscale.exists_multiscalePoincare_affine'],
+    'the partition into good cubes and the inequalities on the cluster of Armstrong and Dario (sections 2 and 3)':
+        ['Rigidity.Percolation.partition_estimates',
+         'Rigidity.Percolation.partition_estimates_general',
+         'Rigidity.Percolation.exists_minimalScale',
+         'Rigidity.Percolation.exists_minimalScale_general',
+         'Rigidity.Percolation.exists_measure_not_mem_goodCubes_le',
+         'Rigidity.Percolation.TriadicCube.reachable_of_mem_goodCubes',
+         'Rigidity.Percolation.reachable_partitionAnchor_of_walk',
+         'Rigidity.Percolation.partition_sum_abs_sub_coarseAnchor_rpow_le',
+         'Rigidity.Percolation.partition_sum_gradNormIn_coarseAnchor_rpow_le',
+         'Rigidity.Percolation.exists_partition_sum_rpow_le_of_latticeSobolevOn',
+         'Rigidity.Percolation.exists_partition_sum_sq_le_two',
+         'Rigidity.Proofs.Cluster.caccioppoli_cluster',
+         'Rigidity.Proofs.Cluster.reverse_holder_partition_cube',
+         'Rigidity.Proofs.Cluster.gehring_triadic',
+         'Rigidity.Proofs.Cluster.meyers_cluster'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
