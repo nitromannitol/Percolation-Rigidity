@@ -203,4 +203,125 @@ theorem le_ballL2_quadratic (z : EuclideanSpace ℝ (Fin d)) {ρ m : ℝ} (hρ :
   rw [h6, ballVolume]
   linarith
 
+/-- The excess of `x ↦ a + ⟪p, x⟫ + q_M(x)` over affine functions on `B_ρ(z)` is at most
+`d m ρ²`, `m` bounding the entries of the symmetric part of `M`. -/
+theorem ballExcess_continuumQuadratic_le (z : EuclideanSpace ℝ (Fin d)) {ρ a : ℝ}
+    {p : EuclideanSpace ℝ (Fin d)} {M : Matrix (Fin d) (Fin d) ℝ} {w : locallySqIntegrable d}
+    (hw : ∀ x, (w : EuclideanSpace ℝ (Fin d) → ℝ) x = a + inner ℝ p x + quadForm M x)
+    {m : ℝ} (hm0 : 0 ≤ m) (hm : ∀ i j, |symEntry M i j| ≤ m) :
+    ballExcess (continuumBallSeminorm z) (continuumAffine d) ρ w ≤ d * m * ρ ^ 2 := by
+  set ℓ := continuumAffineFun (a + quadForm M z - inner ℝ z (polarVec M z)) (p + polarVec M z)
+    with hℓ
+  have hmem : ℓ ∈ continuumAffine d := ⟨_, _, fun x => rfl⟩
+  refine (ballExcess_le _ _ hmem).trans ?_
+  apply continuumBallSeminorm_le_of_abs_le z (by positivity)
+  intro x hx
+  have e : ((w - ℓ : locallySqIntegrable d) : EuclideanSpace ℝ (Fin d) → ℝ) x =
+      quadForm M (x - z) := by
+    simp only [AddSubgroup.coe_sub, Pi.sub_apply, hw, hℓ, continuumAffineFun_apply]
+    rw [quadForm_eq_sub M x z, inner_add_left, inner_sub_left, real_inner_comm x (polarVec M z)]
+    ring
+  rw [e]
+  refine (abs_quadForm_le M hm0 hm _).trans ?_
+  have hxz : ‖x - z‖ ≤ ρ := by rw [← dist_eq_norm]; exact (mem_ball.1 hx).le
+  have := pow_le_pow_left₀ (norm_nonneg _) hxz 2
+  exact mul_le_mul_of_nonneg_left this (by positivity)
+
+/-- The excess of `x ↦ a + ⟪p, x⟫ + q_M(x)` over affine functions on `B_ρ(z)` is at least
+`2^{-d} m ρ² / 32` with `m = |(M_{ij} + M_{ji}) / 2|`. -/
+theorem le_ballExcess_continuumQuadratic [NeZero d] (z : EuclideanSpace ℝ (Fin d)) {ρ a : ℝ}
+    (hρ : 0 < ρ) {p : EuclideanSpace ℝ (Fin d)} {M : Matrix (Fin d) (Fin d) ℝ}
+    {w : locallySqIntegrable d}
+    (hw : ∀ x, (w : EuclideanSpace ℝ (Fin d) → ℝ) x = a + inner ℝ p x + quadForm M x)
+    (i j : Fin d) :
+    |symEntry M i j| * ρ ^ 2 / 32 * (1 / 2) ^ d ≤
+      ballExcess (continuumBallSeminorm z) (continuumAffine d) ρ w := by
+  apply le_ballExcess
+  rintro ℓ ⟨b, q, hℓ⟩
+  obtain ⟨e, he, hqe⟩ := exists_le_abs_quadForm M i j
+  have hfun : ((w - ℓ : locallySqIntegrable d) : EuclideanSpace ℝ (Fin d) → ℝ) =
+      fun x => (a - b) + inner ℝ (p - q) x + quadForm M x := by
+    funext x
+    simp only [AddSubgroup.coe_sub, Pi.sub_apply, hw, hℓ, inner_sub_left]
+    ring
+  have hlow := le_ballL2_quadratic z hρ (a - b) (p - q) M he hqe
+  rw [← hfun] at hlow
+  rw [continuumBallSeminorm_apply]
+  have hV : 0 < ballVolume z ρ := by
+    rw [ballVolume_eq z hρ]; exact mul_pos (by positivity) unitBallVolume_pos
+  have hratio : Real.sqrt (ballVolume z (ρ / 4)) / Real.sqrt (ballVolume z ρ) = (1 / 2) ^ d := by
+    rw [← Real.sqrt_div' _ hV.le]
+    have h1 : ballVolume z (ρ / 4) = (volume (ball z (ρ / 4))).toReal := rfl
+    rw [h1, ballVolume_ratio z z hρ (by positivity)]
+    have e1 : ρ / 4 / ρ = ((1 : ℝ) / 2) ^ 2 := by field_simp; norm_num
+    rw [e1, ← pow_mul, mul_comm, pow_mul, Real.sqrt_sq (by positivity)]
+  rw [le_div_iff₀ (Real.sqrt_pos.2 hV)]
+  calc |symEntry M i j| * ρ ^ 2 / 32 * (1 / 2) ^ d * Real.sqrt (ballVolume z ρ)
+      = |symEntry M i j| * ρ ^ 2 / 32 * Real.sqrt (ballVolume z (ρ / 4)) := by
+        rw [← hratio]; field_simp
+    _ ≤ _ := hlow
+
+/-- **Polynomial comparison for quadratic functions on Euclidean balls**, with
+`CP = 32 d 2^d`. -/
+theorem polynomialComparison_continuumQuadratic [NeZero d] (z : EuclideanSpace ℝ (Fin d))
+    {X R : ℝ} (hX : 0 < X) :
+    PolynomialComparison (continuumBallSeminorm z) (continuumAffine d) (continuumQuadratic d) 2
+      X R (32 * d * 2 ^ d) := by
+  rintro w ⟨a, p, M, hw⟩ ρ ρ' hXρ hρρ' _
+  have hd : 0 < d := Nat.pos_of_ne_zero (NeZero.ne d)
+  have hne : (Finset.univ : Finset (Fin d × Fin d)).Nonempty :=
+    ⟨(⟨0, hd⟩, ⟨0, hd⟩), Finset.mem_univ _⟩
+  obtain ⟨⟨i₀, j₀⟩, -, hmax⟩ := Finset.exists_max_image Finset.univ
+    (fun ij : Fin d × Fin d => |symEntry M ij.1 ij.2|) hne
+  set m := |symEntry M i₀ j₀| with hmdef
+  have hm : ∀ i j, |symEntry M i j| ≤ m := fun i j => hmax (i, j) (Finset.mem_univ _)
+  have hm0 : 0 ≤ m := abs_nonneg _
+  have hρ : 0 < ρ := hX.trans_le hXρ
+  have hρ' : 0 < ρ' := hρ.trans_le hρρ'
+  have hup := ballExcess_continuumQuadratic_le z (ρ := ρ) hw hm0 hm
+  have hlow := le_ballExcess_continuumQuadratic z hρ' hw i₀ j₀
+  rw [← hmdef] at hlow
+  have h2 : (2 : ℝ) ^ d * (1 / 2) ^ d = 1 := by rw [← mul_pow]; norm_num
+  have e : (d : ℝ) * m * ρ ^ 2 = 32 * d * 2 ^ d * (ρ / ρ') ^ 2 * (m * ρ' ^ 2 / 32 * (1 / 2) ^ d) := by
+    have h3 : 32 * (d : ℝ) * 2 ^ d * (ρ / ρ') ^ 2 * (m * ρ' ^ 2 / 32 * (1 / 2) ^ d) =
+        (2 ^ d * (1 / 2) ^ d) * ((ρ / ρ') ^ 2 * ρ' ^ 2) * (d * m) := by ring
+    rw [h3, h2, div_pow, div_mul_cancel₀ _ (pow_ne_zero 2 hρ'.ne')]; ring
+  calc ballExcess (continuumBallSeminorm z) (continuumAffine d) ρ w ≤ d * m * ρ ^ 2 := hup
+    _ = _ := e
+    _ ≤ _ := mul_le_mul_of_nonneg_left hlow (by positivity)
+
+/-- **Armstrong–Dario, Lemma 7.2 (`k = 1`), in the normalized `L²` norms of Lebesgue measure on
+the balls `B_s(z)` of `ℝ^d`**, with `Ā_2 = P₂` any group of quadratic functions containing the
+affine functions (the `ā`-harmonic quadratic polynomials in the source): for every class `Ā(B_r)`
+with the excess decay of orders one and two and every `u` satisfying the harmonic approximation
+hypothesis, `D_1(r) ≤ C (r / R)² D_1(R) + C r^{1-α} (D_0(R) / R + E / r)`. -/
+theorem armstrongDario_lemma_7_2_one_continuum (d : ℕ) [NeZero d] {A α CH : ℝ} (hA : 2 ≤ A)
+    (hα : 0 < α) (hCH : 0 ≤ CH) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (z : EuclideanSpace ℝ (Fin d)) (P₂ : AddSubgroup (locallySqIntegrable d))
+      (Abar : ℝ → Set (locallySqIntegrable d)) (R X E : ℝ) (u : locallySqIntegrable d),
+      continuumAffine d ≤ P₂ → P₂ ≤ continuumQuadratic d →
+      1 ≤ X → X ≤ R / A → 0 ≤ E →
+      HarmonicRegularity (continuumBallSeminorm z) Abar (continuumAffine d) 1 X R CH →
+      HarmonicRegularity (continuumBallSeminorm z) Abar P₂ 2 X R CH →
+      (∀ r : ℝ, X ≤ r → r ≤ R / A → (Abar r).Nonempty) →
+      HarmonicApproximation (continuumBallSeminorm z) Abar (continuumConstants d) A α X R E u →
+      ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+        ballExcess (continuumBallSeminorm z) (continuumAffine d) r u ≤
+          C * (r / R) ^ 2 * ballExcess (continuumBallSeminorm z) (continuumAffine d) R u +
+          C * r ^ (1 - α) *
+            (ballExcess (continuumBallSeminorm z) (continuumConstants d) R u / R + E / r) := by
+  obtain ⟨C, hC, h⟩ := armstrongDario_lemma_7_2_one hA hα (γ := (d : ℝ) / 2) (CV := 1)
+    (CP := 4 * 2 ^ d + 32 * d * 2 ^ d) (by positivity) zero_le_one (by positivity) hCH
+  refine ⟨C, hC, fun z P₂ Abar R X E u hAP hPQ hX hXR hE hreg₁ hreg₂ hne happ r hr hrR => ?_⟩
+  have hX0 : 0 < X := by linarith
+  have hc₁ : (0 : ℝ) ≤ 32 * d * 2 ^ d := by positivity
+  have hc₂ : (0 : ℝ) ≤ 4 * 2 ^ d := by positivity
+  have hpc₁ := (polynomialComparison_continuumAffine z (R := R) hX0).mono_const _ hX0.le
+    (by linarith : (4 : ℝ) * 2 ^ d ≤ 4 * 2 ^ d + 32 * d * 2 ^ d)
+  have hpc₂ := ((polynomialComparison_continuumQuadratic z (R := R) hX0).of_le_high _
+    hPQ).mono_const _ hX0.le (by linarith : (32 : ℝ) * d * 2 ^ d ≤ 4 * 2 ^ d + 32 * d * 2 ^ d)
+  exact h (continuumBallSeminorm z) (continuumConstants d) (continuumAffine d) P₂ Abar R X E u
+    continuumConstants_le_continuumAffine hAP hX hXR hE
+    (radiusMonotone_continuumBallSeminorm z hX0) hpc₁ hpc₂ hreg₁ hreg₂ hne happ r hr hrR
+
 end Rigidity.Proofs.Regularity
