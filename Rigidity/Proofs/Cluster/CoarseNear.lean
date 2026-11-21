@@ -236,6 +236,29 @@ theorem pairOverlap_of_mem
       exact ⟨hsc z (P.cluster_subset hz) q.1 (hdom q hq) hn.symm,
         hsc q.1 (hdom q hq) z (P.cluster_subset hz) hn⟩
 
+/-- **Sums over partition cubes.** A sum over the cluster of a function of the partition cube times
+a function of the vertex is the sum over the partition cubes `□` meeting the cluster of the first
+function times the sum over `□ ∩ C_*(U)`: the right sides of Lemmas 3.2 and 3.3 regrouped as in
+Armstrong and Dario. -/
+theorem sum_cluster_eq_sum_parts {β : Type*} [AddCommMonoid β] [Module ℝ β]
+    (f : TriadicCube d → ℝ) (g : Vertex d → β) :
+    ∑ z ∈ P.cluster, f (P.part z) • g z =
+      ∑ Q ∈ P.cluster.image P.part, f Q • ∑ z ∈ P.cluster.filter (· ∈ Q.vertices), g z := by
+  rw [← Finset.sum_fiberwise_of_maps_to (g := P.part) (t := P.cluster.image P.part)
+    (fun z hz => Finset.mem_image_of_mem _ hz)]
+  refine Finset.sum_congr rfl fun Q hQ => ?_
+  obtain ⟨x, hx, rfl⟩ := Finset.mem_image.1 hQ
+  have hfilter : P.cluster.filter (fun z => P.part z = P.part x) =
+      P.cluster.filter (· ∈ (P.part x).vertices) := by
+    refine Finset.filter_congr fun z hz => ⟨fun h => ?_, fun h => ?_⟩
+    · rw [← h]
+      exact P.mem_part z (P.cluster_subset hz)
+    · exact P.part_eq_of_mem x (P.cluster_subset hx) z h
+  rw [hfilter, Finset.smul_sum]
+  refine Finset.sum_congr rfl fun z hz => ?_
+  have hz' := (Finset.mem_filter.1 hz)
+  rw [P.part_eq_of_mem x (P.cluster_subset hx) z hz'.2]
+
 end CoarseData
 
 end Rigidity.Percolation
