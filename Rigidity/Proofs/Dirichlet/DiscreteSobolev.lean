@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Dirichlet.CubeStokes
+import Rigidity.Proofs.Dirichlet.SecondDifferences
 
 /-!
 # A discrete Sobolev inequality on lattice cubes
@@ -15,7 +16,7 @@ pointwise by their averages, which gives the large-scale regularity of the discr
 solutions.
 -/
 
-open Finset LatticeProb
+open Finset LatticeProb LatticeHC
 
 namespace Rigidity.Dirichlet
 
@@ -237,5 +238,32 @@ theorem abs_le_sum_mixedDiff_cube (f : Vertex d → ℝ) (x : Vertex d) {M : ℕ
       ∑ y ∈ (cornerCube x M).vertices, |mixedDiff S f y| := by
   have h := abs_le_sum_mixedDiff_partialCube f x hM Finset.univ
   rwa [partialCube_univ, Finset.card_univ, Fintype.card_fin] at h
+
+/-- The constant-coefficient operator commutes with mixed differences:
+`L(∂^S h)(y) = ∂^S (L h)(y)`. -/
+theorem condLaplacian_constCond_mixedDiff (a : Fin d → ℝ) (S : Finset (Fin d))
+    (h : Vertex d → ℝ) (y : Vertex d) :
+    condLaplacian (constCond a) (mixedDiff S h) y =
+      mixedDiff S (condLaplacian (constCond a) h) y := by
+  unfold mixedDiff
+  simp only [condLaplacian, constCond, Finset.mul_sum, ← Finset.sum_sub_distrib,
+    ← Finset.sum_add_distrib]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun R _ => ?_
+  refine Finset.sum_congr rfl fun j _ => ?_
+  rw [show y + unit j + ∑ i ∈ R, unit i = y + ∑ i ∈ R, unit i + unit j by abel,
+    show y - unit j + ∑ i ∈ R, unit i = y + ∑ i ∈ R, unit i - unit j by abel]
+  ring
+
+/-- Mixed differences of a constant-coefficient harmonic function are harmonic at the points `y`
+such that all the points `y + Σ_{j ∈ R} e_j`, `R ⊆ S`, are points of harmonicity. -/
+theorem condLaplacian_constCond_mixedDiff_eq_zero (a : Fin d → ℝ) (S : Finset (Fin d))
+    {h : Vertex d → ℝ} {U : Set (Vertex d)} (hU : ∀ x ∈ U, condLaplacian (constCond a) h x = 0)
+    {y : Vertex d} (hy : ∀ R ⊆ S, y + ∑ j ∈ R, unit j ∈ U) :
+    condLaplacian (constCond a) (mixedDiff S h) y = 0 := by
+  rw [condLaplacian_constCond_mixedDiff]
+  unfold mixedDiff
+  exact Finset.sum_eq_zero fun R hR => by
+    rw [hU _ (hy R (Finset.mem_powerset.mp hR)), mul_zero]
 
 end Rigidity.Dirichlet
