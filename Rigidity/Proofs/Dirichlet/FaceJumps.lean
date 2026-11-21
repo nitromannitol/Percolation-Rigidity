@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Dirichlet.AffinePatch
 import Rigidity.Proofs.Dirichlet.MesoscopicAffine
+import Rigidity.Proofs.Dirichlet.InteriorLinfty
 
 /-!
 # Jumps of the patched affine approximations across the faces of a tiling
@@ -167,5 +168,66 @@ theorem sum_face_jumps_le {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (z : Ver
         F w := rfl
   rw [hS]
   nlinarith [hA, hB]
+
+theorem shrinkCube_vertices_subset_self (Q : IntegerCube d) (t : ℕ) :
+    (shrinkCube Q t).vertices ⊆ Q.vertices := by
+  have h := shrinkCube_vertices_subset Q (Nat.zero_le t)
+  rwa [shrinkCube_zero_vertices] at h
+
+/-- **Lemma 6.3 (iii), homogenized part**: for `u` harmonic (constant conductances
+`λ ≤ a_k ≤ Λ`) on `shrink(Q, 1)` and a tiled cube inside `shrink(Q, r + 3)`, the distance from `u`
+to its mesoscopic affine approximations on the tiles satisfies
+`Σ_i Σ_{tile i} (u − ℓ_{y_i})² ≤ C N⁴ r^{−2} Σ_{x∈Q} Σ_j (∇_j u(x))²`, `C = C(d, λ, Λ)`. -/
+theorem exists_sum_tiles_sq_sub_cubeAffine_le_energy (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ}
+    (hlam : 0 < lam) (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (Q : IntegerCube d) (u : Vertex d → ℝ),
+      (∀ x ∈ (shrinkCube Q 1).vertices, condLaplacian (constCond a) u x = 0) →
+      ∀ (r : ℕ), 0 < r → ∀ (z : Vertex d) (M N : ℕ), 0 < N →
+      (cornerCube z (M * N)).vertices ⊆ (shrinkCube Q (r + 3)).vertices →
+      ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+          (u x - cubeAffine N u (z + (N : ℤ) • i) x) ^ 2 ≤
+        C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 *
+          ∑ x ∈ Q.vertices, ∑ j : Fin d, (u (x + unit j) - u x) ^ 2 := by
+  obtain ⟨CA, hCA, hA⟩ := exists_sum_tiles_sq_sub_cubeAffine_le (d := d)
+  have hΛ : 0 ≤ Λ := (hlam.le.trans (ha ⟨0, hd⟩).1).trans (ha ⟨0, hd⟩).2
+  refine ⟨CA * (10 * d * Λ / lam), by positivity, fun Q u hu r hr z M N hN hsub => ?_⟩
+  have hr' : (0 : ℝ) < r := by exact_mod_cast hr
+  refine (hA z M N u hN).trans ?_
+  set Q' := shrinkCube Q 1
+  -- each difference `∇_j u` is harmonic on `shrink(Q', 1)`
+  have hharm : ∀ j : Fin d, ∀ x ∈ (shrinkCube Q' 1).vertices,
+      condLaplacian (constCond a) (fun y => u (y + unit j) - u y) x = 0 := by
+    intro j x hx
+    rw [condLaplacian_constCond_grad, hu, hu, sub_zero]
+    · rw [shrinkCube_shrinkCube_vertices] at hx
+      exact shrinkCube_vertices_subset Q (by norm_num) hx
+    · rw [shrinkCube_shrinkCube_vertices, mem_shrinkCube_iff] at hx
+      rw [mem_shrinkCube_iff]
+      intro k
+      have := hx k
+      rw [add_unit_apply]
+      push_cast at this ⊢
+      split_ifs <;> constructor <;> omega
+  have hcacc : ∀ j : Fin d, ∑ x ∈ (shrinkCube Q (r + 3)).vertices, ∑ k : Fin d,
+      ((u (x + unit k + unit j) - u (x + unit k)) - (u (x + unit j) - u x)) ^ 2 ≤
+        10 * d * Λ / (lam * (r : ℝ) ^ 2) * ∑ x ∈ Q.vertices, (u (x + unit j) - u x) ^ 2 := by
+    intro j
+    have h := sum_sq_grad_shrinkCube_le hd a hlam ha Q' (hharm j) hr
+    rw [shrinkCube_shrinkCube_vertices, show 1 + (r + 2) = r + 3 by ring] at h
+    refine h.trans (mul_le_mul_of_nonneg_left (Finset.sum_le_sum_of_subset_of_nonneg
+      (shrinkCube_vertices_subset_self Q 1) fun _ _ _ => sq_nonneg _) (by positivity))
+  calc CA * (N : ℝ) ^ 4 * ∑ y ∈ (cornerCube z (M * N)).vertices, ∑ j : Fin d, ∑ k : Fin d,
+        ((u (y + unit k + unit j) - u (y + unit k)) - (u (y + unit j) - u y)) ^ 2
+      = CA * (N : ℝ) ^ 4 * ∑ j : Fin d, ∑ y ∈ (cornerCube z (M * N)).vertices, ∑ k : Fin d,
+        ((u (y + unit k + unit j) - u (y + unit k)) - (u (y + unit j) - u y)) ^ 2 := by
+        rw [Finset.sum_comm (s := (cornerCube z (M * N)).vertices)]
+    _ ≤ CA * (N : ℝ) ^ 4 * ∑ j : Fin d, 10 * d * Λ / (lam * (r : ℝ) ^ 2) *
+          ∑ x ∈ Q.vertices, (u (x + unit j) - u x) ^ 2 := by
+        refine mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun j _ => ?_) (by positivity)
+        refine le_trans (Finset.sum_le_sum_of_subset_of_nonneg hsub fun x _ _ =>
+          Finset.sum_nonneg fun k _ => sq_nonneg _) (hcacc j)
+    _ = _ := by
+        rw [← Finset.mul_sum, Finset.sum_comm (s := (Finset.univ : Finset (Fin d)))]
+        field_simp
 
 end Rigidity.Dirichlet
