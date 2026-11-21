@@ -188,4 +188,74 @@ theorem abs_le_average_add_sum_forwardDiff (g : (Fin d → ℤ) → ℝ) (x₀ :
     _ = ((n : ℝ) + 1)⁻¹ * ∑ k ∈ range (n + 1), |g (x₀ + (k : ℤ) • unit i)| + D := by
         field_simp
 
+/-- Exchange of the sum over the slices `k ≤ n` with the sum over the subsets of directions. -/
+theorem sum_range_sum_powerset_latticeBox {T : Finset (Fin d)} {i : Fin d} (hi : i ∉ T)
+    (x₀ : Fin d → ℤ) (n : ℕ) (a : Finset (Fin d) → ℝ) (G : Finset (Fin d) → (Fin d → ℤ) → ℝ) :
+    ∑ k ∈ range (n + 1), ∑ S ∈ T.powerset,
+        a S * ∑ y ∈ latticeBox T (x₀ + (k : ℤ) • unit i) n, G S y =
+      ∑ S ∈ T.powerset, a S * ∑ y ∈ latticeBox (insert i T) x₀ n, G S y := by
+  rw [sum_comm]
+  refine sum_congr rfl fun S _ => ?_
+  rw [← mul_sum, latticeBox_insert hi, sum_biUnion (latticeBox_pairwiseDisjoint hi x₀ n)]
+
+/-- **Discrete Sobolev inequality with mixed differences**:
+`|g(x₀)| ≤ ∑_{S ⊆ T} (n + 1)^{-(|T| - |S|)} ∑_{y ∈ x₀ + [0, n]^T} |D_S g(y)|`. -/
+theorem abs_le_sum_mixedDiff (n : ℕ) (T : Finset (Fin d)) :
+    ∀ (g : (Fin d → ℤ) → ℝ) (x₀ : Fin d → ℤ),
+      |g x₀| ≤ ∑ S ∈ T.powerset, (((n : ℝ) + 1)⁻¹) ^ (T.card - S.card) *
+        ∑ y ∈ latticeBox T x₀ n, |mixedDiff S g y| := by
+  induction T using Finset.induction_on with
+  | empty =>
+    intro g x₀
+    simp [latticeBox_empty, mixedDiff_empty]
+  | insert i T hi ih =>
+    intro g x₀
+    set c := ((n : ℝ) + 1)⁻¹ with hc
+    have hc0 : 0 ≤ c := by positivity
+    have h1 := abs_le_average_add_sum_forwardDiff g x₀ i n
+    have hA : ∀ k ∈ range (n + 1), |g (x₀ + (k : ℤ) • unit i)| ≤
+        ∑ S ∈ T.powerset, c ^ (T.card - S.card) *
+          ∑ y ∈ latticeBox T (x₀ + (k : ℤ) • unit i) n, |mixedDiff S g y| :=
+      fun k _ => ih g _
+    have hB : ∀ k ∈ range (n + 1),
+        |g (x₀ + (k : ℤ) • unit i + unit i) - g (x₀ + (k : ℤ) • unit i)| ≤
+          ∑ S ∈ T.powerset, c ^ (T.card - S.card) *
+            ∑ y ∈ latticeBox T (x₀ + (k : ℤ) • unit i) n, |mixedDiff (insert i S) g y| := by
+      intro k _
+      have := ih (fun x => g (x + unit i) - g x) (x₀ + (k : ℤ) • unit i)
+      refine this.trans (le_of_eq (sum_congr rfl fun S hS => ?_))
+      congr 1
+      refine sum_congr rfl fun y _ => ?_
+      rw [mixedDiff_forwardDiff (fun h => hi (mem_powerset.1 hS h))]
+    have hsumA := sum_le_sum hA
+    have hsumB := sum_le_sum hB
+    rw [sum_range_sum_powerset_latticeBox hi] at hsumA hsumB
+    rw [sum_powerset_insert hi]
+    have e1 : ∀ S ∈ T.powerset, c ^ ((insert i T).card - S.card) =
+        c * c ^ (T.card - S.card) := by
+      intro S hS
+      rw [card_insert_of_notMem hi, Nat.succ_sub (card_le_card (mem_powerset.1 hS)), pow_succ']
+    have e2 : ∀ S ∈ T.powerset, c ^ ((insert i T).card - (insert i S).card) =
+        c ^ (T.card - S.card) := by
+      intro S hS
+      have hiS : i ∉ S := fun h => hi (mem_powerset.1 hS h)
+      rw [card_insert_of_notMem hi, card_insert_of_notMem hiS, Nat.add_sub_add_right]
+    have hsplit :
+        ∑ S ∈ T.powerset, c ^ ((insert i T).card - S.card) *
+            ∑ y ∈ latticeBox (insert i T) x₀ n, |mixedDiff S g y| +
+          ∑ S ∈ T.powerset, c ^ ((insert i T).card - (insert i S).card) *
+            ∑ y ∈ latticeBox (insert i T) x₀ n, |mixedDiff (insert i S) g y| =
+        c * ∑ S ∈ T.powerset, c ^ (T.card - S.card) *
+            ∑ y ∈ latticeBox (insert i T) x₀ n, |mixedDiff S g y| +
+          ∑ S ∈ T.powerset, c ^ (T.card - S.card) *
+            ∑ y ∈ latticeBox (insert i T) x₀ n, |mixedDiff (insert i S) g y| := by
+      congr 1
+      · rw [mul_sum]
+        refine sum_congr rfl fun S hS => ?_
+        rw [e1 S hS]; ring
+      · exact sum_congr rfl fun S hS => by rw [e2 S hS]
+    rw [hsplit]
+    have := mul_le_mul_of_nonneg_left hsumA hc0
+    linarith
+
 end Rigidity.Proofs.Regularity
