@@ -639,7 +639,9 @@ For `d ≥ 3` and `𝔭_c(d) < p < 1`, almost surely every vertex `y` of the inf
 pole of exactly one Green column: a function `g` on the cluster with `−Δg = δ_y` that tends to zero
 at infinity. Dario and Gu state the existence and uniqueness of Green columns without proof (DG,
 p. 4 and p. 58). With the planar case of the previous section, the Green-column input
-`SupercriticalBondGreenColumnExistence` follows from the planar order-zero estimate alone.
+`SupercriticalBondGreenColumnExistence` follows from the planar order-zero estimate alone. The same
+route bounds the heat kernel of the cluster for `d ≥ 2` and the decay of the Green columns for
+`d ≥ 3`, with a polynomial loss.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -647,8 +649,11 @@ p. 4 and p. 58). With the planar case of the previous section, the Green-column 
 | [`Rigidity.Green.greenColumnExistence_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | for `d ≥ 3`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster there is exactly one Green column with pole `y`. |
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_two`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from its planar case `SupercriticalBondGreenColumnExistenceTwo`. |
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from `ArmstrongDarioOrderZeroTwo`. |
+| [`Rigidity.Green.heat_le_of_two_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 2`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster, then for `0 ≤ t ≤ 1` there are `K` and `N` with `p_n(x, y) ≤ K n^{−(d/2 − 1/100)(1 − t)} exp(−t\|x − y\|²/(2n))` for all `n ≥ N` and all vertices `x` of the cluster. |
+| [`Rigidity.Green.greenColumn_le_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0` the Green column `g` with pole `y` satisfies `0 ≤ g(x) ≤ K \|x − y\|^{2 − d + 1/50 + δ}` for `\|x − y\| ≥ R`. |
+| [`Rigidity.Green.greenColumn_le_one_add_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0`, `0 ≤ g(x) ≤ K (1 + \|x − y\|)^{2 − d + 1/50 + δ}` at every vertex `x`. |
 
-The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+The seven theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
 are in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/).
 
 1. **Isoperimetry of `ℤᵈ`** (`LatticeIsoperimetry.lean`). The lattice `ℓ¹` Sobolev inequality
@@ -678,6 +683,17 @@ are in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/).
    `p_n(x, y) ≤ K n^{−(d/2)(1 − 1/(50d))}` for `n ≥ max(n₀, dist(x, y))`, which is summable for
    `d ≥ 3`. Then `g = Σ_n p_n(·, y) / deg(y)` solves `−Δg = δ_y` and tends to zero at infinity, and
    the maximum principle gives the uniqueness.
+6. **Heat kernel and Green column bounds** (`OffDiagonal.lean`, `ClusterHeatKernel.lean`,
+   `GreenUpperBound.lean`, `ClusterGreenUpperBound.lean`, `GreenGlobalBound.lean`,
+   `SupercriticalGreenBounds.lean`). The off-diagonal bound
+   `p_{a+b}(x, y) ≤ √(deg y / deg x) √(p_{2a}(x, x) p_{2b}(y, y))` gives
+   `p_n(x, y) ≤ K n^{−γ}`, `γ = (d/2)(1 − 1/(50d)) = d/2 − 1/100`, at every vertex `x`, and its
+   weighted geometric mean with the Carne–Varopoulos bound
+   `p_n(x, y) ≤ 2 √(deg y / deg x) exp(−dist(x, y)²/(2n))` of Lattice-Probability gives the
+   transition bound of the table, since the Euclidean distance is at most the graph distance in the
+   cluster. Summing the Carne–Varopoulos bound over `n < |x − y|^{2−θ}` and `K n^{−γ}` over the
+   larger `n` gives `g(x) ≤ K |x − y|^{(2−θ)(1−γ)}`, hence the decay `2 − 2γ + δ = 2 − d + 1/50 + δ`
+   of the Green columns.
 
 **Departures from Dario and Gu.** Dario and Gu state the existence and uniqueness of Green columns
 without proof; the Gaussian bounds of M. T. Barlow (*Random walks on supercritical percolation
@@ -688,7 +704,12 @@ decay, with two changes: the isoperimetric inequality of the cluster is proved b
 graining by good subcubes, with the polynomial loss `R^{−1/(100d)}` in place of the sharp inequality
 for sets of size at least a power of `log R`, and only on-diagonal bounds, combined by the
 Cauchy–Schwarz inequality, are used. The decay exponent `(d/2)(1 − 1/(50d)) > 1` is enough for
-`d ≥ 3`. The lattice Sobolev inequality is copied from Lattice-High-Contrast-Homogenization and the
+`d ≥ 3`. Barlow's Gaussian upper bound, as quoted by Dario and Gu (DG, §3.1), is
+`p_t(x, y) ≤ C t^{−d/2} exp(−|x − y|²/(Ct))` for `|x − y| ≤ t` above a random time, and it gives
+Green functions of order `|x − y|^{2−d}`; the bounds proved here lose the factor
+`n^{1/100 + (d/2 − 1/100)t}` in the heat kernel and `|x − y|^{1/50 + δ}` in the Green columns, and
+they are stated for the discrete-time simple random walk, whereas Dario and Gu use the
+variable-speed continuous-time walk. The lattice Sobolev inequality is copied from Lattice-High-Contrast-Homogenization and the
 step inequality of `LocalNash.lean` is adapted from Lattice-Probability; see
 [Copied code](#copied-code).
 
@@ -697,7 +718,7 @@ step inequality of `LocalNash.lean` is adapted from Lattice-Probability; see
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 71 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 74 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -711,8 +732,8 @@ step inequality of `LocalNash.lean` is adapted from Lattice-Probability; see
   [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
-  and the four theorems of [Green columns for d ≥ 3](#green-columns-for-d--3).
-  Each of the 71 reports lists exactly `propext`, `Classical.choice` and
+  and the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3).
+  Each of the 74 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -743,10 +764,10 @@ step inequality of `LocalNash.lean` is adapted from Lattice-Probability; see
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 913 Lean files with 160,287 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 919 Lean files with 161,306 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (129 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (135 lines) are counted separately.
 
 ## Building
 
@@ -815,7 +836,7 @@ Rigidity/
       Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
-    Green/                    Green columns of the cluster for d ≥ 3
+    Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
     Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)

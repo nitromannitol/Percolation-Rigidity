@@ -62,7 +62,7 @@ sources:
     type: "paper"
     location: "p. 4, around (1.8), and p. 58"
     relationship: "independently-proves"
-    note: "The existence and uniqueness of the Green's function of the infinite cluster (LatticeProb.External.SupercriticalBondGreenColumnExistence), stated there without proof, is proved for d >= 3 (Rigidity.Green.greenColumnExistence_of_three_le) by the route of Mathieu and Remy, isoperimetry, Faber-Krahn, Nash and on-diagonal decay, with an isoperimetric inequality of the cluster of polynomial loss R^(-1/(100d)) from one coarse graining by good subcubes, in place of the Gaussian bounds of Barlow; with the planar case, Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo derives the input from the planar order-zero estimate (README, Green columns for d >= 3)."
+    note: "The existence and uniqueness of the Green's function of the infinite cluster (LatticeProb.External.SupercriticalBondGreenColumnExistence), stated there without proof, is proved for d >= 3 (Rigidity.Green.greenColumnExistence_of_three_le) by the route of Mathieu and Remy, isoperimetry, Faber-Krahn, Nash and on-diagonal decay, with an isoperimetric inequality of the cluster of polynomial loss R^(-1/(100d)) from one coarse graining by good subcubes, in place of the Gaussian bounds of Barlow; with the planar case, Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo derives the input from the planar order-zero estimate. The same route gives heat kernel bounds for d >= 2 and the decay |x-y|^(2-d+1/50+delta) of the Green columns for d >= 3, weaker by polynomial factors than those that DG derive from Barlow's Gaussian bounds (README, Green columns for d >= 3)."
   - title: "Percolation"
     authors: ["Geoffrey Grimmett"]
     type: "book"
