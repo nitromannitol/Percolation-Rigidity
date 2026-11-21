@@ -27,6 +27,11 @@ import Rigidity.Proofs.Cluster.Caccioppoli
 import Rigidity.Proofs.Cluster.ReverseHolderPartition
 import Rigidity.Proofs.Cluster.Gehring
 import Rigidity.Proofs.Cluster.MeyersCluster
+import Rigidity.Proofs.Cluster.SobolevCube
+import Rigidity.Proofs.Cluster.SobolevZero
+import Rigidity.Proofs.Cluster.SobolevPartition
+import Rigidity.Proofs.Cluster.SobolevCoarseZero
+import Rigidity.Proofs.Cluster.SobolevReverseHolder
 import Rigidity.Proofs.Percolation.PlanarNuStationarity
 import Rigidity.Proofs.Percolation.PlanarNuLocal
 import Rigidity.Proofs.Percolation.PlanarMuLocal
@@ -60,7 +65,7 @@ from five dimension-two inputs, the Green columns for `d ≥ 3` with the Green-c
 planar order-zero estimate and the heat kernel and Green column bounds, the multiscale Poincaré
 inequality of Armstrong and Dario (Proposition A.2) with its affine form, and the partition into
 good cubes and the functional and elliptic inequalities on the cluster of Armstrong and Dario
-(§§2–3), and the localization of the planar subadditive quantities with the limits of their
+(§§2–3) with the Sobolev inequality of the lattice, the localization of the planar subadditive quantities with the limits of their
 expectations and the homogenized matrix (§4.3 and the start of §5, `d = 2`), and the deterministic
 steps of the homogenization of the Dirichlet problem and of the excess-decay iteration (§§6–7);
 `scripts/check_axioms.py` checks it.
@@ -232,3 +237,11 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_zero_planar
 #print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_one_planar
 #print axioms Rigidity.Proofs.Regularity.armstrongDario_orderZero_origin_planar
+
+-- The Sobolev inequality of the lattice and Proposition 3.4 of Armstrong and Dario in every dimension
+#print axioms Rigidity.Percolation.IntegerCube.exists_latticeSobolevOn
+#print axioms Rigidity.Percolation.exists_sum_rpow_le_of_eq_zero_on_boundary
+#print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_eq_zero
+#print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_coarsen_eq_zero
+#print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_coarsen_eq_zero
+#print axioms Rigidity.Percolation.exists_clusterSobolevTwo

@@ -157,6 +157,13 @@ further = {
          'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_zero_planar',
          'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_one_planar',
          'Rigidity.Proofs.Regularity.armstrongDario_orderZero_origin_planar'],
+    'the Sobolev inequality of the lattice and Proposition 3.4 of Armstrong and Dario (every d >= 2)':
+        ['Rigidity.Percolation.IntegerCube.exists_latticeSobolevOn',
+         'Rigidity.Percolation.exists_sum_rpow_le_of_eq_zero_on_boundary',
+         'Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_eq_zero',
+         'Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_coarsen_eq_zero',
+         'Rigidity.Percolation.exists_partition_sum_rpow_le_of_coarsen_eq_zero',
+         'Rigidity.Percolation.exists_clusterSobolevTwo'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

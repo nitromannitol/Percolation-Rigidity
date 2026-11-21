@@ -747,8 +747,8 @@ The proof of Theorem 2 of AD, from which Theorems 2.4 and 2.5 are quoted, starts
 partition of `ℤᵈ` into good triadic cubes (AD, §2) and from functional and elliptic inequalities on
 the cluster above the scale of this partition (AD, §3). For every `d ≥ 2` and `𝔭_c(d) < p < 1`, the
 partition and its stochastic integrability are proved, and so are the deterministic parts of the
-inequalities of §3, which take the Sobolev inequality of the lattice cube as a hypothesis when
-`d ≥ 3`.
+inequalities of §3, with the Sobolev inequality on the cluster (AD, Proposition 3.4) for
+`s ≥ d/(d − 1)` in three of its four cases.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -763,12 +763,18 @@ inequalities of §3, which take the Sobolev inequality of the lattice cube as a 
 | [`Rigidity.Percolation.partition_sum_gradNormIn_coarseAnchor_rpow_le`](Rigidity/Proofs/Cluster/PartitionCoarseData.lean) | AD Lemma 3.3 on a resolved cube `U`, for `1 ≤ s < ∞`: `Σ_{x ∈ U} \|∇[w]_𝒫\|^s(x) ≤ C^s Σ_{z ∈ C_*(U)} size(□_𝒫(z))^{sd−1} \|∇w 1_{𝐚≠0}\|^s(z)`. |
 | [`Rigidity.Percolation.exists_partition_sum_rpow_le_of_latticeSobolevOn`](Rigidity/Proofs/Cluster/PartitionSobolev.lean) | AD Proposition 3.4 on a resolved cube `U`, for `1 ≤ t ≤ s` and `w` of mean zero on `C_*(U)`, given the Sobolev inequality `Σ_U \|f − (f)_U\|^s ≤ S (Σ_U \|∇f\|^t)^{s/t}` of the lattice cube: `Σ_{C_*(U)} \|w\|^s ≤ K (Σ_{z ∈ C_*(U)} 3^{tdρ(z)} \|∇w 1_{𝐚≠0}\|^t(z))^{s/t}`. |
 | [`Rigidity.Percolation.exists_partition_sum_sq_le_two`](Rigidity/Proofs/Cluster/PartitionSobolevTwo.lean) | AD Proposition 3.4 for `d = 2`, `s = 2` and `t = 1`, the Sobolev inequality of the planar lattice square being proved. |
+| [`Rigidity.Percolation.IntegerCube.exists_latticeSobolevOn`](Rigidity/Proofs/Cluster/SobolevCube.lean) | the Sobolev–Poincaré inequality of the integer cubes of `ℤᵈ`, `d ≥ 2`: for `s ≥ d/(d − 1)` and `t = sd/(s + d)` there is `S` with `Σ_B \|f − (f)_B\|^s ≤ S (Σ_B \|∇f\|^t)^{s/t}` on every cube `B`. |
+| [`Rigidity.Percolation.exists_sum_rpow_le_of_eq_zero_on_boundary`](Rigidity/Proofs/Cluster/SobolevZero.lean) | the Sobolev inequality with zero boundary values: `Σ_D \|f\|^s ≤ S (Σ_D \|∇f\|^t)^{s/t}` for every finite `D ⊆ ℤᵈ` and every `f` vanishing at the points of `D` with a lattice neighbour outside `D`. |
+| [`Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_eq_zero`](Rigidity/Proofs/Cluster/SobolevPartition.lean) | AD Proposition 3.4 on a resolved cube `U`, `d ≥ 2`, `s ≥ d/(d − 1)`, for `Σ_{C_*(U)} w = 0`: `Σ_{C_*(U)} \|w\|^s ≤ K (Σ_{z ∈ C_*(U)} 3^{tdρ(z)} \|∇w 1_{𝐚≠0}\|^t(z))^{s/t}`. |
+| [`Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_coarsen_eq_zero`](Rigidity/Proofs/Cluster/SobolevPartition.lean) | the same for `Σ_U [w]_𝒫 = 0`. |
+| [`Rigidity.Percolation.exists_partition_sum_rpow_le_of_coarsen_eq_zero`](Rigidity/Proofs/Cluster/SobolevCoarseZero.lean) | the same for `[w]_𝒫 = 0` at the points of `U` with a lattice neighbour outside `U`. |
+| [`Rigidity.Percolation.exists_clusterSobolevTwo`](Rigidity/Proofs/Cluster/SobolevReverseHolder.lean) | AD Proposition 3.4 with `s = 2` in the form of the Sobolev hypothesis `ClusterSobolevTwo` of the reverse Hölder inequality, on `C_*(U)` for every resolved cube `U`, `d ≥ 2`. |
 | [`Rigidity.Proofs.Cluster.caccioppoli_cluster`](Rigidity/Proofs/Cluster/Caccioppoli.lean) | AD Lemma 3.5: if `V ⊆ U`, every point of `U` with an open edge leaving `U` is at `ℓ∞` distance at least `r > 0` from `V`, and `u` is harmonic at the points of `U` all of whose open edges stay in `U`, then `Σ_V \|∇u 1_{𝐚≠0}\|² ≤ (8d/r²) Σ_{U ∖ int V} u²`. |
 | [`Rigidity.Proofs.Cluster.reverse_holder_partition_cube`](Rigidity/Proofs/Cluster/ReverseHolderPartition.lean) | AD Lemma 3.6, deterministic part: on the crossing cluster of a resolved triadic cube `□` of scale `m + 1`, given the Sobolev inequality of the lattice cube with exponents `2` and `2_* = 2d/(d+2)` and `Σ_{C_*(□)} 3^{2dsρ} ≤ C_G \|□\|`, every `u` harmonic on `C_*(□)` has `3^{−md} Σ_{C_*(□) ∩ □'} \|∇u\|² ≤ C (\|□\|⁻¹ Σ_{C_*(□)} \|∇u\|^{t2_*})^{2/(t2_*)}`, `□'` the central subcube and `1/s + 1/t = 1`. |
 | [`Rigidity.Proofs.Cluster.gehring_triadic`](Rigidity/Proofs/Cluster/Gehring.lean) | Gehring's lemma on the triadic cubes of `ℤᵈ`: for `0 < θ < 1`, a reverse Hölder inequality `avg_Q g ≤ A (avg_{Q^j} g^θ)^{1/θ}` on every subcube `Q` of `□` whose enlargement `Q^j` lies in `3□` gives `ε > 0` with `avg_□ g^{1+ε} ≤ C (avg_{3□} g)^{1+ε}`. |
 | [`Rigidity.Proofs.Cluster.meyers_cluster`](Rigidity/Proofs/Cluster/MeyersCluster.lean) | AD Proposition 3.8, deterministic part: for `u` harmonic on `U₀` and a partition of `3□` into triadic cells of comparable neighbouring sizes, if the triadic cubes `□'` above the cells carry sets `U' ⊆ U₀ ∩ 3□'` with the Sobolev inequality and a moment bound, and `Σ_{x ∈ □} size(x)^t ≤ K\|□\|`, then `E = \|∇u 1_{𝐚≠0}\|²` has `avg_□ E^{1+ε/2} ≤ C (avg_{3□} E)^{1+ε/2}`. |
 
-The fifteen theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+The twenty-one theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
 are in [`Rigidity/Proofs/Partition/`](Rigidity/Proofs/Partition/) and
 [`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/).
 
@@ -798,9 +804,13 @@ are in [`Rigidity/Proofs/Partition/`](Rigidity/Proofs/Partition/) and
    paths of step 2 and its gradient along the paths of Lemma 2.8, which gives Lemmas 3.2 and 3.3 of
    AD with the weights described below; every moment of the reach of the partition is finite.
 5. **Sobolev inequality** (`CoarseSobolev.lean`, `PartitionSobolev.lean`, `PlanarLatticeSobolev.lean`,
-   `PartitionSobolevTwo.lean`). Lemmas 3.2 and 3.3 and the Sobolev inequality of the lattice cube
-   applied to `[w]_𝒫` give AD, Proposition 3.4, for functions of mean zero on `C_*(U)`; in the plane
-   the lattice inequality from `ℓ¹` to `ℓ²` is proved by comparing the values along rows and columns.
+   `PartitionSobolevTwo.lean`, `Sobolev*.lean`). The Sobolev inequality of `ℤᵈ` with zero boundary
+   values follows from the `ℓ¹` Sobolev inequality `LatticeHC.sum_rpow_le_sum_abs_grad` (see
+   [Copied code](#copied-code)) applied to powers of `\|f\|` and Hölder's inequality; on a cube, a
+   function of mean zero is reflected into the triple cube, cut off, and its mean is controlled by
+   the `Lᵖ` Poincaré inequality of the cube. Lemmas 3.2 and 3.3 and these inequalities applied to
+   `[w]_𝒫` give AD, Proposition 3.4; in the plane the lattice inequality from `ℓ¹` to `ℓ²` is also
+   proved directly by comparing the values along rows and columns.
 6. **Caccioppoli, reverse Hölder, Gehring and Meyers** (`Caccioppoli.lean`, `ReverseHolder*.lean`,
    `Gehring*.lean`, `Meyers*.lean`). The Caccioppoli inequality on a cluster (AD, Lemma 3.5) uses the
    local Caccioppoli inequality `caccioppoli_of_support` of Lattice-Probability; with the Sobolev
@@ -823,12 +833,19 @@ Departures from Armstrong and Dario:
   cubes, so the weight `size(□_𝒫(z))^{sd}` of Lemma 3.2 becomes `3^{sdρ(z)}`, where the reach scale
   `ρ(z) ≥ scale(□_𝒫(z))` is the largest scale of a partition cube whose connecting paths may pass through `z`.
   Lemma 3.3 keeps the weights of AD. Lemmas 3.2 and 3.3 and Proposition 3.4 are proved on cubes
-  resolved by the partition, and Proposition 3.4 for functions with `Σ_{C_*(U)} w = 0` or
-  `Σ_{C_*(U)} [w]_𝒫 = 0`, with the weight `3^{tdρ(z)}`; the cases with zero boundary values are not
-  proved.
-- **The Sobolev inequality of the lattice cube** is a hypothesis of Proposition 3.4 and of the
-  reverse Hölder and Meyers estimates, except for `d = 2` with exponents `2` and `1`, where it is
-  proved.
+  resolved by the partition, with the weight `3^{tdρ(z)}` in Proposition 3.4.
+- **Proposition 3.4.** Three of the four cases of AD are proved: `Σ_{C_*(U)} w = 0`,
+  `Σ_U [w]_𝒫 = 0`, and `[w]_𝒫 = 0` on the lattice boundary of `U`, where AD ask for it on the
+  boundary `∂_𝐚U` of the cluster, which is smaller; the lattice Sobolev inequality applied to `[w]_𝒫`
+  uses the lattice boundary. The case `w = 0` on `∂_𝐚U` is not proved: AD apply Lemmas 3.2 and 3.3
+  to the function equal to `[w]_𝒫` off the partition cubes at the boundary and to `0` on them, which
+  needs an open path from each point of such a cube, inside cubes of comparable size, to a point of
+  `∂_𝐚U`, and AD do not give one.
+- **The Sobolev inequality of `ℤᵈ`** is proved, where AD obtain it from that of `ℝᵈ` by affine
+  interpolation: with zero boundary values from the `ℓ¹` inequality, and on cubes by reflection and
+  the `Lᵖ` Poincaré inequality. It discharges the Sobolev hypothesis `ClusterSobolevTwo` of the
+  reverse Hölder inequality in every dimension (`exists_clusterSobolevTwo`); the reverse Hölder and
+  Meyers theorems of the table keep the Sobolev inequality as a hypothesis in their statements.
 - **Proposition 2.4** is proved by counting bad cubes, with a stretched exponential moment of some
   order `r > 0` for the minimal scale in place of every `r < sd/(d + t + s)`. The bound
   `Λ_t(U, 𝒮) ≤ O_{s/t}(C)` stated after the proof of AD, Proposition 2.1, is proved in the form
@@ -999,7 +1016,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 121 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 127 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1014,13 +1031,13 @@ Departures from Armstrong and Dario:
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
   the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the two theorems of
-  [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), the fifteen theorems of
+  [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), the twenty-one theorems of
   [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster),
   the eleven theorems of
   [Localization of the subadditive quantities and the homogenized matrix for d = 2](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2),
   and the nineteen theorems of
   [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration).
-  Each of the 121 reports lists exactly `propext`, `Classical.choice` and
+  Each of the 127 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1051,10 +1068,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1089 Lean files with 198,187 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1098 Lean files with 199,950 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (234 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (247 lines) are counted separately.
 
 ## Building
 
@@ -1173,7 +1190,7 @@ adapted from its revision `7512f4fb` state the changes.
 | [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/c21955fb1c127db67c43b995f47db4543f88f9fd) (Apache License 2.0) | `c21955fb1c127db67c43b995f47db4543f88f9fd` | the 12 modules under `Rigidity/Proofs/Topology/PlanarJordan/`, which are based on Leonardo Bonanno's lean-formalizations and on R. Kirov's [jordan_pick](https://github.com/rkirov/jordan_pick/tree/b3c9b7cf7358bf81a077d78ad67e6e8247869ddd) (Apache License 2.0) |
 | [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/a6fae9f9df6a47c15e338b928807feb20d9da4b0) (Apache License 2.0) | `a6fae9f9df6a47c15e338b928807feb20d9da4b0` | `Rigidity/Proofs/Percolation/Kesten/`: `EdgeCrossing`, `DualDecayRectangle`, `RigidityCrossingAdapter` |
 | [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069) (Apache License 2.0) | `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069` | `Rigidity/Support/PlanarOrderZeroGradient.lean`, `Rigidity/Support/PlanarGreenQuantitativeField.lean`, `Rigidity/Proofs/S3/PlanarCorrectorValid.lean`, `Rigidity/Proofs/S3/PlanarGreenColumn.lean`: theorems of the modules `LatticeOrderZeroApproximation`, `LatticeOrderZeroTranslation`, `LatticeOrderZeroGradient`, `GreenQuantitativeField`, `MeasurableRootedPlane` and `GreenColumnEvent` of `LatticeProb/Prob/Percolation/`, specialized to `d = 2`; `Rigidity/Proofs/Green/LocalNash.lean`: `heat_step_of_faberKrahnOn`, adapted from `heat_step` of `LatticeProb/Graph/OnDiagonal.lean` |
-| Lattice-High-Contrast-Homogenization (a private repository; Apache License 2.0, text in [`Rigidity/Vendor/LHCH/LICENSE`](Rigidity/Vendor/LHCH/LICENSE)) | `f47a932a9f7a07e1692bfe4aae564d02e8ca0944` | the 48 modules under `Rigidity/Vendor/LHCH/`, from the files of the same paths under `LatticeHC/` |
+| Lattice-High-Contrast-Homogenization (a private repository; Apache License 2.0, text in [`Rigidity/Vendor/LHCH/LICENSE`](Rigidity/Vendor/LHCH/LICENSE)) | `f47a932a9f7a07e1692bfe4aae564d02e8ca0944` | the 48 modules under `Rigidity/Vendor/LHCH/`, from the files of the same paths under `LatticeHC/`; [`Rigidity/Proofs/Cluster/SobolevCubePoincare.lean`](Rigidity/Proofs/Cluster/SobolevCubePoincare.lean), adapted from `LatticeHC/Support/Analysis/CubePoincare.lean` (squares replaced by `p`-th powers) |
 
 The repository of Leonardo Bonanno does not state a licence, and none is claimed here for the
 modules copied from it.

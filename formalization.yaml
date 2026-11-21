@@ -319,8 +319,9 @@ fidelity:
     Lattice-High-Contrast-Homogenization modules instead of the continuum one), for the partition
     into good cubes and the inequalities on the cluster in every dimension (Armstrong and Dario, §§2-3:
     good cubes of scale at least three, the weight of Lemma 3.2 through the reach scale of the
-    partition, Lemmas 3.2 and 3.3 and Proposition 3.4 on resolved cubes and for functions of mean zero,
-    the Sobolev inequality of the lattice cube a hypothesis for d >= 3, Proposition 2.4 by counting bad
+    partition, Lemmas 3.2 and 3.3 and Proposition 3.4 on resolved cubes, Proposition 3.4 in three of its
+    four cases (the case w = 0 on the boundary of the cluster is not proved), the Sobolev inequality of
+    Z^d proved on the lattice instead of from that of R^d, Proposition 2.4 by counting bad
     cubes, Gehring's lemma proved on triadic cubes, and Lemma 3.6 and Proposition 3.8 in their
     deterministic parts), for the localization of the planar subadditive quantities and the
     homogenized matrix (Armstrong and Dario, §4.3 and Definition 5.1, d = 2: anchors chosen through
