@@ -322,12 +322,17 @@ fidelity:
     partition, Lemmas 3.2 and 3.3 and Proposition 3.4 on resolved cubes and for functions of mean zero,
     the Sobolev inequality of the lattice cube a hypothesis for d >= 3, Proposition 2.4 by counting bad
     cubes, Gehring's lemma proved on triadic cubes, and Lemma 3.6 and Proposition 3.8 in their
-    deterministic parts), and for the localization of the planar subadditive quantities and the
+    deterministic parts), for the localization of the planar subadditive quantities and the
     homogenized matrix (Armstrong and Dario, §4.3 and Definition 5.1, d = 2: anchors chosen through
     their displacement from the centre, local quantities defined through the partition capped at the
     scale of the cube with approximate stationarity in place of the exact stationarity (4.40) of the
     local partitions, and only the convergence of the expectations, Definition 5.1 and (5.1) proved
-    from Section 5).
+    from Section 5), and for the Dirichlet problem and the excess-decay iteration (Armstrong and Dario,
+    §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,
+    a Hardy-weighted boundary-layer estimate in place of the Meyers and H^2 estimates of
+    Proposition 6.5, the upper bound of Lemma 6.3, Step 1, from the first variation of nu at its
+    maximizer, the inputs on the cluster as hypotheses, and Lemma 7.2 with the excess decay proved
+    for the harmonic functions of Z^d and of the plane).
 
 review:
   status: "model review"

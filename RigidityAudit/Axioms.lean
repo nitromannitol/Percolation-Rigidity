@@ -36,6 +36,19 @@ import Rigidity.Proofs.Percolation.PlanarMuConvergence
 import Rigidity.Proofs.Percolation.PlanarNuQuadratic
 import Rigidity.Proofs.Percolation.PlanarMuLimitBounds
 import Rigidity.Proofs.Percolation.PlanarDuality
+import Rigidity.Proofs.Dirichlet.LemmaSixTwoCoarse
+import Rigidity.Proofs.Dirichlet.CutoffRegions
+import Rigidity.Proofs.Dirichlet.LemmaSixThreeCoarse
+import Rigidity.Proofs.Dirichlet.Interpolation
+import Rigidity.Proofs.Dirichlet.PropSixOne
+import Rigidity.Proofs.Dirichlet.LayerEnergyBound
+import Rigidity.Proofs.Regularity.KIterationGeneral
+import Rigidity.Proofs.Regularity.KIteration
+import Rigidity.Proofs.Regularity.LatticeHarmonicExcess
+import Rigidity.Proofs.Regularity.LatticeHarmonicExcessTwo
+import Rigidity.Proofs.Regularity.PlanarHarmonicRegularity
+import Rigidity.Proofs.Regularity.PlanarHarmonicRegularityTwo
+import Rigidity.Proofs.Regularity.PlanarMesoscopicRegularity
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -48,7 +61,8 @@ planar order-zero estimate and the heat kernel and Green column bounds, the mult
 inequality of Armstrong and Dario (Proposition A.2) with its affine form, and the partition into
 good cubes and the functional and elliptic inequalities on the cluster of Armstrong and Dario
 (§§2–3), and the localization of the planar subadditive quantities with the limits of their
-expectations and the homogenized matrix (§4.3 and the start of §5, `d = 2`);
+expectations and the homogenized matrix (§4.3 and the start of §5, `d = 2`), and the deterministic
+steps of the homogenization of the Dirichlet problem and of the excess-decay iteration (§§6–7);
 `scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
@@ -196,3 +210,25 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.exists_planarAhom_bounds
 #print axioms Rigidity.Percolation.exists_planarMuLimit_two_sided
 #print axioms Rigidity.Percolation.sum_mul_le_planarMuLimit_add_planarNuLimit
+
+-- The deterministic steps of the homogenization of the Dirichlet problem of Armstrong and Dario
+-- (Lemmas 6.2, 6.3 and 6.4, Proposition 6.1) and the excess-decay iteration (Lemmas 7.2 and 7.3)
+#print axioms Rigidity.Dirichlet.innerEdgeEnergy_dirichletSolution_div_le_of_coarse
+#print axioms Rigidity.Dirichlet.patch_cubeCutoff_of_not_mem
+#print axioms Rigidity.Dirichlet.innerEdgeEnergy_patch_div_le_of_coarse
+#print axioms Rigidity.Dirichlet.exists_sum_sq_patch_sub_div_le_of_coarse
+#print axioms Rigidity.Dirichlet.sum_abs_grad_boundaryInterpolation_rpow_div_le
+#print axioms Rigidity.Dirichlet.sum_sq_sub_le_of_inner_energy_chain
+#print axioms Rigidity.Dirichlet.sum_energy_cubeLayer_div_le
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one
+#print axioms Rigidity.Proofs.Regularity.harmonicRegularity_latticeHarmonicClass
+#print axioms Rigidity.Proofs.Regularity.harmonicRegularity_planarHarmonicClass
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero_latticeHarmonic
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one_latticeHarmonic
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero_planar
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one_planar
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_zero_planar
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_one_planar
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_orderZero_origin_planar

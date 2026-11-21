@@ -137,6 +137,26 @@ further = {
          'Rigidity.Percolation.exists_planarAhom_bounds',
          'Rigidity.Percolation.exists_planarMuLimit_two_sided',
          'Rigidity.Percolation.sum_mul_le_planarMuLimit_add_planarNuLimit'],
+    'the Dirichlet problem and the excess-decay iteration of Armstrong and Dario (sections 6 and 7)':
+        ['Rigidity.Dirichlet.innerEdgeEnergy_dirichletSolution_div_le_of_coarse',
+         'Rigidity.Dirichlet.patch_cubeCutoff_of_not_mem',
+         'Rigidity.Dirichlet.innerEdgeEnergy_patch_div_le_of_coarse',
+         'Rigidity.Dirichlet.exists_sum_sq_patch_sub_div_le_of_coarse',
+         'Rigidity.Dirichlet.sum_abs_grad_boundaryInterpolation_rpow_div_le',
+         'Rigidity.Dirichlet.sum_sq_sub_le_of_inner_energy_chain',
+         'Rigidity.Dirichlet.sum_energy_cubeLayer_div_le',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one',
+         'Rigidity.Proofs.Regularity.harmonicRegularity_latticeHarmonicClass',
+         'Rigidity.Proofs.Regularity.harmonicRegularity_planarHarmonicClass',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero_latticeHarmonic',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one_latticeHarmonic',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero_planar',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one_planar',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_zero_planar',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_one_planar',
+         'Rigidity.Proofs.Regularity.armstrongDario_orderZero_origin_planar'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

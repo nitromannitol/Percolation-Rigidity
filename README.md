@@ -909,12 +909,97 @@ Departures from Armstrong and Dario:
   inequality `q · ξ ≤ lim E[−μ] + lim E[ν]` are proved; the identification
   `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q` and the rates of AD, §5, are not.
 
+## The Dirichlet problem and the excess-decay iteration
+
+The proof of Theorem 2 of AD compares a solution on the cluster with the solution of the homogenized
+Dirichlet problem on a cube (AD, §6) and iterates this comparison over the scales to obtain the
+large-scale regularity (AD, §7). The deterministic steps of both are proved, for every `d`: the
+comparison of the energies and the error chain of AD, Proposition 6.1, with the inputs on the
+cluster (the subadditive quantities `μ` and `ν` in every dimension and the convergence rates of
+AD, §5) as hypotheses; and the iteration of AD, Lemma 7.2, with its excess-decay and
+harmonic-approximation hypotheses, the excess decay being proved for the harmonic functions of
+`ℤᵈ` and of the plane.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Dirichlet.innerEdgeEnergy_dirichletSolution_div_le_of_coarse`](Rigidity/Proofs/Dirichlet/LemmaSixTwoCoarse.lean) | AD Lemma 6.2 on the lattice: the normalized homogenized energy of the solution `u_hom` of the discrete `ā`-Dirichlet problem on a cube `Q` of side `L`, with the boundary interpolation `w̃` of the coarsened function as datum, is at most the energy of `u` in `Q` plus the errors of the `μ` test and `C((r + N)/L)^{1−2/s}` times the bound of Lemma 6.4 (iii). |
+| [`Rigidity.Dirichlet.patch_cubeCutoff_of_not_mem`](Rigidity/Proofs/Dirichlet/CutoffRegions.lean) | AD Lemma 6.3 (i) on the lattice: off the cube the patched function is the outer function. |
+| [`Rigidity.Dirichlet.innerEdgeEnergy_patch_div_le_of_coarse`](Rigidity/Proofs/Dirichlet/LemmaSixThreeCoarse.lean) | AD Lemma 6.3 (ii) on the lattice: the energy on the cluster of the patch `ũ` of the `ν`-maximizers and of `u_hom` is at most the homogenized energy of `u_hom` plus the boundary-layer and patching errors. |
+| [`Rigidity.Dirichlet.exists_sum_sq_patch_sub_div_le_of_coarse`](Rigidity/Proofs/Dirichlet/LemmaSixThreeCoarse.lean) | AD Lemma 6.3 (iii) on the lattice: `L^{−d} Σ (ũ − u_hom)²` is at most the `L²` distances of the maximizers to their affine functions plus `C N⁴ r^{−2}` times the bound of Lemma 6.4 (iii). |
+| [`Rigidity.Dirichlet.sum_abs_grad_boundaryInterpolation_rpow_div_le`](Rigidity/Proofs/Dirichlet/Interpolation.lean) | AD Lemma 6.4 (iii) on the lattice: for `1 ≤ s < p`, the normalized `Lˢ` norm of `∇w̃` is at most the moments of the partition sizes times `(V⁻¹ Σ_{C_*} \|∇u 1_{𝐚≠0}\|^p)^{s/p}`. |
+| [`Rigidity.Dirichlet.sum_sq_sub_le_of_inner_energy_chain`](Rigidity/Proofs/Dirichlet/PropSixOne.lean) | AD Proposition 6.1 on the lattice, from the energy comparisons: if `u` is harmonic in `Q`, `ũ = u` off the interior of `Q`, `E_hom(u_hom) ≤ E(u) + δ₁` and `E(ũ) ≤ E_hom(u_hom) + δ₂`, then `Σ (u − u_hom)² ≤ 2P(δ₁ + δ₂)/λ + 2δ₃`, with `P` a Poincaré constant for `ũ − u` and `δ₃` a bound for `Σ (ũ − u_hom)²`. |
+| [`Rigidity.Dirichlet.sum_energy_cubeLayer_div_le`](Rigidity/Proofs/Dirichlet/LayerEnergyBound.lean) | the energy of the discrete homogenized solution in the boundary layer of width `ℓ + 1` of a cube of side `N` is at most twice that of its datum plus `C((ℓ + 1)/N)^γ (N^{−d} Σ \|∇f\|^p)^{2/p}`, for `p > 2` and small `γ > 0`. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2`](Rigidity/Proofs/Regularity/KIterationGeneral.lean) | AD Lemma 7.2 for every `k`, for abstract seminorms with the excess-decay hypothesis: `D_k(r) ≤ C(r/R)^{k+1} D_k(R) + C r^{1−α}(D_0(R)/R + E/r)` for `r ∈ [X ∨ C, R/2]`. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero`](Rigidity/Proofs/Regularity/KIteration.lean) | AD Lemma 7.2 for `k = 0`: `D_0(r) ≤ C(r/R) D_0(R) + C r^{1−α}(D_0(R)/R + E/r)`. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one`](Rigidity/Proofs/Regularity/KIteration.lean) | AD Lemma 7.2 for `k = 1`, with the quadratic polynomials: `D_1(r) ≤ C(r/R)² D_1(R) + C r^{1−α}(D_0(R)/R + E/r)`. |
+| [`Rigidity.Proofs.Regularity.harmonicRegularity_latticeHarmonicClass`](Rigidity/Proofs/Regularity/LatticeHarmonicExcess.lean) | the excess decay of order one of the harmonic functions on the balls of `ℤᵈ`, above a fixed radius. |
+| [`Rigidity.Proofs.Regularity.harmonicRegularity_planarHarmonicClass`](Rigidity/Proofs/Regularity/PlanarHarmonicRegularity.lean) | the excess decay of order one of the harmonic functions on the discs of `ℝ²`, in the normalized `L²` norms, with the constant `1024`. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero_latticeHarmonic`](Rigidity/Proofs/Regularity/LatticeHarmonicExcess.lean) | AD Lemma 7.2 for `k = 0` with the harmonic functions on the balls of `ℤᵈ`, from the harmonic-approximation hypothesis alone. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one_latticeHarmonic`](Rigidity/Proofs/Regularity/LatticeHarmonicExcessTwo.lean) | AD Lemma 7.2 for `k = 1` with the harmonic functions and the harmonic quadratic functions on the balls of `ℤᵈ`, from the harmonic-approximation hypothesis alone. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_zero_planar`](Rigidity/Proofs/Regularity/PlanarHarmonicRegularity.lean) | AD Lemma 7.2 for `k = 0` in the plane, in the normalized `L²` norms of Lebesgue measure with the harmonic functions on discs, from the harmonic-approximation hypothesis alone. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_one_planar`](Rigidity/Proofs/Regularity/PlanarHarmonicRegularityTwo.lean) | AD Lemma 7.2 for `k = 1` in the plane, from the harmonic-approximation hypothesis alone. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_zero_planar`](Rigidity/Proofs/Regularity/PlanarMesoscopicRegularity.lean) | the iteration of AD Lemma 7.3 for `k = 0` in the plane, from the harmonic-approximation hypothesis. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_one_planar`](Rigidity/Proofs/Regularity/PlanarMesoscopicRegularity.lean) | the same for `k = 1`. |
+| [`Rigidity.Proofs.Regularity.armstrongDario_orderZero_origin_planar`](Rigidity/Proofs/Regularity/PlanarMesoscopicRegularity.lean) | order-zero regularity at the origin in the plane: one constant `φ` with `‖u − φ‖_{L̲²(B_r)} ≤ C(r/R)B` for `r ∈ [X ∨ C, R/2]`, under the harmonic-approximation hypothesis. |
+
+The nineteen theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+are in [`Rigidity/Proofs/Dirichlet/`](Rigidity/Proofs/Dirichlet/) and
+[`Rigidity/Proofs/Regularity/`](Rigidity/Proofs/Regularity/).
+
+1. **The discrete Dirichlet problem** (`BoundaryData.lean`, `BoundaryLayer.lean`, `Hardy*.lean`,
+   `WeightedEnergy.lean`, `LayerEnergy*.lean`). Existence and uniqueness, the Dirichlet principle,
+   the energy identity and the maximum principle on lattice cubes, and the energy of the
+   homogenized solution in a boundary layer through a Hardy-weighted energy estimate.
+2. **Lemma 6.2** (`LemmaSixTwo*.lean`, `TrialEnergy*.lean`, `MuTest.lean`, `Mesoscopic*.lean`,
+   `CubeTiling.lean`, `CubeStokes.lean`). The coarsened function, cut off near the boundary and
+   averaged over the translates of a mesoscopic cube, is a trial function for the homogenized
+   energy, compared with the energy of `u` through the `μ` test.
+3. **Lemma 6.3** (`LemmaSixThree*.lean`, `Patching*.lean`, `Tile*.lean`, `AffinePatch.lean`,
+   `InteriorH2.lean`, `SecondDifferences.lean`, `BoundaryCaccioppoli.lean`). The `ν`-maximizers on
+   the tiles are patched along the affine approximations of `u_hom`, with the interior second
+   differences of `u_hom` and the boundary-layer energy.
+4. **Lemma 6.4 and Proposition 6.1** (`Interpolation.lean`, `EnergyComparison.lean`,
+   `DirichletError.lean`, `PropSixOne.lean`). The boundary interpolation of the coarsened function is
+   bounded by Lemmas 3.2 and 3.3, and the two energy comparisons give the `L²` error by the
+   Pythagorean identity for harmonic functions.
+5. **The iteration** (`BallExcess.lean`, `KIteration*.lean`, `SinglePolynomial.lean`). Lemma 7.2 is
+   proved for abstract seminorms with a reverse monotonicity, Poincaré and excess-decay hypotheses,
+   for every `k`, and for `k = 0, 1` in cluster, lattice and continuum instances.
+6. **Excess decay** (`LatticeHarmonic*.lean`, `MixedDifferenceSobolev.lean`, `DiscreteTaylor.lean`,
+   `PlanarHarmonic*.lean`). For harmonic functions on the balls of `ℤᵈ` by discrete Taylor
+   expansions and Sobolev bounds of mixed differences; in the plane from the harmonic functions as
+   real parts of holomorphic functions, the Borel–Carathéodory and Cauchy estimates and the
+   mean-value property.
+
+Departures from Armstrong and Dario:
+
+- **The homogenized problem is discrete.** `u_hom` is the solution of the discrete Dirichlet problem
+  for the constant conductance `ā` on the lattice cube, with the boundary interpolation `w̃` of the
+  coarsened function as datum; AD use the continuum problem on the cube with a mollified datum.
+  Lemma 6.4 (i) and (ii) are therefore not needed and (iv) is not used; Lemma 6.2 averages over all
+  translates of the mesoscopic cube, and the energies are those of the edges inside `Q`.
+- **No Meyers estimate for `u_hom`.** AD bound the boundary-layer energy of `u_hom` by the Meyers and
+  `H²` estimates of AD, Proposition 6.5 (from Giusti); the Lean proof uses the interior second
+  differences and a Hardy-weighted energy estimate on the lattice.
+- **Lemma 6.3, Step 1.** Testing `v_y` in `μ(y + □_n, q)` gives a lower bound for the energy of
+  `v_y`; the upper bound needed is obtained from the first variation of `ν` at its maximizer `v_y`,
+  `E(v_y) = ⟨p, 𝐚∇v_y⟩`, so that `ν = E(v_y)/(2\|cl\|)` (`energy_le_of_nu_maximizer`).
+- **Inputs on the cluster.** The `μ` test, the `ν`-maximizers and their Poincaré bounds, the
+  convergence rates of AD, §5, and the Poincaré inequality for `ũ − u` enter as hypotheses.
+- **Lemma 7.2.** The excess decay of `ā`-harmonic functions is proved for `ā = ½σ²I` (AD note that `ā`
+  is a multiple of the identity, by the symmetries of the model): for the harmonic functions of
+  `ℤᵈ`, and in the plane for the continuum norms of AD; for `d ≥ 3` the continuum excess decay is not
+  proved. The harmonic approximation (AD, Lemma 7.1) and the transfer from the coarsened function to
+  `u` in AD, Lemma 7.3, remain hypotheses; the general `k` follows the case `k = 0` with the excess
+  over the polynomials of degree `k`, whose details AD omit, referring to Step 3 of the proof of
+  Lemma 2.4 of Armstrong, Kuusi and Mourrat.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 102 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 121 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -931,9 +1016,11 @@ Departures from Armstrong and Dario:
   the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the two theorems of
   [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), the fifteen theorems of
   [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster),
-  and the eleven theorems of
-  [Localization of the subadditive quantities and the homogenized matrix for d = 2](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2).
-  Each of the 102 reports lists exactly `propext`, `Classical.choice` and
+  the eleven theorems of
+  [Localization of the subadditive quantities and the homogenized matrix for d = 2](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2),
+  and the nineteen theorems of
+  [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration).
+  Each of the 121 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -964,10 +1051,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1007 Lean files with 180,827 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1089 Lean files with 198,187 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (198 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (234 lines) are counted separately.
 
 ## Building
 
@@ -1037,9 +1124,11 @@ Rigidity/
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
     Cluster/                  the coarse-grained and elliptic inequalities on the cluster of Armstrong and Dario (AD §3)
+    Dirichlet/                the homogenization error for the Dirichlet problem of Armstrong and Dario (AD §6)
     Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3
     Multiscale/               the multiscale Poincaré inequality of Armstrong and Dario (Proposition A.2)
     Partition/                the partition of ℤᵈ into good triadic cubes of Armstrong and Dario (AD §2)
+    Regularity/               the excess-decay iteration of Armstrong and Dario (AD §7)
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
     Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)
