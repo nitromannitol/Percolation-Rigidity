@@ -87,4 +87,29 @@ theorem sum_cornerCube_coord_sub (y : Vertex d) (N : ℕ) (k : Fin d) :
       exact_mod_cast this.symm
   rw [h1, sum_Ico_toNat_sub (y k) N (fun s => (s : ℝ)), sum_range_natCast]
 
+/-- **The mesoscopic affine approximation in centred form**:
+`ℓ_y(x) = ζ(y) + Σ_k p_k(y) ((x_k − y_k) − (N − 1)/2)`. -/
+theorem cubeAffine_eq {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (y x : Vertex d) :
+    cubeAffine N g y x = cubeAverage N g y +
+      ∑ k, cubeSlope N g y k * (((x k - y k : ℤ) : ℝ) - ((N : ℝ) - 1) / 2) := by
+  have hN' : (0 : ℝ) < N := by exact_mod_cast hN
+  unfold cubeAffine
+  set p := cubeSlope N g y
+  have hav : cubeAverage N (fun z => g z - ∑ j, p j * ((z j - y j : ℤ) : ℝ)) y =
+      cubeAverage N g y - ∑ j, p j * (((N : ℝ) - 1) / 2) := by
+    unfold cubeAverage
+    rw [Finset.sum_sub_distrib, Finset.sum_comm, sub_div]
+    congr 1
+    rw [Finset.sum_div]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    rw [← Finset.mul_sum, sum_cornerCube_coord_sub]
+    have hd : 1 ≤ d := Nat.one_le_iff_ne_zero.mpr fun h0 => (h0 ▸ j).elim0
+    have hpow : (N : ℝ) ^ d = (N : ℝ) ^ (d - 1) * N := by
+      rw [← pow_succ, Nat.sub_add_cancel hd]
+    rw [hpow]
+    field_simp
+  rw [hav]
+  simp only [mul_sub, Finset.sum_sub_distrib]
+  ring
+
 end Rigidity.Dirichlet
