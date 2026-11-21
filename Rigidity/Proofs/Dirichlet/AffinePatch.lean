@@ -149,4 +149,51 @@ theorem cubeAffine_neighbour_sub {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (
   rw [e1, e2]
   linarith [key, hdiff]
 
+/-- **The jump across a face, bounded by slope oscillations**: for an edge `(x, x + e_j)` from the
+cube `y + □` to the neighbouring cube `y' = y + N e_j`,
+`(ℓ_{y'}(x + e_j) − ℓ_y(x))² ≤ 3 ((Σ_{t<N} |p_j(y + t e_j) − p_j(y)|)² +
+  N² (Σ_k |p_k(y') − p_k(y)|)² + p_j(y)²)`. -/
+theorem sq_cubeAffine_neighbour_sub_le {N : ℕ} (hN : 0 < N) (g : Vertex d → ℝ) (y x : Vertex d)
+    (j : Fin d) (hx : x + unit j ∈ (cornerCube (y + (N : ℤ) • unit j) N).vertices) :
+    (cubeAffine N g (y + (N : ℤ) • unit j) (x + unit j) - cubeAffine N g y x) ^ 2 ≤
+      3 * ((∑ t ∈ Finset.range N,
+          |cubeSlope N g (y + (t : ℤ) • unit j) j - cubeSlope N g y j|) ^ 2 +
+        (N : ℝ) ^ 2 * (∑ k, |cubeSlope N g (y + (N : ℤ) • unit j) k - cubeSlope N g y k|) ^ 2 +
+        cubeSlope N g y j ^ 2) := by
+  rw [cubeAffine_neighbour_sub hN g y x j, cubeAverage_add_sub_sub_eq_sum]
+  set a := ∑ t ∈ Finset.range N, (cubeSlope N g (y + (t : ℤ) • unit j) j - cubeSlope N g y j)
+  set b := ∑ k, (cubeSlope N g (y + (N : ℤ) • unit j) k - cubeSlope N g y k) *
+    ((((x + unit j) k - (y + (N : ℤ) • unit j) k : ℤ) : ℝ) - ((N : ℝ) - 1) / 2)
+  set c := cubeSlope N g y j
+  have hN' : (0 : ℝ) < N := by exact_mod_cast hN
+  have ha : |a| ≤ ∑ t ∈ Finset.range N,
+      |cubeSlope N g (y + (t : ℤ) • unit j) j - cubeSlope N g y j| :=
+    Finset.abs_sum_le_sum_abs _ _
+  have hb : |b| ≤ (N : ℝ) * ∑ k, |cubeSlope N g (y + (N : ℤ) • unit j) k - cubeSlope N g y k| := by
+    refine (Finset.abs_sum_le_sum_abs _ _).trans ?_
+    rw [Finset.mul_sum]
+    refine Finset.sum_le_sum fun k _ => ?_
+    rw [abs_mul, mul_comm]
+    refine mul_le_mul_of_nonneg_right ?_ (abs_nonneg _)
+    rw [IntegerCube.mem_vertices] at hx
+    have hk := hx k
+    simp only [cornerCube] at hk
+    rw [abs_le]
+    have h1 : (0 : ℝ) ≤ (((x + unit j) k - (y + (N : ℤ) • unit j) k : ℤ) : ℝ) := by
+      exact_mod_cast (by linarith [hk.1] : (0 : ℤ) ≤ (x + unit j) k - (y + (N : ℤ) • unit j) k)
+    have h2 : (((x + unit j) k - (y + (N : ℤ) • unit j) k : ℤ) : ℝ) ≤ (N : ℝ) - 1 := by
+      have : (x + unit j) k - (y + (N : ℤ) • unit j) k ≤ (N : ℤ) - 1 := by linarith [hk.2]
+      exact_mod_cast this
+    constructor <;> linarith
+  have hA0 : 0 ≤ ∑ t ∈ Finset.range N,
+      |cubeSlope N g (y + (t : ℤ) • unit j) j - cubeSlope N g y j| :=
+    Finset.sum_nonneg fun _ _ => abs_nonneg _
+  have hB0 : 0 ≤ (N : ℝ) * ∑ k, |cubeSlope N g (y + (N : ℤ) • unit j) k - cubeSlope N g y k| :=
+    mul_nonneg hN'.le (Finset.sum_nonneg fun _ _ => abs_nonneg _)
+  have ha2 := pow_le_pow_left₀ (abs_nonneg a) ha 2
+  have hb2 := pow_le_pow_left₀ (abs_nonneg b) hb 2
+  rw [sq_abs] at ha2 hb2
+  rw [mul_pow] at hb2
+  nlinarith [sq_nonneg (a - b), sq_nonneg (a - c), sq_nonneg (b - c)]
+
 end Rigidity.Dirichlet
