@@ -12,7 +12,7 @@ and similarly, if `v` solves the first variation equation of `ν(U, p)`,
 
 `F_p(w) - B(w, w) / 2 + B(w - v, w - v) / 2 = |U| ν(U, p)`
 
-(Armstrong and Dario, Lemma 4.1). Testing `μ(V, q)` and `ν(V, p)` on the resolved subcubes `V` of
+(Armstrong and Dario, Lemma 4.2). Testing `μ(V, q)` and `ν(V, p)` on the resolved subcubes `V` of
 scale `n` with the restrictions of the optimizers on `U` and keeping the second variation term, we
 obtain the subadditivity inequalities with the energies of the differences on the left side:
 
@@ -20,7 +20,7 @@ obtain the subadditivity inequalities with the energies of the differences on th
 `∑_V B_V(v|_V - v_V)/2 + |U| ν(U, p) ≤ ∑_V |V| ν(V, p) + F_p^{exc}(v)`,
 
 with the same error terms as in the subadditivity of `μ` and `ν`. This is the deterministic step
-in the proof of Lemma 5.4 of Armstrong and Dario (display (5.12) and its analogue for `ν`).
+in the proof of Lemma 5.4 of Armstrong and Dario (display (5.11) and its analogue for `ν`).
 -/
 
 open LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
@@ -38,7 +38,7 @@ theorem clusterForm_sub_sub {U : TriadicCube 2} (u w : ClusterFun ω U) :
   rw [clusterForm_symm u w]
   ring
 
-/-- **Second variation for `μ`** (Armstrong and Dario, Lemma 4.1). -/
+/-- **Second variation for `μ`** (Armstrong and Dario, Lemma 4.2). -/
 theorem planarMu_mul_volume_add_clusterForm_sub (hP : PlanarPartitionEvent ω)
     {U : TriadicCube 2} (hU : PlanarResolved ω U) (q : Fin 2 → ℝ) {u : ClusterFun ω U}
     (hu : u ∈ clusterHarmonic ω U)
@@ -69,7 +69,7 @@ theorem planarMu_mul_volume_eq (hP : PlanarPartitionEvent ω) {U : TriadicCube 2
   simp only [sub_self, map_zero, zero_div, add_zero] at h
   linarith
 
-/-- **Second variation for `ν`** (Armstrong and Dario, Lemma 4.1). -/
+/-- **Second variation for `ν`** (Armstrong and Dario, Lemma 4.2). -/
 theorem fluxPairing_sub_add_clusterForm_sub {U : TriadicCube 2} (p : Fin 2 → ℝ)
     {v : ClusterFun ω U} (hv : v ∈ clusterHarmonic ω U)
     (hvar : ∀ w ∈ clusterHarmonic ω U, clusterForm ω U w v = fluxPairing ω U p w)
@@ -172,17 +172,17 @@ theorem coarsePairing_eq_sum_restrict_add (hP : PlanarPartitionEvent ω) {U : Tr
   exact Finset.sum_congr rfl fun i _ => hsplit x hx i
 
 /-- **Subadditivity of `μ` with the energies of the differences** (Armstrong and Dario, proof of
-Lemma 5.4, display (5.12), planar form). For any solutions `u_V` of the first variation equations
-of `μ(V, q)` on the resolved subcubes `V` of scale `n`, the restriction of the minimizer `u` of
-`μ(U, q)` satisfies
+Lemma 5.4, display (5.11), planar form). For any solutions `u_V` of the first variation equations
+of `μ(V, q)` on the resolved subcubes `V` of scale `n`, the restriction of any solution `u` of the
+first variation equation of `μ(U, q)` satisfies
 `∑_V B_V(u|_V - u_V)/2 + ∑_{x ∈ U} 1{V(x) resolved} μ(V(x), q) ≤ |U| μ(U, q) + E_q(u)`. -/
 theorem sum_clusterForm_sub_add_sum_planarMu_subcubes_le (hP : PlanarPartitionEvent ω)
     {U : TriadicCube 2} (hU : PlanarResolved ω U) {n : ℕ} (hn : n ≤ U.scale) (q : Fin 2 → ℝ)
+    {u : ClusterFun ω U} (hu : u ∈ clusterHarmonic ω U)
+    (hvar : ∀ w ∈ clusterHarmonic ω U, clusterForm ω U w u = coarsePairing ω U q w)
     (uV : (V : TriadicCube 2) → ClusterFun ω V)
     (huV : ∀ V ∈ subcubesAt U n, PlanarResolved ω V → uV V ∈ clusterHarmonic ω V ∧
       ∀ w ∈ clusterHarmonic ω V, clusterForm ω V w (uV V) = coarsePairing ω V q w) :
-    ∃ u ∈ clusterHarmonic ω U, (∀ w ∈ clusterHarmonic ω U,
-        clusterForm ω U w u = coarsePairing ω U q w) ∧
       ∑ V ∈ (subcubesAt U n).filter (fun V => PlanarResolved ω V),
           clusterForm ω V (clusterRestrictExt V u - uV V) (clusterRestrictExt V u - uV V) / 2 +
         ∑ x ∈ U.toIntegerCube.vertices,
@@ -192,8 +192,6 @@ theorem sum_clusterForm_sub_add_sum_planarMu_subcubes_le (hP : PlanarPartitionEv
               ¬ (PlanarResolved ω (scaleCube n x) ∧
                 x + unitVertex i ∈ (scaleCube n x).toIntegerCube.vertices) then
             q i * (coarsen ω U u (x + unitVertex i) - coarsen ω U u x) else 0) := by
-  obtain ⟨u, hu, hvar, hμ⟩ := exists_planarMu_minimizer hP hU q
-  refine ⟨u, hu, hvar, ?_⟩
   set T := (subcubesAt U n).filter (fun V => PlanarResolved ω V)
   have hV : ∀ V ∈ T, clusterForm ω V (clusterRestrictExt V u - uV V)
         (clusterRestrictExt V u - uV V) / 2 + V.volume * planarMu ω V q =
@@ -211,7 +209,8 @@ theorem sum_clusterForm_sub_add_sum_planarMu_subcubes_le (hP : PlanarPartitionEv
   have hBU := sum_clusterForm_restrict_le hn T (Finset.filter_subset _ _) u
   have hℓ := coarsePairing_eq_sum_restrict_add hP hn q u
   have hμU : planarMu ω U q * U.volume = clusterForm ω U u u / 2 - coarsePairing ω U q u := by
-    rw [hμ, div_mul_cancel₀ _ U.volume_pos.ne']
+    rw [planarMu_mul_volume_eq hP hU q hu hvar, hvar u hu]
+    ring
   have hL : ∑ x ∈ U.toIntegerCube.vertices,
       (if PlanarResolved ω (scaleCube n x) then planarMu ω (scaleCube n x) q else 0) =
       ∑ V ∈ T, V.volume * planarMu ω V q :=
@@ -237,17 +236,17 @@ theorem fluxPairing_eq_sum_restrict_add {U : TriadicCube 2} {n : ℕ} (hn : n �
   split_ifs <;> simp
 
 /-- **Subadditivity of `ν` with the energies of the differences** (Armstrong and Dario, proof of
-Lemma 5.4, analogue of display (5.12) for `ν`, planar form). For any solutions `v_V` of the first
-variation equations of `ν(V, p)` on the resolved subcubes `V` of scale `n`, the restriction of the
-maximizer `v` of `ν(U, p)` satisfies
+Lemma 5.4, analogue of display (5.11) for `ν`, planar form). For any solutions `v_V` of the first
+variation equations of `ν(V, p)` on the resolved subcubes `V` of scale `n`, the restriction of any
+solution `v` of the first variation equation of `ν(U, p)` satisfies
 `∑_V B_V(v|_V - v_V)/2 + |U| ν(U, p) ≤ ∑_{x ∈ U} 1{V(x) resolved} ν(V(x), p) + F_p^{exc}(v)`. -/
 theorem sum_clusterForm_sub_add_planarNu_le_sum_subcubes (hP : PlanarPartitionEvent ω)
     {U : TriadicCube 2} {n : ℕ} (hn : n ≤ U.scale) (p : Fin 2 → ℝ)
+    {v : ClusterFun ω U} (hv : v ∈ clusterHarmonic ω U)
+    (hvar : ∀ w ∈ clusterHarmonic ω U, clusterForm ω U w v = fluxPairing ω U p w)
     (vV : (V : TriadicCube 2) → ClusterFun ω V)
     (hvV : ∀ V ∈ subcubesAt U n, PlanarResolved ω V → vV V ∈ clusterHarmonic ω V ∧
       ∀ w ∈ clusterHarmonic ω V, clusterForm ω V w (vV V) = fluxPairing ω V p w) :
-    ∃ v ∈ clusterHarmonic ω U, (∀ w ∈ clusterHarmonic ω U,
-        clusterForm ω U w v = fluxPairing ω U p w) ∧
       ∑ V ∈ (subcubesAt U n).filter (fun V => PlanarResolved ω V),
           clusterForm ω V (clusterRestrictExt V v - vV V) (clusterRestrictExt V v - vV V) / 2 +
         planarNu ω U p * U.volume ≤
@@ -255,8 +254,6 @@ theorem sum_clusterForm_sub_add_planarNu_le_sum_subcubes (hP : PlanarPartitionEv
           (if PlanarResolved ω (scaleCube n x) then planarNu ω (scaleCube n x) p else 0) +
         (1 / 2 : ℝ) * ∑ x ∈ clusterVertices ω U, ∑ y ∈ clusterVertices ω U,
           (if IsSubcubePair ω n x y then 0 else fluxTerm ω U p v x y) := by
-  obtain ⟨v, hv, hvar, hν⟩ := exists_planarNu_maximizer (ω := ω) (U := U) p
-  refine ⟨v, hv, hvar, ?_⟩
   set T := (subcubesAt U n).filter (fun V => PlanarResolved ω V)
   have hV : ∀ V ∈ T, fluxPairing ω V p (clusterRestrictExt V v) -
         clusterForm ω V (clusterRestrictExt V v) (clusterRestrictExt V v) / 2 +
@@ -273,7 +270,8 @@ theorem sum_clusterForm_sub_add_planarNu_le_sum_subcubes (hP : PlanarPartitionEv
   have hBU := sum_clusterForm_restrict_le hn T (Finset.filter_subset _ _) v
   have hF := fluxPairing_eq_sum_restrict_add (ω := ω) hn p v
   have hνU : planarNu ω U p * U.volume = fluxPairing ω U p v - clusterForm ω U v v / 2 := by
-    rw [hν, div_mul_cancel₀ _ U.volume_pos.ne']
+    rw [planarNu_mul_volume_eq p hv hvar, hvar v hv]
+    ring
   have hL : ∑ x ∈ U.toIntegerCube.vertices,
       (if PlanarResolved ω (scaleCube n x) then planarNu ω (scaleCube n x) p else 0) =
       ∑ V ∈ T, V.volume * planarNu ω V p :=
