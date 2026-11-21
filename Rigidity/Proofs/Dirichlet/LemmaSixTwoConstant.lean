@@ -8,7 +8,8 @@ the `μ` test of `edgeEnergy_dirichletSolution_div_le_of_mu_test_density` holds 
 the energy density `e = Σ_k a_k (∇_k w)²` of the datum: by Cauchy–Schwarz the edge average `G_k`
 of `∇_k w` satisfies `G_k² ≤ N^{-d} Σ_{x+□} (∇_k w)²`, and `2 p G − p² ≤ G²`
 (`mu_test_constCond`). So the hypotheses of the lattice form of Lemma 6.2 are satisfied in this
-case (`edgeEnergy_dirichletSolution_div_le_constCond`).
+case (`edgeEnergy_dirichletSolution_div_le_constCond`, and
+`edgeEnergy_dirichletSolution_div_le_constCond_trim` for the cutoff on the trimmed cube).
 -/
 
 open Finset LatticeProb LatticeHC
@@ -90,6 +91,33 @@ theorem edgeEnergy_dirichletSolution_div_le_constCond (hd : 1 ≤ d) (a : Fin d 
               ∑ y ∈ B, ∑ k : Fin d, |w (y + unit k) - w y| ^ s) / (Q.size : ℝ) ^ d) ^ (2 / s)) := by
   have h := edgeEnergy_dirichletSolution_div_le_of_mu_test_density hd a ha haΛ Q hL hN hr w hs B
     hB (fun x => -(∑ k, a k * cubeSlope N w x k ^ 2) / 2) (fun _ => 0)
+    (fun y => ∑ k, a k * (w (y + unit k) - w y) ^ 2)
+    (fun y => Finset.sum_nonneg fun k _ => mul_nonneg (ha k).le (sq_nonneg _))
+    (fun x _ => mu_test_constCond a (fun k => (ha k).le) N w x)
+    (fun x _ => by
+      have hq : ∑ k, (a k * cubeSlope N w x k) ^ 2 / a k = ∑ k, a k * cubeSlope N w x k ^ 2 :=
+        Finset.sum_congr rfl fun k _ => by
+          have := (ha k).ne'
+          field_simp
+      rw [hq, neg_div, add_neg_cancel, abs_zero])
+  simpa only [Finset.sum_const_zero, mul_zero, add_zero] using h
+
+/-- **Lemma 6.2 on the lattice for constant conductances, with all cubes inside `Q`.** -/
+theorem edgeEnergy_dirichletSolution_div_le_constCond_trim (hd : 1 ≤ d) (a : Fin d → ℝ)
+    (ha : ∀ k, 0 < a k) {Λ : ℝ} (haΛ : ∀ k, a k ≤ Λ) (Q : IntegerCube d) (hL : 0 < Q.size)
+    {N r : ℕ} (hN : 0 < N) (hr : 0 < r) (w : Vertex d → ℝ) {s : ℝ} (hs : 2 ≤ s) :
+    edgeEnergy (constCond a) Q.vertices (dirichletSolution (constCond a) (cubeInterior Q) w) /
+        (Q.size : ℝ) ^ d ≤
+      (∑ y ∈ Q.vertices, ∑ k, a k * (w (y + unit k) - w y) ^ 2 +
+          2 * (Λ / √(N : ℝ) * ∑ y ∈ Q.vertices, ∑ k, (w (y + unit k) - w y) ^ 2)) /
+            (Q.size : ℝ) ^ d +
+        Λ * ((2 * d * ((r + 1 + N : ℕ) : ℝ) / Q.size) ^ (1 - 2 / s) *
+          ((d : ℝ) ^ (s / 2 - 1) *
+            ((1 + (3 : ℝ) ^ (s - 1) * (1 + 2 ^ s + (d : ℝ) ^ s * ((N : ℝ) / r) ^ s)) *
+              ∑ y ∈ Q.vertices, ∑ k : Fin d, |w (y + unit k) - w y| ^ s) /
+                (Q.size : ℝ) ^ d) ^ (2 / s)) := by
+  have h := edgeEnergy_dirichletSolution_div_le_of_mu_test_trim hd a ha haΛ Q hL hN hr w hs
+    (fun x => -(∑ k, a k * cubeSlope N w x k ^ 2) / 2) (fun _ => 0)
     (fun y => ∑ k, a k * (w (y + unit k) - w y) ^ 2)
     (fun y => Finset.sum_nonneg fun k _ => mul_nonneg (ha k).le (sq_nonneg _))
     (fun x _ => mu_test_constCond a (fun k => (ha k).le) N w x)
