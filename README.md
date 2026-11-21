@@ -331,14 +331,16 @@ states that there are a width `w ≥ 1` and a constant `ρ > 0` such that for ev
 `U = c + [0, n)ᵈ`, every direction `a` and every `k` with `(k + 1) w ≤ n`, any two vertices of the
 slab `{x ∈ U : c_a + k w ≤ x_a < c_a + (k + 1) w}` are joined by an open path inside the slab with
 probability at least `ρ`. The theorem depends on exactly `propext`, `Classical.choice` and
-`Quot.sound`. The same file derives from this bound the triadic stopping partition with its
-exponential size moment and its localization bound
+`Quot.sound`, and its axiom report is checked with those of the numbered results. The same file
+derives from this bound the triadic stopping partition with its exponential size moment and its
+localization bound
 (`Rigidity.Percolation.triadic_partition_estimates_of_uniformCubeSlabConnectivity`). The literature
 inputs `WellConnectedInput` and `ClusterDensityConcentrationInput` remain hypotheses.
 
-The proof follows Chapter 2 of D. Contreras, *Percolation on graphs of polynomial growth*, ETH
-Zürich dissertation (2022), doi:10.3929/ethz-b-000585148, which proves the theorem of Grimmett and
-Marstrand by a bootstrap, and concludes by a static renormalization in slabs. The files are in
+Steps 1 to 3 below follow Chapter 2 of D. Contreras, *Percolation on graphs of polynomial growth*,
+ETH Zürich dissertation (2022), doi:10.3929/ethz-b-000585148, which proves the theorem of Grimmett
+and Marstrand by a bootstrap. Step 4 is the route of the Lean proof from the bootstrap to slabs, a
+static renormalization in slabs. The files are in
 [`Rigidity/Percolation/Bootstrap/`](Rigidity/Percolation/Bootstrap/) and
 [`Rigidity/Percolation/Blocks/`](Rigidity/Percolation/Blocks/).
 
@@ -383,10 +385,12 @@ scale and each bond is sprinkled at most once, so the number of scales is not re
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 50 axiom
-  reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, and the six
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 51 axiom
+  reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
-  2.5, Lemma 2.14). Each of the 50 reports lists exactly `propext`, `Classical.choice` and
+  2.5, Lemma 2.14), and the slab connectivity theorem of
+  [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point). Each of
+  the 51 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -417,10 +421,10 @@ scale and each bond is sprinkled at most once, so the number of scales is not re
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 638 Lean files with 123,103 lines, on top of mathlib and
-Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,210 lines; see
+`Rigidity/` and `Rigidity.lean`: 638 Lean files with 123,099 lines, on top of mathlib and
+Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,205 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (78 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (83 lines) are counted separately.
 
 ## Building
 
@@ -491,7 +495,7 @@ Rigidity/
   Support/                    definitions and lemmas used by the frozen results
   Vendor/                     modules copied from other repositories (see Copied code)
 RigidityAudit/
-  Axioms.lean                 the axiom report of every numbered result
+  Axioms.lean                 the axiom report of every numbered result and of the slab connectivity
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
 paper/                        the arXiv v2 source and the corrected draft (LaTeX and PDF), figures,
@@ -515,8 +519,9 @@ tooling and review process are disclosed in [`formalization.yaml`](formalization
 ## Copied code
 
 Some modules are copied from other repositories, with attribution, and not through a Lake
-dependency. Each copied file starts with a header naming its source repository, file and commit
-and the changes made.
+dependency. Each copied file starts with a header naming its source repository, file and commit.
+The headers of the modules from formal-math, openai/math and Leonardo Bonanno's repository also
+state the changes made; the modules from Lattice-Probability are adapted from the named revision.
 
 | Source | Commit | Files in this repository |
 | --- | --- | --- |

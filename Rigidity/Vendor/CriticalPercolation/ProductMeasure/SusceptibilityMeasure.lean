@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/SusceptibilityMeasure.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.SusceptibilityMeasure in place of OAI.Probability.CriticalPercolation.ProductMeasure.SusceptibilityMeasure, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.SusceptibilityMeasure in place of OAI.Probability.CriticalPercolation.ProductMeasure.SusceptibilityMeasure, and the module paths of local imports are changed in the same way; a module docstring is added; in proofs, `ite_eq_left` and `ite_eq_right` are replaced by `if_pos` and `if_neg` respectively; the steps `simp only [w,BernoulliProduct.bitWeight,ite_false]` and `simp only [w,BernoulliProduct.bitWeight,ite_true]` are replaced by `simp [w, BernoulliProduct.bitWeight]`; statements are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.Clusters.ClusterTail
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.FiniteInterpolationMeasure

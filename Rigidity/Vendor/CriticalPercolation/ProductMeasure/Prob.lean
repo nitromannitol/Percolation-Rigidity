@@ -1,8 +1,8 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/Prob.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Prob in place of OAI.Probability.CriticalPercolation.ProductMeasure.Prob, and the module paths of local imports are changed in the same way; the import of LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.ExpectMulReal (not copied here) is replaced by the imports of the copied modules it reaches,
-   namely LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Distribution, LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Density;
-   the unused declarations `expect_mul_ge_antitone`, `prob_harris_decreasing` (they need modules not copied here) are omitted; statements and proofs of the declarations kept are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.Prob in place of OAI.Probability.CriticalPercolation.ProductMeasure.Prob, and the module paths of local imports are changed in the same way; the import of OAI.Probability.CriticalPercolation.ProductMeasure.ExpectMulReal (not copied here) is replaced by the imports of the copied modules it reaches,
+   namely Rigidity.Vendor.CriticalPercolation.ProductMeasure.Distribution, Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density;
+   the unused declarations `expect_mul_ge_antitone`, `prob_harris_decreasing` (they need modules not copied here) are omitted; a module docstring is added; statements and proofs of the declarations kept are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.Distribution
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density

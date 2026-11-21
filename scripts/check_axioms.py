@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Require one axiom report for each declaration of RigidityAudit/Axioms.lean, listing no axiom
-other than propext, Classical.choice and Quot.sound.
+other than propext, Classical.choice and Quot.sound: the numbered results of the paper and the
+further proved results listed below.
 
     lake env lean RigidityAudit/Axioms.lean 2>&1 | tee axioms-audit.log
     python3 scripts/check_axioms.py axioms-audit.log
@@ -67,11 +68,16 @@ results = {
     'Theorem 6.5': ['Rigidity.Assembly.Main.slowMixing'],
 }
 cited = {'Proposition 2.3', 'Theorem 2.4', 'Theorem 2.5', 'Lemma 2.13', 'Lemma 2.14'}
+# Further proved results that are not numbered results of the paper.
+further = {
+    'Slab connectivity (Grimmett and Marstrand, d >= 3)':
+        ['Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt'],
+}
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
 if len(results) != 48:
     raise SystemExit(f'The list must have the 48 numbered results, not {len(results)}')
-expected = [name for names in results.values() for name in names]
+expected = [name for names in list(results.values()) + list(further.values()) for name in names]
 if len(set(expected)) != len(expected):
     raise SystemExit('A declaration is listed twice')
 if len(sys.argv) != 2:
@@ -99,3 +105,5 @@ print(f'All {len(results)} numbered results checked: the {len(proved)} proved re
       f'{len(cited) - 1} cited results ({sum(len(results[r]) for r in cited)} declarations) '
       f'use only propext, Classical.choice and Quot.sound; Lemma 2.13 is cited and used by no '
       f'Lean proof.')
+print(f'The {len(further)} further proved result(s) ({", ".join(further)}) use only propext, '
+      f'Classical.choice and Quot.sound.')

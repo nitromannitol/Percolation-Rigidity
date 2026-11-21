@@ -7,8 +7,10 @@ import Rigidity.Proofs.Assembly.Section5
 import Rigidity.Proofs.Assembly.Section5b
 import Rigidity.Proofs.Assembly.Section5d
 import Rigidity.Proofs.Assembly.Section5e
+import Rigidity.Percolation.Blocks.SlabConnectivity
 
-/-! The axiom report of every numbered result of the paper; `scripts/check_axioms.py` checks it.
+/-! The axiom report of every numbered result of the paper, and of the slab connectivity theorem
+of Grimmett and Marstrand for `d ≥ 3`; `scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
@@ -76,3 +78,6 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 -- Section 6
 #print axioms Rigidity.integer_valued_compact_support                 -- Proposition 6.4
 #print axioms Rigidity.Assembly.Main.slowMixing                       -- Theorem 6.5
+
+-- Slab connectivity above the critical point (Grimmett and Marstrand, d ≥ 3)
+#print axioms Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt

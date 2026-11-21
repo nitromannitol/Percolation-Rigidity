@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/MeasurableSetRestrict.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.MeasurableSetRestrict in place of OAI.Probability.CriticalPercolation.ProductMeasure.MeasurableSetRestrict, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.MeasurableSetRestrict in place of OAI.Probability.CriticalPercolation.ProductMeasure.MeasurableSetRestrict, and the module paths of local imports are changed in the same way; a module docstring is added; in proofs, `Set.mem_ofPred_eq` and `Measurable.of_eval` are replaced by `Set.mem_setOf_eq` and `measurable_pi_iff.mpr` respectively; statements are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.FiniteOpenWitness
 

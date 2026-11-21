@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/Exploration/QueryNormalized.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.Exploration.QueryNormalized in place of OAI.Probability.CriticalPercolation.Exploration.QueryNormalized, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.Exploration.QueryNormalized in place of OAI.Probability.CriticalPercolation.Exploration.QueryNormalized, and the module paths of local imports are changed in the same way; a module docstring is added; in proofs, `ite_eq_left` is replaced by `if_pos`; statements are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.Exploration.QueryBand
 import Rigidity.Vendor.CriticalPercolation.Exploration.Score

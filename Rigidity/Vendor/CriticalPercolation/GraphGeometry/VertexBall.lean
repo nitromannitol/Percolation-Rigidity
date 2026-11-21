@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/GraphGeometry/VertexBall.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.GraphGeometry.VertexBall in place of OAI.Probability.CriticalPercolation.GraphGeometry.VertexBall, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.GraphGeometry.VertexBall in place of OAI.Probability.CriticalPercolation.GraphGeometry.VertexBall, and the module paths of local imports are changed in the same way; a module docstring is added; in proofs, `ite_eq_left`, `ite_eq_right` and `Measurable.of_eval` are replaced by `if_pos`, `if_neg` and `measurable_pi_iff.mpr` respectively; statements are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.Model
 

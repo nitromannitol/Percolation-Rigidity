@@ -2,9 +2,8 @@
 Vendored from `anthropics/formal-math` (https://github.com/anthropics/formal-math), commit
 795efb86f191735c5481675763537cfb4ff37e55, file `percolation/Percolation/Literature/ConnectivityProofs.lean`.
 Copyright 2026 Anthropic, PBC; licensed under the Apache License, Version 2.0 (see `LICENSE` and
-`NOTICE` in this directory).  Changes to the original source: the module paths of the
-`import` lines and adjustments of names and proof steps to the Mathlib version of this
-library.
+`NOTICE` in this directory).  The changes to the original source are the module path of the
+`import` lines and a reworded module docstring.
 -/
 import Rigidity.Vendor.FormalMathPercolation.Literature.Connectivity
 import Rigidity.Vendor.FormalMathPercolation.Literature.PercolationProofs

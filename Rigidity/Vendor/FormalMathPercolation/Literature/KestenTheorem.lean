@@ -2,7 +2,8 @@
 Vendored from `anthropics/formal-math` (https://github.com/anthropics/formal-math), commit
 795efb86f191735c5481675763537cfb4ff37e55, file `percolation/Percolation/Literature/KestenTheorem.lean`.
 Copyright 2026 Anthropic, PBC; licensed under the Apache License, Version 2.0 (see `LICENSE` and
-`NOTICE` in this directory).  Changes to the original source include module paths and adjustments for this Mathlib version.
+`NOTICE` in this directory).  The changes to the original source are the module path of the
+`import` lines and a reworded module docstring.
 -/
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 import Rigidity.Vendor.FormalMathPercolation.Literature.BernoulliPercolation

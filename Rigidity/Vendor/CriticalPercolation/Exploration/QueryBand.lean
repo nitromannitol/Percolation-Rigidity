@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/Exploration/QueryBand.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.Exploration.QueryBand in place of OAI.Probability.CriticalPercolation.Exploration.QueryBand, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.Exploration.QueryBand in place of OAI.Probability.CriticalPercolation.Exploration.QueryBand, and the module paths of local imports are changed in the same way; a module docstring is added; statements and proofs are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.Modular.WeightedCauchy
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.QueryMartingale

@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/Modular/ClusterDiscrepancy.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.Modular.ClusterDiscrepancy in place of OAI.Probability.CriticalPercolation.Modular.ClusterDiscrepancy, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.Modular.ClusterDiscrepancy in place of OAI.Probability.CriticalPercolation.Modular.ClusterDiscrepancy, and the module paths of local imports are changed in the same way; a module docstring is added; in proofs, `ite_eq_left`, `ite_eq_right` and `Set.mem_ofPred_eq` are replaced by `if_pos`, `if_neg` and `Set.mem_setOf_eq` respectively; statements are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.Model
 import Rigidity.Vendor.CriticalPercolation.GraphGeometry.Link
