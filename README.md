@@ -709,9 +709,9 @@ Cauchy–Schwarz inequality, are used. The decay exponent `(d/2)(1 − 1/(50d)) 
 Green functions of order `|x − y|^{2−d}`; the bounds proved here lose the factor
 `n^{1/100 + (d/2 − 1/100)t}` in the heat kernel and `|x − y|^{1/50 + δ}` in the Green columns, and
 they are stated for the discrete-time simple random walk, whereas Dario and Gu use the
-variable-speed continuous-time walk. The lattice Sobolev inequality is copied from Lattice-High-Contrast-Homogenization and the
-step inequality of `LocalNash.lean` is adapted from Lattice-Probability; see
-[Copied code](#copied-code).
+variable-speed continuous-time walk. The lattice Sobolev inequality is copied from
+Lattice-High-Contrast-Homogenization and the step inequality of `LocalNash.lean` is adapted from
+Lattice-Probability; see [Copied code](#copied-code).
 
 ## Guarantees
 
