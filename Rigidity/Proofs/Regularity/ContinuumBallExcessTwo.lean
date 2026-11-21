@@ -282,7 +282,8 @@ theorem polynomialComparison_continuumQuadratic [NeZero d] (z : EuclideanSpace �
   have hlow := le_ballExcess_continuumQuadratic z hρ' hw i₀ j₀
   rw [← hmdef] at hlow
   have h2 : (2 : ℝ) ^ d * (1 / 2) ^ d = 1 := by rw [← mul_pow]; norm_num
-  have e : (d : ℝ) * m * ρ ^ 2 = 32 * d * 2 ^ d * (ρ / ρ') ^ 2 * (m * ρ' ^ 2 / 32 * (1 / 2) ^ d) := by
+  have e : (d : ℝ) * m * ρ ^ 2 =
+      32 * d * 2 ^ d * (ρ / ρ') ^ 2 * (m * ρ' ^ 2 / 32 * (1 / 2) ^ d) := by
     have h3 : 32 * (d : ℝ) * 2 ^ d * (ρ / ρ') ^ 2 * (m * ρ' ^ 2 / 32 * (1 / 2) ^ d) =
         (2 ^ d * (1 / 2) ^ d) * ((ρ / ρ') ^ 2 * ρ' ^ 2) * (d * m) := by ring
     rw [h3, h2, div_pow, div_mul_cancel₀ _ (pow_ne_zero 2 hρ'.ne')]; ring
