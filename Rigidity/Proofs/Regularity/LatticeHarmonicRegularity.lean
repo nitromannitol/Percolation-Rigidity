@@ -42,7 +42,8 @@ theorem latticeLaplacian_fwd_eq_zero {h : (Fin d → ℤ) → ℝ} {z : Fin d �
 /-- One forward difference and the Caccioppoli inequality. -/
 theorem sum_sq_fwd_le (h : (Fin d → ℤ) → ℝ) (z : Fin d → ℤ) {ρ : ℕ} (hρ : 0 < ρ)
     (hh : ∀ x ∈ supBox z (2 * ρ), latticeLaplacian h x = 0) (a : Fin d) :
-    ∑ x ∈ supBox z ρ, fwd a h x ^ 2 ≤ 16 * d / (ρ : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * ρ + 2), h x ^ 2 := by
+    ∑ x ∈ supBox z ρ, fwd a h x ^ 2 ≤
+      16 * d / (ρ : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * ρ + 2), h x ^ 2 := by
   refine le_trans ?_ (caccioppoli_supBox h z hρ hh)
   refine sum_le_sum fun x _ => ?_
   exact single_le_sum (f := fun i => (h (x + unit i) - h x) ^ 2) (fun i _ => sq_nonneg _)

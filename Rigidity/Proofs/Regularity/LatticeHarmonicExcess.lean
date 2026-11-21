@@ -107,7 +107,8 @@ theorem abs_sub_le_floor_of_mem_ball {ω : Configuration d} {C : OpenComponent �
 /-- The coefficient of `sq_fwd_fwd_le` at the scale `m`. -/
 noncomputable def secondDiffCoeff (d m : ℕ) : ℝ :=
   4 ^ d * (64 * d) ^ d / ((m : ℝ) + 1) ^ d *
-    (16 * d / ((4 ^ d * (2 * m) : ℕ) : ℝ) ^ 2 * (16 * d / ((2 * (4 ^ d * (2 * m)) + 2 : ℕ) : ℝ) ^ 2))
+    (16 * d / ((4 ^ d * (2 * m) : ℕ) : ℝ) ^ 2 *
+      (16 * d / ((2 * (4 ^ d * (2 * m)) + 2 : ℕ) : ℝ) ^ 2))
 
 theorem secondDiffCoeff_nonneg (d m : ℕ) : 0 ≤ secondDiffCoeff d m := by
   unfold secondDiffCoeff; positivity
@@ -275,7 +276,8 @@ theorem ballExcess_le_latticeHRConst_mul [NeZero d] (z : Vertex d) {R r s : ℝ}
     {v : latticeComponent d → ℝ} (hv : v ∈ latticeHarmonicClass z r) (hXs : latticeHRScale d ≤ s)
     (hsr : s ≤ r / 2) {w : latticeComponent d → ℝ} (hw : w ∈ clusterAffine (latticeComponent d)) :
     ballExcess (componentBallSeminorm (latticeComponent d) z) (clusterAffine (latticeComponent d))
-        s v ≤ latticeHRConst d * (s / r) ^ 2 * componentBallL2 (latticeComponent d) z r (v - w) := by
+        s v ≤
+      latticeHRConst d * (s / r) ^ 2 * componentBallL2 (latticeComponent d) z r (v - w) := by
   have hd : 0 < d := Nat.pos_of_ne_zero (NeZero.ne d)
   have hsd1 : 1 ≤ Real.sqrt d := Real.one_le_sqrt.2 (Nat.one_le_cast.2 hd)
   set X₀ := latticeHRScale d with hX₀

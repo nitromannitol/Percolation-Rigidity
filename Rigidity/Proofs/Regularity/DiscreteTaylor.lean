@@ -78,7 +78,8 @@ theorem abs_sub_taylor_one_le (φ : (Fin d → ℤ) → ℝ) (q : Fin d → ℤ)
         exact mul_le_mul_of_nonneg_right (by exact_mod_cast this.le) hM0
     _ = n ^ 2 * M := by rw [sum_const, card_range, nsmul_eq_mul]; ring
 
-/-- The point `c + ∑_{i ∈ T} (xᵢ - cᵢ) eᵢ`, with the coordinates of `x` in `T` and of `c` outside. -/
+/-- The point `c + ∑_{i ∈ T} (xᵢ - cᵢ) eᵢ`, with the coordinates of `x` in `T` and of `c`
+outside. -/
 def cornerPoint (c x : Fin d → ℤ) (T : Finset (Fin d)) : Fin d → ℤ :=
   c + ∑ i ∈ T, (x i - c i) • unit i
 

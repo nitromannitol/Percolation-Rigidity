@@ -150,8 +150,8 @@ theorem latticeBox_pairwiseDisjoint {T : Finset (Fin d)} {i : Fin d} (hi : i ∉
   rw [add_smul_unit_apply, if_pos rfl] at h1 h2
   exact hkk' (by omega)
 
-/-- **One direction.** `|g(x₀)|` is at most the average of `|g|` on `x₀ + [0, n] e_i` plus the sum of
-`|D_i g|` there. -/
+/-- **One direction.** `|g(x₀)|` is at most the average of `|g|` on `x₀ + [0, n] e_i` plus the sum
+of `|D_i g|` there. -/
 theorem abs_le_average_add_sum_forwardDiff (g : (Fin d → ℤ) → ℝ) (x₀ : Fin d → ℤ) (i : Fin d)
     (n : ℕ) :
     |g x₀| ≤ ((n : ℝ) + 1)⁻¹ * ∑ k ∈ range (n + 1), |g (x₀ + (k : ℤ) • unit i)| +
