@@ -13,7 +13,7 @@ Armstrong and Dario (arXiv:1609.09431v2), Lemma 7.3, state the outcome of Lemma 
 `δ = α`, for `k = 0, 1` on the balls of the infinite cluster
 (`armstrongDario_lemma_7_3_zero_infiniteCluster`, `armstrongDario_lemma_7_3_one_infiniteCluster`)
 and for lattice harmonic functions on the balls of the lattice
-(`armstrongDario_lemma_7_3_one_latticeHarmonic`).
+(`armstrongDario_lemma_7_3_zero_latticeHarmonic`, `armstrongDario_lemma_7_3_one_latticeHarmonic`).
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -154,6 +154,32 @@ theorem armstrongDario_lemma_7_3_one_latticeHarmonic (d : ℕ) [NeZero d] {A α 
             (clusterAffine (latticeComponent d)) R u +
           2 * C * r ^ (-α) * (r / R) * componentBallL2 (latticeComponent d) z R u := by
   obtain ⟨C, hC, hlem⟩ := armstrongDario_lemma_7_2_one_latticeHarmonic d hA hα
+  refine ⟨C, hC, fun z R X E u hX hXs hXR hE hRE happ r hr hrR => ?_⟩
+  have h1 := hlem z R X E u hX hXs hXR hE happ r hr hrR
+  have hr1 : 1 ≤ r := hX.trans ((le_max_left _ _).trans hr)
+  have hR : 0 < R := by linarith
+  have h2 := mul_rpow_one_sub_mul_le (α := α) hC.le hr1 hR hE
+    (ballExcess_le_componentBallL2 _ z (clusterConstants _) R u) hRE
+  linarith
+
+/-- **Armstrong–Dario, Lemma 7.3 (`k = 0`), for lattice harmonic functions on the balls of the
+lattice**, in the form `D_0(r) ≤ C (r / R) D_0(R) + 2 C r^{-α} (r / R) ‖u‖_{L̲²(B_R)}`, with the
+excess decay of order one proved: only the harmonic approximation hypothesis of Lemma 7.2, with
+`R E ≤ ‖u‖_{L̲²(B_R)}`, remains. -/
+theorem armstrongDario_lemma_7_3_zero_latticeHarmonic (d : ℕ) [NeZero d] {A α : ℝ} (hA : 2 ≤ A)
+    (hα : 0 < α) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (z : Vertex d) (R X E : ℝ) (u : latticeComponent d → ℝ),
+      1 ≤ X → max (latticeHRScale d) (24 * Real.sqrt d) ≤ X → X ≤ R / A → 0 ≤ E →
+      R * E ≤ componentBallL2 (latticeComponent d) z R u →
+      HarmonicApproximation (componentBallSeminorm (latticeComponent d) z)
+        (latticeHarmonicClass z) (clusterConstants (latticeComponent d)) A α X R E u →
+      ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+        ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterConstants (latticeComponent d)) r u ≤
+          C * (r / R) * ballExcess (componentBallSeminorm (latticeComponent d) z)
+            (clusterConstants (latticeComponent d)) R u +
+          2 * C * r ^ (-α) * (r / R) * componentBallL2 (latticeComponent d) z R u := by
+  obtain ⟨C, hC, hlem⟩ := armstrongDario_lemma_7_2_zero_latticeHarmonic d hA hα
   refine ⟨C, hC, fun z R X E u hX hXs hXR hE hRE happ r hr hrR => ?_⟩
   have h1 := hlem z R X E u hX hXs hXR hE happ r hr hrR
   have hr1 : 1 ≤ r := hX.trans ((le_max_left _ _).trans hr)
