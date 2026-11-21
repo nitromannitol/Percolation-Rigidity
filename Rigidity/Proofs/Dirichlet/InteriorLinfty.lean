@@ -165,4 +165,84 @@ theorem sum_sq_grad_shrinkCube_le (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ
         field_simp
         ring
 
+theorem shrinkCube_zero_vertices (Q : IntegerCube d) : (shrinkCube Q 0).vertices = Q.vertices := by
+  ext x
+  rw [mem_shrinkCube_iff, IntegerCube.mem_vertices]
+  simp
+
+theorem shrinkCube_shrinkCube_vertices (Q : IntegerCube d) (s t : ℕ) :
+    (shrinkCube (shrinkCube Q s) t).vertices = (shrinkCube Q (s + t)).vertices := by
+  ext x
+  rw [mem_shrinkCube_iff, mem_shrinkCube_iff]
+  simp only [shrinkCube, Pi.add_apply]
+  refine forall_congr' fun k => ?_
+  constructor <;> rintro ⟨h1, h2⟩ <;> constructor <;> push_cast at * <;> omega
+
+theorem sum_unit_apply (R : Finset (Fin d)) (k : Fin d) :
+    (∑ j ∈ R, unit j) k = if k ∈ R then 1 else 0 := by
+  simp [unit, Finset.sum_apply, Pi.single_apply]
+
+/-- **Interior estimates of all orders**: for `h` harmonic on `shrink(Q, 1)` and every set `S` of
+coordinates, `Σ_{shrink(Q, |S|(r+2))} (∂^S h)² ≤ (10 d Λ/(λ r²))^{|S|} Σ_Q h²`. -/
+theorem sum_sq_mixedDiff_shrinkCube_le (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ}
+    (hlam : 0 < lam) (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) (Q : IntegerCube d) {h : Vertex d → ℝ}
+    (hh : ∀ x ∈ (shrinkCube Q 1).vertices, condLaplacian (constCond a) h x = 0) {r : ℕ}
+    (hr : 0 < r) (S : Finset (Fin d)) :
+    ∑ x ∈ (shrinkCube Q (S.card * (r + 2))).vertices, mixedDiff S h x ^ 2 ≤
+      (10 * d * Λ / (lam * (r : ℝ) ^ 2)) ^ S.card * ∑ x ∈ Q.vertices, h x ^ 2 := by
+  classical
+  have hC : 0 ≤ 10 * d * Λ / (lam * (r : ℝ) ^ 2) := by
+    have := (hlam.le.trans (ha ⟨0, hd⟩).1).trans (ha ⟨0, hd⟩).2
+    positivity
+  induction S using Finset.induction_on with
+  | empty => simp [shrinkCube_zero_vertices, mixedDiff_empty]
+  | insert k S hk ih =>
+    set Q' := shrinkCube Q (S.card * (r + 2))
+    set g := mixedDiff S h
+    have hg : ∀ x ∈ (shrinkCube Q' 1).vertices, condLaplacian (constCond a) g x = 0 := by
+      intro y hy
+      refine condLaplacian_constCond_mixedDiff_eq_zero a S (U := ↑(shrinkCube Q 1).vertices)
+        (fun x hx => hh x hx) fun R hR => ?_
+      rw [Finset.mem_coe, mem_shrinkCube_iff]
+      rw [shrinkCube_shrinkCube_vertices, mem_shrinkCube_iff] at hy
+      intro m
+      have hym := hy m
+      rw [Pi.add_apply, sum_unit_apply]
+      obtain ⟨t, ht⟩ : ∃ t, t = S.card * (r + 2) := ⟨_, rfl⟩
+      rw [← ht] at hym
+      rcases Nat.eq_zero_or_pos S.card with h0 | h0
+      · have hRe : R = ∅ := by
+          have := Finset.card_eq_zero.mp h0
+          subst this
+          exact Finset.subset_empty.mp hR
+        subst hRe
+        have ht0 : t = 0 := by rw [ht, h0, zero_mul]
+        subst ht0
+        simp only [Finset.notMem_empty, if_false, add_zero]
+        push_cast at hym ⊢
+        omega
+      · have h1 : 1 ≤ t := by
+          rw [ht]
+          exact Nat.one_le_iff_ne_zero.mpr (by positivity)
+        push_cast at hym ⊢
+        split_ifs <;> constructor <;> omega
+    have hcc := sum_sq_grad_shrinkCube_le hd a hlam ha Q' hg hr
+    rw [shrinkCube_shrinkCube_vertices] at hcc
+    rw [Finset.card_insert_of_notMem hk, pow_succ]
+    have hshape : (S.card + 1) * (r + 2) = S.card * (r + 2) + (r + 2) := by ring
+    rw [hshape]
+    calc ∑ x ∈ (shrinkCube Q (S.card * (r + 2) + (r + 2))).vertices,
+          mixedDiff (insert k S) h x ^ 2
+        ≤ ∑ x ∈ (shrinkCube Q (S.card * (r + 2) + (r + 2))).vertices,
+            ∑ j : Fin d, (g (x + unit j) - g x) ^ 2 := by
+          refine Finset.sum_le_sum fun x _ => ?_
+          rw [mixedDiff_insert hk]
+          exact Finset.single_le_sum (f := fun j => (g (x + unit j) - g x) ^ 2)
+            (fun j _ => sq_nonneg _) (Finset.mem_univ k)
+      _ ≤ 10 * d * Λ / (lam * (r : ℝ) ^ 2) * ∑ x ∈ Q'.vertices, g x ^ 2 := hcc
+      _ ≤ 10 * d * Λ / (lam * (r : ℝ) ^ 2) *
+            ((10 * d * Λ / (lam * (r : ℝ) ^ 2)) ^ S.card * ∑ x ∈ Q.vertices, h x ^ 2) :=
+          mul_le_mul_of_nonneg_left ih hC
+      _ = _ := by ring
+
 end Rigidity.Dirichlet
