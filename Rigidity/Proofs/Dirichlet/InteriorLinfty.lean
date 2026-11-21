@@ -245,4 +245,47 @@ theorem sum_sq_mixedDiff_shrinkCube_le (hd : 0 < d) (a : Fin d → ℝ) {lam Λ 
           mul_le_mul_of_nonneg_left ih hC
       _ = _ := by ring
 
+theorem shrinkCube_vertices_subset (Q : IntegerCube d) {s t : ℕ} (hst : s ≤ t) :
+    (shrinkCube Q t).vertices ⊆ (shrinkCube Q s).vertices := by
+  intro x hx
+  rw [mem_shrinkCube_iff] at hx ⊢
+  intro k
+  have := hx k
+  constructor <;> omega
+
+/-- `Σ_T |f| ≤ √#T √(Σ_T f²)`. -/
+theorem sum_abs_le_sqrt_card_mul_sqrt {ι : Type*} (T : Finset ι) (f : ι → ℝ) :
+    ∑ x ∈ T, |f x| ≤ √(#T : ℝ) * √(∑ x ∈ T, f x ^ 2) := by
+  rw [← Real.sqrt_mul (Nat.cast_nonneg _)]
+  refine Real.le_sqrt_of_sq_le ?_
+  have h := sq_sum_le_card_mul_sum_sq (s := T) (f := fun x => |f x|)
+  simpa only [sq_abs] using h
+
+/-- **Interior `L^∞` bound for constant-coefficient harmonic functions**: for `h` harmonic on
+`shrink(Q, 1)`, `r ≥ 1`, `M ≥ 1` and a cube `x + {0, …, M − 1}^d` inside `shrink(Q, d(r + 2))`,
+`|h(x)| ≤ Σ_{S} M^{|S| − d} M^{d/2} ((10 d Λ/(λ r²))^{|S|} Σ_Q h²)^{1/2}`. -/
+theorem abs_le_of_condLaplacian_constCond_eq_zero (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ}
+    (hlam : 0 < lam) (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) (Q : IntegerCube d) {h : Vertex d → ℝ}
+    (hh : ∀ x ∈ (shrinkCube Q 1).vertices, condLaplacian (constCond a) h x = 0) {r : ℕ}
+    (hr : 0 < r) {x : Vertex d} {M : ℕ} (hM : 0 < M)
+    (hxM : (cornerCube x M).vertices ⊆ (shrinkCube Q (d * (r + 2))).vertices) :
+    |h x| ≤ ∑ S ∈ (Finset.univ : Finset (Fin d)).powerset, (1 / (M : ℝ)) ^ (d - S.card) *
+      (√((M : ℝ) ^ d) * √((10 * d * Λ / (lam * (r : ℝ) ^ 2)) ^ S.card *
+        ∑ y ∈ Q.vertices, h y ^ 2)) := by
+  refine (abs_le_sum_mixedDiff_cube h x hM).trans (Finset.sum_le_sum fun S _ => ?_)
+  refine mul_le_mul_of_nonneg_left ?_ (by positivity)
+  have hcard : (#(cornerCube x M).vertices : ℝ) = (M : ℝ) ^ d := by
+    rw [card_vertices]
+    simp [cornerCube]
+  refine (sum_abs_le_sqrt_card_mul_sqrt _ _).trans ?_
+  rw [hcard]
+  refine mul_le_mul_of_nonneg_left (Real.sqrt_le_sqrt ?_) (Real.sqrt_nonneg _)
+  have hS : S.card ≤ d := by
+    have := Finset.card_le_univ S
+    simpa using this
+  have hsub : (cornerCube x M).vertices ⊆ (shrinkCube Q (S.card * (r + 2))).vertices :=
+    hxM.trans (shrinkCube_vertices_subset Q (Nat.mul_le_mul_right _ hS))
+  refine le_trans (Finset.sum_le_sum_of_subset_of_nonneg hsub fun _ _ _ => sq_nonneg _) ?_
+  exact sum_sq_mixedDiff_shrinkCube_le hd a hlam ha Q hh hr S
+
 end Rigidity.Dirichlet
