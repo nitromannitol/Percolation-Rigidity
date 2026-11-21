@@ -86,4 +86,60 @@ theorem sum_energy_mesoInterpolation_le (a : Fin d → ℝ) {Λ : ℝ}
     rw [Finset.mul_sum]
     exact Finset.sum_le_sum fun k _ => mul_le_mul_of_nonneg_right (haΛ k) (sq_nonneg _)
 
+/-- **The energy of the trial function in the boundary layer**: for `s ≥ 2`, `N, r ≥ 1`, a cube of
+side `L ≥ 1` and `B ⊇ Q + {0, …, N − 1}^d`,
+`L^{-d} Σ_{layer} Σ_k (∇_k ũ)² ≤ (2d(r + 1)/L)^{1 − 2/s}
+  (d^{s/2 − 1} 3^{s−1} (1 + 2^s + d^s (N/r)^s) L^{-d} Σ_B Σ_k |∇_k w|^s)^{2/s}`. -/
+theorem sum_layer_energy_mesoInterpolation_div_le (Q : IntegerCube d) (hL : 0 < Q.size)
+    {N r : ℕ} (hN : 0 < N) (hr : 0 < r) (w : Vertex d → ℝ) {s : ℝ} (hs : 2 ≤ s)
+    (B : Finset (Vertex d)) (hB : ∀ x ∈ Q.vertices, ∀ o ∈ (cornerCube 0 N).vertices, x + o ∈ B) :
+    (∑ x ∈ cubeLayer Q (r + 1), ∑ k : Fin d,
+        (mesoInterpolation N (cubeCutoff Q r) w (x + unit k) -
+          mesoInterpolation N (cubeCutoff Q r) w x) ^ 2) / (Q.size : ℝ) ^ d ≤
+      (2 * d * ((r + 1 : ℕ) : ℝ) / Q.size) ^ (1 - 2 / s) *
+        ((d : ℝ) ^ (s / 2 - 1) *
+          ((3 : ℝ) ^ (s - 1) * (1 + 2 ^ s + (d : ℝ) ^ s * ((N : ℝ) / r) ^ s) *
+          ∑ y ∈ B, ∑ k : Fin d, |w (y + unit k) - w y| ^ s) / (Q.size : ℝ) ^ d) ^ (2 / s) := by
+  set u := mesoInterpolation N (cubeCutoff Q r) w
+  set g : Vertex d → ℝ := fun x => √(∑ k : Fin d, (u (x + unit k) - u x) ^ 2) with hg
+  have hs1 : 1 ≤ s / 2 := by linarith
+  have hs0 : 0 < s := by linarith
+  have hg2 : ∀ x, g x ^ 2 = ∑ k : Fin d, (u (x + unit k) - u x) ^ 2 := fun x => by
+    rw [hg, Real.sq_sqrt (Finset.sum_nonneg fun k _ => sq_nonneg _)]
+  have hlayer := sum_sq_cubeLayer_div_le Q hL (r + 1) g hs
+  simp only [hg2] at hlayer
+  refine hlayer.trans (mul_le_mul_of_nonneg_left ?_ (by positivity))
+  refine Real.rpow_le_rpow (by positivity) (div_le_div_of_nonneg_right ?_ (by positivity))
+    (by positivity)
+  -- `|g|^s ≤ d^{s/2-1} Σ_k |∇_k u|^s`
+  have hgs : ∀ x, |g x| ^ s ≤ (d : ℝ) ^ (s / 2 - 1) * ∑ k : Fin d, |u (x + unit k) - u x| ^ s := by
+    intro x
+    have hY : 0 ≤ ∑ k : Fin d, (u (x + unit k) - u x) ^ 2 :=
+      Finset.sum_nonneg fun k _ => sq_nonneg _
+    have h1 : |g x| ^ s = (∑ k : Fin d, (u (x + unit k) - u x) ^ 2) ^ (s / 2) := by
+      rw [abs_of_nonneg (Real.sqrt_nonneg _), Real.sqrt_eq_rpow, ← Real.rpow_mul hY]
+      congr 1
+      ring
+    have h2 := Real.rpow_sum_le_const_mul_sum_rpow_of_nonneg (Finset.univ : Finset (Fin d)) hs1
+      (f := fun k => (u (x + unit k) - u x) ^ 2) fun k _ => sq_nonneg _
+    rw [Finset.card_univ, Fintype.card_fin] at h2
+    have h3 : ∀ k : Fin d, ((u (x + unit k) - u x) ^ 2) ^ (s / 2) = |u (x + unit k) - u x| ^ s :=
+      fun k => by
+        rw [← sq_abs, ← Real.rpow_natCast, ← Real.rpow_mul (abs_nonneg _)]
+        congr 1
+        push_cast
+        ring
+    simp only [h3] at h2
+    rw [h1]
+    exact h2
+  have hmeso := sum_abs_grad_mesoInterpolation_rpow_le Q.vertices B hN hr (cubeCutoff Q r) w
+    (cubeCutoff_nonneg Q r) (cubeCutoff_le_one Q r)
+    (fun x _ j => abs_cubeCutoff_add_unit_sub_le Q r x j) (s := s) (by linarith) hB
+  calc ∑ x ∈ Q.vertices, |g x| ^ s
+      ≤ ∑ x ∈ Q.vertices, (d : ℝ) ^ (s / 2 - 1) * ∑ k : Fin d, |u (x + unit k) - u x| ^ s :=
+        Finset.sum_le_sum fun x _ => hgs x
+    _ = (d : ℝ) ^ (s / 2 - 1) * ∑ x ∈ Q.vertices, ∑ k : Fin d, |u (x + unit k) - u x| ^ s := by
+        rw [Finset.mul_sum]
+    _ ≤ _ := mul_le_mul_of_nonneg_left hmeso (by positivity)
+
 end Rigidity.Dirichlet
