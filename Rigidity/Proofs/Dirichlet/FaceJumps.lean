@@ -230,4 +230,84 @@ theorem exists_sum_tiles_sq_sub_cubeAffine_le_energy (hd : 0 < d) (a : Fin d →
         rw [← Finset.mul_sum, Finset.sum_comm (s := (Finset.univ : Finset (Fin d)))]
         field_simp
 
+/-- **Lemma 6.3, Step 2, homogenized part**: for `u` harmonic (constant conductances
+`λ ≤ a_k ≤ Λ`) on `shrink(Q, 1)` and a tiling whose doubled region
+`z + {0, …, (M+1)N − 1}^d` lies in `shrink(Q, r + 3)`, the squared jumps of the patched affine
+approximations of `u` across the faces orthogonal to `e_j` satisfy
+`Σ_faces jump² ≤ 3 ((1 + d) 2^d N³ · 10dΛ/(λ r²) + N⁻¹) Σ_{x∈Q} Σ_k (∇_k u(x))²`. -/
+theorem sum_face_jumps_le_energy (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ} (hlam : 0 < lam)
+    (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) (Q : IntegerCube d) {u : Vertex d → ℝ}
+    (hu : ∀ x ∈ (shrinkCube Q 1).vertices, condLaplacian (constCond a) u x = 0) {r : ℕ}
+    (hr : 0 < r) (z : Vertex d) (M : ℕ) {N : ℕ} (hN : 0 < N)
+    (hsub : (cornerCube z ((M + 1) * N)).vertices ⊆ (shrinkCube Q (r + 3)).vertices) (j : Fin d) :
+    ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).upperFace j,
+        (cubeAffine N u (z + (N : ℤ) • i + (N : ℤ) • unit j) (x + unit j) -
+          cubeAffine N u (z + (N : ℤ) • i) x) ^ 2 ≤
+      3 * ((1 + d) * 2 ^ d * (N : ℝ) ^ 3 * (10 * d * Λ / (lam * (r : ℝ) ^ 2)) + 1 / N) *
+        ∑ x ∈ Q.vertices, ∑ k : Fin d, (u (x + unit k) - u x) ^ 2 := by
+  have hΛ : 0 ≤ Λ := (hlam.le.trans (ha ⟨0, hd⟩).1).trans (ha ⟨0, hd⟩).2
+  have hN' : (0 : ℝ) < N := by exact_mod_cast hN
+  set E := ∑ x ∈ Q.vertices, ∑ k : Fin d, (u (x + unit k) - u x) ^ 2
+  have hjump := sum_face_jumps_le hN u z M j
+  -- the second differences: `∇_j∇_k u = ∇_k∇_j u`, harmonic `∇_j u`, Caccioppoli
+  set Q' := shrinkCube Q 1
+  have hharm : ∀ x ∈ (shrinkCube Q' 1).vertices,
+      condLaplacian (constCond a) (fun y => u (y + unit j) - u y) x = 0 := by
+    intro x hx
+    rw [condLaplacian_constCond_grad, hu, hu, sub_zero]
+    · rw [shrinkCube_shrinkCube_vertices] at hx
+      exact shrinkCube_vertices_subset Q (by norm_num) hx
+    · rw [shrinkCube_shrinkCube_vertices, mem_shrinkCube_iff] at hx
+      rw [mem_shrinkCube_iff]
+      intro k
+      have := hx k
+      rw [add_unit_apply]
+      push_cast at this ⊢
+      split_ifs <;> constructor <;> omega
+  have hcacc := sum_sq_grad_shrinkCube_le hd a hlam ha Q' hharm hr
+  rw [shrinkCube_shrinkCube_vertices, show 1 + (r + 2) = r + 3 by ring] at hcacc
+  have hsecond : ∑ w ∈ (cornerCube z ((M + 1) * N)).vertices, ∑ k,
+      ((u (w + unit j + unit k) - u (w + unit j)) - (u (w + unit k) - u w)) ^ 2 ≤
+        10 * d * Λ / (lam * (r : ℝ) ^ 2) * E := by
+    have hcomm : ∀ w : Vertex d, ∀ k : Fin d,
+        ((u (w + unit j + unit k) - u (w + unit j)) - (u (w + unit k) - u w)) ^ 2 =
+          ((u (w + unit k + unit j) - u (w + unit k)) - (u (w + unit j) - u w)) ^ 2 := by
+      intro w k
+      rw [add_right_comm w (unit j) (unit k)]
+      ring
+    simp only [hcomm]
+    refine (Finset.sum_le_sum_of_subset_of_nonneg hsub fun x _ _ =>
+      Finset.sum_nonneg fun k _ => sq_nonneg _).trans (hcacc.trans ?_)
+    refine mul_le_mul_of_nonneg_left ?_ (by positivity)
+    refine (Finset.sum_le_sum_of_subset_of_nonneg (shrinkCube_vertices_subset_self Q 1)
+      fun _ _ _ => sq_nonneg _).trans ?_
+    exact Finset.sum_le_sum fun x _ => Finset.single_le_sum
+      (f := fun k => (u (x + unit k) - u x) ^ 2) (fun k _ => sq_nonneg _) (Finset.mem_univ j)
+  have hgrad : ∑ x ∈ (cornerCube z (M * N)).vertices, (u (x + unit j) - u x) ^ 2 ≤ E := by
+    have hsub' : (cornerCube z (M * N)).vertices ⊆ Q.vertices := by
+      intro x hx
+      refine shrinkCube_vertices_subset_self Q (r + 3) (hsub ?_)
+      rw [IntegerCube.mem_vertices] at hx ⊢
+      intro k
+      have := hx k
+      simp only [cornerCube] at this ⊢
+      constructor
+      · exact this.1
+      · have : ((M * N : ℕ) : ℤ) ≤ (((M + 1) * N : ℕ) : ℤ) := by
+          exact_mod_cast Nat.mul_le_mul_right N (Nat.le_succ M)
+        linarith [(hx k).2]
+    refine (Finset.sum_le_sum_of_subset_of_nonneg hsub' fun _ _ _ => sq_nonneg _).trans ?_
+    exact Finset.sum_le_sum fun x _ => Finset.single_le_sum
+      (f := fun k => (u (x + unit k) - u x) ^ 2) (fun k _ => sq_nonneg _) (Finset.mem_univ j)
+  refine hjump.trans ?_
+  have hc0 : 0 ≤ (1 + d) * 2 ^ d * (N : ℝ) ^ 3 := by positivity
+  calc 3 * ((1 + d) * 2 ^ d * (N : ℝ) ^ 3 * ∑ w ∈ (cornerCube z ((M + 1) * N)).vertices,
+          ∑ k, ((u (w + unit j + unit k) - u (w + unit j)) - (u (w + unit k) - u w)) ^ 2 +
+        1 / N * ∑ x ∈ (cornerCube z (M * N)).vertices, (u (x + unit j) - u x) ^ 2)
+      ≤ 3 * ((1 + d) * 2 ^ d * (N : ℝ) ^ 3 * (10 * d * Λ / (lam * (r : ℝ) ^ 2) * E) +
+          1 / N * E) :=
+        mul_le_mul_of_nonneg_left (add_le_add (mul_le_mul_of_nonneg_left hsecond hc0)
+          (mul_le_mul_of_nonneg_left hgrad (by positivity))) (by norm_num)
+    _ = _ := by ring
+
 end Rigidity.Dirichlet
