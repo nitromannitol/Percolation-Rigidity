@@ -79,4 +79,57 @@ theorem latticeLaplacian_mixedDiff (S : Finset (Fin d)) (f : (Fin d → ℤ) →
   rw [h]
   exact sum_eq_zero fun U hU => by rw [hf U hU, mul_zero]
 
+/-- The `ℓ^∞` box `{x : |xᵢ - zᵢ| ≤ m for all i}`. -/
+noncomputable def supBox (z : Fin d → ℤ) (m : ℕ) : Finset (Fin d → ℤ) :=
+  Fintype.piFinset fun i => Icc (z i - m) (z i + m)
+
+/-- The `ℓ^∞` distance `maxᵢ |xᵢ - zᵢ|`. -/
+def supDist (x z : Fin d → ℤ) : ℕ := Finset.univ.sup fun i => (x i - z i).natAbs
+
+theorem mem_supBox_iff_supDist_le {z x : Fin d → ℤ} {m : ℕ} :
+    x ∈ supBox z m ↔ supDist x z ≤ m := by
+  simp only [supBox, Fintype.mem_piFinset, mem_Icc, supDist, Finset.sup_le_iff, mem_univ,
+    true_implies]
+  refine forall_congr' fun i => ?_
+  omega
+
+theorem supDist_add_unit_le (x z : Fin d → ℤ) (i : Fin d) (s : ℤ) (hs : |s| ≤ 1) :
+    supDist (x + s • unit i) z ≤ supDist x z + 1 := by
+  simp only [supDist, Finset.sup_le_iff, mem_univ, true_implies]
+  intro j
+  have hj : (x j - z j).natAbs ≤ Finset.univ.sup fun i => (x i - z i).natAbs :=
+    Finset.le_sup (f := fun i => (x i - z i).natAbs) (mem_univ j)
+  have hu : |(s • unit i) j| ≤ 1 := by
+    simp only [Pi.smul_apply, smul_eq_mul, unit, Pi.single_apply]
+    split_ifs <;> simp [hs]
+  have : (x + s • unit i) j - z j = (x j - z j) + (s • unit i) j := by
+    simp only [Pi.add_apply]; ring
+  rw [this]
+  have h1 := Int.natAbs_add_le (x j - z j) ((s • unit i) j)
+  have h2 : ((s • unit i) j).natAbs ≤ 1 := by
+    have h : (((s • unit i) j).natAbs : ℤ) ≤ 1 := by rw [← Int.abs_eq_natAbs]; exact hu
+    exact_mod_cast h
+  omega
+
+/-- Neighbours differ by at most one in `ℓ^∞` distance. -/
+theorem abs_supDist_sub_le_one {x y : Fin d → ℤ} (hy : y ∈ nbrFinset x) (z : Fin d → ℤ) :
+    |(supDist y z : ℝ) - supDist x z| ≤ 1 := by
+  obtain ⟨i, rfl | rfl⟩ := Graph.Zd.mem_nbrFinset.1 hy
+  · have h1 := supDist_add_unit_le x z i 1 (by norm_num)
+    have h2 := supDist_add_unit_le (x + unit i) z i (-1) (by norm_num)
+    rw [one_smul] at h1
+    rw [neg_one_smul, add_neg_cancel_right] at h2
+    have h1' : (supDist (x + unit i) z : ℝ) ≤ supDist x z + 1 := by exact_mod_cast h1
+    have h2' : (supDist x z : ℝ) ≤ supDist (x + unit i) z + 1 := by exact_mod_cast h2
+    rw [abs_le]
+    constructor <;> linarith
+  · have h1 := supDist_add_unit_le x z i (-1) (by norm_num)
+    have h2 := supDist_add_unit_le (x - unit i) z i 1 (by norm_num)
+    rw [neg_one_smul, ← sub_eq_add_neg] at h1
+    rw [one_smul, sub_add_cancel] at h2
+    have h1' : (supDist (x - unit i) z : ℝ) ≤ supDist x z + 1 := by exact_mod_cast h1
+    have h2' : (supDist x z : ℝ) ≤ supDist (x - unit i) z + 1 := by exact_mod_cast h2
+    rw [abs_le]
+    constructor <;> linarith
+
 end Rigidity.Proofs.Regularity
