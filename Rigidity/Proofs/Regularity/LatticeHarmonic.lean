@@ -316,4 +316,92 @@ theorem caccioppoli_supBox (f : (Fin d → ℤ) → ℝ) (z : Fin d → ℤ) {m 
     _ ≤ 4 * (4 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2) := this
     _ = 16 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), f x ^ 2 := by ring
 
+theorem shiftSum_apply (U : Finset (Fin d)) (j : Fin d) :
+    shiftSum U j = if j ∈ U then 1 else 0 := by
+  classical
+  simp only [shiftSum, Finset.sum_apply, unit, Pi.single_apply]
+  rw [Finset.sum_ite_eq]
+
+theorem supDist_add_shiftSum_le (x z : Fin d → ℤ) (U : Finset (Fin d)) :
+    supDist (x + shiftSum U) z ≤ supDist x z + 1 := by
+  simp only [supDist, Finset.sup_le_iff, mem_univ, true_implies]
+  intro j
+  have hj : (x j - z j).natAbs ≤ Finset.univ.sup fun i => (x i - z i).natAbs :=
+    Finset.le_sup (f := fun i => (x i - z i).natAbs) (mem_univ j)
+  have : (x + shiftSum U) j - z j = (x j - z j) + shiftSum U j := by
+    simp only [Pi.add_apply]; ring
+  rw [this, shiftSum_apply]
+  split_ifs <;> omega
+
+/-- **Iterated Caccioppoli inequality**: the mixed differences of order `k = |S|` of a function
+harmonic on `Q_{4^k m}` satisfy `∑_{Q_m} (D_S f)² ≤ (64 d)^k m^{-2k} ∑_{Q_{4^k m}} f²`. -/
+theorem sum_sq_mixedDiff_le (f : (Fin d → ℤ) → ℝ) (z : Fin d → ℤ) (S : Finset (Fin d)) :
+    ∀ m : ℕ, 0 < m → (∀ x ∈ supBox z (4 ^ S.card * m), latticeLaplacian f x = 0) →
+      ∑ x ∈ supBox z m, (mixedDiff S f x) ^ 2 ≤
+        (64 * d) ^ S.card / (m : ℝ) ^ (2 * S.card) *
+          ∑ x ∈ supBox z (4 ^ S.card * m), f x ^ 2 := by
+  induction S using Finset.induction_on with
+  | empty =>
+    intro m _ _
+    simp [mixedDiff_empty]
+  | insert i S hi ih =>
+    intro m hm hf
+    have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+    set k := S.card with hk
+    have hcard : (insert i S).card = k + 1 := card_insert_of_notMem hi
+    rw [hcard] at hf ⊢
+    set g := mixedDiff S f with hg
+    -- `g` is harmonic on `Q_{2m}`
+    have hgh : ∀ x ∈ supBox z (2 * m), latticeLaplacian g x = 0 := by
+      intro x hx
+      apply latticeLaplacian_mixedDiff
+      intro U _
+      apply hf
+      rw [mem_supBox_iff_supDist_le] at hx ⊢
+      have h1 := supDist_add_shiftSum_le x z U
+      have h2 : 2 * m + 1 ≤ 4 ^ (k + 1) * m := by
+        have : 4 ≤ 4 ^ (k + 1) := by
+          calc 4 = 4 ^ 1 := (pow_one 4).symm
+            _ ≤ 4 ^ (k + 1) := Nat.pow_le_pow_right (by norm_num) (by omega)
+        nlinarith
+      omega
+    have hcac := caccioppoli_supBox g z hm hgh
+    have hDi : ∑ x ∈ supBox z m, (mixedDiff (insert i S) f x) ^ 2 ≤
+        ∑ x ∈ supBox z m, ∑ j, (g (x + unit j) - g x) ^ 2 := by
+      refine sum_le_sum fun x _ => ?_
+      rw [mixedDiff_insert hi]
+      exact single_le_sum (f := fun j => (g (x + unit j) - g x) ^ 2)
+        (fun j _ => sq_nonneg _) (mem_univ i)
+    have hbox : 4 ^ k * (4 * m) = 4 ^ (k + 1) * m := by ring
+    have hih := ih (4 * m) (by omega) (by rw [hbox]; exact hf)
+    have hsub : ∑ x ∈ supBox z (2 * m + 2), g x ^ 2 ≤ ∑ x ∈ supBox z (4 * m), g x ^ 2 :=
+      sum_le_sum_of_subset_of_nonneg (fun x hx => by
+        rw [mem_supBox_iff_supDist_le] at hx ⊢; omega) fun x _ _ => sq_nonneg _
+    rw [hbox] at hih
+    have hA : 0 ≤ ∑ x ∈ supBox z (4 ^ (k + 1) * m), f x ^ 2 :=
+      sum_nonneg fun x _ => sq_nonneg _
+    have hd0 : (0 : ℝ) ≤ d := Nat.cast_nonneg d
+    calc ∑ x ∈ supBox z m, (mixedDiff (insert i S) f x) ^ 2
+        ≤ 16 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (2 * m + 2), g x ^ 2 := hDi.trans hcac
+      _ ≤ 16 * d / (m : ℝ) ^ 2 * ∑ x ∈ supBox z (4 * m), g x ^ 2 :=
+          mul_le_mul_of_nonneg_left hsub (by positivity)
+      _ ≤ 16 * d / (m : ℝ) ^ 2 * ((64 * d) ^ k / ((4 * m : ℕ) : ℝ) ^ (2 * k) *
+            ∑ x ∈ supBox z (4 ^ (k + 1) * m), f x ^ 2) :=
+          mul_le_mul_of_nonneg_left hih (by positivity)
+      _ ≤ (64 * d) ^ (k + 1) / (m : ℝ) ^ (2 * (k + 1)) *
+            ∑ x ∈ supBox z (4 ^ (k + 1) * m), f x ^ 2 := by
+          rw [← mul_assoc]
+          apply mul_le_mul_of_nonneg_right _ hA
+          have e1 : ((4 * m : ℕ) : ℝ) ^ (2 * k) = 16 ^ k * (m : ℝ) ^ (2 * k) := by
+            push_cast; rw [mul_pow, pow_mul]; norm_num
+          have e2 : (m : ℝ) ^ (2 * (k + 1)) = (m : ℝ) ^ 2 * (m : ℝ) ^ (2 * k) := by ring
+          have e3 : (64 * (d : ℝ)) ^ (k + 1) = 64 * d * (64 * d) ^ k := by ring
+          rw [e1, e2, e3, div_mul_div_comm, div_le_div_iff₀ (by positivity) (by positivity)]
+          have h16 : (16 : ℝ) ≤ 64 * 16 ^ k := by
+            have : (1 : ℝ) ≤ 16 ^ k := one_le_pow₀ (by norm_num)
+            linarith
+          have hP : 0 ≤ (d : ℝ) * (64 * d) ^ k * ((m : ℝ) ^ 2 * (m : ℝ) ^ (2 * k)) := by
+            positivity
+          nlinarith [mul_le_mul_of_nonneg_left h16 hP]
+
 end Rigidity.Proofs.Regularity
