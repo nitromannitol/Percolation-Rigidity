@@ -87,4 +87,56 @@ theorem sq_fwd_fwd_fwd_le (f : (Fin d → ℤ) → ℝ) (z : Fin d → ℤ) {m :
         mul_le_mul_of_nonneg_left h2 hc
     _ = _ := by push_cast; ring
 
+theorem fwd_sub (i : Fin d) (f g : (Fin d → ℤ) → ℝ) :
+    fwd i (fun y => f y - g y) = fun y => fwd i f y - fwd i g y := by
+  funext y; simp only [fwd]; ring
+
+/-- The Hessian `H_{ij} = D_i D_j f(c)` of second forward differences at `c`. -/
+def hessAt (f : (Fin d → ℤ) → ℝ) (c : Fin d → ℤ) : Matrix (Fin d) (Fin d) ℝ :=
+  fun i j => fwd i (fwd j f) c
+
+/-- The quadratic part `Q₀(y) = ½ q_H(y - c)` of the second-order expansion at `c`. -/
+noncomputable def halfQuad (H : Matrix (Fin d) (Fin d) ℝ) (c : Fin d → ℤ) (y : Fin d → ℤ) : ℝ :=
+  quadForm H (latticeEuclideanEmbedding y - latticeEuclideanEmbedding c) / 2
+
+theorem symEntry_hessAt (f : (Fin d → ℤ) → ℝ) (c : Fin d → ℤ) (a b : Fin d) :
+    symEntry (hessAt f c) a b = fwd a (fwd b f) c := by
+  simp only [symEntry, hessAt]
+  rw [fwd_comm b a]; ring
+
+/-- **Second-order Taylor expansion on the lattice**: with `g = f - Q₀`,
+`|f(x) - (Q₀(x) + g(c) + ∑ᵢ (xᵢ - cᵢ) D_i g(c))| ≤ d (d + 1) s² · d s M₃` when the third forward
+differences are bounded by `M₃` on the box `[c, x]`. -/
+theorem abs_sub_taylor_two_le (f : (Fin d → ℤ) → ℝ) {c x : Fin d → ℤ} (hcx : ∀ i, c i ≤ x i)
+    {s : ℕ} (hs : ∀ i, x i - c i ≤ s) {M₃ : ℝ} (hM₀ : 0 ≤ M₃)
+    (hM : ∀ y : Fin d → ℤ, (∀ i, c i ≤ y i ∧ y i ≤ x i) →
+      ∀ a b e, |fwd e (fwd a (fwd b f)) y| ≤ M₃) :
+    |f x - (halfQuad (hessAt f c) c x + (f c - halfQuad (hessAt f c) c c) +
+        ∑ i, ((x i - c i : ℤ) : ℝ) * fwd i (fun y => f y - halfQuad (hessAt f c) c y) c)| ≤
+      d * (d + 1) * s ^ 2 * (d * s * M₃) := by
+  set Q₀ := halfQuad (hessAt f c) c with hQ₀
+  set g : (Fin d → ℤ) → ℝ := fun y => f y - Q₀ y with hg
+  have hMg : ∀ y : Fin d → ℤ, (∀ i, c i ≤ y i ∧ y i ≤ x i) → ∀ a b,
+      |fwd a (fwd b g) y| ≤ d * s * M₃ := by
+    intro y hy a b
+    have e1 : fwd a (fwd b g) y = fwd a (fwd b f) y - fwd a (fwd b Q₀) y := by
+      rw [hg, fwd_sub, fwd_sub]
+    have e2 : fwd a (fwd b Q₀) y = fwd a (fwd b f) c := by
+      rw [hQ₀]
+      exact (fwd_fwd_halfQuad (hessAt f c) c a b y).trans (symEntry_hessAt f c a b)
+    rw [e1, e2]
+    have hcy : ∀ i, c i ≤ y i := fun i => (hy i).1
+    have hsy : ∀ i, y i - c i ≤ s := fun i => by have := (hy i).2; have := hs i; omega
+    have h := abs_cornerPoint_sub_le (fwd a (fwd b f)) hcy hsy hM₀
+      (fun y' hy' i => hM y' (fun j => ⟨(hy' j).1, (hy' j).2.trans (hy j).2⟩) a b i) univ
+    rw [cornerPoint_univ, card_univ, Fintype.card_fin] at h
+    exact h
+  have hdM : 0 ≤ (d : ℝ) * s * M₃ := by positivity
+  have := abs_sub_taylor_le g hcx hs hdM hMg
+  have e3 : f x - (Q₀ x + (f c - Q₀ c) + ∑ i, ((x i - c i : ℤ) : ℝ) * fwd i g c) =
+      g x - g c - ∑ i, ((x i - c i : ℤ) : ℝ) * fwd i g c := by
+    simp only [hg]; ring
+  rw [e3]
+  exact this
+
 end Rigidity.Proofs.Regularity
