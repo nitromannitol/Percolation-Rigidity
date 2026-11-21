@@ -14,7 +14,7 @@ the minimizer of `μ`, the expected spatial average of the coarsened gradient of
 which is the centering in Lemma 5.6 of Armstrong and Dario.
 -/
 
-open MeasureTheory LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
+open MeasureTheory Filter Topology LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Section5
 open scoped Classical
 
 namespace Rigidity.Percolation
@@ -90,5 +90,44 @@ theorem integral_coarsePairing_planarMuMinimizer {p : unitInterval}
     (planarMuMean_eq_integral p n s).symm
   rw [e, e, e]
   exact planarMuMean_polarization hpc n r q
+
+/-- The matrix of the quadratic form `2 lim E[-μ(□_n, ·)]` (in dimension two). -/
+noncomputable def planarAhomInvLimit (p : unitInterval) : Matrix (Fin 2) (Fin 2) ℝ :=
+  !![2 * planarMuLimit p ![1, 0],
+    planarMuLimit p ![1, 1] - planarMuLimit p ![1, 0] - planarMuLimit p ![0, 1];
+    planarMuLimit p ![1, 1] - planarMuLimit p ![1, 0] - planarMuLimit p ![0, 1],
+    2 * planarMuLimit p ![0, 1]]
+
+/-- **The finite-volume matrices converge** (entrywise) to the matrix of `2 lim E[-μ]`. -/
+theorem tendsto_planarAhomInvFinite {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
+    (i j : Fin 2) :
+    Tendsto (fun n => planarAhomInvFinite p n i j) atTop (𝓝 (planarAhomInvLimit p i j)) := by
+  have h10 := tendsto_planarMuLimit hpc ![1, 0]
+  have h01 := tendsto_planarMuLimit hpc ![0, 1]
+  have h11 := tendsto_planarMuLimit hpc ![1, 1]
+  fin_cases i <;> fin_cases j <;>
+    simp only [planarAhomInvFinite, planarAhomInvLimit, Matrix.of_apply, Matrix.cons_val',
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.empty_val', Matrix.cons_val_fin_one,
+      Fin.zero_eta, Fin.mk_one]
+  · exact h10.const_mul 2
+  · exact (h11.sub h10).sub h01
+  · exact (h11.sub h10).sub h01
+  · exact h01.const_mul 2
+
+/-- `lim E[-μ(□_n, q)] = (1/2) q · L q` for the limit matrix `L` of the finite-volume matrices. -/
+theorem planarMuLimit_eq_planarAhomInvLimit {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (q : Fin 2 → ℝ) :
+    planarMuLimit p q = 1 / 2 * ∑ i, ∑ j, q i * planarAhomInvLimit p i j * q j := by
+  have hR : Tendsto (fun n => 1 / 2 * ∑ i, ∑ j, q i * planarAhomInvFinite p n i j * q j) atTop
+      (𝓝 (1 / 2 * ∑ i, ∑ j, q i * planarAhomInvLimit p i j * q j)) := by
+    refine Tendsto.const_mul _ (tendsto_finsetSum _ fun i _ => tendsto_finsetSum _ fun j _ => ?_)
+    exact ((tendsto_planarAhomInvFinite hpc i j).const_mul (q i)).mul_const (q j)
+  have hL := tendsto_planarMuLimit hpc q
+  have heq : (fun n => planarMuMean p n q) =
+      fun n => 1 / 2 * ∑ i, ∑ j, q i * planarAhomInvFinite p n i j * q j := by
+    funext n
+    exact planarMuMean_eq_planarAhomInvFinite hpc n q
+  rw [heq] at hL
+  exact tendsto_nhds_unique hL hR
 
 end Rigidity.Percolation
