@@ -149,4 +149,110 @@ theorem hardyRatio_add_le {γ : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 16) (t : 
   refine mul_le_mul_of_nonneg_left ?_ hK0.le
   linarith
 
+/-- Young's inequality in the form used for the Hardy inequality:
+`a b (−g) ≤ 4γ m a² + (16γ)⁻¹ (g²/m) b²` for `γ, m > 0`. -/
+theorem mul_mul_neg_le_hardy {γ m : ℝ} (hγ : 0 < γ) (hm : 0 < m) (a b g : ℝ) :
+    a * b * (-g) ≤ 4 * γ * (m * a ^ 2) + 1 / (16 * γ) * (g ^ 2 / m) * b ^ 2 := by
+  rw [← sub_nonneg]
+  have h : 4 * γ * (m * a ^ 2) + 1 / (16 * γ) * (g ^ 2 / m) * b ^ 2 - a * b * (-g) =
+      (8 * γ * m * a + g * b) ^ 2 / (16 * γ * m) := by
+    field_simp
+    ring
+  rw [h]
+  positivity
+
+/-- **One-dimensional discrete Hardy inequality**: for `0 < γ ≤ 1/16` and `φ` with
+`φ_0 = φ_{m+1} = 0`, `Σ_{t<m} φ_{t+1}² Δw_{t+1} ≤ 8γ Σ_{t≤m} w̄_t (φ_{t+1} − φ_t)²`. -/
+theorem sum_sq_mul_secondDiff_le {γ : ℝ} (hγ0 : 0 < γ) (hγ : γ ≤ 1 / 16) (m : ℕ)
+    (φ : ℕ → ℝ) (h0 : φ 0 = 0) (hm : φ (m + 1) = 0) :
+    ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 *
+        (hardyWeight γ (t + 2) + hardyWeight γ t - 2 * hardyWeight γ (t + 1)) ≤
+      8 * γ * ∑ t ∈ Finset.range (m + 1), hardyEdgeWeight γ t * (φ (t + 1) - φ t) ^ 2 := by
+  have hγ1 : γ < 1 := by linarith
+  set g : ℕ → ℝ := fun t => hardyWeight γ (t + 1) - hardyWeight γ t with hg
+  set H := ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 *
+    (hardyWeight γ (t + 2) + hardyWeight γ t - 2 * hardyWeight γ (t + 1)) with hH
+  set G := ∑ t ∈ Finset.range (m + 1), hardyEdgeWeight γ t * (φ (t + 1) - φ t) ^ 2 with hG
+  -- summation by parts
+  have habel : H = ∑ t ∈ Finset.range (m + 1), (φ t ^ 2 - φ (t + 1) ^ 2) * g t := by
+    have e1 : ∑ t ∈ Finset.range (m + 1), φ t ^ 2 * g t =
+        ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * g (t + 1) := by
+      rw [Finset.sum_range_succ']
+      simp [h0]
+    have e2 : ∑ t ∈ Finset.range (m + 1), φ (t + 1) ^ 2 * g t =
+        ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * g t := by
+      rw [Finset.sum_range_succ]
+      simp [hm]
+    have e3 : H = ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * g (t + 1) -
+        ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * g t := by
+      rw [hH, ← Finset.sum_sub_distrib]
+      refine Finset.sum_congr rfl fun t _ => ?_
+      simp only [hg, show t + 1 + 1 = t + 2 from rfl]
+      ring
+    rw [e3, ← e1, ← e2, ← Finset.sum_sub_distrib]
+    exact Finset.sum_congr rfl fun t _ => by ring
+  have hR0 : ∀ t, 0 ≤ hardyRatio γ t := fun t =>
+    div_nonneg (sq_nonneg _) (hardyEdgeWeight_pos hγ1 t).le
+  -- the pointwise Young inequality
+  have hpt : ∀ t ∈ Finset.range (m + 1), (φ t ^ 2 - φ (t + 1) ^ 2) * g t ≤
+      4 * γ * (hardyEdgeWeight γ t * (φ (t + 1) - φ t) ^ 2) +
+        1 / (16 * γ) * hardyRatio γ t * (2 * φ t ^ 2 + 2 * φ (t + 1) ^ 2) := by
+    intro t _
+    have hm0 := hardyEdgeWeight_pos hγ1 t
+    have hy := mul_mul_neg_le_hardy hγ0 hm0 (φ (t + 1) - φ t) (φ (t + 1) + φ t) (g t)
+    have hsq : (φ (t + 1) + φ t) ^ 2 ≤ 2 * φ t ^ 2 + 2 * φ (t + 1) ^ 2 := by
+      nlinarith [sq_nonneg (φ (t + 1) - φ t)]
+    have hRnn : 0 ≤ 1 / (16 * γ) * hardyRatio γ t := mul_nonneg (by positivity) (hR0 t)
+    calc (φ t ^ 2 - φ (t + 1) ^ 2) * g t = (φ (t + 1) - φ t) * (φ (t + 1) + φ t) * (-g t) := by
+          ring
+      _ ≤ 4 * γ * (hardyEdgeWeight γ t * (φ (t + 1) - φ t) ^ 2) +
+            1 / (16 * γ) * hardyRatio γ t * (φ (t + 1) + φ t) ^ 2 := hy
+      _ ≤ _ := add_le_add le_rfl (mul_le_mul_of_nonneg_left hsq hRnn)
+  -- regrouping the ratio terms
+  have hshift : ∑ t ∈ Finset.range (m + 1), hardyRatio γ t * (φ t ^ 2 + φ (t + 1) ^ 2) =
+      ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * (hardyRatio γ (t + 1) + hardyRatio γ t) := by
+    have e1 : ∑ t ∈ Finset.range (m + 1), hardyRatio γ t * φ t ^ 2 =
+        ∑ t ∈ Finset.range m, hardyRatio γ (t + 1) * φ (t + 1) ^ 2 := by
+      rw [Finset.sum_range_succ']
+      simp [h0]
+    have e2 : ∑ t ∈ Finset.range (m + 1), hardyRatio γ t * φ (t + 1) ^ 2 =
+        ∑ t ∈ Finset.range m, hardyRatio γ t * φ (t + 1) ^ 2 := by
+      rw [Finset.sum_range_succ]
+      simp [hm]
+    have e0 : ∑ t ∈ Finset.range (m + 1), hardyRatio γ t * (φ t ^ 2 + φ (t + 1) ^ 2) =
+        ∑ t ∈ Finset.range (m + 1), hardyRatio γ t * φ t ^ 2 +
+          ∑ t ∈ Finset.range (m + 1), hardyRatio γ t * φ (t + 1) ^ 2 := by
+      rw [← Finset.sum_add_distrib]
+      exact Finset.sum_congr rfl fun t _ => by ring
+    rw [e0, e1, e2, ← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun t _ => by ring
+  have hRle : ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * (hardyRatio γ (t + 1) + hardyRatio γ t) ≤
+      4 * γ * H := by
+    rw [hH, Finset.mul_sum]
+    refine Finset.sum_le_sum fun t _ => ?_
+    have := mul_le_mul_of_nonneg_left (hardyRatio_add_le hγ0 hγ t) (sq_nonneg (φ (t + 1)))
+    linarith
+  have hsum := Finset.sum_le_sum hpt
+  rw [← habel] at hsum
+  have hsplit : ∑ t ∈ Finset.range (m + 1), (4 * γ * (hardyEdgeWeight γ t *
+      (φ (t + 1) - φ t) ^ 2) + 1 / (16 * γ) * hardyRatio γ t *
+        (2 * φ t ^ 2 + 2 * φ (t + 1) ^ 2)) =
+      4 * γ * G + 1 / (8 * γ) *
+        ∑ t ∈ Finset.range (m + 1), hardyRatio γ t * (φ t ^ 2 + φ (t + 1) ^ 2) := by
+    rw [Finset.sum_add_distrib]
+    congr 1
+    · rw [hG, Finset.mul_sum]
+    · rw [Finset.mul_sum]
+      exact Finset.sum_congr rfl fun t _ => by ring
+  rw [hsplit, hshift] at hsum
+  have hhalf : 1 / (8 * γ) *
+      ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * (hardyRatio γ (t + 1) + hardyRatio γ t) ≤ H / 2 := by
+    calc 1 / (8 * γ) *
+          ∑ t ∈ Finset.range m, φ (t + 1) ^ 2 * (hardyRatio γ (t + 1) + hardyRatio γ t)
+        ≤ 1 / (8 * γ) * (4 * γ * H) := mul_le_mul_of_nonneg_left hRle (by positivity)
+      _ = H / 2 := by
+        field_simp
+        ring
+  linarith
+
 end Rigidity.Dirichlet
