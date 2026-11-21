@@ -11,7 +11,9 @@ Hardy-weighted layer estimate `sum_energy_cubeLayer_div_le`. Normalized by the v
 `L^{-d} E_c(ũ) ≤ L^{-d} E_ā(u_hom) + L^{-d} (6 N^d Σ δ + 3 F + 6 Λ d ρ^{-2} (X + Y))`
 `+ (2 + 3Λ/λ) (2 L^{-d} Σ_{layer} ā|∇f|² + C ((D + ρ + N + 1)/L)^γ (L^{-d} Σ |∇f|^p)^{2/p})`,
 which is the energy estimate (ii) of Lemma 6.3 with the boundary strip estimates (2step31) and
-(2step32) on the lattice.
+(2step32) on the lattice. The `L²` estimate (iii) reads
+`Σ_Q (ũ − u_hom)² ≤ 2 Σ_i Σ (ṽ − ℓ_{y_i})² + 2 C N⁴ r^{-2} Σ_Q |∇u_hom|²`
+(`exists_sum_sq_patch_cubeCutoff_sub_le`).
 -/
 
 open Finset LatticeProb LatticeHC
@@ -139,6 +141,27 @@ theorem edgeEnergy_patch_dirichletSolution_div_le (hd : 0 < d) (a : Fin d → �
   have e2 : (edgeEnergy (constCond a) Q.vertices u / (Q.size : ℝ) ^ d) * (Q.size : ℝ) ^ d =
       edgeEnergy (constCond a) Q.vertices u := by field_simp
   rw [add_mul, add_mul, e2, div_mul_cancel₀ _ hV.ne']
+  linarith
+
+/-- **Lemma 6.3 (iii) on the lattice**: there is `C = C(d, λ, Λ)` such that for `u` harmonic on
+`Q` and the tiling at depth `r + 3`,
+`Σ_U (ũ − u)² ≤ 2 Σ_i Σ_{y_i+□} (ṽ − ℓ_{y_i})² + 2 C N⁴ r^{-2} Σ_Q Σ_j (∇_j u)²`. -/
+theorem exists_sum_sq_patch_cubeCutoff_sub_le (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ}
+    (hlam : 0 < lam) (ha : ∀ j, lam ≤ a j ∧ a j ≤ Λ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (Q : IntegerCube d) (u : Vertex d → ℝ),
+      (∀ x ∈ (shrinkCube Q 1).vertices, condLaplacian (constCond a) u x = 0) →
+      ∀ (r : ℕ), 0 < r → ∀ (z : Vertex d) (M N : ℕ), 0 < N →
+      (cornerCube z (M * N)).vertices ⊆ (shrinkCube Q (r + 3)).vertices →
+      ∀ (ρ : ℕ) (U : Finset (Vertex d)) (v : Vertex d → ℝ),
+      ∑ x ∈ U, (patch (cubeCutoff (cornerCube z (M * N)) ρ) v u x - u x) ^ 2 ≤
+        2 * ∑ i ∈ (cornerCube 0 M).vertices, ∑ x ∈ (cornerCube (z + (N : ℤ) • i) N).vertices,
+            (v x - cubeAffine N u (z + (N : ℤ) • i) x) ^ 2 +
+          2 * (C * (N : ℝ) ^ 4 / (r : ℝ) ^ 2 *
+            ∑ x ∈ Q.vertices, ∑ j : Fin d, (u (x + unit j) - u x) ^ 2) := by
+  obtain ⟨C, hC, hbound⟩ := exists_sum_tiles_sq_sub_cubeAffine_le_energy hd a hlam ha
+  refine ⟨C, hC, fun Q u hu r hr z M N hN hsub ρ U v => ?_⟩
+  refine (sum_sq_patch_cubeCutoff_sub_le hN z M ρ U v u).trans ?_
+  have h := hbound Q u hu r hr z M N hN hsub
   linarith
 
 end Rigidity.Dirichlet
