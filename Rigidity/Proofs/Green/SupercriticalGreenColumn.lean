@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Green.ClusterIsoperimetryWellConnected
 import Rigidity.Proofs.Green.LatticeIsoperimetry
+import Rigidity.Proofs.Assembly.PlanarGreenInputs
 
 /-!
 # Green columns of the supercritical cluster in dimension at least three
@@ -17,7 +18,11 @@ a unique Green column (`greenColumnExistence_of_three_le`). The proof chains
 
 With the planar statement this is the Green-column input
 `LatticeProb.External.SupercriticalBondGreenColumnExistence`
-(`supercriticalBondGreenColumnExistence_of_two`).
+(`supercriticalBondGreenColumnExistence_of_two`). The planar statement follows from the planar
+order-zero estimate and the existence of planar Green columns
+(`Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero`), so the
+Green-column input follows from the planar order-zero estimate alone
+(`supercriticalBondGreenColumnExistence_of_orderZeroTwo`).
 -/
 
 open MeasureTheory LatticeProb.Percolation
@@ -46,5 +51,12 @@ theorem supercriticalBondGreenColumnExistence_of_two
     LatticeProb.External.SupercriticalBondGreenColumnExistence :=
   supercriticalBondGreenColumnExistence_of_latticeIsoperimetry hTwo fun _ hd =>
     latticeIsoperimetry (by omega)
+
+/-- **The Green-column input** from the planar order-zero estimate. -/
+theorem supercriticalBondGreenColumnExistence_of_orderZeroTwo
+    (hAD : Rigidity.External.ArmstrongDarioOrderZeroTwo) :
+    LatticeProb.External.SupercriticalBondGreenColumnExistence :=
+  supercriticalBondGreenColumnExistence_of_two
+    (Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero hAD)
 
 end Rigidity.Green
