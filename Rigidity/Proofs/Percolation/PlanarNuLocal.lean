@@ -67,14 +67,16 @@ theorem planarPartCube_eq_cappedCube {V : TriadicCube 2} (h : PlanarLocalGood ω
   by_contra hne
   exact h.2 ⟨x, hx, _, (planarPartCube_spec h.1 x).1, (planarPartCube_spec h.1 x).2, hne⟩
 
-/-- On the good event, the local data determine `1{P, V res} ν(V, ξ)`. -/
-theorem planarNu_indicator_eq_of_planarLocalData_eq {V : TriadicCube 2}
+/-- On the good event, the local data determine resolution, the cluster, the open edges inside
+`V` and the coarse anchors of the vertices of `V`. -/
+theorem planarLocalData_eq_imp {V : TriadicCube 2}
     (hω : PlanarLocalGood ω V) (hω' : PlanarLocalGood ω' V)
-    (h : planarLocalData ω V = planarLocalData ω' V) (ξ : Fin 2 → ℝ) :
-    (if PlanarPartitionEvent ω ∧ PlanarResolved ω V then ENNReal.ofReal (planarNu ω V ξ)
-      else 0) =
-      if PlanarPartitionEvent ω' ∧ PlanarResolved ω' V then ENNReal.ofReal (planarNu ω' V ξ)
-      else 0 := by
+    (h : planarLocalData ω V = planarLocalData ω' V) :
+    (PlanarResolved ω V ↔ PlanarResolved ω' V) ∧
+      (∀ x, x ∈ clusterVertices ω' V ↔ x ∈ clusterVertices ω V) ∧
+      (∀ x ∈ V.vertices, ∀ y ∈ V.vertices,
+        ((openGraph ω').Adj x y ↔ (openGraph ω).Adj x y)) ∧
+      (∀ x ∈ V.vertices, planarCoarseAnchor ω' x = planarCoarseAnchor ω x) := by
   have hcd := congrArg Prod.fst h
   have hQx : ∀ x ∈ V.vertices,
       TriadicCube.cappedCube (planarGoodCubes ω) V.scale x =
@@ -116,13 +118,24 @@ theorem planarNu_indicator_eq_of_planarLocalData_eq {V : TriadicCube 2}
     refine and_congr_right fun hx => ?_
     rw [hanc x hx]
     exact reachIn_iff_of_adj_iff hadj _ _
+  refine ⟨hres, fun x => ?_, hadj, hanc⟩
+  rw [mem_clusterVertices, mem_clusterVertices]
+  exact hcl x
+
+/-- On the good event, the local data determine `1{P, V res} ν(V, ξ)`. -/
+theorem planarNu_indicator_eq_of_planarLocalData_eq {V : TriadicCube 2}
+    (hω : PlanarLocalGood ω V) (hω' : PlanarLocalGood ω' V)
+    (h : planarLocalData ω V = planarLocalData ω' V) (ξ : Fin 2 → ℝ) :
+    (if PlanarPartitionEvent ω ∧ PlanarResolved ω V then ENNReal.ofReal (planarNu ω V ξ)
+      else 0) =
+      if PlanarPartitionEvent ω' ∧ PlanarResolved ω' V then ENNReal.ofReal (planarNu ω' V ξ)
+      else 0 := by
+  obtain ⟨hres, hC, hadj, -⟩ := planarLocalData_eq_imp hω hω' h
   by_cases hr : PlanarResolved ω V
   · rw [if_pos ⟨hω.1, hr⟩, if_pos ⟨hω'.1, hres.1 hr⟩]
     congr 1
-    refine (planarNu_eq_of_cluster_eq (fun x => ?_) (fun x hx y hy => ?_) ξ).symm
-    · rw [mem_clusterVertices, mem_clusterVertices]
-      exact hcl x
-    · exact hadj x (mem_clusterVertices.1 hx).1 y (mem_clusterVertices.1 hy).1
+    refine (planarNu_eq_of_cluster_eq hC (fun x hx y hy => ?_) ξ).symm
+    exact hadj x (mem_clusterVertices.1 hx).1 y (mem_clusterVertices.1 hy).1
   · rw [if_neg fun h' => hr h'.2, if_neg fun h' => hr (hres.2 h'.2)]
 
 /-- **Agreement with `ν`.** On the good event, the local version equals
