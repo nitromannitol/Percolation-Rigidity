@@ -328,7 +328,14 @@ fidelity:
     their displacement from the centre, local quantities defined through the partition capped at the
     scale of the cube with approximate stationarity in place of the exact stationarity (4.40) of the
     local partitions, and only the convergence of the expectations, Definition 5.1 and (5.1) proved
-    from Section 5), and for the Dirichlet problem and the excess-decay iteration (Armstrong and Dario,
+    from Section 5 there), for the energy defects, the finite-volume matrices and the
+    identification of the limit of the expectation of -mu (Armstrong and Dario, Section 5, d = 2:
+    Lemma 5.4 for every n <= m with the error of the sums of 3^(-k/2) + exp(-c 3^k), the solenoidal
+    field of Lemma 5.7, Step 1, as the exactly divergence free discrete curl of a cut off stream
+    function, the bound of Lemma 5.9 for the quantity D_n a hypothesis of the identification and of
+    the geometric rates of Lemma 5.10, whose Step 2 is proved through exact recursions for the
+    weighted averages, and the rate of Proposition 5.2 not proved), and for the Dirichlet problem and
+    the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,
     a Hardy-weighted boundary-layer estimate in place of the Meyers and H^2 estimates of
     Proposition 6.5, the upper bound of Lemma 6.3, Step 1, from the first variation of nu at its

@@ -54,6 +54,29 @@ import Rigidity.Proofs.Regularity.LatticeHarmonicExcessTwo
 import Rigidity.Proofs.Regularity.PlanarHarmonicRegularity
 import Rigidity.Proofs.Regularity.PlanarHarmonicRegularityTwo
 import Rigidity.Proofs.Regularity.PlanarMesoscopicRegularity
+import Rigidity.Proofs.Percolation.PlanarCoarseGradientMean
+import Rigidity.Proofs.Percolation.PlanarFiniteVolumeBounds
+import Rigidity.Proofs.Percolation.PlanarFiniteVolumeClose
+import Rigidity.Proofs.Percolation.PlanarFiniteVolumeInverseLimit
+import Rigidity.Proofs.Percolation.PlanarFiniteVolumeMatrix
+import Rigidity.Proofs.Percolation.PlanarFiniteVolumeRate
+import Rigidity.Proofs.Percolation.PlanarIdentification
+import Rigidity.Proofs.Percolation.PlanarMuEnergyDefect
+import Rigidity.Proofs.Percolation.PlanarMuIncrements
+import Rigidity.Proofs.Percolation.PlanarNuDefectTau
+import Rigidity.Proofs.Percolation.PlanarNuEnergyDefect
+import Rigidity.Proofs.Percolation.PlanarOmegaDBounds
+import Rigidity.Proofs.Percolation.PlanarOmegaDecayIteration
+import Rigidity.Proofs.Percolation.PlanarOmegaDLimit
+import Rigidity.Proofs.Percolation.PlanarOmegaIteration
+import Rigidity.Proofs.Percolation.PlanarOmegaLimit
+import Rigidity.Proofs.Percolation.PlanarOmegaMatrix
+import Rigidity.Proofs.Percolation.PlanarOmegaStepOne
+import Rigidity.Proofs.Percolation.PlanarQuadraticResponse
+import Rigidity.Proofs.Percolation.PlanarSecondVariation
+import Rigidity.Proofs.Percolation.PlanarSolenoidalField
+import Rigidity.Proofs.Percolation.PlanarSolenoidalPairing
+import Rigidity.Proofs.Percolation.PlanarTauSummable
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -66,7 +89,9 @@ planar order-zero estimate and the heat kernel and Green column bounds, the mult
 inequality of Armstrong and Dario (Proposition A.2) with its affine form, and the partition into
 good cubes and the functional and elliptic inequalities on the cluster of Armstrong and Dario
 (§§2–3) with the Sobolev inequality of the lattice, the localization of the planar subadditive quantities with the limits of their
-expectations and the homogenized matrix (§4.3 and the start of §5, `d = 2`), and the deterministic
+expectations and the homogenized matrix (§4.3 and the start of §5, `d = 2`), the convergence of
+the finite-volume matrices and the energy defects of the planar subadditive quantities with the
+identification of the limit from the decay of `ω` (§5, `d = 2`), and the deterministic
 steps of the homogenization of the Dirichlet problem and of the excess-decay iteration (§§6–7);
 `scripts/check_axioms.py` checks it.
 
@@ -245,3 +270,41 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_coarsen_eq_zero
 #print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_coarsen_eq_zero
 #print axioms Rigidity.Percolation.exists_clusterSobolevTwo
+
+-- The energy defects, the finite-volume matrices, the solenoidal field and the identification of the
+-- limit from the decay of omega in Section 5 of Armstrong and Dario, for d = 2
+#print axioms Rigidity.Percolation.sum_clusterForm_sub_add_sum_planarMu_subcubes_le
+#print axioms Rigidity.Percolation.sum_clusterForm_sub_add_planarNu_le_sum_subcubes
+#print axioms Rigidity.Percolation.exists_lintegral_planarMuDefect_le
+#print axioms Rigidity.Percolation.exists_lintegral_planarNuDefect_le
+#print axioms Rigidity.Percolation.exists_planarMuDefect_le_planarMuTau
+#print axioms Rigidity.Percolation.exists_planarNuDefect_le_planarNuTau
+#print axioms Rigidity.Percolation.summable_planarTau
+#print axioms Rigidity.Percolation.exists_planarMuDefect_le_tendsto
+#print axioms Rigidity.Percolation.exists_planarNuDefect_le_tendsto
+#print axioms Rigidity.Percolation.planarMuLimit_eq_iff_planarOmegaLimit_eq_zero
+#print axioms Rigidity.Percolation.forall_planarOmegaLimit_eq_zero_iff
+#print axioms Rigidity.Percolation.coarsePairing_planarMuMinimizer
+#print axioms Rigidity.Percolation.integral_coarsePairing_planarMuMinimizer
+#print axioms Rigidity.Percolation.tendsto_planarAhomInvFinite
+#print axioms Rigidity.Percolation.planarMuLimit_eq_planarAhomInvLimit
+#print axioms Rigidity.Percolation.exists_planarAhomInvFinite_bounds
+#print axioms Rigidity.Percolation.exists_abs_planarAhomInvFinite_sub_le
+#print axioms Rigidity.Percolation.sum_solenoidalField_sub_eq_zero
+#print axioms Rigidity.Percolation.solenoidalField_eq
+#print axioms Rigidity.Percolation.abs_solenoidalField_le
+#print axioms Rigidity.Percolation.tsum_sum_grad_mul_solenoidalField
+#print axioms Rigidity.Percolation.exists_abs_planarNu_sub_planarMu_sub_le
+#print axioms Rigidity.Percolation.exists_planarOmegaD_succ_le
+#print axioms Rigidity.Percolation.exists_neg_le_planarOmegaD
+#print axioms Rigidity.Percolation.exists_le_mul_pow_of_omega_iteration
+#print axioms Rigidity.Percolation.exists_le_mul_pow_of_omega_iteration_of_ge
+#print axioms Rigidity.Percolation.exists_planarOmegaD_le_pow_of_decay
+#print axioms Rigidity.Percolation.exists_planarTau_le_pow_of_decay
+#print axioms Rigidity.Percolation.exists_abs_planarAhomInvLimit_sub_le_of_decay
+#print axioms Rigidity.Percolation.planarAhomInvLimit_det_ne_zero
+#print axioms Rigidity.Percolation.tendsto_planarAhomFinite
+#print axioms Rigidity.Percolation.tendsto_planarOmegaD
+#print axioms Rigidity.Percolation.dotProduct_inv_planarAhomInvLimit_le
+#print axioms Rigidity.Percolation.planarMuLimit_eq_of_limit_planarOmegaD_nonpos
+#print axioms Rigidity.Percolation.planarMuLimit_eq_of_decay

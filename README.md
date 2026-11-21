@@ -922,9 +922,95 @@ Departures from Armstrong and Dario:
   error `C\|q\|₁² exp(−c 3ⁿ)`, and defines the local versions through the capped partition on the
   square of side `14 · 3ⁿ` around `V`; the stationary versions are taken through the origin square,
   where their laws are exactly invariant.
-- **Section 5.** Only the convergence of the expectations, Definition 5.1 and (5.1), and the
-  inequality `q · ξ ≤ lim E[−μ] + lim E[ν]` are proved; the identification
-  `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q` and the rates of AD, §5, are not.
+- **Section 5.** This section proves the convergence of the expectations, Definition 5.1 and (5.1),
+  and the inequality `q · ξ ≤ lim E[−μ] + lim E[ν]`; the identification
+  `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q` and the further parts of AD, §5, are in
+  [Energy defects, finite-volume matrices and the identification of the limit for d = 2](#energy-defects-finite-volume-matrices-and-the-identification-of-the-limit-for-d--2).
+
+## Energy defects, finite-volume matrices and the identification of the limit for d = 2
+
+Continuing [the previous section](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2),
+the parts of AD, §5, that do not use the Meyers estimate on the cluster are proved for `d = 2` and
+`𝔭_c(2) < p < 1`. Write `ε_k = 3^{−k/2} + exp(−c 3ᵏ)`. The quantity `τ_k` of AD, §5, is the sum of
+the positive parts of the increments of `E[μ(□_k, ·)]` at the unit vectors and of `E[ν(□_k, ·)]` at
+`ā⁻¹` applied to them. The matrix `ā_{□_n}⁻¹` of AD, Definition 5.6, is the matrix of the quadratic
+form `2 E[−μ(□_n, ·)]`. The expectation of `ω(□_n, q)` is
+`E[ν(□_n, ā⁻¹q)] + E[−μ(□_n, q)] − q · ā⁻¹q`, and `D_n` is the quantity of the proof of AD,
+Lemma 5.10. The numbering is that of the arXiv v2 source: Definition 5.6 precedes the weak
+convergence Lemma 5.7, the flatness Lemma 5.8, the decay of `ω` Lemma 5.9 and its iteration
+Lemma 5.10.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.sum_clusterForm_sub_add_sum_planarMu_subcubes_le`](Rigidity/Proofs/Percolation/PlanarSecondVariation.lean) | AD Lemma 4.2 and (5.11) for `μ`, `d = 2`: for the minimizer on a resolved cube and the minimizers on its subcubes of scale `n`, the energy of the differences plus the sum of `μ` over the subcubes is at most `μ` of the large cube. |
+| [`Rigidity.Percolation.sum_clusterForm_sub_add_planarNu_le_sum_subcubes`](Rigidity/Proofs/Percolation/PlanarSecondVariation.lean) | the same for `ν`, for any solution of the first variation equation on the large cube. |
+| [`Rigidity.Percolation.exists_lintegral_planarMuDefect_le`](Rigidity/Proofs/Percolation/PlanarMuEnergyDefect.lean) | AD Lemma 5.4, display (5.10), for `μ`: the expected energy of the differences between the restricted minimizer and the minimizers on the subcubes of scale `n` is at most the volume times the decrease of `E[−μ]` between the two scales, up to `C\|q\|₁² ε_n`. |
+| [`Rigidity.Percolation.exists_lintegral_planarNuDefect_le`](Rigidity/Proofs/Percolation/PlanarNuEnergyDefect.lean) | the same for `ν`, with maximizers. |
+| [`Rigidity.Percolation.exists_planarMuDefect_le_planarMuTau`](Rigidity/Proofs/Percolation/PlanarMuIncrements.lean) | AD (5.9) and (5.10) for `μ`: for `n ≤ m`, the expected energy of the differences, divided by the volume, is at most `2\|q\|² ∑_{n ≤ k < m} τ_k^μ` plus `C\|q\|₁² (∑_{n ≤ k < m} ε_k + ε_n)`. |
+| [`Rigidity.Percolation.exists_planarNuDefect_le_planarNuTau`](Rigidity/Proofs/Percolation/PlanarNuDefectTau.lean) | the same for `ν` at `ā⁻¹ q`, with `τ^ν`. |
+| [`Rigidity.Percolation.summable_planarTau`](Rigidity/Proofs/Percolation/PlanarTauSummable.lean) | `τ_k` is summable. |
+| [`Rigidity.Percolation.exists_planarMuDefect_le_tendsto`](Rigidity/Proofs/Percolation/PlanarTauSummable.lean), [`exists_planarNuDefect_le_tendsto`](Rigidity/Proofs/Percolation/PlanarNuDefectTau.lean) | AD Lemma 5.4, qualitative form: the expected energy of the differences divided by the volume is at most `(\|q\|² + \|q\|₁²) R_n` with `R_n → 0`, uniformly in `m ≥ n`. |
+| [`Rigidity.Percolation.planarMuLimit_eq_iff_planarOmegaLimit_eq_zero`](Rigidity/Proofs/Percolation/PlanarOmegaLimit.lean), [`forall_planarOmegaLimit_eq_zero_iff`](Rigidity/Proofs/Percolation/PlanarOmegaMatrix.lean) | AD Proposition 5.2: the limit of `E[ω(□_n, q)]` exists and is nonnegative, and `lim E[−μ(□_n, q)] = (1/2) q · ā⁻¹ q` for all `q` if and only if the limit of `E[ω]` vanishes, if and only if the finite-volume matrices converge to `ā⁻¹`. |
+| [`Rigidity.Percolation.integral_coarsePairing_planarMuMinimizer`](Rigidity/Proofs/Percolation/PlanarFiniteVolumeMatrix.lean) | AD (5.23), the centering in Lemma 5.7: the expected spatial average of the coarsened gradient of the minimizer of `μ(□_n, q)` against `r` is `r · ā_{□_n}⁻¹ q`. |
+| [`Rigidity.Percolation.tendsto_planarAhomInvFinite`](Rigidity/Proofs/Percolation/PlanarFiniteVolumeMatrix.lean) | the matrices `ā_{□_n}⁻¹` converge entrywise to twice the matrix of the limit of `E[−μ]`. |
+| [`Rigidity.Percolation.exists_planarAhomInvFinite_bounds`](Rigidity/Proofs/Percolation/PlanarFiniteVolumeBounds.lean), [`exists_abs_planarAhomInvFinite_sub_le`](Rigidity/Proofs/Percolation/PlanarFiniteVolumeClose.lean) | AD (5.22) and (5.24): the matrices are uniformly elliptic from some scale on, and two of them differ by at most `2 ∑ τ_k` plus a vanishing error. |
+| [`Rigidity.Percolation.tsum_sum_grad_mul_solenoidalField`](Rigidity/Proofs/Percolation/PlanarSolenoidalPairing.lean), [`solenoidalField_eq`](Rigidity/Proofs/Percolation/PlanarSolenoidalField.lean), [`abs_solenoidalField_le`](Rigidity/Proofs/Percolation/PlanarSolenoidalField.lean) | AD Lemma 5.7, Step 1, and (5.28) with right side zero, `d = 2`: a finitely supported, exactly divergence free field, bounded by `10 \|e\|₁`, equal to `e` near `□_n`, is orthogonal to every gradient. |
+| [`Rigidity.Percolation.exists_abs_planarNu_sub_planarMu_sub_le`](Rigidity/Proofs/Percolation/PlanarQuadraticResponse.lean) | first display of the proof of AD Lemma 5.9, per cube: `ν(U, p) − μ(U, q) − q · p` differs from the energy of the difference between the maximizer and the minimizer, divided by twice the volume, by at most `\|q · p\|/L` plus the boundary error. |
+| [`Rigidity.Percolation.exists_planarOmegaD_succ_le`](Rigidity/Proofs/Percolation/PlanarOmegaStepOne.lean), [`exists_neg_le_planarOmegaD`](Rigidity/Proofs/Percolation/PlanarOmegaDBounds.lean) | AD Lemma 5.10, Step 1 and the lower bound of `D_n`: from some scale on, `D_{n+1} ≤ D_n − c τ_n + C ε_n` and `D_n ≥ −C 3^{−n/2}`. |
+| [`Rigidity.Percolation.exists_le_mul_pow_of_omega_iteration`](Rigidity/Proofs/Percolation/PlanarOmegaIteration.lean), [`exists_le_mul_pow_of_omega_iteration_of_ge`](Rigidity/Proofs/Percolation/PlanarOmegaIteration.lean) | AD Lemma 5.10, Steps 1 to 3, for real sequences, also when the hypotheses hold only from a starting scale on. |
+| [`Rigidity.Percolation.exists_planarOmegaD_le_pow_of_decay`](Rigidity/Proofs/Percolation/PlanarOmegaDecayIteration.lean), [`exists_planarTau_le_pow_of_decay`](Rigidity/Proofs/Percolation/PlanarOmegaDecayIteration.lean), [`exists_abs_planarAhomInvLimit_sub_le_of_decay`](Rigidity/Proofs/Percolation/PlanarFiniteVolumeRate.lean) | AD Lemma 5.10 with the bound of Lemma 5.9 as an explicit hypothesis `h59`: `D_n`, `τ_n` and the distance from `ā_{□_n}⁻¹` to its limit decay geometrically. |
+| [`Rigidity.Percolation.planarMuLimit_eq_of_decay`](Rigidity/Proofs/Percolation/PlanarIdentification.lean) | AD Proposition 5.2, qualitative part, with the bound of Lemma 5.9, `D_n ≤ C (σⁿ + ∑_{l ≤ n} ρ^{n−l} τ_l)` from some scale on with `σ, ρ < 1`, as an explicit hypothesis: `lim E[−μ(□_n, q)] = (1/2) q · ā⁻¹ q` for every `q`. |
+
+The theorems of the table and their supporting results (the limit matrix is invertible, the matrices
+`ā_{□_n}` converge to its inverse, `D_n` converges, the limit matrix is below `ā⁻¹`) depend on
+exactly `propext`, `Classical.choice` and `Quot.sound`; thirty-five of them have axiom reports in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The modules are in
+[`Rigidity/Proofs/Percolation/`](Rigidity/Proofs/Percolation/), from `PlanarSecondVariation.lean`
+and `PlanarMuEnergyDefect.lean` to `PlanarIdentification.lean`.
+
+1. **Energy defects** (`PlanarSecondVariation.lean`, `PlanarMuEnergyDefect.lean`,
+   `PlanarNuEnergyDefect.lean`). The second variation identities for `μ` and `ν` on a resolved
+   cube and their subadditive form, summed over the subcubes of scale `n`, bound the energy of the
+   differences between the restricted optimizer and the optimizers of the subcubes by the decrease
+   of the expectation between the two scales.
+2. **The quantity `τ`** (`PlanarMuIncrements.lean`, `PlanarNuIncrements.lean`,
+   `PlanarNuDefectTau.lean`, `PlanarTauSummable.lean`). The increments of the expectations are
+   almost nonnegative quadratic forms, controlled by their values at the unit vectors, so that the
+   energy defects are controlled by the sums of `τ_k`, which are summable.
+3. **Finite-volume matrices** (`PlanarFiniteVolumeMatrix.lean`, `PlanarFiniteVolumeInverse.lean`,
+   `PlanarFiniteVolumeBounds.lean`, `PlanarFiniteVolumeClose.lean`,
+   `PlanarFiniteVolumeInverseLimit.lean`, `PlanarCoarseGradientMean.lean`). The matrices
+   `ā_{□_n}⁻¹` and their inverses, their ellipticity, their closeness at two scales and their
+   limit.
+4. **Solenoidal field** (`PlanarSolenoidalField.lean`, `PlanarSolenoidalPairing.lean`). The
+   discrete curl of a cut off affine stream function on the plaquettes.
+5. **The quantity `ω` and the identification** (`PlanarOmegaLimit.lean`, `PlanarOmegaMatrix.lean`,
+   `PlanarOmegaDLimit.lean`, `PlanarQuadraticTrace.lean`, `PlanarOmegaStepOne.lean`,
+   `PlanarOmegaDBounds.lean`, `PlanarOmegaIteration.lean`, `PlanarOmegaDecayIteration.lean`,
+   `PlanarFiniteVolumeRate.lean`, `PlanarIdentification.lean`, `PlanarQuadraticResponse.lean`). The
+   limit of `E[ω]` and its vanishing, the decrease of `D_n` along `τ_n`, the iteration of AD,
+   Lemma 5.10, and the identification of the limit of `E[−μ]` from the bound of Lemma 5.9.
+
+Departures from Armstrong and Dario:
+
+- **Hypothesis of the identification.** The bound of Lemma 5.9 for `D_n` is not proved. Its proof
+  uses Lemmas 5.5 to 5.8, and Lemma 5.5, with Steps 2 and 3 of Lemma 5.7, needs the Meyers estimate
+  of AD, Proposition 3.8, on the planar cluster, which is available only in the abstract form of
+  [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster).
+  The theorem `planarMuLimit_eq_of_decay` and the geometric rates derived from Lemma 5.10 therefore
+  take the bound as the explicit hypothesis `h59`; without it, the identification is reduced to the
+  vanishing of the limit of `E[ω]`. The rate of Proposition 5.2 and Lemmas 5.3 and 5.11 are not
+  proved.
+- **Lemma 5.4.** The estimate is proved for every `n ≤ m` with the error
+  `C\|q\|₁² (∑_k ε_k + ε_n)`, `ε_k = 3^{−k/2} + exp(−c 3ᵏ)`, where AD take `n ∈ [m/2, m)` and the
+  error `3^{−n/4}`; the quantity `τ^ν` is built at `ā⁻¹ e_i`, as in AD.
+- **Lemma 5.7.** The field of Step 1 is the discrete curl of a cut off affine stream function, so
+  it is exactly divergence free and supported in the square of half side `5/4 · 3ⁿ + 1`, whereas AD
+  discretize a smooth field that is almost divergence free. Steps 2 and 3 are not proved.
+- **Lemma 5.10, Step 2.** The display for `D̃_n − D̃_{n+1}` has `D_k − D_{k−1}` where `D_k − D_{k+1}`
+  is meant, and the bound of Lemma 5.9 is resummed over `l ∈ [N₀, n]` where `l ≤ k` is meant, the
+  terms with `l < N₀` being `O(3^{N₀−k})`. The Lean proof uses the exact recursions
+  `D̃_{n+1} = μ D̃_n + D_{n+1}` for the weighted averages instead.
 
 ## The Dirichlet problem and the excess-decay iteration
 
@@ -1016,7 +1102,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 127 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 162 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1035,9 +1121,11 @@ Departures from Armstrong and Dario:
   [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster),
   the eleven theorems of
   [Localization of the subadditive quantities and the homogenized matrix for d = 2](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2),
+  the thirty-five theorems of
+  [Energy defects, finite-volume matrices and the identification of the limit for d = 2](#energy-defects-finite-volume-matrices-and-the-identification-of-the-limit-for-d--2),
   and the nineteen theorems of
   [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration).
-  Each of the 127 reports lists exactly `propext`, `Classical.choice` and
+  Each of the 162 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1068,10 +1156,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1098 Lean files with 199,950 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1124 Lean files with 204,149 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (247 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (310 lines) are counted separately.
 
 ## Building
 
