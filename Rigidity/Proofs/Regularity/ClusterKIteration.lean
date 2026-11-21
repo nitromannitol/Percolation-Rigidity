@@ -14,8 +14,8 @@ comparison `ClusterBallVolumeComparison` and the cap density `ClusterBallCapDens
 radii `X` and `R`; the class `Abar` of harmonic functions and its excess decay remain hypotheses.
 The constants depend only on `d`, `A`, `α`, the volume constant `K`, the cap fraction `δ` and the
 constant `CH` of the excess decay of `Abar`. The versions `..._of_clusterCubeDensity` take instead a
-lower bound `κ > 0` on the density of the cluster in the triadic cubes of size at least `ℓ` inside
-`B_R(z)` (`ClusterCubeDensity`), for `X ≥ 24 √d max ℓ 1`.
+lower bound `κ > 0` on the density of the cluster in the triadic cubes of size `3^m ≥ ℓ` inside
+`B_{24 √d 3^m}(z)` (`ClusterCubeDensity`), for `X ≥ 24 √d max ℓ 1`.
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -90,7 +90,7 @@ theorem armstrongDario_lemma_7_2_zero_of_clusterCubeDensity (d : ℕ) (hd : 0 < 
     ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration d) (Cl : OpenComponent ω) (z : Vertex d)
       (Abar : ℝ → Set (Cl → ℝ)) (R X E ℓ : ℝ) (u : Cl → ℝ),
       1 ≤ X → X ≤ R / A → 0 ≤ E → 24 * Real.sqrt d * max ℓ 1 ≤ X →
-      ClusterCubeDensity Cl z ℓ R κ →
+      ClusterCubeDensity Cl z ℓ κ →
       HarmonicRegularity (componentBallSeminorm Cl z) Abar (clusterAffine Cl) 1 X R CH →
       (∀ r : ℝ, X ≤ r → r ≤ R / A → (Abar r).Nonempty) →
       HarmonicApproximation (componentBallSeminorm Cl z) Abar (clusterConstants Cl) A α X R E u →
@@ -107,8 +107,8 @@ theorem armstrongDario_lemma_7_2_zero_of_clusterCubeDensity (d : ℕ) (hd : 0 < 
       mul_nonneg (Real.sqrt_nonneg _) ((zero_le_one).trans (le_max_right _ _))
     linarith
   exact h ω Cl z Abar R X E u hX hXR hE
-    ((clusterBallVolumeComparison_of_clusterCubeDensity Cl z hd hκ hcube).of_le h6)
-    ((clusterBallCapDensity_of_clusterCubeDensity Cl z hd hκ hcube).of_le hXℓ) hreg hne happ
+    ((clusterBallVolumeComparison_of_clusterCubeDensity Cl z R hd hκ hcube).of_le h6)
+    ((clusterBallCapDensity_of_clusterCubeDensity Cl z R hd hκ hcube).of_le hXℓ) hreg hne happ
 
 /-- **Order-zero regularity at the origin on cluster balls, from the density in cubes.** -/
 theorem armstrongDario_orderZero_origin_of_clusterCubeDensity (d : ℕ) (hd : 0 < d)
@@ -116,7 +116,7 @@ theorem armstrongDario_orderZero_origin_of_clusterCubeDensity (d : ℕ) (hd : 0 
     ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration d) (Cl : OpenComponent ω) (z : Vertex d)
       (Abar : ℝ → Set (Cl → ℝ)) (R X E ℓ : ℝ) (u : Cl → ℝ),
       1 ≤ X → X ≤ R / A → 0 ≤ E → 24 * Real.sqrt d * max ℓ 1 ≤ X →
-      ClusterCubeDensity Cl z ℓ R κ →
+      ClusterCubeDensity Cl z ℓ κ →
       HarmonicRegularity (componentBallSeminorm Cl z) Abar (clusterAffine Cl) 1 X R CH →
       (∀ r : ℝ, X ≤ r → r ≤ R / A → (Abar r).Nonempty) →
       HarmonicApproximation (componentBallSeminorm Cl z) Abar (clusterConstants Cl) A α X R E u →
@@ -133,7 +133,7 @@ theorem armstrongDario_orderZero_origin_of_clusterCubeDensity (d : ℕ) (hd : 0 
       mul_nonneg (Real.sqrt_nonneg _) ((zero_le_one).trans (le_max_right _ _))
     linarith
   exact h ω Cl z Abar R X E u hX hXR hE
-    ((clusterBallVolumeComparison_of_clusterCubeDensity Cl z hd hκ hcube).of_le h6)
-    ((clusterBallCapDensity_of_clusterCubeDensity Cl z hd hκ hcube).of_le hXℓ) hreg hne happ
+    ((clusterBallVolumeComparison_of_clusterCubeDensity Cl z R hd hκ hcube).of_le h6)
+    ((clusterBallCapDensity_of_clusterCubeDensity Cl z R hd hκ hcube).of_le hXℓ) hreg hne happ
 
 end Rigidity.Proofs.Regularity

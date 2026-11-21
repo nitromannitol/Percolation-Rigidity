@@ -6,10 +6,10 @@ import Rigidity.Proofs.Regularity.ClusterBallExcess
 
 The cluster-ball properties `ClusterBallVolumeComparison` and `ClusterBallCapDensity` used by the
 iteration of Armstrong–Dario, Lemma 7.2 (arXiv:1609.09431v2), on cluster balls follow from a lower
-bound on the density of the cluster in the triadic cubes `□_m(3^m k)` (`triadicCube`) of size at
-least `ℓ` inside a ball `B_R(z)` (`ClusterCubeDensity`): every cluster ball `C ∩ B_s(z)`,
-`s ∈ [6 √d max ℓ 1, R]`, contains a cube of size comparable to `s` near `z`, and every cap
-`C ∩ B_ρ(z) ∩ {±⟪p, x - z⟫ ≥ ‖p‖ ρ / 2}`, `ρ ∈ [24 √d max ℓ 1, R]`, contains a cube of size
+bound on the density of the cluster in the triadic cubes `□_m(3^m k)` (`triadicCube`) of size
+`3^m ≥ ℓ` inside the ball `B_{24 √d 3^m}(z)` (`ClusterCubeDensity`): every cluster ball
+`C ∩ B_s(z)`, `s ≥ 6 √d max ℓ 1`, contains a cube of size comparable to `s` near `z`, and every cap
+`C ∩ B_ρ(z) ∩ {±⟪p, x - z⟫ ≥ ‖p‖ ρ / 2}`, `ρ ≥ 24 √d max ℓ 1`, contains a cube of size
 comparable to `ρ` near `z ± (3ρ / 4) p / ‖p‖`, while a ball of radius `r ≥ 1` has at most
 `(2 r + 3) ^ d` lattice points (`card_componentEuclideanBall_le`).
 
@@ -93,13 +93,13 @@ noncomputable def clusterCubePoints (C : OpenComponent ω) (z : Vertex d) (R : �
   (componentEuclideanBall C z R).filter fun x =>
     ∀ i, |((x.val i : ℤ) : ℝ) - 3 ^ m * (k i : ℝ)| < 3 ^ m / 2
 
-/-- Every triadic cube of size `3^m ≥ ℓ` inside the ball `B_R(z)` carries at least `κ 3^{d m}`
-vertices of the cluster `C`. -/
-def ClusterCubeDensity (C : OpenComponent ω) (z : Vertex d) (ℓ R κ : ℝ) : Prop :=
+/-- Every triadic cube of size `3^m ≥ ℓ` inside the ball `B_{24 √d 3^m}(z)` carries at least
+`κ 3^{d m}` vertices of the cluster `C`. -/
+def ClusterCubeDensity (C : OpenComponent ω) (z : Vertex d) (ℓ κ : ℝ) : Prop :=
   ∀ (m : ℕ) (k : Vertex d), ℓ ≤ 3 ^ m →
-    (∀ y ∈ triadicCube d m k,
-      dist (latticeEuclideanEmbedding y) (latticeEuclideanEmbedding z) < R) →
-    κ * 3 ^ (d * m) ≤ (clusterCubePoints C z R m k).card
+    (∀ y ∈ triadicCube d m k, dist (latticeEuclideanEmbedding y) (latticeEuclideanEmbedding z) <
+      24 * Real.sqrt d * 3 ^ m) →
+    κ * 3 ^ (d * m) ≤ (clusterCubePoints C z (24 * Real.sqrt d * 3 ^ m) m k).card
 
 /-- The triadic cube of size `3^m` nearest to a point `w` lies within `√d 3^m` of `w`. -/
 theorem dist_le_of_mem_triadicCube_round (m : ℕ) (w : EuclideanSpace ℝ (Fin d)) {y : Vertex d}
@@ -118,12 +118,13 @@ theorem dist_le_of_mem_triadicCube_round (m : ℕ) (w : EuclideanSpace ℝ (Fin 
         |3 ^ m * ((round (w i / 3 ^ m) : ℤ) : ℝ) - w i| := abs_sub_le _ _ _
     _ ≤ 3 ^ m := by linarith [hy i]
 
-/-- **A cube near `w`.** If the ball of radius `√d 3^m` around `w` lies in `B_ρ(z)`, `ρ ≤ R`, and
-`3^m ≥ ℓ`, then at least `κ 3^{d m}` vertices of `C ∩ B_ρ(z)` lie within `√d 3^m` of `w`. -/
-theorem le_card_filter_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex d) {ℓ R κ ρ : ℝ}
-    (hcube : ClusterCubeDensity C z ℓ R κ) {m : ℕ} (hℓ : ℓ ≤ 3 ^ m)
+/-- **A cube near `w`.** If the ball of radius `√d 3^m` around `w` lies in `B_ρ(z)`,
+`ρ ≤ 24 √d 3^m`, and `3^m ≥ ℓ`, then at least `κ 3^{d m}` vertices of `C ∩ B_ρ(z)` lie within `√d 3^m` of `w`. -/
+theorem le_card_filter_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex d) {ℓ κ ρ : ℝ}
+    (hcube : ClusterCubeDensity C z ℓ κ) {m : ℕ} (hℓ : ℓ ≤ 3 ^ m)
     {w : EuclideanSpace ℝ (Fin d)}
-    (hw : dist w (latticeEuclideanEmbedding z) + Real.sqrt d * 3 ^ m < ρ) (hρR : ρ ≤ R)
+    (hw : dist w (latticeEuclideanEmbedding z) + Real.sqrt d * 3 ^ m < ρ)
+    (hρR : ρ ≤ 24 * Real.sqrt d * 3 ^ m)
     (P : C → Prop) [DecidablePred P]
     (hP : ∀ x : C, dist (latticeEuclideanEmbedding x.val) w ≤ Real.sqrt d * 3 ^ m → P x) :
     κ * 3 ^ (d * m) ≤ ((componentEuclideanBall C z ρ).filter P).card := by
@@ -145,7 +146,7 @@ theorem le_card_filter_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex 
 
 /-- **Volume comparison of cluster balls** from the density in cubes. -/
 theorem clusterBallVolumeComparison_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex d)
-    {ℓ R κ : ℝ} (hd : 0 < d) (hκ : 0 < κ) (hcube : ClusterCubeDensity C z ℓ R κ) :
+    {ℓ κ : ℝ} (R : ℝ) (hd : 0 < d) (hκ : 0 < κ) (hcube : ClusterCubeDensity C z ℓ κ) :
     ClusterBallVolumeComparison C z (6 * Real.sqrt d * max ℓ 1) R
       ((5 * (6 * Real.sqrt d)) ^ d / κ) := by
   classical
@@ -173,7 +174,10 @@ theorem clusterBallVolumeComparison_of_clusterCubeDensity (C : OpenComponent ω)
     rw [dist_self, zero_add]
     rw [le_div_iff₀ (by positivity)] at hm1
     linarith
-  have hcount := le_card_filter_of_clusterCubeDensity C z hcube hℓ hw (hsr.trans hrR)
+  have hs24 : s ≤ 24 * Real.sqrt d * 3 ^ m := by
+    rw [pow_succ, div_lt_iff₀ (by positivity)] at hm2
+    nlinarith [pow_pos (by norm_num : (0 : ℝ) < 3) m]
+  have hcount := le_card_filter_of_clusterCubeDensity C z hcube hℓ hw hs24
     (fun _ => True) fun _ _ => trivial
   rw [Finset.filter_true] at hcount
   have hr1 : 1 ≤ r := hs1.trans hsr
@@ -216,7 +220,7 @@ theorem norm_smul_inv_norm_self_le (p : EuclideanSpace ℝ (Fin d)) {c : ℝ} (h
 
 /-- **Cap density of cluster balls** from the density in cubes. -/
 theorem clusterBallCapDensity_of_clusterCubeDensity (C : OpenComponent ω) (z : Vertex d)
-    {ℓ R κ : ℝ} (hd : 0 < d) (hκ : 0 < κ) (hcube : ClusterCubeDensity C z ℓ R κ) :
+    {ℓ κ : ℝ} (R : ℝ) (hd : 0 < d) (hκ : 0 < κ) (hcube : ClusterCubeDensity C z ℓ κ) :
     ClusterBallCapDensity C z (24 * Real.sqrt d * max ℓ 1) R
       (κ / (5 * (24 * Real.sqrt d)) ^ d) := by
   classical
@@ -255,7 +259,10 @@ theorem clusterBallCapDensity_of_clusterCubeDensity (C : OpenComponent ω) (z : 
             rw [mul_assoc, ← smul_smul, norm_smul, Real.norm_eq_abs]
         _ ≤ 3 * ρ / 4 := by
             rw [hσ, one_mul]; exact norm_smul_inv_norm_self_le p (by positivity)
-    refine le_card_filter_of_clusterCubeDensity C z hcube hℓ (by linarith) hρR _ ?_
+    have hρ24 : ρ ≤ 24 * Real.sqrt d * 3 ^ m := by
+      rw [pow_succ, div_lt_iff₀ (by positivity)] at hm2
+      nlinarith [pow_pos (by norm_num : (0 : ℝ) < 3) m]
+    refine le_card_filter_of_clusterCubeDensity C z hcube hℓ (by linarith) hρ24 _ ?_
     intro x hx
     have hsplit : inner ℝ p (latticeEuclideanEmbedding x.val - latticeEuclideanEmbedding z) =
         σ * (3 * ρ / 4) * ‖p‖ + inner ℝ p (latticeEuclideanEmbedding x.val - w) := by
