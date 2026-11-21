@@ -105,6 +105,27 @@ theorem osBound_of_lintegral_exp_half_le {Ω : Type*} [MeasurableSpace Ω] {P : 
       exact ENNReal.ofReal_le_ofReal (Real.exp_le_exp.mpr
         (by nlinarith [mul_nonneg hA (sub_nonneg.2 htp)]))
 
+/-- Powers: if `0 ≤ X ≤ 𝒪_s(θ)`, then `X^n ≤ 𝒪_{s/n}(θ^n)`. -/
+theorem osBound_pow_of_nonneg {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {s θ : ℝ}
+    {X : Ω → ℝ} (hX : OsBound P s θ X) (hX0 : ∀ ω, 0 ≤ X ω) {n : ℕ} (hn : 0 < n) : OsBound P (s / n) (θ ^ n) (fun ω => X ω ^ n) := by
+  intro t ht
+  have ht0 : 0 ≤ t := zero_le_one.trans ht
+  have hu1 : 1 ≤ t ^ ((n : ℝ)⁻¹) := Real.one_le_rpow ht (by positivity)
+  have hun : (t ^ ((n : ℝ)⁻¹)) ^ n = t := Real.rpow_inv_natCast_pow ht0 hn.ne'
+  refine le_trans (measure_mono ?_) ((hX _ hu1).trans ?_)
+  · intro ω hω
+    change t * θ ^ n < max (X ω ^ n) 0 at hω
+    change t ^ ((n : ℝ)⁻¹) * θ < max (X ω) 0
+    rw [max_eq_left (pow_nonneg (hX0 ω) n)] at hω
+    rw [max_eq_left (hX0 ω)]
+    by_contra hle
+    have h := pow_le_pow_left₀ (hX0 ω) (not_lt.1 hle) n
+    rw [mul_pow, hun] at h
+    linarith
+  · apply ENNReal.ofReal_le_ofReal
+    apply Real.exp_le_exp.2
+    rw [← Real.rpow_mul ht0, div_eq_inv_mul]
+
 /-- **Finite sums of `𝒪_s` variables for `0 < s ≤ 1`.** There is `C(s)` such that for every
 probability measure and finite family with positive scales `θ i`, `X i ≤ 𝒪_s(θ i)` for all `i`
 implies `∑ i, X i ≤ 𝒪_s(C ∑ i, θ i)`, independently of the number of summands. -/
