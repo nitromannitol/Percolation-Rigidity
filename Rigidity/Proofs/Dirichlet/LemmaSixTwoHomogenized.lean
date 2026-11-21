@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Dirichlet.TrialEnergy
+import Rigidity.Proofs.Dirichlet.TrialEnergyInner
 import Rigidity.Proofs.Dirichlet.MuTest
 import Rigidity.Proofs.Dirichlet.CoarseGradientDefect
 
@@ -20,7 +20,10 @@ test for `u`, the convergence (6.10) and the local energies, whose sum over the 
 most `N^d` times the energy of `u` by `sum_translates_le`, Step 3) enter as the hypotheses.
 When the local energies are the normalized sums `N^{-d} Σ_{x+□} e` of an energy density `e ≥ 0`
 of `u`, their sum is at most `Σ_B e` (`edgeEnergy_dirichletSolution_div_le_of_mu_test_density`),
-which is the comparison `E_hom(u_hom) ≤ E(u) + errors` of Lemma 6.2.
+which is the comparison `E_hom(u_hom) ≤ E(u) + errors` of Lemma 6.2. With the cutoff on the
+trimmed cube (`edgeEnergy_dirichletSolution_div_le_trim`) all mesoscopic cubes lie in `Q`, the
+`μ` test is needed only for the cubes `x + □_N ⊆ Q` with `x` in the trimmed cube off its layer, and
+all sums are over `Q` (`edgeEnergy_dirichletSolution_div_le_of_mu_test_trim`).
 -/
 
 open Finset LatticeProb LatticeHC
@@ -100,5 +103,56 @@ theorem edgeEnergy_dirichletSolution_div_le_of_mu_test_density (hd : 1 ≤ d) (a
     exact htr
   rw [Finset.sum_add_distrib, ← Finset.mul_sum]
   linarith
+
+/-- **Lemma 6.2, homogenized side, with all mesoscopic cubes inside `Q`.** -/
+theorem edgeEnergy_dirichletSolution_div_le_of_mu_test_trim (hd : 1 ≤ d) (a : Fin d → ℝ)
+    (ha : ∀ k, 0 < a k) {Λ : ℝ} (haΛ : ∀ k, a k ≤ Λ) (Q : IntegerCube d) (hL : 0 < Q.size)
+    {N r : ℕ} (hN : 0 < N) (hr : 0 < r) (w : Vertex d → ℝ) {s : ℝ} (hs : 2 ≤ s)
+    (μ δ e : Vertex d → ℝ) (he : ∀ y, 0 ≤ e y)
+    (htest : ∀ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1),
+      μ x ≤ (∑ y ∈ (cornerCube x N).vertices, e y) / (N : ℝ) ^ d / 2 -
+        ∑ k, a k * cubeSlope N w x k * cubeEdgeSlope N w x k)
+    (hconv : ∀ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1),
+      |(∑ k, (a k * cubeSlope N w x k) ^ 2 / a k) / 2 + μ x| ≤ δ x) :
+    edgeEnergy (constCond a) Q.vertices (dirichletSolution (constCond a) (cubeInterior Q) w) /
+        (Q.size : ℝ) ^ d ≤
+      (∑ y ∈ Q.vertices, e y +
+          2 * ∑ x ∈ (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1), δ x +
+          2 * (Λ / √(N : ℝ) * ∑ y ∈ Q.vertices, ∑ k, (w (y + unit k) - w y) ^ 2)) /
+            (Q.size : ℝ) ^ d +
+        Λ * ((2 * d * ((r + 1 + N : ℕ) : ℝ) / Q.size) ^ (1 - 2 / s) *
+          ((d : ℝ) ^ (s / 2 - 1) *
+            ((1 + (3 : ℝ) ^ (s - 1) * (1 + 2 ^ s + (d : ℝ) ^ s * ((N : ℝ) / r) ^ s)) *
+              ∑ y ∈ Q.vertices, ∑ k : Fin d, |w (y + unit k) - w y| ^ s) /
+                (Q.size : ℝ) ^ d) ^ (2 / s)) := by
+  have hΛ : 0 ≤ Λ := (ha ⟨0, hd⟩).le.trans (haΛ _)
+  have hV : (0 : ℝ) < (Q.size : ℝ) ^ d := by positivity
+  have hNd : (0 : ℝ) < (N : ℝ) ^ d := by
+    have : (0 : ℝ) < N := by exact_mod_cast hN
+    positivity
+  set A := (trimCube Q N).vertices \ cubeLayer (trimCube Q N) (r + 1)
+  have hB : ∀ x ∈ A, ∀ o ∈ (cornerCube 0 N).vertices, x + o ∈ Q.vertices :=
+    fun x hx o ho => add_mem_of_mem_trimCube Q N (Finset.sdiff_subset hx) ho
+  have hhom := edgeEnergy_dirichletSolution_div_le_trim hd a ha haΛ Q hL hN hr w hs
+  have hpt : ∀ x ∈ A, ∑ k, a k * cubeSlope N w x k ^ 2 ≤
+      (∑ y ∈ (cornerCube x N).vertices, e y) / (N : ℝ) ^ d + 2 * δ x +
+        2 * ∑ k, |a k * cubeSlope N w x k| * |cubeEdgeSlope N w x k - cubeSlope N w x k| :=
+    fun x hx => quadratic_le_of_mu_test' a (cubeSlope N w x) (cubeEdgeSlope N w x) ha
+      (htest x hx) (hconv x hx)
+  have hdef := sum_translates_slope_mul_defect_le a hΛ (fun k => by
+    rw [abs_of_pos (ha k)]; exact haΛ k) hN w A Q.vertices hB
+  have htr := sum_translates_le A Q.vertices N e he hB
+  have hE : ∑ x ∈ A, (∑ y ∈ (cornerCube x N).vertices, e y) / (N : ℝ) ^ d ≤
+      ∑ y ∈ Q.vertices, e y := by
+    rw [← Finset.sum_div, div_le_iff₀ hNd, mul_comm]
+    exact htr
+  have hsum : ∑ x ∈ A, ∑ k, a k * cubeSlope N w x k ^ 2 ≤
+      ∑ y ∈ Q.vertices, e y + 2 * ∑ x ∈ A, δ x +
+        2 * (Λ / √(N : ℝ) * ∑ y ∈ Q.vertices, ∑ k, (w (y + unit k) - w y) ^ 2) := by
+    refine (Finset.sum_le_sum hpt).trans ?_
+    rw [Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+    have := mul_le_mul_of_nonneg_left hdef (show (0 : ℝ) ≤ 2 by norm_num)
+    linarith
+  exact hhom.trans (add_le_add (div_le_div_of_nonneg_right hsum hV.le) le_rfl)
 
 end Rigidity.Dirichlet
