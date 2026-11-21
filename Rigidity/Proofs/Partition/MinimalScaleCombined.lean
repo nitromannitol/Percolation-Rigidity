@@ -4,8 +4,8 @@ import Rigidity.Proofs.Partition.LambdaClosure
 # Armstrong and Dario, Proposition 2.4
 
 For supercritical bond percolation on `ℤᵈ`, `d ≥ 2`, and `t ∈ ℕ`, there are a constant `C`, an
-exponent `s > 0` and one random scale `M` with a stretched-exponential moment of order `s` such
-that, almost surely, whenever `M < 3ᵐ`,
+exponent `s > 0` and one random scale `M`, finite almost surely, with a stretched-exponential
+moment of order `s` such that, almost surely, whenever `M < 3ᵐ`,
 `Λ_t(Q_m) ≤ C` and every partition cube meeting `Q_m` has side at most `3^{d m / (d + t)}`.
 The two bounds hold outside events `E₁(m)`, `E₂(m)` of probabilities at most
 `C exp(-c 3^{m s_i})` (`exists_events_sum_pow_partitionCube_le`, `exists_events_stoppingSize_le`);
@@ -288,12 +288,13 @@ theorem exists_events_sum_pow_partitionCube_le [NeZero d] (hd : 2 ≤ d) {p : un
 
 /-- **Armstrong and Dario, Proposition 2.4** (minimal scales for the partition `𝒫`). For
 supercritical bond percolation on `ℤᵈ`, `d ≥ 2`, and every `t ∈ ℕ`, there are `C`, `s > 0` and a
-measurable random scale `M` with a stretched-exponential moment of order `s` such that, almost
-surely, whenever `M < 3ᵐ`, `Λ_t(Q_m) = 3^{-d m} ∑_{x ∈ cl(Q_m)} 3^{t n(x)} ≤ C` and every vertex
-of `Q_m` lies in a partition cube of side at most `3^{d m / (d + t)}`. -/
+measurable random scale `M`, finite almost surely, with a stretched-exponential moment of order `s`
+such that, almost surely, whenever `M < 3ᵐ`, `Λ_t(Q_m) = 3^{-d m} ∑_{x ∈ cl(Q_m)} 3^{t n(x)} ≤ C`
+and every vertex of `Q_m` lies in a partition cube of side at most `3^{d m / (d + t)}`. -/
 theorem exists_minimalScale [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     (hpc : criticalProbability d < (p : ℝ)) (t : ℕ) :
     ∃ C s : ℝ, 0 < s ∧ ∃ M : Configuration d → ℝ≥0∞, Measurable M ∧
+      (∀ᵐ ω ∂(latticeBondLaw d p), M ω ≠ ∞) ∧
       (∃ θ : ℝ, 0 < θ ∧
         Integrable (fun ω => Real.exp (((M ω).toReal / θ) ^ s)) (latticeBondLaw d p) ∧
         (∫ ω, Real.exp (((M ω).toReal / θ) ^ s) ∂(latticeBondLaw d p)) ≤ 2) ∧
@@ -339,7 +340,13 @@ theorem exists_minimalScale [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
       _ = _ := by ring
   obtain ⟨θ', hθ', hint, hle⟩ := exceptionalScale_exp_moment μ E hEm (C1 + ENNReal.ofReal C2)
     (ENNReal.add_ne_top.2 ⟨hC1, ENNReal.ofReal_ne_top⟩) s c hs hc hE
-  refine ⟨Cf, s, hs, exceptionalScale E, measurable_exceptionalScale E hEm,
+  have hfin : ∀ᵐ ω ∂μ, exceptionalScale E ω ≠ ∞ :=
+    ae_exceptionalScale_ne_top μ E (C1 + ENNReal.ofReal C2)
+      (ENNReal.add_ne_top.2 ⟨hC1, ENNReal.ofReal_ne_top⟩) ((3 : ℝ) ^ s) c
+      (Real.one_lt_rpow (by norm_num) hs) hc (fun n => by
+        rw [Real.rpow_pow_comm (show (0 : ℝ) ≤ 3 by norm_num) s n]
+        exact hE n)
+  refine ⟨Cf, s, hs, exceptionalScale E, measurable_exceptionalScale E hEm, hfin,
     ⟨θ', hθ', hint, hle⟩, ?_⟩
   filter_upwards [hae] with ω hP m hm
   have hnot : ω ∉ E m := by
