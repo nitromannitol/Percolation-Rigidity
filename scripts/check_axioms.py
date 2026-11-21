@@ -125,6 +125,18 @@ further = {
          'Rigidity.Proofs.Cluster.reverse_holder_partition_cube',
          'Rigidity.Proofs.Cluster.gehring_triadic',
          'Rigidity.Proofs.Cluster.meyers_cluster'],
+    'the localization of the planar subadditive quantities of Armstrong and Dario and the homogenized matrix (d = 2)':
+        ['Rigidity.Percolation.exists_measure_planarCappedDiscrepancy_le',
+         'Rigidity.Percolation.exists_planarNuLoc_localization',
+         'Rigidity.Percolation.exists_planarMuLoc_localization',
+         'Rigidity.Percolation.map_planarNuStat_shift',
+         'Rigidity.Percolation.map_planarMuStat_shift',
+         'Rigidity.Percolation.exists_tendsto_planarNuMean',
+         'Rigidity.Percolation.exists_tendsto_planarMuMean',
+         'Rigidity.Percolation.planarNuLimit_eq_planarAhom',
+         'Rigidity.Percolation.exists_planarAhom_bounds',
+         'Rigidity.Percolation.exists_planarMuLimit_two_sided',
+         'Rigidity.Percolation.sum_mul_le_planarMuLimit_add_planarNuLimit'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

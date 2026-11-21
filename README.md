@@ -846,12 +846,75 @@ Departures from Armstrong and Dario:
   triadic cubes as hypotheses; the probability bounds of Lemma 3.6 and Proposition 3.8 and the
   partition `ℛ` of AD, Definition 3.7, are not proved here.
 
+## Localization of the subadditive quantities and the homogenized matrix for d = 2
+
+Continuing the planar steps of
+[Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
+the localization and approximate stationarity of `μ` and `ν` (AD, §4.3) and the first step of AD,
+§5, the limits of their expectations and the homogenized matrix `ā`, are proved for `d = 2` and
+`𝔭_c(2) < p < 1`. Here `ν(□_m, ξ)` and `μ(□_m, q)` are the planar subadditive quantities on the
+cluster of the triadic square `□_m` of scale `m` centred at the origin, and the expectations are
+taken on the event that the partition exists and resolves `□_m`.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.exists_measure_planarCappedDiscrepancy_le`](Rigidity/Proofs/Percolation/PlanarNuStationarity.lean) | AD Proposition 4.9 for `d = 2`: the planar partition differs somewhere in a triadic square `V` of scale `n` from the partition capped at scale `n` with probability at most `C exp(−c 3ⁿ)`. |
+| [`Rigidity.Percolation.exists_planarNuLoc_localization`](Rigidity/Proofs/Percolation/PlanarNuLocal.lean) | AD Proposition 4.10 for `ν`, `d = 2`: a version of `ν(V, ξ)` measurable with respect to the edges near `V` differs from it on an event of probability at most `C exp(−c 3ⁿ)`, and the expectations differ by at most `C\|ξ\|₁² exp(−c 3ⁿ)`. |
+| [`Rigidity.Percolation.exists_planarMuLoc_localization`](Rigidity/Proofs/Percolation/PlanarMuLocal.lean) | AD Proposition 4.10 for `μ`, `d = 2`, with the error `C\|q\|₁² exp(−c 3ⁿ)` in expectation. |
+| [`Rigidity.Percolation.map_planarNuStat_shift`](Rigidity/Proofs/Percolation/PlanarLocalStationary.lean) | AD (4.40) for `d = 2`: the law of the local version of `ν(z + □_n, ξ)` does not depend on `z ∈ 3ⁿℤ²`. |
+| [`Rigidity.Percolation.map_planarMuStat_shift`](Rigidity/Proofs/Percolation/PlanarLocalStationary.lean) | the same for `μ`. |
+| [`Rigidity.Percolation.exists_tendsto_planarNuMean`](Rigidity/Proofs/Percolation/PlanarNuConvergence.lean) | `E[ν(□_m, ξ)]` converges as `m → ∞`, to a limit between `c\|ξ\|²` and `(9/4)\|ξ\|₁²`. |
+| [`Rigidity.Percolation.exists_tendsto_planarMuMean`](Rigidity/Proofs/Percolation/PlanarMuConvergence.lean) | `E[−μ(□_m, q)]` converges as `m → ∞`, to a limit between `0` and `C\|q\|₁²`. |
+| [`Rigidity.Percolation.planarNuLimit_eq_planarAhom`](Rigidity/Proofs/Percolation/PlanarNuQuadratic.lean) | AD Definition 5.1 for `d = 2`: the limit is the quadratic form `(1/2) ξ · ā ξ` of a matrix `ā`. |
+| [`Rigidity.Percolation.exists_planarAhom_bounds`](Rigidity/Proofs/Percolation/PlanarNuQuadratic.lean) | AD (5.1) for `d = 2`: `c\|ξ\|² ≤ (1/2) ξ · ā ξ ≤ (9/4)\|ξ\|₁²` with `c > 0`. |
+| [`Rigidity.Percolation.exists_planarMuLimit_two_sided`](Rigidity/Proofs/Percolation/PlanarMuLimitBounds.lean) | `\|q\|²/18 ≤ lim_m E[−μ(□_m, q)] ≤ C\|q\|₁²`. |
+| [`Rigidity.Percolation.sum_mul_le_planarMuLimit_add_planarNuLimit`](Rigidity/Proofs/Percolation/PlanarDuality.lean) | for all slopes `q` and `ξ`, `q · ξ ≤ lim E[−μ(□_m, q)] + lim E[ν(□_m, ξ)]`. |
+
+The eleven theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+are in [`Rigidity/Proofs/Percolation/`](Rigidity/Proofs/Percolation/), from `PlanarLocality.lean`
+and `TriadicCappedPartition.lean` to `PlanarDuality.lean`.
+
+1. **Capped partition and translations** (`TriadicCappedPartition.lean`, `PlanarTranslation.lean`,
+   `PlanarAnchorTranslation.lean`, `PlanarClusterTransport.lean`, `PlanarMuTransport.lean`). Declaring
+   every cube of scale above `n` good caps the partition at scale `n`; the capped partition and the
+   anchors move with the translations of `3ⁿℤ²`, and `μ` and `ν` are invariant under the relabellings
+   of the cluster that respect the open edges.
+2. **Localization** (`PlanarNuStationarity.lean`, `PlanarNuMeasurable.lean`, `PlanarMuMeasurable.lean`,
+   `PlanarLocality.lean`, `PlanarNuLocal.lean`, `PlanarMuLocal.lean`). The partition and its capped
+   version differ in `V` with probability at most `C exp(−c 3ⁿ)` (AD, Proposition 4.9). The local
+   versions of `ν` and `μ` take the value of `ν` and `μ` at any configuration with the same capped
+   cubes, anchors and open edges in the square of side `14 · 3ⁿ` around `V`; they are measurable with
+   respect to these edges, hence independent for distant squares (AD, Proposition 4.10).
+3. **Stationarity and limits** (`PlanarLocalStationary.lean`, `PlanarLocalLimits.lean`,
+   `PlanarNuConvergence.lean`, `PlanarMuConvergence.lean`, `PlanarLimitCubes.lean`). The subadditivity
+   of `ν` and `μ` over the resolved subsquares and the approximate stationarity of their expectations
+   make `E[ν(□_m, ξ)]` and `E[−μ(□_m, q)]` approximately monotone, with errors
+   `C\|ξ\|₁²(3^{−n/2} + exp(−c 3ⁿ))`, so they converge, along every sequence of squares of scale `m`.
+4. **The homogenized matrix** (`PlanarNuQuadratic.lean`, `PlanarMuQuadratic.lean`,
+   `PlanarMuLimitBounds.lean`, `PlanarDuality.lean`). `ν` and `μ` are quadratic in the slope, so the
+   limits are quadratic forms; the limit of `E[ν]` defines `ā` (AD, Definition 5.1), with the bounds
+   (5.1), and `q · ξ ≤ ν(U, ξ) − μ(U, q)` passes to the limits.
+
+Departures from Armstrong and Dario:
+
+- **Anchors.** The anchor of a planar partition square is chosen through its displacement from the
+  centre of the square, so that anchors move with translations.
+- **Localization.** AD define local quantities through the local partitions `𝒫_loc` of
+  Proposition 2.1 and use their exact stationarity (4.40); the Lean proof caps the partition at the
+  scale of `V`, proves the approximate stationarity of `E[ν]` and `E[−μ]` on resolved squares with
+  error `C\|q\|₁² exp(−c 3ⁿ)`, and defines the local versions through the capped partition on the
+  square of side `14 · 3ⁿ` around `V`; the stationary versions are taken through the origin square,
+  where their laws are exactly invariant.
+- **Section 5.** Only the convergence of the expectations, Definition 5.1 and (5.1), and the
+  inequality `q · ξ ≤ lim E[−μ] + lim E[ν]` are proved; the identification
+  `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q` and the rates of AD, §5, are not.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 91 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 102 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -866,9 +929,11 @@ Departures from Armstrong and Dario:
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
   the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the two theorems of
-  [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), and the fifteen theorems of
-  [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster).
-  Each of the 91 reports lists exactly `propext`, `Classical.choice` and
+  [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), the fifteen theorems of
+  [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster),
+  and the eleven theorems of
+  [Localization of the subadditive quantities and the homogenized matrix for d = 2](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2).
+  Each of the 102 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -899,10 +964,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 989 Lean files with 176,888 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1007 Lean files with 180,827 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (172 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (198 lines) are counted separately.
 
 ## Building
 

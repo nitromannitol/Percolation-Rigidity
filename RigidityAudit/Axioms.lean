@@ -27,6 +27,15 @@ import Rigidity.Proofs.Cluster.Caccioppoli
 import Rigidity.Proofs.Cluster.ReverseHolderPartition
 import Rigidity.Proofs.Cluster.Gehring
 import Rigidity.Proofs.Cluster.MeyersCluster
+import Rigidity.Proofs.Percolation.PlanarNuStationarity
+import Rigidity.Proofs.Percolation.PlanarNuLocal
+import Rigidity.Proofs.Percolation.PlanarMuLocal
+import Rigidity.Proofs.Percolation.PlanarLocalStationary
+import Rigidity.Proofs.Percolation.PlanarNuConvergence
+import Rigidity.Proofs.Percolation.PlanarMuConvergence
+import Rigidity.Proofs.Percolation.PlanarNuQuadratic
+import Rigidity.Proofs.Percolation.PlanarMuLimitBounds
+import Rigidity.Proofs.Percolation.PlanarDuality
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -38,7 +47,9 @@ from five dimension-two inputs, the Green columns for `d ≥ 3` with the Green-c
 planar order-zero estimate and the heat kernel and Green column bounds, the multiscale Poincaré
 inequality of Armstrong and Dario (Proposition A.2) with its affine form, and the partition into
 good cubes and the functional and elliptic inequalities on the cluster of Armstrong and Dario
-(§§2–3); `scripts/check_axioms.py` checks it.
+(§§2–3), and the localization of the planar subadditive quantities with the limits of their
+expectations and the homogenized matrix (§4.3 and the start of §5, `d = 2`);
+`scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
@@ -170,3 +181,18 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Cluster.reverse_holder_partition_cube
 #print axioms Rigidity.Proofs.Cluster.gehring_triadic
 #print axioms Rigidity.Proofs.Cluster.meyers_cluster
+
+-- The localization and stationarity of the planar subadditive quantities of Armstrong and Dario
+-- (Propositions 4.9 and 4.10, (4.40)), the limits of their expectations and the homogenized matrix
+-- (Definition 5.1, (5.1)), for d = 2
+#print axioms Rigidity.Percolation.exists_measure_planarCappedDiscrepancy_le
+#print axioms Rigidity.Percolation.exists_planarNuLoc_localization
+#print axioms Rigidity.Percolation.exists_planarMuLoc_localization
+#print axioms Rigidity.Percolation.map_planarNuStat_shift
+#print axioms Rigidity.Percolation.map_planarMuStat_shift
+#print axioms Rigidity.Percolation.exists_tendsto_planarNuMean
+#print axioms Rigidity.Percolation.exists_tendsto_planarMuMean
+#print axioms Rigidity.Percolation.planarNuLimit_eq_planarAhom
+#print axioms Rigidity.Percolation.exists_planarAhom_bounds
+#print axioms Rigidity.Percolation.exists_planarMuLimit_two_sided
+#print axioms Rigidity.Percolation.sum_mul_le_planarMuLimit_add_planarNuLimit
