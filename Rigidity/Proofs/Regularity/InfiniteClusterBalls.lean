@@ -161,4 +161,37 @@ theorem armstrongDario_lemma_7_2_one_infiniteCluster [NeZero d] (hd : 2 ≤ d) (
   exact hlemma ω (uniqueInfiniteComponent h) z P₂ Abar R X E (M ω) u hAP hPQ hX hXR hE hMX
     (hω h) hreg₁ hreg₂ hne happ r hr hrR
 
+/-- **Order-zero regularity at the origin on the balls of the infinite cluster** above a minimal
+scale: one constant `φ` with `componentBallL2 C_∞ z r (u - φ) ≤ C (r / R) B` for
+`r ∈ [X ∨ C, R / 2]`, for every `B > 0` bounding `D_0(R) + R E`, under the excess decay of order one
+of the class `Abar` and the harmonic approximation hypothesis of Lemma 7.2. -/
+theorem armstrongDario_orderZero_origin_infiniteCluster [NeZero d] (hd : 2 ≤ d)
+    (p : unitInterval) (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) {A α CH : ℝ}
+    (hA : 2 ≤ A) (hα : 0 < α) (hCH : 0 ≤ CH) :
+    ∃ s C₀ C : ℝ, 0 < s ∧ 0 < C₀ ∧ 0 < C ∧ ∀ z : Vertex d,
+      ∃ M : Configuration d → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond d p M s C₀ ∧
+      ∀ᵐ ω ∂latticeBondLaw d p, ∀ h : HasUniqueInfiniteOpenComponent ω,
+        ∀ (Abar : ℝ → Set (uniqueInfiniteComponent h → ℝ)) (R X E : ℝ)
+          (u : uniqueInfiniteComponent h → ℝ),
+        1 ≤ X → M ω ≤ X → X ≤ R / A → 0 ≤ E →
+        HarmonicRegularity (componentBallSeminorm (uniqueInfiniteComponent h) z) Abar
+          (clusterAffine (uniqueInfiniteComponent h)) 1 X R CH →
+        (∀ r : ℝ, X ≤ r → r ≤ R / A → (Abar r).Nonempty) →
+        HarmonicApproximation (componentBallSeminorm (uniqueInfiniteComponent h) z) Abar
+          (clusterConstants (uniqueInfiniteComponent h)) A α X R E u →
+        ∀ B : ℝ, 0 < B →
+          ballExcess (componentBallSeminorm (uniqueInfiniteComponent h) z)
+            (clusterConstants (uniqueInfiniteComponent h)) R u + R * E ≤ B →
+          ∃ φ ∈ clusterConstants (uniqueInfiniteComponent h), ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+            componentBallL2 (uniqueInfiniteComponent h) z r (u - φ) ≤ C * (r / R) * B := by
+  obtain ⟨s, C₀, K, δ, hs, hC₀, hK, hδ, hgeo⟩ := infiniteCluster_ballVolume_capDensity hd p hpc hp1
+  obtain ⟨C, hC, hlemma⟩ := armstrongDario_orderZero_origin_cluster d hA hα hK.le hδ hCH
+  refine ⟨s, C₀, C, hs, hC₀, hC, fun z => ?_⟩
+  obtain ⟨M, hMm, hM0, hMos, hae⟩ := hgeo z
+  refine ⟨M, hMm, hM0, hMos, ?_⟩
+  filter_upwards [hae] with ω hω h Abar R X E u hX hMX hXR hE hreg hne happ B hB hBu
+  obtain ⟨hvol, hcap⟩ := hω h R
+  exact hlemma ω (uniqueInfiniteComponent h) z Abar R X E u hX hXR hE (hvol.of_le hMX)
+    (hcap.of_le hMX) hreg hne happ B hB hBu
+
 end Rigidity.Proofs.Regularity
