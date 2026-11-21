@@ -328,4 +328,30 @@ theorem polynomialComparison_continuumAffine [NeZero d] (z : EuclideanSpace ℝ 
     _ = 4 * 2 ^ d * (ρ / ρ') * (‖p‖ * ρ' / 4 * (1 / 2) ^ d) := e
     _ ≤ _ := mul_le_mul_of_nonneg_left hlow (by positivity)
 
+/-- **Armstrong–Dario, Lemma 7.2 (`k = 0`), in the normalized `L²` norms of Lebesgue measure on
+the balls `B_s(z)` of `ℝ^d`**: for every class `Ā(B_r)` with the excess decay of order one over
+affine functions (`HarmonicRegularity`, classical for `ā`-harmonic functions) and every `u`
+satisfying the harmonic approximation hypothesis,
+`D_0(r) ≤ C (r / R) D_0(R) + C r^{1-α} (D_0(R) / R + E / r)` for `r ∈ [X ∨ C, R / 2]`. -/
+theorem armstrongDario_lemma_7_2_zero_continuum (d : ℕ) [NeZero d] {A α CH : ℝ} (hA : 2 ≤ A)
+    (hα : 0 < α) (hCH : 0 ≤ CH) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (z : EuclideanSpace ℝ (Fin d)) (Abar : ℝ → Set (locallySqIntegrable d))
+      (R X E : ℝ) (u : locallySqIntegrable d),
+      1 ≤ X → X ≤ R / A → 0 ≤ E →
+      HarmonicRegularity (continuumBallSeminorm z) Abar (continuumAffine d) 1 X R CH →
+      (∀ r : ℝ, X ≤ r → r ≤ R / A → (Abar r).Nonempty) →
+      HarmonicApproximation (continuumBallSeminorm z) Abar (continuumConstants d) A α X R E u →
+      ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+        ballExcess (continuumBallSeminorm z) (continuumConstants d) r u ≤
+          C * (r / R) * ballExcess (continuumBallSeminorm z) (continuumConstants d) R u +
+          C * r ^ (1 - α) *
+            (ballExcess (continuumBallSeminorm z) (continuumConstants d) R u / R + E / r) := by
+  obtain ⟨C, hC, h⟩ := armstrongDario_lemma_7_2_zero hA hα (γ := (d : ℝ) / 2) (CV := 1)
+    (CP := 4 * 2 ^ d) (by positivity) zero_le_one (by positivity) hCH
+  refine ⟨C, hC, fun z Abar R X E u hX hXR hE hreg hne happ r hr hrR => ?_⟩
+  have hX0 : 0 < X := by linarith
+  exact h (continuumBallSeminorm z) (continuumConstants d) (continuumAffine d) Abar R X E u
+    continuumConstants_le_continuumAffine hX hXR hE (radiusMonotone_continuumBallSeminorm z hX0)
+    (polynomialComparison_continuumAffine z hX0) hreg hne happ r hr hrR
+
 end Rigidity.Proofs.Regularity
