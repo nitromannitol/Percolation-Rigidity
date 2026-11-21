@@ -14,7 +14,7 @@ configuration in the translated cube is the translated cluster as soon as the pa
 vertices of `U` move with the translation: any two anchors of a meshed cube are joined inside it,
 since each of them is joined to every long open path of the cube. Hence `ν` is translation
 covariant on resolved cubes, which is the deterministic part of the stationarity of
-Armstrong and Dario, (4.21).
+Armstrong and Dario, (4.40).
 -/
 
 open MeasureTheory LatticeProb.Percolation Rigidity.Proofs.Section5

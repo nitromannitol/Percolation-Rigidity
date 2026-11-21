@@ -192,12 +192,23 @@ theorem TriadicCube.reachIn_anchor_of_infinite {Q : TriadicCube 2} {a : Vertex 2
   · exact habs x u k hxu (by omega)
   · exact (habs u x k hxu.symm (by omega)).trans hxu.symm
 
+/-- The anchor property of a vertex of a triadic cube: inside the cube and inside the square of
+side `9s` around it, the vertex is joined to every open walk whose endpoints differ by at least
+`⌊s/100⌋` in some coordinate. -/
+def TriadicCube.IsPlanarAnchor (ω : Configuration 2) (Q : TriadicCube 2) (a : Vertex 2) : Prop :=
+  a ∈ Q.vertices ∧
+    (∀ (c d : Vertex 2) (k : Fin 2), ReachIn ω Q.vertices c d →
+      c k + ((3 ^ Q.scale / 100 : ℕ) : ℤ) ≤ d k → ReachIn ω Q.vertices a c) ∧
+    (∀ (c d : Vertex 2) (k : Fin 2), ReachIn ω ↑Q.ninefold.vertices c d →
+      c k + ((3 ^ Q.scale / 100 : ℕ) : ℤ) ≤ d k → ReachIn ω ↑Q.ninefold.vertices a c)
+
 open Classical in
 /-- The anchor of a triadic cube: for a meshed cube of side at least `1000`, a vertex given by
-`exists_planar_anchor`, and its centre otherwise. -/
+`exists_planar_anchor`, and its centre otherwise. The vertex is chosen through its displacement
+from the centre, so that anchors move with translations. -/
 noncomputable def TriadicCube.planarAnchor (ω : Configuration 2) (Q : TriadicCube 2) : Vertex 2 :=
-  if h : Q.planarMeshed ω ∧ 1000 ≤ 3 ^ Q.scale then
-    Classical.choose (Q.exists_planar_anchor h.1 h.2)
+  if Q.planarMeshed ω ∧ 1000 ≤ 3 ^ Q.scale then
+    Q.center + Classical.epsilon fun e => Q.IsPlanarAnchor ω (Q.center + e)
   else Q.center
 
 theorem TriadicCube.planarAnchor_spec {Q : TriadicCube 2} (hQ : Q.planarMeshed ω)
@@ -209,9 +220,12 @@ theorem TriadicCube.planarAnchor_spec {Q : TriadicCube 2} (hQ : Q.planarMeshed �
         c k + ((3 ^ Q.scale / 100 : ℕ) : ℤ) ≤ d k →
           ReachIn ω ↑Q.ninefold.vertices (Q.planarAnchor ω) c) := by
   have h : Q.planarMeshed ω ∧ 1000 ≤ 3 ^ Q.scale := ⟨hQ, hs⟩
+  obtain ⟨a, ha, hspec⟩ := Q.exists_planar_anchor hQ hs
+  have hex : ∃ e, Q.IsPlanarAnchor ω (Q.center + e) :=
+    ⟨a - Q.center, by rw [add_sub_cancel]; exact ⟨ha, hspec⟩⟩
   unfold TriadicCube.planarAnchor
-  rw [dif_pos h]
-  exact Classical.choose_spec (Q.exists_planar_anchor h.1 h.2)
+  rw [if_pos h]
+  exact Classical.epsilon_spec hex
 
 /-- **Adjacent anchors.** If a meshed cube `Q'` touches a meshed cube `Q` and has the same or the
 next scale, their anchors are joined inside the square of side `9s` around `Q`. -/
