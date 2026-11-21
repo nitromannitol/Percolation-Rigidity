@@ -52,4 +52,46 @@ theorem quadratic_le_of_mu_test (a p G : Fin d → ℝ) (ha : ∀ k, 0 < a k) {�
   have := neg_abs_le (∑ k, (a k * p k) * (G k - p k))
   linarith
 
+/-- **First variation along a line**: if `J(t) = −B t²/2 + L t` is maximal at `t = 1`, then
+`B = L`. -/
+theorem eq_of_isMaxOn_line {B L : ℝ} (h : ∀ t : ℝ, -(B * t ^ 2) / 2 + L * t ≤ -B / 2 + L) :
+    B = L := by
+  by_contra hne
+  have h1 := h (1 + (L - B) / (|B| + 1))
+  have hpos : 0 < |B| + 1 := by positivity
+  set s := (L - B) / (|B| + 1) with hs
+  -- `J(1 + s) − J(1) = s (L − B) − B s² / 2 > 0`
+  have hsLB : s * (L - B) = (L - B) ^ 2 / (|B| + 1) := by rw [hs]; ring
+  have hsq : B * s ^ 2 ≤ |B| * s ^ 2 := mul_le_mul_of_nonneg_right (le_abs_self B) (sq_nonneg s)
+  have hs2 : (|B| + 1) * s ^ 2 = s * (L - B) := by
+    rw [hs]
+    field_simp
+  have hpos2 : 0 < (L - B) ^ 2 / (|B| + 1) := by
+    have : (L - B) ^ 2 > 0 := by
+      have : L - B ≠ 0 := fun h0 => hne (by linarith)
+      positivity
+    positivity
+  nlinarith [sq_nonneg s]
+
+/-- **Energy of the maximizer of `ν`**: if `v` maximizes `J(w) = (−B(w)/2 + L(w))/V` on a set of
+competitors containing all multiples `t v` (with `B(t v) = t² B(v)` and `L(t v) = t L(v)`), then
+`ν = J(v) = B(v)/(2V)`, and the convergence `|ν − P/2| ≤ δ` gives `B(v)/V ≤ P + 2δ`. -/
+theorem energy_le_of_nu_maximizer {Bv Lv V ν P δ : ℝ} (hV : 0 < V)
+    (hmax : ∀ t : ℝ, (-(Bv * t ^ 2) / 2 + Lv * t) / V ≤ ν) (hν : ν = (-Bv / 2 + Lv) / V)
+    (hconv : |ν - P / 2| ≤ δ) : Bv / V ≤ P + 2 * δ := by
+  have hline : ∀ t : ℝ, -(Bv * t ^ 2) / 2 + Lv * t ≤ -Bv / 2 + Lv := by
+    intro t
+    have := hmax t
+    rw [hν, div_le_div_iff_of_pos_right hV] at this
+    exact this
+  have hBL := eq_of_isMaxOn_line hline
+  have hνB : ν = Bv / 2 / V := by
+    rw [hν, ← hBL]
+    ring
+  have := (abs_le.mp hconv).2
+  rw [hνB] at this
+  have e : Bv / V = 2 * (Bv / 2 / V) := by ring
+  rw [e]
+  linarith
+
 end Rigidity.Dirichlet
