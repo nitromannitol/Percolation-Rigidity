@@ -94,4 +94,57 @@ theorem polynomialComparison_clusterQuadratic (C : OpenComponent ω) (z : Vertex
         ballExcess (componentBallSeminorm C z) (clusterAffine C) ρ' w :=
         mul_le_mul_of_nonneg_left hlow (by positivity)
 
+/-- **Armstrong–Dario, Lemma 7.2 (`k = 1`), on cluster balls, from the density in cubes**, with
+`Ā_2 = P₂` any subgroup of the quadratic functions on the cluster containing the affine
+functions. -/
+theorem armstrongDario_lemma_7_2_one_of_clusterCubeDensity (d : ℕ) (hd : 0 < d)
+    {A α κ CH : ℝ} (hA : 2 ≤ A) (hα : 0 < α) (hκ : 0 < κ) (hCH : 0 ≤ CH) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration d) (Cl : OpenComponent ω) (z : Vertex d)
+      (P₂ : AddSubgroup (Cl → ℝ)) (Abar : ℝ → Set (Cl → ℝ)) (R X E ℓ : ℝ) (u : Cl → ℝ),
+      clusterAffine Cl ≤ P₂ → P₂ ≤ clusterQuadratic Cl →
+      1 ≤ X → X ≤ R / A → 0 ≤ E → quadLocality d (capFraction d κ) * max ℓ 1 ≤ X →
+      ClusterCubeDensity Cl z (quadLocality d (capFraction d κ)) ℓ κ →
+      HarmonicRegularity (componentBallSeminorm Cl z) Abar (clusterAffine Cl) 1 X R CH →
+      HarmonicRegularity (componentBallSeminorm Cl z) Abar P₂ 2 X R CH →
+      (∀ r : ℝ, X ≤ r → r ≤ R / A → (Abar r).Nonempty) →
+      HarmonicApproximation (componentBallSeminorm Cl z) Abar (clusterConstants Cl) A α X R E u →
+      ∀ r : ℝ, max X C ≤ r → r ≤ R / 2 →
+        ballExcess (componentBallSeminorm Cl z) (clusterAffine Cl) r u ≤
+          C * (r / R) ^ 2 * ballExcess (componentBallSeminorm Cl z) (clusterAffine Cl) R u +
+            C * r ^ (1 - α) *
+              (ballExcess (componentBallSeminorm Cl z) (clusterConstants Cl) R u / R + E / r) := by
+  have hsd : 0 < Real.sqrt d := Real.sqrt_pos.2 (Nat.cast_pos.2 hd)
+  have hδ := capFraction_pos hd hκ
+  have hc₂ := quadLowerConst_pos hd hκ hδ
+  have hΛ := le_quadLocality hd hδ
+  set δ := capFraction d κ with hδdef
+  set K := (5 * (6 * Real.sqrt d)) ^ d / κ with hK
+  set CP := max (2 / Real.sqrt δ) (d / quadLowerConst d κ δ) with hCP
+  obtain ⟨C, hC, h⟩ := armstrongDario_lemma_7_2_one.{0} (γ := (d : ℝ) / 2) (CV := Real.sqrt K)
+    (CP := CP) hA hα (by positivity) (Real.sqrt_nonneg K)
+    ((by positivity : (0 : ℝ) ≤ 2 / Real.sqrt δ).trans (le_max_left _ _)) hCH
+  refine ⟨C, hC, fun ω Cl z P₂ Abar R X E ℓ u hAP hPQ hX hXR hE hXℓ hcube hreg₁ hreg₂ hne happ =>
+    ?_⟩
+  have hX0 : 0 < X := by linarith
+  have hmax0 : 0 ≤ max ℓ 1 := zero_le_one.trans (le_max_right _ _)
+  have hcube24 := hcube.of_le Cl z hΛ
+  have h24 : 24 * Real.sqrt d * max ℓ 1 ≤ X :=
+    (mul_le_mul_of_nonneg_right hΛ hmax0).trans hXℓ
+  have h6 : 6 * Real.sqrt d * max ℓ 1 ≤ X := by
+    have : 0 ≤ Real.sqrt d * max ℓ 1 := mul_nonneg hsd.le hmax0
+    linarith
+  have hvol := (clusterBallVolumeComparison_of_clusterCubeDensity Cl z R hd hκ hcube24).of_le h6
+  have hcap : ClusterBallCapDensity Cl z X R δ :=
+    (clusterBallCapDensity_of_clusterCubeDensity Cl z R hd hκ hcube24).of_le h24
+  have hmono := radiusMonotone_componentBallSeminorm Cl z hX0 (by positivity) hvol
+  have hpc₁ : PolynomialComparison (componentBallSeminorm Cl z) (clusterConstants Cl)
+      (clusterAffine Cl) 1 X R CP :=
+    (polynomialComparison_componentBallSeminorm Cl z hX0 hδ hcap).mono_const _ hX0.le
+      (le_max_left _ _)
+  have hpc₂ : PolynomialComparison (componentBallSeminorm Cl z) (clusterAffine Cl) P₂ 2 X R CP :=
+    ((((polynomialComparison_clusterQuadratic Cl z R hd hκ hcube).of_le_high _
+      hPQ).of_le _ hXℓ).mono_const _ hX0.le (le_max_right _ _))
+  exact h (componentBallSeminorm Cl z) (clusterConstants Cl) (clusterAffine Cl) P₂ Abar R X E u
+    (clusterConstants_le_clusterAffine Cl) hAP hX hXR hE hmono hpc₁ hpc₂ hreg₁ hreg₂ hne happ
+
 end Rigidity.Proofs.Regularity
