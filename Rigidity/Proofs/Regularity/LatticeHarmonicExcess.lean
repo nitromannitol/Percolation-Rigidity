@@ -223,4 +223,41 @@ theorem ballExcess_le_of_latticeHarmonic [NeZero d] (z : Vertex d) {r s : ℝ} {
           mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left h1 hd0) hM0
       _ ≤ _ := mul_le_mul_of_nonneg_left h2 (by positivity)
 
+theorem secondDiffCoeff_le (d : ℕ) {m : ℕ} (hm : 0 < m) :
+    secondDiffCoeff d m ≤ 4 ^ d * (64 * d) ^ d * (16 * d) ^ 2 / (m : ℝ) ^ (d + 4) := by
+  have hm' : (0 : ℝ) < m := by exact_mod_cast hm
+  have hd0 : (0 : ℝ) ≤ d := Nat.cast_nonneg d
+  set ρ : ℝ := ((4 ^ d * (2 * m) : ℕ) : ℝ) with hρ
+  set ρ' : ℝ := ((2 * (4 ^ d * (2 * m)) + 2 : ℕ) : ℝ) with hρ'
+  have hρm : (m : ℝ) ≤ ρ := by
+    rw [hρ]; push_cast
+    have : (1 : ℝ) ≤ 4 ^ d := one_le_pow₀ (by norm_num)
+    nlinarith
+  have hρ'm : (m : ℝ) ≤ ρ' := by
+    rw [hρ']; push_cast
+    have : (1 : ℝ) ≤ 4 ^ d := one_le_pow₀ (by norm_num)
+    nlinarith
+  have e : secondDiffCoeff d m = 4 ^ d * (64 * d) ^ d * (16 * d) ^ 2 *
+      (1 / ((m : ℝ) + 1) ^ d * (1 / ρ ^ 2) * (1 / ρ' ^ 2)) := by
+    rw [secondDiffCoeff, ← hρ, ← hρ']; ring
+  rw [e]
+  have h1 : 1 / ((m : ℝ) + 1) ^ d ≤ 1 / (m : ℝ) ^ d :=
+    one_div_le_one_div_of_le (by positivity) (pow_le_pow_left₀ hm'.le (by linarith) d)
+  have h2 : 1 / ρ ^ 2 ≤ 1 / (m : ℝ) ^ 2 :=
+    one_div_le_one_div_of_le (by positivity) (pow_le_pow_left₀ hm'.le hρm 2)
+  have h3 : 1 / ρ' ^ 2 ≤ 1 / (m : ℝ) ^ 2 :=
+    one_div_le_one_div_of_le (by positivity) (pow_le_pow_left₀ hm'.le hρ'm 2)
+  have h123 : 1 / ((m : ℝ) + 1) ^ d * (1 / ρ ^ 2) * (1 / ρ' ^ 2) ≤
+      1 / (m : ℝ) ^ d * (1 / (m : ℝ) ^ 2) * (1 / (m : ℝ) ^ 2) :=
+    mul_le_mul (mul_le_mul h1 h2 (by positivity) (by positivity)) h3 (by positivity)
+      (by positivity)
+  have e2 : 1 / (m : ℝ) ^ d * (1 / (m : ℝ) ^ 2) * (1 / (m : ℝ) ^ 2) = 1 / (m : ℝ) ^ (d + 4) := by
+    rw [pow_add]; field_simp
+  rw [e2] at h123
+  calc 4 ^ d * (64 * d) ^ d * (16 * d) ^ 2 *
+        (1 / ((m : ℝ) + 1) ^ d * (1 / ρ ^ 2) * (1 / ρ' ^ 2))
+      ≤ 4 ^ d * (64 * d) ^ d * (16 * d) ^ 2 * (1 / (m : ℝ) ^ (d + 4)) :=
+        mul_le_mul_of_nonneg_left h123 (by positivity)
+    _ = _ := by ring
+
 end Rigidity.Proofs.Regularity
