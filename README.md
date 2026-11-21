@@ -713,12 +713,40 @@ variable-speed continuous-time walk. The lattice Sobolev inequality is copied fr
 Lattice-High-Contrast-Homogenization and the step inequality of `LocalNash.lean` is adapted from
 Lattice-Probability; see [Copied code](#copied-code).
 
+## Multiscale Poincaré inequality
+
+The proofs of Section 5 of Armstrong and Dario bound a function on a triadic cube by the spatial
+averages of its gradient over the subcubes of every intermediate scale (AD, Proposition A.2).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Multiscale.multiscalePoincare_holds`](Rigidity/Proofs/Multiscale/Poincare.lean) | AD Proposition A.2 (`MultiscalePoincare d`, [`Defs.lean`](Rigidity/Proofs/Multiscale/Defs.lean)): for every triadic cube `□_m` of `ℤᵈ`, every `n` with `m/2 ≤ n ≤ m` and every `u : ℤᵈ ∩ □_m → ℝ`, `‖u − (u)_{□_m}‖_{L̲²(□_m)} ≤ C 3^n ‖∇u‖_{L̲²(□_m)} + C Σ_{k=n}^{m−1} 3^k (the mean over the subcubes of size 3^k of the squared average of ∇u)^{1/2}` |
+| [`Rigidity.Proofs.Multiscale.exists_multiscalePoincare_affine`](Rigidity/Proofs/Multiscale/Affine.lean) | the same inequality for `u − ℓ_ξ`, with `ℓ_ξ(x) = ξ · x`, in the form used for Lemma 5.8 of AD |
+
+The two theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules are
+in [`Rigidity/Proofs/Multiscale/`](Rigidity/Proofs/Multiscale/).
+
+Departures from Armstrong and Dario:
+
+- **Route.** AD smooth `u` and apply the continuum multiscale Poincaré inequality (their
+  Proposition A.1, from Armstrong, Kuusi and Mourrat). The Lean proof extends `u` to the closed
+  lattice cube with one more layer by clamping, applies the lattice multiscale Poincaré inequality
+  with face-weighted block means `LatticeHC.exists_sum_sq_sub_vertexMean_le_multiscale` (see
+  [Copied code](#copied-code)), and compares the block means with the subcube averages: the boundary
+  layer contributes at most `C 3^{m/2}` times the gradient norm, which is at most `C 3^n` times it
+  since `n ≥ m/2`.
+- **Normalization.** The gradient sums count each edge once; AD's inner product counts both
+  orientations, which changes only the constant.
+- **Affine form.** The averages of `∇u` are compared with `(1 − 3^{−k}) ξ`, the exact average of the
+  gradient of `ℓ_ξ` over a subcube, where AD write `ξ`; the difference adds at most `(m − n)|ξ|` to
+  the right side.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 74 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 76 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -732,8 +760,9 @@ Lattice-Probability; see [Copied code](#copied-code).
   [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
-  and the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3).
-  Each of the 74 reports lists exactly `propext`, `Classical.choice` and
+  the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), and the two theorems of
+  [Multiscale Poincaré inequality](#multiscale-poincaré-inequality).
+  Each of the 76 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -764,10 +793,10 @@ Lattice-Probability; see [Copied code](#copied-code).
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 919 Lean files with 161,306 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 926 Lean files with 162,848 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (135 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (141 lines) are counted separately.
 
 ## Building
 
@@ -837,6 +866,7 @@ Rigidity/
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
     Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3
+    Multiscale/               the multiscale Poincaré inequality of Armstrong and Dario (Proposition A.2)
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
     Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)

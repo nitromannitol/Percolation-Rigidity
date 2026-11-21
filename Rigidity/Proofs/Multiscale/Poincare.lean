@@ -3,10 +3,10 @@ import Rigidity.Proofs.Multiscale.Scales
 /-!
 # The discrete multiscale Poincaré inequality
 
-Proof of `MultiscalePoincare d`, Armstrong–Dario 2018, Proposition 8.2.
+Proof of `MultiscalePoincare d`, Armstrong–Dario 2018, Proposition A.2.
 
 Departure from the source: Armstrong and Dario derive the discrete inequality from the continuum
-inequality of Armstrong–Kuusi–Mourrat (their Proposition 8.1) by smoothing. Here it follows from
+inequality (their Proposition A.1, from Armstrong–Kuusi–Mourrat) by smoothing. Here it follows from
 the lattice multiscale Poincaré inequality on the closed cubes `P + {0, …, 3^m}^d` with
 face-weighted block means (`LatticeHC.exists_sum_sq_sub_vertexMean_le_multiscale`), applied to
 the extension of `u` by the clamp. The block terms of the scales below `n` and of the top scale
@@ -94,7 +94,7 @@ theorem sqrt_blockSq_clampSite_le {k m : ℕ} (hk : k ≤ m) (z : Vertex d) (u :
     nlinarith [mul_nonneg hA0 hB0]
   exact (Real.sqrt_le_sqrt hle).trans_eq (Real.sqrt_sq (add_nonneg hA0 hB0))
 
-/-- **The sum over the scales**: the bookkeeping behind Proposition 8.2. If the block terms
+/-- **The sum over the scales**: the bookkeeping behind Proposition A.2. If the block terms
 `bs k ≤ ca` at every scale, the top one is at most the one below, and at every scale
 `√(bs k) ≤ √2 √(S k) + b √3^{-k} √ca`, then for `m/2 ≤ n ≤ m`,
 `Σ_{k ≤ m} 3^k √(bs k) + √ca ≤ (3 + 8b) a 3^n Γ + 4√2 Σ_{k=n}^{m-1} 3^k √(S k)` when `√ca ≤ a Γ`. -/
@@ -201,7 +201,7 @@ theorem sum_scales_le {m n : ℕ} (hm2 : m ≤ 2 * n) (hnm : n ≤ m) (a b ca Γ
   rw [hsplit]
   nlinarith
 
-/-- **Armstrong–Dario 2018, Proposition 8.2** (discrete multiscale Poincaré inequality). -/
+/-- **Armstrong–Dario 2018, Proposition A.2** (discrete multiscale Poincaré inequality). -/
 theorem multiscalePoincare_holds (d : ℕ) : MultiscalePoincare d := by
   obtain ⟨CL, hCL, hL⟩ := exists_sum_sq_sub_vertexMean_le_multiscale (d := d)
   have hb0 : 0 ≤ Real.sqrt (2 * (12 * d * 4 ^ d)) := Real.sqrt_nonneg _

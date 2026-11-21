@@ -3,7 +3,7 @@ import Rigidity.Proofs.Multiscale.Poincare
 /-!
 # The multiscale Poincaré inequality relative to an affine function
 
-The form in which Armstrong–Dario apply Proposition 8.2 in §5 (first display of the proof of
+The form in which Armstrong–Dario apply Proposition A.2 in §5 (first display of the proof of
 Lemma 5.8): for a slope `ξ ∈ ℝ^d` and `w = u - ℓ_ξ`, `ℓ_ξ(x) = ξ · x`,
 
 `‖w - (w)_{□_m}‖²_{L̲²} ≤ C 3^{2n} ‖∇w‖²_{L̲²}
@@ -125,7 +125,7 @@ theorem gradSum_affineFun (k : ℕ) (z : Vertex d) (ξ : Fin d → ℝ) (j : Fin
   field_simp
 
 /-- **Multiscale Poincaré inequality relative to an affine function** (Armstrong–Dario 2018,
-Proposition 8.2 in the form used in the proof of Lemma 5.8). -/
+Proposition A.2 in the form used in the proof of Lemma 5.8). -/
 theorem exists_multiscalePoincare_affine :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ m n : ℕ, (m : ℝ) / 2 ≤ n → n ≤ m →
       ∀ (z : Vertex d) (u : Vertex d → ℝ) (ξ : Fin d → ℝ),

@@ -4,7 +4,7 @@ import Rigidity.Percolation.IntegerCube
 # The discrete multiscale Poincaré inequality: statement
 
 Armstrong–Dario, *Elliptic regularity and quantitative homogenization on percolation clusters*
-(CPAM 2018), Appendix "Multiscale Poincaré inequality", Proposition 8.2 (`p.mspoincare`): for
+(CPAM 2018), Appendix "Multiscale Poincaré inequality", Proposition A.2 (`p.mspoincare`): for
 `n, m ∈ ℕ` with `n ∈ [m/2, m]` there is `C(d) < ∞` such that for every `u : ℤ^d ∩ □_m → ℝ`,
 
 `‖u - (u)_{□_m}‖_{L̲²(ℤ^d ∩ □_m)} ≤ C 3^n ‖∇u‖_{L̲²(ℤ^d ∩ □_m)}
@@ -73,7 +73,7 @@ def subcubeGradMeanSq (m : ℕ) (z : Vertex d) (k : ℕ) (u : Vertex d → ℝ) 
   ((centers m z k).card : ℝ)⁻¹ * ∑ y ∈ centers m z k, ∑ j : Fin d,
     ((((3 : ℝ) ^ k) ^ d)⁻¹ * gradSum (subcube k y) u j) ^ 2
 
-/-- **Discrete multiscale Poincaré inequality** (Armstrong–Dario 2018, Proposition 8.2): there is
+/-- **Discrete multiscale Poincaré inequality** (Armstrong–Dario 2018, Proposition A.2): there is
 `C(d) < ∞` such that for all `n, m ∈ ℕ` with `n ∈ [m/2, m]`, every triadic cube `3^m z + □_m` and
 every `u`,
 `‖u - (u)_{□_m}‖_{L̲²} ≤ C 3^n ‖∇u‖_{L̲²} + C Σ_{k=n}^{m-1} 3^k (subcubeGradMeanSq m z k u)^{1/2}`.

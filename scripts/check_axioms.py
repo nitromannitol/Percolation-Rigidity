@@ -106,6 +106,9 @@ further = {
          'Rigidity.Green.heat_le_of_two_le',
          'Rigidity.Green.greenColumn_le_rpow_of_three_le',
          'Rigidity.Green.greenColumn_le_one_add_rpow_of_three_le'],
+    'the multiscale Poincare inequality of Armstrong and Dario (Proposition A.2) and its affine form':
+        ['Rigidity.Proofs.Multiscale.multiscalePoincare_holds',
+         'Rigidity.Proofs.Multiscale.exists_multiscalePoincare_affine'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

@@ -15,6 +15,7 @@ import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
 import Rigidity.Proofs.Green.SupercriticalGreenBounds
+import Rigidity.Proofs.Multiscale.Affine
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -22,8 +23,9 @@ clusters for `d ≥ 3`, Proposition 2.3 in every dimension, Proposition 2.3 and 
 concentration for `d = 2`, Theorem 6.5 with every literature input proved, Theorem 1.3 from its
 dimension-two inputs, the density concentration in every dimension with Proposition 2.6 and
 Theorem 1.3 without it as a hypothesis, the existence of planar Green columns with Theorem 1.3
-from five dimension-two inputs, and the Green columns for `d ≥ 3` with the Green-column input from
-the planar order-zero estimate and the heat kernel and Green column bounds; `scripts/check_axioms.py`
+from five dimension-two inputs, the Green columns for `d ≥ 3` with the Green-column input from the
+planar order-zero estimate and the heat kernel and Green column bounds, and the multiscale Poincaré
+inequality of Armstrong and Dario (Proposition A.2) with its affine form; `scripts/check_axioms.py`
 checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
@@ -133,3 +135,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Green.heat_le_of_two_le
 #print axioms Rigidity.Green.greenColumn_le_rpow_of_three_le
 #print axioms Rigidity.Green.greenColumn_le_one_add_rpow_of_three_le
+
+-- The multiscale Poincaré inequality of Armstrong and Dario (Proposition A.2) and its affine form
+#print axioms Rigidity.Proofs.Multiscale.multiscalePoincare_holds
+#print axioms Rigidity.Proofs.Multiscale.exists_multiscalePoincare_affine
