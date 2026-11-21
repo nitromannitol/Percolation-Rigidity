@@ -334,6 +334,30 @@ theorem renormWalkBound_of_peierls {p : unitInterval} (hW : WellConnectedInput)
     simp [renormField]
   exact h1.trans (ENNReal.ofReal_le_ofReal (hR₀ _ (hR.trans (by omega))))
 
+/-- The Peierls estimate using only planar well-connectedness. -/
+theorem renormWalkBound_of_peierls_two {p : unitInterval} (hW : WellConnectedInputTwo)
+    (hK : KestenRectangleCrossing) (hpc : criticalProbability 2 < (p : ℝ))
+    (hV : VeryGoodProbabilityStepTwo) (hM : RenormFieldMeasurableStep)
+    (hD : RenormFieldOneDependentStep) (hP : OneDependentWalkStep) : RenormWalkBound p := by
+  obtain ⟨C, c, s, hC, hc, hs, hbound⟩ := hV hW hK p hpc
+  obtain ⟨ε₀, hε₀, c₂, C', c', hc₂, hC', hc', hpei⟩ := hP
+  obtain ⟨R₀, hR₀⟩ := exists_nat_mul_exp_neg_rpow_le C hc hs hε₀
+  refine ⟨R₀, fun R hR => ⟨c₂, C', c', hc₂, hC', hc', fun N₀ hN₀ => ?_⟩⟩
+  have hmeas := hM R
+  haveI : IsProbabilityMeasure ((latticeBondLaw 2 p).map (renormField R)) :=
+    Measure.isProbabilityMeasure_map hmeas.aemeasurable
+  refine (Measure.le_map_apply hmeas.aemeasurable _).trans
+    (hpei _ inferInstance (hD p R) (fun z => ?_) N₀ hN₀)
+  have hz : MeasurableSet {η : PlanarCarrier → Bool | η z = false} :=
+    measurableSet_eq_fun (measurable_pi_apply z) measurable_const
+  rw [Measure.map_apply hmeas hz]
+  have h1 : latticeBondLaw 2 p (renormField R ⁻¹' {η | η z = false}) ≤
+      ENNReal.ofReal (C * Real.exp (-(c * ((11 * R / 10 : ℕ) : ℝ) ^ s))) := by
+    convert hbound (renormCentre R z) (11 * R / 10) using 2
+    ext ω
+    simp [renormField]
+  exact h1.trans (ENNReal.ofReal_le_ofReal (hR₀ _ (hR.trans (by omega))))
+
 /-- Proposition 5.24 by the printed route: Lemma 5.23, the inclusion
 `implication-renormalized-cluster` of the proof of Proposition 5.21, and `step:5.24-crossings`
 for Bernoulli site percolation. The regime `p_c(2) < p` enters through Lemma 5.23, which fails
@@ -349,5 +373,14 @@ theorem longPathRenormalized_of_peierls {p : unitInterval} (hW : WellConnectedIn
     (hD : RenormFieldOneDependentStep) (hP : RenormalizedClusterPathsStep)
     (hPW : OneDependentWalkStep) : LongPathRenormalizedStmt p :=
   longPathRenormalized_of_renormWalkBound hP (renormWalkBound_of_peierls hW hK hpc hV hM hD hPW)
+
+/-- Proposition 5.24 using only planar well-connectedness. -/
+theorem longPathRenormalized_of_peierls_two {p : unitInterval} (hW : WellConnectedInputTwo)
+    (hK : KestenRectangleCrossing) (hpc : criticalProbability 2 < (p : ℝ))
+    (hV : VeryGoodProbabilityStepTwo) (hM : RenormFieldMeasurableStep)
+    (hD : RenormFieldOneDependentStep) (hP : RenormalizedClusterPathsStep)
+    (hPW : OneDependentWalkStep) : LongPathRenormalizedStmt p :=
+  longPathRenormalized_of_renormWalkBound hP
+    (renormWalkBound_of_peierls_two hW hK hpc hV hM hD hPW)
 
 end Rigidity.Steps.Section5

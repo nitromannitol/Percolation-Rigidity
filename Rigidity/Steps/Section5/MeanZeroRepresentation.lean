@@ -48,6 +48,28 @@ def ConnectingSetStep : Prop :=
             (V : Set (uniqueInfiniteComponent h))).Preconnected ∧
           (∀ y : uniqueInfiniteComponent h, f y.val ≠ 0 → y ∈ V) ∧ (V.card : ℝ) ≤ R ω
 
+/-- A connecting-set estimate at a fixed planar bond parameter. -/
+def ConnectingSetAt (p : unitInterval) : Prop :=
+    ∀ f : Vertex 2 → ℤ, (Function.support f).Finite →
+    ∃ θ s : ℝ, 0 < θ ∧ 0 < s ∧ ∃ R : Configuration 2 → ℝ, Measurable R ∧ IsOs 2 p R s θ ∧
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
+        ∃ V : Finset (uniqueInfiniteComponent h),
+          ((componentGraph (uniqueInfiniteComponent h)).induce
+            (V : Set (uniqueInfiniteComponent h))).Preconnected ∧
+          (∀ y : uniqueInfiniteComponent h, f y.val ≠ 0 → y ∈ V) ∧ (V.card : ℝ) ≤ R ω
+
+/-- The connecting-set step from planar well-connectedness. -/
+def ConnectingSetStepTwo : Prop :=
+  Rigidity.External.WellConnectedInputTwo → ∀ p : unitInterval,
+    criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+    ∀ f : Vertex 2 → ℤ, (Function.support f).Finite →
+    ∃ θ s : ℝ, 0 < θ ∧ 0 < s ∧ ∃ R : Configuration 2 → ℝ, Measurable R ∧ IsOs 2 p R s θ ∧
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
+        ∃ V : Finset (uniqueInfiniteComponent h),
+          ((componentGraph (uniqueInfiniteComponent h)).induce
+            (V : Set (uniqueInfiniteComponent h))).Preconnected ∧
+          (∀ y : uniqueInfiniteComponent h, f y.val ≠ 0 → y ∈ V) ∧ (V.card : ℝ) ≤ R ω
+
 /-- Step (flow on a finite connected set; deterministic): on a graph, a function `g` of zero sum
 supported in a finite set `V` connected through the edges inside `V` is the divergence
 `Σ_b F(a, b)` of an antisymmetric `F` carried by the edges inside `V`, with `|F| ≤ Σ_V |g|`

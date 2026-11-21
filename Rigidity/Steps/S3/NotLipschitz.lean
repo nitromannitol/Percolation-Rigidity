@@ -846,15 +846,16 @@ theorem exists_notMem_of_measure_lt {α : Type*} [MeasurableSpace α] {μ : Meas
 
 /-- The first assertion of Proposition 3.2, by contradiction: if `|∇ℓ_{e₁}(0)| ≤ L` almost surely,
 some configuration of the event `E_N` satisfies the hypotheses of `false_of_steps_at`. -/
-theorem originGradient_of_steps (hd : 2 ≤ d) (p : unitInterval)
+theorem originGradient_of_wellConnected_event (hd : 2 ≤ d) (p : unitInterval)
     (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
-    (hW : Rigidity.External.WellConnectedInput)
     (hginput : LatticeProb.External.SupercriticalBondGreenQuantitative)
     (hreg : LatticeProb.External.ArmstrongDarioOrderZero)
     (hclassical : LatticeProb.External.SupercriticalBondUniqueness)
     (h33 : Section3.CompareDifferentPlanesStmt d hd p)
     (hEdge : EdgeGradientStep d p) (hFE : FiniteEnergyStep d p) (hCU : ClosedBondsUniqueStep d p)
-    (hWC : WellConnectedEventStep d p) (hGS : GreenScaleEventStep d p)
+    (hWC : Tendsto (fun N : ℕ =>
+      latticeBondLaw d p {ω | ¬ Rigidity.External.IsWellConnected ω 0 N}) atTop (𝓝 0))
+    (hGS : GreenScaleEventStep d p)
     (hFlux : FluxEventStep d p) (hRem : RemovalStep d) (hSP : ShortPathsStep d)
     (hDiv : DivergenceStep d) (hBr : BridgeFluxStep d) (hKer : GreenKernelSumStep d)
     (L : ℝ) (hL : 0 ≤ L) :
@@ -872,7 +873,7 @@ theorem originGradient_of_steps (hd : 2 ≤ d) (p : unitInterval)
   obtain ⟨a, ha, hfl⟩ := hFlux hd hpc hp1
   obtain ⟨Ksp, hKsp, H, hH⟩ := hSP hd
   obtain ⟨Kker, hKker⟩ := hKer hd
-  have hsum := ((hWC hW hd hpc hp1).add (hGS s CG hs hCG M hMmeas hMint hMle)).add
+  have hsum := (hWC.add (hGS s CG hs hCG M hMmeas hMint hMle)).add
     (hfl (a / 2) (by positivity))
   rw [add_zero, add_zero] at hsum
   obtain ⟨N, hN1, hNprob, hNH, hNker, hNarith⟩ := ((eventually_ge_atTop 1).and
@@ -890,6 +891,27 @@ theorem originGradient_of_steps (hd : 2 ≤ d) (p : unitInterval)
     (fun y => M y ω) hgr (fun y hy g hg x hx => (hMω y).elim fun _ hall => hall h hy g hg x hx)
     u0 hu0 hleft hside
   linarith
+
+
+/-- The origin gradient bound from the all-dimensional well-connectedness input. -/
+theorem originGradient_of_steps (hd : 2 ≤ d) (p : unitInterval)
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hW : Rigidity.External.WellConnectedInput)
+    (hginput : LatticeProb.External.SupercriticalBondGreenQuantitative)
+    (hreg : LatticeProb.External.ArmstrongDarioOrderZero)
+    (hclassical : LatticeProb.External.SupercriticalBondUniqueness)
+    (h33 : Section3.CompareDifferentPlanesStmt d hd p)
+    (hEdge : EdgeGradientStep d p) (hFE : FiniteEnergyStep d p) (hCU : ClosedBondsUniqueStep d p)
+    (hWC : WellConnectedEventStep d p) (hGS : GreenScaleEventStep d p)
+    (hFlux : FluxEventStep d p) (hRem : RemovalStep d) (hSP : ShortPathsStep d)
+    (hDiv : DivergenceStep d) (hBr : BridgeFluxStep d) (hKer : GreenKernelSumStep d)
+    (L : ℝ) (hL : 0 ≤ L) :
+    latticeBondLaw d p {ω | ∃ h : HasUniqueInfiniteOpenComponent ω,
+        ∃ ho : (0 : Vertex d) ∈ (uniqueInfiniteComponent h).supp,
+        ∃ u, IsCorrectedPlane (uniqueInfiniteComponent h) (slopeE1 d) u ∧
+          L < originGradientNorm (uniqueInfiniteComponent h) ho u} ≠ 0 :=
+  originGradient_of_wellConnected_event hd p hpc hp1 hginput hreg hclassical h33 hEdge hFE hCU
+    (hWC hW hd hpc hp1) hGS hFlux hRem hSP hDiv hBr hKer L hL
 
 /-- **Proposition 3.2** from its steps, Lemma 3.3 and the cited inputs: Proposition 2.3
 (well-connected cubes), the two cited inputs of Proposition 2.8 (mixed derivative of the Green

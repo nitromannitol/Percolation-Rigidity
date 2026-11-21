@@ -119,8 +119,10 @@ theorem exists_cube_superset_support {f : Vertex d → ℤ} (hf : (Function.supp
 /-- **A random well-connected scale.** For `n₀ ≥ 1` there is a measurable `X ≥ n₀` such that
 `Q_X` is almost surely well-connected and `P[X = m] ≤ C exp(-c m^s)` for `m > n₀`: `X` is the
 first `N ≥ n₀` outside a measurable hull `A_N` of the event that `Q_N` is not well-connected. -/
-theorem exists_wellConnectedScale [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
-    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) (hwc : WellConnectedInput)
+theorem exists_wellConnectedScale_of_bound [NeZero d] {p : unitInterval}
+    (hbound0 : ∃ c C s : ℝ, 0 < c ∧ 0 < C ∧ 0 < s ∧ ∀ N : ℕ,
+      latticeBondLaw d p {ω | ¬ IsWellConnected ω 0 N} ≤
+        ENNReal.ofReal (C * Real.exp (-(c * (N : ℝ) ^ s))))
     (n₀ : ℕ) (hn₀ : 1 ≤ n₀) :
     ∃ c C s : ℝ, 0 < c ∧ 0 ≤ C ∧ 0 < s ∧ ∃ X : Configuration d → ℕ, Measurable X ∧
       (∀ ω, n₀ ≤ X ω) ∧
@@ -128,12 +130,12 @@ theorem exists_wellConnectedScale [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
         ENNReal.ofReal (C * Real.exp (-(c * (m : ℝ) ^ s)))) ∧
       ∀ᵐ ω ∂latticeBondLaw d p, IsWellConnected ω 0 (X ω) := by
   classical
-  obtain ⟨c, C, s, hc, hC, hs, hbound⟩ := hwc d hd p hpc hp1
+  obtain ⟨c, C, s, hc, hC, hs, hbound⟩ := hbound0
   set μ := latticeBondLaw d p
   set A : ℕ → Set (Configuration d) := fun N => toMeasurable μ {ω | ¬ IsWellConnected ω 0 N}
   have hAm : ∀ N, MeasurableSet (A N) := fun N => measurableSet_toMeasurable _ _
   have hAμ : ∀ N : ℕ, μ (A N) ≤ ENNReal.ofReal (C * Real.exp (-(c * (N : ℝ) ^ s))) := fun N =>
-    (measure_toMeasurable _).trans_le (hbound 0 N)
+    (measure_toMeasurable _).trans_le (hbound N)
   set B : Set (Configuration d) := {ω | ∀ N, n₀ ≤ N → ω ∈ A N}
   have hBm : MeasurableSet B := by
     have : B = ⋂ N, ⋂ (_ : n₀ ≤ N), A N := by ext ω; simp [B]
@@ -176,6 +178,18 @@ theorem exists_wellConnectedScale [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     have hnot : ω ∉ A (Nat.find (hP ω)) := (Nat.find_spec (hP ω)).2.resolve_right hωB
     by_contra hbad
     exact hnot (subset_toMeasurable μ _ hbad)
+
+/-- A well-connected scale from the all-dimensional estimate. -/
+theorem exists_wellConnectedScale [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) (hwc : WellConnectedInput)
+    (n₀ : ℕ) (hn₀ : 1 ≤ n₀) :
+    ∃ c C s : ℝ, 0 < c ∧ 0 ≤ C ∧ 0 < s ∧ ∃ X : Configuration d → ℕ, Measurable X ∧
+      (∀ ω, n₀ ≤ X ω) ∧
+      (∀ m : ℕ, n₀ < m → latticeBondLaw d p {ω | X ω = m} ≤
+        ENNReal.ofReal (C * Real.exp (-(c * (m : ℝ) ^ s)))) ∧
+      ∀ᵐ ω ∂latticeBondLaw d p, IsWellConnected ω 0 (X ω) := by
+  obtain ⟨c, C, s, hc, hC, hs, hbound⟩ := hwc d hd p hpc hp1
+  exact exists_wellConnectedScale_of_bound ⟨c, C, s, hc, hC, hs, hbound 0⟩ n₀ hn₀
 
 /-! ### Stochastic integrability -/
 
@@ -302,11 +316,12 @@ theorem exists_isOs_of_integrable {p : unitInterval} {Y : Configuration d → �
 finitely supported `f`, almost surely `supp f ∩ 𝒞_∞` lies in a finite set `V ⊆ 𝒞_∞` connected
 through the edges of `𝒞_∞` inside `V`, with `|V| ≤ 81 |supp f| X²` for the well-connected scale
 `X` of `exists_wellConnectedScale`, and `81 |supp f| X² ≤ O_{s/4}(θ)`. -/
-theorem connectingSetStep : Rigidity.Steps.Section5.ConnectingSetStep := by
+theorem connectingSetStep_two : Rigidity.Steps.Section5.ConnectingSetStepTwo := by
   intro hwc p hpc hp1 f hf
   obtain ⟨Nf, hNf1, hNf⟩ := exists_cube_superset_support hf
+  obtain ⟨c₀, C₀, s₀, hc₀, hC₀, hs₀, hbound⟩ := hwc p hpc hp1
   obtain ⟨c, C, s, hc, hC, hs, X, hXm, hXge, hXtail, hXae⟩ :=
-    exists_wellConnectedScale (d := 2) le_rfl hpc hp1 hwc Nf hNf1
+    exists_wellConnectedScale_of_bound (d := 2) ⟨c₀, C₀, s₀, hc₀, hC₀, hs₀, hbound 0⟩ Nf hNf1
   have hint := integrable_exp_rpow_of_tail (μ := latticeBondLaw 2 p) hXm
     (K := 81 * (hf.toFinset.card : ℝ)) (Nf + 1) (by positivity) hC hc hs
     fun m hm => hXtail m hm
@@ -338,5 +353,9 @@ theorem connectingSetStep : Rigidity.Steps.Section5.ConnectingSetStep := by
         norm_num
         linarith
     _ = 81 * (hf.toFinset.card : ℝ) * (X ω : ℝ) ^ 2 := by ring
+
+/-- The connecting-set step from the all-dimensional well-connectedness estimate. -/
+theorem connectingSetStep : Rigidity.Steps.Section5.ConnectingSetStep :=
+  fun hwc => connectingSetStep_two (wellConnectedInputTwo_of_wellConnectedInput hwc)
 
 end Rigidity.Proofs.Section5

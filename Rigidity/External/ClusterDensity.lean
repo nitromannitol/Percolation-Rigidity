@@ -52,4 +52,28 @@ def ClusterDensityConcentrationInput : Prop :=
         (2 * ((d : ℝ) - 1) / (3 * (d : ℝ) ^ 2 + 2 * (d : ℝ) - 1))
         (C * (3 : ℝ) ^ (-((d : ℝ) * (m : ℝ)) / 2))
 
+/-- Density concentration in a fixed dimension and at a fixed bond parameter. -/
+def ClusterDensityConcentrationAt (d : ℕ) (p : unitInterval) : Prop :=
+  ∃ C : ℝ, 0 < C ∧ ∀ (m : ℕ) (k : Vertex d),
+      IsOsBond d p
+        (fun ω => |(infiniteClusterCount (triadicCube d m k) ω : ℝ) /
+          ((triadicCube d m k).ncard : ℝ) - theta d p|)
+        (2 * ((d : ℝ) - 1) / (3 * (d : ℝ) ^ 2 + 2 * (d : ℝ) - 1))
+        (C * (3 : ℝ) ^ (-((d : ℝ) * (m : ℝ)) / 2))
+
+/-- Dario–Gu density concentration for planar bond percolation. -/
+def ClusterDensityConcentrationInputTwo : Prop :=
+  ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+    ∃ C : ℝ, 0 < C ∧ ∀ (m : ℕ) (k : Vertex 2),
+      IsOsBond 2 p
+        (fun ω => |(infiniteClusterCount (triadicCube 2 m k) ω : ℝ) /
+          ((triadicCube 2 m k).ncard : ℝ) - theta 2 p|)
+        (2 * ((2 : ℝ) - 1) / (3 * (2 : ℝ) ^ 2 + 2 * (2 : ℝ) - 1))
+        (C * (3 : ℝ) ^ (-((2 : ℝ) * (m : ℝ)) / 2))
+
+/-- The all-dimensional density estimate implies its planar specialization. -/
+theorem clusterDensityConcentrationInputTwo_of_input
+    (h : ClusterDensityConcentrationInput) : ClusterDensityConcentrationInputTwo :=
+  h 2 le_rfl
+
 end Rigidity.External

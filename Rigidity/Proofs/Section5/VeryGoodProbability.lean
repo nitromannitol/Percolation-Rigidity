@@ -118,13 +118,13 @@ theorem allOpen_isWellConnected (x : Vertex 2) {N : ℕ} (hN : 1 ≤ N)
 
 /-- Proposition 2.3 in dimension `2` for every `p_c < p ≤ 1`: for `p < 1` it is
 `WellConnectedInput`; for `p = 1` every edge is open almost surely. -/
-theorem wellConnected_bound (hW : External.WellConnectedInput) (p : unitInterval)
+theorem wellConnected_bound_two (hW : External.WellConnectedInputTwo) (p : unitInterval)
     (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ C c s : ℝ, 0 < C ∧ 0 < c ∧ 0 < s ∧ ∀ (x : Vertex 2) (N : ℕ),
       latticeBondLaw 2 p {ω | ¬ IsWellConnected ω x N} ≤
         ENNReal.ofReal (C * Real.exp (-(c * (N : ℝ) ^ s))) := by
   rcases lt_or_eq_of_le p.2.2 with hp1 | hp1
-  · obtain ⟨c, C, s, hc, hC, hs, hb⟩ := hW 2 le_rfl p hpc hp1
+  · obtain ⟨c, C, s, hc, hC, hs, hb⟩ := hW p hpc hp1
     refine ⟨C, c, s, hC, hc, hs, fun x N => ?_⟩
     simpa only [isWellConnected_iff_external] using hb x N
   · have hp : p = 1 := Subtype.ext hp1
@@ -159,6 +159,14 @@ theorem wellConnected_bound (hW : External.WellConnectedInput) (p : unitInterval
       have hwc := allOpen_isWellConnected x hN hcond
       rw [Set.indicator_of_notMem (by simpa using hwc)]
       simp
+
+/-- The all-dimensional well-connectedness input gives the planar bound up to `p = 1`. -/
+theorem wellConnected_bound (hW : External.WellConnectedInput) (p : unitInterval)
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∃ C c s : ℝ, 0 < C ∧ 0 < c ∧ 0 < s ∧ ∀ (x : Vertex 2) (N : ℕ),
+      latticeBondLaw 2 p {ω | ¬ IsWellConnected ω x N} ≤
+        ENNReal.ofReal (C * Real.exp (-(c * (N : ℝ) ^ s))) :=
+  wellConnected_bound_two (External.wellConnectedInputTwo_of_wellConnectedInput hW) p hpc
 
 /-! ### Kesten channels -/
 
@@ -302,9 +310,9 @@ theorem exp_neg_mul_rpow_le {c c' s s' : ℝ} (hc : 0 ≤ c) (hcc : c ≤ c') (h
     _ ≤ c' * (r : ℝ) ^ s' := mul_le_mul_of_nonneg_left hr (hc.trans hcc)
 
 /-- **Step `step:5.21-very-good`** (eq. `verygoodstretchedexpclose1`). -/
-theorem veryGoodProbabilityStep : Steps.Section5.VeryGoodProbabilityStep := by
+theorem veryGoodProbabilityStep_two : Steps.Section5.VeryGoodProbabilityStepTwo := by
   intro hW hK p hpc
-  obtain ⟨C₁, c₁, s₁, hC₁, hc₁, hs₁, hb₁⟩ := wellConnected_bound hW p hpc
+  obtain ⟨C₁, c₁, s₁, hC₁, hc₁, hs₁, hb₁⟩ := wellConnected_bound_two hW p hpc
   obtain ⟨C₂, c₂, hC₂, hc₂, hb₂⟩ := hK p hpc
   set K := C₂ * Real.exp c₂ * (9 + 216 * (2 / c₂) ^ 4) with hK_def
   have hK0 : 0 < K := by positivity
@@ -331,5 +339,9 @@ theorem veryGoodProbabilityStep : Steps.Section5.VeryGoodProbabilityStep := by
   have e1 := exp_neg_mul_rpow_le hc.le (min_le_left _ _) hs (min_le_left _ _) r
   have e2 := exp_neg_mul_rpow_le hc.le (min_le_right _ _) hs (min_le_right _ _) r
   nlinarith [mul_le_mul_of_nonneg_left e1 hC₁.le, mul_le_mul_of_nonneg_left e2 hK0.le]
+
+/-- The very-good-cube estimate from the all-dimensional input. -/
+theorem veryGoodProbabilityStep : Steps.Section5.VeryGoodProbabilityStep :=
+  fun hW => veryGoodProbabilityStep_two (External.wellConnectedInputTwo_of_wellConnectedInput hW)
 
 end Rigidity.Proofs.Section5

@@ -1,0 +1,123 @@
+import Rigidity.Proofs.Section5.PlanarFieldTranslation
+import Rigidity.Proofs.Section5.PlanarRenormalizedDomination
+
+/-!
+# Sparse paths in the renormalized field
+
+For sufficiently large blocks, long star paths with few very-good blocks satisfy a uniform
+exponential probability bound.
+-/
+
+open MeasureTheory Filter Topology LatticeProb.Percolation Rigidity.Section5 Rigidity.Steps.Section5
+  Percolation.Literature
+
+namespace Rigidity.Proofs.Section5
+
+/-- At sufficiently large scales, each renormalized site is closed with uniformly small
+probability. -/
+theorem planar_renormalized_closed_marginal {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ z,
+      ((latticeBondLaw 2 p).map (renormField R)) {η | η z = false} ≤
+        ENNReal.ofReal ((1 / 144 : ℝ) ^ 18) := by
+  obtain ⟨C, c, s, hC, hc, hs, hbound⟩ := veryGoodProbabilityStep_two
+    Rigidity.Percolation.wellConnected_input_two Rigidity.Percolation.kesten_rectangle_crossing p hpc
+  have htend : Tendsto (fun R : ℕ => C * Real.exp (-(c * (R : ℝ) ^ s))) atTop (𝓝 0) := by
+    have hpow : Tendsto (fun R : ℕ => (R : ℝ) ^ s) atTop atTop :=
+      (tendsto_rpow_atTop hs).comp tendsto_natCast_atTop_atTop
+    simpa only [mul_zero, Function.comp_def] using
+      (Real.tendsto_exp_neg_atTop_nhds_zero.comp (hpow.const_mul_atTop hc)).const_mul C
+  filter_upwards [htend.eventually_lt_const (show (0 : ℝ) < (1 / 144 : ℝ) ^ 18 by positivity)]
+    with R hsmall z
+  have hmeas := renormFieldMeasurableStep R
+  have hz : MeasurableSet {ω : PlanarCarrier → Bool | ω z = false} :=
+    measurableSet_eq_fun (measurable_pi_apply z) measurable_const
+  rw [Measure.map_apply hmeas hz]
+  have hsite := hbound (renormCentre R z) (11 * R / 10)
+  have hRr : (R : ℝ) ^ s ≤ ((11 * R / 10 : ℕ) : ℝ) ^ s :=
+    Real.rpow_le_rpow (Nat.cast_nonneg _)
+      (by exact_mod_cast (show R ≤ 11 * R / 10 by omega)) hs.le
+  have hexp : Real.exp (-(c * ((11 * R / 10 : ℕ) : ℝ) ^ s)) ≤
+      Real.exp (-(c * (R : ℝ) ^ s)) :=
+    Real.exp_le_exp.mpr (by nlinarith [mul_le_mul_of_nonneg_left hRr hc.le])
+  have hsite' : (latticeBondLaw 2 p) (renormField R ⁻¹' {ω | ω z = false}) ≤
+      ENNReal.ofReal (C * Real.exp (-(c * ((11 * R / 10 : ℕ) : ℝ) ^ s))) := by
+    convert hsite using 2
+    ext ω
+    simp [renormField]
+  refine hsite'.trans (ENNReal.ofReal_le_ofReal ?_)
+  exact (mul_le_mul_of_nonneg_left hexp hC.le).trans hsmall.le
+
+/-- For every supercritical bond density, sufficiently large block sizes give an exponential
+bound for sparse star paths starting in any finite set. -/
+theorem planar_renormalized_sparse_paths {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ (T : Finset PlanarCarrier) (N : ℕ),
+      ((latticeBondLaw 2 p).map (renormField R))
+        (⋃ j : ℕ, ⋃ z ∈ T, ⋃ l ∈ starWalkLists (N + j) z,
+          {η | l.Nodup ∧ 2 * l.countP η ≤ N + j}) ≤
+            ENNReal.ofReal (4 * (T.card : ℝ) * (1 / 8 : ℝ) ^ N) := by
+  filter_upwards [planar_renormalized_closed_marginal hpc] with R hsmall T N
+  haveI : IsProbabilityMeasure ((latticeBondLaw 2 p).map (renormField R)) :=
+    Measure.isProbabilityMeasure_map (renormFieldMeasurableStep R).aemeasurable
+  exact measure_exists_sparse_star_path_le (renormFieldOneDependentStep p R) hsmall T N
+
+/-- At sufficiently large block scales, the renormalized site field has many disjoint
+horizontal crossings with exponentially high probability. -/
+theorem planar_renormalized_disjoint_crossings {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ (m n k : ℕ), 0 < m → 0 < n → 2 * k ≤ n →
+      ((latticeBondLaw 2 p).map (renormField R))
+        {η | ¬∃ L : Finset (List (LatticeModels.Site 2)),
+          Menger.IsLinkage
+            (Menger.edgesIn (planarOpenSiteGraph η)
+              (Finset.finite_toSet (Percolation.Literature.rectangle m n)))
+            (↑(Percolation.Literature.leftSide m n))
+            (↑(Percolation.Literature.rightSide m n)) L ∧ L.card = k} ≤
+      ENNReal.ofReal (4 * (m + 1 : ℝ) * (1 / 8 : ℝ) ^ n) := by
+  filter_upwards [planar_renormalized_closed_marginal hpc] with R hsmall m n k hm hn hk
+  haveI : IsProbabilityMeasure ((latticeBondLaw 2 p).map (renormField R)) :=
+    Measure.isProbabilityMeasure_map (renormFieldMeasurableStep R).aemeasurable
+  exact measure_no_disjoint_open_crossings_le (renormFieldOneDependentStep p R) hsmall m n k
+    hm hn hk
+
+/-- At sufficiently large block scales, a finite family of translated rectangles all have
+many disjoint crossings, except on an event with an explicit exponential bound. -/
+theorem planar_renormalized_disjoint_crossings_translates {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ (T : Finset PlanarCarrier) (m n k : ℕ),
+      0 < m → 0 < n → 2 * k ≤ n →
+      ((latticeBondLaw 2 p).map (renormField R))
+        (⋃ a ∈ T, translatePlanarField a ⁻¹'
+          {η | ¬∃ L : Finset (List (LatticeModels.Site 2)), Menger.IsLinkage
+            (Menger.edgesIn (planarOpenSiteGraph η)
+              (Finset.finite_toSet (Percolation.Literature.rectangle m n)))
+            (↑(Percolation.Literature.leftSide m n))
+            (↑(Percolation.Literature.rightSide m n)) L ∧ L.card = k}) ≤
+        ENNReal.ofReal (4 * (T.card : ℝ) * (m + 1 : ℝ) * (1 / 8 : ℝ) ^ n) := by
+  filter_upwards [planar_renormalized_closed_marginal hpc] with R hsmall T m n k hm hn hk
+  haveI : IsProbabilityMeasure ((latticeBondLaw 2 p).map (renormField R)) :=
+    Measure.isProbabilityMeasure_map (renormFieldMeasurableStep R).aemeasurable
+  exact measure_exists_no_disjoint_crossings_translate_le
+    (renormFieldOneDependentStep p R) hsmall T m n k hm hn hk
+
+/-- The corresponding bound for translated rectangles with exchanged coordinate axes. -/
+theorem planar_renormalized_disjoint_crossings_swap_translates {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∀ᶠ R : ℕ in atTop, ∀ (T : Finset PlanarCarrier) (m n k : ℕ),
+      0 < m → 0 < n → 2 * k ≤ n →
+      ((latticeBondLaw 2 p).map (renormField R))
+        (swapPlanarField ⁻¹' (⋃ a ∈ T, translatePlanarField a ⁻¹'
+          {η | ¬∃ L : Finset (List (LatticeModels.Site 2)), Menger.IsLinkage
+            (Menger.edgesIn (planarOpenSiteGraph η)
+              (Finset.finite_toSet (Percolation.Literature.rectangle m n)))
+            (↑(Percolation.Literature.leftSide m n))
+            (↑(Percolation.Literature.rightSide m n)) L ∧ L.card = k})) ≤
+        ENNReal.ofReal (4 * (T.card : ℝ) * (m + 1 : ℝ) * (1 / 8 : ℝ) ^ n) := by
+  filter_upwards [planar_renormalized_closed_marginal hpc] with R hsmall T m n k hm hn hk
+  haveI : IsProbabilityMeasure ((latticeBondLaw 2 p).map (renormField R)) :=
+    Measure.isProbabilityMeasure_map (renormFieldMeasurableStep R).aemeasurable
+  exact measure_exists_no_disjoint_crossings_swap_translate_le
+    (renormFieldOneDependentStep p R) hsmall T m n k hm hn hk
+
+end Rigidity.Proofs.Section5

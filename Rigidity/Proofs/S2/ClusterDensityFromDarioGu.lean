@@ -604,10 +604,10 @@ theorem exists_badScale_summable [NeZero d] (hd : 2 ≤ d) {p : unitInterval} {C
 /-- **The printed density sentence from Dario–Gu, Proposition A.1** (`ClusterDensityInputFaithful`,
 paper L508-511): a union bound over the `(6d+5)^d` triadic cubes of size `3^m` near `x`, at every
 scale `3^m ≥ 3^{N(x)}`, with `s = d s₀/4` and `𝔠 = (θ/2)(300d)^{-d}`. -/
-theorem clusterDensityInputFaithful_of_concentration (hDG : ClusterDensityConcentrationInput) :
-    ClusterDensityInputFaithful := by
-  intro d _ hd p hpc hp1
-  obtain ⟨C, hC, hX⟩ := hDG d hd p hpc hp1
+theorem clusterDensityInputFaithfulAt_of_concentration [NeZero d] (hd : 2 ≤ d)
+    (p : unitInterval) (hDG : ClusterDensityConcentrationAt d p) :
+    ClusterDensityInputFaithfulAt d p := by
+  obtain ⟨C, hC, hX⟩ := hDG
   rcases (theta_nonneg d p).eq_or_lt with hθ0 | hθ
   · refine ⟨1, 1 * 3 ^ ((1 : ℝ) / 1), 1, one_pos, by positivity, one_pos, fun x =>
       ⟨fun _ => 1, measurable_const, fun _ => zero_le_one, isOsBond_const one_pos one_pos, ?_⟩⟩
@@ -639,11 +639,30 @@ theorem clusterDensityInputFaithful_of_concentration (hDG : ClusterDensityConcen
   rw [hMN] at hr
   exact density_lower_bound_of_good h hgood hr hy hθ
 
+/-- Dario–Gu concentration gives the density lower bound in every dimension. -/
+theorem clusterDensityInputFaithful_of_concentration (hDG : ClusterDensityConcentrationInput) :
+    ClusterDensityInputFaithful := by
+  intro d _ hd p hpc hp1
+  exact clusterDensityInputFaithfulAt_of_concentration hd p (hDG d hd p hpc hp1)
+
 /-- **The density input of Proposition 2.6 from Dario–Gu, Proposition A.1**: the proposed form
 (centres in `B̄_r(x)`), through the printed sentence and `clusterDensityInputProposed_of_faithful`. -/
 theorem clusterDensityInputProposed_of_concentration (hDG : ClusterDensityConcentrationInput) :
     ClusterDensityInputProposed :=
   clusterDensityInputProposed_of_faithful (clusterDensityInputFaithful_of_concentration hDG)
+
+/-- Planar Dario–Gu concentration gives the uniform planar density lower bound. -/
+theorem clusterDensityInputProposedAt_two_of_concentration
+    (hDG : ClusterDensityConcentrationInputTwo) (p : unitInterval)
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ClusterDensityInputProposedAt 2 p :=
+  clusterDensityInputProposedAt_of_faithfulAt p
+    (clusterDensityInputFaithfulAt_of_concentration le_rfl p (hDG p hpc hp1))
+
+/-- The density-scale step in dimension two follows from planar concentration. -/
+theorem densityScaleStep_two_of_concentration (p : unitInterval)
+    (hDG : ClusterDensityConcentrationInputTwo) : DensityScaleStep 2 p :=
+  fun hpc hp1 => clusterDensityInputProposedAt_two_of_concentration hDG p hpc hp1
 
 /-- step:2.6-inputs, density, from Dario–Gu, Proposition A.1. -/
 theorem densityScaleStep_of_concentration [NeZero d] (hd : 2 ≤ d) (p : unitInterval)

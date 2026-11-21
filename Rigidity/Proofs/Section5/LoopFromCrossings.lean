@@ -608,12 +608,13 @@ theorem exists_loop_of_arcs (h : HasUniqueInfiniteOpenComponent ω) {R : ℕ} (h
     rw [hsum, key, div_self (by positivity)]
     exact one_ne_zero
 
-/-- **Step `step:5.14-planarity`** of Lemma 5.14: if the crossings `AnnulusCrossings ω R` occur at
-every scale `R ≥ M`, then for every `R ≥ M + 1` the unique infinite cluster contains a loop in
-`Q_{2R} \ Q_R` with winding number `1` around the origin. -/
-theorem loopFromCrossingsStep : LoopFromCrossingsStep := by
-  intro ω h M hM
-  refine ⟨M + 1, fun R hR => ?_⟩
+/-- Crossings at all scales from `M` give a loop in the infinite cluster at each scale above `M`.-/
+theorem loop_at_scale_of_crossings (ω : Configuration 2) (h : HasUniqueInfiniteOpenComponent ω)
+    (M : ℕ) (hM : ∀ R : ℕ, M ≤ R → AnnulusCrossings ω R) (R : ℕ) (hR : M + 1 ≤ R) :
+    ∃ n : ℕ, ∃ γ : Fin (n + 1) → uniqueInfiniteComponent h,
+      (∀ i, (componentGraph _).Adj (γ i) (γ (i + 1))) ∧
+      (∀ i, (γ i).val ∈ cube (2 * R) \ cube R) ∧
+      windingNumber (fun i => (γ i).val) ≠ 0 := by
   have hR1 : 1 ≤ R := by omega
   have hMR : M ≤ R := by omega
   obtain ⟨hb, ht, hl, hr, -⟩ := hM R hMR
@@ -662,6 +663,12 @@ theorem loopFromCrossingsStep : LoopFromCrossingsStep := by
   · have := hW2 w hw; simp only [Set.mem_setOf_eq] at this; omega
   · have := hW3 w hw; simp only [Set.mem_setOf_eq] at this; omega
   · have := hW4 w hw; simp only [Set.mem_setOf_eq] at this; omega
+
+/-- **Step `step:5.14-planarity`** of Lemma 5.14: crossings at all sufficiently large scales
+give loops in the unique infinite cluster at all sufficiently large scales. -/
+theorem loopFromCrossingsStep : LoopFromCrossingsStep := by
+  intro ω h M hM
+  exact ⟨M + 1, fun R hR => loop_at_scale_of_crossings ω h M hM R hR⟩
 
 /-- **Lemma 5.14** (`lemma:loops-around-annuli`): for `p > p_c(2)`, almost surely there is a scale
 `M` such that for every `R ≥ M` the unique infinite cluster contains a loop in `Q_{2R} \ Q_R` with

@@ -261,6 +261,14 @@ Theorems 1.1 and 1.2 without the uniqueness hypothesis, Theorem 1.3 without the 
 crossing, or sphere Jordan hypotheses, and Theorem 6.5 without the uniqueness or smoothing
 hypotheses. The other inputs listed below remain hypotheses of those versions.
 
+For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proofs/Assembly/PlanarInputs.lean)
+assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
+order-zero and order-one regularity, and the Green-column existence and quantitative estimates.
+The planar well-connectedness and cluster-density concentration estimates are supplied by
+[`wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) and
+[`planar_cluster_density_concentration`](Rigidity/Proofs/S2/PlanarDensityConcentration.lean).
+The variant `fast_decay_of_green_exists` derives Green-column uniqueness from order-zero regularity.
+
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
 | `LatticeProb.External.SupercriticalBondUniqueness` | `0 < 𝔭_c(d) < 1` for `d ≥ 2`, and for `𝔭_c(d) < p < 1` there is almost surely a unique infinite open cluster | Grimmett, (1.8), (1.10) and (1.11), pp. 13–14, and Theorem 8.1, p. 198; Burton and Keane, Theorem 2 | Theorems 1.1, 1.2, 1.3, 5.1, 6.5; Propositions 3.2, 4.10, 5.3, 5.5, 5.7, 5.8, 5.11, 5.12, 5.20; Lemmas 3.1, 3.3, 4.7, 4.9, 5.6, 5.14, 5.16, 5.17, 5.18, 5.19, 5.25, 5.27, 5.28 |
