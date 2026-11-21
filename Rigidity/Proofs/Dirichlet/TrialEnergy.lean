@@ -142,4 +142,61 @@ theorem sum_layer_energy_mesoInterpolation_div_le (Q : IntegerCube d) (hL : 0 < 
         rw [Finset.mul_sum]
     _ ≤ _ := mul_le_mul_of_nonneg_left hmeso (by positivity)
 
+theorem coversEdges_cubeInterior (Q : IntegerCube d) :
+    CoversEdges (cubeInterior Q) Q.vertices := by
+  intro x j hx
+  rcases hx with hx | hx
+  · exact (Finset.mem_filter.mp hx).1
+  · obtain ⟨hxQ, hxi⟩ := Finset.mem_filter.mp hx
+    rw [IntegerCube.mem_vertices] at hxQ ⊢
+    intro k
+    have h1 := hxQ k
+    have h2 := hxi k
+    rw [add_unit_apply] at h1 h2
+    split_ifs at h1 h2 <;> constructor <;> linarith [h1.1, h1.2, h2.1, h2.2]
+
+/-- **The homogenized half of Armstrong–Dario, Lemma 6.2, on the lattice**: for constant
+conductances `0 < a_k ≤ Λ`, the homogenized solution `u_hom` with datum `w` on the cube `Q`
+(of side `L`) satisfies, for `N, r ≥ 1`, `s ≥ 2` and `B ⊇ Q + {0, …, N − 1}^d`,
+`L^{-d} E_hom(u_hom) ≤ L^{-d} Σ_{Q ∖ layer} Σ_k a_k p_k² +
+  Λ (2d(r + 1)/L)^{1 − 2/s} (d^{s/2−1} 3^{s−1} (1 + 2^s + d^s (N/r)^s) L^{-d} Σ_B Σ_k |∇_k w|^s)^{2/s}`,
+with `p_k(x) = ⟨∇_k w⟩_{x + □_N}` the mesoscopic slopes and the layer of width `r + 1`. -/
+theorem edgeEnergy_dirichletSolution_div_le (hd : 1 ≤ d) (a : Fin d → ℝ) (ha : ∀ k, 0 < a k)
+    {Λ : ℝ} (haΛ : ∀ k, a k ≤ Λ) (Q : IntegerCube d) (hL : 0 < Q.size) {N r : ℕ} (hN : 0 < N)
+    (hr : 0 < r) (w : Vertex d → ℝ) {s : ℝ} (hs : 2 ≤ s) (B : Finset (Vertex d))
+    (hB : ∀ x ∈ Q.vertices, ∀ o ∈ (cornerCube 0 N).vertices, x + o ∈ B) :
+    edgeEnergy (constCond a) Q.vertices (dirichletSolution (constCond a) (cubeInterior Q) w) /
+        (Q.size : ℝ) ^ d ≤
+      (∑ x ∈ Q.vertices \ cubeLayer Q (r + 1), ∑ k : Fin d, a k * cubeSlope N w x k ^ 2) /
+          (Q.size : ℝ) ^ d +
+        Λ * ((2 * d * ((r + 1 : ℕ) : ℝ) / Q.size) ^ (1 - 2 / s) *
+          ((d : ℝ) ^ (s / 2 - 1) *
+            ((3 : ℝ) ^ (s - 1) * (1 + 2 ^ s + (d : ℝ) ^ s * ((N : ℝ) / r) ^ s) *
+              ∑ y ∈ B, ∑ k : Fin d, |w (y + unit k) - w y| ^ s) / (Q.size : ℝ) ^ d) ^ (2 / s)) := by
+  have hV : (0 : ℝ) < (Q.size : ℝ) ^ d := by positivity
+  have hΛ : 0 ≤ Λ := (ha ⟨0, hd⟩).le.trans (haΛ _)
+  have hmin := edgeEnergy_dirichletSolution_le hd (constCond a) (fun e => ha e.2)
+    (coversEdges_cubeInterior Q) w (mesoInterpolation N (cubeCutoff Q r) w)
+    (fun x hx => mesoInterpolation_cubeCutoff_of_not_mem Q N r w hx)
+  have htrial := sum_energy_mesoInterpolation_le a haΛ Q N hr w
+  have hlayer := sum_layer_energy_mesoInterpolation_div_le Q hL hN hr w hs B hB
+  have hE : edgeEnergy (constCond a) Q.vertices (mesoInterpolation N (cubeCutoff Q r) w) =
+      ∑ x ∈ Q.vertices, ∑ k : Fin d, a k *
+        (mesoInterpolation N (cubeCutoff Q r) w (x + unit k) -
+          mesoInterpolation N (cubeCutoff Q r) w x) ^ 2 := rfl
+  rw [hE] at hmin
+  calc edgeEnergy (constCond a) Q.vertices (dirichletSolution (constCond a) (cubeInterior Q) w) /
+        (Q.size : ℝ) ^ d
+      ≤ (∑ x ∈ Q.vertices \ cubeLayer Q (r + 1), ∑ k : Fin d, a k * cubeSlope N w x k ^ 2 +
+          Λ * ∑ x ∈ cubeLayer Q (r + 1), ∑ k : Fin d,
+            (mesoInterpolation N (cubeCutoff Q r) w (x + unit k) -
+              mesoInterpolation N (cubeCutoff Q r) w x) ^ 2) / (Q.size : ℝ) ^ d :=
+        div_le_div_of_nonneg_right (hmin.trans htrial) hV.le
+    _ = (∑ x ∈ Q.vertices \ cubeLayer Q (r + 1), ∑ k : Fin d, a k * cubeSlope N w x k ^ 2) /
+          (Q.size : ℝ) ^ d +
+        Λ * ((∑ x ∈ cubeLayer Q (r + 1), ∑ k : Fin d,
+            (mesoInterpolation N (cubeCutoff Q r) w (x + unit k) -
+              mesoInterpolation N (cubeCutoff Q r) w x) ^ 2) / (Q.size : ℝ) ^ d) := by ring
+    _ ≤ _ := add_le_add le_rfl (mul_le_mul_of_nonneg_left hlayer hΛ)
+
 end Rigidity.Dirichlet
