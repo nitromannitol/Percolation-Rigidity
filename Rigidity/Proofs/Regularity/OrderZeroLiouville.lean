@@ -1,4 +1,4 @@
-import LatticeProb.Prob.Percolation.LatticeHarmonicGrowth
+import LatticeProb.External.ArmstrongDarioOrderZero
 import Rigidity.Proofs.Regularity.ClusterBallExcess
 
 /-!
@@ -180,5 +180,39 @@ theorem orderZero_regularity_of_decay (C : OpenComponent ω) [Nonempty C] {X K :
   refine ⟨h1, h2, fun R hR u hu => ?_⟩
   obtain ⟨c, hc⟩ := hdecay R hR u hu
   exact ⟨fun _ => c, const_mem_harmonicGrowthSpace C 0 c, hc⟩
+
+/-- The order-zero decay with constant approximations above a minimal scale `X ≤ O_s(θ)`: the
+statement of `LatticeProb.External.ArmstrongDarioOrderZero` with the dimension clause removed and
+the approximating elements of `𝒜_0` replaced by constants. -/
+def ArmstrongDarioOrderZeroDecay : Prop :=
+  ∀ (d : ℕ) [NeZero d] (_hd : 2 ≤ d) (p : unitInterval),
+    criticalProbability d < (p : ℝ) → (p : ℝ) < 1 →
+    ∃ (s θ C : ℝ), 0 < s ∧ 0 < θ ∧ 0 < C ∧
+      ∃ X : Configuration d → ℝ,
+        Measurable X ∧ (∀ ω, 0 ≤ X ω) ∧
+        MeasureTheory.Integrable (fun ω => Real.exp (Real.rpow (X ω / θ) s))
+          (latticeBondLaw d p) ∧
+        (∫ ω, Real.exp (Real.rpow (X ω / θ) s) ∂latticeBondLaw d p) ≤ 2 ∧
+        ∀ᵐ ω ∂latticeBondLaw d p,
+          ∃ _h : HasUniqueInfiniteOpenComponent ω,
+            ∀ h' : HasUniqueInfiniteOpenComponent ω, ∀ R : ℝ, 2 * X ω ≤ R →
+              ∀ u : uniqueInfiniteComponent h' → ℝ,
+                IsHarmonicInBall (uniqueInfiniteComponent h') R u →
+                ∃ c : ℝ, ∀ r : ℝ, X ω ≤ r → r ≤ R / 2 →
+                  componentBallL2 (uniqueInfiniteComponent h') 0 r (u - fun _ => c) ≤
+                    C * (r / R) * componentBallL2 (uniqueInfiniteComponent h') 0 R u
+
+/-- **The order-zero regularity input of Armstrong–Dario from the decay with constants**: the
+dimension clause and the approximation by `𝒜_0` follow from the decay with constants. -/
+theorem armstrongDarioOrderZero_of_decay (h : ArmstrongDarioOrderZeroDecay) :
+    LatticeProb.External.ArmstrongDarioOrderZero := by
+  intro d _ hd p hpc hp1
+  obtain ⟨s, θ, C, hs, hθ, hC, X, hXm, hX0, hint, hle, hae⟩ := h d hd p hpc hp1
+  refine ⟨s, θ, C, hs, hθ, hC, X, hXm, hX0, hint, hle, ?_⟩
+  filter_upwards [hae] with ω ⟨h₀, hall⟩
+  refine ⟨h₀, fun h' => ?_⟩
+  haveI : Nonempty (uniqueInfiniteComponent h') :=
+    (uniqueInfiniteComponent_infinite h').nonempty.to_subtype
+  exact orderZero_regularity_of_decay (uniqueInfiniteComponent h') (hall h')
 
 end Rigidity.Proofs.Regularity
