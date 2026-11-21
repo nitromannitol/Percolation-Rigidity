@@ -171,9 +171,9 @@ theorem exists_events_sum_stoppingSize_le (hd : 0 < d) (p : unitInterval)
 
 /-- **Armstrong and Dario, Proposition 2.4**, for a general random collection of good cubes
 satisfying (2.1) and (2.2) with `0 < s ≤ 1`: for every `τ ∈ ℕ` and `α > 0` there are `C`, `s' > 0`
-and one measurable random scale `M` with a stretched-exponential moment of order `s'` such that,
-almost surely, whenever `M < 3ᵐ`, `∑_{x ∈ Q_m} size(x)^τ ≤ C 3^{d m}` and every vertex of `Q_m` has
-stopping size at most `3^{α m}`. -/
+and one measurable random scale `M`, finite almost surely, with a stretched-exponential moment of
+order `s'` such that, almost surely, whenever `M < 3ᵐ`, `∑_{x ∈ Q_m} size(x)^τ ≤ C 3^{d m}` and
+every vertex of `Q_m` has stopping size at most `3^{α m}`. -/
 theorem exists_minimalScale_general (hd : 0 < d) (p : unitInterval)
     (G : Configuration d → Set (TriadicCube d))
     (hGm : ∀ T : TriadicCube d, MeasurableSet {ω | T ∈ G ω})
@@ -184,6 +184,7 @@ theorem exists_minimalScale_general (hd : 0 < d) (p : unitInterval)
       ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0)))
     (τ : ℕ) {α : ℝ} (hα : 0 < α) :
     ∃ C s : ℝ, 0 < s ∧ ∃ M : Configuration d → ℝ≥0∞, Measurable M ∧
+      (∀ᵐ ω ∂(latticeBondLaw d p), M ω ≠ ∞) ∧
       (∃ θ : ℝ, 0 < θ ∧
         Integrable (fun ω => Real.exp (((M ω).toReal / θ) ^ s)) (latticeBondLaw d p) ∧
         (∫ ω, Real.exp (((M ω).toReal / θ) ^ s) ∂(latticeBondLaw d p)) ≤ 2) ∧
@@ -229,7 +230,13 @@ theorem exists_minimalScale_general (hd : 0 < d) (p : unitInterval)
       _ = _ := by ring
   obtain ⟨θ', hθ', hint, hle⟩ := exceptionalScale_exp_moment μ E hEm (C1' + ENNReal.ofReal C2)
     (ENNReal.add_ne_top.2 ⟨hC1', ENNReal.ofReal_ne_top⟩) s c' hs hc' hE
-  refine ⟨Cf, s, hs, exceptionalScale E, measurable_exceptionalScale E hEm,
+  have hfin : ∀ᵐ ω ∂μ, exceptionalScale E ω ≠ ∞ :=
+    ae_exceptionalScale_ne_top μ E (C1' + ENNReal.ofReal C2)
+      (ENNReal.add_ne_top.2 ⟨hC1', ENNReal.ofReal_ne_top⟩) ((3 : ℝ) ^ s) c'
+      (Real.one_lt_rpow (by norm_num) hs) hc' (fun n => by
+        rw [Real.rpow_pow_comm (show (0 : ℝ) ≤ 3 by norm_num) s n]
+        exact hE n)
+  refine ⟨Cf, s, hs, exceptionalScale E, measurable_exceptionalScale E hEm, hfin,
     ⟨θ', hθ', hint, hle⟩, Filter.Eventually.of_forall fun ω m hm => ?_⟩
   have hnot : ω ∉ E m := by
     intro hωE
