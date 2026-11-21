@@ -16,7 +16,10 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses. The remaining five are quoted from the literature: four of them (Proposition 2.3,
+hypotheses. Five of these twelve inputs, among them Proposition 2.3, are also proved in Lean, and
+Theorem 6.5 is proved with no literature hypothesis (see
+[Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
+literature: four of them (Proposition 2.3,
 Theorems 2.4 and 2.5, Lemma 2.14) enter as literature inputs, and the fifth (Lemma 2.13, a fact of
 plane topology) is used by no proof. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
 printed, and Theorem 6.5 as printed with its restriction event made explicit (see
@@ -69,7 +72,10 @@ for Theorem 1.3) and the literature inputs its proof uses, listed in
 [Assumed literature inputs](#assumed-literature-inputs). The statements of Theorems 1.1, 1.3 and 6.5
 are the definitions `Rigidity.Section3.LipschitzStmt`, `Rigidity.Section5.FastDecayStmt` and
 `Rigidity.Section6.SlowMixingStmt`; Theorem 1.2 is also the theorem
-`Rigidity.integer_valued_linear_growth`, whose statement is written out in full.
+`Rigidity.integer_valued_linear_growth`, whose statement is written out in full. The three
+literature inputs of Theorem 6.5 are proved, and
+[`Rigidity.Assembly.Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) is
+Theorem 6.5 with the regime `2 ≤ d`, `criticalProbability d < p`, `p < 1` as its only hypotheses.
 
 ### All numbered results
 
@@ -80,7 +86,7 @@ and lemmas in `Rigidity.Assembly.Main` are in
 first, with their own definitions, are in [`Rigidity/Frozen/`](Rigidity/Frozen/). For a statement
 in `Rigidity.Assembly`, the definition `Rigidity.Section<n>.<Name>Stmt` that it concludes is in
 [`Rigidity/Draft/`](Rigidity/Draft/). A quoted result is marked *quoted*, with the literature input
-that states it, if any.
+that states it, if any, and the theorem that proves this input, if any.
 
 | Paper | Label | Lean declaration | Content |
 | --- | --- | --- | --- |
@@ -88,13 +94,13 @@ that states it, if any.
 | Theorem 1.2 | `theorem:integer-valued-linear-growth` | `Rigidity.Assembly.Main.integerValuedLinearGrowth` | Integer-valued harmonic functions of linear growth are constant. |
 | Theorem 1.3 | `theorem:fast-decay` | `Rigidity.Assembly.Main.fastDecay` | `d = 2`: integer Laplacian of finite support and decay faster than `\|x\|⁻¹` force finite support. |
 | Lemma 2.1 | `lemma:finite-energy` | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
-| Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
+| Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput`; proved: `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
 | Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
 | Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
 | Lemma 2.13 | (none) | quoted, not used | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
-| Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere` | The Jordan curve theorem on the sphere `S²`. |
+| Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere`; proved: `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
 | Lemma 2.16 | `lemma:jordan-curves-theorem` | `Rigidity.Assembly.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
 | Lemma 3.1 | `lemma:reduction-to-slope-e1` | `Rigidity.Assembly.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
 | Proposition 3.2 | `prop:not-lipschitz` | `Rigidity.Assembly.Main.notLipschitz` | For every `L`, with positive probability `\|∇ℓ_{e₁}(0)\| > L`. |
@@ -213,7 +219,8 @@ Proposition 3.2.
    Proposition 6.4; Propositions 4.1 and 6.4 are proved in every dimension `d ≥ 2`.
 2. **Literature inputs.** Twelve results of the literature enter as explicit hypotheses of the
    theorems that use them; none is an `axiom`. They are listed in
-   [Assumed literature inputs](#assumed-literature-inputs).
+   [Assumed literature inputs](#assumed-literature-inputs), with the five of them that are proved
+   and the case `d = 2` of a sixth.
 3. **Measurability.** Some events quantify over the corrected planes of every configuration and are
    not shown to be measurable. For them, "with positive probability" means that the event contains a
    measurable event of positive probability (Proposition 3.2 and Lemmas 5.25 and 5.27), and an upper bound on
@@ -246,24 +253,36 @@ Proposition 3.2.
 7. **Axioms.** The library contains no `sorry`, `admit`, `native_decide` or new `axiom`. The Lean
    declaration of each proved numbered result depends on exactly `propext`, `Classical.choice` and
    `Quot.sound`.
-8. **Not formalized.** Lemma 2.13, which no proof uses; the quoted results, which enter as literature
-   inputs; the remarks, problems and conjectures; the figures.
+8. **Not formalized.** Lemma 2.13, which no proof uses; Theorems 2.4 and 2.5, which enter as
+   literature inputs; the remarks, problems and conjectures; the figures. The other two quoted
+   results, Proposition 2.3 and Lemma 2.14, enter as literature inputs that are proved.
 
 ## Assumed literature inputs
 
-The table records the hypotheses of the original theorem statements. Four of these propositions
+The table records the hypotheses of the original theorem statements. Five of these propositions
 are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](Rigidity/Proofs/Percolation/BondUniqueness.lean),
 [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean),
 [`Rigidity.Percolation.kesten_rectangle_crossing`](Rigidity/Proofs/Percolation/KestenCrossing.lean),
-and [`Rigidity.Topology.jordan_curve_theorem_sphere`](Rigidity/Proofs/Topology/JordanCurveSphere.lean).
+[`Rigidity.Topology.jordan_curve_theorem_sphere`](Rigidity/Proofs/Topology/JordanCurveSphere.lean),
+and [`Rigidity.Percolation.wellConnected_input`](Rigidity/Proofs/Percolation/WellConnected.lean)
+(Proposition 2.3; see the note below the table). The case `d = 2` of
+`ClusterDensityConcentrationInput` is also proved:
+[`Rigidity.Proofs.S2.planar_cluster_density_concentration`](Rigidity/Proofs/S2/PlanarDensityConcentration.lean)
+proves its planar form `Rigidity.External.ClusterDensityConcentrationInputTwo` (see
+[Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2)).
 [`Rigidity.Assembly.WithProvedInputs`](Rigidity/Proofs/Assembly/ProvedInputs.lean) gives versions of
 Theorems 1.1 and 1.2 without the uniqueness hypothesis, Theorem 1.3 without the uniqueness,
 crossing, or sphere Jordan hypotheses, and Theorem 6.5 without the uniqueness or smoothing
-hypotheses. The other inputs listed below remain hypotheses of those versions.
+hypotheses; `Rigidity.Percolation.wellConnected_input` supplies the hypothesis `WellConnectedInput`
+of the versions of Theorems 1.1, 1.3 and 6.5, and
+[`Rigidity.Assembly.Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) is
+Theorem 6.5 with no literature hypothesis. The other inputs listed below remain hypotheses.
 
 For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proofs/Assembly/PlanarInputs.lean)
 assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
 order-zero and order-one regularity, and the Green-column existence and quantitative estimates.
+These six planar forms are stated in
+[`Rigidity/External/PlanarInputs.lean`](Rigidity/External/PlanarInputs.lean) and are not proved.
 The planar well-connectedness and cluster-density concentration estimates are supplied by
 [`wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) and
 [`planar_cluster_density_concentration`](Rigidity/Proofs/S2/PlanarDensityConcentration.lean).
@@ -296,7 +315,10 @@ in [Slab connectivity above the critical point](#slab-connectivity-above-the-cri
 `d ≥ 3` the statement of `WellConnectedInput` is proved, with the box estimate replaced by crossing
 estimates from slab connectivity; see
 [Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3).
-The input therefore reduces to its case `d = 2`.
+For `d = 2` it is proved from Kesten's rectangle-crossing estimate in place of the estimate of
+Couronné and Messikh; see
+[Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2).
+The two cases together prove `WellConnectedInput`, as `Rigidity.Percolation.wellConnected_input`.
 
 Each input was checked against its source in an independent model review. Page numbers refer to the
 arXiv versions listed below. AD: S. Armstrong and P. Dario, *Elliptic regularity and quantitative
@@ -432,19 +454,64 @@ The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.soun
    Chayes, Chayes, Grimmett, Kesten and Schonmann. The volume bound follows, since a cluster of
    `ℓ^∞`-radius less than `l` has at most `(2l)^d` vertices.
 
+## Proposition 2.3 and the density concentration for d = 2
+
+For `d = 2` and `𝔭_c(2) < p < 1`, Kesten's rectangle-crossing estimate, which is proved (see
+[Assumed literature inputs](#assumed-literature-inputs)), gives Proposition 2.3 of the paper and
+the density concentration of Dario and Gu, Proposition A.1, in the plane. With the theorems of the
+previous section, Proposition 2.3 holds in every dimension, and so does Theorem 6.5, with no
+literature hypothesis.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) | `WellConnectedInputTwo`, the statement of `WellConnectedInput` at `d = 2`, here with `s = 1/800`. |
+| [`Rigidity.Percolation.wellConnected_input`](Rigidity/Proofs/Percolation/WellConnected.lean) | `WellConnectedInput`: Proposition 2.3 for every `d ≥ 2`, from `wellConnected_input_two` and `wellConnected_of_three_le`. |
+| [`Rigidity.Proofs.S2.planar_cluster_density_concentration`](Rigidity/Proofs/S2/PlanarDensityConcentration.lean) | `ClusterDensityConcentrationInputTwo`, the statement of `ClusterDensityConcentrationInput` at `d = 2`: the density of the infinite cluster in a triadic square of side `3ᵐ` differs from `θ(𝔭)` by `O_{2/15}(C 3^{−m})`. |
+| [`Rigidity.Assembly.Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) | Theorem 6.5 for every `d ≥ 2` and `𝔭_c(d) < p < 1`, with no literature hypothesis. |
+
+The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`.
+
+1. **Well-connected squares** (`Rigidity/Proofs/Percolation/PlanarGoodCube.lean`,
+   `PlanarWellConnected.lean` and the modules they import). In the square `z + Q_M`, `M ≥ 10⁴`, let
+   `w = ⌊√M⌋/100`. Outside an event of probability at most a polynomial in `M` times `exp(−c w)`,
+   every horizontal and vertical strip of width `w` of the square has an open crossing in its long
+   direction, and the square has a unique crossing cluster. The strip crossings then lie in the
+   crossing cluster, every other open cluster of the square lies in a square of side `2w + 1`, so
+   the crossing cluster is a largest cluster, and every open path with at least `M/100` steps is
+   joined to it by a transverse crossing. The square is then good, and the union bound over
+   subcubes stated with the input gives the statement with `s = 1/800 = 1/(d(10d)²)`. This route
+   replaces the estimate of Couronné and Messikh by Kesten's estimate.
+2. **Density concentration** (`Rigidity/Proofs/S2/`, from `BondEfronStein.lean` to
+   `PlanarDensityConcentration.lean`). Resampling one bond changes the number of vertices of the
+   infinite cluster in the square by at most the sum of the sizes of the finite clusters at the
+   endpoints of the bond, before and after resampling. These sizes have stretched-exponential
+   tails, because a loop of the infinite cluster in an annulus, obtained from rectangle crossings,
+   encloses every finite cluster that meets the inner square (`ClusterDensityInfluenceBound.lean`,
+   `Rigidity/Proofs/Percolation/PlanarFiniteCluster.lean`). The Efron–Stein inequality for the product of the Bernoulli bonds, applied to the powers of the
+   centred density `X`, gives for `n ≥ 2` the recursion
+   `E|X|^{2n} ≤ (E|X|ⁿ)² + C n^{14} 3^{−2m} (E|X|^{2n})^{(n−1)/n}`
+   (`Rigidity.Proofs.S2.planar_density_moment_recursion`). Solving it bounds the tail of `X` at
+   the scale `C 3^{−m}` with the exponent `1/7`, which gives the stated exponent `2/15`. Dario and
+   Gu derive the estimate from a concentration inequality of Efron–Stein type beyond the variance;
+   the Lean proof replaces it by this iteration of the variance inequality.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 55 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 61 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
-  [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point), and the
+  [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point), the
   four theorems of
-  [Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3).
-  Each of the 55 reports lists exactly `propext`, `Classical.choice` and
+  [Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3),
+  the four theorems of
+  [Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2),
+  and the two forms of Theorem 1.3 from dimension-two inputs, `WithPlanarInputs.fast_decay` and
+  `WithPlanarInputs.fast_decay_of_green_exists`.
+  Each of the 61 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -471,14 +538,14 @@ The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.soun
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
   checked against its source in an independent model review; the sources are listed in
   [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
-  hypotheses; the versions described above discharge four of them.
+  hypotheses; five of them are proved, and the versions described there discharge them.
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 640 Lean files with 123,861 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 805 Lean files with 138,658 lines, on top of mathlib and
 Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,205 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (91 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (107 lines) are counted separately.
 
 ## Building
 
@@ -544,13 +611,14 @@ Rigidity/
   Proofs/                     the proofs of the steps
     Assembly/                 the numbered results, composed from the steps
       Main.lean               the main theorems, from the regime and the literature inputs only
+      Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
   Percolation/                supercritical estimates in boxes and slabs for the literature inputs
     Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
     Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)
   Support/                    definitions and lemmas used by the frozen results
   Vendor/                     modules copied from other repositories (see Copied code)
 RigidityAudit/
-  Axioms.lean                 the axiom report of every numbered result and of the results for d ≥ 3
+  Axioms.lean                 the axiom report of every numbered result and of the further results
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
 paper/                        the arXiv v2 source and the corrected draft (LaTeX and PDF), figures,
