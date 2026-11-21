@@ -13,12 +13,12 @@ The plane `ℝ²` is identified with `ℂ` by the linear isometry `planarEquiv`,
 measure. A function `v` on `ℝ²` is in `planarHarmonicClass z r` when `v ∘ planarEquiv` is
 harmonic on the disc `B_r(z)`. For such `v` and any affine `ℓ`, `g = (v - ℓ) ∘ planarEquiv` is
 harmonic; the mean value property bounds `|g|` on `B_{r/2}` by `2 ‖v - ℓ‖_{L̲²(B_r)}`
-(`abs_le_of_planarHarmonic`), and the first-order Taylor expansion of planar harmonic functions gives
-an affine function within `C (s/r)² ‖v - ℓ‖_{L̲²(B_r)}` of `v` on `B_s` for `s < r / 8`. This is the
-excess decay of order one (`harmonicRegularity_planarHarmonicClass`, `HarmonicRegularity` with
-`j = 1` and `CH = 1024`) of harmonic functions in the normalized `L²` norms of Lebesgue measure, so
-that Lemma 7.2 of Armstrong and Dario for `k = 0` holds in the plane with only the harmonic
-approximation hypothesis (`armstrongDario_lemma_7_2_zero_planar`).
+(`abs_le_of_planarHarmonic`), and the first-order Taylor expansion of planar harmonic functions
+gives an affine function within `C (s/r)² ‖v - ℓ‖_{L̲²(B_r)}` of `v` on `B_s` for `s < r / 8`.
+This is the excess decay of order one (`harmonicRegularity_planarHarmonicClass`,
+`HarmonicRegularity` with `j = 1` and `CH = 1024`) of harmonic functions in the normalized `L²`
+norms of Lebesgue measure, so that Lemma 7.2 of Armstrong and Dario for `k = 0` holds in the plane
+with only the harmonic approximation hypothesis (`armstrongDario_lemma_7_2_zero_planar`).
 -/
 
 open MeasureTheory Metric Complex
@@ -182,7 +182,8 @@ theorem ballExcess_le_planar_mul (z : EuclideanSpace ℝ (Fin 2)) {r s : ℝ} (h
         rw [← dist_eq_norm, hζ, hc, LinearIsometryEquiv.dist_map]; exact hxz
       have hζ8 : ζ ∈ ball c (r / 2 / 4) := by
         rw [mem_ball, dist_eq_norm]; linarith
-      have h1 : g ζ = (v : EuclideanSpace ℝ (Fin 2) → ℝ) x - (ℓ : EuclideanSpace ℝ (Fin 2) → ℝ) x := by
+      have h1 : g ζ =
+          (v : EuclideanSpace ℝ (Fin 2) → ℝ) x - (ℓ : EuclideanSpace ℝ (Fin 2) → ℝ) x := by
         simp only [hg, hζ, LinearIsometryEquiv.apply_symm_apply, hw, AddSubgroup.coe_sub,
           Pi.sub_apply]
       have h2 : inner ℝ (planarEquiv (starRingEnd ℂ q)) x = (q * ζ).re := by
@@ -214,8 +215,9 @@ theorem ballExcess_le_planar_mul (z : EuclideanSpace ℝ (Fin 2)) {r s : ℝ} (h
       _ ≤ r / s * N := hmono
       _ ≤ 1024 * (s / r) ^ 2 * N := mul_le_mul_of_nonneg_right (by linarith) hN0
 
-/-- **Excess decay of order one of harmonic functions in the plane**, in the normalized `L²` norms
-of Lebesgue measure: `HarmonicRegularity` with `j = 1` and `CH = 1024` above every radius `X > 0`. -/
+/-- **Excess decay of order one of harmonic functions in the plane**, in the normalized `L²`
+norms of Lebesgue measure: `HarmonicRegularity` with `j = 1` and `CH = 1024` above every radius
+`X > 0`. -/
 theorem harmonicRegularity_planarHarmonicClass (z : EuclideanSpace ℝ (Fin 2)) (R : ℝ) {X : ℝ}
     (hX : 0 < X) :
     HarmonicRegularity (continuumBallSeminorm z) (planarHarmonicClass z) (continuumAffine 2) 1 X
@@ -236,8 +238,9 @@ theorem harmonicRegularity_planarHarmonicClass (z : EuclideanSpace ℝ (Fin 2)) 
     _ = _ := by norm_num
 
 /-- **Armstrong–Dario, Lemma 7.2 (`k = 0`), in the plane**, in the normalized `L²` norms of
-Lebesgue measure with `Ā(B_r)` the harmonic functions on `B_r(z)` (`ā = σ² I`), whose excess decay is
-`harmonicRegularity_planarHarmonicClass`: only the harmonic approximation hypothesis remains. -/
+Lebesgue measure with `Ā(B_r)` the harmonic functions on `B_r(z)` (`ā = σ² I`), whose excess decay
+is `harmonicRegularity_planarHarmonicClass`: only the harmonic approximation hypothesis
+remains. -/
 theorem armstrongDario_lemma_7_2_zero_planar {A α : ℝ} (hA : 2 ≤ A) (hα : 0 < α) :
     ∃ C : ℝ, 0 < C ∧ ∀ (z : EuclideanSpace ℝ (Fin 2)) (R X E : ℝ) (u : locallySqIntegrable 2),
       1 ≤ X → X ≤ R / A → 0 ≤ E →
