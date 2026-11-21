@@ -114,11 +114,15 @@ theorem armstrongDarioOrderZero_of_harmonicApproximation
         componentEuclideanBall_mono (uniqueInfiniteComponent h') 0 (by linarith) hx
       simp [hz x hxR]
     rw [hr0, hN, mul_zero]
-  · have hNpos : 0 < componentBallL2 (uniqueInfiniteComponent h') 0 R u := lt_of_le_of_ne hN0 (Ne.symm hN)
-    have hB : 0 < (1 + K) * componentBallL2 (uniqueInfiniteComponent h') 0 R u := mul_pos hK1 hNpos
-    have hBu : ballExcess (componentBallSeminorm (uniqueInfiniteComponent h') 0) (clusterConstants (uniqueInfiniteComponent h')) R u + R * E ≤
+  · have hNpos : 0 < componentBallL2 (uniqueInfiniteComponent h') 0 R u :=
+      lt_of_le_of_ne hN0 (Ne.symm hN)
+    have hB : 0 < (1 + K) * componentBallL2 (uniqueInfiniteComponent h') 0 R u :=
+      mul_pos hK1 hNpos
+    have hBu : ballExcess (componentBallSeminorm (uniqueInfiniteComponent h') 0)
+        (clusterConstants (uniqueInfiniteComponent h')) R u + R * E ≤
         (1 + K) * componentBallL2 (uniqueInfiniteComponent h') 0 R u := by
-      have := ballExcess_le_self (componentBallSeminorm (uniqueInfiniteComponent h') 0) (clusterConstants (uniqueInfiniteComponent h')) R u
+      have := ballExcess_le_self (componentBallSeminorm (uniqueInfiniteComponent h') 0)
+        (clusterConstants (uniqueInfiniteComponent h')) R u
       rw [componentBallSeminorm_apply] at this
       linarith
     obtain ⟨φ, ⟨c, hc⟩, hφ⟩ := hω₂ h' Abar R (Z ω) E u hZ1 hMZ hZR hE
