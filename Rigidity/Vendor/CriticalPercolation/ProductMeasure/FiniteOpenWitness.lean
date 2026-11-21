@@ -1,8 +1,8 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/FiniteOpenWitness.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.FiniteOpenWitness in place of OAI.Probability.CriticalPercolation.ProductMeasure.FiniteOpenWitness, and the module paths of local imports are changed in the same way; the import of LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.ContinuousExpectWeights (not copied here) is replaced by the imports of the copied modules it reaches,
-   namely LatticeProb.OpenAI.Probability.CriticalPercolation.GraphGeometry.HitEvent, LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Density;
-   the unused declarations `continuous_real_law_finite`, `continuous_real_law_restrict`, `lowerSemicontinuous_real_finiteWitness`, `exists_lower_parameter` (they need modules not copied here) are omitted; statements and proofs of the declarations kept are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.FiniteOpenWitness in place of OAI.Probability.CriticalPercolation.ProductMeasure.FiniteOpenWitness, and the module paths of local imports are changed in the same way; the import of OAI.Probability.CriticalPercolation.ProductMeasure.ContinuousExpectWeights (not copied here) is replaced by the imports of the copied modules it reaches,
+   namely Rigidity.Vendor.CriticalPercolation.GraphGeometry.HitEvent, Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density;
+   the unused declarations `continuous_real_law_finite`, `continuous_real_law_restrict`, `lowerSemicontinuous_real_finiteWitness`, `exists_lower_parameter` (they need modules not copied here) are omitted; a module docstring is added; in proofs, `ite_eq_right`, `Set.preimage_ofPred_eq` and `Measurable.of_eval` are replaced by `if_neg`, `Set.preimage_setOf_eq` and `measurable_pi_iff.mpr` respectively; statements of the declarations kept are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.GraphGeometry.HitEvent
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density

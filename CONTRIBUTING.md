@@ -29,13 +29,14 @@ lake env lean RigidityAudit/Axioms.lean 2>&1 | tee axioms-audit.log
 python3 scripts/check_axioms.py axioms-audit.log
 ```
 
-`RigidityAudit/Axioms.lean` prints the axiom reports of the numbered results and of the
-propositions that state the quoted results. It is not imported by the root module, because a
-`#print axioms` command runs again whenever its module is rebuilt. `scripts/check_axioms.py` fails
-on an error or a warning in the log, on `sorryAx`, on any axiom other than `propext`,
-`Classical.choice` and `Quot.sound`, and on a missing, unexpected or repeated report. The
-literature inputs are hypotheses of the theorems that use them, not axioms, so they do not appear
-in the reports of the theorems.
+`RigidityAudit/Axioms.lean` prints the axiom reports of the numbered results, of the propositions
+that state the quoted results, and of the slab connectivity theorem
+`Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt`. It is not imported by
+the root module, because a `#print axioms` command runs again whenever its module is rebuilt.
+`scripts/check_axioms.py` fails on an error or a warning in the log, on `sorryAx`, on any axiom
+other than `propext`, `Classical.choice` and `Quot.sound`, and on a missing, unexpected or repeated
+report. The literature inputs are hypotheses of the theorems that use them, not axioms, so they do
+not appear in the reports of the theorems.
 
 ## Conventions for Lean files
 

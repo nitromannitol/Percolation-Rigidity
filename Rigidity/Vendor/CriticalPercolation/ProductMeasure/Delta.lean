@@ -1,8 +1,8 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/Delta.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Delta in place of OAI.Probability.CriticalPercolation.ProductMeasure.Delta, and the module paths of local imports are changed in the same way; the import of LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.ProbOr (not copied here) is replaced by the imports of the copied modules it reaches,
-   namely LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Potential, LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Prob;
-   the unused declarations `delta_eq_pivotal` (they need modules not copied here) are omitted; statements and proofs of the declarations kept are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.Delta in place of OAI.Probability.CriticalPercolation.ProductMeasure.Delta, and the module paths of local imports are changed in the same way; the import of OAI.Probability.CriticalPercolation.ProductMeasure.ProbOr (not copied here) is replaced by the imports of the copied modules it reaches,
+   namely Rigidity.Vendor.CriticalPercolation.ProductMeasure.Potential, Rigidity.Vendor.CriticalPercolation.ProductMeasure.Prob;
+   the unused declarations `delta_eq_pivotal` (they need modules not copied here) are omitted; a module docstring is added; statements and proofs of the declarations kept are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.Potential
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.Prob

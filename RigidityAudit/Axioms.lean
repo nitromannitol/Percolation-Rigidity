@@ -7,8 +7,18 @@ import Rigidity.Proofs.Assembly.Section5
 import Rigidity.Proofs.Assembly.Section5b
 import Rigidity.Proofs.Assembly.Section5d
 import Rigidity.Proofs.Assembly.Section5e
+import Rigidity.Percolation.Blocks.SlabConnectivity
+import Rigidity.Percolation.Pisztora.FiniteClusters
+import Rigidity.Proofs.Assembly.PlanarInputs
+import Rigidity.Proofs.Assembly.Unconditional
+import Rigidity.Proofs.Assembly.ProvedDensity
 
-/-! The axiom report of every numbered result of the paper; `scripts/check_axioms.py` checks it.
+/-! The axiom report of every numbered result of the paper and of the further proved results: the
+slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
+clusters for `d ≥ 3`, Proposition 2.3 in every dimension, Proposition 2.3 and the density
+concentration for `d = 2`, Theorem 6.5 with every literature input proved, Theorem 1.3 from its
+dimension-two inputs, and the density concentration in every dimension with Proposition 2.6 and
+Theorem 1.3 without it as a hypothesis; `scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
@@ -76,3 +86,29 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 -- Section 6
 #print axioms Rigidity.integer_valued_compact_support                 -- Proposition 6.4
 #print axioms Rigidity.Assembly.Main.slowMixing                       -- Theorem 6.5
+
+-- Slab connectivity above the critical point (Grimmett and Marstrand, d ≥ 3)
+#print axioms Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt
+
+-- Proposition 2.3 for d ≥ 3, its reduction to d = 2, and finite clusters for d ≥ 3
+#print axioms Rigidity.Percolation.wellConnected_of_three_le
+#print axioms Rigidity.Percolation.wellConnectedInput_of_planar
+#print axioms Rigidity.Percolation.exists_finite_cluster_radius_le
+#print axioms Rigidity.Percolation.exists_finite_cluster_card_le
+
+-- Proposition 2.3 in every dimension, and Proposition 2.3 and the density concentration for d = 2
+#print axioms Rigidity.Percolation.wellConnected_input
+#print axioms Rigidity.Percolation.wellConnected_input_two
+#print axioms Rigidity.Proofs.S2.planar_cluster_density_concentration
+
+-- Theorem 6.5 with every literature input proved
+#print axioms Rigidity.Assembly.Unconditional.slow_mixing
+
+-- Theorem 1.3 from its dimension-two literature inputs
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists
+
+-- The density concentration in every dimension, and Proposition 2.6 and Theorem 1.3 without it
+#print axioms Rigidity.Proofs.S2.cluster_density_concentration
+#print axioms Rigidity.Assembly.WithProvedDensity.green_gradient_homogenization
+#print axioms Rigidity.Assembly.WithProvedDensity.fast_decay

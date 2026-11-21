@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/Criticality/PositiveCritical.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.Criticality.PositiveCritical in place of OAI.Probability.CriticalPercolation.Criticality.PositiveCritical, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.Criticality.PositiveCritical in place of OAI.Probability.CriticalPercolation.Criticality.PositiveCritical, and the module paths of local imports are changed in the same way; a module docstring is added; statements and proofs are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.Exploration.BallIncidence
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.FiniteOpenWitness

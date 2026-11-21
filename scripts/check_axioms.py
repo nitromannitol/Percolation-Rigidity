@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Require one axiom report for each declaration of RigidityAudit/Axioms.lean, listing no axiom
-other than propext, Classical.choice and Quot.sound.
+other than propext, Classical.choice and Quot.sound: the numbered results of the paper and the
+further proved results listed below.
 
     lake env lean RigidityAudit/Axioms.lean 2>&1 | tee axioms-audit.log
     python3 scripts/check_axioms.py axioms-audit.log
@@ -67,11 +68,37 @@ results = {
     'Theorem 6.5': ['Rigidity.Assembly.Main.slowMixing'],
 }
 cited = {'Proposition 2.3', 'Theorem 2.4', 'Theorem 2.5', 'Lemma 2.13', 'Lemma 2.14'}
+# Further proved results: results that are not numbered results of the paper, proofs of literature
+# inputs, and forms of the main theorems with fewer hypotheses.
+further = {
+    'Slab connectivity (Grimmett and Marstrand, d >= 3)':
+        ['Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt'],
+    'Proposition 2.3 for d >= 3 and its reduction to d = 2':
+        ['Rigidity.Percolation.wellConnected_of_three_le',
+         'Rigidity.Percolation.wellConnectedInput_of_planar'],
+    'Finite clusters (d >= 3)':
+        ['Rigidity.Percolation.exists_finite_cluster_radius_le',
+         'Rigidity.Percolation.exists_finite_cluster_card_le'],
+    'Proposition 2.3 in every dimension':
+        ['Rigidity.Percolation.wellConnected_input'],
+    'Proposition 2.3 and the density concentration (d = 2)':
+        ['Rigidity.Percolation.wellConnected_input_two',
+         'Rigidity.Proofs.S2.planar_cluster_density_concentration'],
+    'Theorem 6.5 with every literature input proved':
+        ['Rigidity.Assembly.Unconditional.slow_mixing'],
+    'Theorem 1.3 from its dimension-two inputs':
+        ['Rigidity.Assembly.WithPlanarInputs.fast_decay',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists'],
+    'Density concentration in every dimension':
+        ['Rigidity.Proofs.S2.cluster_density_concentration',
+         'Rigidity.Assembly.WithProvedDensity.green_gradient_homogenization',
+         'Rigidity.Assembly.WithProvedDensity.fast_decay'],
+}
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
 if len(results) != 48:
     raise SystemExit(f'The list must have the 48 numbered results, not {len(results)}')
-expected = [name for names in results.values() for name in names]
+expected = [name for names in list(results.values()) + list(further.values()) for name in names]
 if len(set(expected)) != len(expected):
     raise SystemExit('A declaration is listed twice')
 if len(sys.argv) != 2:
@@ -99,3 +126,5 @@ print(f'All {len(results)} numbered results checked: the {len(proved)} proved re
       f'{len(cited) - 1} cited results ({sum(len(results[r]) for r in cited)} declarations) '
       f'use only propext, Classical.choice and Quot.sound; Lemma 2.13 is cited and used by no '
       f'Lean proof.')
+print(f'The {len(further)} further proved result(s) ({", ".join(further)}) use only propext, '
+      f'Classical.choice and Quot.sound.')

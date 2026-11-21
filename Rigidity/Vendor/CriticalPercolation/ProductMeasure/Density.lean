@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/Density.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Density in place of OAI.Probability.CriticalPercolation.ProductMeasure.Density; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density in place of OAI.Probability.CriticalPercolation.ProductMeasure.Density; a module docstring is added; statements and proofs are unchanged. -/
 import Mathlib
 
 /-!

@@ -11,7 +11,8 @@ project:
     that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov chain on
     the largest cluster of a box of radius n mixes in time of order n^d log n (Theorem 6.5). All 43
     numbered results that the paper proves are proved in Lean, from twelve results of the literature
-    that enter as explicit hypotheses; the other five numbered results are quoted from the
+    that enter as explicit hypotheses; six of these inputs are also proved in Lean, and Theorem 6.5
+    is proved with no literature hypothesis. The other five numbered results are quoted from the
     literature. Theorems 1.1, 1.2, 1.3 and 6.5 are independently checked by the comparator pairs
     under RigidityAudit/.
   authors:
@@ -49,12 +50,18 @@ sources:
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
     relationship: "assumes"
-    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof), Proposition 2.12 and Proposition A.1 enter as literature inputs."
+    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs. Proposition A.1, also stated as a literature input, is proved (next entry)."
+  - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
+    authors: ["Paul Dario", "Chenlin Gu"]
+    type: "paper"
+    location: "Appendix A, Proposition A.1"
+    relationship: "independently-proves"
+    note: "Proposition A.1, the concentration of the density of the infinite cluster in triadic cubes (Rigidity.External.ClusterDensityConcentrationInput), is proved in every dimension (Rigidity.Proofs.S2.cluster_density_concentration), with an iteration of the Efron-Stein variance inequality over the moments in place of the exponential Efron-Stein inequality of the source and, for d >= 3, with the exponential decay of the radius of finite clusters in place of the volume tail of Kesten and Zhang, at the exponent 1/(floor((3d+3)/2)+1) >= 2(d-1)/(3d^2+2d-1) for d >= 3 and 1/7 >= 2/15 for d = 2 (README, Proposition 2.3 and the density concentration for d = 2, and Density concentration in every dimension)."
   - title: "Percolation"
     authors: ["Geoffrey Grimmett"]
     type: "book"
     relationship: "assumes"
-    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2."
+    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2. Theorem (8.21), the exponential decay of the radius of finite clusters, is proved for d >= 3 by a route through crossing estimates (README, Well-connected cubes and finite clusters for d >= 3); it replaces the tail of Kesten and Zhang in the proof of the density concentration for d >= 3."
   - title: "Density and uniqueness in percolation"
     authors: ["Robert M. Burton", "Michael Keane"]
     type: "paper"
@@ -64,12 +71,12 @@ sources:
     authors: ["Agoston Pisztora"]
     type: "paper"
     relationship: "assumes"
-    note: "Probab. Theory Related Fields 104 (1996). The box estimate of Theorems 1.2 and 3.1, as recalled by Penrose and Pisztora (Adv. Appl. Probab. 28 (1996), p. 35), gives Proposition 2.3 of the paper for d >= 3 by a union bound; Proposition 2.3 is a literature input."
+    note: "Probab. Theory Related Fields 104 (1996). The box estimate of Theorems 1.2 and 3.1, as recalled by Penrose and Pisztora (Adv. Appl. Probab. 28 (1996), p. 35), gives Proposition 2.3 of the paper for d >= 3 by a union bound. For d >= 3 Proposition 2.3 is proved, with this estimate replaced by crossing estimates from slab connectivity (README, Well-connected cubes and finite clusters for d >= 3); with its case d = 2, Proposition 2.3 is proved in every dimension (Rigidity.Percolation.wellConnected_input)."
   - title: "Surface order large deviations for 2D FK-percolation and Potts models"
     authors: ["Olivier Couronné", "Reda Jürg Messikh"]
     type: "paper"
     relationship: "assumes"
-    note: "Stochastic Process. Appl. 113 (2004), 81-99; arXiv:math/0303117v1. Theorem 5, (7), gives Proposition 2.3 of the paper for d = 2 by a union bound."
+    note: "Stochastic Process. Appl. 113 (2004), 81-99; arXiv:math/0303117v1. Theorem 5, (7), gives Proposition 2.3 of the paper for d = 2 by a union bound. The Lean proof of the case d = 2 uses Kesten's rectangle-crossing estimate instead (README, Proposition 2.3 and the density concentration for d = 2)."
   - title: "Percolation Theory for Mathematicians"
     authors: ["Harry Kesten"]
     type: "book"
@@ -90,11 +97,32 @@ sources:
     type: "paper"
     relationship: "assumes"
     note: "SIAM J. Comput. 37 (2007). Lemma 3.3 enters as a literature input."
+  - title: "Percolation on graphs of polynomial growth"
+    authors: ["Daniel Contreras"]
+    type: "dissertation"
+    id: "doi:10.3929/ethz-b-000585148"
+    location: "Chapter 2: Theorem 2.1.2, Lemmas 2.3.2-2.3.5 and 2.4.1"
+    relationship: "adapts"
+    note: "ETH Zürich, 2022. Its bootstrap proof of the theorem of Grimmett and Marstrand is formalized for bond percolation in d >= 3, with Lemma 2.4.1 proved in a form with zones, and is followed by a static renormalization in slabs (see README, Slab connectivity above the critical point)."
+  - title: "The supercritical phase of percolation is well behaved"
+    authors: ["Geoffrey R. Grimmett", "John M. Marstrand"]
+    type: "paper"
+    relationship: "independently-proves"
+    note: "Proc. R. Soc. Lond. A 430 (1990), 439-457. The theorem is proved for bond percolation in d >= 3, in the finite-volume form of a uniform two-point bound in the slabs of cubes, by the route of Contreras's dissertation."
 
 related_formalizations:
   - id: "https://github.com/nitromannitol/Lattice-Probability"
     relationship: "builds-on"
-    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency."
+    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and Rigidity/Proofs/Percolation/Kesten/, and four planar modules specialized to d = 2 (Rigidity/Support/PlanarOrderZeroGradient.lean, Rigidity/Support/PlanarGreenQuantitativeField.lean, Rigidity/Proofs/S3/PlanarCorrectorValid.lean, Rigidity/Proofs/S3/PlanarGreenColumn.lean, from its revision 7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069), are adapted from it (see README, Copied code)."
+  - id: "https://github.com/anthropics/formal-math"
+    relationship: "adapts"
+    note: "The 53 modules under Rigidity/Vendor/FormalMathPercolation/ are copied from its percolation/ project at commit 795efb86f191735c5481675763537cfb4ff37e55 (Apache-2.0), with its LICENSE and NOTICE."
+  - id: "https://github.com/openai/math"
+    relationship: "adapts"
+    note: "The 44 modules under Rigidity/Vendor/CriticalPercolation/ are copied from lean/OAI/Probability/CriticalPercolation/ at commit 4eaee87548250b2682affda7d05d947c05554bae (Apache-2.0), with its LICENSE."
+  - id: "https://github.com/leobon12/lean-formalizations"
+    relationship: "adapts"
+    note: "The 8 modules under Rigidity/Vendor/BonannoPerc/ are copied from LQGMetric/Perc/ at commit 31e748330ee154d5f41537c4b01f71b8a5510c2d, with attribution; the upstream repository states no licence and none is claimed. The modules of Rigidity/Proofs/Topology/PlanarJordan/ are also based on it."
 
 status:
   scope: >-
@@ -102,8 +130,9 @@ status:
     theorems among them (Theorems 1.1, 1.2, 1.3 and 6.5): Theorems 1.1, 1.2 and 1.3 are stated as
     printed, and Theorem 6.5 as printed with its restriction event made explicit. The other five
     numbered results are quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 and
-    Lemma 2.14 enter as literature inputs, and Lemma 2.13 is used by no proof. README.md lists every
-    numbered result with its Lean declaration.
+    Lemma 2.14 enter as literature inputs, of which Proposition 2.3 and Lemma 2.14 are also proved,
+    and Lemma 2.13 is used by no proof. README.md lists every numbered result with its Lean
+    declaration.
   sorry_count: 0
   sorry_count_scope: "Rigidity/ and Rigidity.lean"
   comparator_challenge_sorry_count: 4
@@ -117,7 +146,11 @@ status:
     Twelve results of the literature are stated as propositions, seven in Rigidity/External/ and five
     in the directory LatticeProb/External/ of Lattice-Probability, each with its source in its
     docstring. They enter as explicit hypotheses of the theorems that use them, not as axioms;
-    README.md lists them with the results that use them. The library also declares
+    README.md lists them with the results that use them. Six of them are proved in Lean
+    (Rigidity.Percolation.supercritical_bond_uniqueness, Rigidity.Smoothing.micciancio_regev_smoothing,
+    Rigidity.Percolation.kesten_rectangle_crossing, Rigidity.Topology.jordan_curve_theorem_sphere,
+    Rigidity.Percolation.wellConnected_input and Rigidity.Proofs.S2.cluster_density_concentration,
+    which proves Rigidity.External.ClusterDensityConcentrationInput). The library also declares
     Rigidity.External.AntalPisztoraChemicalDistance, which no numbered result uses.
   main_results:
     - declaration: "Rigidity.Assembly.Main.lipschitz"
@@ -171,6 +204,12 @@ status:
         - "LatticeProb.External.SupercriticalBondUniqueness"
         - "Rigidity.External.WellConnectedInput"
         - "Rigidity.External.MicciancioRegevSmoothing"
+    - declaration: "Rigidity.Assembly.Unconditional.slow_mixing"
+      file: "Rigidity/Proofs/Assembly/Unconditional.lean"
+      statement: "Theorem 6.5, with its three literature inputs proved"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
 
 automation:
   methods:
@@ -261,11 +300,13 @@ review:
     in an independent model review. Eleven inputs are stated in their sources; the twelfth,
     Proposition 2.3 of the paper (WellConnectedInput), is stated by its cited sources only in
     single-scale forms and follows from Couronné and Messikh (d = 2) and Pisztora (d >= 3) by a union
-    bound. The inputs remain assumptions. The author fixed the scope, the
+    bound; it is now proved in Lean in every dimension. Six inputs are proved in Lean; the other six
+    remain assumptions. The author fixed the scope, the
     corrections and the policy for literature inputs, but did not review every Lean statement personally.
     The statements of Theorems 1.1, 1.2, 1.3 and 6.5, and of the literature inputs they use, are also
     checked against self-contained challenge files by the comparator. This is a model review, not
     external peer review.
 
 acknowledgements: >-
-  Built on Lean 4, Mathlib, Lake, Lattice-Probability and leanprover/comparator.
+  Built on Lean 4, Mathlib, Lake, Lattice-Probability and leanprover/comparator, with modules copied
+  from anthropics/formal-math, openai/math and Leonardo Bonanno's lean-formalizations.

@@ -1,3 +1,8 @@
+/- Adapted from Lattice-Probability, revision 7512f4fb, module
+   LatticeProb.Prob.Percolation.GreenQuantitativeField (`exists_green_quantitative_field`).
+   Changes: its case d = 2 only, from the planar input `SupercriticalBondGreenQuantitativeTwo` in
+   place of `SupercriticalBondGreenQuantitative`, with the power of the distance rewritten directly
+   at d = 2; the theorem carries the suffix `_two`. -/
 import Rigidity.External.PlanarInputs
 import LatticeProb.Prob.Percolation.GreenQuantitativeField
 

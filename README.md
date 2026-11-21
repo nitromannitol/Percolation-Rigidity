@@ -16,7 +16,11 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses. The remaining five are quoted from the literature: four of them (Proposition 2.3,
+hypotheses. Six of these twelve inputs, among them Proposition 2.3 and the concentration of the
+density of the infinite cluster, are also proved in Lean, and Theorem 6.5 is proved with no
+literature hypothesis (see
+[Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
+literature: four of them (Proposition 2.3,
 Theorems 2.4 and 2.5, Lemma 2.14) enter as literature inputs, and the fifth (Lemma 2.13, a fact of
 plane topology) is used by no proof. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
 printed, and Theorem 6.5 as printed with its restriction event made explicit (see
@@ -69,7 +73,10 @@ for Theorem 1.3) and the literature inputs its proof uses, listed in
 [Assumed literature inputs](#assumed-literature-inputs). The statements of Theorems 1.1, 1.3 and 6.5
 are the definitions `Rigidity.Section3.LipschitzStmt`, `Rigidity.Section5.FastDecayStmt` and
 `Rigidity.Section6.SlowMixingStmt`; Theorem 1.2 is also the theorem
-`Rigidity.integer_valued_linear_growth`, whose statement is written out in full.
+`Rigidity.integer_valued_linear_growth`, whose statement is written out in full. The three
+literature inputs of Theorem 6.5 are proved, and
+[`Rigidity.Assembly.Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) is
+Theorem 6.5 with the regime `2 ≤ d`, `criticalProbability d < p`, `p < 1` as its only hypotheses.
 
 ### All numbered results
 
@@ -80,7 +87,7 @@ and lemmas in `Rigidity.Assembly.Main` are in
 first, with their own definitions, are in [`Rigidity/Frozen/`](Rigidity/Frozen/). For a statement
 in `Rigidity.Assembly`, the definition `Rigidity.Section<n>.<Name>Stmt` that it concludes is in
 [`Rigidity/Draft/`](Rigidity/Draft/). A quoted result is marked *quoted*, with the literature input
-that states it, if any.
+that states it, if any, and the theorem that proves this input, if any.
 
 | Paper | Label | Lean declaration | Content |
 | --- | --- | --- | --- |
@@ -88,13 +95,13 @@ that states it, if any.
 | Theorem 1.2 | `theorem:integer-valued-linear-growth` | `Rigidity.Assembly.Main.integerValuedLinearGrowth` | Integer-valued harmonic functions of linear growth are constant. |
 | Theorem 1.3 | `theorem:fast-decay` | `Rigidity.Assembly.Main.fastDecay` | `d = 2`: integer Laplacian of finite support and decay faster than `\|x\|⁻¹` force finite support. |
 | Lemma 2.1 | `lemma:finite-energy` | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
-| Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
+| Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput`; proved: `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
 | Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
 | Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
 | Lemma 2.13 | (none) | quoted, not used | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
-| Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere` | The Jordan curve theorem on the sphere `S²`. |
+| Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere`; proved: `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
 | Lemma 2.16 | `lemma:jordan-curves-theorem` | `Rigidity.Assembly.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
 | Lemma 3.1 | `lemma:reduction-to-slope-e1` | `Rigidity.Assembly.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
 | Proposition 3.2 | `prop:not-lipschitz` | `Rigidity.Assembly.Main.notLipschitz` | For every `L`, with positive probability `\|∇ℓ_{e₁}(0)\| > L`. |
@@ -213,7 +220,7 @@ Proposition 3.2.
    Proposition 6.4; Propositions 4.1 and 6.4 are proved in every dimension `d ≥ 2`.
 2. **Literature inputs.** Twelve results of the literature enter as explicit hypotheses of the
    theorems that use them; none is an `axiom`. They are listed in
-   [Assumed literature inputs](#assumed-literature-inputs).
+   [Assumed literature inputs](#assumed-literature-inputs), with the six of them that are proved.
 3. **Measurability.** Some events quantify over the corrected planes of every configuration and are
    not shown to be measurable. For them, "with positive probability" means that the event contains a
    measurable event of positive probability (Proposition 3.2 and Lemmas 5.25 and 5.27), and an upper bound on
@@ -246,28 +253,46 @@ Proposition 3.2.
 7. **Axioms.** The library contains no `sorry`, `admit`, `native_decide` or new `axiom`. The Lean
    declaration of each proved numbered result depends on exactly `propext`, `Classical.choice` and
    `Quot.sound`.
-8. **Not formalized.** Lemma 2.13, which no proof uses; the quoted results, which enter as literature
-   inputs; the remarks, problems and conjectures; the figures.
+8. **Not formalized.** Lemma 2.13, which no proof uses; Theorems 2.4 and 2.5, which enter as
+   literature inputs; the remarks, problems and conjectures; the figures. The other two quoted
+   results, Proposition 2.3 and Lemma 2.14, enter as literature inputs that are proved.
 
 ## Assumed literature inputs
 
-The table records the hypotheses of the original theorem statements. Four of these propositions
+The table records the hypotheses of the original theorem statements. Six of these propositions
 are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](Rigidity/Proofs/Percolation/BondUniqueness.lean),
 [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean),
 [`Rigidity.Percolation.kesten_rectangle_crossing`](Rigidity/Proofs/Percolation/KestenCrossing.lean),
-and [`Rigidity.Topology.jordan_curve_theorem_sphere`](Rigidity/Proofs/Topology/JordanCurveSphere.lean).
+[`Rigidity.Topology.jordan_curve_theorem_sphere`](Rigidity/Proofs/Topology/JordanCurveSphere.lean),
+[`Rigidity.Percolation.wellConnected_input`](Rigidity/Proofs/Percolation/WellConnected.lean)
+(Proposition 2.3; see the note below the table), and
+[`Rigidity.Proofs.S2.cluster_density_concentration`](Rigidity/Proofs/S2/ClusterDensityConcentration.lean)
+(`ClusterDensityConcentrationInput`, the density concentration of Dario and Gu; see
+[Density concentration in every dimension](#density-concentration-in-every-dimension)).
 [`Rigidity.Assembly.WithProvedInputs`](Rigidity/Proofs/Assembly/ProvedInputs.lean) gives versions of
 Theorems 1.1 and 1.2 without the uniqueness hypothesis, Theorem 1.3 without the uniqueness,
 crossing, or sphere Jordan hypotheses, and Theorem 6.5 without the uniqueness or smoothing
-hypotheses. The other inputs listed below remain hypotheses of those versions.
+hypotheses; `Rigidity.Percolation.wellConnected_input` supplies the hypothesis `WellConnectedInput`
+of the versions of Theorems 1.1, 1.3 and 6.5, and
+[`Rigidity.Assembly.Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) is
+Theorem 6.5 with no literature hypothesis.
+[`Rigidity.Assembly.WithProvedDensity`](Rigidity/Proofs/Assembly/ProvedDensity.lean) gives
+Proposition 2.6 without the density-concentration hypothesis, and Theorem 1.3 without the
+uniqueness, crossing, sphere Jordan, well-connectedness or density-concentration hypotheses. The
+other inputs listed below remain hypotheses.
 
 For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proofs/Assembly/PlanarInputs.lean)
 assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
 order-zero and order-one regularity, and the Green-column existence and quantitative estimates.
+These six planar forms are stated in
+[`Rigidity/External/PlanarInputs.lean`](Rigidity/External/PlanarInputs.lean) and are not proved.
 The planar well-connectedness and cluster-density concentration estimates are supplied by
 [`wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) and
 [`planar_cluster_density_concentration`](Rigidity/Proofs/S2/PlanarDensityConcentration.lean).
-The variant `fast_decay_of_green_exists` derives Green-column uniqueness from order-zero regularity.
+The variant `fast_decay_of_green_exists` assumes, in place of the planar Green-column existence and
+uniqueness, only the existence `Rigidity.External.SupercriticalBondGreenColumnExistsTwo`, stated in
+[`Rigidity/Proofs/Section5/PlanarGreenUniqueness.lean`](Rigidity/Proofs/Section5/PlanarGreenUniqueness.lean),
+and derives the uniqueness from order-zero regularity.
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -289,7 +314,17 @@ with probability at least `1 − C exp(−c Nˢ)`, with `s` depending on `d` onl
 paper cites for it (Pisztora, Theorem 3.2; Penrose and Pisztora, Theorem 5; Antal and Pisztora, (2.24))
 state single-scale forms. The statement follows from Couronné and Messikh, Theorem 5, (7), p. 8
 (`d = 2`), and from Pisztora's box estimate, his Theorems 1.2 and 3.1 as recalled by Penrose and
-Pisztora, p. 35 (`d ≥ 3`), by a union bound over the subcubes, with `s = 1/(d(10d)²)`.
+Pisztora, p. 35 (`d ≥ 3`), by a union bound over the subcubes, with `s = 1/(d(10d)²)`. For
+`d ≥ 3`, Pisztora's estimate holds above the threshold of percolation in slabs, which equals
+`𝔭_c(d)` by the theorem of Grimmett and Marstrand; that theorem is proved, in a finite-volume form,
+in [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point). For
+`d ≥ 3` the statement of `WellConnectedInput` is proved, with the box estimate replaced by crossing
+estimates from slab connectivity; see
+[Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3).
+For `d = 2` it is proved from Kesten's rectangle-crossing estimate in place of the estimate of
+Couronné and Messikh; see
+[Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2).
+The two cases together prove `WellConnectedInput`, as `Rigidity.Percolation.wellConnected_input`.
 
 Each input was checked against its source in an independent model review. Page numbers refer to the
 arXiv versions listed below. AD: S. Armstrong and P. Dario, *Elliptic regularity and quantitative
@@ -319,15 +354,232 @@ input: Lemma 2.1, Proposition 4.1, Lemmas 4.2 to 4.6 and Proposition 6.4.
 The library also declares `Rigidity.External.AntalPisztoraChemicalDistance` (Antal and Pisztora,
 Theorem 1.1), which no numbered result uses.
 
+## Slab connectivity above the critical point
+
+For `d ≥ 3`, the theorem of Grimmett and Marstrand (G. R. Grimmett and J. M. Marstrand, *The
+supercritical phase of percolation is well behaved*, Proc. R. Soc. Lond. A 430 (1990), 439–457;
+Grimmett, Chapter 7) is proved for bond percolation, in the finite-volume form that the coarse
+graining uses.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt`](Rigidity/Percolation/Blocks/SlabConnectivity.lean) | If `3 ≤ d` and `criticalProbability d < p`, then `UniformCubeSlabConnectivity d p`. |
+
+The proposition `UniformCubeSlabConnectivity d p`, defined in
+[`Rigidity/Percolation/SlabTriadicPartition.lean`](Rigidity/Percolation/SlabTriadicPartition.lean),
+states that there are a width `w ≥ 1` and a constant `ρ > 0` such that for every cube
+`U = c + [0, n)ᵈ`, every direction `a` and every `k` with `(k + 1) w ≤ n`, any two vertices of the
+slab `{x ∈ U : c_a + k w ≤ x_a < c_a + (k + 1) w}` are joined by an open path inside the slab with
+probability at least `ρ`. The theorem depends on exactly `propext`, `Classical.choice` and
+`Quot.sound`, and its axiom report is checked with those of the numbered results. The same file
+derives from this bound the triadic stopping partition with its exponential size moment and its
+localization bound
+(`Rigidity.Percolation.triadic_partition_estimates_of_uniformCubeSlabConnectivity`), and the next
+section derives from it Proposition 2.3 for `d ≥ 3`.
+
+Steps 1 to 3 below follow Chapter 2 of D. Contreras, *Percolation on graphs of polynomial growth*,
+ETH Zürich dissertation (2022), doi:10.3929/ethz-b-000585148, which proves the theorem of Grimmett
+and Marstrand by a bootstrap. Step 4 is the route of the Lean proof from the bootstrap to slabs, a
+static renormalization in slabs. The files are in
+[`Rigidity/Percolation/Bootstrap/`](Rigidity/Percolation/Bootstrap/) and
+[`Rigidity/Percolation/Blocks/`](Rigidity/Percolation/Blocks/).
+
+1. **Local inputs** (`Bootstrap/LocalInputs.lean`), from the formal-math library (see
+   [Copied code](#copied-code)): the uniqueness zone and the fact that large finite sets meet the
+   infinite cluster (S. Martineau and V. Tassion, *Locality of percolation for abelian Cayley
+   graphs*, Ann. Probab. 45 (2017), proof of Lemma 3.7 and Lemma 3.6), and the connection of a large
+   cube to each face orthant of a larger cube (Grimmett, (7.14)–(7.16)).
+2. **Seeds and sprinkling** (dissertation, Lemmas 2.3.2–2.3.5): a seed is joined to each face
+   orthant of a large cube (`Bootstrap/SeedFaceLink.lean`); connection estimates compose by
+   sprinkling (`Bootstrap/SprinkledExit.lean`, `Bootstrap/Composition.lean`); and a left seed of
+   scale `3m'` reaches the anchors of the two subregions of scale `m'` (`Bootstrap/Relay.lean`,
+   `Bootstrap/AnchorReach.lean`).
+3. **Bootstrap** (dissertation, Theorem 2.1.2): above `𝔭_c(d)`, for every `ε > 0` there is a seed
+   radius such that at arbitrarily large scales `m` every left seed and every right seed of scale
+   `m` are joined inside `Q_{6m}` with probability at least `1 − ε`
+   (`Rigidity.Percolation.exists_seed_link`, `Bootstrap/Link.lean`). The step from scale `m'` to
+   scale `3m'` is `Bootstrap/Recursion.lean`, and its iteration `Bootstrap/Iteration.lean`.
+4. **Static renormalization.** In a slab box with two long sides and thin sides `12m + 1`, blocks
+   centred on a square grid of mesh `10m` are good when the uniqueness zone holds at the centre and
+   the block is linked to its four neighbours (`Blocks/LinkEvents.lean`, `Blocks/SlabBlocks.lean`).
+   The good blocks form a dependent site percolation of finite range and high density on a
+   rectangle of `ℤ²`. The Peierls bound for such percolation, from Leonardo Bonanno's library (see
+   [Copied code](#copied-code)), and a recursion over quadrants join any two vertices of the slab
+   box with probability bounded below, uniformly in the size of the box
+   (`Blocks/GridPeierls.lean`, `Blocks/SlabTwoPoint.lean`). Two vertices of a slab of a cube are
+   joined through `d` intermediate vertices, changing one coordinate at a time inside a slab box,
+   by Harris' inequality; small cubes are handled by finite energy (`Blocks/SlabConnectivity.lean`).
+
+**Departure from the dissertation.** The probabilistic step of the bootstrap, Lemma 2.4.1, is proved
+in a form with zones (`Bootstrap/TwoChances.lean`). Each of the two seeds lies in a zone of its
+region and is conditioned to have its cut inside the zone closed at the level `p₀`. The two clusters
+are explored, at the level `p₀` raised to `q = p₀ + δ` on the cut from the seed only, inside two
+disjoint regions that meet the two subregions of the smaller scale exactly in their zones, and the
+traces of the clusters in these zones are conditioned in the same way as the seeds. The recursion is
+over seeds with this conditioning (`BootGood`, `Bootstrap/Recursion.lean`), so the conditioning of
+the traces is the conditioning at the smaller scale. The levels `p₀` and `q` are the same at every
+scale and each bond is sprinkled at most once, so the number of scales is not restricted.
+
+## Well-connected cubes and finite clusters for d ≥ 3
+
+For `d ≥ 3` and `𝔭_c(d) < p`, slab connectivity gives Proposition 2.3 of the paper and the
+exponential decay of the radius of finite clusters (Grimmett, Theorem (8.21), due to J. T. Chayes,
+L. Chayes, G. R. Grimmett, H. Kesten and R. H. Schonmann, *The correlation length for the
+high-density phase of Bernoulli percolation*, Ann. Probab. 17 (1989), 1277–1302).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.wellConnected_of_three_le`](Rigidity/Percolation/Pisztora/WellConnected.lean) | If `3 ≤ d` and `criticalProbability d < p`, there are `c, C, s > 0` such that every cube `x + Q_N` fails to be well-connected with probability at most `C exp(−c Nˢ)`: the statement of `WellConnectedInput` at `d`, here with `s = 1/(100d³)` and without the hypothesis `p < 1`. |
+| [`Rigidity.Percolation.wellConnectedInput_of_planar`](Rigidity/Percolation/Pisztora/WellConnected.lean) | The case `d = 2` of `WellConnectedInput` implies `WellConnectedInput`. |
+| [`Rigidity.Percolation.exists_finite_cluster_radius_le`](Rigidity/Percolation/Pisztora/FiniteClusters.lean) | If `3 ≤ d` and `criticalProbability d < p`, the open cluster of `x` is finite and reaches `ℓ^∞`-distance `l` from `x` with probability at most `C exp(−c l)`, for all `x` and `l`. |
+| [`Rigidity.Percolation.exists_finite_cluster_card_le`](Rigidity/Percolation/Pisztora/FiniteClusters.lean) | Under the same hypotheses, the open cluster of `x` is finite with at least `n` vertices with probability at most `C exp(−c n^{1/d})`. |
+
+The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`.
+
+1. **Crossing estimate** (`Rigidity.Percolation.crossing_fail_le`, `Pisztora/CubeEstimates.lean`).
+   From the slab bound, a cube of side `n` has, for `10dw ≤ r < 10dn`, a crossing component joined
+   inside the cube to every open path that leaves each `ℓ¹`-ball of radius `r/10`, except with
+   probability at most `(d + 2)(n + 1)^{2d+1} exp(−c(⌊r/(10dw)⌋ − 1))`. The proof explores the
+   slabs of the cube one at a time (`Rigidity/Percolation/SlabRadiusCrossing.lean` and the modules
+   it imports).
+2. **Good cubes** (`Pisztora/GoodSubcube.lean`, `Pisztora/WellConnected.lean`). In `z + Q_M` take
+   `t = ⌊M^{1/d}/(4 · 100^{1/d})⌋` and `r = 8t`. The crossing component is a largest cluster and
+   contains every open path with at least `M/100` steps, because every other cluster has fewer than
+   `(4t)^d ≤ M/100` vertices. So `z + Q_M` is good and crossing outside an event of probability at
+   most `K exp(−κ M^{1/d})` (`Rigidity.Percolation.exists_not_goodSubcube_le`). A union bound over
+   the cube `x + Q_N` and the at most `(4N + 1)^d (N + 1)` cubes `z + Q_M` that meet it with
+   `N^{1/(10d)²}/2 ≤ M ≤ N/10` gives the statement. This is the derivation stated with the input,
+   with Pisztora's box estimate replaced by the crossing estimate.
+3. **Finite clusters** (`Pisztora/FiniteClusters.lean`). If `2t < l` and, for every `k`, the cube
+   `x + Q_{M_k}`, `M_k = 2^{k+1} t`, has a crossing root joined inside it to every open path of
+   coordinate diameter at least `M_k`, then the open path from `x` to distance `l` joins `x` to the
+   first root, and a crossing path of the `k`-th cube, of diameter `M_{k+1}`, joins the `k`-th root
+   to the next one; the cluster of `x` then meets every face of every cube and is infinite. By the
+   crossing estimate the `k`-th condition fails with probability at most `A exp(−κ 2^k t)`, and the
+   sum over `k` gives the bound. This route through the crossing estimate departs from the proof of
+   Chayes, Chayes, Grimmett, Kesten and Schonmann. The volume bound follows, since a cluster of
+   `ℓ^∞`-radius less than `l` has at most `(2l)^d` vertices.
+
+## Proposition 2.3 and the density concentration for d = 2
+
+For `d = 2` and `𝔭_c(2) < p < 1`, Kesten's rectangle-crossing estimate, which is proved (see
+[Assumed literature inputs](#assumed-literature-inputs)), gives Proposition 2.3 of the paper and
+the density concentration of Dario and Gu, Proposition A.1, in the plane. With the theorems of the
+previous section, Proposition 2.3 holds in every dimension, and so does Theorem 6.5, with no
+literature hypothesis.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) | `WellConnectedInputTwo`, the statement of `WellConnectedInput` at `d = 2`, here with `s = 1/800`. |
+| [`Rigidity.Percolation.wellConnected_input`](Rigidity/Proofs/Percolation/WellConnected.lean) | `WellConnectedInput`: Proposition 2.3 for every `d ≥ 2`, from `wellConnected_input_two` and `wellConnected_of_three_le`. |
+| [`Rigidity.Proofs.S2.planar_cluster_density_concentration`](Rigidity/Proofs/S2/PlanarDensityConcentration.lean) | `ClusterDensityConcentrationInputTwo`, the statement of `ClusterDensityConcentrationInput` at `d = 2`: the density of the infinite cluster in a triadic square of side `3ᵐ` differs from `θ(𝔭)` by `O_{2/15}(C 3^{−m})`. |
+| [`Rigidity.Assembly.Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) | Theorem 6.5 for every `d ≥ 2` and `𝔭_c(d) < p < 1`, with no literature hypothesis. |
+
+The four theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`.
+
+1. **Well-connected squares** (`Rigidity/Proofs/Percolation/PlanarGoodCube.lean`,
+   `PlanarWellConnected.lean` and the modules they import). In the square `z + Q_M`, `M ≥ 10⁴`, let
+   `w = ⌊√M⌋/100`. Outside an event of probability at most a polynomial in `M` times `exp(−c w)`,
+   every horizontal and vertical strip of width `w` of the square has an open crossing in its long
+   direction, and the square has a unique crossing cluster. The strip crossings then lie in the
+   crossing cluster, every other open cluster of the square lies in a square of side `2w + 1`, so
+   the crossing cluster is a largest cluster, and every open path with at least `M/100` steps is
+   joined to it by a transverse crossing. The square is then good, and the union bound over
+   subcubes stated with the input gives the statement with `s = 1/800 = 1/(d(10d)²)`. This route
+   replaces the estimate of Couronné and Messikh by Kesten's estimate.
+2. **Density concentration** (`Rigidity/Proofs/S2/`, from `BondEfronStein.lean` to
+   `PlanarDensityConcentration.lean`). Resampling one bond changes the number of vertices of the
+   infinite cluster in the square by at most the sum of the sizes of the finite clusters at the
+   endpoints of the bond, before and after resampling. These sizes have stretched-exponential
+   tails, because a loop of the infinite cluster in an annulus, obtained from rectangle crossings,
+   encloses every finite cluster that meets the inner square (`ClusterDensityInfluenceBound.lean`,
+   `Rigidity/Proofs/Percolation/PlanarFiniteCluster.lean`). The Efron–Stein inequality for the
+   product of the Bernoulli bonds, applied to the powers of the centred density `X`, gives for
+   `n ≥ 2` the recursion
+   `E|X|^{2n} ≤ (E|X|ⁿ)² + C n^{14} 3^{−2m} (E|X|^{2n})^{(n−1)/n}`
+   (`Rigidity.Proofs.S2.planar_density_moment_recursion`). Solving it bounds the tail of `X` at
+   the scale `C 3^{−m}` with the exponent `1/7`, which gives the stated exponent `2/15`. Dario and
+   Gu derive the estimate from a concentration inequality of Efron–Stein type beyond the variance;
+   the Lean proof replaces it by this iteration of the variance inequality.
+
+## Density concentration in every dimension
+
+For `d ≥ 3` and `𝔭_c(d) < p`, the finite-cluster estimates of
+[Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3)
+give the density concentration of Dario and Gu, Proposition A.1. With the case `d = 2` of the
+previous section, `ClusterDensityConcentrationInput` is proved, and the versions of Proposition 2.6
+and Theorem 1.3 in `Rigidity.Assembly.WithProvedDensity` do not take it as a hypothesis.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.S2.cluster_density_concentration`](Rigidity/Proofs/S2/ClusterDensityConcentration.lean) | `ClusterDensityConcentrationInput`: for `d ≥ 2` and `𝔭_c(d) < p < 1`, the density of the infinite cluster in a triadic cube of side `3ᵐ` differs from `θ(𝔭)` by `O_{2(d−1)/(3d²+2d−1)}(C 3^{−dm/2})`; from `planar_cluster_density_concentration` (`d = 2`) and `clusterDensityConcentrationAt_of_three_le` (`d ≥ 3`, without the hypothesis `p < 1`). |
+| [`Rigidity.Assembly.WithProvedDensity.green_gradient_homogenization`](Rigidity/Proofs/Assembly/ProvedDensity.lean) | Proposition 2.6 for every `d ≥ 2`, with the hypotheses `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin` and `SupercriticalBondGreenQuantitative`. |
+| [`Rigidity.Assembly.WithProvedDensity.fast_decay`](Rigidity/Proofs/Assembly/ProvedDensity.lean) | Theorem 1.3, with the hypotheses `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderZero`, `ArmstrongDarioOrderOneOrigin`, `SupercriticalBondGreenColumnExistence` and `SupercriticalBondGreenQuantitative`. |
+
+The three theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+are in [`Rigidity/Proofs/S2/`](Rigidity/Proofs/S2/), from `DensityResamplingEnergy.lean` to
+`ClusterDensityConcentration.lean`, and
+[`Rigidity/Proofs/Percolation/BondShellExponential.lean`](Rigidity/Proofs/Percolation/BondShellExponential.lean).
+
+1. **Influences** (`FiniteClusterVolumeMoments.lean`, `InfluenceRadiusTail.lean`,
+   `InfluenceRootBoundHigh.lean`). As in the plane, resampling a bond `e` changes the number of
+   vertices of the infinite cluster in the cube by at most the sizes of the finite clusters at the
+   endpoints of `e`, before and after resampling, and changes it only if one of these finite
+   clusters meets the cube. The volume tail `C exp(−c n^{1/d})` of finite clusters gives the
+   moments `E|Δ_e|^r ≤ 4^{r+1} (dr)! a^{−dr} C`. By the radius tail `C exp(−c l)`, a bond at
+   coordinate distance `n` from the cube changes the count with probability at most `C exp(−cn)`,
+   and by the Cauchy–Schwarz inequality the moments of its influence decay exponentially in `n`.
+   Summing over the bond shells around the cube gives
+   `Σ_e ‖Δ_e‖²_{L^{2r}} ≤ C r^{3d+2} (3ᵐ + 1)^d`
+   (`Rigidity.Proofs.S2.densityInfluenceRootBound_of_three_le`).
+2. **Moment recursion** (`DensityResamplingEnergy.lean`, `DensityRealEncoding.lean`,
+   `DensityMomentGrowth.lean`, `DensityConcentrationOfRoots.lean`). The argument of the planar case,
+   written for every `d` under the hypothesis `DensityInfluenceRootBound d p (2γ)` that this sum is
+   at most `C r^{2γ} (3ᵐ + 1)^d`. The Efron–Stein inequality for the powers of the centred density
+   `X` gives, for `n ≥ 2`,
+   `E|X|^{2n} ≤ (E|X|ⁿ)² + C n^{2γ+2} 3^{−dm} (E|X|^{2n})^{(n−1)/n}`
+   (`Rigidity.Proofs.S2.density_moment_recursion`), hence `‖X‖_{Lⁿ} ≤ C n^{γ+1} 3^{−dm/2}` and
+   `|X| ≤ O_s(C 3^{−dm/2})` for every `0 < s ≤ 1/(γ + 1)`
+   (`Rigidity.Proofs.S2.isOsBond_density_of_rootBound`; at the exponent of the source,
+   `Rigidity.Proofs.S2.clusterDensityConcentrationAt_of_rootBound`). For `d ≥ 3` the Lean proof
+   takes `γ = ⌊(3d + 3)/2⌋`, so that `2γ ≥ 3d + 2`; since `2(γ + 1) ≤ 3d + 5`, the exponent
+   `1/(γ + 1)` is at least `2(d − 1)/(3d² + 2d − 1)` (for `d = 3`, `1/7 ≥ 1/8`).
+
+**Departures from Dario and Gu.** Dario and Gu prove Proposition A.1 with an exponential
+Efron–Stein inequality (their Proposition A.3, from S. Armstrong and J. Lin, *Optimal quantitative
+estimates in stochastic homogenization for elliptic equations in nondivergence form*, Arch. Ration.
+Mech. Anal. 225 (2017), Proposition 2.2) and the volume tail `exp(−c n^{(d−1)/d})` of finite clusters
+(their Theorem 6, from H. Kesten and Y. Zhang, *The probability of a large finite cluster in
+supercritical Bernoulli percolation*, Ann. Probab. 18 (1990), 537–555). The Lean
+proof replaces the exponential inequality by the iteration of the Efron–Stein variance inequality
+over the moments, as for `d = 2`. For `d ≥ 3` it replaces the tail of Kesten and Zhang by the
+exponential decay of the radius of finite clusters (Grimmett, Theorem (8.21)) and the volume tail
+`exp(−c n^{1/d})` that follows from it, both proved from slab connectivity in
+[Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3).
+It obtains the scale `3^{−dm/2}` of the source with the exponent `1/(⌊(3d + 3)/2⌋ + 1)` for
+`d ≥ 3` and `1/7` for `d = 2`, which are at least the exponent `2(d − 1)/(3d² + 2d − 1)` of the
+source, and it derives the stated exponent from them. The case `d = 2` is the planar proof of the
+previous section. The modules for `d ≥ 3` and every `d` follow the planar modules of the previous
+section; no code is copied from another repository.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 50 axiom
-  reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, and the six
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 64 axiom
+  reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
-  2.5, Lemma 2.14). Each of the 50 reports lists exactly `propext`, `Classical.choice` and
+  2.5, Lemma 2.14), the slab connectivity theorem of
+  [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point), the
+  four theorems of
+  [Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3),
+  the four theorems of
+  [Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2),
+  the two forms of Theorem 1.3 from dimension-two inputs, `WithPlanarInputs.fast_decay` and
+  `WithPlanarInputs.fast_decay_of_green_exists`, and the three theorems of
+  [Density concentration in every dimension](#density-concentration-in-every-dimension).
+  Each of the 64 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -354,13 +606,14 @@ Theorem 1.1), which no numbered result uses.
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
   checked against its source in an independent model review; the sources are listed in
   [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
-  hypotheses; the versions described above discharge four of them.
+  hypotheses; six of them are proved, and the versions described there discharge them.
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 237 Lean files with 64,912 lines, on top of mathlib and
-Lattice-Probability. The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (78 lines) are counted separately.
+`Rigidity/` and `Rigidity.lean`: 815 Lean files with 140,790 lines, on top of mathlib and
+Lattice-Probability, including the 105 copied modules under `Rigidity/Vendor/` (24,205 lines; see
+[Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
+`RigidityAudit/Axioms.lean` (114 lines) are counted separately.
 
 ## Building
 
@@ -426,9 +679,15 @@ Rigidity/
   Proofs/                     the proofs of the steps
     Assembly/                 the numbered results, composed from the steps
       Main.lean               the main theorems, from the regime and the literature inputs only
+      Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
+      ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
+  Percolation/                supercritical estimates in boxes and slabs for the literature inputs
+    Bootstrap/, Blocks/       the slab connectivity above the critical point (d ≥ 3)
+    Pisztora/                 well-connected cubes and finite clusters (d ≥ 3)
   Support/                    definitions and lemmas used by the frozen results
+  Vendor/                     modules copied from other repositories (see Copied code)
 RigidityAudit/
-  Axioms.lean                 the axiom report of every numbered result
+  Axioms.lean                 the axiom report of every numbered result and of the further results
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
 paper/                        the arXiv v2 source and the corrected draft (LaTeX and PDF), figures,
@@ -449,6 +708,26 @@ under the direction of Ahmed Bou-Rabee. Every proof is checked by the Lean kerne
 tooling and review process are disclosed in [`formalization.yaml`](formalization.yaml), following the
 [mathlib-initiative](https://github.com/mathlib-initiative/formalization.yaml) standard.
 
+## Copied code
+
+Some modules are copied from other repositories, with attribution, and not through a Lake
+dependency. Each copied file starts with a header naming its source repository, file and commit.
+The headers of the modules from formal-math, openai/math and Leonardo Bonanno's repository also
+state the changes made; the modules from Lattice-Probability are adapted from the named revision,
+and the headers of the four planar modules adapted from its revision `7512f4fb` state the changes.
+
+| Source | Commit | Files in this repository |
+| --- | --- | --- |
+| [anthropics/formal-math](https://github.com/anthropics/formal-math/tree/795efb86f191735c5481675763537cfb4ff37e55/percolation), the `percolation/` project (Apache License 2.0; its `LICENSE` and `NOTICE` are kept verbatim in [`Rigidity/Vendor/FormalMathPercolation/`](Rigidity/Vendor/FormalMathPercolation/)) | `795efb86f191735c5481675763537cfb4ff37e55` | the 53 modules under `Rigidity/Vendor/FormalMathPercolation/`, from the files of the same paths under `percolation/Percolation/` |
+| [openai/math](https://github.com/openai/math/tree/4eaee87548250b2682affda7d05d947c05554bae) (Apache License 2.0; text in [`Rigidity/Vendor/CriticalPercolation/LICENSE`](Rigidity/Vendor/CriticalPercolation/LICENSE)) | `4eaee87548250b2682affda7d05d947c05554bae` | the 44 modules under `Rigidity/Vendor/CriticalPercolation/`, from `lean/OAI/Probability/CriticalPercolation/` |
+| Leonardo Bonanno, [lean-formalizations](https://github.com/leobon12/lean-formalizations/tree/31e748330ee154d5f41537c4b01f71b8a5510c2d) (no licence stated upstream) | `31e748330ee154d5f41537c4b01f71b8a5510c2d` | `Rigidity/Vendor/BonannoPerc/`: `Basic`, `Duality`, `DualityMain`, `Exclusive`, `ExclusiveMain`, `Paths`, `Peierls`, `StepSum`, from the files of the same names in `LQGMetric/Perc/` |
+| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/c21955fb1c127db67c43b995f47db4543f88f9fd) (Apache License 2.0) | `c21955fb1c127db67c43b995f47db4543f88f9fd` | the 12 modules under `Rigidity/Proofs/Topology/PlanarJordan/`, which are based on Leonardo Bonanno's lean-formalizations and on R. Kirov's [jordan_pick](https://github.com/rkirov/jordan_pick/tree/b3c9b7cf7358bf81a077d78ad67e6e8247869ddd) (Apache License 2.0) |
+| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/a6fae9f9df6a47c15e338b928807feb20d9da4b0) (Apache License 2.0) | `a6fae9f9df6a47c15e338b928807feb20d9da4b0` | `Rigidity/Proofs/Percolation/Kesten/`: `EdgeCrossing`, `DualDecayRectangle`, `RigidityCrossingAdapter` |
+| [Lattice-Probability](https://github.com/nitromannitol/Lattice-Probability/tree/7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069) (Apache License 2.0) | `7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069` | `Rigidity/Support/PlanarOrderZeroGradient.lean`, `Rigidity/Support/PlanarGreenQuantitativeField.lean`, `Rigidity/Proofs/S3/PlanarCorrectorValid.lean`, `Rigidity/Proofs/S3/PlanarGreenColumn.lean`: theorems of the modules `LatticeOrderZeroApproximation`, `LatticeOrderZeroTranslation`, `LatticeOrderZeroGradient`, `GreenQuantitativeField`, `MeasurableRootedPlane` and `GreenColumnEvent` of `LatticeProb/Prob/Percolation/`, specialized to `d = 2` |
+
+The repository of Leonardo Bonanno does not state a licence, and none is claimed here for the
+modules copied from it.
+
 ## Authors and citation
 
 The paper is by **Ahmed Bou-Rabee**, **William Cooperman** and **Paul Dario**. The Lean development
@@ -458,6 +737,7 @@ the library [Lattice-Probability](https://github.com/nitromannitol/Lattice-Proba
 
 ## License
 
-The Lean development is licensed under the Apache License 2.0; see [`LICENSE`](LICENSE). The paper
+The Lean development is licensed under the Apache License 2.0; see [`LICENSE`](LICENSE). The
+copied modules listed in [Copied code](#copied-code) keep the terms of their sources. The paper
 sources in [`paper/`](paper/) are included with the permission of the paper's authors and are not
 covered by the Apache license.

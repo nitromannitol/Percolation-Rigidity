@@ -1,3 +1,9 @@
+/- Adapted from Lattice-Probability, revision 7512f4fb, modules
+   LatticeProb.Prob.Percolation.LatticeOrderZeroApproximation,
+   LatticeProb.Prob.Percolation.LatticeOrderZeroTranslation and
+   LatticeProb.Prob.Percolation.LatticeOrderZeroGradient.
+   Changes: specialized to d = 2, from the planar input `ArmstrongDarioOrderZeroTwo` in place of
+   `ArmstrongDarioOrderZero`; the theorems carry the suffix `_two`. -/
 import Rigidity.External.PlanarInputs
 import LatticeProb.Prob.Percolation.LatticeOrderZeroGradient
 

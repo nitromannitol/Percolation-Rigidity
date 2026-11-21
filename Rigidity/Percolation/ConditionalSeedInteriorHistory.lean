@@ -41,7 +41,8 @@ theorem disjoint_localBonds_seedExitExteriorSupport {d : ℕ} (M n : ℕ) (i : F
     intro e heR hecut
     have hefull := (Finset.mem_filter.mp hecut).1
     obtain ⟨x, hx, he⟩ := Finset.mem_biUnion.mp hefull
-    exact Set.disjoint_left.mp (disjoint_outgoingBonds_localBonds (R : Set (Vertex d)) hx) he heR
+    exact Set.disjoint_left.mp
+      (disjoint_regionOutgoingBonds_localBonds (R : Set (Vertex d)) hx) he heR
 
 /-- The source seed exit depends only on exterior bonds and the boundary cut. -/
 theorem measurableSet_markedPadSeedExit_exterior {d : ℕ} (p : unitInterval)

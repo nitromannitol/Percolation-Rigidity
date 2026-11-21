@@ -1,8 +1,8 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/MonotoneIndicatorUpper.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.MonotoneIndicatorUpper in place of OAI.Probability.CriticalPercolation.ProductMeasure.MonotoneIndicatorUpper, and the module paths of local imports are changed in the same way; the import of LatticeProb.OpenAI.Probability.CriticalPercolation.Modular.DensityModular (not copied here) is replaced by the imports of the copied modules it reaches,
-   namely LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.FiniteOpenWitness, LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.Density;
-   the unused declarations `finite_harris`, `finite_restriction_harris`, `harris_finiteWitness` (they need modules not copied here) are omitted; statements and proofs of the declarations kept are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.MonotoneIndicatorUpper in place of OAI.Probability.CriticalPercolation.ProductMeasure.MonotoneIndicatorUpper, and the module paths of local imports are changed in the same way; the import of OAI.Probability.CriticalPercolation.Modular.DensityModular (not copied here) is replaced by the imports of the copied modules it reaches,
+   namely Rigidity.Vendor.CriticalPercolation.ProductMeasure.FiniteOpenWitness, Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density;
+   the unused declarations `finite_harris`, `finite_restriction_harris`, `harris_finiteWitness` (they need modules not copied here) are omitted; a module docstring is added; in proofs, `Set.preimage_ofPred_eq` and `Measurable.of_eval` are replaced by `Set.preimage_setOf_eq` and `measurable_pi_iff.mpr` respectively; statements of the declarations kept are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.FiniteOpenWitness
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density

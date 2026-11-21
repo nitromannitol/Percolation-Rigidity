@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/ProductMeasure/BitMeasure.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.ProductMeasure.BitMeasure in place of OAI.Probability.CriticalPercolation.ProductMeasure.BitMeasure, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.ProductMeasure.BitMeasure in place of OAI.Probability.CriticalPercolation.ProductMeasure.BitMeasure, and the module paths of local imports are changed in the same way; a module docstring is added; `MeasurableEquiv.setOfPred` is replaced by `MeasurableEquiv.setOf`, also in the definition of `law`, and `Set.domRestrict` by `Set.restrict`; the proof `infer_instance` of `law_probability` is replaced by `exact Measure.isProbabilityMeasure_map MeasurableEquiv.setOf.measurable.aemeasurable`; statements are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.Density
 

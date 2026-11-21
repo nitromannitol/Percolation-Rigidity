@@ -2,7 +2,8 @@
 Vendored from `anthropics/formal-math` (https://github.com/anthropics/formal-math), commit
 795efb86f191735c5481675763537cfb4ff37e55, file `percolation/Percolation/Literature/BoxCrossing.lean`.
 Copyright 2026 Anthropic, PBC; licensed under the Apache License, Version 2.0 (see `LICENSE` and
-`NOTICE` in this directory).  Changes to the original source include module paths and adjustments for this Mathlib version.
+`NOTICE` in this directory).  The only change to the original source is the module path of the
+`import` lines.
 -/
 import Rigidity.Vendor.FormalMathPercolation.Literature.Crossings
 import Rigidity.Vendor.FormalMathPercolation.Util.Linter

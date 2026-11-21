@@ -1,6 +1,6 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/GraphGeometry/OpenGraphIso.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.GraphGeometry.OpenGraphIso in place of OAI.Probability.CriticalPercolation.GraphGeometry.OpenGraphIso, and the module paths of local imports are changed in the same way; statements and proofs are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.GraphGeometry.OpenGraphIso in place of OAI.Probability.CriticalPercolation.GraphGeometry.OpenGraphIso, and the module paths of local imports are changed in the same way; a module docstring is added; in proofs, `Measurable.of_eval` and `MeasurableEquiv.setOfPred` are replaced by `measurable_pi_iff.mpr` and `MeasurableEquiv.setOf` respectively; statements are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.Model
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.BitMeasure

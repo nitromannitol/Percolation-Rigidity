@@ -1,7 +1,7 @@
 /- Adapted from OpenAI's math repository (https://github.com/openai/math), commit 4eaee875,
    file lean/OAI/Probability/CriticalPercolation/Clusters/ClusterTail.lean, Apache License 2.0;
-   changes: the module path is LatticeProb.OpenAI.Probability.CriticalPercolation.Clusters.ClusterTail in place of OAI.Probability.CriticalPercolation.Clusters.ClusterTail, and the module paths of local imports are changed in the same way;
-   the unused declarations `lowerSemicontinuous_real_clusterTail`, `subcritical_uniform_clusterTail` (they need modules not copied here) are omitted; statements and proofs of the declarations kept are unchanged. -/
+   changes: the module path is Rigidity.Vendor.CriticalPercolation.Clusters.ClusterTail in place of OAI.Probability.CriticalPercolation.Clusters.ClusterTail, and the module paths of local imports are changed in the same way;
+   the unused declarations `lowerSemicontinuous_real_clusterTail`, `subcritical_uniform_clusterTail` (they need modules not copied here) are omitted; a module docstring is added; in proofs, `Set.mem_ofPred_eq` is replaced by `Set.mem_setOf_eq`; statements of the declarations kept are unchanged. -/
 import Mathlib
 import Rigidity.Vendor.CriticalPercolation.GraphGeometry.OpenGraphIso
 import Rigidity.Vendor.CriticalPercolation.ProductMeasure.MeasurableSetRestrict
