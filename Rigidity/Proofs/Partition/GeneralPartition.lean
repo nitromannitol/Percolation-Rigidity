@@ -203,7 +203,8 @@ theorem exists_events_sum_stoppingSize_le (hd : 0 < d) (p : unitInterval)
       ∃ x ∈ (originCube d m).vertices, ∀ i, |x i - T.center i| ≤ 11 * T.side} with hBigdef
   set Mid : ℕ → Set (Configuration d) := fun m =>
     ⋃ j ∈ Finset.Ico j0 (m / K), ⋃ r : Fin d → Fin 3,
-      {ω | 3 ^ (d * (m - j) - (τ + 1) * (j + 1)) ≤ classCount (fun T => T ∉ G ω) (originCube d m) m j r}
+      {ω | 3 ^ (d * (m - j) - (τ + 1) * (j + 1)) ≤
+        classCount (fun T => T ∉ G ω) (originCube d m) m j r}
     with hMiddef
   set PE : Set (Configuration d) :=
     {ω | ∀ x : Vertex d, ∃! Q : TriadicCube d, x ∈ Q.vertices ∧ Q.IsMaximalStopping (G ω)}
@@ -217,14 +218,16 @@ theorem exists_events_sum_stoppingSize_le (hd : 0 < d) (p : unitInterval)
         ∀ x ∈ (⟨m, 0⟩ : TriadicCube d).vertices, ¬ ∀ i, |x i - T.center i| ≤ 11 * T.side :=
       fun T hT hbad x hx hnear => hBig ⟨T, hT, hbad, x, hx, hnear⟩
     have hmid : ∀ j, j0 ≤ j → j < m / K → ∀ r,
-        classCount (fun T => T ∉ G ω) (originCube d m) m j r < 3 ^ (d * (m - j) - (τ + 1) * (j + 1)) := by
+        classCount (fun T => T ∉ G ω) (originCube d m) m j r <
+          3 ^ (d * (m - j) - (τ + 1) * (j + 1)) := by
       intro j hj0' hjJ r
       by_contra hge
       apply hMid
       simp only [hMiddef, Set.mem_iUnion, Set.mem_setOf_eq, exists_prop, Finset.mem_Ico]
       exact ⟨j, ⟨hj0', hjJ⟩, r, not_lt.1 hge⟩
     have h1 := sum_stoppingSize_pow_le hP (originCube d m) m (m / K) τ rfl hfar
-    have h2 := sum_weights_le_of_counts (fun T => T ∉ G ω) (originCube d m) m (m / K) j0 τ (Nat.div_le_self m K)
+    have h2 := sum_weights_le_of_counts (fun T => T ∉ G ω) (originCube d m) m (m / K) j0 τ
+      (Nat.div_le_self m K)
       (fun j hj => le_trans (Nat.le_add_right _ _) (hexpK m j hj)) hmid
     have hω' : Cfin * 3 ^ (d * m) <
         ∑ x ∈ (originCube d m).toIntegerCube.vertices, f x ω ^ τ := hω
@@ -346,7 +349,8 @@ theorem exists_events_sum_stoppingSize_le (hd : 0 < d) (p : unitInterval)
     -- many failures in a residue class
     have hmid : μ (Mid m) ≤ ENNReal.ofReal (3 ^ d * D2) * ENNReal.ofReal (Real.exp (-c' * x)) := by
       have hterm : ∀ j ∈ Finset.Ico j0 (m / K), ∀ r : Fin d → Fin 3,
-          μ {ω | 3 ^ (d * (m - j) - (τ + 1) * (j + 1)) ≤ classCount (fun T => T ∉ G ω) (originCube d m) m j r} ≤
+          μ {ω | 3 ^ (d * (m - j) - (τ + 1) * (j + 1)) ≤
+            classCount (fun T => T ∉ G ω) (originCube d m) m j r} ≤
             ENNReal.ofReal (Real.exp (-(3 : ℝ) ^ (m / K))) := by
         intro j hj r
         rw [Finset.mem_Ico] at hj

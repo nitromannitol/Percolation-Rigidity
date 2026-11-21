@@ -7,9 +7,10 @@ import Rigidity.Proofs.Partition.StochasticAverage
 Armstrong and Dario state after Proposition 2.1 that `Λ_t(U) ≤ 𝒪_{s/t}(C)`, as a consequence of
 Proposition 2.1 (iii) and the averaging property of the `𝒪_s` notation. We prove, uniformly in
 the finite set `U`, `Λ_t(U) ≤ 𝒪_{1/(t + d)}(C)` for the partition `𝒫` (for which `s = 1`): every
-partition cube meeting `U` contains a point of `U`, so `Λ_t(U) ≤ |U|⁻¹ ∑_{z ∈ U} size(𝒫(z))^{t + d}`,
-an average of `𝒪_{1/(t + d)}` variables. For `U` a single vertex `x`, `Λ_t(U) = size(𝒫(x))^{t + d}`,
-so a bound uniform in `U` carries the exponent of `size^{t + d}`.
+partition cube meeting `U` contains a point of `U`, so
+`Λ_t(U) ≤ |U|⁻¹ ∑_{z ∈ U} size(𝒫(z))^{t + d}`, an average of `𝒪_{1/(t + d)}` variables. For `U` a
+single vertex `x`, `Λ_t(U) = size(𝒫(x))^{t + d}`, so a bound uniform in `U` carries the exponent
+of `size^{t + d}`.
 -/
 
 namespace Rigidity.Percolation

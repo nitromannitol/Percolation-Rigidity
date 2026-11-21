@@ -96,7 +96,8 @@ theorem measure_classCount_ge_le (p : unitInterval) (G : Configuration d → Set
       MeasurableSet[localEdgeSigma T.centeredTriple] {ω | T ∉ G ω})
     {C1 c s0 : ℝ} (hC1 : 0 ≤ C1)
     (hq : ∀ T : TriadicCube d, latticeBondLaw d p {ω | T ∉ G ω} ≤
-      ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0))) {R : TriadicCube d} {m j τ : ℕ}
+      ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0)))
+    {R : TriadicCube d} {m j τ : ℕ}
     (hj : Real.exp 1 * 25 ^ d * C1 * (3 : ℝ) ^ ((τ + 1) * (j + 1)) *
       Real.exp (-c * ((3 : ℝ) ^ j) ^ s0) ≤ Real.exp (-1))
     (hexp : (τ + 1) * (j + 1) ≤ d * (m - j)) (r : Fin d → Fin 3) :

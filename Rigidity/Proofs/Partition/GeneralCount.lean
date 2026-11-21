@@ -160,7 +160,8 @@ theorem sum_stoppingSize_pow_le {G : Set (TriadicCube d)}
 open scoped Classical in
 /-- The number of cubes of scale `j` near the cube of scale `m` centred at the origin, with
 index of residues `r`, satisfying a predicate. -/
-noncomputable def classCount (bad : TriadicCube d → Prop) (R : TriadicCube d) (m j : ℕ) (r : Fin d → Fin 3) : ℕ :=
+noncomputable def classCount (bad : TriadicCube d → Prop) (R : TriadicCube d) (m j : ℕ)
+    (r : Fin d → Fin 3) : ℕ :=
   (((nearIndicesAt R m j).subtype fun ι => residue ι = r).filter
     fun ι => bad (⟨j, ι.1⟩ : TriadicCube d)).card
 
@@ -188,7 +189,8 @@ open scoped Classical in
 class has fewer than `3^{e_j}` cubes of scale `j` near `Q_m` satisfying `bad`,
 `e_j = d (m - j) - (τ + 1)(j + 1)`, then
 `∑_{j < J} 3^{τ (j + 1)} (22 · 3^j + 1)^d N_j ≤ (j0 · 575ᵈ · 3^{τ j0} + 69ᵈ) 3^{d m}`. -/
-theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (R : TriadicCube d) (m J j0 τ : ℕ) (hJm : J ≤ m)
+theorem sum_weights_le_of_counts (bad : TriadicCube d → Prop) (R : TriadicCube d)
+    (m J j0 τ : ℕ) (hJm : J ≤ m)
     (hexp : ∀ j < J, (τ + 1) * (j + 1) + d * j ≤ d * m)
     (hmid : ∀ j, j0 ≤ j → j < J → ∀ r,
       classCount bad R m j r < 3 ^ (d * (m - j) - (τ + 1) * (j + 1))) :

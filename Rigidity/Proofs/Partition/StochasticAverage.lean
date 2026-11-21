@@ -107,7 +107,8 @@ theorem osBound_of_lintegral_exp_half_le {Ω : Type*} [MeasurableSpace Ω] {P : 
 
 /-- Powers: if `0 ≤ X ≤ 𝒪_s(θ)`, then `X^n ≤ 𝒪_{s/n}(θ^n)`. -/
 theorem osBound_pow_of_nonneg {Ω : Type*} [MeasurableSpace Ω] {P : Measure Ω} {s θ : ℝ}
-    {X : Ω → ℝ} (hX : OsBound P s θ X) (hX0 : ∀ ω, 0 ≤ X ω) {n : ℕ} (hn : 0 < n) : OsBound P (s / n) (θ ^ n) (fun ω => X ω ^ n) := by
+    {X : Ω → ℝ} (hX : OsBound P s θ X) (hX0 : ∀ ω, 0 ≤ X ω) {n : ℕ} (hn : 0 < n) :
+    OsBound P (s / n) (θ ^ n) (fun ω => X ω ^ n) := by
   intro t ht
   have ht0 : 0 ≤ t := zero_le_one.trans ht
   have hu1 : 1 ≤ t ^ ((n : ℝ)⁻¹) := Real.one_le_rpow ht (by positivity)
