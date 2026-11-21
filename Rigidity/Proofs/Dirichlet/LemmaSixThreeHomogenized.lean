@@ -149,8 +149,8 @@ theorem edgeEnergy_patch_le_of_nu (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ
   have hdisjBS : Disjoint B S :=
     Finset.disjoint_left.mpr fun x hxB hxS =>
       Finset.disjoint_left.mp hABS (Finset.mem_union_right _ hxB) hxS
-  have hcnn : ∀ (V : Finset (Vertex d)) (f : Vertex d → ℝ) (x : Vertex d),
-      0 ≤ ∑ j : Fin d, c (x, j) * (f (x + unit j) - f x) ^ 2 := fun _ _ x =>
+  have hcnn : ∀ (f : Vertex d → ℝ) (x : Vertex d),
+      0 ≤ ∑ j : Fin d, c (x, j) * (f (x + unit j) - f x) ^ 2 := fun _ x =>
     Finset.sum_nonneg fun j _ => mul_nonneg (hc0 _) (sq_nonneg _)
   -- the patch
   have hP := edgeEnergy_patch_le c hc0 hcΛ v u hη0 hη1 A B S hAB hABS hA hB hK
@@ -159,7 +159,7 @@ theorem edgeEnergy_patch_le_of_nu (hd : 0 < d) (a : Fin d → ℝ) {lam Λ : ℝ
   have hAS : edgeEnergy c A v + edgeEnergy c S v ≤ edgeEnergy c T v := by
     rw [edgeEnergy, edgeEnergy, ← Finset.sum_union hdisjAS]
     exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.union_subset hAT hST)
-      fun x _ _ => hcnn T v x
+      fun x _ _ => hcnn v x
   have hT := edgeEnergy_tiles_le_of_nu hd a hlam ha c hcΛ Q hu hr z M hN hsub v δ hinner hface
   have hTQ : edgeEnergy (constCond a) T u ≤ edgeEnergy (constCond a) Q.vertices u :=
     Finset.sum_le_sum_of_subset_of_nonneg (cornerCube_mul_subset hsub) fun x _ _ =>
