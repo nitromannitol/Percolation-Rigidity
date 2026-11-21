@@ -6,8 +6,9 @@ import Mathlib.Analysis.MeanInequalities
 
 Armstrong–Dario, *Elliptic regularity and quantitative homogenization on percolation clusters*
 (Comm. Pure Appl. Math. 2018), Lemma 3.6. For an exponent `s > (d+2)/2` with Hölder conjugate `s'`,
-on scales where the partition `𝒫` satisfies the moment bound
-`|□_m|⁻¹ ∑_{x ∈ □_{m+1}} size(□_𝒫(x))^{2sd} ≤ C`, every `u ∈ 𝒜(𝒞_*(□_{m+1}))` satisfies
+on scales `3^m ≥ 𝓜_{2sd}(𝒫)`, where the partition `𝒫` satisfies the moment bound
+`∑_{x ∈ □_{m+1}} size(□_𝒫(x))^{2sd} ≤ C |□_{m+1}|` (the form used in the proof), every
+`u ∈ 𝒜(𝒞_*(□_{m+1}))` satisfies
 
 `(|□_m|⁻¹ ∫_{𝒞_*(□_m)} |∇u 1_{𝐚≠0}|²)^{1/2} ≤ C (|□_{m+1}|⁻¹ ∫_{𝒞_*(□_{m+1})} |∇u 1_{𝐚≠0}|^{s' 2_*})^{1/(s' 2_*)}`
 

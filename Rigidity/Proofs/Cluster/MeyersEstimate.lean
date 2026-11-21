@@ -11,8 +11,9 @@ see the module `Rigidity.Proofs.Cluster.Meyers` for the hypotheses. Step 2 appli
 `gehring_triadic` to `g = (avg_{cell} G^θ)^{1/θ}`, `θ = d/(d+1)`, with the enlargement `9□`, and
 Step 3 removes the cell sizes by Hölder's inequality with the exponents `p = (1+ε)/(1+ε/2)` and
 `q = 2(1+ε)/ε`, using `G(x)^θ ≤ |cell(x)| avg_{cell(x)} G^θ` and the moment bound
-`∑_{x ∈ □} size(cell(x))^t ≤ K |□|`, `t = d q (1+ε/2)/θ` (the exponent
-`t = (2+ε)(1+ε)(d+1)/(2ε)` of Armstrong and Dario, with `ε` in place of `ε/2`).
+`∑_{x ∈ □} size(cell(x))^t ≤ K |□|`, `t = d q (1+ε/2)/θ = (2+ε)(1+ε)(d+1)/ε` (Armstrong and Dario
+choose the Hölder exponents differently and state `(2+ε)(1+ε)(d+1)/(2ε)`; any finite `t` serves,
+since the minimal scale of the partition controls every moment).
 -/
 
 namespace Rigidity.Proofs.Cluster
