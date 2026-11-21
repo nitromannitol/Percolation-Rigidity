@@ -139,4 +139,94 @@ theorem abs_sub_taylor_two_le (f : (Fin d → ℤ) → ℝ) {c x : Fin d → ℤ
   rw [e3]
   exact this
 
+theorem latticeEuclideanEmbedding_sub_unit (x : Fin d → ℤ) (i : Fin d) :
+    latticeEuclideanEmbedding (x - unit i) =
+      latticeEuclideanEmbedding x - EuclideanSpace.single i 1 := by
+  rw [latticeEuclideanEmbedding_sub, latticeEuclideanEmbedding_unit]
+
+/-- The lattice Laplacian of `½ q_H(y - c)` is the trace of `H`. -/
+theorem latticeLaplacian_halfQuad (H : Matrix (Fin d) (Fin d) ℝ) (c x : Fin d → ℤ) :
+    latticeLaplacian (halfQuad H c) x = ∑ a, H a a := by
+  simp only [latticeLaplacian, halfQuad]
+  refine sum_congr rfl fun a _ => ?_
+  have h1 : latticeEuclideanEmbedding (x + unit a) - latticeEuclideanEmbedding c =
+      (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) + EuclideanSpace.single a 1 := by
+    rw [latticeEuclideanEmbedding_add, latticeEuclideanEmbedding_unit]; abel
+  have h2 : latticeEuclideanEmbedding (x - unit a) - latticeEuclideanEmbedding c =
+      (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c) - EuclideanSpace.single a 1 := by
+    rw [latticeEuclideanEmbedding_sub_unit]; abel
+  rw [h1, h2]
+  have := quadForm_add_add_sub H (latticeEuclideanEmbedding x - latticeEuclideanEmbedding c)
+    (EuclideanSpace.single a 1)
+  rw [quadForm_single] at this
+  linarith
+
+theorem quadForm_smul_matrix (t : ℝ) (H : Matrix (Fin d) (Fin d) ℝ) (v : EuclideanSpace ℝ (Fin d)) :
+    quadForm (t • H) v = t * quadForm H v := by
+  simp only [quadForm, Matrix.smul_apply, smul_eq_mul, mul_sum]
+  refine sum_congr rfl fun i _ => sum_congr rfl fun j _ => ?_
+  ring
+
+/-- `½ q_H(y - c)` is a quadratic function. -/
+theorem halfQuad_mem_clusterQuadratic [NeZero d] (H : Matrix (Fin d) (Fin d) ℝ)
+    (c : Fin d → ℤ) :
+    (fun x : latticeComponent d => halfQuad H c x.val) ∈ clusterQuadratic (latticeComponent d) := by
+  set C := latticeEuclideanEmbedding c
+  refine ⟨(inner ℝ C (polarVec H C) - quadForm H C) / 2, (-(1 / 2 : ℝ)) • polarVec H C,
+    (1 / 2 : ℝ) • H, fun x => ?_⟩
+  simp only [halfQuad]
+  have h1 := quadForm_eq_sub H (latticeEuclideanEmbedding x.val) C
+  rw [inner_sub_left] at h1
+  have hcomm : inner ℝ (polarVec H C) (latticeEuclideanEmbedding x.val) =
+      inner ℝ (latticeEuclideanEmbedding x.val) (polarVec H C) := real_inner_comm _ _
+  rw [quadForm_smul_matrix, real_inner_smul_left, hcomm]
+  linarith
+
+theorem latticeLaplacian_add (f g : (Fin d → ℤ) → ℝ) (x : Fin d → ℤ) :
+    latticeLaplacian (fun y => f y + g y) x = latticeLaplacian f x + latticeLaplacian g x := by
+  simp only [latticeLaplacian, ← sum_add_distrib]
+  refine sum_congr rfl fun i _ => ?_
+  ring
+
+theorem latticeLaplacian_neg (f : (Fin d → ℤ) → ℝ) (x : Fin d → ℤ) :
+    latticeLaplacian (fun y => -f y) x = -latticeLaplacian f x := by
+  simp only [latticeLaplacian, ← sum_neg_distrib]
+  refine sum_congr rfl fun i _ => ?_
+  ring
+
+theorem mem_latticeComponent_supp [NeZero d] (y : Fin d → ℤ) : y ∈ (latticeComponent d).supp := by
+  rw [latticeComponent_supp]; trivial
+
+/-- A function on the lattice component as a function on `ℤ^d`. -/
+def latticeExt [NeZero d] (v : latticeComponent d → ℝ) (y : Fin d → ℤ) : ℝ :=
+  v ⟨y, mem_latticeComponent_supp y⟩
+
+/-- The lattice harmonic quadratic functions, `Ā_2` on the lattice. -/
+def latticeHarmonicQuadratic (d : ℕ) [NeZero d] : AddSubgroup (latticeComponent d → ℝ) where
+  carrier := {v | v ∈ clusterQuadratic (latticeComponent d) ∧
+    ∀ y : Fin d → ℤ, latticeLaplacian (latticeExt v) y = 0}
+  add_mem' := by
+    rintro v w ⟨hv, hv'⟩ ⟨hw, hw'⟩
+    refine ⟨(clusterQuadratic _).add_mem hv hw, fun y => ?_⟩
+    have e : latticeExt (v + w) = fun y => latticeExt v y + latticeExt w y := rfl
+    rw [e, latticeLaplacian_add, hv' y, hw' y, add_zero]
+  zero_mem' := ⟨(clusterQuadratic _).zero_mem, fun y => by
+    simp [latticeExt, latticeLaplacian]⟩
+  neg_mem' := by
+    rintro v ⟨hv, hv'⟩
+    refine ⟨(clusterQuadratic _).neg_mem hv, fun y => ?_⟩
+    have e : latticeExt (-v) = fun y => -latticeExt v y := rfl
+    rw [e, latticeLaplacian_neg, hv' y, neg_zero]
+
+theorem latticeHarmonicQuadratic_le_clusterQuadratic [NeZero d] :
+    latticeHarmonicQuadratic d ≤ clusterQuadratic (latticeComponent d) := fun _ hv => hv.1
+
+theorem clusterAffine_le_latticeHarmonicQuadratic [NeZero d] :
+    clusterAffine (latticeComponent d) ≤ latticeHarmonicQuadratic d := by
+  rintro v ⟨a, p, hv⟩
+  refine ⟨clusterAffine_le_clusterQuadratic _ ⟨a, p, hv⟩, fun y => ?_⟩
+  have : latticeExt v = fun y => a + inner ℝ p (latticeEuclideanEmbedding y) := by
+    funext y; simp only [latticeExt, hv]
+  rw [this, latticeLaplacian_affine]
+
 end Rigidity.Proofs.Regularity
