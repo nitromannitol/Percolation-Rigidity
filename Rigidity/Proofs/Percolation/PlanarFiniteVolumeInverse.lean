@@ -33,10 +33,11 @@ theorem exists_planarAhomInvFinite_mulVec_planarAhomFinite {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ C : ℝ, 0 ≤ C ∧ ∃ N : ℕ, ∀ n, N ≤ n →
       (∀ q : Fin 2 → ℝ, planarAhomInvFinite p n *ᵥ (planarAhomFinite p n *ᵥ q) = q) ∧
+      (∀ q : Fin 2 → ℝ, planarAhomFinite p n *ᵥ (planarAhomInvFinite p n *ᵥ q) = q) ∧
       ∀ q : Fin 2 → ℝ, (q 0 ^ 2 + q 1 ^ 2) / 36 ≤ planarMuMean p n q ∧
         planarMuMean p n q ≤ C * (q 0 ^ 2 + q 1 ^ 2) := by
   obtain ⟨C, hC, N, hb⟩ := exists_planarMuMean_bounds hpc
-  refine ⟨C, hC, N, fun n hn => ⟨fun q => ?_, hb n hn⟩⟩
+  refine ⟨C, hC, N, fun n hn => ?_⟩
   have hdet : (planarAhomInvFinite p n).det ≠ 0 := by
     intro hdet
     obtain ⟨v, hv, hBv⟩ := Matrix.exists_mulVec_eq_zero_iff.2 hdet
@@ -50,8 +51,11 @@ theorem exists_planarAhomInvFinite_mulVec_planarAhomFinite {p : unitInterval}
       nlinarith [sq_nonneg (v 0), sq_nonneg (v 1)]
     · simp only [Fin.mk_one, Pi.zero_apply]
       nlinarith [sq_nonneg (v 0), sq_nonneg (v 1)]
-  rw [planarAhomFinite, Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.2 hdet),
-    Matrix.one_mulVec]
+  refine ⟨fun q => ?_, fun q => ?_, hb n hn⟩
+  · rw [planarAhomFinite, Matrix.mulVec_mulVec,
+      Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.2 hdet), Matrix.one_mulVec]
+  · rw [planarAhomFinite, Matrix.mulVec_mulVec,
+      Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.2 hdet), Matrix.one_mulVec]
 
 /-- `M_n(ā_{□_n} r) = (1/2) r · ā_{□_n} r` once `ā_{□_n}⁻¹ ā_{□_n} = I`. -/
 theorem planarMuMean_planarAhomFinite {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
