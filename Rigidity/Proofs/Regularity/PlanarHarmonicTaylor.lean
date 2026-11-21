@@ -13,7 +13,9 @@ Borel–Carathéodory theorem bounds `G = F - F(c)` by `4 M` on `B_{R/2}(c)`
 and the mean value inequality gives the first-order Taylor expansion of `f` at `c`:
 `|f(x) - f(c) - Re(q (x - c))| ≤ 128 M |x - c|² / R²` on `B_{R/4}(c)`
 (`abs_sub_taylor_le_of_harmonicOnNhd`), the interior `C^{1,1}` estimate of harmonic functions
-used for the excess decay of order one in the plane.
+used for the excess decay of order one in the plane. The Cauchy estimate for `G'''` gives the
+second-order expansion `|f(x) - f(c) - Re(q₁ (x - c)) - Re(q₂ (x - c)²)| ≤ 1536 M |x - c|³ / R³`
+(`abs_sub_taylor_two_le_of_harmonicOnNhd`), used for the excess decay of order two.
 -/
 
 open Complex Metric
