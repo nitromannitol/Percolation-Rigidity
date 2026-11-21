@@ -11,7 +11,8 @@ the variation along the row of `p` and the column of `q`, and also by the variat
 column of `p` and the row of `q`; the product of the two bounds sums to `L² (R + C)²`.
 -/
 
-open Finset
+open Finset LatticeProb.Percolation
+open scoped Classical
 
 namespace Rigidity.Percolation
 
@@ -165,5 +166,251 @@ theorem sum_sq_sub_mean_le_grid (L : ℕ) (hL : 0 < L) (F : ℕ × ℕ → ℝ) 
       ≤ (L : ℝ) ^ 2 * (∑ k ∈ range L, gridRowVar F L k + ∑ a ∈ range L, gridColVar F L a) ^ 2 :=
         hdouble
     _ = _ := by ring
+
+/-- For a locally finite graph and a vertex with at most `D` neighbours, the sum of the absolute
+increments at the vertex is at most `√(2D)` times the magnitude of the gradient. -/
+theorem sum_abs_adj_le_gradNormIn {d : ℕ} (G : SimpleGraph (Vertex d)) [G.LocallyFinite]
+    (S : Finset (Vertex d)) (f : Vertex d → ℝ) (x : Vertex d) {D : ℕ} (hdeg : G.degree x ≤ D) :
+    ∑ y ∈ S, (if G.Adj x y then |f x - f y| else 0) ≤ √(2 * D) * gradNormIn G S f x := by
+  have hV : ∑ y ∈ S, (if G.Adj x y then |f x - f y| else 0) =
+      ∑ y ∈ S.filter (G.Adj x), |f x - f y| := by
+    rw [Finset.sum_filter]
+  have hQ : (∑ y ∈ S, if G.Adj x y then (f x - f y) ^ 2 else 0) =
+      ∑ y ∈ S.filter (G.Adj x), |f x - f y| ^ 2 := by
+    rw [Finset.sum_filter]
+    refine Finset.sum_congr rfl fun y _ => ?_
+    split_ifs <;> simp [sq_abs]
+  have hT : ((S.filter (G.Adj x)).card : ℝ) ≤ D := by
+    have h1 : S.filter (G.Adj x) ⊆ G.neighborFinset x := fun y hy =>
+      (SimpleGraph.mem_neighborFinset _ _ _).2 (Finset.mem_filter.1 hy).2
+    exact_mod_cast ((Finset.card_le_card h1).trans
+      ((SimpleGraph.card_neighborFinset_eq_degree _ _).le.trans hdeg))
+  have hQ0 : 0 ≤ ∑ y ∈ S.filter (G.Adj x), |f x - f y| ^ 2 :=
+    Finset.sum_nonneg fun _ _ => sq_nonneg _
+  have hg : gradNormIn G S f x ^ 2 = (1 / 2) * ∑ y ∈ S.filter (G.Adj x), |f x - f y| ^ 2 := by
+    rw [gradNormIn, hQ, Real.sq_sqrt (by positivity)]
+  have hcs := sq_sum_le_card_mul_sum_sq (s := S.filter (G.Adj x)) (f := fun y => |f x - f y|)
+  have hnn : 0 ≤ ∑ y ∈ S.filter (G.Adj x), |f x - f y| :=
+    Finset.sum_nonneg fun _ _ => abs_nonneg _
+  have hrhs : 0 ≤ √(2 * D) * gradNormIn G S f x :=
+    mul_nonneg (Real.sqrt_nonneg _) (gradNormIn_nonneg _ _ _ _)
+  rw [hV]
+  refine (pow_le_pow_iff_left₀ hnn hrhs two_ne_zero).1 ?_
+  have hD : (√(2 * (D : ℝ))) ^ 2 = 2 * D := Real.sq_sqrt (by positivity)
+  calc (∑ y ∈ S.filter (G.Adj x), |f x - f y|) ^ 2
+      ≤ ((S.filter (G.Adj x)).card : ℝ) * ∑ y ∈ S.filter (G.Adj x), |f x - f y| ^ 2 := hcs
+    _ ≤ (D : ℝ) * ∑ y ∈ S.filter (G.Adj x), |f x - f y| ^ 2 := mul_le_mul_of_nonneg_right hT hQ0
+    _ = (√(2 * (D : ℝ)) * gradNormIn G S f x) ^ 2 := by
+        rw [mul_pow, hD, hg]
+        ring
+
+/-- The vertex of a lattice square at offsets `p` from its corner. -/
+def IntegerCube.gridPoint (B : IntegerCube 2) (p : ℕ × ℕ) : Vertex 2 :=
+  ![B.corner 0 + p.1, B.corner 1 + p.2]
+
+theorem IntegerCube.gridPoint_apply_zero (B : IntegerCube 2) (p : ℕ × ℕ) :
+    B.gridPoint p 0 = B.corner 0 + p.1 := rfl
+
+theorem IntegerCube.gridPoint_apply_one (B : IntegerCube 2) (p : ℕ × ℕ) :
+    B.gridPoint p 1 = B.corner 1 + p.2 := rfl
+
+theorem IntegerCube.mem_vertices_two {B : IntegerCube 2} {x : Vertex 2} :
+    x ∈ B.vertices ↔ (B.corner 0 ≤ x 0 ∧ x 0 < B.corner 0 + B.size) ∧
+      (B.corner 1 ≤ x 1 ∧ x 1 < B.corner 1 + B.size) := by
+  rw [IntegerCube.mem_vertices]
+  exact ⟨fun h => ⟨h 0, h 1⟩, fun h i => by fin_cases i; exacts [h.1, h.2]⟩
+
+theorem IntegerCube.gridPoint_mem {B : IntegerCube 2} {p : ℕ × ℕ}
+    (hp : p ∈ range B.size ×ˢ range B.size) : B.gridPoint p ∈ B.vertices := by
+  rw [Finset.mem_product, Finset.mem_range, Finset.mem_range] at hp
+  rw [IntegerCube.mem_vertices_two, B.gridPoint_apply_zero, B.gridPoint_apply_one]
+  omega
+
+/-- Sums over a lattice square are sums over the grid of offsets. -/
+theorem IntegerCube.sum_vertices_eq_sum_grid (B : IntegerCube 2) (g : Vertex 2 → ℝ) :
+    ∑ x ∈ B.vertices, g x = ∑ p ∈ range B.size ×ˢ range B.size, g (B.gridPoint p) := by
+  have hleft : ∀ x ∈ B.vertices,
+      B.gridPoint ((x 0 - B.corner 0).toNat, (x 1 - B.corner 1).toNat) = x := by
+    intro x hx
+    rw [IntegerCube.mem_vertices_two] at hx
+    funext i
+    fin_cases i
+    · show B.corner 0 + ((x 0 - B.corner 0).toNat : ℤ) = x 0
+      omega
+    · show B.corner 1 + ((x 1 - B.corner 1).toNat : ℤ) = x 1
+      omega
+  refine Finset.sum_nbij' (fun x => ((x 0 - B.corner 0).toNat, (x 1 - B.corner 1).toNat))
+    B.gridPoint ?_ ?_ hleft ?_ ?_
+  · intro x hx
+    rw [IntegerCube.mem_vertices_two] at hx
+    rw [Finset.mem_product, Finset.mem_range, Finset.mem_range]
+    omega
+  · intro p hp
+    exact IntegerCube.gridPoint_mem hp
+  · intro p _
+    simp only [B.gridPoint_apply_zero, B.gridPoint_apply_one, add_sub_cancel_left,
+      Int.toNat_natCast]
+  · intro x hx
+    rw [hleft x hx]
+
+theorem IntegerCube.gridPoint_add_unit_zero (B : IntegerCube 2) (p : ℕ × ℕ) :
+    B.gridPoint p + LatticeProb.unit (0 : Fin 2) = B.gridPoint (p.1 + 1, p.2) := by
+  funext i
+  fin_cases i
+  · show B.corner 0 + (p.1 : ℤ) + 1 = B.corner 0 + ((p.1 + 1 : ℕ) : ℤ)
+    push_cast
+    ring
+  · show B.corner 1 + (p.2 : ℤ) + 0 = B.corner 1 + (p.2 : ℤ)
+    ring
+
+theorem IntegerCube.gridPoint_add_unit_one (B : IntegerCube 2) (p : ℕ × ℕ) :
+    B.gridPoint p + LatticeProb.unit (1 : Fin 2) = B.gridPoint (p.1, p.2 + 1) := by
+  funext i
+  fin_cases i
+  · show B.corner 0 + (p.1 : ℤ) + 0 = B.corner 0 + (p.1 : ℤ)
+    ring
+  · show B.corner 1 + (p.2 : ℤ) + 1 = B.corner 1 + ((p.2 + 1 : ℕ) : ℤ)
+    push_cast
+    ring
+
+private theorem sum_range_ite_succ_lt (L : ℕ) (h : ℕ → ℝ) :
+    ∑ a ∈ range L, (if a + 1 < L then h a else 0) = ∑ a ∈ range (L - 1), h a := by
+  rw [← Finset.sum_filter]
+  congr 1
+  ext a
+  simp only [Finset.mem_filter, Finset.mem_range]
+  omega
+
+/-- **The planar lattice Sobolev inequality on a square**: for every function `f` on a lattice
+square `B`, `∑_{x ∈ B} (f x - (f)_B)² ≤ 4 (∑_{x ∈ B} |∇f|(x))²`, with `|∇f|(x)` the magnitude of
+the lattice gradient on `B`. -/
+theorem IntegerCube.latticeSobolevOn_two (B : IntegerCube 2) (hB : 0 < B.size) :
+    LatticeSobolevOn B.vertices 2 1 4 := by
+  intro f
+  have hcard : (B.vertices.card : ℝ) = ((range B.size ×ˢ range B.size).card : ℝ) := by
+    rw [IntegerCube.card_vertices_eq, Finset.card_product, Finset.card_range]
+    push_cast
+    ring
+  have hmean : (∑ y ∈ B.vertices, f y) / B.vertices.card =
+      (∑ q ∈ range B.size ×ˢ range B.size, f (B.gridPoint q)) /
+        (range B.size ×ˢ range B.size).card := by
+    rw [B.sum_vertices_eq_sum_grid f, hcard]
+  have hvar : ∑ x ∈ B.vertices, |f x - (∑ y ∈ B.vertices, f y) / B.vertices.card| ^ (2 : ℝ) =
+      ∑ p ∈ range B.size ×ˢ range B.size, (f (B.gridPoint p) -
+        (∑ q ∈ range B.size ×ˢ range B.size, f (B.gridPoint q)) /
+          (range B.size ×ˢ range B.size).card) ^ 2 := by
+    rw [hmean, B.sum_vertices_eq_sum_grid]
+    refine Finset.sum_congr rfl fun p _ => ?_
+    rw [Real.rpow_two, sq_abs]
+  -- the two forward increments at a vertex
+  have hE : ∀ x : Vertex 2,
+      ((if x + LatticeProb.unit (0 : Fin 2) ∈ B.vertices then
+          |f x - f (x + LatticeProb.unit (0 : Fin 2))| else 0) +
+        (if x + LatticeProb.unit (1 : Fin 2) ∈ B.vertices then
+          |f x - f (x + LatticeProb.unit (1 : Fin 2))| else 0)) ≤
+      ∑ y ∈ B.vertices, (if (nearestNeighborGraph 2).Adj x y then |f x - f y| else 0) := by
+    intro x
+    have hne : x + LatticeProb.unit (0 : Fin 2) ≠ x + LatticeProb.unit (1 : Fin 2) := by
+      intro h
+      have := congrFun h 0
+      simp [LatticeProb.unit] at this
+    have hadj0 : (nearestNeighborGraph 2).Adj x (x + LatticeProb.unit (0 : Fin 2)) :=
+      ⟨0, Or.inl rfl⟩
+    have hadj1 : (nearestNeighborGraph 2).Adj x (x + LatticeProb.unit (1 : Fin 2)) :=
+      ⟨1, Or.inl rfl⟩
+    calc ((if x + LatticeProb.unit (0 : Fin 2) ∈ B.vertices then
+            |f x - f (x + LatticeProb.unit (0 : Fin 2))| else 0) +
+          (if x + LatticeProb.unit (1 : Fin 2) ∈ B.vertices then
+            |f x - f (x + LatticeProb.unit (1 : Fin 2))| else 0))
+        = ∑ y ∈ ({x + LatticeProb.unit (0 : Fin 2), x + LatticeProb.unit (1 : Fin 2)} :
+            Finset (Vertex 2)), (if y ∈ B.vertices then
+              (if (nearestNeighborGraph 2).Adj x y then |f x - f y| else 0) else 0) := by
+          rw [Finset.sum_pair hne, if_pos hadj0, if_pos hadj1]
+      _ = ∑ y ∈ ({x + LatticeProb.unit (0 : Fin 2), x + LatticeProb.unit (1 : Fin 2)} :
+            Finset (Vertex 2)).filter (· ∈ B.vertices),
+              (if (nearestNeighborGraph 2).Adj x y then |f x - f y| else 0) :=
+          (Finset.sum_filter _ _).symm
+      _ ≤ _ := Finset.sum_le_sum_of_subset_of_nonneg (fun y hy => (Finset.mem_filter.1 hy).2)
+          fun _ _ _ => by split_ifs <;> positivity
+  -- the row and column variations are the sums of the forward increments
+  have hgrid : ∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k +
+      ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a =
+      ∑ p ∈ range B.size ×ˢ range B.size,
+        ((if B.gridPoint p + LatticeProb.unit (0 : Fin 2) ∈ B.vertices then
+            |f (B.gridPoint p) - f (B.gridPoint p + LatticeProb.unit (0 : Fin 2))| else 0) +
+          (if B.gridPoint p + LatticeProb.unit (1 : Fin 2) ∈ B.vertices then
+            |f (B.gridPoint p) - f (B.gridPoint p + LatticeProb.unit (1 : Fin 2))| else 0)) := by
+    have hmem0 : ∀ p ∈ range B.size ×ˢ range B.size,
+        (B.gridPoint p + LatticeProb.unit (0 : Fin 2) ∈ B.vertices ↔ p.1 + 1 < B.size) := by
+      intro p hp
+      rw [Finset.mem_product, Finset.mem_range, Finset.mem_range] at hp
+      rw [B.gridPoint_add_unit_zero, IntegerCube.mem_vertices_two, B.gridPoint_apply_zero,
+        B.gridPoint_apply_one]
+      push_cast
+      omega
+    have hmem1 : ∀ p ∈ range B.size ×ˢ range B.size,
+        (B.gridPoint p + LatticeProb.unit (1 : Fin 2) ∈ B.vertices ↔ p.2 + 1 < B.size) := by
+      intro p hp
+      rw [Finset.mem_product, Finset.mem_range, Finset.mem_range] at hp
+      rw [B.gridPoint_add_unit_one, IntegerCube.mem_vertices_two, B.gridPoint_apply_zero,
+        B.gridPoint_apply_one]
+      push_cast
+      omega
+    have hterm : ∀ p ∈ range B.size ×ˢ range B.size,
+        ((if B.gridPoint p + LatticeProb.unit (0 : Fin 2) ∈ B.vertices then
+            |f (B.gridPoint p) - f (B.gridPoint p + LatticeProb.unit (0 : Fin 2))| else 0) +
+          (if B.gridPoint p + LatticeProb.unit (1 : Fin 2) ∈ B.vertices then
+            |f (B.gridPoint p) - f (B.gridPoint p + LatticeProb.unit (1 : Fin 2))| else 0)) =
+        (if p.1 + 1 < B.size then
+            |f (B.gridPoint (p.1 + 1, p.2)) - f (B.gridPoint p)| else 0) +
+          (if p.2 + 1 < B.size then
+            |f (B.gridPoint (p.1, p.2 + 1)) - f (B.gridPoint p)| else 0) := by
+      intro p hp
+      rw [if_congr (hmem0 p hp) rfl rfl, if_congr (hmem1 p hp) rfl rfl,
+        B.gridPoint_add_unit_zero, B.gridPoint_add_unit_one, abs_sub_comm (f (B.gridPoint p)),
+        abs_sub_comm (f (B.gridPoint p))]
+    rw [Finset.sum_congr rfl hterm, Finset.sum_add_distrib, Finset.sum_product,
+      Finset.sum_product, Finset.sum_comm]
+    dsimp only
+    congr 1
+    · refine Finset.sum_congr rfl fun k _ => ?_
+      rw [sum_range_ite_succ_lt B.size (fun a => |f (B.gridPoint (a + 1, k)) -
+        f (B.gridPoint (a, k))|)]
+      rfl
+    · refine Finset.sum_congr rfl fun a _ => ?_
+      rw [sum_range_ite_succ_lt B.size (fun b => |f (B.gridPoint (a, b + 1)) -
+        f (B.gridPoint (a, b))|)]
+      rfl
+  have hgrad : ∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k +
+      ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a ≤
+      √(2 * ((2 * 2 : ℕ) : ℝ)) *
+        ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x := by
+    rw [hgrid, ← B.sum_vertices_eq_sum_grid (fun x =>
+      (if x + LatticeProb.unit (0 : Fin 2) ∈ B.vertices then
+          |f x - f (x + LatticeProb.unit (0 : Fin 2))| else 0) +
+        (if x + LatticeProb.unit (1 : Fin 2) ∈ B.vertices then
+          |f x - f (x + LatticeProb.unit (1 : Fin 2))| else 0)), Finset.mul_sum]
+    refine Finset.sum_le_sum fun x _ => (hE x).trans ?_
+    exact sum_abs_adj_le_gradNormIn _ _ _ _ (LatticeProb.Graph.Zd.degree_eq x).le
+  have hX0 : 0 ≤ ∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k +
+      ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a :=
+    add_nonneg (Finset.sum_nonneg fun _ _ => gridRowVar_nonneg _ _ _)
+      (Finset.sum_nonneg fun _ _ => gridColVar_nonneg _ _ _)
+  have hY0 : 0 ≤ ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x :=
+    Finset.sum_nonneg fun _ _ => gradNormIn_nonneg _ _ _ _
+  rw [hvar]
+  simp only [Real.rpow_one, div_one, Real.rpow_two]
+  refine (sum_sq_sub_mean_le_grid B.size hB (fun p => f (B.gridPoint p))).trans ?_
+  have h8 : (√(2 * ((2 * 2 : ℕ) : ℝ))) ^ 2 = 8 := by
+    rw [Real.sq_sqrt (by positivity)]
+    norm_num
+  calc (1 / 2) * (∑ k ∈ range B.size, gridRowVar (fun p => f (B.gridPoint p)) B.size k +
+        ∑ a ∈ range B.size, gridColVar (fun p => f (B.gridPoint p)) B.size a) ^ 2
+      ≤ (1 / 2) * (√(2 * ((2 * 2 : ℕ) : ℝ)) *
+          ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x) ^ 2 :=
+        mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hX0 hgrad 2) (by norm_num)
+    _ = 4 * (∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph 2) B.vertices f x) ^ 2 := by
+        rw [mul_pow, h8]
+        ring
 
 end Rigidity.Percolation
