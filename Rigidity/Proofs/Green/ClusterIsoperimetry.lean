@@ -6,18 +6,20 @@ import Rigidity.External.PlanarInputs
 /-!
 # Green columns of the infinite cluster from isoperimetry in large cubes
 
-`ClusterIsoperimetry d p ε` says that, for each fixed pole `y`, almost surely there are `κ > 0`
+`ClusterIsoperimetry d p ε τ` says that, for each fixed pole `y`, almost surely there are `κ > 0`
 and `R₀` such that for every `R ≥ R₀`, every finite set `A` of vertices of the infinite cluster
-inside the cube `y + Q_R` with at least `R^ε` vertices has at least `κ |A|^{(d-1)/d}` boundary
-edges in the cluster. This is the isoperimetric inequality of Benjamini-Mossel and
-Mathieu-Remy for the supercritical cluster, required only for sets of polynomial size `R^ε`
-(they prove it above a power of `log R`).
+inside the cube `y + Q_R` with at least `R^ε` vertices has at least `κ R^{-τ} |A|^{(d-1)/d}`
+boundary edges in the cluster. For `τ = 0` this is the isoperimetric inequality of
+Benjamini-Mossel and Mathieu-Remy for the supercritical cluster, required only for sets of
+polynomial size `R^ε` (they prove it above a power of `log R`); the polynomial loss `R^{-τ}` is
+what a crude coarse graining gives.
 
 A graph ball of radius `R` in the cluster lies in the cube `y + Q_R`, so the discrete Cheeger
 inequality (`Cheeger.lean`) gives the Faber-Krahn inequality on the balls with constant
-`a₀ R^{-2ε}`, and for `d ≥ 3` and `(d/2)(1 - 2ε) > 1` (for instance `ε ≤ 1/12`) the cluster Green
-columns exist and are unique (`ClusterFaberKrahn.lean`). Together with the planar statement this
-gives the Green-column input `LatticeProb.External.SupercriticalBondGreenColumnExistence`
+`a₀ R^{-2ε-2τ}`, and for `d ≥ 3` and `(d/2)(1 - 2ε - 2τ) > 1` (for instance `ε + τ ≤ 1/12`) the
+cluster Green columns exist and are unique (`ClusterFaberKrahn.lean`). Together with the planar
+statement this gives the Green-column input
+`LatticeProb.External.SupercriticalBondGreenColumnExistence`
 (`supercriticalBondGreenColumnExistence_of_isoperimetry`).
 -/
 
@@ -28,14 +30,15 @@ namespace Rigidity.Green
 
 variable {d : ℕ}
 
-/-- Almost surely, for all large `R`, the isoperimetric inequality of dimension `d` holds for the
-sets of at least `R^ε` vertices of the infinite cluster inside the cube `y + Q_R`. -/
-def ClusterIsoperimetry (d : ℕ) [NeZero d] (p : unitInterval) (ε : ℝ) : Prop :=
+/-- Almost surely, for all large `R`, the isoperimetric inequality of dimension `d` with constant
+`κ R^{-τ}` holds for the sets of at least `R^ε` vertices of the infinite cluster inside the cube
+`y + Q_R`. -/
+def ClusterIsoperimetry (d : ℕ) [NeZero d] (p : unitInterval) (ε τ : ℝ) : Prop :=
   ∀ y : Vertex d, ∀ᵐ ω ∂latticeBondLaw d p,
     ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ _hy : y ∈ (uniqueInfiniteComponent h).supp,
       ∃ κ : ℝ, 0 < κ ∧ ∃ R₀ : ℕ, ∀ R : ℕ, R₀ ≤ R →
         IsoperimetricOn (componentGraph (uniqueInfiniteComponent h))
-          {v | v.val ∈ Rigidity.External.cubeAt y R} d κ ((R : ℝ) ^ ε)
+          {v | v.val ∈ Rigidity.External.cubeAt y R} d (κ * (R : ℝ) ^ (-τ)) ((R : ℝ) ^ ε)
 
 /-- A component step changes every coordinate by at most one. -/
 theorem abs_sub_le_one_of_componentGraph_adj {ω : Configuration d} {C : OpenComponent ω}
@@ -73,10 +76,10 @@ theorem mem_cubeAt_of_dist_le {ω : Configuration d} (C : OpenComponent ω) {y v
   exact this.trans hR
 
 /-- Cube isoperimetry gives Faber-Krahn inequalities on the graph balls with constant
-`a₀ R^{-2ε}`. -/
-theorem clusterFaberKrahn_of_clusterIsoperimetry [NeZero d] {p : unitInterval} {ε : ℝ}
-    (hd : 1 ≤ d) (hε : 0 ≤ ε) (hiso : ClusterIsoperimetry d p ε) :
-    ClusterFaberKrahn d p d (2 * ε) := by
+`a₀ R^{-2ε-2τ}`. -/
+theorem clusterFaberKrahn_of_clusterIsoperimetry [NeZero d] {p : unitInterval} {ε τ : ℝ}
+    (hd : 1 ≤ d) (hε : 0 ≤ ε) (hτ : 0 ≤ τ) (hiso : ClusterIsoperimetry d p ε τ) :
+    ClusterFaberKrahn d p d (2 * ε + 2 * τ) := by
   intro y
   filter_upwards [hiso y] with ω hω
   intro h hy
@@ -84,39 +87,54 @@ theorem clusterFaberKrahn_of_clusterIsoperimetry [NeZero d] {p : unitInterval} {
   set C := uniqueInfiniteComponent h
   letI : Infinite C := Set.infinite_coe_iff.mpr (uniqueInfiniteComponent_infinite h)
   have hG := C.connected_toSimpleGraph
-  set κ' := min κ 1 with hκ'
-  have hκ'pos : 0 < κ' := lt_min hκ one_pos
+  set κ₁ := min κ 1 with hκ₁
+  have hκ₁pos : 0 < κ₁ := lt_min hκ one_pos
   have hdpos : (0 : ℝ) < 2 * d := by
     have : (1 : ℝ) ≤ d := by exact_mod_cast hd
     linarith
-  refine ⟨κ' ^ 2 / (4 * (2 * d : ℕ)), by positivity, max R₀ 1, fun R hRR => ?_⟩
+  refine ⟨κ₁ ^ 2 / (4 * (2 * d : ℕ)), by positivity, max R₀ 1, fun R hRR => ?_⟩
   have hR1 : (1 : ℝ) ≤ R := by exact_mod_cast le_of_max_le_right hRR
   have hRpos : (0 : ℝ) < R := by linarith
   have hs₀ : (1 : ℝ) ≤ (R : ℝ) ^ ε := Real.one_le_rpow hR1 hε
+  have hRτ : (R : ℝ) ^ (-τ) ≤ 1 := Real.rpow_le_one_of_one_le_of_nonpos hR1 (by linarith)
+  have hRτpos : 0 < (R : ℝ) ^ (-τ) := Real.rpow_pos_of_pos hRpos _
+  set κ' := κ₁ * (R : ℝ) ^ (-τ) with hκ'
+  have hκ'pos : 0 < κ' := mul_pos hκ₁pos hRτpos
+  have hκ'le : κ' ≤ 1 := by
+    have := mul_le_mul (min_le_right κ 1) hRτ hRτpos.le zero_le_one
+    simpa [hκ'] using this
   have hisoR : IsoperimetricOn (componentGraph C) {v | (componentGraph C).dist ⟨y, hy⟩ v ≤ R}
       d κ' ((R : ℝ) ^ ε) := by
     intro U hU hs
     have hU' : (↑U : Set C) ⊆ {v | v.val ∈ Rigidity.External.cubeAt y R} :=
       fun v hv => mem_cubeAt_of_dist_le C (hU hv)
     have h1 := hR R (le_of_max_le_left hRR) U hU' hs
-    have h2 : κ' * (U.card : ℝ) ^ (((d : ℝ) - 1) / d) ≤ κ * (U.card : ℝ) ^ (((d : ℝ) - 1) / d) :=
-      mul_le_mul_of_nonneg_right (min_le_left _ _) (Real.rpow_nonneg (Nat.cast_nonneg _) _)
+    have h2 : κ' * (U.card : ℝ) ^ (((d : ℝ) - 1) / d) ≤
+        κ * (R : ℝ) ^ (-τ) * (U.card : ℝ) ^ (((d : ℝ) - 1) / d) :=
+      mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (min_le_left _ _) hRτpos.le)
+        (Real.rpow_nonneg (Nat.cast_nonneg _) _)
     exact h2.trans h1
   have hFK := faberKrahnOn_of_isoperimetricOn hG (componentGraph_degree_le C)
-    (by exact_mod_cast (by omega : 0 < d)) hκ'pos (min_le_right _ _) hs₀ hisoR
+    (by exact_mod_cast (by omega : 0 < d)) hκ'pos hκ'le hs₀ hisoR
   have hconst : κ' ^ 2 / (4 * ((2 * d : ℕ) : ℝ) * ((R : ℝ) ^ ε) ^ 2) =
-      κ' ^ 2 / (4 * (2 * d : ℕ)) * (R : ℝ) ^ (-(2 * ε)) := by
+      κ₁ ^ 2 / (4 * (2 * d : ℕ)) * (R : ℝ) ^ (-(2 * ε + 2 * τ)) := by
     have hpow : ((R : ℝ) ^ ε) ^ 2 = (R : ℝ) ^ (2 * ε) := by
       rw [← Real.rpow_natCast, ← Real.rpow_mul hRpos.le]; ring_nf
-    rw [hpow, Real.rpow_neg hRpos.le]
+    have hpowτ : ((R : ℝ) ^ (-τ)) ^ 2 = (R : ℝ) ^ (-(2 * τ)) := by
+      rw [← Real.rpow_natCast, ← Real.rpow_mul hRpos.le]; ring_nf
+    have hsplit : (R : ℝ) ^ (-(2 * ε + 2 * τ)) = (R : ℝ) ^ (-(2 * τ)) / (R : ℝ) ^ (2 * ε) := by
+      rw [show -(2 * ε + 2 * τ) = -(2 * τ) - 2 * ε by ring, Real.rpow_sub hRpos]
+    rw [hpow, hκ', mul_pow, hpowτ, hsplit]
+    have : 0 < (R : ℝ) ^ (2 * ε) := Real.rpow_pos_of_pos hRpos _
     field_simp
   rw [hconst] at hFK
   exact hFK
 
 /-- **Green columns in dimension `d ≥ 3` from cluster isoperimetry.** -/
 theorem greenColumnExistence_of_clusterIsoperimetry [NeZero d] (hd : 3 ≤ d) (hd2 : 2 ≤ d)
-    (p : unitInterval) {ε : ℝ} (hε : 0 ≤ ε) (hγ : 1 < (d : ℝ) / 2 * (1 - 2 * ε))
-    (hiso : ClusterIsoperimetry d p ε) (y : Vertex d) :
+    (p : unitInterval) {ε τ : ℝ} (hε : 0 ≤ ε) (hτ : 0 ≤ τ)
+    (hγ : 1 < (d : ℝ) / 2 * (1 - (2 * ε + 2 * τ)))
+    (hiso : ClusterIsoperimetry d p ε τ) (y : Vertex d) :
     ∀ᵐ ω ∂latticeBondLaw d p,
       ∀ h : HasUniqueInfiniteOpenComponent ω,
         ∀ hy : y ∈ (uniqueInfiniteComponent h).supp,
@@ -124,28 +142,28 @@ theorem greenColumnExistence_of_clusterIsoperimetry [NeZero d] (hd : 3 ≤ d) (h
             IsGreenColumn d hd2 (uniqueInfiniteComponent h) ⟨y, hy⟩ g :=
   greenColumnExistence_of_clusterFaberKrahn hd hd2 p
     (by exact_mod_cast (by omega : 0 < d)) hγ
-    (clusterFaberKrahn_of_clusterIsoperimetry (by omega) hε hiso) y
+    (clusterFaberKrahn_of_clusterIsoperimetry (by omega) hε hτ hiso) y
 
-/-- With `ε ≤ 1/12`, the exponent condition holds in every dimension `d ≥ 3`. -/
-theorem one_lt_exponent_of_le {ε : ℝ} (hε : ε ≤ 1 / 12) (hd : 3 ≤ d) :
-    1 < (d : ℝ) / 2 * (1 - 2 * ε) := by
+/-- With `ε + τ ≤ 1/12`, the exponent condition holds in every dimension `d ≥ 3`. -/
+theorem one_lt_exponent_of_le {ε τ : ℝ} (hε : ε + τ ≤ 1 / 12) (hd : 3 ≤ d) :
+    1 < (d : ℝ) / 2 * (1 - (2 * ε + 2 * τ)) := by
   have : (3 : ℝ) ≤ d := by exact_mod_cast hd
   nlinarith
 
 /-- **The Green-column input** from the planar statement and cluster isoperimetry in every
-dimension `d ≥ 3` for some exponent `ε ≤ 1/12`. -/
+dimension `d ≥ 3` for some exponents `ε, τ ≥ 0` with `ε + τ ≤ 1/12`. -/
 theorem supercriticalBondGreenColumnExistence_of_isoperimetry
     (hTwo : Rigidity.External.SupercriticalBondGreenColumnExistenceTwo)
     (hiso : ∀ (d : ℕ) [NeZero d], 3 ≤ d → ∀ p : unitInterval,
       criticalProbability d < (p : ℝ) → (p : ℝ) < 1 →
-        ∃ ε : ℝ, 0 ≤ ε ∧ ε ≤ 1 / 12 ∧ ClusterIsoperimetry d p ε) :
+        ∃ ε τ : ℝ, 0 ≤ ε ∧ 0 ≤ τ ∧ ε + τ ≤ 1 / 12 ∧ ClusterIsoperimetry d p ε τ) :
     LatticeProb.External.SupercriticalBondGreenColumnExistence := by
   intro d _ hd p hp hp1 y
   rcases Nat.lt_or_ge d 3 with hlt | h3
   · obtain rfl : d = 2 := by omega
     exact hTwo p hp hp1 y
-  · obtain ⟨ε, hε0, hε, hI⟩ := hiso d h3 p hp hp1
-    exact greenColumnExistence_of_clusterIsoperimetry h3 hd p hε0 (one_lt_exponent_of_le hε h3)
-      hI y
+  · obtain ⟨ε, τ, hε0, hτ0, hε, hI⟩ := hiso d h3 p hp hp1
+    exact greenColumnExistence_of_clusterIsoperimetry h3 hd p hε0 hτ0
+      (one_lt_exponent_of_le hε h3) hI y
 
 end Rigidity.Green
