@@ -21,14 +21,16 @@ open Finset LatticeProb LatticeProb.Percolation Rigidity.External
 variable {d : ℕ}
 
 theorem latticeEuclideanEmbedding_add (y v : Fin d → ℤ) :
-    latticeEuclideanEmbedding (y + v) = latticeEuclideanEmbedding y + latticeEuclideanEmbedding v := by
+    latticeEuclideanEmbedding (y + v) =
+      latticeEuclideanEmbedding y + latticeEuclideanEmbedding v := by
   ext i
   change ((y + v) i : ℝ) = (y i : ℝ) + (v i : ℝ)
   push_cast [Pi.add_apply]
   rfl
 
 theorem latticeEuclideanEmbedding_sub (y v : Fin d → ℤ) :
-    latticeEuclideanEmbedding (y - v) = latticeEuclideanEmbedding y - latticeEuclideanEmbedding v := by
+    latticeEuclideanEmbedding (y - v) =
+      latticeEuclideanEmbedding y - latticeEuclideanEmbedding v := by
   ext i
   change ((y - v) i : ℝ) = (y i : ℝ) - (v i : ℝ)
   push_cast [Pi.sub_apply]
@@ -101,5 +103,124 @@ theorem abs_sub_le_floor_of_mem_ball {ω : Configuration d} {C : OpenComponent �
     rw [h4]; exact h2
   have h5 : (|x.val i - z i|).toNat ≤ ⌊s⌋₊ := Nat.le_floor h3.le
   omega
+
+/-- The coefficient of `sq_fwd_fwd_le` at the scale `m`. -/
+noncomputable def secondDiffCoeff (d m : ℕ) : ℝ :=
+  4 ^ d * (64 * d) ^ d / ((m : ℝ) + 1) ^ d *
+    (16 * d / ((4 ^ d * (2 * m) : ℕ) : ℝ) ^ 2 * (16 * d / ((2 * (4 ^ d * (2 * m)) + 2 : ℕ) : ℝ) ^ 2))
+
+theorem secondDiffCoeff_nonneg (d m : ℕ) : 0 ≤ secondDiffCoeff d m := by
+  unfold secondDiffCoeff; positivity
+
+/-- The lattice harmonic functions on `B_r(z)`, restricted to the lattice. -/
+def latticeHarmonicClass [NeZero d] (z : Vertex d) (r : ℝ) : Set (latticeComponent d → ℝ) :=
+  {v | ∃ F : (Fin d → ℤ) → ℝ, (∀ x, v x = F x.val) ∧
+    ∀ y : Fin d → ℤ, dist (latticeEuclideanEmbedding y) (latticeEuclideanEmbedding z) < r →
+      latticeLaplacian F y = 0}
+
+/-- **Excess decay below the interior scale.** -/
+theorem ballExcess_le_of_latticeHarmonic [NeZero d] (z : Vertex d) {r s : ℝ} {m : ℕ}
+    (hm : 0 < m) (hbox : Real.sqrt d * ((4 * (4 ^ d * (2 * m)) + 6 : ℕ) : ℝ) < r)
+    (hsm : s ≤ m) (hs0 : 0 ≤ s) {v : latticeComponent d → ℝ}
+    (hv : v ∈ latticeHarmonicClass z r) {w : latticeComponent d → ℝ}
+    (hw : w ∈ clusterAffine (latticeComponent d)) :
+    ballExcess (componentBallSeminorm (latticeComponent d) z) (clusterAffine (latticeComponent d))
+        s v ≤
+      d * (d + 1) * (2 * s) ^ 2 * Real.sqrt (secondDiffCoeff d m *
+        (((componentEuclideanBall (latticeComponent d) z r).card : ℝ) *
+          componentBallL2 (latticeComponent d) z r (v - w) ^ 2)) := by
+  classical
+  obtain ⟨F, hvF, hF⟩ := hv
+  obtain ⟨a, p, hwap⟩ := hw
+  set W : (Fin d → ℤ) → ℝ := fun y => a + inner ℝ p (latticeEuclideanEmbedding y) with hW
+  set f : (Fin d → ℤ) → ℝ := fun y => F y - W y with hfdef
+  set ρ := 4 ^ d * (2 * m) with hρ
+  have hsd : 0 ≤ Real.sqrt d := Real.sqrt_nonneg _
+  -- `f` is harmonic on `Q_{4ρ+4}(z)`
+  have hf : ∀ x ∈ supBox z (4 * ρ + 4), latticeLaplacian f x = 0 := by
+    intro x hx
+    rw [hfdef, latticeLaplacian_sub, latticeLaplacian_affine, sub_zero]
+    apply hF
+    refine (dist_le_of_mem_supBox hx).trans_lt (lt_of_le_of_lt ?_ hbox)
+    apply mul_le_mul_of_nonneg_left _ hsd
+    exact_mod_cast (by omega : 4 * ρ + 4 ≤ 4 * ρ + 6)
+  set n := ⌊s⌋₊ with hn
+  have hnm : n ≤ m := Nat.floor_le_of_le hsm
+  have hns : (n : ℝ) ≤ s := Nat.floor_le hs0
+  set M := Real.sqrt (secondDiffCoeff d m * ∑ y ∈ supBox z (4 * ρ + 6), f y ^ 2) with hMdef
+  have hM0 : 0 ≤ M := Real.sqrt_nonneg _
+  set c : Fin d → ℤ := fun i => z i - n with hc
+  -- the second differences on `Q_n(z)`
+  have hM : ∀ y : Fin d → ℤ, y ∈ supBox z n → ∀ a b, |fwd a (fwd b f) y| ≤ M := by
+    intro y hy a b
+    apply Real.abs_le_sqrt
+    have hy' : y ∈ supBox z m := by
+      rw [mem_supBox_iff_supDist_le] at hy ⊢; omega
+    have := sq_fwd_fwd_le f z hm (by rw [← hρ]; exact hf) a b hy'
+    rw [secondDiffCoeff]
+    have e : 2 * (2 * ρ + 2) + 2 = 4 * ρ + 6 := by ring
+    rw [← hρ, e] at this
+    calc fwd a (fwd b f) y ^ 2 ≤ _ := this
+      _ = _ := by ring
+  -- the affine Taylor polynomial at the corner `c`
+  set q : EuclideanSpace ℝ (Fin d) := WithLp.toLp 2 fun i => fwd i f c with hq
+  set α := f c - ∑ i, (c i : ℝ) * fwd i f c with hα
+  have hTaff : (fun x : latticeComponent d => α + inner ℝ q (latticeEuclideanEmbedding x.val)) ∈
+      clusterAffine (latticeComponent d) := ⟨α, q, fun _ => rfl⟩
+  have hsum_aff := (clusterAffine (latticeComponent d)).add_mem ⟨a, p, hwap⟩ hTaff
+  refine (ballExcess_le _ _ hsum_aff).trans ?_
+  rw [componentBallSeminorm_apply]
+  have hbound : 0 ≤ d * (d + 1) * (2 * (n : ℝ)) ^ 2 * M := by positivity
+  refine (componentBallL2_le_of_abs_le (latticeComponent d) z s hbound ?_).trans ?_
+  · intro x hx
+    have hxz := abs_sub_le_floor_of_mem_ball hx
+    have hcx : ∀ i, c i ≤ x.val i := fun i => by
+      have := abs_le.1 (hxz i); simp only [hc]; rw [← hn] at this; omega
+    have hs2 : ∀ i, x.val i - c i ≤ (2 * n : ℕ) := fun i => by
+      have := abs_le.1 (hxz i); simp only [hc]; rw [← hn] at this; push_cast; omega
+    have htay := abs_sub_taylor_le f hcx hs2 hM0 (fun y hy a b => hM y (by
+      rw [mem_supBox_iff_supDist_le]
+      simp only [supDist, Finset.sup_le_iff, mem_univ, true_implies]
+      intro i
+      have h1 := hy i
+      have h2 := abs_le.1 (hxz i)
+      simp only [hc] at h1
+      rw [← hn] at h2
+      omega) a b)
+    have hinner : inner ℝ q (latticeEuclideanEmbedding x.val) =
+        ∑ i, (x.val i : ℝ) * fwd i f c := by
+      rw [inner_eq_sum]
+      exact sum_congr rfl fun i _ => mul_comm _ _
+    have hsplit : ∑ i, ((x.val i - c i : ℤ) : ℝ) * fwd i f c =
+        ∑ i, (x.val i : ℝ) * fwd i f c - ∑ i, (c i : ℝ) * fwd i f c := by
+      rw [← sum_sub_distrib]
+      exact sum_congr rfl fun i _ => by push_cast; ring
+    have hval : (v - (w + fun x : latticeComponent d =>
+        α + inner ℝ q (latticeEuclideanEmbedding x.val))) x =
+        f x.val - f c - ∑ i, ((x.val i - c i : ℤ) : ℝ) * fwd i f c := by
+      rw [Pi.sub_apply, Pi.add_apply, hvF, hwap, hinner, hsplit, hα]
+      simp only [hfdef, hW]
+      ring
+    have e4 : (2 * n : ℕ) = 2 * n := rfl
+    rw [hval]
+    calc |f x.val - f c - ∑ i, ((x.val i - c i : ℤ) : ℝ) * fwd i f c|
+        ≤ d * (d + 1) * ((2 * n : ℕ) : ℝ) ^ 2 * M := htay
+      _ = d * (d + 1) * (2 * (n : ℝ)) ^ 2 * M := by push_cast; ring
+  · -- compare with the norm on `B_r`
+    have h1 : (2 * (n : ℝ)) ^ 2 ≤ (2 * s) ^ 2 :=
+      pow_le_pow_left₀ (by positivity) (by linarith) 2
+    have h2 : M ≤ Real.sqrt (secondDiffCoeff d m *
+        (((componentEuclideanBall (latticeComponent d) z r).card : ℝ) *
+          componentBallL2 (latticeComponent d) z r (v - w) ^ 2)) := by
+      apply Real.sqrt_le_sqrt
+      apply mul_le_mul_of_nonneg_left _ (secondDiffCoeff_nonneg d m)
+      rw [← sum_sq_eq_card_mul_componentBallL2_sq]
+      have hball := sum_sq_supBox_le_ball z (L := 4 * ρ + 6) hbox f
+      refine hball.trans (le_of_eq (sum_congr rfl fun x _ => ?_))
+      simp only [Pi.sub_apply, hvF, hwap, hfdef, hW]
+    have hd0 : (0 : ℝ) ≤ d * (d + 1) := by positivity
+    calc d * (d + 1) * (2 * (n : ℝ)) ^ 2 * M ≤ d * (d + 1) * (2 * s) ^ 2 * M :=
+          mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left h1 hd0) hM0
+      _ ≤ _ := mul_le_mul_of_nonneg_left h2 (by positivity)
 
 end Rigidity.Proofs.Regularity
