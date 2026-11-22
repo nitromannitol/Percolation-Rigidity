@@ -11,7 +11,7 @@ origin:
 
 * `clusterHarmonicQuadratic C`: the restrictions to `C` of the harmonic quadratic polynomials
   `a + ⟪p, x⟫ + q_M(x)`, `tr M = 0`. For bond percolation the homogenized matrix is a multiple of
-  the identity (Armstrong–Dario, arXiv:1609.09431v2, p. 3 and §5), so these are the
+  the identity (Armstrong–Dario, arXiv:1609.09431v2, §1.1 and §5), so these are the
   `ā`-harmonic polynomials `Ā_2` of degree at most two;
 * the affine functions `clusterAffineMap C (a, p) = a + ⟪p, x⟫`, the quadratic parts
   `clusterQuadMap C M = q_M` with `tr M = 0`, and the lift

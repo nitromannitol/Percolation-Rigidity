@@ -14,7 +14,7 @@ are `s, δ > 0`, a random scale `𝒳 ≤ O_s(C)` and, for each `k`, a constant 
   C r^{-δ} (r / R) |B_R|^{-1/2} ‖u‖_{L²(𝒞_∞ ∩ B_R)}`.
 `ArmstrongDarioMesoscopicDegreeTwo` is this statement at `k = 2` for bond percolation, at the
 origin, with `Ā_2` the harmonic quadratic polynomials (`clusterHarmonicQuadratic`; the homogenized
-matrix is `σ² I / 2`, p. 3 of the source) and `|B_r| = r^d` (`clusterBallVolumeL2`); the Lebesgue
+matrix is `σ² I / 2`, §1.1 of the source) and `|B_r| = r^d` (`clusterBallVolumeL2`); the Lebesgue
 measure `ω_d r^d` gives the same statement, the factor `ω_d^{-1/2}` appearing on both sides.
 
 `armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo` proves Theorem 2 (iii) at `k = 1`,
