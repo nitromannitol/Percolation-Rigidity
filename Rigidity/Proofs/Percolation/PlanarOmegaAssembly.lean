@@ -453,9 +453,9 @@ theorem planarOmega_integral_le {p : unitInterval} {n : ℕ} (hn : 1 ≤ n) (ξ 
           clusterExtend ω ⟨n + 1, 0⟩
             (planarNuMaximizer ω ⟨n + 1, 0⟩ ξ - planarMuMinimizer ω ⟨n + 1, 0⟩ q)
             (planarCoarseAnchor ω x)) ^ 2) ≤ H ω)
-    (hΦu : ∀ ω, planarFlatnessError ⟨n + 1, 0⟩
+    (hΦu : ∀ᵐ ω ∂(latticeBondLaw 2 p), planarFlatnessError ⟨n + 1, 0⟩
       (coarsen ω ⟨n + 1, 0⟩ (planarMuMinimizer ω ⟨n + 1, 0⟩ q)) ξ ≤ Φu ω)
-    (hΦv : ∀ ω, planarFlatnessError ⟨n + 1, 0⟩
+    (hΦv : ∀ᵐ ω ∂(latticeBondLaw 2 p), planarFlatnessError ⟨n + 1, 0⟩
       (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ)) ξ ≤ Φv ω)
     (hMμ : ∀ ω, PlanarPartitionEvent ω → PlanarResolved ω ⟨n + 1, 0⟩ →
       ENNReal.ofReal (muSubGap ω ⟨n + 1, 0⟩ n q) ≤ Mμ ω)
@@ -529,17 +529,17 @@ theorem planarOmega_integral_le {p : unitInterval} {n : ℕ} (hn : 1 ≤ n) (ξ 
     split_ifs
     · exact ENNReal.ofReal_mul hW0
     · simp
-  have hpt : ∀ ω, fν ω + fμ ω + ENNReal.ofReal c * (ENNReal.ofReal W * gμ ω) +
+  have hpt : ∀ᵐ ω ∂μP, fν ω + fμ ω + ENNReal.ofReal c * (ENNReal.ofReal W * gμ ω) +
       ENNReal.ofReal c * (ENNReal.ofReal W * gν ω) ≤
       ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) + ENNReal.ofReal c48 * H ω +
         ENNReal.ofReal (c96 * (Φu ω + Φv ω)) + ENNReal.ofReal c * Mμ ω +
         ENNReal.ofReal c * ENNReal.ofReal (subMuSum ω ⟨n + 1, 0⟩ n q) +
         ENNReal.ofReal c * ENNReal.ofReal (subNuSum ω ⟨n + 1, 0⟩ n ξ) + Bad ω +
         ENNReal.ofReal c * Gt ω := by
-    intro ω
+    filter_upwards [hΦu, hΦv] with ω hu hv
     rw [← hgμ, ← hgν]
-    exact planarOmega_ennreal_le hn ξ q hs ω (hMb ω) (hH ω) (hΦu ω) (hΦv ω) (hMμ ω) (hBad ω)
-  have hint := lintegral_mono (μ := μP) hpt
+    exact planarOmega_ennreal_le hn ξ q hs ω (hMb ω) (hH ω) hu hv (hMμ ω) (hBad ω)
+  have hint := lintegral_mono_ae (μ := μP) hpt
   have hR := lintegral_rhs_le (μ := μP) hs0 hc0 hc48 hc96 mMb mH mΦu mΦv mMμ
     (measurable_ofReal_subMuSum _ n q).aemeasurable (measurable_ofReal_subNuSum _ n ξ).aemeasurable
     mBad hΦu0 hΦv0 IMb IH IΦu IΦv IMμ IX1 IX3 IBad IG

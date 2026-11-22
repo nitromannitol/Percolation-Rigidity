@@ -1,12 +1,13 @@
 import Rigidity.Proofs.Percolation.PlanarOmegaRates
 import Rigidity.Proofs.Percolation.PlanarIdentification
+import Rigidity.Proofs.Percolation.PlanarFlatnessAE
 
 /-!
 # Lemma 5.9 of Armstrong and Dario in dimension two, and Proposition 5.2 (qualitative)
 
 From Lemma 5.7 (`PlanarWeakConvergence`), Lemma 5.5 (`PlanarRestrictQuadCoarsenMu`,
-`PlanarRestrictQuadCoarsenNu`) and the energy bounds (4.24), (4.25)
-(`PlanarCoarseGradMomentMu`, `PlanarCoarseGradMomentNu`), every term of
+`PlanarRestrictQuadCoarsenNu`), the energy bounds (4.24), (4.25) being proved with measurable
+majorants (`PlanarCoarseEnergyMajorant`), every term of
 `D_n = ∑ᵢ (E[ν(□_n, eᵢ)] - E[μ(□_n, ā_{□_n} eᵢ)] - eᵢ · ā_{□_n} eᵢ)` satisfies
 
 `E[ν(□_n, eᵢ)] - E[μ(□_n, q)] - q · eᵢ ≤ K (3^{-n/10} + ∑_{k=0}^{n} 3^{k-n} τ_k)`,
@@ -55,8 +56,7 @@ theorem planarAhomFinite_single_self_nonneg {p : unitInterval}
 /-- The real inequality of the integrated bound, for the slopes `ξ = eᵢ` and `q = ā_{□_n} eᵢ`. -/
 theorem exists_planarOmegaD_term_raw {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
     (h57 : PlanarWeakConvergence p) (h55μ : PlanarRestrictQuadCoarsenMu p)
-    (h55ν : PlanarRestrictQuadCoarsenNu p) (hcgμ : PlanarCoarseGradMomentMu p)
-    (hcgν : PlanarCoarseGradMomentNu p) :
+    (h55ν : PlanarRestrictQuadCoarsenNu p) :
     ∃ CB CH Cu Cv Cμ CBad C1 c1 C3 c3 CG : ℝ, 0 ≤ CB ∧ 0 ≤ CH ∧ 0 ≤ Cu ∧ 0 ≤ Cv ∧ 0 ≤ Cμ ∧
       0 ≤ CBad ∧ 0 ≤ C1 ∧ 0 < c1 ∧ 0 ≤ C3 ∧ 0 < c3 ∧ 0 ≤ CG ∧ ∃ N : ℕ, ∀ n, N ≤ n →
       ∀ (ξ q : Fin 2 → ℝ), 0 < |ξ 0| + |ξ 1| → 0 ≤ ∑ i, q i * ξ i →
@@ -89,8 +89,8 @@ theorem exists_planarOmegaD_term_raw {p : unitInterval} (hpc : criticalProbabili
             (⟨n + 1, 0⟩ : TriadicCube 2).volume / Real.sqrt (3 ^ n))) := by
   obtain ⟨CB, hCB, hB⟩ := exists_boundaryMajorant hpc
   obtain ⟨CH, hCH, hHm⟩ := exists_coarseError_majorant hpc
-  obtain ⟨Cu, hCu, hUf⟩ := exists_planarMuFlatness_majorant hpc h57 h55μ hcgμ
-  obtain ⟨Cv, hCv, hVf⟩ := exists_planarNuFlatness_majorant hpc h55ν hcgν
+  obtain ⟨Cu, hCu, hUf⟩ := exists_planarMuFlatness_majorant_ae hpc h57 h55μ
+  obtain ⟨Cv, hCv, hVf⟩ := exists_planarNuFlatness_majorant_ae hpc h55ν
   obtain ⟨Cμ, hCμ, hMμ⟩ := exists_muSubGap_majorant hpc
   obtain ⟨CBad, hCBad, hBad⟩ := exists_badMajorant hpc
   obtain ⟨C1, hC1, c1, hc1, hX1⟩ := exists_lintegral_subMuSum_le hpc
@@ -502,17 +502,16 @@ theorem planarOmegaD_term_le {p : unitInterval} (hpc : criticalProbability 2 < (
   exact harith
 
 /-- **Lemma 5.9 of Armstrong and Dario** (in dimension two, in the form used by Lemma 5.10): from
-Lemmas 5.7 and 5.5 and the energy bounds (4.24), (4.25),
+Lemmas 5.7 and 5.5,
 `D_n ≤ K (3^{-n/10} + ∑_{k ≤ n} 3^{k-n} τ_k)` for `n ≥ N`. -/
 theorem exists_planarOmegaD_le_of_inputs {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (h57 : PlanarWeakConvergence p)
-    (h55μ : PlanarRestrictQuadCoarsenMu p) (h55ν : PlanarRestrictQuadCoarsenNu p)
-    (hcgμ : PlanarCoarseGradMomentMu p) (hcgν : PlanarCoarseGradMomentNu p) :
+    (h55μ : PlanarRestrictQuadCoarsenMu p) (h55ν : PlanarRestrictQuadCoarsenNu p) :
     ∃ K : ℝ, 0 ≤ K ∧ ∃ N : ℕ, ∀ n, N ≤ n →
       planarOmegaD p n ≤ K * ((3 : ℝ) ^ (-(n : ℝ) / 10) +
         ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k) := by
   obtain ⟨CB, CH, Cu, Cv, Cμ, CBad, C1, c1, C3, c3, CG, hCB, hCH, hCu, hCv, hCμ, hCBad, hC1, hc1,
-    hC3, hc3, hCG, N0, hraw⟩ := exists_planarOmegaD_term_raw hpc h57 h55μ h55ν hcgμ hcgν
+    hC3, hc3, hCG, N0, hraw⟩ := exists_planarOmegaD_term_raw hpc h57 h55μ h55ν
   obtain ⟨Cb0, -, N1, hN1⟩ := exists_planarAhomInvFinite_mulVec_planarAhomFinite hpc
   obtain ⟨Ci, hCi, ci, hci, hIμ⟩ := exists_planarMuIncrement_le hpc
   obtain ⟨Cj, hCj, cj, hcj, hJν⟩ := exists_planarNuIncrement_ahomInv_le hpc
@@ -549,25 +548,23 @@ theorem exists_planarOmegaD_le_of_inputs {p : unitInterval}
 `σ = 3^{-1/10}` and `ρ = 1/3`. -/
 theorem exists_planarOmegaD_decay {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
     (h57 : PlanarWeakConvergence p) (h55μ : PlanarRestrictQuadCoarsenMu p)
-    (h55ν : PlanarRestrictQuadCoarsenNu p) (hcgμ : PlanarCoarseGradMomentMu p)
-    (hcgν : PlanarCoarseGradMomentNu p) :
+    (h55ν : PlanarRestrictQuadCoarsenNu p) :
     ∃ C : ℝ, 0 ≤ C ∧ ∃ N : ℕ, ∀ n, N ≤ n → planarOmegaD p n ≤
       C * ((3 : ℝ) ^ (-(1 / 10 : ℝ))) ^ n +
         C * ∑ l ∈ Finset.range (n + 1), (1 / 3 : ℝ) ^ (n - l) * planarTau p l := by
-  obtain ⟨K, hK, N, h⟩ := exists_planarOmegaD_le_of_inputs hpc h57 h55μ h55ν hcgμ hcgν
+  obtain ⟨K, hK, N, h⟩ := exists_planarOmegaD_le_of_inputs hpc h57 h55μ h55ν
   refine ⟨K, hK, N, fun n hn => ?_⟩
   have := h n hn
   rw [three_rpow_neg_div_ten, inv_three_pow_mul_sum_eq] at this
   linarith
 
-/-- **Proposition 5.2 of Armstrong and Dario, qualitative part** (dimension two), from Lemma 5.7,
-Lemma 5.5 and the energy bounds (4.24), (4.25): `lim E[-μ(□_n, q)] = (1/2) q · ā⁻¹ q`. -/
+/-- **Proposition 5.2 of Armstrong and Dario, qualitative part** (dimension two), from Lemma 5.7
+and Lemma 5.5: `lim E[-μ(□_n, q)] = (1/2) q · ā⁻¹ q`. -/
 theorem planarMuLimit_eq_of_inputs {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
     (h57 : PlanarWeakConvergence p) (h55μ : PlanarRestrictQuadCoarsenMu p)
-    (h55ν : PlanarRestrictQuadCoarsenNu p) (hcgμ : PlanarCoarseGradMomentMu p)
-    (hcgν : PlanarCoarseGradMomentNu p) (q : Fin 2 → ℝ) :
+    (h55ν : PlanarRestrictQuadCoarsenNu p) (q : Fin 2 → ℝ) :
     planarMuLimit p q = 1 / 2 * ∑ i, q i * ((planarAhom p)⁻¹ *ᵥ q) i := by
-  obtain ⟨C, hC, N, h⟩ := exists_planarOmegaD_decay hpc h57 h55μ h55ν hcgμ hcgν
+  obtain ⟨C, hC, N, h⟩ := exists_planarOmegaD_decay hpc h57 h55μ h55ν
   have hσ0 : (0 : ℝ) ≤ (3 : ℝ) ^ (-(1 / 10 : ℝ)) := by positivity
   have hσ1 : (3 : ℝ) ^ (-(1 / 10 : ℝ)) < 1 :=
     Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by norm_num)
