@@ -18,9 +18,9 @@ and summing over the faces,
 
 `|ℓ_q v - (q · p) L^{d-1} (L - 1)| ≤ |q|₁ ∑_{x ∈ ∂U} (Var(v; C_*(□_𝒫(x))) + |p|₁ size(□_𝒫(x)))`,
 
-the faces being counted with multiplicity (Armstrong and Dario, Lemma 4.5, the inequality (4.27)
-on which its proof rests, with the regions of the paths taken inside the boundary partition
-cubes).
+the faces being counted with multiplicity (Armstrong and Dario, proof of Lemma 4.5: the discrete
+Stokes formula and the boundary estimate in the proof of (4.27), before the Hölder inequality, with
+the paths taken inside the crossing clusters of the boundary partition cubes).
 -/
 
 open LatticeProb.Percolation Rigidity.External
@@ -206,8 +206,8 @@ theorem cubeBoundaryError_nonneg (ω : Configuration d) (U : TriadicCube d) (p :
     (Finset.sum_nonneg fun _ _ => add_nonneg (partitionCubeVariation_nonneg _ _ _)
       (by positivity))
 
-/-- **Spatial average of the coarsened gradient** (Armstrong and Dario, Lemma 4.5, the
-deterministic inequality (4.27)). -/
+/-- **Spatial average of the coarsened gradient** (Armstrong and Dario, proof of Lemma 4.5, the
+boundary estimate in the proof of (4.27)). -/
 theorem abs_cubeCoarsePairing_sub_le (hd : 0 < d) (hP : PartitionEvent ω) {U : TriadicCube d}
     (hU : PartitionResolved ω U) (p q : Fin d → ℝ) {v : CubeFun ω U} {c : ℝ}
     (hc : ∀ x : ↥(crossingClusterVertices ω U), ¬ U.IsLatticeInterior x.1 →
