@@ -183,6 +183,12 @@ import Rigidity.Proofs.Percolation.PlanarMuGeneral
 import Rigidity.Proofs.Percolation.PlanarNuDefectTauCube
 import Rigidity.Proofs.Percolation.PlanarReachDomination
 import Rigidity.Proofs.Percolation.PlanarRestrictErrorMeasurable
+import Rigidity.Proofs.Cluster.BoundedChernoff
+import Rigidity.Proofs.Cluster.PlanarConvergenceRate
+import Rigidity.Proofs.Cluster.PlanarMinimalSet
+import Rigidity.Proofs.Cluster.PlanarOmegaSupRate
+import Rigidity.Proofs.Cluster.PlanarRhoLocal
+import Rigidity.Proofs.Cluster.PlanarSIStepTwo
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -638,3 +644,17 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.measurable_planarMuRestrictError
 #print axioms Rigidity.Percolation.measurable_planarNuRestrictError
 #print axioms Rigidity.Percolation.measurable_planarMuGen_indicator
+
+-- The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two
+#print axioms Rigidity.Proofs.Cluster.exists_planarOmegaD_decay_holds
+#print axioms Rigidity.Proofs.Cluster.exists_planarOmegaD_le_geometric
+#print axioms Rigidity.Proofs.Cluster.exists_planarTau_le_geometric
+#print axioms Rigidity.Proofs.Cluster.planarAhomInvLimit_eq_inv
+#print axioms Rigidity.Proofs.Cluster.exists_abs_planarAhom_inv_sub_planarAhomInvFinite_le
+#print axioms Rigidity.Proofs.Cluster.planar_convexp
+#print axioms Rigidity.Proofs.Cluster.planar_omegadecayrate
+#print axioms Rigidity.Proofs.Cluster.exists_integral_min_planarRhoStat_le
+#print axioms Rigidity.Proofs.Cluster.measureReal_sum_ge_le_of_bounded
+#print axioms Rigidity.Proofs.Cluster.planar_SIupgrade_step2
+#print axioms Rigidity.Proofs.Cluster.abs_quadratic_sub_half_le
+#print axioms Rigidity.Proofs.Cluster.planar_minimalset

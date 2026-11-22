@@ -413,6 +413,19 @@ further = {
          'Rigidity.Percolation.measurable_planarMuRestrictError',
          'Rigidity.Percolation.measurable_planarNuRestrictError',
          'Rigidity.Percolation.measurable_planarMuGen_indicator'],
+    'the rate of Proposition 5.2 in expectation and Lemmas 5.3, 5.10 and 5.11 (Step 2) of Armstrong and Dario in dimension two for p above the critical value':
+        ['Rigidity.Proofs.Cluster.exists_planarOmegaD_decay_holds',
+         'Rigidity.Proofs.Cluster.exists_planarOmegaD_le_geometric',
+         'Rigidity.Proofs.Cluster.exists_planarTau_le_geometric',
+         'Rigidity.Proofs.Cluster.planarAhomInvLimit_eq_inv',
+         'Rigidity.Proofs.Cluster.exists_abs_planarAhom_inv_sub_planarAhomInvFinite_le',
+         'Rigidity.Proofs.Cluster.planar_convexp',
+         'Rigidity.Proofs.Cluster.planar_omegadecayrate',
+         'Rigidity.Proofs.Cluster.exists_integral_min_planarRhoStat_le',
+         'Rigidity.Proofs.Cluster.measureReal_sum_ge_le_of_bounded',
+         'Rigidity.Proofs.Cluster.planar_SIupgrade_step2',
+         'Rigidity.Proofs.Cluster.abs_quadratic_sub_half_le',
+         'Rigidity.Proofs.Cluster.planar_minimalset'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
