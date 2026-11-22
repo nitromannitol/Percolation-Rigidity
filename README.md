@@ -845,7 +845,9 @@ Departures from Armstrong and Dario:
   interpolation: with zero boundary values from the `ℓ¹` inequality, and on cubes by reflection and
   the `Lᵖ` Poincaré inequality. It discharges the Sobolev hypothesis `ClusterSobolevTwo` of the
   reverse Hölder inequality in every dimension (`exists_clusterSobolevTwo`); the reverse Hölder and
-  Meyers theorems of the table keep the Sobolev inequality as a hypothesis in their statements.
+  Meyers theorems of the table keep the Sobolev inequality as a hypothesis in their statements. The Sobolev inequality on the clusters of integer cubes, and the
+  reverse Hölder and Meyers theorems that use it with this hypothesis proved, are in
+  [Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5](#clusters-of-integer-cubes-the-meyers-estimate-and-the-coarse-energy-bounds-toward-lemma-55).
 - **Proposition 2.4** is proved by counting bad cubes, with a stretched exponential moment of some
   order `r > 0` for the minimal scale in place of every `r < sd/(d + t + s)`. The bound
   `Λ_t(U, 𝒮) ≤ O_{s/t}(C)` stated after the proof of AD, Proposition 2.1, is proved in the form
@@ -995,8 +997,9 @@ Departures from Armstrong and Dario:
 
 - **Hypothesis of the identification.** The bound of Lemma 5.9 for `D_n` is not proved. Its proof
   uses Lemmas 5.5 to 5.8, and Lemma 5.5, with Steps 2 and 3 of Lemma 5.7, needs the Meyers estimate
-  of AD, Proposition 3.8, on the planar cluster, which is available only in the abstract form of
-  [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster).
+  of AD, Proposition 3.8, on the planar cluster, which is proved in a deterministic form with its
+  good events as hypotheses in
+  [Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5](#clusters-of-integer-cubes-the-meyers-estimate-and-the-coarse-energy-bounds-toward-lemma-55).
   The theorem `planarMuLimit_eq_of_decay` and the geometric rates derived from Lemma 5.10 therefore
   take the bound as the explicit hypothesis `h59`; without it, the identification is reduced to the
   vanishing of the limit of `E[ω]`. The rate of Proposition 5.2 and Lemmas 5.3 and 5.11 are not
@@ -1011,6 +1014,96 @@ Departures from Armstrong and Dario:
   is meant, and the bound of Lemma 5.9 is resummed over `l ∈ [N₀, n]` where `l ≤ k` is meant, the
   terms with `l < N₀` being `O(3^{N₀−k})`. The Lean proof uses the exact recursions
   `D̃_{n+1} = μ D̃_n + D_{n+1}` for the weighted averages instead.
+
+## Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5
+
+Armstrong and Dario use the reverse Hölder inequality of Lemma 3.6 on every triadic cube `□'`
+above a cell of the Gehring partition, with the Sobolev inequality of Proposition 3.4 on the cluster
+of the triple `3□'`, which is an integer cube of side `3^{k+1}` but in general not a triadic cube.
+Here Lemmas 3.2 and 3.3 and Proposition 3.4 (with `s = 2` and `∑_{C(B)} w = 0`) are proved on the
+cluster `C(B)` of every integer cube `B` resolved by the partition, in every dimension `d ≥ 2`, and
+the deterministic part of the Meyers estimate (AD, Proposition 3.8) and of Step 3 of the proof of
+Lemma 5.5 follow in `d = 2`. The results are conditional: each states, as hypotheses, exactly the
+events and moment bounds listed in its row, which are not proved here.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Cluster.reverse_holder_partition_cube_of_moment`](Rigidity/Proofs/Cluster/ReverseHolderMoment.lean), [`reverse_holder_partition_of_moment`](Rigidity/Proofs/Cluster/ReverseHolderMoment.lean) | AD Lemma 3.6, deterministic part, every `d ≥ 2`, with the Sobolev hypothesis proved: for a resolved cube `□_{m+1}` with `∑_{z ∈ C_*(□_{m+1})} (3^{ρ(z)})^{2ds} ≤ C_G \|□_{m+1}\|` and `u` harmonic on `C_*(□_{m+1})`, `3^{−md} ∑_{C_*(□_{m+1}) ∩ □_m} \|∇u 1_{𝐚≠0}\|² ≤ C (\|□_{m+1}\|⁻¹ ∑_{C_*(□_{m+1})} \|∇u 1_{𝐚≠0}\|^{t 2_*})^{2/(t 2_*)}`, as in `reverse_holder_partition_cube`. |
+| [`Rigidity.Proofs.Cluster.planar_reverse_holder_cube_of_moment`](Rigidity/Proofs/Cluster/ReverseHolderPlanar.lean) | the same for the planar partition, with the weight `((3^ρ)² + 3^{ρ'})^{1/4}` and the moment bound `∑ ((3^ρ)² + 3^{ρ'})^s ≤ C_G 3^{2(m+1)}`. |
+| [`Rigidity.Percolation.exists_planarBox_sum_sq_le`](Rigidity/Proofs/Cluster/PlanarBoxSobolev.lean), [`exists_clusterSobolevTwo_box`](Rigidity/Proofs/Cluster/PartitionBoxSobolev.lean) | AD Proposition 3.4 with `s = 2`, with Lemmas 3.2 and 3.3 proved on the cluster of an integer square (`d = 2`) or integer cube (every `d ≥ 2`) `B` resolved by the partition, for `w` of mean zero on the cluster: `∑_{C(B)} w² ≤ K (∑_{z ∈ C(B)} w_ρ(z) \|∇w 1_{𝐚≠0}\|(z))²` with the weight `w_ρ` built from the reach scales of `B`, which are bounded by the reach of the partition (`three_pow_reachScale_le_planarReach_box`, `three_pow_reachScale_le_partitionReach_box`). |
+| [`Rigidity.Proofs.Cluster.reverse_holder_clusterEnergy_local`](Rigidity/Proofs/Cluster/MeyersPlanarBox.lean), [`meyers_cluster_of_local`](Rigidity/Proofs/Cluster/MeyersPlanarBox.lean) | the reverse Hölder inequality for functions harmonic near the cube, and `meyers_cluster` with a weight chosen for each cube `□'`. |
+| [`Rigidity.Proofs.Cluster.planar_meyers`](Rigidity/Proofs/Cluster/MeyersPlanarBox.lean), [`planar_meyers_clusterHarmonic`](Rigidity/Proofs/Cluster/PlanarMeyersHarmonic.lean) | AD Proposition 3.8, deterministic part, `d = 2`, with the Sobolev inequality on the clusters of the triples proved, for `u` harmonic on the cluster of a triadic cube `V ⊇ 3□` (for the extension by zero of a harmonic function of a smaller cube in the second form). Hypotheses: the planar partition event; a Gehring partition of `3□` into cells of comparable neighbouring sizes with `∑_{x ∈ □} (3^{s(x)})^t ≤ K \|□\|`; for every triadic `□' = cube k y` above a cell with `3□' ⊆ 3□`, the partition cubes of the vertices of `3□'` have scale at most `k` and `∑_{z ∈ 3□'} planarReach(z)^8 ≤ C_G \|3□'\|`. |
+| [`Rigidity.Proofs.Cluster.partition_meyers`](Rigidity/Proofs/Cluster/MeyersPartitionBox.lean) | the same in every dimension `d ≥ 2` on `C_*(V) ∩ 3□`, `V` resolved, with `∑_{z ∈ 3□'} partitionReach(z)^{2d(d+2)} ≤ C_G \|3□'\|` and the partition scales below `k`. |
+| [`Rigidity.Proofs.Cluster.sum_mul_le_of_meyers_cells`](Rigidity/Proofs/Cluster/PlanarCoarseMeyers.lean), [`planarBox_coarse_energy_le_of_meyers`](Rigidity/Proofs/Cluster/PlanarCoarseMeyers.lean) | AD display (5.18), deterministic, `d = 2`: with the Meyers estimate on cells `□'` covering the cluster of a resolved square `B ⊆ V`, triples of overlap at most `N`, and cell averages of a weight `W ≥ 3^{ρ'}` with `(avg_{□'} W^{3q})^{1/q} ≤ A`, `∑_B \|∇[w]_𝒫\|² ≤ C² A C_M^{1/p} N ∑_V \|∇w 1_{𝐚≠0}\|²`. |
+| [`Rigidity.Percolation.edgePairing_sq_le_of_subset`](Rigidity/Proofs/Cluster/PlanarEdgePairing.lean), [`coarsePairing_eq_edgePairing`](Rigidity/Proofs/Cluster/PlanarEdgePairing.lean) | AD Lemma 5.5, Step 2 (removal of the boundary layer): `⟨∇f, g⟩_V² ≤ 8 G² \|B\| E_B + 16 G² \|V ∖ B\| E_V` for `\|g\| ≤ G`. |
+| [`Rigidity.Proofs.Cluster.edgePairing_clusterExtend_sq_le_clusterForm`](Rigidity/Proofs/Cluster/PlanarCoarseEnergy.lean), [`edgePairing_innerCells_sq_le`](Rigidity/Proofs/Cluster/PlanarInnerCells.lean) | AD Lemma 5.5, Steps 2 and 3 on one subcube, with the Hölder inequality inside the cells of scale `j` of the inner square: `⟨∇[w]_𝒫, g⟩_V² ≤ Λ B(w, w)`. Hypotheses: the partition scales on `V` are at most `j`, the Meyers estimate for `w` on the cells, the bound `A` on the cell averages of the weight, and `W ≥ 3 planarReach` on the cluster. |
+| [`Rigidity.Proofs.Cluster.sum_edgePairing_sq_le_planarMuDefect`](Rigidity/Proofs/Cluster/PlanarRestrictDefect.lean) | AD Lemma 5.5, deterministic part, summed over the resolved subcubes of scale `n`: `∑_V ⟨∇[w_V]_𝒫, g⟩_V² ≤ 2 Λ D_n(U, q)`, with the hypotheses of `edgePairing_innerCells_sq_le` on each subcube. |
+| [`Rigidity.Percolation.exists_measure_partitionScale_gt_le`](Rigidity/Proofs/Cluster/PlanarPartitionScaleTail.lean) | for every `m`, the probability that some vertex of a finite set `S` has a planar partition cube of scale larger than `j` is at most `C \|S\| 3^{−(j+1)(m+1)}`. |
+| [`Rigidity.Proofs.Cluster.ofReal_sum_gradNormIn_coarse_planarMuMinimizer_le`](Rigidity/Proofs/Cluster/PlanarCoarseMinimizer.lean), [`exists_lintegral_coarse_minimizer_le`](Rigidity/Proofs/Cluster/PlanarCoarseEnergyMoments.lean), [`exists_lintegral_coarse_minimizer_sq_le`](Rigidity/Proofs/Cluster/PlanarCoarseEnergySecondMoment.lean) | AD (4.10), `d = 2`: for the minimizer `u_V` of `μ(V, q)` on a resolved triadic cube, `∑_V \|∇[u_V]_𝒫\|² ≤ C \|q\|₁² (3 max_V R)³ ∑_V R⁴` with `R = planarReach`, `E[∑_V \|∇[u_V]_𝒫\|²] ≤ C_a \|q\|₁² \|V\|^{1+1/a}` for `a ≥ 2`, and the second moment `≤ C \|q\|₁⁴ \|V\|^{2+2/a}` for `a ≥ 3`. |
+| [`Rigidity.Percolation.edgePairing_sub_sum_subcubes_sq_le`](Rigidity/Proofs/Cluster/PlanarSubcubePairing.lean), [`Rigidity.Proofs.Cluster.exists_lintegral_edgePairing_sub_sum_subcubes_le`](Rigidity/Proofs/Cluster/PlanarHolderAway.lean) | AD Lemma 5.7, Step 2, display (5.29), `d = 2`: the pairing of a bounded field with the coarsened gradient on `U` differs from the sum over the subcubes of scale `n` by at most the number of crossing edges times the energy, and in expectation `E[(⟨∇[u_U], g⟩_U − ∑_V ⟨∇[u_U], g⟩_V)²] ≤ C G² \|q\|₁² 3^{−n} \|U\|² \|U\|^{1/a}`. |
+
+The theorems of the table and their supporting results depend on exactly `propext`, `Classical.choice`
+and `Quot.sound`; sixty-five of them have axiom reports in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The modules are in
+[`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/), from `ReverseHolderMoment.lean` to
+`PlanarRestrictDefect.lean`.
+
+1. **Windows and clusters of integer cubes** (`PlanarBoxWindows.lean`, `PlanarBoxCluster.lean`,
+   `PartitionBoxPaths.lean`, `PartitionBoxCluster.lean`). A vertex joined to the anchor of its
+   partition cube by a path that leaves the integer cube only far from the vertex is joined to it
+   inside the window of the cube; the cluster `C(B)` of an integer cube resolved by the partition is
+   the set of vertices of `B` joined inside `B` to the anchor of their partition cube, and its
+   coarse-graining data are built from the windows and pair windows inside `B`.
+2. **Sobolev inequality and Meyers estimate** (`PlanarBoxSobolev.lean`, `PartitionBoxSobolev.lean`,
+   `ReverseHolder*.lean`, `Meyers*.lean`, `PlanarMeyersHarmonic.lean`). Lemmas 3.2 and 3.3 and the
+   lattice Sobolev inequality on integer cubes give Proposition 3.4 on `C(B)`, and with it the
+   reverse Hölder inequality at every cube used by the Gehring argument.
+3. **Coarse energy of Lemma 5.5** (`PlanarCoarseMeyers.lean`, `PlanarEdgePairing.lean`,
+   `PlanarInnerSquare.lean`, `PlanarInnerCells.lean`, `PlanarRestrictQuad.lean`,
+   `PlanarRestrictCoarse.lean`, `PlanarCoarseEnergy.lean`, `PlanarRestrictDefect.lean`). The Meyers
+   estimate on the cells of the inner square, Lemma 3.3 and the Hölder inequality bound the energy
+   of the coarsened differences of the minimizers, and the pairing with a bounded field, by the
+   energy defect of Lemma 5.4.
+4. **Moments** (`PlanarCoarseMinimizer.lean`, `PlanarCoarseEnergyMoments.lean`,
+   `PlanarCoarseEnergySecondMoment.lean`, `PlanarPartitionScaleTail.lean`,
+   `PlanarSubcubePairing.lean`, `PlanarHolderAway.lean`). The reach of the planar partition has all
+   moments, which bounds the coarsened energy of the minimizers in expectation (AD (4.10)) and the
+   probability that a partition cube is larger than a given scale.
+
+Departures from Armstrong and Dario:
+
+- **Clusters of the triples.** AD apply Proposition 3.4 on `C_max(3□')`; the Lean proof uses the
+  cluster `C(3□')` of the integer cube, the vertices joined to the anchor of their partition cube
+  inside it. It lies in the crossing cluster of every resolved triadic cube containing `3□'`, is
+  closed under open edges inside `3□'`, and contains the vertices of the crossing cluster in `□'`.
+  The weight of the Sobolev inequality is the reach of the partition, not the size of the partition
+  cube.
+- **Reverse Hölder inequality at non-central cubes.** AD prove Lemma 3.6 for central subcubes of a
+  triadic cube and obtain the other cubes of the proof of Proposition 3.8 by stationarity. The Lean
+  proof of the Meyers estimate derives the inequality at every `□'` from the Caccioppoli
+  inequality and the Sobolev inequality on `C(3□')`, and takes the good event of the partition
+  `ℛ` at `□'` as a hypothesis in place of the stationarity.
+- **GAP in Lemma 5.5, Step 3 (AD, arXiv v2 numbering, display after "apply the proposition in each
+  `Q'`").** The second inequality of the display,
+  `(\|□_n\|⁻¹ ∑ \|Q'\|^{1−s/2} a_{Q'}^{s/2})^{2/s} ≤ \|□_n\|⁻¹ ∑ \|Q'\|^{2/s−1} a_{Q'}`, is not true
+  as written: by concavity the right side carries `\|□_n\|^{−2/s}`, and for one charged unit cell
+  the two sides differ by the factor `\|□_n\|^{1−2/s}`; the global Hölder inequality over the cells
+  loses the power `(#cells)^{(s−2)/s}` (it is `sum_rpow_le_of_meyers_cells`). The repair is the
+  Hölder inequality inside each cell with the cell average of the weight (`sum_mul_le_of_meyers_cells`),
+  the cells being the triadic squares of scale `⌈n/2⌉` not touching the boundary of the subcube, on
+  the event that the Meyers estimate holds on all cubes of scale at least `⌈n/2⌉` and the cell
+  averages of the weight are bounded. The weight is the pair reach of the partition, bounded by
+  three times the reach of the planar partition, in place of the sizes of the partition cubes.
+- **Display (4.10) and the moments.** The bounds are proved with the reach of the planar partition
+  and the factor `\|V\|^{1/a}` for every `a ≥ 2` in place of `3^{δ n}`, `δ > 0`; the second moment
+  is added for the estimates off the good events.
+- **Conditional statements.** The Meyers estimate (`planar_meyers`, `partition_meyers`), the
+  per-subcube bound `edgePairing_innerCells_sq_le` and its sum over the subcubes
+  `sum_edgePairing_sq_le_planarMuDefect` are deterministic: the good events they assume (the
+  Gehring partition and the bounds on the reach over the triples, the partition scales and the
+  Meyers estimate on the cells of the inner squares, the bounds on the cell averages of the weight)
+  are not shown to hold with high probability here. Consequently Lemma 5.5 itself, Lemma 5.7 Step 3,
+  Lemmas 5.8 and 5.9, and hence the hypothesis `h59` of `planarMuLimit_eq_of_decay`, are not proved.
 
 ## The Dirichlet problem and the excess-decay iteration
 
@@ -1102,7 +1195,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 162 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 227 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1123,9 +1216,11 @@ Departures from Armstrong and Dario:
   [Localization of the subadditive quantities and the homogenized matrix for d = 2](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2),
   the thirty-five theorems of
   [Energy defects, finite-volume matrices and the identification of the limit for d = 2](#energy-defects-finite-volume-matrices-and-the-identification-of-the-limit-for-d--2),
+  the sixty-five theorems of
+  [Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5](#clusters-of-integer-cubes-the-meyers-estimate-and-the-coarse-energy-bounds-toward-lemma-55),
   and the nineteen theorems of
   [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration).
-  Each of the 162 reports lists exactly `propext`, `Classical.choice` and
+  Each of the 227 reports lists exactly `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1156,10 +1251,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1124 Lean files with 204,149 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1149 Lean files with 208,619 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (310 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (406 lines) are counted separately.
 
 ## Building
 

@@ -334,7 +334,15 @@ fidelity:
     field of Lemma 5.7, Step 1, as the exactly divergence free discrete curl of a cut off stream
     function, the bound of Lemma 5.9 for the quantity D_n a hypothesis of the identification and of
     the geometric rates of Lemma 5.10, whose Step 2 is proved through exact recursions for the
-    weighted averages, and the rate of Proposition 5.2 not proved), and for the Dirichlet problem and
+    weighted averages, and the rate of Proposition 5.2 not proved), for the Sobolev inequality, the
+    reverse Hoelder inequality and the Meyers estimate on the clusters of integer cubes and the
+    coarse energy bounds toward Lemma 5.5 (Armstrong and Dario, Lemma 3.6, Propositions 3.4 and
+    3.8 with the Sobolev hypothesis proved on the cluster of the triple of each Gehring cube, the
+    weights being the reach of the partition; the Meyers estimate, the Gehring partition and the
+    bounds on the reach and on the cell averages of the weight remain hypotheses, so that Lemma 5.5
+    and the steps of Lemma 5.7 are not proved; the second inequality of the display in Step 3 of
+    Lemma 5.5 does not hold as written and is replaced by the Hoelder inequality inside each cell
+    with the cell average of the weight), and for the Dirichlet problem and
     the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,
     a Hardy-weighted boundary-layer estimate in place of the Meyers and H^2 estimates of

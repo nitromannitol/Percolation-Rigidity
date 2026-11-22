@@ -77,6 +77,31 @@ import Rigidity.Proofs.Percolation.PlanarSecondVariation
 import Rigidity.Proofs.Percolation.PlanarSolenoidalField
 import Rigidity.Proofs.Percolation.PlanarSolenoidalPairing
 import Rigidity.Proofs.Percolation.PlanarTauSummable
+import Rigidity.Proofs.Cluster.MeyersPartitionBox
+import Rigidity.Proofs.Cluster.MeyersPlanarBox
+import Rigidity.Proofs.Cluster.PartitionBoxCluster
+import Rigidity.Proofs.Cluster.PartitionBoxPaths
+import Rigidity.Proofs.Cluster.PartitionBoxSobolev
+import Rigidity.Proofs.Cluster.PlanarBoxCluster
+import Rigidity.Proofs.Cluster.PlanarBoxSobolev
+import Rigidity.Proofs.Cluster.PlanarBoxWindows
+import Rigidity.Proofs.Cluster.PlanarCoarseEnergy
+import Rigidity.Proofs.Cluster.PlanarCoarseEnergyMoments
+import Rigidity.Proofs.Cluster.PlanarCoarseEnergySecondMoment
+import Rigidity.Proofs.Cluster.PlanarCoarseMeyers
+import Rigidity.Proofs.Cluster.PlanarCoarseMinimizer
+import Rigidity.Proofs.Cluster.PlanarEdgePairing
+import Rigidity.Proofs.Cluster.PlanarHolderAway
+import Rigidity.Proofs.Cluster.PlanarInnerCells
+import Rigidity.Proofs.Cluster.PlanarInnerSquare
+import Rigidity.Proofs.Cluster.PlanarMeyersHarmonic
+import Rigidity.Proofs.Cluster.PlanarPartitionScaleTail
+import Rigidity.Proofs.Cluster.PlanarRestrictCoarse
+import Rigidity.Proofs.Cluster.PlanarRestrictDefect
+import Rigidity.Proofs.Cluster.PlanarRestrictQuad
+import Rigidity.Proofs.Cluster.PlanarSubcubePairing
+import Rigidity.Proofs.Cluster.ReverseHolderMoment
+import Rigidity.Proofs.Cluster.ReverseHolderPlanar
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -308,3 +333,74 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.dotProduct_inv_planarAhomInvLimit_le
 #print axioms Rigidity.Percolation.planarMuLimit_eq_of_limit_planarOmegaD_nonpos
 #print axioms Rigidity.Percolation.planarMuLimit_eq_of_decay
+
+-- The reverse Hölder inequality, the Meyers estimate and the Sobolev inequality on the clusters of integer cubes
+-- (Armstrong and Dario, Lemma 3.6, Propositions 3.4 and 3.8)
+#print axioms Rigidity.Proofs.Cluster.exists_latticeSobolevOn_two
+#print axioms Rigidity.Proofs.Cluster.reverse_holder_partition_cube_of_moment
+#print axioms Rigidity.Proofs.Cluster.reverse_holder_partition_of_moment
+#print axioms Rigidity.Proofs.Cluster.lowerSobolevTwo_two
+#print axioms Rigidity.Proofs.Cluster.mem_clusterVertices_of_adj_mem
+#print axioms Rigidity.Proofs.Cluster.planar_reverse_holder_cube_of_moment
+#print axioms Rigidity.Proofs.Cluster.reverse_holder_clusterEnergy_local
+#print axioms Rigidity.Proofs.Cluster.meyers_cluster_of_local
+#print axioms Rigidity.Proofs.Cluster.mem_boxClusterVertices_of_mem_cube
+#print axioms Rigidity.Proofs.Cluster.planar_meyers
+#print axioms Rigidity.Proofs.Cluster.mem_partitionBoxCluster_of_mem_cube
+#print axioms Rigidity.Proofs.Cluster.partition_meyers
+#print axioms Rigidity.Percolation.TriadicCube.reachIn_boxWindow_of_reachIn
+#print axioms Rigidity.Percolation.TriadicCube.reachIn_planarAnchor_boxPairWindow
+#print axioms Rigidity.Percolation.reachIn_planarAnchor_of_boxResolved
+#print axioms Rigidity.Percolation.planarBoxCoarseData
+#print axioms Rigidity.Percolation.planarBox_sum_abs_sub_coarseAnchor_rpow_le
+#print axioms Rigidity.Percolation.planarBox_sum_gradNormIn_coarseAnchor_rpow_le
+#print axioms Rigidity.Percolation.exists_planarBox_sum_sq_le
+#print axioms Rigidity.Percolation.three_pow_reachScale_le_planarReach_box
+#print axioms Rigidity.Percolation.three_pow_pairReachScale_le_planarReach_box
+#print axioms Rigidity.Proofs.Cluster.openLaplacian_clusterExtend
+#print axioms Rigidity.Proofs.Cluster.openLaplacian_clusterExtend_eq_zero
+#print axioms Rigidity.Proofs.Cluster.planar_meyers_clusterHarmonic
+#print axioms Rigidity.Percolation.reachable_partitionAnchor_of_reachable_box
+#print axioms Rigidity.Percolation.IntegerCube.exists_walk
+#print axioms Rigidity.Percolation.partitionBoxCoarseData
+#print axioms Rigidity.Percolation.exists_partitionBox_sum_rpow_le_of_latticeSobolevOn
+#print axioms Rigidity.Percolation.exists_clusterSobolevTwo_box
+#print axioms Rigidity.Percolation.three_pow_reachScale_le_partitionReach_box
+
+-- The coarse energy, the pairings with bounded fields and the restriction defect (Armstrong and Dario,
+-- display (4.10), Lemmas 5.5 and 5.7, d = 2)
+#print axioms Rigidity.Proofs.Cluster.sum_gradNormIn_coarse_sq_le_clusterForm
+#print axioms Rigidity.Proofs.Cluster.edgePairing_clusterExtend_sq_le_clusterForm
+#print axioms Rigidity.Proofs.Cluster.sup_planarReach_pow_seven_le
+#print axioms Rigidity.Proofs.Cluster.ofReal_coarse_minimizer_le_reachSum
+#print axioms Rigidity.Proofs.Cluster.exists_lintegral_coarse_minimizer_le
+#print axioms Rigidity.Proofs.Cluster.exists_lintegral_coarse_minimizer_sq_le
+#print axioms Rigidity.Proofs.Cluster.sum_rpow_le_of_meyers_cells
+#print axioms Rigidity.Proofs.Cluster.sum_mul_le_of_meyers_cells
+#print axioms Rigidity.Proofs.Cluster.planarBox_sum_gradNormIn_sq_le_clusterGradSq
+#print axioms Rigidity.Proofs.Cluster.planarBox_coarse_energy_le_of_meyers
+#print axioms Rigidity.Proofs.Cluster.sum_gradNormIn_coarse_sq_le_sup
+#print axioms Rigidity.Proofs.Cluster.three_pow_sup_pairReachScale_le
+#print axioms Rigidity.Proofs.Cluster.ofReal_sum_gradNormIn_coarse_sq_le
+#print axioms Rigidity.Proofs.Cluster.ofReal_sum_gradNormIn_coarse_planarMuMinimizer_le
+#print axioms Rigidity.Percolation.edgePairing
+#print axioms Rigidity.Percolation.coarsePairing_eq_edgePairing
+#print axioms Rigidity.Percolation.edgeEnergy_le_two_mul_sum_gradNormIn_sq
+#print axioms Rigidity.Percolation.edgePairing_sq_le
+#print axioms Rigidity.Percolation.card_layer_edges_le
+#print axioms Rigidity.Percolation.edgePairing_sq_le_of_subset
+#print axioms Rigidity.Proofs.Cluster.exists_lintegral_edgePairing_sub_sum_subcubes_le
+#print axioms Rigidity.Proofs.Cluster.TriadicCube.subset_innerSquare
+#print axioms Rigidity.Proofs.Cluster.enl_subset_of_mem_innerSquare
+#print axioms Rigidity.Proofs.Cluster.card_innerCells_filter_le
+#print axioms Rigidity.Proofs.Cluster.edgePairing_innerCells_sq_le
+#print axioms Rigidity.Proofs.Cluster.innerSquare
+#print axioms Rigidity.Proofs.Cluster.innerSquare_subset
+#print axioms Rigidity.Proofs.Cluster.card_sdiff_innerSquare_le
+#print axioms Rigidity.Proofs.Cluster.planarBoxResolved_innerSquare
+#print axioms Rigidity.Percolation.exists_measure_partitionScale_gt_le
+#print axioms Rigidity.Proofs.Cluster.edgePairing_coarse_sq_le_of_meyers
+#print axioms Rigidity.Proofs.Cluster.sum_edgePairing_sq_le_planarMuDefect
+#print axioms Rigidity.Proofs.Cluster.sum_clusterGradSq_eq_clusterForm
+#print axioms Rigidity.Proofs.Cluster.edgePairing_clusterExtend_sq_le_of_meyers
+#print axioms Rigidity.Percolation.edgePairing_sub_sum_subcubes_sq_le
