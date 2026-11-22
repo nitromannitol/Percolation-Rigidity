@@ -99,7 +99,7 @@ theorem exists_measure_exceptionalMajorant_le [NeZero d] (hd : 2 ≤ d) {prob : 
           ENNReal.ofReal_sum_of_nonneg fun i _ => by positivity]
 
 /-- The subcubes of scale `n` of `U` have `|U|` vertices in total. -/
-theorem card_subcubesAt_mul (U : TriadicCube d) {n : ℕ} (hn : n ≤ U.scale) :
+theorem card_subcubesAt_mul_general (U : TriadicCube d) {n : ℕ} (hn : n ≤ U.scale) :
     ((U.subcubesAt n).card : ℝ) * ((3 : ℝ) ^ n) ^ d = U.latticeVolume := by
   have h := sum_triadicCubeAt_eq hn (fun _ _ => (1 : ℝ))
   simp only [Finset.sum_const, nsmul_eq_mul, mul_one] at h
@@ -148,7 +148,7 @@ theorem exists_sum_measure_exceptionalMajorant_le [NeZero d] (hd : 2 ≤ d) {pro
             rw [← pow_succ, Nat.sub_add_cancel (by omega : 1 ≤ d)]
           rw [h']
           field_simp
-      _ = 2 * K * U.latticeVolume / (3 : ℝ) ^ n := by rw [card_subcubesAt_mul U hn]
+      _ = 2 * K * U.latticeVolume / (3 : ℝ) ^ n := by rw [card_subcubesAt_mul_general U hn]
   calc ∑ x ∈ U.toIntegerCube.vertices,
         (latticeBondLaw d prob {ω | ExceptionalMajorant ω n x}).toReal
       ≤ ∑ x ∈ U.toIntegerCube.vertices, (C * Real.exp (-c * (3 : ℝ) ^ n) +
