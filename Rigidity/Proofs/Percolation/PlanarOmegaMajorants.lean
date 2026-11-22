@@ -289,4 +289,202 @@ theorem ofReal_clusterForm_sub_le (hP : PlanarPartitionEvent ω) {U : TriadicCub
         field_simp
         ring
 
+/-- The moments of the reach sums as real numbers. -/
+theorem exists_lintegral_reachSum_le_ofReal {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (m : ℕ) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ a : Vertex 2,
+      ∫⁻ ω, reachSum ω m a ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal C := by
+  obtain ⟨C, hC, h⟩ := exists_lintegral_tsum_ninefold_le hpc m
+  exact ⟨C.toReal, ENNReal.toReal_nonneg, fun a => by rw [ENNReal.ofReal_toReal hC]; exact h a⟩
+
+theorem lintegral_sum_reachSum_le {p : unitInterval} {m : ℕ} {C : ℝ}
+    (h : ∀ a : Vertex 2, ∫⁻ ω, reachSum ω m a ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal C)
+    (S : Finset (Vertex 2)) :
+    ∫⁻ ω, ∑ z ∈ S, reachSum ω m z ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal ((S.card : ℝ) * C) := by
+  rw [lintegral_finsetSum _ fun z _ => measurable_reachSum m z]
+  calc ∑ z ∈ S, ∫⁻ ω, reachSum ω m z ∂(latticeBondLaw 2 p) ≤ ∑ _z ∈ S, ENNReal.ofReal C :=
+        Finset.sum_le_sum fun z _ => h z
+    _ = _ := by
+        rw [Finset.sum_const, nsmul_eq_mul, ENNReal.ofReal_mul (Nat.cast_nonneg _),
+          ENNReal.ofReal_natCast]
+
+/-- The pointwise majorant of the coarsening error of `v - u`. -/
+theorem ofReal_coarseError_sub_le (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
+    (hU : PlanarResolved ω U) (ξ q : Fin 2 → ℝ) :
+    ENNReal.ofReal (∑ x ∈ clusterVertices ω U,
+        (clusterExtend ω U (planarNuMaximizer ω U ξ - planarMuMinimizer ω U q) x -
+          clusterExtend ω U (planarNuMaximizer ω U ξ - planarMuMinimizer ω U q)
+            (planarCoarseAnchor ω x)) ^ 2) ≤
+      ENNReal.ofReal ((3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2 * (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 *
+          (2 * √((2 : ℕ) : ℝ))) ^ 2) *
+        (ENNReal.ofReal ((3 : ℝ) ^ U.scale) * ENNReal.ofReal (9 * (|ξ 0| + |ξ 1|) ^ 2 * U.volume) +
+          ENNReal.ofReal ((3 : ℝ) ^ U.scale) * ENNReal.ofReal (36 * 234256 * (|q 0| + |q 1|) ^ 2) *
+            ∑ z ∈ U.toIntegerCube.vertices, reachSum ω 4 z +
+          ENNReal.ofReal ((3 : ℝ) ^ U.scale)⁻¹ * ENNReal.ofReal (9 * (|ξ 0| + |ξ 1|) ^ 2 * U.volume) *
+            ∑ z ∈ U.toIntegerCube.vertices, reachSum ω 8 z +
+          ENNReal.ofReal ((3 : ℝ) ^ U.scale)⁻¹ * ENNReal.ofReal (36 * 234256 * (|q 0| + |q 1|) ^ 2) *
+            (ENNReal.ofReal (U.toIntegerCube.vertices.card : ℝ) *
+              (∑ z ∈ U.toIntegerCube.vertices, reachSum ω 16 z +
+                ∑ z ∈ U.toIntegerCube.vertices, reachSum ω 8 z))) := by
+  have hL0 : (0 : ℝ) < (3 : ℝ) ^ U.scale := by positivity
+  set l : ℝ≥0∞ := ENNReal.ofReal ((3 : ℝ) ^ U.scale) with hl
+  have hl0 : l ≠ 0 := by rw [hl]; exact (ENNReal.ofReal_pos.2 hL0).ne'
+  have hlt : l ≠ ∞ := ENNReal.ofReal_ne_top
+  have hli : (ENNReal.ofReal ((3 : ℝ) ^ U.scale)⁻¹) = l⁻¹ := ENNReal.ofReal_inv_of_pos hL0
+  rw [hli]
+  have h1 := ofReal_coarseError_le hP hU (planarNuMaximizer ω U ξ - planarMuMinimizer ω U q)
+    hl0 hlt
+  have h2 := ofReal_clusterForm_sub_le hP hU ξ q
+  set S4 := ∑ a ∈ U.toIntegerCube.vertices, planarReach ω a ^ 4
+  set S8 := ∑ z ∈ U.toIntegerCube.vertices, planarReach ω z ^ 8
+  set S16 := ∑ z ∈ U.toIntegerCube.vertices, planarReach ω z ^ 16
+  have hS84 : S8 * S4 ≤ ENNReal.ofReal (U.toIntegerCube.vertices.card : ℝ) * (S16 + S8) := by
+    have h := ENNReal.sum_mul_sum_le U.toIntegerCube.vertices (fun z => planarReach ω z ^ 8)
+      (fun z => planarReach ω z ^ 4)
+    simp only [← pow_mul] at h
+    rw [ENNReal.ofReal_natCast]
+    exact h
+  have hR : ∀ k, ∑ z ∈ U.toIntegerCube.vertices, planarReach ω z ^ (k + 1) ≤
+      ∑ z ∈ U.toIntegerCube.vertices, reachSum ω (k + 1) z :=
+    fun k => Finset.sum_le_sum fun z _ => planarReach_pow_le ω z k
+  have hR4 := hR 3
+  have hR8 := hR 7
+  have hR16 := hR 15
+  refine h1.trans ?_
+  refine mul_le_mul_of_nonneg_left ?_ zero_le
+  calc (l + l⁻¹ * S8) * ENNReal.ofReal (clusterForm ω U
+        (planarNuMaximizer ω U ξ - planarMuMinimizer ω U q)
+        (planarNuMaximizer ω U ξ - planarMuMinimizer ω U q))
+      ≤ (l + l⁻¹ * S8) * (ENNReal.ofReal (9 * (|ξ 0| + |ξ 1|) ^ 2 * U.volume) +
+          ENNReal.ofReal (36 * 234256 * (|q 0| + |q 1|) ^ 2) * S4) :=
+        mul_le_mul_of_nonneg_left h2 zero_le
+    _ = l * ENNReal.ofReal (9 * (|ξ 0| + |ξ 1|) ^ 2 * U.volume) +
+          l * ENNReal.ofReal (36 * 234256 * (|q 0| + |q 1|) ^ 2) * S4 +
+          l⁻¹ * ENNReal.ofReal (9 * (|ξ 0| + |ξ 1|) ^ 2 * U.volume) * S8 +
+          l⁻¹ * ENNReal.ofReal (36 * 234256 * (|q 0| + |q 1|) ^ 2) * (S8 * S4) := by ring
+    _ ≤ _ := by
+        refine add_le_add (add_le_add (add_le_add le_rfl
+          (mul_le_mul_of_nonneg_left hR4 zero_le)) (mul_le_mul_of_nonneg_left hR8 zero_le))
+          (mul_le_mul_of_nonneg_left ?_ zero_le)
+        exact hS84.trans (mul_le_mul_of_nonneg_left (add_le_add hR16 hR8) zero_le)
+
+/-- The expectation of the majorant of the coarsening error. -/
+theorem lintegral_coarseMajorant_le {p : unitInterval} {C4 C8 C16 : ℝ}
+    (h4 : ∀ a : Vertex 2, ∫⁻ ω, reachSum ω 4 a ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal C4)
+    (h8 : ∀ a : Vertex 2, ∫⁻ ω, reachSum ω 8 a ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal C8)
+    (h16 : ∀ a : Vertex 2, ∫⁻ ω, reachSum ω 16 a ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal C16)
+    (S : Finset (Vertex 2)) (a b c d e : ℝ≥0∞) :
+    ∫⁻ ω, a * (b + c * ∑ z ∈ S, reachSum ω 4 z + d * ∑ z ∈ S, reachSum ω 8 z +
+        e * (∑ z ∈ S, reachSum ω 16 z + ∑ z ∈ S, reachSum ω 8 z)) ∂(latticeBondLaw 2 p) ≤
+      a * (b + c * ENNReal.ofReal ((S.card : ℝ) * C4) + d * ENNReal.ofReal ((S.card : ℝ) * C8) +
+        e * (ENNReal.ofReal ((S.card : ℝ) * C16) + ENNReal.ofReal ((S.card : ℝ) * C8))) := by
+  have m : ∀ k, Measurable fun ω => ∑ z ∈ S, reachSum ω k z := fun k =>
+    Finset.measurable_fun_sum _ fun z _ => measurable_reachSum k z
+  have m1 : Measurable fun ω => b + c * ∑ z ∈ S, reachSum ω 4 z := measurable_const.add
+    ((m 4).const_mul _)
+  have m2 : Measurable fun ω => b + c * ∑ z ∈ S, reachSum ω 4 z + d * ∑ z ∈ S, reachSum ω 8 z :=
+    m1.add ((m 8).const_mul _)
+  have m3 : Measurable fun ω => ∑ z ∈ S, reachSum ω 16 z + ∑ z ∈ S, reachSum ω 8 z :=
+    (m 16).add (m 8)
+  have m4 : Measurable fun ω => b + c * ∑ z ∈ S, reachSum ω 4 z + d * ∑ z ∈ S, reachSum ω 8 z +
+      e * (∑ z ∈ S, reachSum ω 16 z + ∑ z ∈ S, reachSum ω 8 z) := m2.add (m3.const_mul _)
+  rw [lintegral_const_mul _ m4, lintegral_add_left m2,
+    lintegral_add_left m1, lintegral_add_left measurable_const, lintegral_const, measure_univ,
+    mul_one, lintegral_const_mul _ (m 4),
+    lintegral_const_mul _ (m 8), lintegral_const_mul _ m3, lintegral_add_left (m 16)]
+  gcongr
+  · exact lintegral_sum_reachSum_le h4 S
+  · exact lintegral_sum_reachSum_le h8 S
+  · exact lintegral_sum_reachSum_le h16 S
+  · exact lintegral_sum_reachSum_le h8 S
+
+theorem ofReal_combo {a b c d e x y z w : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hc : 0 ≤ c)
+    (hd : 0 ≤ d) (he : 0 ≤ e) (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0 ≤ z) (hw : 0 ≤ w) :
+    ENNReal.ofReal a * (ENNReal.ofReal b + ENNReal.ofReal c * ENNReal.ofReal x +
+      ENNReal.ofReal d * ENNReal.ofReal y + ENNReal.ofReal e * (ENNReal.ofReal z +
+        ENNReal.ofReal w)) = ENNReal.ofReal (a * (b + c * x + d * y + e * (z + w))) := by
+  rw [ENNReal.ofReal_mul ha, ENNReal.ofReal_add (by positivity) (by positivity),
+    ENNReal.ofReal_add (by positivity) (by positivity),
+    ENNReal.ofReal_add (by positivity) (by positivity), ENNReal.ofReal_mul hc,
+    ENNReal.ofReal_mul hd, ENNReal.ofReal_mul he, ENNReal.ofReal_add hz hw]
+
+/-- **The coarsening error of `v - u` with a measurable majorant.** -/
+theorem exists_coarseError_majorant {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : TriadicCube 2) (ξ q : Fin 2 → ℝ),
+      ∃ H : Configuration 2 → ℝ≥0∞, Measurable H ∧
+        (∀ ω, PlanarPartitionEvent ω → PlanarResolved ω U →
+          ENNReal.ofReal (∑ x ∈ clusterVertices ω U,
+            (clusterExtend ω U (planarNuMaximizer ω U ξ - planarMuMinimizer ω U q) x -
+              clusterExtend ω U (planarNuMaximizer ω U ξ - planarMuMinimizer ω U q)
+                (planarCoarseAnchor ω x)) ^ 2) ≤ H ω) ∧
+        ∫⁻ ω, H ω ∂(latticeBondLaw 2 p) ≤
+          ENNReal.ofReal (C * ((|ξ 0| + |ξ 1|) ^ 2 + (|q 0| + |q 1|) ^ 2) * U.volume *
+            (3 : ℝ) ^ U.scale) := by
+  obtain ⟨C4, hC4, h4⟩ := exists_lintegral_reachSum_le_ofReal hpc 4
+  obtain ⟨C8, hC8, h8⟩ := exists_lintegral_reachSum_le_ofReal hpc 8
+  obtain ⟨C16, hC16, h16⟩ := exists_lintegral_reachSum_le_ofReal hpc 16
+  set K := (3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2 * (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 *
+    (2 * √((2 : ℕ) : ℝ))) with hK
+  refine ⟨K ^ 2 * (9 + 9 * C8 + 36 * 234256 * (C4 + C16 + C8)), by positivity,
+    fun U ξ q => ?_⟩
+  set S := U.toIntegerCube.vertices
+  set N : ℝ := (S.card : ℝ) with hN
+  have hNvol : N = U.volume := card_toIntegerCube_vertices_eq U
+  have hN0 : 0 ≤ N := Nat.cast_nonneg _
+  set P := (|ξ 0| + |ξ 1|) ^ 2 with hP
+  set Q := (|q 0| + |q 1|) ^ 2 with hQ
+  set L : ℝ := (3 : ℝ) ^ U.scale with hL
+  have hL0 : 0 < L := by positivity
+  have hLL : L * L = N := by
+    rw [hNvol, hL]
+    change (3 : ℝ) ^ U.scale * 3 ^ U.scale = (9 : ℝ) ^ U.scale
+    rw [← mul_pow]
+    norm_num
+  have hK2 : 0 ≤ K ^ 2 := by positivity
+  have hX : 0 ≤ 9 * P * U.volume := mul_nonneg (by positivity) U.volume_pos.le
+  have hB : 0 ≤ 36 * 234256 * Q := by positivity
+  have hLi : 0 ≤ L⁻¹ := inv_nonneg.2 hL0.le
+  refine ⟨fun ω => ENNReal.ofReal (K ^ 2) *
+      (ENNReal.ofReal (L * (9 * P * U.volume)) +
+        ENNReal.ofReal (L * (36 * 234256 * Q)) * ∑ z ∈ S, reachSum ω 4 z +
+        ENNReal.ofReal (L⁻¹ * (9 * P * U.volume)) * ∑ z ∈ S, reachSum ω 8 z +
+        ENNReal.ofReal (L⁻¹ * (36 * 234256 * Q) * N) *
+          (∑ z ∈ S, reachSum ω 16 z + ∑ z ∈ S, reachSum ω 8 z)),
+    ?_, fun ω hP' hU' => ?_, ?_⟩
+  · have m : ∀ k, Measurable fun ω => ∑ z ∈ S, reachSum ω k z := fun k =>
+      Finset.measurable_fun_sum _ fun z _ => measurable_reachSum k z
+    exact measurable_const.mul ((((measurable_const.add ((m 4).const_mul _)).add
+      ((m 8).const_mul _))).add (((m 16).add (m 8)).const_mul _))
+  · have hpt := ofReal_coarseError_sub_le hP' hU' ξ q
+    rw [← hL, ← hP, ← hQ] at hpt
+    rw [← ENNReal.ofReal_mul (p := L) hL0.le, ← ENNReal.ofReal_mul (p := L) hL0.le,
+      ← ENNReal.ofReal_mul (p := L⁻¹) hLi, ← ENNReal.ofReal_mul (p := L⁻¹) hLi,
+      ← mul_assoc (ENNReal.ofReal (L⁻¹ * (36 * 234256 * Q))),
+      ← ENNReal.ofReal_mul (mul_nonneg hLi hB)] at hpt
+    exact hpt
+  · refine (lintegral_coarseMajorant_le h4 h8 h16 S _ _ _ _ _).trans ?_
+    rw [ofReal_combo hK2 (mul_nonneg hL0.le hX) (mul_nonneg hL0.le hB) (mul_nonneg hLi hX)
+      (mul_nonneg (mul_nonneg hLi hB) hN0) (mul_nonneg hN0 hC4) (mul_nonneg hN0 hC8)
+      (mul_nonneg hN0 hC16) (mul_nonneg hN0 hC8)]
+    refine ENNReal.ofReal_le_ofReal ?_
+    have e : K ^ 2 * (L * (9 * P * U.volume) + L * (36 * 234256 * Q) * (N * C4) +
+        L⁻¹ * (9 * P * U.volume) * (N * C8) +
+        L⁻¹ * (36 * 234256 * Q) * N * (N * C16 + N * C8)) =
+        K ^ 2 * (N * L) * (9 * P + 36 * 234256 * Q * C4 + 9 * P * C8 +
+          36 * 234256 * Q * (C16 + C8)) := by
+      rw [← hNvol, ← hLL]
+      field_simp
+    rw [e, ← hNvol]
+    have hNL : 0 ≤ K ^ 2 * (N * L) := by positivity
+    have hP0 : 0 ≤ P := by positivity
+    have hQ0 : 0 ≤ Q := by positivity
+    have key : 9 * P + 36 * 234256 * Q * C4 + 9 * P * C8 + 36 * 234256 * Q * (C16 + C8) ≤
+        (9 + 9 * C8 + 36 * 234256 * (C4 + C16 + C8)) * (P + Q) := by
+      linarith [mul_nonneg hQ0 hC8, mul_nonneg hP0 hC4, mul_nonneg hP0 hC16, mul_nonneg hP0 hC8]
+    calc K ^ 2 * (N * L) * (9 * P + 36 * 234256 * Q * C4 + 9 * P * C8 +
+          36 * 234256 * Q * (C16 + C8))
+        ≤ K ^ 2 * (N * L) * ((9 + 9 * C8 + 36 * 234256 * (C4 + C16 + C8)) * (P + Q)) :=
+          mul_le_mul_of_nonneg_left key hNL
+      _ = _ := by rw [hL]; ring
+
 end Rigidity.Percolation
