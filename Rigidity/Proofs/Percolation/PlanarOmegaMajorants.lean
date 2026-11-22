@@ -212,4 +212,81 @@ theorem ofReal_coarseError_le (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
     _ = ENNReal.ofReal (K ^ 2) * (M * ENNReal.ofReal (clusterForm ω U w w)) := by
         rw [← Finset.mul_sum, ← ENNReal.ofReal_sum_of_nonneg fun z _ => hg0 z, hsumg]
 
+/-- `a b ≤ a² + b²` in `ℝ≥0∞`. -/
+theorem ENNReal.mul_le_sq_add_sq (a b : ℝ≥0∞) : a * b ≤ a ^ 2 + b ^ 2 := by
+  rcases le_total a b with h | h
+  · calc a * b ≤ b * b := mul_le_mul_of_nonneg_right h zero_le
+      _ = b ^ 2 := (sq b).symm
+      _ ≤ a ^ 2 + b ^ 2 := le_add_self
+  · calc a * b ≤ a * a := mul_le_mul_of_nonneg_left h zero_le
+      _ = a ^ 2 := (sq a).symm
+      _ ≤ a ^ 2 + b ^ 2 := le_self_add
+
+/-- `(∑ a)(∑ b) ≤ |s| (∑ a² + ∑ b²)` in `ℝ≥0∞`. -/
+theorem ENNReal.sum_mul_sum_le {ι : Type*} (s : Finset ι) (a b : ι → ℝ≥0∞) :
+    (∑ i ∈ s, a i) * (∑ j ∈ s, b j) ≤
+      (s.card : ℝ≥0∞) * (∑ i ∈ s, a i ^ 2 + ∑ j ∈ s, b j ^ 2) := by
+  rw [Finset.sum_mul_sum]
+  calc ∑ i ∈ s, ∑ j ∈ s, a i * b j ≤ ∑ i ∈ s, ∑ j ∈ s, (a i ^ 2 + b j ^ 2) :=
+        Finset.sum_le_sum fun i _ => Finset.sum_le_sum fun j _ => ENNReal.mul_le_sq_add_sq _ _
+    _ = (s.card : ℝ≥0∞) * (∑ i ∈ s, a i ^ 2 + ∑ j ∈ s, b j ^ 2) := by
+        simp only [Finset.sum_add_distrib, Finset.sum_const, nsmul_eq_mul, ← Finset.mul_sum]
+        ring
+
+/-- The energy of `v - u` for the maximizer of `ν(U, p)` and the minimizer of `μ(U, q)`. -/
+theorem ofReal_clusterForm_sub_le (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
+    (hU : PlanarResolved ω U) (p q : Fin 2 → ℝ) :
+    ENNReal.ofReal (clusterForm ω U (planarNuMaximizer ω U p - planarMuMinimizer ω U q)
+        (planarNuMaximizer ω U p - planarMuMinimizer ω U q)) ≤
+      ENNReal.ofReal (9 * (|p 0| + |p 1|) ^ 2 * U.volume) +
+        ENNReal.ofReal (36 * 234256 * (|q 0| + |q 1|) ^ 2) *
+          ∑ a ∈ U.toIntegerCube.vertices, planarReach ω a ^ 4 := by
+  set u := planarMuMinimizer ω U q
+  set v := planarNuMaximizer ω U p
+  obtain ⟨huA, hvar_u⟩ := planarMuMinimizer_spec hP hU q
+  have hvol := U.volume_pos
+  have h2 : clusterForm ω U (v - u) (v - u) ≤ 2 * clusterForm ω U v v + 2 * clusterForm ω U u u := by
+    have h := clusterForm_self_nonneg (v + u)
+    have e1 : clusterForm ω U (v - u) (v - u) =
+        clusterForm ω U v v - 2 * clusterForm ω U u v + clusterForm ω U u u := by
+      simp only [map_sub, LinearMap.sub_apply]
+      rw [clusterForm_symm v u]
+      ring
+    have e2 : clusterForm ω U (v + u) (v + u) =
+        clusterForm ω U v v + 2 * clusterForm ω U u v + clusterForm ω U u u := by
+      simp only [map_add, LinearMap.add_apply]
+      rw [clusterForm_symm v u]
+      ring
+    rw [e1]
+    rw [e2] at h
+    linarith
+  have hBv : clusterForm ω U v v = 2 * U.volume * planarNu ω U p := by
+    rw [planarNu_eq_planarNuMaximizer U p]
+    field_simp
+    rfl
+  have hBu : clusterForm ω U u u = 2 * U.volume * (-planarMu ω U q) := by
+    have := planarMu_mul_volume_eq hP hU q huA hvar_u
+    linarith
+  have hν := planarNu_le (ω := ω) (U := U) p
+  have hμ := ofReal_neg_planarMu_le hP hU q
+  have hμ0 : 0 ≤ -planarMu ω U q := by linarith [planarMu_nonpos hP hU q]
+  have hB : clusterForm ω U (v - u) (v - u) ≤
+      9 * (|p 0| + |p 1|) ^ 2 * U.volume + 4 * U.volume * (-planarMu ω U q) := by
+    rw [hBv, hBu] at h2
+    nlinarith
+  refine (ENNReal.ofReal_le_ofReal hB).trans ?_
+  rw [ENNReal.ofReal_add (by positivity) (by positivity),
+    ENNReal.ofReal_mul (p := 4 * U.volume) (by positivity)]
+  refine add_le_add le_rfl ?_
+  calc ENNReal.ofReal (4 * U.volume) * ENNReal.ofReal (-planarMu ω U q)
+      ≤ ENNReal.ofReal (4 * U.volume) * (ENNReal.ofReal (9 * (|q 0| + |q 1|) ^ 2 / U.volume) *
+          ∑ a ∈ U.toIntegerCube.vertices, 234256 * planarReach ω a ^ 4) := by gcongr
+    _ = ENNReal.ofReal (36 * 234256 * (|q 0| + |q 1|) ^ 2) *
+          ∑ a ∈ U.toIntegerCube.vertices, planarReach ω a ^ 4 := by
+        rw [← mul_assoc, ← ENNReal.ofReal_mul (by positivity), ← Finset.mul_sum, ← mul_assoc,
+          ← ENNReal.ofReal_ofNat 234256, ← ENNReal.ofReal_mul (by positivity)]
+        congr 2
+        field_simp
+        ring
+
 end Rigidity.Percolation
