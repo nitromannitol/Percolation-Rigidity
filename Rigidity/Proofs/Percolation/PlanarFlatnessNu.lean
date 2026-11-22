@@ -173,15 +173,17 @@ theorem exists_planarNuFlatness_le_pointwise :
 
 /-- **Flatness of the coarsened maximizers of `ν`** (Armstrong and Dario, Lemma 5.8, display
 (5.33), in dimension two), from Lemma 5.5 and the energy bound (4.25). -/
-theorem exists_lintegral_planarNuFlatness_le {p : unitInterval}
+theorem exists_planarNuFlatness_majorant {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (h55 : PlanarRestrictQuadCoarsenNu p)
     (hcg : PlanarCoarseGradMomentNu p) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ (n : ℕ) (ξ : Fin 2 → ℝ),
-      ∫⁻ ω, ENNReal.ofReal (planarFlatnessError ⟨n + 1, 0⟩
-          (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ)) ξ) ∂(latticeBondLaw 2 p) ≤
-        ENNReal.ofReal (C * (ξ 0 ^ 2 + ξ 1 ^ 2) * (9 : ℝ) ^ n *
-          ((3 : ℝ) ^ (-(n : ℝ) / 10) +
-            ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) := by
+      ∃ Φ : Configuration 2 → ℝ, AEMeasurable Φ (latticeBondLaw 2 p) ∧ (∀ ω, 0 ≤ Φ ω) ∧
+        (∀ ω, planarFlatnessError ⟨n + 1, 0⟩
+            (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ)) ξ ≤ Φ ω) ∧
+        ∫⁻ ω, ENNReal.ofReal (Φ ω) ∂(latticeBondLaw 2 p) ≤
+          ENNReal.ofReal (C * (ξ 0 ^ 2 + ξ 1 ^ 2) * (9 : ℝ) ^ n *
+            ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+              ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) := by
   obtain ⟨Cn, hCn, hNab⟩ := exists_nablaAffineMajorant_le hpc
   obtain ⟨C55, hC55, h55⟩ := h55
   obtain ⟨Cg, hCg, hcg⟩ := hcg (1 / 10) (by norm_num)
@@ -242,7 +244,7 @@ theorem exists_lintegral_planarNuFlatness_le {p : unitInterval}
     refine mul_le_mul_of_nonneg_left (add_le_add le_rfl ?_) (by positivity)
     refine mul_le_mul_of_nonneg_left (Finset.sum_le_sum fun V _ => le_nablaAffineMajorant V ξ ω)
       (by positivity)
-  have hmain := lintegral_ofReal_le_of_le (μ := latticeBondLaw 2 p)
+  obtain ⟨Φ, hΦm, hΦ0, hXΦ, hΦint⟩ := exists_majorant_of_le (μ := latticeBondLaw 2 p)
     (X := fun ω => planarFlatnessError ⟨n + 1, 0⟩
       (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ)) ξ)
     (f₀ := fun ω => coarseEnergy ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ))
@@ -276,10 +278,25 @@ theorem exists_lintegral_planarNuFlatness_le {p : unitInterval}
     (fun k _ => mul_nonneg (by positivity) (add_nonneg (Finset.sum_nonneg fun l _ =>
       planarTau_nonneg p l) (by positivity)))
     (fun k _ => mul_nonneg (by positivity) (add_nonneg (planarTau_nonneg p k) (by positivity)))
-  refine hmain.trans (ENNReal.ofReal_le_ofReal ?_)
+  refine ⟨Φ, hΦm, hΦ0, hXΦ, hΦint.trans (ENNReal.ofReal_le_ofReal ?_)⟩
   refine planarFlatness_arith (τ := planarTau p) (planarTau_nonneg p) hCM hCg le_rfl hC55 hCn hQ0
     hQ0 hΞQ (m := n + 1) (n := n) rfl h10b (Cc := fun _ => ∑ j : Fin 2, (ξ j - ξ j) ^ 2) ?_
   intro k _
   simp
+
+/-- The bound of `exists_planarNuFlatness_majorant` for the expectation itself. -/
+theorem exists_lintegral_planarNuFlatness_le {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (h55 : PlanarRestrictQuadCoarsenNu p)
+    (hcg : PlanarCoarseGradMomentNu p) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (n : ℕ) (ξ : Fin 2 → ℝ),
+      ∫⁻ ω, ENNReal.ofReal (planarFlatnessError ⟨n + 1, 0⟩
+          (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ)) ξ) ∂(latticeBondLaw 2 p) ≤
+        ENNReal.ofReal (C * (ξ 0 ^ 2 + ξ 1 ^ 2) * (9 : ℝ) ^ n *
+          ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+            ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) := by
+  obtain ⟨C, hC, h⟩ := exists_planarNuFlatness_majorant hpc h55 hcg
+  refine ⟨C, hC, fun n ξ => ?_⟩
+  obtain ⟨Φ, -, -, hle, hint⟩ := h n ξ
+  exact (lintegral_mono fun ω => ENNReal.ofReal_le_ofReal (hle ω)).trans hint
 
 end Rigidity.Percolation

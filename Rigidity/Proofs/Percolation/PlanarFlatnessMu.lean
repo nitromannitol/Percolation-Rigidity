@@ -358,16 +358,18 @@ theorem planarFlatness_arith {τ : ℕ → ℝ} (hτ : ∀ l, 0 ≤ τ l) {CM Cg
 
 /-- **Flatness of the coarsened minimizers of `μ`** (Armstrong and Dario, Lemma 5.8, display
 (5.32), in dimension two), from Lemmas 5.7 and 5.5 and the energy bound (4.24). -/
-theorem exists_lintegral_planarMuFlatness_le {p : unitInterval}
+theorem exists_planarMuFlatness_majorant {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (h57 : PlanarWeakConvergence p)
     (h55 : PlanarRestrictQuadCoarsenMu p) (hcg : PlanarCoarseGradMomentMu p) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ (n : ℕ) (q : Fin 2 → ℝ),
-      ∫⁻ ω, ENNReal.ofReal (planarFlatnessError ⟨n + 1, 0⟩
-          (coarsen ω ⟨n + 1, 0⟩ (planarMuMinimizer ω ⟨n + 1, 0⟩ q))
-          (planarAhomInvFinite p n *ᵥ q)) ∂(latticeBondLaw 2 p) ≤
-        ENNReal.ofReal (C * (q 0 ^ 2 + q 1 ^ 2) * (9 : ℝ) ^ n *
-          ((3 : ℝ) ^ (-(n : ℝ) / 10) +
-            ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) := by
+      ∃ Φ : Configuration 2 → ℝ, AEMeasurable Φ (latticeBondLaw 2 p) ∧ (∀ ω, 0 ≤ Φ ω) ∧
+        (∀ ω, planarFlatnessError ⟨n + 1, 0⟩
+            (coarsen ω ⟨n + 1, 0⟩ (planarMuMinimizer ω ⟨n + 1, 0⟩ q))
+            (planarAhomInvFinite p n *ᵥ q) ≤ Φ ω) ∧
+        ∫⁻ ω, ENNReal.ofReal (Φ ω) ∂(latticeBondLaw 2 p) ≤
+          ENNReal.ofReal (C * (q 0 ^ 2 + q 1 ^ 2) * (9 : ℝ) ^ n *
+            ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+              ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) := by
   obtain ⟨C57, hC57, h57⟩ := h57
   obtain ⟨C55, hC55, h55⟩ := h55
   obtain ⟨Cg, hCg, hcg⟩ := hcg (1 / 10) (by norm_num)
@@ -417,7 +419,7 @@ theorem exists_lintegral_planarMuFlatness_le {p : unitInterval}
     have h := h57 V q
     rw [hVs] at h
     exact h
-  have hmain := lintegral_ofReal_le_of_le (μ := latticeBondLaw 2 p)
+  obtain ⟨Φ, hΦm, hΦ0, hXΦ, hΦint⟩ := exists_majorant_of_le (μ := latticeBondLaw 2 p)
     (X := fun ω => planarFlatnessError ⟨n + 1, 0⟩
       (coarsen ω ⟨n + 1, 0⟩ (planarMuMinimizer ω ⟨n + 1, 0⟩ q)) (planarAhomInvFinite p n *ᵥ q))
     (f₀ := fun ω => coarseEnergy ω ⟨n + 1, 0⟩ (planarMuMinimizer ω ⟨n + 1, 0⟩ q))
@@ -455,7 +457,7 @@ theorem exists_lintegral_planarMuFlatness_le {p : unitInterval}
     (fun k _ => mul_nonneg (by positivity) (add_nonneg (Finset.sum_nonneg fun l _ =>
       planarTau_nonneg p l) (by positivity)))
     (fun k _ => mul_nonneg (by positivity) (add_nonneg (planarTau_nonneg p k) (by positivity)))
-  refine hmain.trans (ENNReal.ofReal_le_ofReal ?_)
+  refine ⟨Φ, hΦm, hΦ0, hXΦ, hΦint.trans (ENNReal.ofReal_le_ofReal ?_)⟩
   refine planarFlatness_arith (τ := planarTau p) (planarTau_nonneg p) hCM hCg hCA hC55 hC57 hQ0
     (by positivity) hΞQ (m := n + 1) (n := n) rfl h10b (Cc := fun k =>
       ∑ j : Fin 2, ((planarAhomInvFinite p k *ᵥ q) j - (planarAhomInvFinite p n *ᵥ q) j) ^ 2) ?_
@@ -465,5 +467,21 @@ theorem exists_lintegral_planarMuFlatness_le {p : unitInterval}
   refine add_le_add ?_ le_rfl
   exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.Ico_subset_Ico_right (by omega))
     fun l _ _ => planarTau_nonneg p l
+
+/-- The bound of `exists_planarMuFlatness_majorant` for the expectation itself. -/
+theorem exists_lintegral_planarMuFlatness_le {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (h57 : PlanarWeakConvergence p)
+    (h55 : PlanarRestrictQuadCoarsenMu p) (hcg : PlanarCoarseGradMomentMu p) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (n : ℕ) (q : Fin 2 → ℝ),
+      ∫⁻ ω, ENNReal.ofReal (planarFlatnessError ⟨n + 1, 0⟩
+          (coarsen ω ⟨n + 1, 0⟩ (planarMuMinimizer ω ⟨n + 1, 0⟩ q))
+          (planarAhomInvFinite p n *ᵥ q)) ∂(latticeBondLaw 2 p) ≤
+        ENNReal.ofReal (C * (q 0 ^ 2 + q 1 ^ 2) * (9 : ℝ) ^ n *
+          ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+            ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) := by
+  obtain ⟨C, hC, h⟩ := exists_planarMuFlatness_majorant hpc h57 h55 hcg
+  refine ⟨C, hC, fun n q => ?_⟩
+  obtain ⟨Φ, -, -, hle, hint⟩ := h n q
+  exact (lintegral_mono fun ω => ENNReal.ofReal_le_ofReal (hle ω)).trans hint
 
 end Rigidity.Percolation
