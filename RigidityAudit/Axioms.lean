@@ -144,6 +144,9 @@ import Rigidity.Proofs.Percolation.PlanarOmegaIntegrals
 import Rigidity.Proofs.Percolation.PlanarOmegaMajorants
 import Rigidity.Proofs.Percolation.PlanarOmegaPointwise
 import Rigidity.Proofs.Percolation.PlanarOmegaRates
+import Rigidity.Proofs.Regularity.ClusterOrderOne
+import Rigidity.Proofs.Regularity.OrderOneEndpoint
+import Rigidity.Proofs.Regularity.OrderOneOrigin
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -542,3 +545,15 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.exists_planarOmegaD_le_of_inputs
 #print axioms Rigidity.Percolation.exists_planarOmegaD_decay
 #print axioms Rigidity.Percolation.planarMuLimit_eq_of_inputs
+
+-- Theorem 2(iii) at k = 1 from the mesoscopic regularity of degree two (Armstrong and Dario, Lemma 7.3 and Theorem 2)
+#print axioms Rigidity.Proofs.Regularity.ArmstrongDarioMesoscopicDegreeTwo
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo
+#print axioms Rigidity.Proofs.Regularity.ballExcess_le_of_clusterBallVolumeL2
+#print axioms Rigidity.Proofs.Regularity.weighted_endpoint_step
+#print axioms Rigidity.Proofs.Regularity.orderOneEndpoint_step
+#print axioms Rigidity.Proofs.Regularity.orderOneEndpoint_iterate
+#print axioms Rigidity.Proofs.Regularity.orderOneEndpoint_fit
+#print axioms Rigidity.Proofs.Regularity.exists_forall_le_of_orderOneEndpoint
+#print axioms Rigidity.Proofs.Regularity.orderOneEndpointData_cluster
+#print axioms Rigidity.Proofs.Regularity.clusterLiftMap_mem_harmonicGrowthSpace

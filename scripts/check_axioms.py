@@ -359,6 +359,17 @@ further = {
          'Rigidity.Percolation.exists_planarOmegaD_le_of_inputs',
          'Rigidity.Percolation.exists_planarOmegaD_decay',
          'Rigidity.Percolation.planarMuLimit_eq_of_inputs'],
+    'Theorem 2(iii) of Armstrong and Dario at k = 1 from the mesoscopic regularity of degree two (Lemma 7.3, (7.18) at k = 2), by the endpoint iteration':
+        ['Rigidity.Proofs.Regularity.ArmstrongDarioMesoscopicDegreeTwo',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo',
+         'Rigidity.Proofs.Regularity.ballExcess_le_of_clusterBallVolumeL2',
+         'Rigidity.Proofs.Regularity.weighted_endpoint_step',
+         'Rigidity.Proofs.Regularity.orderOneEndpoint_step',
+         'Rigidity.Proofs.Regularity.orderOneEndpoint_iterate',
+         'Rigidity.Proofs.Regularity.orderOneEndpoint_fit',
+         'Rigidity.Proofs.Regularity.exists_forall_le_of_orderOneEndpoint',
+         'Rigidity.Proofs.Regularity.orderOneEndpointData_cluster',
+         'Rigidity.Proofs.Regularity.clusterLiftMap_mem_harmonicGrowthSpace'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
