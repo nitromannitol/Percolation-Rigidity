@@ -339,8 +339,8 @@ fidelity:
     coarse energy bounds toward Lemma 5.5 (Armstrong and Dario, Lemma 3.6, Propositions 3.4 and
     3.8 with the Sobolev hypothesis proved on the cluster of the triple of each Gehring cube, the
     weights being the reach of the partition; the Meyers estimate, the Gehring partition and the
-    bounds on the reach and on the cell averages of the weight remain hypotheses, so that Lemma 5.5
-    and the steps of Lemma 5.7 are not proved; the second inequality of the display in Step 3 of
+    bounds on the reach and on the cell averages of the weight are hypotheses of that deterministic
+    form; the second inequality of the display in Step 3 of
     Lemma 5.5 does not hold as written and is replaced by the Hoelder inequality inside each cell
     with the cell average of the weight), for the subadditive quantities on the clusters of
     triadic cubes of Z^d (Armstrong and Dario, Section 4 and Definition 5.1, every d >= 2: mu and
@@ -349,11 +349,21 @@ fidelity:
     3^(-n) in (4.49), Lemma 4.7 in expectation with a deterministic slope, and the homogenized matrix
     by polarization of the limit; the localization of mu and the limit of its expectation are proved
     for d = 2 only), for Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 in
-    dimension two (Armstrong and Dario, from Lemma 5.7 and from Lemma 5.5, which remain the
-    hypotheses PlanarWeakConvergence, PlanarRestrictQuadCoarsenMu and PlanarRestrictQuadCoarsenNu;
+    dimension two (Armstrong and Dario, from Lemma 5.7 and from Lemma 5.5, which are the
+    hypotheses PlanarWeakConvergence, PlanarRestrictQuadCoarsenMu and PlanarRestrictQuadCoarsenNu, discharged below;
     the sum in (5.12) is taken over k = n, ..., m - 1 in place of the printed upper limit m + 1,
-    the flatness is measured with the mean subtracted, and both flatness rates are 3^(-n/10)), and
-    for Theorem 2(iii) of Armstrong and Dario at k = 1 at the origin (a theorem from the mesoscopic
+    the flatness is measured with the mean subtracted, and both flatness rates are 3^(-n/10)), for
+    Lemmas 5.5 and 5.7 and the qualitative part of Proposition 5.2 in dimension two (Armstrong and
+    Dario, displays (5.12) and (5.25), theorems for p above the critical value with no further
+    hypothesis, so that PlanarWeakConvergence, PlanarRestrictQuadCoarsenMu and
+    PlanarRestrictQuadCoarsenNu are discharged; the partition of Definition 3.7 is obtained from
+    Propositions 2.1 and 2.4 applied to a local family of cubes on whose children the reverse
+    Hoelder inequality holds for all closed subsets of the triple, with a failure probability bounded
+    through the planar partition, in place of C_max(3 cube) with the numerator C_*(cube); the Meyers
+    estimate is restated with the exponents chosen before the moment bound and the moment exponent
+    (2+e)(1+e)(d+1)/e; the Hoelder inequality is applied inside the cells, the decay of the failure
+    probabilities is polynomial, and the cap in (5.31) is at n/12), for
+    Theorem 2(iii) of Armstrong and Dario at k = 1 at the origin (a theorem from the mesoscopic
     estimate (7.18) at k = 2, ArmstrongDarioMesoscopicDegreeTwo, and the corrector inputs, by an
     endpoint iteration that lifts only the affine functions in place of the argument of
     Armstrong, Kuusi and Mourrat, Proposition 3.1), and

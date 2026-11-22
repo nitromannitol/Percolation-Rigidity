@@ -1005,13 +1005,14 @@ Departures from Armstrong and Dario:
   The theorem `planarMuLimit_eq_of_decay` and the geometric rates derived from Lemma 5.10 therefore
   take the bound as the explicit hypothesis `h59`; without it, the identification is reduced to the
   vanishing of the limit of `E[ω]`. The rate of Proposition 5.2 and Lemmas 5.3 and 5.11 are not
-  proved.
+  proved. Lemmas 5.5 and 5.7 in `d = 2` are proved in [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
 - **Lemma 5.4.** The estimate is proved for every `n ≤ m` with the error
   `C\|q\|₁² (∑_k ε_k + ε_n)`, `ε_k = 3^{−k/2} + exp(−c 3ᵏ)`, where AD take `n ∈ [m/2, m)` and the
   error `3^{−n/4}`; the quantity `τ^ν` is built at `ā⁻¹ e_i`, as in AD.
 - **Lemma 5.7.** The field of Step 1 is the discrete curl of a cut off affine stream function, so
   it is exactly divergence free and supported in the square of half side `5/4 · 3ⁿ + 1`, whereas AD
-  discretize a smooth field that is almost divergence free. Steps 2 and 3 are not proved.
+  discretize a smooth field that is almost divergence free. Steps 2 and 3 are not proved in this
+  section; see [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
 - **Lemma 5.10, Step 2.** The display for `D̃_n − D̃_{n+1}` has `D_k − D_{k−1}` where `D_k − D_{k+1}`
   is meant, and the bound of Lemma 5.9 is resummed over `l ∈ [N₀, n]` where `l ≤ k` is meant, the
   terms with `l < N₀` being `O(3^{N₀−k})`. The Lean proof uses the exact recursions
@@ -1104,8 +1105,8 @@ Departures from Armstrong and Dario:
   `sum_edgePairing_sq_le_planarMuDefect` are deterministic: the good events they assume (the
   Gehring partition and the bounds on the reach over the triples, the partition scales and the
   Meyers estimate on the cells of the inner squares, the bounds on the cell averages of the weight)
-  are not shown to hold with high probability here. Consequently Lemma 5.5 itself and Lemma 5.7 Step 3
-  are not proved; Lemmas 5.8 and 5.9 are proved from Lemmas 5.5 and 5.7 in
+  are not shown to hold with high probability in this section. Consequently Lemma 5.5 itself and
+  Lemma 5.7 Step 3 are not proved here; they are proved for `p > 𝔭_c(2)` in [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two). Lemmas 5.8 and 5.9 are proved from Lemmas 5.5 and 5.7 in
   [Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 for d = 2](#lemmas-58-and-59-and-the-qualitative-part-of-proposition-52-for-d--2).
 
 ## The subadditive quantities on the clusters of triadic cubes of Z^d
@@ -1225,7 +1226,8 @@ those of the three hypotheses) have axiom reports in
 identification are Lemma 5.7 (`PlanarWeakConvergence`) and Lemma 5.5
 (`PlanarRestrictQuadCoarsenMu`, `PlanarRestrictQuadCoarsenNu`), which are the inputs that
 [Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5](#clusters-of-integer-cubes-the-meyers-estimate-and-the-coarse-energy-bounds-toward-lemma-55)
-reduces to the good events of the Meyers estimate; they are not proved here.
+reduces to the good events of the Meyers estimate; they are not proved in this section, and are theorems
+for `p > 𝔭_c(2)` in [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
 
 Departures from Armstrong and Dario:
 
@@ -1248,6 +1250,79 @@ Departures from Armstrong and Dario:
 - **Measurability.** Lower integrals are subadditive only for measurable summands. In the proof of
   Lemma 5.9 only one summand, the gap of `ν`, is not shown to be measurable; every other term has a
   measurable majorant, and measurability of the quantities of Lemma 5.5 is part of its hypothesis.
+
+## Lemmas 5.5 and 5.7 in dimension two
+
+Lemma 5.5 (display (5.12), for `μ` and for `ν`), Lemma 5.7 (display (5.25)) and the qualitative part of
+Proposition 5.2 hold in `d = 2` for `𝔭_c(2) < p < 1` with no further hypothesis
+([`planarRestrictQuadCoarsenMu_holds`](Rigidity/Proofs/Cluster/PlanarRHRestrictQuad.lean),
+[`planarRestrictQuadCoarsenNu_holds`](Rigidity/Proofs/Cluster/PlanarRHRestrictQuad.lean),
+[`planarWeakConvergence_holds`](Rigidity/Proofs/Cluster/PlanarRHWeakConv.lean),
+[`planarMuLimit_eq`](Rigidity/Proofs/Cluster/PlanarRHWeakConv.lean)): the three hypotheses of the
+identification in the previous section are discharged, and
+`lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q` for every `q`.
+
+The partition `𝓡` of Definition 3.7 is obtained from Propositions 2.1 and 2.4 applied to a local family
+[`planarRHGood`](Rigidity/Proofs/Cluster/PlanarRHLocal.lean). A cube is good when, on each of its
+children `□`, the reverse Hölder inequality with exponent `2d/(d+1)` holds for every set of `3□`
+closed under its open edges and every function harmonic on it. Its failure events are determined by
+the open edges inside the threefold enlargement (hypothesis (2.1);
+`measurableSet_not_mem_planarRHGood_local`). As at (3.12), its failure probability is bounded through
+the planar partition: when the planar cells of `3□` have scale at most `k − 2` and
+`∑ planarReach⁸ ≤ C |3□|`, the planar Lemma 3.6 holds on the cluster of the triple
+(`planarRHCube_of_scales`). The parts of a closed set that no open edge leaves carry no energy, by the
+Caccioppoli inequality; the parts that leave the triple meet its cluster, by the anchor property of the
+planar cells. The concentration of the averages of the powers of the reach (the analogue of AD
+Proposition 2.4 for the planar partition) is proved as well (`planarReachConcentration_holds`). The
+hypothesis `PlanarGehringPartition`, a Gehring partition in the form used by the planar Meyers estimate,
+remains only as the hypothesis of the earlier theorems `planarRestrictQuadCoarsenMu_of_gehring`,
+`planarRestrictQuadCoarsenNu_of_gehring`, `planarWeakConvergence_of_gehring` and
+`planarMuLimit_eq_of_gehring_partition`, which the theorems above supersede.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Cluster.measurableSet_not_mem_planarRHGood_local`](Rigidity/Proofs/Cluster/PlanarRHLocal.lean) | the failure event of a cube `T` of the local family is determined by the open edges inside `3T`, as the hypothesis (2.1) of Proposition 2.1 requires. |
+| [`planarRHCube_of_scales`](Rigidity/Proofs/Cluster/PlanarRHEvent.lean), [`planarRHFailureBound_holds`](Rigidity/Proofs/Cluster/PlanarRHProb.lean) | the planar form of AD Lemma 3.6 on the triple of a cube whose partition cubes are small, and the failure bound (2.2) of the local family, `C exp(−c 3^{ns})`, for `p > 𝔭_c(2)`. |
+| [`planarRHPartition_of_failureBound`](Rigidity/Proofs/Cluster/PlanarRHPartition.lean), [`planarRHPartition_holds`](Rigidity/Proofs/Cluster/PlanarRHProb.lean) | the partition `𝓡` of AD Definition 3.7 in `d = 2`, with comparable neighbours, predecessors in the local family and, for every `t` and `B`, `∑_{x ∈ □} size(cell(x))^t ≤ K \|□\|` off an event of probability `C 3^{−Bk}` (Propositions 2.1 and 2.4). |
+| [`Rigidity.Proofs.Cluster.planar_meyers_rh_uniform`](Rigidity/Proofs/Cluster/PlanarRHMeyers.lean), [`meyers_triadic_uniform`](Rigidity/Proofs/Cluster/MeyersUniform.lean), [`planar_meyers_uniform`](Rigidity/Proofs/Cluster/MeyersUniform.lean), [`planar_meyers_clusterHarmonic_uniform`](Rigidity/Proofs/Cluster/MeyersUniform.lean), [`partition_meyers_uniform`](Rigidity/Proofs/Cluster/MeyersUniform.lean) | AD Proposition 3.8, deterministic part, in the form `∃ ε t, ∀ K, ∃ C`: the exponents `ε` and `t` depend only on the reverse Hölder constant (as the minimal scale `𝓜_t(𝓡)` requires) and only the constant depends on the moment bound `K`; for the local family `planarRHGood` in `planar_meyers_rh_uniform`. |
+| [`planarReachConcentration_holds`](Rigidity/Proofs/Cluster/PlanarReachConcentrationHolds.lean), [`Rigidity.Percolation.exists_measure_not_mem_planarCoarseGood_le`](Rigidity/Proofs/Percolation/PlanarReachDomination.lean), [`planarReach_le_stoppingSize`](Rigidity/Proofs/Percolation/PlanarReachDomination.lean) | the analogue of AD Proposition 2.4 for the planar partition: `∑_{x ∈ □} planarReach(x)^τ ≤ A \|□\|` off an event of probability `C 3^{−Bk}`, through the coarsely good cubes, whose failure is determined by the threefold enlargement and whose stopping size dominates the reach. |
+| [`planarRestrictQuadCoarsenMu_holds`](Rigidity/Proofs/Cluster/PlanarRHRestrictQuad.lean), [`planarRestrictQuadCoarsenNu_holds`](Rigidity/Proofs/Cluster/PlanarRHRestrictQuad.lean) | AD Lemma 5.5, display (5.12), `d = 2`, `p > 𝔭_c(2)`: on the good event the deterministic bound of Step 3 applies, and off it the Cauchy–Schwarz inequality with a measurable majorant built from the moments of the reach. |
+| [`Rigidity.Proofs.Cluster.exists_planarMuRestrictError_majorant`](Rigidity/Proofs/Cluster/PlanarRestrictErrorMajorant.lean), [`exists_planarNuRestrictError_majorant`](Rigidity/Proofs/Cluster/PlanarRestrictErrorMajorant.lean), [`measure_restrictBad_le`](Rigidity/Proofs/Cluster/PlanarRestrictBad.lean), [`Rigidity.Percolation.measurable_planarMuRestrictError`](Rigidity/Proofs/Percolation/PlanarRestrictErrorMeasurable.lean), [`measurable_planarNuRestrictError`](Rigidity/Proofs/Percolation/PlanarRestrictErrorMeasurable.lean), [`measurable_planarMuGen_indicator`](Rigidity/Proofs/Percolation/PlanarMuGeneral.lean) | the measurable majorants of the restriction errors, the probability of the bad event of the proof of Lemma 5.5, and the measurability of the errors (part of the hypothesis of the previous section, proved here). |
+| [`Rigidity.Proofs.Cluster.exists_lintegral_sum_subcube_solenoidal_sq_le`](Rigidity/Proofs/Cluster/PlanarOneVarEstBound.lean), [`exists_lintegral_planarMuRestrictFieldError_le`](Rigidity/Proofs/Cluster/PlanarRestrictFieldQuad.lean) | AD Lemma 5.7, display (5.30), `d = 2`: for `n ≥ 9`, `E[\|∑_V \|□_n\|⁻¹ ⟨∇[u(·, V, q)]_𝒫, g⟩_V\|²] ≤ C \|e\|₁² \|q\|² (τ_n + 3^{−n/4})`, the sum over the subcubes `V` of scale `n` of `□_{n+1}` and `g` the solenoidal field of Step 1; the expectation of the error of the pairing of a bounded field with the coarsened gradient on `U` against its restriction to the subcubes (from the hypothesis `PlanarGehringPartition`). |
+| [`Rigidity.Proofs.Cluster.exists_measure_not_planarCapGood_le`](Rigidity/Proofs/Cluster/PlanarSwitchLocProb.lean), [`exists_lintegral_sq_sub_switchLoc_le`](Rigidity/Proofs/Cluster/PlanarSwitchLocProb.lean), [`exists_variance_planarMuGradAvg_origin_le`](Rigidity/Proofs/Cluster/PlanarWeakConvOrigin.lean) | AD Proposition 4.9 and Lemma 5.7, display (5.31), `d = 2`: the planar partition is determined by the edges of a neighbourhood at the cap `k`, off an event of probability at most `C (2 · 3^{n−k} + 29)² exp(−c 3^k)`; for `n ≥ 120` and `k = ⌊n/12⌋` the pairing and its local version differ in mean square by at most `C G² \|q\|₁² 3^{−n/4}`; the variance of the spatial average at the origin is at most `C \|q\|² (τ_n + 3^{−n/4})` (the last from `PlanarGehringPartition`). |
+| [`Rigidity.Percolation.exists_lintegral_planarMuDefect_le_tau`](Rigidity/Proofs/Percolation/PlanarDefectTauCube.lean), [`exists_lintegral_planarNuDefect_le_tau`](Rigidity/Proofs/Percolation/PlanarNuDefectTauCube.lean) | AD Lemma 5.4, display (5.10), `d = 2`, on every triadic cube `U`: `E[1{𝒫, U resolved} D_n(U, q)] ≤ \|U\| C \|q\|² (∑_{k=n}^{m−1} τ_k + 3^{−n/4})` for `μ` and for `ν`. |
+| [`planarWeakConvergence_holds`](Rigidity/Proofs/Cluster/PlanarRHWeakConv.lean), [`planarMuLimit_eq`](Rigidity/Proofs/Cluster/PlanarRHWeakConv.lean) | AD Lemma 5.7, display (5.25), for every triadic cube, and AD Proposition 5.2, qualitative part, `d = 2`, `p > 𝔭_c(2)`: `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q`. |
+
+The theorems of the table and the earlier theorems from `PlanarGehringPartition` depend only on axioms among
+`propext`, `Classical.choice` and `Quot.sound`; forty reports (thirty-eight theorems and two definitions)
+are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Armstrong and Dario:
+
+- **The partition `𝓡`.** The good cubes ask the reverse Hölder inequality for all sets of the triple
+  of each child closed under the open edges and all functions harmonic on them, not only for
+  `𝒞_max(3□)` with the numerator `𝒞_*(□)` as in Definition 3.7. The family stays local, so that
+  Propositions 2.1 and 2.4 apply to it; its failure probability is bounded through the planar
+  partition, as AD bound (3.12) through the minimal scale of `𝒫`, with polynomial rates in place of
+  the stretched exponentials of the tails of `𝓡`.
+- **Moment exponent.** The Meyers estimate is restated with `ε` and `t` chosen before the moment
+  bound `K`, the order that the minimal scale `𝓜_t(𝓡)` requires. The Lean uses
+  `t = (2+ε)(1+ε)(d+1)/ε`, given by the Hölder inequality; the exponent printed at AD18.tex:1657-1663
+  has a harmless factor-2 slip.
+- **Lemma 5.5, Step 3.** The Hölder inequality is applied inside each cell, as in the section on the
+  Meyers estimate; the cells are the triadic squares of scale `⌊n/2⌋ − 1` of the inner square, so that the
+  triples and their lattice neighbourhoods lie inside the subcube, the weight is `W_t = 3 planarReach`, and
+  `W = 3 √A₂ 3^k` on `U`. Off the good event the Cauchy–Schwarz inequality is used with a measurable
+  majorant built from the moments of the reach; the decay is `C 3^{−Bk}`.
+- **Proposition 2.4.** The concentration of the reach is proved for the planar partition through the
+  coarsely good cubes (the subcubes five scales down are good; the failure of a cube is determined by
+  its threefold enlargement and each subcube is ninefold local), whose stopping size dominates the reach.
+- **Lemma 5.7, display (5.31).** The cap is at `k = n/12` (AD: `⌈n/2⌉`), with deterministic window bounds on
+  the capped event in place of moments; the local version is the clamp to `[−M, M]` of the value at a
+  configuration of the capped event with the same open edges in the neighbourhood, and `Ψ` is obtained by
+  polarization of the matrix `planarMuGen` with the fields restricted to the interior (AD use `μ_loc`
+  pairs on the interior). This route needs `n ≥ 120`; `n < 120` is covered by the deterministic bound, and
+  every cube by translation on the local good events.
 
 ## The Dirichlet problem and the excess-decay iteration
 
@@ -1377,7 +1452,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 327 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 367 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1406,9 +1481,11 @@ Departures from Armstrong and Dario:
   [Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 for d = 2](#lemmas-58-and-59-and-the-qualitative-part-of-proposition-52-for-d--2),
   the nineteen theorems of
   [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration),
+  the thirty-eight theorems and two definitions of
+  [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two),
   and the nine theorems and one definition of
   [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate).
-  Each of the 327 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 367 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1439,10 +1516,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1194 Lean files with 220,951 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1230 Lean files with 230,605 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (559 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (640 lines) are counted separately.
 
 ## Building
 
