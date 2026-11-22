@@ -186,6 +186,29 @@ theorem exists_majorant_of_le {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω
   · exact lintegral_ofReal_le_of_le ha₀ ha hc₀ hf₀ hf hg mf₀ mf mg (fun ω => le_rfl) I₀ If Ig
       hb₀ hbf hbg
 
+/-- **A measurable majorant with bounded expectation**, from an almost sure bound. -/
+theorem exists_majorant_of_le_ae {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    [IsProbabilityMeasure μ] {X f₀ : Ω → ℝ} {f g : ℕ → Ω → ℝ} {s : Finset ℕ}
+    {a₀ c₀ b₀ : ℝ} {a bf bg : ℕ → ℝ}
+    (ha₀ : 0 ≤ a₀) (ha : ∀ k ∈ s, 0 ≤ a k) (hc₀ : 0 ≤ c₀)
+    (hf₀ : ∀ ω, 0 ≤ f₀ ω) (hf : ∀ k ∈ s, ∀ ω, 0 ≤ f k ω) (hg : ∀ k ∈ s, ∀ ω, 0 ≤ g k ω)
+    (mf₀ : AEMeasurable f₀ μ) (mf : ∀ k ∈ s, AEMeasurable (f k) μ)
+    (mg : ∀ k ∈ s, AEMeasurable (g k) μ)
+    (hX : ∀ᵐ ω ∂μ, X ω ≤ a₀ * f₀ ω + ∑ k ∈ s, a k * (f k ω + g k ω) + c₀)
+    (I₀ : ∫⁻ ω, ENNReal.ofReal (f₀ ω) ∂μ ≤ ENNReal.ofReal b₀)
+    (If : ∀ k ∈ s, ∫⁻ ω, ENNReal.ofReal (f k ω) ∂μ ≤ ENNReal.ofReal (bf k))
+    (Ig : ∀ k ∈ s, ∫⁻ ω, ENNReal.ofReal (g k ω) ∂μ ≤ ENNReal.ofReal (bg k))
+    (hb₀ : 0 ≤ b₀) (hbf : ∀ k ∈ s, 0 ≤ bf k) (hbg : ∀ k ∈ s, 0 ≤ bg k) :
+    ∃ Φ : Ω → ℝ, AEMeasurable Φ μ ∧ (∀ ω, 0 ≤ Φ ω) ∧ (∀ᵐ ω ∂μ, X ω ≤ Φ ω) ∧
+      ∫⁻ ω, ENNReal.ofReal (Φ ω) ∂μ ≤
+        ENNReal.ofReal (a₀ * b₀ + ∑ k ∈ s, a k * (bf k + bg k) + c₀) := by
+  obtain ⟨Φ, hΦm, hΦ0, hΦle, hΦint⟩ := exists_majorant_of_le (X := fun ω => a₀ * f₀ ω +
+    ∑ k ∈ s, a k * (f k ω + g k ω) + c₀) ha₀ ha hc₀ hf₀ hf hg mf₀ mf mg (fun ω => le_rfl) I₀ If Ig
+    hb₀ hbf hbg
+  refine ⟨Φ, hΦm, hΦ0, ?_, hΦint⟩
+  filter_upwards [hX] with ω hω
+  exact hω.trans (hΦle ω)
+
 /-- **The mean of random variables with bounded expectations.** -/
 theorem lintegral_ofReal_avg_le {Ω α : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
     {s : Finset α} (hs : s.Nonempty) {F : α → Ω → ℝ} (hF : ∀ a ∈ s, ∀ ω, 0 ≤ F a ω)
