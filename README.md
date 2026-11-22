@@ -1380,9 +1380,10 @@ Departures from Armstrong and Dario, which are choices of the formalization:
   position modulo `27`, and a union bound over the `729` groups replaces the single product of Step 2.
 - **Lemma 5.3.** A gradient step replaces the minimizer `q₀` (so no `k(□)` is needed), and the random factor
   `√(Λ(U) + 1)` multiplies `ρ^{1/2}`; the statement is deterministic and pointwise, with the errors named.
+
 Misprints in the source whose meaning is clear: AD18.tex:2232 (`|q|²` appears twice); :3929 (`t := 1/K` with
-`K` undefined, `t = 1/C`); :3975 and :4003-4029 (`μ − (1/2) q · ā⁻¹ q` for `μ + (1/2) q · ā⁻¹ q`); :4018-4025
-(`exp(−C⁻¹ 3^{−αm})` for `exp(−C⁻¹ 3^{αm})`); :4195 (`(1/2) p · ā p + ν` for `(1/2) p · ā p − ν`).
+`K` undefined, `t = 1/C`); :3975 and :4003-4029 (`μ − (1/2) q · ā⁻¹ q` for `μ + (1/2) q · ā⁻¹ q`); :4003, :4012-4016,
+:4018-4025 and :4029 (`exp(−C⁻¹ 3^{−αm})` for `exp(−C⁻¹ 3^{αm})`); :4195 (`(1/2) p · ā p + ν` for `(1/2) p · ā p − ν`).
 
 ## The Dirichlet problem and the excess-decay iteration
 
