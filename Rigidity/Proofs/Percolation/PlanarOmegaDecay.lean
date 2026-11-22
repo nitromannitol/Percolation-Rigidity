@@ -136,4 +136,218 @@ theorem exists_planarOmegaD_term_raw {p : unitInterval} (hpc : criticalProbabili
       by positivity,
       mul_nonneg hCG (div_nonneg (mul_nonneg (by positivity) U.volume_pos.le) (Real.sqrt_nonneg _))⟩
 
+set_option maxHeartbeats 400000 in
+/-- **The arithmetic of the proof of Lemma 5.9.** -/
+theorem planarOmega_term_arith {p : unitInterval} {n : ℕ} (hn : 1 ≤ n) {ξ q : Fin 2 → ℝ}
+    (hξ1 : |ξ 0| + |ξ 1| = 1) (hξ2 : ξ 0 ^ 2 + ξ 1 ^ 2 = 1) (hq : q 0 ^ 2 + q 1 ^ 2 ≤ 324)
+    (hs18 : ∑ i, q i * ξ i ≤ 18)
+    {CB CH Cu Cv Cμ CBad C1 c1 C3 c3 CG Ci ci Cj cj KA KB : ℝ} (hCB : 0 ≤ CB) (hCH : 0 ≤ CH)
+    (hCu : 0 ≤ Cu) (hCv : 0 ≤ Cv) (hCμ : 0 ≤ Cμ) (hCBad : 0 ≤ CBad) (hC1 : 0 ≤ C1) (hc1 : 0 < c1)
+    (hC3 : 0 ≤ C3) (hc3 : 0 < c3) (hCG : 0 ≤ CG) (hCi : 0 ≤ Ci) (hci : 0 < ci) (hCj : 0 ≤ Cj)
+    (hcj : 0 < cj) (hKA : 0 ≤ KA) (hKB : 0 ≤ KB)
+    (hraw : planarNuMean p n ξ + planarMuMean p n q +
+          3 / (⟨n, 0⟩ : TriadicCube 2).volume * (⟨n + 1, 0⟩ : TriadicCube 2).volume *
+            (planarMuMean p (n + 1) q + planarNuMean p (n + 1) ξ) ≤
+        (∑ i, q i * ξ i + (∑ i, q i * ξ i) / ((⟨n, 0⟩ : TriadicCube 2).toIntegerCube.size : ℝ)) +
+          (|q 0| + |q 1|) * (CB * (|ξ 0| + |ξ 1|) /
+            Real.sqrt ((⟨n, 0⟩ : TriadicCube 2).toIntegerCube.size : ℝ)) +
+          48 / (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) *
+            (CH * ((|ξ 0| + |ξ 1|) ^ 2 + (|q 0| + |q 1|) ^ 2) *
+              (⟨n + 1, 0⟩ : TriadicCube 2).volume * (3 : ℝ) ^ (⟨n + 1, 0⟩ : TriadicCube 2).scale) +
+          96 * (⟨n + 1, 0⟩ : TriadicCube 2).volume /
+              (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) *
+            (Cu * (q 0 ^ 2 + q 1 ^ 2) * (9 : ℝ) ^ n *
+                ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+                  ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k) +
+              Cv * (ξ 0 ^ 2 + ξ 1 ^ 2) * (9 : ℝ) ^ n *
+                ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+                  ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) +
+          3 / (⟨n, 0⟩ : TriadicCube 2).volume * (Cμ * ((|q 0| + |q 1|) ^ 2 *
+            (⟨n + 1, 0⟩ : TriadicCube 2).volume / Real.sqrt (3 ^ n))) +
+          3 / (⟨n, 0⟩ : TriadicCube 2).volume * ((⟨n + 1, 0⟩ : TriadicCube 2).volume *
+            (planarMuMean p n q + C1 * ((|q 0| + |q 1|) ^ 2 * Real.exp (-c1 * (3 : ℝ) ^ n)))) +
+          3 / (⟨n, 0⟩ : TriadicCube 2).volume * ((⟨n + 1, 0⟩ : TriadicCube 2).volume *
+            (planarNuMean p n ξ + C3 * ((|ξ 0| + |ξ 1|) ^ 2 * Real.exp (-c3 * (3 : ℝ) ^ n)))) +
+          CBad * (1 + (|ξ 0| + |ξ 1|) ^ 2 + (|q 0| + |q 1|) ^ 4) / (9 : ℝ) ^ n +
+          3 / (⟨n, 0⟩ : TriadicCube 2).volume * (CG * ((|ξ 0| + |ξ 1|) ^ 2 *
+            (⟨n + 1, 0⟩ : TriadicCube 2).volume / Real.sqrt (3 ^ n))))
+    (hI : planarMuMean p n q - planarMuMean p (n + 1) q ≤
+      2 * 324 * planarMuTau p n + Ci * 1296 * (1 / Real.sqrt ((3 : ℝ) ^ n) +
+        Real.exp (-ci * (3 : ℝ) ^ n)))
+    (hJ : planarNuMean p n ξ - planarNuMean p (n + 1) ξ ≤
+      2 * KA * planarNuTau p n + Cj * KB * (1 / Real.sqrt ((3 : ℝ) ^ n) +
+        Real.exp (-cj * (3 : ℝ) ^ n))) :
+    planarNuMean p n ξ + planarMuMean p n q - ∑ i, q i * ξ i ≤
+      (18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 3456 * (324 * Cu + Cv) + 27 * 1296 * Cμ +
+        27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+        27 * 1296 * Ci * (1 + ci⁻¹) + 27 * Cj * KB * (1 + cj⁻¹) + 27 * 648 + 54 * KA) *
+        ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+          ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k) := by
+  set ε := (3 : ℝ) ^ (-(n : ℝ) / 10) with hε
+  set R := ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k with hR
+  have hε0 : 0 ≤ ε := by positivity
+  have hR0 : 0 ≤ R := mul_nonneg (by positivity)
+    (Finset.sum_nonneg fun k _ => mul_nonneg (by positivity) (planarTau_nonneg p k))
+  set s := ∑ i, q i * ξ i with hsdef
+  set X : ℝ := (9 : ℝ) ^ n with hX
+  set T : ℝ := (3 : ℝ) ^ n with hT
+  have hT0 : 0 < T := by positivity
+  have hX0 : 0 < X := by positivity
+  have hXT : X = T * T := by rw [hX, hT, ← mul_pow]; norm_num
+  have hVv : (⟨n, 0⟩ : TriadicCube 2).volume = X := rfl
+  have hUv : (⟨n + 1, 0⟩ : TriadicCube 2).volume = 9 * X := by
+    change (9 : ℝ) ^ (n + 1) = _
+    rw [pow_succ, hX]
+    ring
+  have hUs : (3 : ℝ) ^ (⟨n + 1, 0⟩ : TriadicCube 2).scale = 3 * T := by
+    change (3 : ℝ) ^ (n + 1) = _
+    rw [pow_succ, hT]
+    ring
+  have hL : ((⟨n, 0⟩ : TriadicCube 2).toIntegerCube.size : ℝ) = T := by
+    change ((3 ^ n : ℕ) : ℝ) = _
+    push_cast
+    rfl
+  rw [hVv, hUv, hUs, hL, hξ1, hξ2] at hraw
+  have hq18 := abs_le_of_sq_add_sq_le (show q 0 ^ 2 + q 1 ^ 2 ≤ 18 ^ 2 by linarith) (by norm_num)
+  set Q1 := |q 0| + |q 1| with hQ1
+  have hQ10 : 0 ≤ Q1 := by positivity
+  have hQ1b : Q1 ≤ 36 := by linarith [hq18.1, hq18.2]
+  have hQ12 : Q1 ^ 2 ≤ 1296 := by
+    have := pow_le_pow_left₀ hQ10 hQ1b 2
+    norm_num at this
+    linarith
+  have hQ14 : Q1 ^ 4 ≤ 36 ^ 4 := pow_le_pow_left₀ hQ10 hQ1b 4
+  have hc27 : 3 / X * (9 * X) = 27 := by field_simp; ring
+  have hc27' : ∀ a : ℝ, 3 / X * (9 * X * a) = 27 * a := fun a => by field_simp; ring
+  rw [hc27] at hraw
+  simp only [hc27'] at hraw
+  -- the rates
+  have r1 : T⁻¹ ≤ ε := inv_three_pow_le_rpow n
+  have r2 : 1 / Real.sqrt T ≤ ε := one_div_sqrt_three_pow_le_rpow n
+  have r3 : X⁻¹ ≤ ε := inv_nine_pow_le_rpow n
+  have r4 : Real.exp (-c1 * T) ≤ c1⁻¹ * ε := exp_neg_le_rpow hc1 n
+  have r5 : Real.exp (-c3 * T) ≤ c3⁻¹ * ε := exp_neg_le_rpow hc3 n
+  have r6 : Real.exp (-ci * T) ≤ ci⁻¹ * ε := exp_neg_le_rpow hci n
+  have r7 : Real.exp (-cj * T) ≤ cj⁻¹ * ε := exp_neg_le_rpow hcj n
+  have r8 : ((T - 1) ^ 2)⁻¹ ≤ 4 * X⁻¹ := inv_sq_three_pow_sub_one_le hn
+  have hτ : planarMuTau p n + planarNuTau p n ≤ R := planarTau_le_weighted p n
+  have hμτ0 := planarMuTau_nonneg p n
+  have hντ0 := planarNuTau_nonneg p n
+  have hsq : 0 < Real.sqrt T := Real.sqrt_pos.2 hT0
+  -- the terms
+  have t1 : s / T ≤ 18 * ε := by
+    rw [div_eq_mul_inv]
+    calc s * T⁻¹ ≤ 18 * T⁻¹ := mul_le_mul_of_nonneg_right hs18 (inv_nonneg.2 hT0.le)
+      _ ≤ 18 * ε := mul_le_mul_of_nonneg_left r1 (by norm_num)
+  have t2 : Q1 * (CB * 1 / Real.sqrt T) ≤ 36 * CB * ε := by
+    have : CB * 1 / Real.sqrt T = CB * (1 / Real.sqrt T) := by ring
+    rw [this]
+    calc Q1 * (CB * (1 / Real.sqrt T)) ≤ 36 * (CB * ε) :=
+          mul_le_mul hQ1b (mul_le_mul_of_nonneg_left r2 hCB) (by positivity) (by norm_num)
+      _ = 36 * CB * ε := by ring
+  have t3 : 48 / ((T - 1) ^ 2 * X) * (CH * (1 + Q1 ^ 2) * (9 * X) * (3 * T)) ≤
+      1296 * 1297 * 4 * 3 * CH * ε := by
+    have e : 48 / ((T - 1) ^ 2 * X) * (CH * (1 + Q1 ^ 2) * (9 * X) * (3 * T)) =
+        1296 * CH * (1 + Q1 ^ 2) * T * ((T - 1) ^ 2)⁻¹ := by field_simp; ring
+    rw [e]
+    have k1 : T * ((T - 1) ^ 2)⁻¹ ≤ 4 * T⁻¹ := by
+      calc T * ((T - 1) ^ 2)⁻¹ ≤ T * (4 * X⁻¹) := mul_le_mul_of_nonneg_left r8 hT0.le
+        _ = 4 * T⁻¹ := by rw [hXT]; field_simp
+    have k2 : 1296 * CH * (1 + Q1 ^ 2) ≤ 1296 * CH * 1297 := by
+      have := mul_le_mul_of_nonneg_left (show 1 + Q1 ^ 2 ≤ 1297 by linarith)
+        (show 0 ≤ 1296 * CH by positivity)
+      linarith
+    calc 1296 * CH * (1 + Q1 ^ 2) * T * ((T - 1) ^ 2)⁻¹ =
+          1296 * CH * (1 + Q1 ^ 2) * (T * ((T - 1) ^ 2)⁻¹) := by ring
+      _ ≤ 1296 * CH * 1297 * (4 * T⁻¹) := mul_le_mul k2 k1 (by positivity) (by positivity)
+      _ ≤ 1296 * CH * 1297 * (4 * ε) :=
+          mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left r1 (by norm_num)) (by positivity)
+      _ = 1296 * 1297 * 4 * 3 * CH * ε / 3 := by ring
+      _ ≤ _ := by
+          have : 0 ≤ 1296 * 1297 * 4 * 3 * CH * ε := by positivity
+          linarith
+  have t4 : 96 * (9 * X) / ((T - 1) ^ 2 * X) * (Cu * (q 0 ^ 2 + q 1 ^ 2) * X * (ε + R) +
+      Cv * 1 * X * (ε + R)) ≤ 3456 * (324 * Cu + Cv) * (ε + R) := by
+    have e : 96 * (9 * X) / ((T - 1) ^ 2 * X) * (Cu * (q 0 ^ 2 + q 1 ^ 2) * X * (ε + R) +
+        Cv * 1 * X * (ε + R)) = 864 * (Cu * (q 0 ^ 2 + q 1 ^ 2) + Cv) * (ε + R) *
+          (X * ((T - 1) ^ 2)⁻¹) := by field_simp; ring
+    rw [e]
+    have k1 : X * ((T - 1) ^ 2)⁻¹ ≤ 4 := by
+      calc X * ((T - 1) ^ 2)⁻¹ ≤ X * (4 * X⁻¹) := mul_le_mul_of_nonneg_left r8 hX0.le
+        _ = 4 := by field_simp
+    have k2 : Cu * (q 0 ^ 2 + q 1 ^ 2) + Cv ≤ 324 * Cu + Cv := by
+      have := mul_le_mul_of_nonneg_left hq hCu
+      linarith
+    have k3 : 0 ≤ Cu * (q 0 ^ 2 + q 1 ^ 2) + Cv := by positivity
+    calc 864 * (Cu * (q 0 ^ 2 + q 1 ^ 2) + Cv) * (ε + R) * (X * ((T - 1) ^ 2)⁻¹)
+        ≤ 864 * (Cu * (q 0 ^ 2 + q 1 ^ 2) + Cv) * (ε + R) * 4 :=
+          mul_le_mul_of_nonneg_left k1 (by positivity)
+      _ ≤ 864 * (324 * Cu + Cv) * (ε + R) * 4 := by
+          have := mul_le_mul_of_nonneg_right k2 (show 0 ≤ 864 * (ε + R) * 4 by positivity)
+          linarith
+      _ = 3456 * (324 * Cu + Cv) * (ε + R) := by ring
+  have t5 : 3 / X * (Cμ * (Q1 ^ 2 * (9 * X) / Real.sqrt T)) ≤ 27 * 1296 * Cμ * ε := by
+    have e : 3 / X * (Cμ * (Q1 ^ 2 * (9 * X) / Real.sqrt T)) =
+        27 * Cμ * Q1 ^ 2 * (1 / Real.sqrt T) := by field_simp; ring
+    rw [e]
+    calc 27 * Cμ * Q1 ^ 2 * (1 / Real.sqrt T) ≤ 27 * Cμ * 1296 * ε :=
+          mul_le_mul (mul_le_mul_of_nonneg_left hQ12 (by positivity)) r2 (by positivity)
+            (by positivity)
+      _ = 27 * 1296 * Cμ * ε := by ring
+  have t6 : 27 * (C1 * (Q1 ^ 2 * Real.exp (-c1 * T))) ≤ 27 * 1296 * C1 * c1⁻¹ * ε := by
+    calc 27 * (C1 * (Q1 ^ 2 * Real.exp (-c1 * T))) ≤ 27 * (C1 * (1296 * (c1⁻¹ * ε))) := by
+          gcongr
+      _ = 27 * 1296 * C1 * c1⁻¹ * ε := by ring
+  have t7 : 27 * (C3 * (1 ^ 2 * Real.exp (-c3 * T))) ≤ 27 * C3 * c3⁻¹ * ε := by
+    calc 27 * (C3 * (1 ^ 2 * Real.exp (-c3 * T))) ≤ 27 * (C3 * (1 * (c3⁻¹ * ε))) := by
+          gcongr
+          norm_num
+      _ = 27 * C3 * c3⁻¹ * ε := by ring
+  have t8 : CBad * (1 + 1 ^ 2 + Q1 ^ 4) / X ≤ CBad * (2 + 36 ^ 4) * ε := by
+    rw [div_eq_mul_inv]
+    exact mul_le_mul (mul_le_mul_of_nonneg_left (by linarith) hCBad) r3
+      (inv_nonneg.2 hX0.le) (by positivity)
+  have t9 : 3 / X * (CG * (1 ^ 2 * (9 * X) / Real.sqrt T)) ≤ 27 * CG * ε := by
+    have e : 3 / X * (CG * (1 ^ 2 * (9 * X) / Real.sqrt T)) = 27 * CG * (1 / Real.sqrt T) := by
+      field_simp
+      ring
+    rw [e]
+    exact mul_le_mul_of_nonneg_left r2 (by positivity)
+  have tI : 27 * (planarMuMean p n q - planarMuMean p (n + 1) q) ≤
+      27 * 648 * planarMuTau p n + 27 * 1296 * Ci * (1 + ci⁻¹) * ε := by
+    have k : 1 / Real.sqrt T + Real.exp (-ci * T) ≤ (1 + ci⁻¹) * ε := by linarith
+    have := mul_le_mul_of_nonneg_left k (show 0 ≤ Ci * 1296 by positivity)
+    linarith
+  have tJ : 27 * (planarNuMean p n ξ - planarNuMean p (n + 1) ξ) ≤
+      54 * KA * planarNuTau p n + 27 * Cj * KB * (1 + cj⁻¹) * ε := by
+    have k : 1 / Real.sqrt T + Real.exp (-cj * T) ≤ (1 + cj⁻¹) * ε := by linarith
+    have := mul_le_mul_of_nonneg_left k (show 0 ≤ Cj * KB by positivity)
+    linarith
+  have hτR1 : 27 * 648 * planarMuTau p n + 54 * KA * planarNuTau p n ≤
+      (27 * 648 + 54 * KA) * R := by
+    have := mul_le_mul_of_nonneg_left hτ (show 0 ≤ 27 * 648 + 54 * KA by positivity)
+    linarith [mul_nonneg hKA hμτ0, hντ0]
+  have hA0 : 0 ≤ 18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 3456 * (324 * Cu + Cv) +
+      27 * 1296 * Cμ + 27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+      27 * 1296 * Ci * (1 + ci⁻¹) + 27 * Cj * KB * (1 + cj⁻¹) := by positivity
+  have hB0 : 0 ≤ 18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 27 * 1296 * Cμ +
+      27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+      27 * 1296 * Ci * (1 + ci⁻¹) + 27 * Cj * KB * (1 + cj⁻¹) := by positivity
+  have hKA' : 0 ≤ 27 * 648 + 54 * KA := by positivity
+  have h1 : (18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 3456 * (324 * Cu + Cv) +
+      27 * 1296 * Cμ + 27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+      27 * 1296 * Ci * (1 + ci⁻¹) + 27 * Cj * KB * (1 + cj⁻¹)) * ε ≤
+      (18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 3456 * (324 * Cu + Cv) +
+      27 * 1296 * Cμ + 27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+      27 * 1296 * Ci * (1 + ci⁻¹) + 27 * Cj * KB * (1 + cj⁻¹) + 27 * 648 + 54 * KA) * ε :=
+    mul_le_mul_of_nonneg_right (by linarith) hε0
+  have h2 : (27 * 648 + 54 * KA + 3456 * (324 * Cu + Cv)) * R ≤
+      (18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 3456 * (324 * Cu + Cv) +
+        27 * 1296 * Cμ + 27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+        27 * 1296 * Ci * (1 + ci⁻¹) + 27 * Cj * KB * (1 + cj⁻¹) + 27 * 648 + 54 * KA) * R :=
+    mul_le_mul_of_nonneg_right (by linarith) hR0
+  have h3 : 3456 * (324 * Cu + Cv) * (ε + R) = 3456 * (324 * Cu + Cv) * ε +
+      3456 * (324 * Cu + Cv) * R := by ring
+  linarith
+
 end Rigidity.Percolation
