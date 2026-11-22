@@ -4,7 +4,7 @@ import Rigidity.Proofs.Cluster.PlanarCoarseData
 /-!
 # The cluster of an integer square resolved by the planar partition
 
-An integer square `B` of side `3^n` (not necessarily triadic) is resolved by the planar partition
+An integer square `B` (not necessarily triadic) is resolved by the planar partition
 when it contains the partition cubes of its vertices. The anchors of all partition cubes inside `B`
 are then joined by open paths inside `B`, and the cluster `C(B)` is the set of vertices of `B`
 joined inside `B` to the anchor of their partition cube. The domain `B`, the cluster `C(B)`, the
@@ -75,9 +75,9 @@ theorem IntegerCube.forall_of_near (B : IntegerCube 2) (R : Vertex 2 → Vertex 
     exact htrans _ _ _ (hstep z hz z'' hz''B hnear) (ih z'' hz''B z' hz' hdist)
 
 /-- **Anchors inside a resolved square.** The anchors of the partition cubes of any two vertices
-of a resolved integer square of side `3^n` are joined by an open path inside the square. -/
+of a resolved integer square are joined by an open path inside the square. -/
 theorem reachIn_planarAnchor_of_boxResolved (hP : PlanarPartitionEvent ω) {B : IntegerCube 2}
-    {n : ℕ} (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) {z z' : Vertex 2}
+    (hBr : PlanarBoxResolved ω B) {z z' : Vertex 2}
     (hz : z ∈ B.vertices) (hz' : z' ∈ B.vertices) :
     ReachIn ω ↑B.vertices ((planarPartCube ω z).planarAnchor ω)
       ((planarPartCube ω z').planarAnchor ω) := by
@@ -88,15 +88,15 @@ theorem reachIn_planarAnchor_of_boxResolved (hP : PlanarPartitionEvent ω) {B : 
   obtain ⟨hsc1, hsc2⟩ := planarPartCube_scales_close hP hnear
   rcases le_total (planarPartCube ω z).scale (planarPartCube ω z').scale with h | h
   · exact (TriadicCube.reachIn_planarAnchor_boxPairWindow (planarPartCube_meshed hP z).1
-      (planarPartCube_meshed hP z').1 (planarPartCube_large hP z) hB (hBr z hz) (hBr z' hz')
+      (planarPartCube_meshed hP z').1 (planarPartCube_large hP z) (hBr z hz) (hBr z' hz')
       h hsc2 (planarPartCube_spec hP z).1 (planarPartCube_spec hP z').1 hnear).mono
-      (Finset.coe_subset.2 (TriadicCube.boxPairWindow_spec hB (hBr z hz) (hBr z' hz') h hsc2
+      (Finset.coe_subset.2 (TriadicCube.boxPairWindow_spec (hBr z hz) (hBr z' hz') h hsc2
         (planarPartCube_spec hP z).1 (planarPartCube_spec hP z').1 hnear).2.2.2)
   · have hnear' : ∀ i, |z' i - z i| ≤ 1 := fun i => by rw [abs_sub_comm]; exact hnear i
     exact ((TriadicCube.reachIn_planarAnchor_boxPairWindow (planarPartCube_meshed hP z').1
-      (planarPartCube_meshed hP z).1 (planarPartCube_large hP z') hB (hBr z' hz') (hBr z hz)
+      (planarPartCube_meshed hP z).1 (planarPartCube_large hP z') (hBr z' hz') (hBr z hz)
       h hsc1 (planarPartCube_spec hP z').1 (planarPartCube_spec hP z).1 hnear').mono
-      (Finset.coe_subset.2 (TriadicCube.boxPairWindow_spec hB (hBr z' hz') (hBr z hz) h hsc1
+      (Finset.coe_subset.2 (TriadicCube.boxPairWindow_spec (hBr z' hz') (hBr z hz) h hsc1
         (planarPartCube_spec hP z').1 (planarPartCube_spec hP z).1 hnear').2.2.2)).symm
 
 /-- The cluster `C(B)` of an integer square: the vertices of `B` joined inside `B` to the anchor
@@ -117,38 +117,38 @@ theorem mem_boxClusterVertices {B : IntegerCube 2} {x : Vertex 2} :
 
 /-- A vertex of a resolved square joined inside it to some anchor belongs to its cluster. -/
 theorem mem_planarBoxCluster_of_reachIn (hP : PlanarPartitionEvent ω) {B : IntegerCube 2}
-    {n : ℕ} (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) {y z : Vertex 2}
+    (hBr : PlanarBoxResolved ω B) {y z : Vertex 2}
     (hy : y ∈ B.vertices) (hz : z ∈ B.vertices)
     (h : ReachIn ω ↑B.vertices y ((planarPartCube ω z).planarAnchor ω)) :
     y ∈ planarBoxCluster ω B :=
-  ⟨hy, h.trans (reachIn_planarAnchor_of_boxResolved hP hB hBr hz hy)⟩
+  ⟨hy, h.trans (reachIn_planarAnchor_of_boxResolved hP hBr hz hy)⟩
 
 /-- Anchors of partition cubes inside a resolved square belong to its cluster. -/
 theorem planarAnchor_mem_planarBoxCluster (hP : PlanarPartitionEvent ω) {B : IntegerCube 2}
-    {n : ℕ} (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) {z : Vertex 2}
+    (hBr : PlanarBoxResolved ω B) {z : Vertex 2}
     (hz : z ∈ B.vertices) : (planarPartCube ω z).planarAnchor ω ∈ planarBoxCluster ω B := by
   have hmem := ((planarPartCube ω z).planarAnchor_spec (planarPartCube_meshed hP z).1
     (planarPartCube_large hP z)).1
   have hB' : (planarPartCube ω z).planarAnchor ω ∈ B.vertices := hBr z hz hmem
-  exact mem_planarBoxCluster_of_reachIn hP hB hBr hB' hz
+  exact mem_planarBoxCluster_of_reachIn hP hBr hB' hz
     ⟨SimpleGraph.Walk.nil, fun v hv => by
       simp only [SimpleGraph.Walk.support_nil, List.mem_singleton] at hv
       exact hv ▸ hB'⟩
 
 /-- Every open path inside `B` from a vertex of the cluster stays in the cluster. -/
-theorem reachIn_planarBoxCluster (hP : PlanarPartitionEvent ω) {B : IntegerCube 2} {n : ℕ}
-    (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) {S : Set (Vertex 2)}
+theorem reachIn_planarBoxCluster (hP : PlanarPartitionEvent ω) {B : IntegerCube 2} 
+    (hBr : PlanarBoxResolved ω B) {S : Set (Vertex 2)}
     (hSB : S ⊆ ↑B.vertices) {a b : Vertex 2} (ha : a ∈ planarBoxCluster ω B)
     (h : ReachIn ω S a b) : ReachIn ω (S ∩ planarBoxCluster ω B) a b := by
   obtain ⟨W, hW⟩ := h
   refine ⟨W, fun y hy => ⟨hW y hy, ?_⟩⟩
   have hya : ReachIn ω ↑B.vertices y a := ((reachIn_of_mem_support W hW hy).mono hSB).symm
-  exact mem_planarBoxCluster_of_reachIn hP hB hBr (hSB (hW y hy)) ha.1 (hya.trans ha.2)
+  exact mem_planarBoxCluster_of_reachIn hP hBr (hSB (hW y hy)) ha.1 (hya.trans ha.2)
 
 /-- The cluster of a resolved square contains every vertex of the square joined to it by an open
 edge. -/
-theorem mem_planarBoxCluster_of_adj (hP : PlanarPartitionEvent ω) {B : IntegerCube 2} {n : ℕ}
-    (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) {z y : Vertex 2}
+theorem mem_planarBoxCluster_of_adj (hP : PlanarPartitionEvent ω) {B : IntegerCube 2} 
+    (hBr : PlanarBoxResolved ω B) {z y : Vertex 2}
     (hz : z ∈ planarBoxCluster ω B) (hadj : (openGraph ω).Adj z y) (hy : y ∈ B.vertices) :
     y ∈ planarBoxCluster ω B := by
   have hyz : ReachIn ω ↑B.vertices y z :=
@@ -158,34 +158,34 @@ theorem mem_planarBoxCluster_of_adj (hP : PlanarPartitionEvent ω) {B : IntegerC
       rcases hw with rfl | rfl
       · exact hy
       · exact hz.1⟩
-  exact mem_planarBoxCluster_of_reachIn hP hB hBr hy hz.1 (hyz.trans hz.2)
+  exact mem_planarBoxCluster_of_reachIn hP hBr hy hz.1 (hyz.trans hz.2)
 
 /-- The window of a partition cube inside `B`, restricted to the cluster of `B`. -/
-noncomputable def planarBoxClusterWindow (ω : Configuration 2) (B : IntegerCube 2) (n : ℕ)
+noncomputable def planarBoxClusterWindow (ω : Configuration 2) (B : IntegerCube 2)
     (x : Vertex 2) : Finset (Vertex 2) :=
-  ((planarPartCube ω x).boxWindow B n).vertices.filter (· ∈ planarBoxCluster ω B)
+  ((planarPartCube ω x).boxWindow B).vertices.filter (· ∈ planarBoxCluster ω B)
 
 /-- The pair window of two adjacent partition cubes inside `B`, restricted to the cluster of
 `B`. -/
-noncomputable def planarBoxClusterPairWindow (ω : Configuration 2) (B : IntegerCube 2) (n : ℕ)
+noncomputable def planarBoxClusterPairWindow (ω : Configuration 2) (B : IntegerCube 2)
     (x y : Vertex 2) : Finset (Vertex 2) :=
-  ((planarPartCube ω x).boxPairWindow (planarPartCube ω y) B n).vertices.filter
+  ((planarPartCube ω x).boxPairWindow (planarPartCube ω y) B).vertices.filter
     (· ∈ planarBoxCluster ω B)
 
 /-- The pair region of two lattice neighbours: the pair window of their partition cubes, taken
 from the one of smaller scale, restricted to the cluster of `B`. -/
-noncomputable def planarBoxClusterPairRegion (ω : Configuration 2) (B : IntegerCube 2) (n : ℕ)
+noncomputable def planarBoxClusterPairRegion (ω : Configuration 2) (B : IntegerCube 2)
     (x y : Vertex 2) : Finset (Vertex 2) :=
   if (planarPartCube ω x).scale ≤ (planarPartCube ω y).scale then
-    planarBoxClusterPairWindow ω B n x y
-  else planarBoxClusterPairWindow ω B n y x
+    planarBoxClusterPairWindow ω B x y
+  else planarBoxClusterPairWindow ω B y x
 
-theorem planarBoxClusterWindow_subset (B : IntegerCube 2) (n : ℕ) (x : Vertex 2) :
-    planarBoxClusterWindow ω B n x ⊆ boxClusterVertices ω B := fun _ hy =>
+theorem planarBoxClusterWindow_subset (B : IntegerCube 2) (x : Vertex 2) :
+    planarBoxClusterWindow ω B x ⊆ boxClusterVertices ω B := fun _ hy =>
   mem_boxClusterVertices.2 (Finset.mem_filter.1 hy).2
 
-theorem planarBoxClusterPairRegion_subset (B : IntegerCube 2) (n : ℕ) (x y : Vertex 2) :
-    planarBoxClusterPairRegion ω B n x y ⊆ boxClusterVertices ω B := by
+theorem planarBoxClusterPairRegion_subset (B : IntegerCube 2) (x y : Vertex 2) :
+    planarBoxClusterPairRegion ω B x y ⊆ boxClusterVertices ω B := by
   intro z hz
   unfold planarBoxClusterPairRegion at hz
   split_ifs at hz <;> exact mem_boxClusterVertices.2 (Finset.mem_filter.1 hz).2
@@ -193,20 +193,20 @@ theorem planarBoxClusterPairRegion_subset (B : IntegerCube 2) (n : ℕ) (x y : V
 /-- A vertex of the cluster of a resolved square is joined to the anchor of its partition cube by
 an open path inside the window of the partition cube and the cluster. -/
 theorem joinedWithin_planarBoxClusterWindow (hP : PlanarPartitionEvent ω) {B : IntegerCube 2}
-    {n : ℕ} (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) {x : Vertex 2}
+    (hBr : PlanarBoxResolved ω B) {x : Vertex 2}
     (hx : x ∈ planarBoxCluster ω B) :
-    JoinedWithin ω ↑(planarBoxClusterWindow ω B n x) x (planarCoarseAnchor ω x) := by
+    JoinedWithin ω ↑(planarBoxClusterWindow ω B x) x (planarCoarseAnchor ω x) := by
   set Q := planarPartCube ω x
   have hsub := hBr x hx.1
   have h := Q.reachIn_boxWindow_of_reachIn (planarPartCube_meshed hP x).1
-    (planarPartCube_large hP x) hB hsub (planarPartCube_spec hP x).1
+    (planarPartCube_large hP x) hsub (planarPartCube_spec hP x).1
     (fun _ _ v hv hvB _ => absurd hv hvB) hx.2
   have hA : Q.planarAnchor ω ∈ planarBoxCluster ω B :=
-    planarAnchor_mem_planarBoxCluster hP hB hBr hx.1
-  have h' := reachIn_planarBoxCluster hP hB hBr
-    (Finset.coe_subset.2 (Q.boxWindow_subset hB hsub)) hA h
-  have hcoe : (↑(planarBoxClusterWindow ω B n x) : Set (Vertex 2)) =
-      ↑(Q.boxWindow B n).vertices ∩ planarBoxCluster ω B := by
+    planarAnchor_mem_planarBoxCluster hP hBr hx.1
+  have h' := reachIn_planarBoxCluster hP hBr
+    (Finset.coe_subset.2 (Q.boxWindow_subset hsub)) hA h
+  have hcoe : (↑(planarBoxClusterWindow ω B x) : Set (Vertex 2)) =
+      ↑(Q.boxWindow B).vertices ∩ planarBoxCluster ω B := by
     ext y
     simp only [planarBoxClusterWindow, Finset.coe_filter, Set.mem_setOf_eq, Set.mem_inter_iff,
       Finset.mem_coe, Q]
@@ -216,26 +216,26 @@ theorem joinedWithin_planarBoxClusterWindow (hP : PlanarPartitionEvent ω) {B : 
 /-- The anchors of the partition cubes of two adjacent vertices of a resolved square, the first of
 the same or smaller scale, are joined by an open path inside their pair window and the cluster. -/
 theorem joinedWithin_planarBoxClusterPairWindow (hP : PlanarPartitionEvent ω)
-    {B : IntegerCube 2} {n : ℕ} (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B)
+    {B : IntegerCube 2} (hBr : PlanarBoxResolved ω B)
     {x y : Vertex 2} (hx : x ∈ B.vertices) (hy : y ∈ B.vertices) (hnear : ∀ i, |x i - y i| ≤ 1)
     (hscale : (planarPartCube ω x).scale ≤ (planarPartCube ω y).scale) :
-    JoinedWithin ω ↑(planarBoxClusterPairWindow ω B n x y) (planarCoarseAnchor ω x)
+    JoinedWithin ω ↑(planarBoxClusterPairWindow ω B x y) (planarCoarseAnchor ω x)
       (planarCoarseAnchor ω y) := by
   set Q := planarPartCube ω x
   set Q' := planarPartCube ω y
   have hsub := hBr x hx
   have hsub' := hBr y hy
   have hsc2 := (planarPartCube_scales_close hP hnear).2
-  have h := TriadicCube.reachIn_planarAnchor_boxPairWindow (n := n) (planarPartCube_meshed hP x).1
-    (planarPartCube_meshed hP y).1 (planarPartCube_large hP x) hB hsub hsub' hscale hsc2
+  have h := TriadicCube.reachIn_planarAnchor_boxPairWindow (planarPartCube_meshed hP x).1
+    (planarPartCube_meshed hP y).1 (planarPartCube_large hP x) hsub hsub' hscale hsc2
     (planarPartCube_spec hP x).1 (planarPartCube_spec hP y).1 hnear
-  have hspec := TriadicCube.boxPairWindow_spec (n := n) hB hsub hsub' hscale hsc2
+  have hspec := TriadicCube.boxPairWindow_spec hsub hsub' hscale hsc2
     (planarPartCube_spec hP x).1 (planarPartCube_spec hP y).1 hnear
   have hA : Q.planarAnchor ω ∈ planarBoxCluster ω B :=
-    planarAnchor_mem_planarBoxCluster hP hB hBr hx
-  have h' := reachIn_planarBoxCluster hP hB hBr (Finset.coe_subset.2 hspec.2.2.2) hA h
-  have hcoe : (↑(planarBoxClusterPairWindow ω B n x y) : Set (Vertex 2)) =
-      ↑(Q.boxPairWindow Q' B n).vertices ∩ planarBoxCluster ω B := by
+    planarAnchor_mem_planarBoxCluster hP hBr hx
+  have h' := reachIn_planarBoxCluster hP hBr (Finset.coe_subset.2 hspec.2.2.2) hA h
+  have hcoe : (↑(planarBoxClusterPairWindow ω B x y) : Set (Vertex 2)) =
+      ↑(Q.boxPairWindow Q' B).vertices ∩ planarBoxCluster ω B := by
     ext z
     simp only [planarBoxClusterPairWindow, Finset.coe_filter, Set.mem_setOf_eq,
       Set.mem_inter_iff, Finset.mem_coe, Q, Q']
@@ -249,8 +249,8 @@ private theorem box_abs_sub_le_one_of_adj {d : ℕ} {u v : Vertex d}
 /-- **Coarse-graining data of a resolved integer square**: domain `B`, cluster `C(B)`, the planar
 partition cubes and their anchors, the windows of the partition cubes and the pair windows of
 adjacent partition cubes inside `B`, restricted to `C(B)`. -/
-noncomputable def planarBoxCoarseData (hP : PlanarPartitionEvent ω) (B : IntegerCube 2) (n : ℕ)
-    (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) : CoarseData 2 ω where
+noncomputable def planarBoxCoarseData (hP : PlanarPartitionEvent ω) (B : IntegerCube 2) 
+    (hBr : PlanarBoxResolved ω B) : CoarseData 2 ω where
   domain := B.vertices
   cluster := boxClusterVertices ω B
   cluster_subset := Finset.filter_subset _ _
@@ -262,39 +262,39 @@ noncomputable def planarBoxCoarseData (hP : PlanarPartitionEvent ω) (B : Intege
   anchor_congr x y h := by
     change (planarPartCube ω x).planarAnchor ω = (planarPartCube ω y).planarAnchor ω
     rw [h]
-  anchor_mem x hx := mem_boxClusterVertices.2 (planarAnchor_mem_planarBoxCluster hP hB hBr hx)
+  anchor_mem x hx := mem_boxClusterVertices.2 (planarAnchor_mem_planarBoxCluster hP hBr hx)
   anchor_mem_part x _ := ((planarPartCube ω x).planarAnchor_spec (planarPartCube_meshed hP x).1
     (planarPartCube_large hP x)).1
-  region := planarBoxClusterWindow ω B n
+  region := planarBoxClusterWindow ω B
   joinedWithin_region x hx :=
-    (joinedWithin_planarBoxClusterWindow hP hB hBr (mem_boxClusterVertices.1 hx)).mono
+    (joinedWithin_planarBoxClusterWindow hP hBr (mem_boxClusterVertices.1 hx)).mono
       (Finset.coe_subset.2 (Finset.subset_inter (Finset.Subset.refl _)
-        (planarBoxClusterWindow_subset B n x)))
-  pairRegion := planarBoxClusterPairRegion ω B n
+        (planarBoxClusterWindow_subset B x)))
+  pairRegion := planarBoxClusterPairRegion ω B
   joinedWithin_pairRegion x hx y hy hadj _ := by
     have hnear : ∀ i, |x i - y i| ≤ 1 := box_abs_sub_le_one_of_adj hadj
     refine JoinedWithin.mono ?_
       (Finset.coe_subset.2 (Finset.subset_inter (Finset.Subset.refl _)
-        (planarBoxClusterPairRegion_subset B n x y)))
+        (planarBoxClusterPairRegion_subset B x y)))
     unfold planarBoxClusterPairRegion
     split_ifs with h
-    · exact joinedWithin_planarBoxClusterPairWindow hP hB hBr hx hy hnear h
-    · exact (joinedWithin_planarBoxClusterPairWindow hP hB hBr hy hx
+    · exact joinedWithin_planarBoxClusterPairWindow hP hBr hx hy hnear h
+    · exact (joinedWithin_planarBoxClusterPairWindow hP hBr hy hx
         (fun i => by rw [abs_sub_comm]; exact hnear i) (by omega)).symm
 
 @[simp] theorem planarBoxCoarseData_cluster (hP : PlanarPartitionEvent ω) (B : IntegerCube 2)
-    (n : ℕ) (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) :
-    (planarBoxCoarseData hP B n hB hBr).cluster = boxClusterVertices ω B :=
+    (hBr : PlanarBoxResolved ω B) :
+    (planarBoxCoarseData hP B hBr).cluster = boxClusterVertices ω B :=
   rfl
 
 @[simp] theorem planarBoxCoarseData_part (hP : PlanarPartitionEvent ω) (B : IntegerCube 2)
-    (n : ℕ) (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) :
-    (planarBoxCoarseData hP B n hB hBr).part = planarPartCube ω :=
+    (hBr : PlanarBoxResolved ω B) :
+    (planarBoxCoarseData hP B hBr).part = planarPartCube ω :=
   rfl
 
 @[simp] theorem planarBoxCoarseData_anchor (hP : PlanarPartitionEvent ω) (B : IntegerCube 2)
-    (n : ℕ) (hB : B.size = 3 ^ n) (hBr : PlanarBoxResolved ω B) :
-    (planarBoxCoarseData hP B n hB hBr).anchor = planarCoarseAnchor ω :=
+    (hBr : PlanarBoxResolved ω B) :
+    (planarBoxCoarseData hP B hBr).anchor = planarCoarseAnchor ω :=
   rfl
 
 end Rigidity.Percolation

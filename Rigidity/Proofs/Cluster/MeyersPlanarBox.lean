@@ -222,11 +222,11 @@ theorem mem_boxClusterVertices_of_mem_cube (hP : PlanarPartitionEvent ω) {k : �
   have hxB : x ∈ (enlSquare k y).vertices := mem_enlSquare_vertices.2 (cube_subset_enl 1 k y hxc)
   have hxC := mem_clusterVertices.1 hx
   have hsub := hBr x hxB
-  have hsc := TriadicCube.scale_le_of_subset_box hB hsub
+  have hsc := TriadicCube.three_pow_scale_le_size_of_subset_box hsub
   have h := (planarPartCube ω x).reachIn_boxWindow_of_reachIn (planarPartCube_meshed hP x).1
-    (planarPartCube_large hP x) hB hsub (planarPartCube_spec hP x).1 (S := V.vertices) ?_ hxC.2
+    (planarPartCube_large hP x) hsub (planarPartCube_spec hP x).1 (S := V.vertices) ?_ hxC.2
   · exact mem_boxClusterVertices.2 ⟨hxB,
-      (h.mono (Finset.coe_subset.2 ((planarPartCube ω x).boxWindow_subset hB hsub))).symm⟩
+      (h.mono (Finset.coe_subset.2 ((planarPartCube ω x).boxWindow_subset hsub))).symm⟩
   · intro u hu v _ hv huv
     rw [IntegerCube.mem_vertices] at hu hv
     push Not at hv
@@ -249,9 +249,8 @@ theorem mem_boxClusterVertices_of_mem_cube (hP : PlanarPartitionEvent ω) {k : �
         push_cast; rfl
       omega
     have hQ : (3 : ℤ) ^ (planarPartCube ω x).scale ≤ 3 * 3 ^ k := by
-      calc (3 : ℤ) ^ (planarPartCube ω x).scale ≤ 3 ^ (k + 1) :=
-            pow_le_pow_right₀ (by norm_num) hsc
-        _ = 3 * 3 ^ k := by ring
+      rw [hsz] at hsc
+      exact hsc
     rw [hsz] at hui hi
     change center k y i - halfSide (k + 1) ≤ u i ∧
       u i < center k y i - halfSide (k + 1) + 3 * 3 ^ k at hui
@@ -298,7 +297,7 @@ theorem planar_meyers {CG K : ℝ} (hCG : 0 ≤ CG) (hK : 0 ≤ K) :
   have hB : (enlSquare k y).size = 3 ^ (k + 1) := rfl
   set B := enlSquare k y with hBdef
   set U' := boxClusterVertices ω B with hU'def
-  set P := planarBoxCoarseData hP B (k + 1) hB hBr with hPdef
+  set P := planarBoxCoarseData hP B hBr with hPdef
   set weight : Vertex 2 → ℝ := fun z => ((3 : ℝ) ^ P.reachScale z) ^ 2 +
     (3 : ℝ) ^ P.pairReachScale z with hweight
   have hw0 : ∀ z, 0 ≤ weight z := fun z => by positivity
@@ -324,11 +323,11 @@ theorem planar_meyers {CG K : ℝ} (hCG : 0 ≤ CG) (hK : 0 ≤ K) :
     intro z hz
     have hne := hzfin z (hU'E z hz)
     have h1 : (3 : ℝ) ^ P.reachScale z ≤ (planarReach ω z).toReal := by
-      have := ENNReal.toReal_mono hne (three_pow_reachScale_le_planarReach_box hP hB hBr hz)
+      have := ENNReal.toReal_mono hne (three_pow_reachScale_le_planarReach_box hP hBr hz)
       simpa using this
     have h2 : (3 : ℝ) ^ P.pairReachScale z ≤ 3 * (planarReach ω z).toReal := by
       have := ENNReal.toReal_mono (ENNReal.mul_ne_top (by norm_num) hne)
-        (three_pow_pairReachScale_le_planarReach_box hP hB hBr z)
+        (three_pow_pairReachScale_le_planarReach_box hP hBr z)
       simpa [ENNReal.toReal_mul] using this
     have h3 : 1 ≤ (planarReach ω z).toReal := by
       have := ENNReal.toReal_mono hne (one_le_planarReach hP z)
@@ -362,11 +361,11 @@ theorem planar_meyers {CG K : ℝ} (hCG : 0 ≤ CG) (hK : 0 ≤ K) :
   · exact boxClusterVertices_subset_clusterVertices fun x hx =>
       hV (Finset.mem_coe.2 (hsub (mem_enlSquare_vertices.1 hx)))
   · intro z hz w hadj hw
-    exact mem_boxClusterVertices.2 (mem_planarBoxCluster_of_adj hP hB hBr
+    exact mem_boxClusterVertices.2 (mem_planarBoxCluster_of_adj hP hBr
       (mem_boxClusterVertices.1 hz) hadj (mem_enlSquare_vertices.2 hw))
   · exact fun x hx hxc => mem_boxClusterVertices_of_mem_cube hP hBr hx hxc
   · intro w hw
-    have h := hSobK ω hP B (k + 1) hB hBr w hw
+    have h := hSobK ω hP B (by rw [hB]; positivity) hBr w hw
     rw [lowerSobolevTwo_two]
     have hterm : ∀ z, size z ^ (2 * ((2 : ℕ) : ℝ)) * clusterGradSq ω U' w z ^ ((1 : ℝ) / 2) =
         weight z * gradNormIn (openGraph ω) U' w z := fun z => by
