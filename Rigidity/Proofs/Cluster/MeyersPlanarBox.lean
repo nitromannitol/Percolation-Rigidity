@@ -28,7 +28,8 @@ cube `V ⊇ 3□`. Its hypotheses are:
   of the vertices of `3□'` have scale at most `k`, and the reach of the planar partition satisfies
   `∑_{z ∈ 3□'} planarReach(z)^8 ≤ C_G |3□'|` (the good event of `𝓡`, which replaces the
   condition `3^m ≥ 𝓜_{2sd}(𝒫) + C` of Lemma 3.6 at `□'`);
-* `u` harmonic on `𝒞(V)`.
+* `u` harmonic at the vertices of `𝒞(V) ∩ 3□` whose open neighbours lie in `𝒞(V)` (this holds
+  for the functions of `A_*(V)` when the lattice neighbours of `3□` lie in `V`).
 -/
 
 namespace Rigidity.Proofs.Cluster
@@ -38,16 +39,101 @@ open scoped BigOperators Classical ENNReal
 
 variable {d : ℕ}
 
+/-- **The reverse Hölder inequality for the energy density, for functions harmonic near the
+cube** (Armstrong–Dario, Lemma 3.6 with `s = d + 2`, in the form used by Proposition 3.8). As
+`reverse_holder_clusterEnergy`, with `u` harmonic only at the vertices of `U₀ ∩ 3□'`: let
+`U' ⊆ U₀ ∩ 3□'`, `□' = cube k y`, be closed under open edges inside `3□'` and contain `U₀ ∩ □'`,
+with the Sobolev inequality and the moment bound `∑_{U'} size^{2d(d+2)} ≤ C_G |3□'|`. Then
+`avg_{□'} E ≤ 8d C_S C_G^{2/((d+2) 2_*)} 3^{d+2} (avg_{3□'} E^{d/(d+1)})^{(d+1)/d}`. -/
+theorem reverse_holder_clusterEnergy_local (ω : Configuration d) (hd : 0 < d)
+    (U₀ : Finset (Vertex d)) (u : Vertex d → ℝ) (k : ℕ) (y : Vertex d)
+    (hu : ∀ x ∈ U₀, x ∈ enl 1 k y → (∀ w, (openGraph ω).Adj x w → w ∈ U₀) →
+      openLaplacian ω u x = 0) (U' : Finset (Vertex d)) (hU'enl : U' ⊆ enl 1 k y) (hU'U₀ : U' ⊆ U₀)
+    (hclosed : ∀ z ∈ U', ∀ w, (openGraph ω).Adj z w → w ∈ enl 1 k y → w ∈ U')
+    (hcap : ∀ x ∈ U₀, x ∈ cube k y → x ∈ U') (size : Vertex d → ℝ) (hsize : ∀ x, 0 ≤ size x)
+    {CS CG : ℝ} (hCS : 0 ≤ CS) (hCG : 0 ≤ CG) (hSob : ClusterSobolevTwo ω U' size CS)
+    (hgood : ∑ x ∈ U', size x ^ (2 * (d : ℝ) * (d + 2)) ≤ CG * (3 : ℝ) ^ ((k + 1) * d)) :
+    avg (cube k y) (clusterEnergy ω U₀ u) ≤
+      8 * d * CS * CG ^ (2 / (((d : ℝ) + 2) * lowerSobolevTwo d)) * (3 : ℝ) ^ (d + 2) *
+        avg (enl 1 k y) (fun x => clusterEnergy ω U₀ u x ^ ((d : ℝ) / (d + 1))) ^
+          (((d : ℝ) + 1) / d) := by
+  obtain ⟨hst, he1, he2⟩ := reverse_holder_exponents (d := d) hd
+  set V := (cube k y).filter (· ∈ U₀) with hV
+  have hVU' : V ⊆ U' := fun x hx => hcap x (Finset.mem_filter.mp hx).2 (Finset.mem_filter.mp hx).1
+  have hVcube : V ⊆ cube k y := Finset.filter_subset _ _
+  have hu' : ∀ x ∈ U', (∀ w, (openGraph ω).Adj x w → w ∈ U') → openLaplacian ω u x = 0 :=
+    fun x hx hall => hu x (hU'U₀ hx) (hU'enl hx) fun w hw => hU'U₀ (hall w hw)
+  have hrh := reverse_holder_triadic ω hd k y U' V hVU' hVcube hclosed size hsize hCS hCG hst
+    hSob hgood u hu'
+  rw [he1, he2] at hrh
+  have hnbr : ∀ x ∈ V, ∀ w, (openGraph ω).Adj x w → w ∈ U₀ → w ∈ U' := by
+    intro x hx w hadj _
+    refine hclosed x (hVU' hx) w hadj ?_
+    have hxc := hVcube hx
+    rw [cube, mem_box] at hxc
+    rw [enl, mem_box]
+    intro i
+    have h1 := abs_sub_le_one_of_openGraph_adj hadj i
+    have h2 : halfSide (k + 1) = 3 * halfSide k + 1 := rfl
+    have h3 := halfSide_nonneg k
+    have h4 := abs_sub_le (w i) (x i) (center k y i)
+    rw [abs_sub_comm (w i) (x i)] at h4
+    linarith [hxc i]
+  have hL : ∑ x ∈ cube k y, clusterEnergy ω U₀ u x = ∑ x ∈ V, clusterGradSq ω U' u x := by
+    rw [hV, Finset.sum_filter]
+    refine Finset.sum_congr rfl fun x hx => ?_
+    unfold clusterEnergy
+    split_ifs with h
+    · exact (clusterGradSq_eq_of_subset ω hU'U₀ u
+        (hnbr x (Finset.mem_filter.mpr ⟨hx, h⟩))).symm
+    · rfl
+  set θ : ℝ := (d : ℝ) / (d + 1) with hθ
+  have hθ0 : 0 ≤ θ := by positivity
+  have hR : ∑ x ∈ U', clusterGradSq ω U' u x ^ θ ≤
+      ∑ x ∈ enl 1 k y, clusterEnergy ω U₀ u x ^ θ := by
+    calc ∑ x ∈ U', clusterGradSq ω U' u x ^ θ ≤ ∑ x ∈ U', clusterEnergy ω U₀ u x ^ θ := by
+          refine Finset.sum_le_sum fun x hx => ?_
+          have h1 : clusterEnergy ω U₀ u x = clusterGradSq ω U₀ u x := by
+            unfold clusterEnergy
+            rw [if_pos (hU'U₀ hx)]
+          rw [h1]
+          exact Real.rpow_le_rpow (clusterGradSq_nonneg ω U' u x)
+            (clusterGradSq_le_of_subset ω hU'U₀ u x) hθ0
+      _ ≤ ∑ x ∈ enl 1 k y, clusterEnergy ω U₀ u x ^ θ :=
+          Finset.sum_le_sum_of_subset_of_nonneg hU'enl fun x _ _ =>
+            Real.rpow_nonneg (clusterEnergy_nonneg ω U₀ u x) _
+  have hcube : ((cube k y).card : ℝ) = (3 : ℝ) ^ (k * d) := by rw [card_cube, pow_mul]
+  have henl : ((enl 1 k y).card : ℝ) = (3 : ℝ) ^ ((k + 1) * d) := by rw [card_enl, pow_mul]
+  have hexp : (0 : ℝ) ≤ ((d : ℝ) + 1) / d := by positivity
+  have hC : 0 ≤ 8 * d * CS * CG ^ (2 / (((d : ℝ) + 2) * lowerSobolevTwo d)) * (3 : ℝ) ^ (d + 2) :=
+    mul_nonneg (mul_nonneg (mul_nonneg (by positivity) hCS) (Real.rpow_nonneg hCG _))
+      (by positivity)
+  calc avg (cube k y) (clusterEnergy ω U₀ u)
+      = (1 / (3 : ℝ) ^ (k * d)) * ∑ x ∈ V, clusterGradSq ω U' u x := by
+        rw [avg, hL, hcube]
+        ring
+    _ ≤ 8 * d * CS * CG ^ (2 / (((d : ℝ) + 2) * lowerSobolevTwo d)) * (3 : ℝ) ^ (d + 2) *
+          ((1 / (3 : ℝ) ^ ((k + 1) * d)) * ∑ x ∈ U', clusterGradSq ω U' u x ^ θ) ^
+            (((d : ℝ) + 1) / d) := hrh
+    _ ≤ 8 * d * CS * CG ^ (2 / (((d : ℝ) + 2) * lowerSobolevTwo d)) * (3 : ℝ) ^ (d + 2) *
+          avg (enl 1 k y) (fun x => clusterEnergy ω U₀ u x ^ θ) ^ (((d : ℝ) + 1) / d) := by
+        refine mul_le_mul_of_nonneg_left (Real.rpow_le_rpow ?_ ?_ hexp) hC
+        · exact mul_nonneg (by positivity) (Finset.sum_nonneg fun x _ =>
+            Real.rpow_nonneg (clusterGradSq_nonneg ω U' u x) _)
+        · rw [avg, henl, one_div_mul_eq_div]
+          exact div_le_div_of_nonneg_right hR (by positivity)
+
 /-- **The Meyers estimate on a cluster with a weight for each cube** (Armstrong–Dario,
 Proposition 3.8, deterministic part, with the Sobolev inequality of Proposition 3.4 as
-hypothesis). As `meyers_cluster`, with the weight `size` of the Sobolev inequality and of the moment
-bound chosen for each cube `□'`. -/
+hypothesis). As `meyers_cluster`, with `u` harmonic only at the vertices of `U₀ ∩ 3□`, and with
+the weight `size` of the Sobolev inequality and of the moment bound chosen for each cube `□'`. -/
 theorem meyers_cluster_of_local (hd : 1 ≤ d) {CS CG K : ℝ} (hCS : 0 ≤ CS) (hCG : 0 ≤ CG)
     (hK : 0 ≤ K) :
     ∃ ε : ℝ, 0 < ε ∧ ∃ t : ℝ, 0 < t ∧ ∃ C : ℝ, 0 ≤ C ∧
       ∀ (ω : Configuration d) (n : ℕ) (x₀ : Vertex d) (U₀ : Finset (Vertex d))
         (u : Vertex d → ℝ) (s : Vertex d → ℕ),
-        (∀ x ∈ U₀, (∀ y, (openGraph ω).Adj x y → y ∈ U₀) → openLaplacian ω u x = 0) →
+        (∀ x ∈ U₀, x ∈ enl 1 n x₀ → (∀ y, (openGraph ω).Adj x y → y ∈ U₀) →
+          openLaplacian ω u x = 0) →
         (∀ x, ∀ z ∈ cube (s x) x, s z = s x) →
         (∀ x y, supDist x y ≤ 1 → s y ≤ s x + 1) →
         (∀ z ∈ enl 1 n x₀, cube (s z) z ⊆ enl 1 n x₀) →
@@ -68,8 +154,8 @@ theorem meyers_cluster_of_local (hd : 1 ≤ d) {CS CG K : ℝ} (hCS : 0 ≤ CS) 
   refine hM n x₀ (clusterEnergy ω U₀ u) s (clusterEnergy_nonneg ω U₀ u) hcell hnb hΩ ?_ hmom
   intro k y hk hsub
   obtain ⟨U', size, hsize, h1, h2, h3, h4, h5, h6⟩ := hcubes k y hk hsub
-  have hrh := reverse_holder_clusterEnergy ω (by omega) U₀ u hu k y U' h1 h2 h3 h4 size hsize hCS
-    hCG h5 h6
+  have hrh := reverse_holder_clusterEnergy_local ω (by omega) U₀ u k y
+    (fun x hx hxe hall => hu x hx (hsub hxe) hall) U' h1 h2 h3 h4 size hsize hCS hCG h5 h6
   refine hrh.trans (mul_le_mul_of_nonneg_right (le_max_right _ _) (Real.rpow_nonneg ?_ _))
   exact div_nonneg (Finset.sum_nonneg fun x _ =>
     Real.rpow_nonneg (clusterEnergy_nonneg ω U₀ u x) _) (Nat.cast_nonneg _)
@@ -179,7 +265,8 @@ theorem mem_boxClusterVertices_of_mem_cube (hP : PlanarPartitionEvent ω) {k : �
 part, in dimension two, with the Sobolev inequality of Proposition 3.4 on the clusters of the
 triples `3□'` proved). For constants `C_G, K ≥ 0` there are `ε > 0`, `t > 0` and `C < ∞` with the
 following property. On the planar partition event, let `V` be a triadic cube containing
-`3□ = enl 1 n x₀`, `u` harmonic on the cluster `𝒞(V)`, the cells `cube (s x) x` of a partition of
+`3□ = enl 1 n x₀`, `u` harmonic at the vertices of `𝒞(V) ∩ 3□` whose open neighbours lie in
+`𝒞(V)`, the cells `cube (s x) x` of a partition of
 `ℤ²` have comparable neighbours and tile `3□`, with `∑_{x ∈ □} (3^{s(x)})^t ≤ K |□|`, and let every
 triadic cube `□' = cube k y` containing a cell with `3□' ⊆ 3□` have planar partition cubes of
 scale at most `k` at the vertices of `3□'` and `∑_{z ∈ 3□'} planarReach(z)^8 ≤ C_G |3□'|`. Then,
@@ -189,8 +276,8 @@ theorem planar_meyers {CG K : ℝ} (hCG : 0 ≤ CG) (hK : 0 ≤ K) :
       ∀ (ω : Configuration 2) (_ : PlanarPartitionEvent ω) (V : TriadicCube 2) (n : ℕ)
         (x₀ : Vertex 2) (u : Vertex 2 → ℝ) (s : Vertex 2 → ℕ),
         (↑(enl 1 n x₀) : Set (Vertex 2)) ⊆ V.vertices →
-        (∀ x ∈ clusterVertices ω V, (∀ y, (openGraph ω).Adj x y → y ∈ clusterVertices ω V) →
-          openLaplacian ω u x = 0) →
+        (∀ x ∈ clusterVertices ω V, x ∈ enl 1 n x₀ →
+          (∀ y, (openGraph ω).Adj x y → y ∈ clusterVertices ω V) → openLaplacian ω u x = 0) →
         (∀ x, ∀ z ∈ cube (s x) x, s z = s x) →
         (∀ x y, supDist x y ≤ 1 → s y ≤ s x + 1) →
         (∀ z ∈ enl 1 n x₀, cube (s z) z ⊆ enl 1 n x₀) →
