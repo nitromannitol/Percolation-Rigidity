@@ -353,6 +353,10 @@ fidelity:
     hypotheses PlanarWeakConvergence, PlanarRestrictQuadCoarsenMu and PlanarRestrictQuadCoarsenNu;
     the sum in (5.12) is taken over k = n, ..., m - 1 in place of the printed upper limit m + 1,
     the flatness is measured with the mean subtracted, and both flatness rates are 3^(-n/10)), and
+    for Theorem 2(iii) of Armstrong and Dario at k = 1 at the origin (a theorem from the mesoscopic
+    estimate (7.18) at k = 2, ArmstrongDarioMesoscopicDegreeTwo, and the corrector inputs, by an
+    endpoint iteration that lifts only the affine functions in place of the argument of
+    Armstrong, Kuusi and Mourrat, Proposition 3.1), and
     for the Dirichlet problem and
     the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,

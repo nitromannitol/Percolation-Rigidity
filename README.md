@@ -1334,12 +1334,50 @@ Departures from Armstrong and Dario:
   over the polynomials of degree `k`, whose details AD omit, referring to Step 3 of the proof of
   Lemma 2.4 of Armstrong, Kuusi and Mourrat.
 
+## Regularity of order one at the origin from the mesoscopic estimate
+
+`Rigidity.External.ArmstrongDarioOrderOneOrigin` (Theorem 2.4, part (iii) at `k = 1`; AD Theorem 2(iii)
+at `k = 1`) is a theorem from one new hypothesis and two inputs that are already assumed:
+[`ArmstrongDarioMesoscopicDegreeTwo`](Rigidity/Proofs/Regularity/OrderOneOrigin.lean), AD Lemma 7.3, display (7.18) at `k = 2`
+for bond percolation at the origin, with `Ā₂` the harmonic quadratic polynomials and the normalization
+`r^{−d/2} ‖·‖_{L²(𝒞_∞ ∩ B_r)}`, together with `Rigidity.External.CorrectorQuantitativeInput` and
+`LatticeProb.External.SupercriticalBondCorrectorInput`. The mesoscopic estimate itself needs the
+harmonic approximation of AD Lemma 7.1, hence Theorem 1 (Sections 5 and 6), and is not proved.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo`](Rigidity/Proofs/Regularity/OrderOneOrigin.lean) | `ArmstrongDarioOrderOneOrigin` from `ArmstrongDarioMesoscopicDegreeTwo`, `CorrectorQuantitativeInput` and `SupercriticalBondCorrectorInput`. |
+| [`Rigidity.Proofs.Regularity.ballExcess_le_of_clusterBallVolumeL2`](Rigidity/Proofs/Regularity/OrderOneOrigin.lean) | the change of normalization from `r^{−d/2} ‖·‖_{L²}` to the ball excess, under the volume comparison `K` of the cluster balls, with the constant multiplied by `√K`. |
+| [`Rigidity.Proofs.Regularity.orderOneEndpointData_cluster`](Rigidity/Proofs/Regularity/ClusterOrderOne.lean), [`clusterLiftMap_mem_harmonicGrowthSpace`](Rigidity/Proofs/Regularity/ClusterOrderOne.lean) | the hypotheses of the endpoint iteration on the cluster: the lifts of the affine functions by the corrected planes, with relative error `C t^{−1/2}` on `B_t` (absolute error `C t^{1/2}`), the trace-free quadratic polynomials, and the comparison of sizes from the density of the infinite cluster in cubes. |
+| [`Rigidity.Proofs.Regularity.weighted_endpoint_step`](Rigidity/Proofs/Regularity/OrderOneEndpoint.lean), [`orderOneEndpoint_step`](Rigidity/Proofs/Regularity/OrderOneEndpoint.lean), [`orderOneEndpoint_iterate`](Rigidity/Proofs/Regularity/OrderOneEndpoint.lean), [`orderOneEndpoint_fit`](Rigidity/Proofs/Regularity/OrderOneEndpoint.lean), [`exists_forall_le_of_orderOneEndpoint`](Rigidity/Proofs/Regularity/OrderOneEndpoint.lean) | the endpoint iteration for abstract data: one step at the endpoint of the scale range, the product of the step factors bounded by `exp(c r^{−δ}/(1 − θ^δ))`, the fit `N_t(u − Lℓ₀) ≤ C (t/R)² N_R(u)` at each radius `t ∈ [𝒳, R/2]`, and one lifted affine function `Lℓ` for all such radii. |
+
+`ArmstrongDarioMesoscopicDegreeTwo` is a definition of a proposition, not an axiom. The nine theorems of the
+table and the definition, which have axiom reports in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean),
+depend only on `propext`, `Classical.choice` and `Quot.sound`.
+
+Departures from Armstrong and Dario:
+
+- **The deduction of Theorem 2(iii).** AD deduce Theorem 2 from Lemma 7.3 through Proposition 3.1 of
+  Armstrong, Kuusi and Mourrat, which lifts the polynomials of degree two. Here an endpoint iteration is
+  used, which lifts only the affine functions, and the quadratic coefficient stays an ordinary trace-free
+  quadratic polynomial; the case `k = 0` (order zero) is not used.
+- **The lifts.** The affine functions are lifted by the corrected planes of slope `e_i` normalized at a vertex
+  `a_0` of the cluster in `B_{X−1}` (`SupercriticalBondCorrectorInput`), with the error
+  `|g_i − x_i| ≤ C t^{1/2}` from `CorrectorQuantitativeInput`, with the edge `(a_0, a_1)` in `B_X`.
+  The literature proof of `CorrectorQuantitativeInput` (DG, Proposition 2.12) rests on the regularity theory of
+  AD, so this route cannot later serve as a proof of that input.
+- **Normalization.** The statement (7.18) is used with `|B_r| = r^d`; the Lebesgue measure
+  `ω_d r^d` gives the same statement, and `Ā₂` is the space of the trace-free quadratic polynomials, as the
+  homogenized matrix is a multiple of the identity.
+- **The random scale.** `X = c_0 max(X_{(7.18)}, M_cube, M_corr(0), 1)` with `c_0` deterministic, and the
+  exponent `s` is the minimum of the three exponents.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 317 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 327 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1366,9 +1404,11 @@ Departures from Armstrong and Dario:
   [The subadditive quantities on the clusters of triadic cubes of Z^d](#the-subadditive-quantities-on-the-clusters-of-triadic-cubes-of-zd),
   the thirty theorems and three definitions of
   [Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 for d = 2](#lemmas-58-and-59-and-the-qualitative-part-of-proposition-52-for-d--2),
-  and the nineteen theorems of
-  [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration).
-  Each of the 317 reports lists only axioms among `propext`, `Classical.choice` and
+  the nineteen theorems of
+  [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration),
+  and the nine theorems and one definition of
+  [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate).
+  Each of the 327 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1399,10 +1439,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1191 Lean files with 219,599 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1194 Lean files with 220,951 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (544 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (559 lines) are counted separately.
 
 ## Building
 
