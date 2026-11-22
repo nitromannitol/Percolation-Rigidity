@@ -28,8 +28,9 @@ printed, in dimension two, in the vocabulary of the planar modules.
   `L²` norms of the coarsened gradients, in expectation: for every `δ > 0`,
   `E[|□|⁻¹ ∫_□ |∇[u(·, □, q)]_P|²] ≤ C(δ) |q|² size(□)^δ`.
 
-The minimizers and maximizers vanish off the partition event and for unresolved cubes, as in the
-convention of Armstrong and Dario that `u(·, □, q) = 0` when `□` is not in `P_*`. The bounds on
+The minimizers `planarMuMinimizer` and the maximizers `planarNuSolution` vanish off the partition
+event and for unresolved cubes, as in the convention of Armstrong and Dario that `u(·, □, q) = 0`
+and `v(·, □, p) = 0` when `□` is not in `P_*`. The bounds on
 expectations are bounds on the expectations of random variables; for the quantities of Lemma 5.5
 and of (4.24), (4.25), whose measurability is not proved here, the measurability is part of the
 statement.
@@ -53,11 +54,17 @@ noncomputable def planarMuGradAvg (ω : Configuration 2) (V : TriadicCube 2) (q 
     (j : Fin 2) : ℝ :=
   coarsePairing ω V (Pi.single j 1) (planarMuMinimizer ω V q) / V.volume
 
+/-- The maximizer `v(·, U, p)` of `ν(U, p)` on the partition event and for a resolved cube, and
+zero otherwise (the convention of Armstrong and Dario for cubes outside `P_*`). -/
+noncomputable def planarNuSolution (ω : Configuration 2) (U : TriadicCube 2) (p : Fin 2 → ℝ) :
+    ClusterFun ω U :=
+  if PlanarPartitionEvent ω ∧ PlanarResolved ω U then planarNuMaximizer ω U p else 0
+
 /-- The normalized spatial average `|V|⁻¹ ⟨e_j, ∇[v(·, V, p)]_P⟩_V` of the coarsened gradient of
 the maximizer of `ν(V, p)`. -/
 noncomputable def planarNuGradAvg (ω : Configuration 2) (V : TriadicCube 2) (p : Fin 2 → ℝ)
     (j : Fin 2) : ℝ :=
-  coarsePairing ω V (Pi.single j 1) (planarNuMaximizer ω V p) / V.volume
+  coarsePairing ω V (Pi.single j 1) (planarNuSolution ω V p) / V.volume
 
 /-- **Lemma 5.7 of Armstrong and Dario** (display (5.25), in dimension two), for every triadic
 cube `V` of scale `n`:
@@ -82,8 +89,8 @@ noncomputable def planarMuRestrictError (ω : Configuration 2) (U : TriadicCube 
 noncomputable def planarNuRestrictError (ω : Configuration 2) (U : TriadicCube 2) (n : ℕ)
     (p : Fin 2 → ℝ) : ℝ :=
   ((subcubesAt U n).card : ℝ)⁻¹ * ∑ V ∈ subcubesAt U n, ∑ j : Fin 2,
-    ((cubeGradSum V (coarsen ω U (planarNuMaximizer ω U p)) j -
-      coarsePairing ω V (Pi.single j 1) (planarNuMaximizer ω V p)) / V.volume) ^ 2
+    ((cubeGradSum V (coarsen ω U (planarNuSolution ω U p)) j -
+      coarsePairing ω V (Pi.single j 1) (planarNuSolution ω V p)) / V.volume) ^ 2
 
 /-- **Lemma 5.5 of Armstrong and Dario for `μ`** (display (5.12), first term, in dimension two).
 -/
@@ -124,8 +131,8 @@ def PlanarCoarseGradMomentMu (p : unitInterval) : Prop :=
 expectation, in dimension two). -/
 def PlanarCoarseGradMomentNu (p : unitInterval) : Prop :=
   ∀ δ : ℝ, 0 < δ → ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : TriadicCube 2) (ξ : Fin 2 → ℝ),
-    AEMeasurable (fun ω => coarseEnergy ω U (planarNuMaximizer ω U ξ)) (latticeBondLaw 2 p) ∧
-    ∫⁻ ω, ENNReal.ofReal (coarseEnergy ω U (planarNuMaximizer ω U ξ)) ∂(latticeBondLaw 2 p) ≤
+    AEMeasurable (fun ω => coarseEnergy ω U (planarNuSolution ω U ξ)) (latticeBondLaw 2 p) ∧
+    ∫⁻ ω, ENNReal.ofReal (coarseEnergy ω U (planarNuSolution ω U ξ)) ∂(latticeBondLaw 2 p) ≤
       ENNReal.ofReal (C * (ξ 0 ^ 2 + ξ 1 ^ 2) * (3 : ℝ) ^ (δ * U.scale))
 
 /-- The coarse pairing with `e_j` is the spatial sum of the gradient of the coarsening. -/
