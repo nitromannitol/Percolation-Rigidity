@@ -294,4 +294,263 @@ theorem planarOmega_ennreal_le {n : ℕ} (hn : 1 ≤ n) (ξ q : Fin 2 → ℝ)
     · simp only [hP, hV, hU, and_false, if_false, mul_zero, add_zero]
       exact zero_le
 
+theorem ofReal_subMuSum_eq (ω : Configuration 2) (U : TriadicCube 2) (n : ℕ) (q : Fin 2 → ℝ) :
+    ENNReal.ofReal (subMuSum ω U n q) = ∑ x ∈ U.toIntegerCube.vertices,
+      (if PlanarPartitionEvent ω ∧ PlanarResolved ω (scaleCube n x) then
+        ENNReal.ofReal (-planarMu ω (scaleCube n x) q) else 0) := by
+  rw [subMuSum, ENNReal.ofReal_sum_of_nonneg fun x _ => by
+    split_ifs with h
+    · linarith [planarMu_nonpos h.1 h.2 q]
+    · exact le_rfl]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  split_ifs <;> simp
+
+theorem ofReal_subNuSum_eq (ω : Configuration 2) (U : TriadicCube 2) (n : ℕ) (ξ : Fin 2 → ℝ) :
+    ENNReal.ofReal (subNuSum ω U n ξ) = ∑ x ∈ U.toIntegerCube.vertices,
+      (if PlanarPartitionEvent ω ∧ PlanarResolved ω (scaleCube n x) then
+        ENNReal.ofReal (planarNu ω (scaleCube n x) ξ) else 0) := by
+  rw [subNuSum, ENNReal.ofReal_sum_of_nonneg fun x _ => by
+    split_ifs
+    · exact planarNu_nonneg ξ
+    · exact le_rfl]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  split_ifs <;> simp
+
+theorem measurable_ofReal_subMuSum (U : TriadicCube 2) (n : ℕ) (q : Fin 2 → ℝ) :
+    Measurable fun ω => ENNReal.ofReal (subMuSum ω U n q) := by
+  simp_rw [ofReal_subMuSum_eq]
+  exact Finset.measurable_fun_sum _ fun x _ => measurable_planarMu_indicator _ q
+
+theorem measurable_ofReal_subNuSum (U : TriadicCube 2) (n : ℕ) (ξ : Fin 2 → ℝ) :
+    Measurable fun ω => ENNReal.ofReal (subNuSum ω U n ξ) := by
+  simp_rw [ofReal_subNuSum_eq]
+  exact Finset.measurable_fun_sum _ fun x _ => measurable_planarNu_indicator _ ξ
+
+/-- The integral of the right side of the pointwise inequality. -/
+theorem lintegral_rhs_le {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} [IsProbabilityMeasure μ]
+    {s0 c c48 c96 : ℝ} (hs0 : 0 ≤ s0) (hc0 : 0 ≤ c) (hc48 : 0 ≤ c48) (hc96 : 0 ≤ c96)
+    {Mb Φu Φv : Ω → ℝ} {H Mμ A B Bad Gt : Ω → ℝ≥0∞}
+    (mMb : AEMeasurable Mb μ) (mH : AEMeasurable H μ) (mΦu : AEMeasurable Φu μ)
+    (mΦv : AEMeasurable Φv μ) (mMμ : AEMeasurable Mμ μ) (mA : AEMeasurable A μ)
+    (mB : AEMeasurable B μ) (mBad : AEMeasurable Bad μ) (hΦu0 : ∀ ω, 0 ≤ Φu ω)
+    (hΦv0 : ∀ ω, 0 ≤ Φv ω) {bMb bH bΦu bΦv bMμ bA bB bBad bG : ℝ}
+    (IMb : ∫⁻ ω, ENNReal.ofReal (Mb ω) ∂μ ≤ ENNReal.ofReal bMb)
+    (IH : ∫⁻ ω, H ω ∂μ ≤ ENNReal.ofReal bH)
+    (IΦu : ∫⁻ ω, ENNReal.ofReal (Φu ω) ∂μ ≤ ENNReal.ofReal bΦu)
+    (IΦv : ∫⁻ ω, ENNReal.ofReal (Φv ω) ∂μ ≤ ENNReal.ofReal bΦv)
+    (IMμ : ∫⁻ ω, Mμ ω ∂μ ≤ ENNReal.ofReal bMμ) (IA : ∫⁻ ω, A ω ∂μ ≤ ENNReal.ofReal bA)
+    (IB : ∫⁻ ω, B ω ∂μ ≤ ENNReal.ofReal bB) (IBad : ∫⁻ ω, Bad ω ∂μ ≤ ENNReal.ofReal bBad)
+    (IG : ∫⁻ ω, Gt ω ∂μ ≤ ENNReal.ofReal bG)
+    (hb : 0 ≤ bMb ∧ 0 ≤ bH ∧ 0 ≤ bΦu ∧ 0 ≤ bΦv ∧ 0 ≤ bMμ ∧ 0 ≤ bA ∧ 0 ≤ bB ∧ 0 ≤ bBad ∧
+      0 ≤ bG) :
+    ∫⁻ ω, (ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) + ENNReal.ofReal c48 * H ω +
+        ENNReal.ofReal (c96 * (Φu ω + Φv ω)) + ENNReal.ofReal c * Mμ ω + ENNReal.ofReal c * A ω +
+        ENNReal.ofReal c * B ω + Bad ω + ENNReal.ofReal c * Gt ω) ∂μ ≤
+      ENNReal.ofReal (s0 + bMb + c48 * bH + c96 * (bΦu + bΦv) + c * bMμ + c * bA + c * bB +
+        bBad + c * bG) := by
+  obtain ⟨hbMb, hbH, hbΦu, hbΦv, hbMμ, hbA, hbB, hbBad, hbG⟩ := hb
+  have m1 : AEMeasurable (fun ω => ENNReal.ofReal (Mb ω)) μ := mMb.ennreal_ofReal
+  have m2 : AEMeasurable (fun ω => ENNReal.ofReal c48 * H ω) μ := mH.const_mul _
+  have m3 : AEMeasurable (fun ω => ENNReal.ofReal (c96 * (Φu ω + Φv ω))) μ :=
+    ((mΦu.add mΦv).const_mul _).ennreal_ofReal
+  have m4 : AEMeasurable (fun ω => ENNReal.ofReal c * Mμ ω) μ := mMμ.const_mul _
+  have m5 : AEMeasurable (fun ω => ENNReal.ofReal c * A ω) μ := mA.const_mul _
+  have m6 : AEMeasurable (fun ω => ENNReal.ofReal c * B ω) μ := mB.const_mul _
+  have a1 := aemeasurable_const (b := ENNReal.ofReal s0) (μ := μ)
+  have n1 : AEMeasurable (fun ω => ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω)) μ := a1.add m1
+  have n2 : AEMeasurable (fun ω => ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) +
+      ENNReal.ofReal c48 * H ω) μ := n1.add m2
+  have n3 : AEMeasurable (fun ω => ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) +
+      ENNReal.ofReal c48 * H ω + ENNReal.ofReal (c96 * (Φu ω + Φv ω))) μ := n2.add m3
+  have n4 : AEMeasurable (fun ω => ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) +
+      ENNReal.ofReal c48 * H ω + ENNReal.ofReal (c96 * (Φu ω + Φv ω)) +
+      ENNReal.ofReal c * Mμ ω) μ := n3.add m4
+  have n5 : AEMeasurable (fun ω => ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) +
+      ENNReal.ofReal c48 * H ω + ENNReal.ofReal (c96 * (Φu ω + Φv ω)) +
+      ENNReal.ofReal c * Mμ ω + ENNReal.ofReal c * A ω) μ := n4.add m5
+  have n6 : AEMeasurable (fun ω => ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) +
+      ENNReal.ofReal c48 * H ω + ENNReal.ofReal (c96 * (Φu ω + Φv ω)) +
+      ENNReal.ofReal c * Mμ ω + ENNReal.ofReal c * A ω + ENNReal.ofReal c * B ω) μ := n5.add m6
+  have n7 : AEMeasurable (fun ω => ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) +
+      ENNReal.ofReal c48 * H ω + ENNReal.ofReal (c96 * (Φu ω + Φv ω)) +
+      ENNReal.ofReal c * Mμ ω + ENNReal.ofReal c * A ω + ENNReal.ofReal c * B ω + Bad ω) μ :=
+    n6.add mBad
+  rw [lintegral_add_left' n7, lintegral_add_left' n6, lintegral_add_left' n5,
+    lintegral_add_left' n4, lintegral_add_left' n3, lintegral_add_left' n2,
+    lintegral_add_left' n1, lintegral_add_left' a1, lintegral_const, measure_univ, mul_one,
+    lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
+    lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
+    lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+  have k3 : ∫⁻ ω, ENNReal.ofReal (c96 * (Φu ω + Φv ω)) ∂μ ≤ ENNReal.ofReal (c96 * (bΦu + bΦv)) := by
+    have e : ∀ ω, ENNReal.ofReal (c96 * (Φu ω + Φv ω)) =
+        ENNReal.ofReal c96 * (ENNReal.ofReal (Φu ω) + ENNReal.ofReal (Φv ω)) := fun ω => by
+      rw [ENNReal.ofReal_mul hc96, ENNReal.ofReal_add (hΦu0 ω) (hΦv0 ω)]
+    simp_rw [e]
+    rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, lintegral_add_left' mΦu.ennreal_ofReal,
+      ENNReal.ofReal_mul hc96, ENNReal.ofReal_add hbΦu hbΦv]
+    gcongr
+  calc _ ≤ ENNReal.ofReal s0 + ENNReal.ofReal bMb + ENNReal.ofReal c48 * ENNReal.ofReal bH +
+        ENNReal.ofReal (c96 * (bΦu + bΦv)) + ENNReal.ofReal c * ENNReal.ofReal bMμ +
+        ENNReal.ofReal c * ENNReal.ofReal bA + ENNReal.ofReal c * ENNReal.ofReal bB +
+        ENNReal.ofReal bBad + ENNReal.ofReal c * ENNReal.ofReal bG := by
+        gcongr
+    _ = _ := by
+        rw [← ENNReal.ofReal_mul hc48, ← ENNReal.ofReal_mul hc0, ← ENNReal.ofReal_mul hc0,
+          ← ENNReal.ofReal_mul hc0, ← ENNReal.ofReal_mul hc0]
+        rw [← ENNReal.ofReal_add hs0 hbMb, ← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity)]
+
+/-- The left side of the integrated inequality, by superadditivity. -/
+theorem lintegral_lhs_ge {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω} {c W : ℝ}
+    (f g h k : Ω → ℝ≥0∞) :
+    ∫⁻ ω, f ω ∂μ + ∫⁻ ω, g ω ∂μ + ENNReal.ofReal c * (ENNReal.ofReal W * ∫⁻ ω, h ω ∂μ) +
+        ENNReal.ofReal c * (ENNReal.ofReal W * ∫⁻ ω, k ω ∂μ) ≤
+      ∫⁻ ω, (f ω + g ω + ENNReal.ofReal c * (ENNReal.ofReal W * h ω) +
+        ENNReal.ofReal c * (ENNReal.ofReal W * k ω)) ∂μ := by
+  rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
+    ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
+    ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
+    ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
+  exact (add_le_add (add_le_add (le_lintegral_add _ _) le_rfl) le_rfl).trans
+    ((add_le_add (le_lintegral_add _ _) le_rfl).trans (le_lintegral_add _ _))
+
+/-- Back to real numbers. -/
+theorem toReal_add_four_le {x y z w : ℝ≥0∞} {c W R : ℝ} (hc : 0 ≤ c) (hW : 0 ≤ W) (hR : 0 ≤ R)
+    (h : x + y + ENNReal.ofReal c * (ENNReal.ofReal W * z) +
+      ENNReal.ofReal c * (ENNReal.ofReal W * w) ≤ ENNReal.ofReal R) :
+    x.toReal + y.toReal + c * W * (z.toReal + w.toReal) ≤ R := by
+  have hne := ne_top_of_le_ne_top ENNReal.ofReal_ne_top h
+  have h1 : x ≠ ∞ := by intro h'; apply hne; rw [h']; simp
+  have h2 : y ≠ ∞ := by intro h'; apply hne; rw [h']; simp
+  have h3 : ENNReal.ofReal c * (ENNReal.ofReal W * z) ≠ ∞ := by intro h'; apply hne; rw [h']; simp
+  have h4 : ENNReal.ofReal c * (ENNReal.ofReal W * w) ≠ ∞ := by intro h'; apply hne; rw [h']; simp
+  have hreal := ENNReal.toReal_le_of_le_ofReal hR h
+  rw [ENNReal.toReal_add (by finiteness) h4, ENNReal.toReal_add (by finiteness) h3,
+    ENNReal.toReal_add h1 h2, ENNReal.toReal_mul, ENNReal.toReal_mul, ENNReal.toReal_mul,
+    ENNReal.toReal_mul, ENNReal.toReal_ofReal hc, ENNReal.toReal_ofReal hW] at hreal
+  linarith
+
+/-- **The pointwise inequality of the proof of Lemma 5.9, integrated.** -/
+theorem planarOmega_integral_le {p : unitInterval} {n : ℕ} (hn : 1 ≤ n) (ξ q : Fin 2 → ℝ)
+    (hs : 0 ≤ ∑ i, q i * ξ i) {Mb Φu Φv : Configuration 2 → ℝ}
+    {H Mμ Bad : Configuration 2 → ℝ≥0∞}
+    (mMb : AEMeasurable Mb (latticeBondLaw 2 p)) (mH : AEMeasurable H (latticeBondLaw 2 p))
+    (mΦu : AEMeasurable Φu (latticeBondLaw 2 p)) (mΦv : AEMeasurable Φv (latticeBondLaw 2 p))
+    (mMμ : AEMeasurable Mμ (latticeBondLaw 2 p)) (mBad : AEMeasurable Bad (latticeBondLaw 2 p))
+    (hΦu0 : ∀ ω, 0 ≤ Φu ω) (hΦv0 : ∀ ω, 0 ≤ Φv ω)
+    (hMb : ∀ ω, PlanarPartitionEvent ω → PlanarResolved ω ⟨n, 0⟩ →
+      (|q 0| + |q 1|) * boundaryError ω ⟨n, 0⟩ ξ (planarNuMaximizer ω ⟨n, 0⟩ ξ) /
+        (⟨n, 0⟩ : TriadicCube 2).volume ≤ Mb ω)
+    (hH : ∀ ω, PlanarPartitionEvent ω → PlanarResolved ω ⟨n + 1, 0⟩ →
+      ENNReal.ofReal (∑ x ∈ clusterVertices ω ⟨n + 1, 0⟩,
+        (clusterExtend ω ⟨n + 1, 0⟩
+            (planarNuMaximizer ω ⟨n + 1, 0⟩ ξ - planarMuMinimizer ω ⟨n + 1, 0⟩ q) x -
+          clusterExtend ω ⟨n + 1, 0⟩
+            (planarNuMaximizer ω ⟨n + 1, 0⟩ ξ - planarMuMinimizer ω ⟨n + 1, 0⟩ q)
+            (planarCoarseAnchor ω x)) ^ 2) ≤ H ω)
+    (hΦu : ∀ ω, planarFlatnessError ⟨n + 1, 0⟩
+      (coarsen ω ⟨n + 1, 0⟩ (planarMuMinimizer ω ⟨n + 1, 0⟩ q)) ξ ≤ Φu ω)
+    (hΦv : ∀ ω, planarFlatnessError ⟨n + 1, 0⟩
+      (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ)) ξ ≤ Φv ω)
+    (hMμ : ∀ ω, PlanarPartitionEvent ω → PlanarResolved ω ⟨n + 1, 0⟩ →
+      ENNReal.ofReal (muSubGap ω ⟨n + 1, 0⟩ n q) ≤ Mμ ω)
+    (hBad : ∀ ω, PlanarPartitionEvent ω → PlanarResolved ω ⟨n, 0⟩ →
+      ¬ PlanarResolved ω ⟨n + 1, 0⟩ →
+      ENNReal.ofReal (planarNu ω ⟨n, 0⟩ ξ) + ENNReal.ofReal (-planarMu ω ⟨n, 0⟩ q) ≤ Bad ω)
+    {bMb bH bΦu bΦv bMμ bX1 bX3 bBad bG : ℝ}
+    (IMb : ∫⁻ ω, ENNReal.ofReal (Mb ω) ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal bMb)
+    (IH : ∫⁻ ω, H ω ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal bH)
+    (IΦu : ∫⁻ ω, ENNReal.ofReal (Φu ω) ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal bΦu)
+    (IΦv : ∫⁻ ω, ENNReal.ofReal (Φv ω) ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal bΦv)
+    (IMμ : ∫⁻ ω, Mμ ω ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal bMμ)
+    (IX1 : ∫⁻ ω, ENNReal.ofReal (subMuSum ω ⟨n + 1, 0⟩ n q) ∂(latticeBondLaw 2 p) ≤
+      ENNReal.ofReal bX1)
+    (IX3 : ∫⁻ ω, ENNReal.ofReal (subNuSum ω ⟨n + 1, 0⟩ n ξ) ∂(latticeBondLaw 2 p) ≤
+      ENNReal.ofReal bX3)
+    (IBad : ∫⁻ ω, Bad ω ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal bBad)
+    (IG : ∫⁻ ω, (if PlanarPartitionEvent ω ∧ PlanarResolved ω ⟨n + 1, 0⟩ then
+      ENNReal.ofReal (nuSubGap ω ⟨n + 1, 0⟩ n ξ) else 0) ∂(latticeBondLaw 2 p) ≤ ENNReal.ofReal bG)
+    (hb : 0 ≤ bMb ∧ 0 ≤ bH ∧ 0 ≤ bΦu ∧ 0 ≤ bΦv ∧ 0 ≤ bMμ ∧ 0 ≤ bX1 ∧ 0 ≤ bX3 ∧ 0 ≤ bBad ∧
+      0 ≤ bG) :
+    planarNuMean p n ξ + planarMuMean p n q +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * (⟨n + 1, 0⟩ : TriadicCube 2).volume *
+          (planarMuMean p (n + 1) q + planarNuMean p (n + 1) ξ) ≤
+      (∑ i, q i * ξ i + (∑ i, q i * ξ i) / ((⟨n, 0⟩ : TriadicCube 2).toIntegerCube.size : ℝ)) +
+        bMb + 48 / (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) * bH +
+        96 * (⟨n + 1, 0⟩ : TriadicCube 2).volume /
+          (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) * (bΦu + bΦv) +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * bMμ +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * bX1 +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * bX3 + bBad +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * bG := by
+  obtain ⟨hbMb, hbH, hbΦu, hbΦv, hbMμ, hbX1, hbX3, hbBad, hbG⟩ := hb
+  set μP := latticeBondLaw 2 p
+  set c : ℝ := 3 / (⟨n, 0⟩ : TriadicCube 2).volume with hc
+  have hc0 : 0 ≤ c := div_nonneg (by norm_num) (⟨n, 0⟩ : TriadicCube 2).volume_pos.le
+  set c48 : ℝ := 48 / (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) with hc48d
+  have hc48 : 0 ≤ c48 :=
+    div_nonneg (by norm_num) (mul_nonneg (sq_nonneg _) (⟨n, 0⟩ : TriadicCube 2).volume_pos.le)
+  set c96 : ℝ := 96 * (⟨n + 1, 0⟩ : TriadicCube 2).volume /
+    (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) with hc96d
+  have hc96 : 0 ≤ c96 := div_nonneg (mul_nonneg (by norm_num)
+    (⟨n + 1, 0⟩ : TriadicCube 2).volume_pos.le)
+    (mul_nonneg (sq_nonneg _) (⟨n, 0⟩ : TriadicCube 2).volume_pos.le)
+  set W : ℝ := (⟨n + 1, 0⟩ : TriadicCube 2).volume with hW
+  have hW0 : 0 ≤ W := (⟨n + 1, 0⟩ : TriadicCube 2).volume_pos.le
+  set s0 : ℝ := ∑ i, q i * ξ i + (∑ i, q i * ξ i) / ((⟨n, 0⟩ : TriadicCube 2).toIntegerCube.size : ℝ)
+  have hs0 : 0 ≤ s0 := add_nonneg hs (div_nonneg hs (Nat.cast_nonneg _))
+  -- the four functions on the left
+  set fν : Configuration 2 → ℝ≥0∞ := fun ω => if PlanarPartitionEvent ω ∧
+    PlanarResolved ω ⟨n, 0⟩ then ENNReal.ofReal (planarNu ω ⟨n, 0⟩ ξ) else 0
+  set fμ : Configuration 2 → ℝ≥0∞ := fun ω => if PlanarPartitionEvent ω ∧
+    PlanarResolved ω ⟨n, 0⟩ then ENNReal.ofReal (-planarMu ω ⟨n, 0⟩ q) else 0
+  set gμ : Configuration 2 → ℝ≥0∞ := fun ω => if PlanarPartitionEvent ω ∧
+    PlanarResolved ω ⟨n + 1, 0⟩ then ENNReal.ofReal (-planarMu ω ⟨n + 1, 0⟩ q) else 0
+  set gν : Configuration 2 → ℝ≥0∞ := fun ω => if PlanarPartitionEvent ω ∧
+    PlanarResolved ω ⟨n + 1, 0⟩ then ENNReal.ofReal (planarNu ω ⟨n + 1, 0⟩ ξ) else 0
+  set Gt : Configuration 2 → ℝ≥0∞ := fun ω => if PlanarPartitionEvent ω ∧
+    PlanarResolved ω ⟨n + 1, 0⟩ then ENNReal.ofReal (nuSubGap ω ⟨n + 1, 0⟩ n ξ) else 0
+  have hgμ : ∀ ω, (if PlanarPartitionEvent ω ∧ PlanarResolved ω ⟨n + 1, 0⟩ then
+      ENNReal.ofReal (W * -planarMu ω ⟨n + 1, 0⟩ q) else 0) = ENNReal.ofReal W * gμ ω := by
+    intro ω
+    simp only [gμ]
+    split_ifs
+    · exact ENNReal.ofReal_mul hW0
+    · simp
+  have hgν : ∀ ω, (if PlanarPartitionEvent ω ∧ PlanarResolved ω ⟨n + 1, 0⟩ then
+      ENNReal.ofReal (W * planarNu ω ⟨n + 1, 0⟩ ξ) else 0) = ENNReal.ofReal W * gν ω := by
+    intro ω
+    simp only [gν]
+    split_ifs
+    · exact ENNReal.ofReal_mul hW0
+    · simp
+  have hpt : ∀ ω, fν ω + fμ ω + ENNReal.ofReal c * (ENNReal.ofReal W * gμ ω) +
+      ENNReal.ofReal c * (ENNReal.ofReal W * gν ω) ≤
+      ENNReal.ofReal s0 + ENNReal.ofReal (Mb ω) + ENNReal.ofReal c48 * H ω +
+        ENNReal.ofReal (c96 * (Φu ω + Φv ω)) + ENNReal.ofReal c * Mμ ω +
+        ENNReal.ofReal c * ENNReal.ofReal (subMuSum ω ⟨n + 1, 0⟩ n q) +
+        ENNReal.ofReal c * ENNReal.ofReal (subNuSum ω ⟨n + 1, 0⟩ n ξ) + Bad ω +
+        ENNReal.ofReal c * Gt ω := by
+    intro ω
+    rw [← hgμ, ← hgν]
+    exact planarOmega_ennreal_le hn ξ q hs ω (hMb ω) (hH ω) (hΦu ω) (hΦv ω) (hMμ ω) (hBad ω)
+  have hint := lintegral_mono (μ := μP) hpt
+  have hR := lintegral_rhs_le (μ := μP) hs0 hc0 hc48 hc96 mMb mH mΦu mΦv mMμ
+    (measurable_ofReal_subMuSum _ n q).aemeasurable (measurable_ofReal_subNuSum _ n ξ).aemeasurable
+    mBad hΦu0 hΦv0 IMb IH IΦu IΦv IMμ IX1 IX3 IBad IG
+    ⟨hbMb, hbH, hbΦu, hbΦv, hbMμ, hbX1, hbX3, hbBad, hbG⟩
+  have htot := ((lintegral_lhs_ge (μ := μP) fν fμ gμ gν).trans hint).trans hR
+  have hreal := toReal_add_four_le hc0 hW0 (by positivity) htot
+  have e : planarNuMean p n ξ + planarMuMean p n q + c * W *
+      (planarMuMean p (n + 1) q + planarNuMean p (n + 1) ξ) =
+      (∫⁻ ω, fν ω ∂μP).toReal + (∫⁻ ω, fμ ω ∂μP).toReal +
+        c * W * ((∫⁻ ω, gμ ω ∂μP).toReal + (∫⁻ ω, gν ω ∂μP).toReal) := rfl
+  rw [e]
+  exact hreal
+
 end Rigidity.Percolation
