@@ -10,28 +10,28 @@ import Rigidity.Proofs.Multiscale.Affine
 Lemmas 5.8 (flatness) and 5.9 (decay of `ω`) of Armstrong and Dario are deduced from Lemma 5.7
 (the weak convergence of the spatial averages of the coarsened gradients of the minimizers of
 `μ`), Lemma 5.5 (the spatial averages of the coarsened gradients are almost additive) and the
-bound of Section 4.1 on the energy of the coarsened minimizers. We state these as they are
+bounds (4.24), (4.25) on the energy of the coarsened minimizers. We state these as they are
 printed, in dimension two, in the vocabulary of the planar modules.
 
 * `PlanarWeakConvergence`: display (5.25) of Lemma 5.7,
   `E[| |□|⁻¹ ⟨∇[u(·, □, q)]_P⟩_□ - ā_{□_n}⁻¹ q |²] ≤ C |q|² (τ_n + 3^{-n/4})`
   for every triadic cube `□` of scale `n` (Armstrong and Dario state it for `□_n` and use it for
   every `z + □_n`, the law of `μ` being stationary).
-* `PlanarRestrictQuadCoarsenMu`, `PlanarRestrictQuadCoarsenNu`: display (5.20) of Lemma 5.5, for
+* `PlanarRestrictQuadCoarsenMu`, `PlanarRestrictQuadCoarsenNu`: display (5.12) of Lemma 5.5, for
   `m, n` with `n ∈ [(9/10) m, m)`, every cube `□` of scale `m` and every slope,
   `E[3^{-2(m-n)} |□_n|⁻² ∑_z |⟨∇[u(·, □, q)]_P⟩_{z+□_n} - ⟨∇[u(·, z+□_n, q)]_P⟩_{z+□_n}|²]
     ≤ C |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`,
   and likewise for the maximizers `v` of `ν`. Armstrong and Dario print the upper limit `m + 1`
-  in (5.20); their proof (the last display of the proof of Lemma 5.5) and the application in the
+  in (5.12); their proof (the last display of the proof of Lemma 5.5) and the application in the
   proof of Lemma 5.8 give `m - 1`, which is the form stated here.
-* `PlanarCoarseGradMomentMu`, `PlanarCoarseGradMomentNu`: the bounds of Section 4.1 on the
+* `PlanarCoarseGradMomentMu`, `PlanarCoarseGradMomentNu`: the bounds (4.24), (4.25) on the
   `L²` norms of the coarsened gradients, in expectation: for every `δ > 0`,
   `E[|□|⁻¹ ∫_□ |∇[u(·, □, q)]_P|²] ≤ C(δ) |q|² size(□)^δ`.
 
 The minimizers and maximizers vanish off the partition event and for unresolved cubes, as in the
 convention of Armstrong and Dario that `u(·, □, q) = 0` when `□` is not in `P_*`. The bounds on
 expectations are bounds on the expectations of random variables; for the quantities of Lemma 5.5
-and of Section 4.1, whose measurability is not proved here, the measurability is part of the
+and of (4.24), (4.25), whose measurability is not proved here, the measurability is part of the
 statement.
 -/
 
@@ -70,7 +70,7 @@ def PlanarWeakConvergence (p : unitInterval) : Prop :=
       ENNReal.ofReal (C * (q 0 ^ 2 + q 1 ^ 2) *
         (planarTau p V.scale + (3 : ℝ) ^ (-(V.scale : ℝ) / 4)))
 
-/-- The quantity of display (5.20) for `μ`: the mean over the subcubes `V` of scale `n` of `U` of
+/-- The quantity of display (5.12) for `μ`: the mean over the subcubes `V` of scale `n` of `U` of
 `∑_j ((⟨∇[u(·, U, q)]_P⟩_V - ⟨∇[u(·, V, q)]_P⟩_V) · e_j / |V|)²`. -/
 noncomputable def planarMuRestrictError (ω : Configuration 2) (U : TriadicCube 2) (n : ℕ)
     (q : Fin 2 → ℝ) : ℝ :=
@@ -78,14 +78,14 @@ noncomputable def planarMuRestrictError (ω : Configuration 2) (U : TriadicCube 
     ((cubeGradSum V (coarsen ω U (planarMuMinimizer ω U q)) j -
       coarsePairing ω V (Pi.single j 1) (planarMuMinimizer ω V q)) / V.volume) ^ 2
 
-/-- The quantity of display (5.20) for `ν`. -/
+/-- The quantity of display (5.12) for `ν`. -/
 noncomputable def planarNuRestrictError (ω : Configuration 2) (U : TriadicCube 2) (n : ℕ)
     (p : Fin 2 → ℝ) : ℝ :=
   ((subcubesAt U n).card : ℝ)⁻¹ * ∑ V ∈ subcubesAt U n, ∑ j : Fin 2,
     ((cubeGradSum V (coarsen ω U (planarNuMaximizer ω U p)) j -
       coarsePairing ω V (Pi.single j 1) (planarNuMaximizer ω V p)) / V.volume) ^ 2
 
-/-- **Lemma 5.5 of Armstrong and Dario for `μ`** (display (5.20), first term, in dimension two).
+/-- **Lemma 5.5 of Armstrong and Dario for `μ`** (display (5.12), first term, in dimension two).
 -/
 def PlanarRestrictQuadCoarsenMu (p : unitInterval) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : TriadicCube 2) (n : ℕ), 9 * U.scale ≤ 10 * n → n < U.scale →
@@ -95,7 +95,7 @@ def PlanarRestrictQuadCoarsenMu (p : unitInterval) : Prop :=
         ENNReal.ofReal (C * (q 0 ^ 2 + q 1 ^ 2) *
           (∑ k ∈ Finset.Ico n U.scale, planarTau p k + (3 : ℝ) ^ (-(n : ℝ) / 4)))
 
-/-- **Lemma 5.5 of Armstrong and Dario for `ν`** (display (5.20), second term, in dimension
+/-- **Lemma 5.5 of Armstrong and Dario for `ν`** (display (5.12), second term, in dimension
 two). -/
 def PlanarRestrictQuadCoarsenNu (p : unitInterval) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : TriadicCube 2) (n : ℕ), 9 * U.scale ≤ 10 * n → n < U.scale →
@@ -112,16 +112,16 @@ noncomputable def coarseEnergy (ω : Configuration 2) (U : TriadicCube 2) (w : C
   U.volume⁻¹ * ∑ x ∈ U.toIntegerCube.vertices,
     Rigidity.Proofs.Multiscale.gradNormSq U.toIntegerCube.vertices (coarsen ω U w) x
 
-/-- **The energy of the coarsened minimizers of `μ`** (Armstrong and Dario, Section 4.1,
-`e.coarsegraduL2`, in expectation, in dimension two). -/
+/-- **The energy of the coarsened minimizers of `μ`** (Armstrong and Dario, (4.24), in
+expectation, in dimension two). -/
 def PlanarCoarseGradMomentMu (p : unitInterval) : Prop :=
   ∀ δ : ℝ, 0 < δ → ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : TriadicCube 2) (q : Fin 2 → ℝ),
     AEMeasurable (fun ω => coarseEnergy ω U (planarMuMinimizer ω U q)) (latticeBondLaw 2 p) ∧
     ∫⁻ ω, ENNReal.ofReal (coarseEnergy ω U (planarMuMinimizer ω U q)) ∂(latticeBondLaw 2 p) ≤
       ENNReal.ofReal (C * (q 0 ^ 2 + q 1 ^ 2) * (3 : ℝ) ^ (δ * U.scale))
 
-/-- **The energy of the coarsened maximizers of `ν`** (Armstrong and Dario, Section 4.1,
-`e.coarsegradvL2`, in expectation, in dimension two). -/
+/-- **The energy of the coarsened maximizers of `ν`** (Armstrong and Dario, (4.25), in
+expectation, in dimension two). -/
 def PlanarCoarseGradMomentNu (p : unitInterval) : Prop :=
   ∀ δ : ℝ, 0 < δ → ∃ C : ℝ, 0 ≤ C ∧ ∀ (U : TriadicCube 2) (ξ : Fin 2 → ℝ),
     AEMeasurable (fun ω => coarseEnergy ω U (planarNuMaximizer ω U ξ)) (latticeBondLaw 2 p) ∧

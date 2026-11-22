@@ -8,7 +8,7 @@ import Rigidity.Proofs.Percolation.PlanarTauSummable
   and `k ≤ m`, the mean square over the subcubes `V = z + □_k` of `| |V|⁻¹ ⟨∇[u]_P⟩_V - ξ |` is at
   most three times the sum of the quantity of Lemma 5.5, of the mean over `V` of
   `| |V|⁻¹ ⟨∇[u(·, V, q)]_P⟩_V - c |²` and of `|c - ξ|²`, for every vector `c` (the
-  inequality `(a + b + c)² ≤ 3 (a² + b² + c²)` in the proof of (5.32) of Armstrong and Dario);
+  inequality `(a + b + c)² ≤ 3 (a² + b² + c²)` in the proof of (5.36) of Armstrong and Dario);
 * `lintegral_ofReal_le_of_le`: the expectation of a random variable bounded by a nonnegative
   combination of random variables with known expectations;
 * elementary sums: `∑_{k ≥ n} (3^{-k/2} + exp(-c 3^k)) ≤ C 3^{-n/4}`,
@@ -42,7 +42,7 @@ theorem inv_mul_le_of_le_three {N X A B C : ℝ} (hN : 0 < N)
   exact h2
 
 /-- **The subcube averages of the coarsened gradient of a minimizer**, split as in the proof of
-(5.32) of Armstrong and Dario. -/
+(5.36) of Armstrong and Dario. -/
 theorem sum_centers_coarsen_le {m k : ℕ} (hk : k ≤ m) (z : Vertex 2) (q ξ c : Fin 2 → ℝ) :
     ((centers m z k).card : ℝ)⁻¹ * ∑ y ∈ centers m z k, ∑ j : Fin 2,
         (((9 : ℝ) ^ k)⁻¹ *
