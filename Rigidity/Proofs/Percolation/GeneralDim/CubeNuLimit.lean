@@ -15,8 +15,8 @@ and Dario, Definition 5.1, in every dimension `d ≥ 2`:
 
 `(1/2) ξ · ā ξ = lim_{m → ∞} E[ν(□_m, ξ)]`, with `0 ≤ (1/2) ξ · ā ξ ≤ (3^d/4) |ξ|₁²`.
 
-The lower bound `c |ξ|² ≤ (1/2) ξ · ā ξ` of (5.1) needs Lemma 4.7 in expectation and is not proved
-here.
+The lower bound `c |ξ|² ≤ (1/2) ξ · ā ξ` of (5.1) needs Lemma 4.7 in expectation and is proved in
+`CubeNuLowerBoundMean`.
 -/
 
 open MeasureTheory Filter Topology LatticeProb LatticeProb.Percolation Rigidity.External
