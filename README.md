@@ -1335,7 +1335,7 @@ Departures from Armstrong and Dario:
 ## The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two
 
 For `𝔭_c(2) < p < 1` and with no hypothesis, the rate of convergence of the expectations in
-Proposition 5.2 (display (5.3)), Lemma 5.10 (display (5.4)), Step 2 of the proof of Lemma 5.11 and a
+Proposition 5.2 (display (5.4)), Lemma 5.10 (display (5.42)), Step 2 of the proof of Lemma 5.11 and a
 deterministic pointwise form of Lemma 5.3 are proved, in
 [`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/). The decay of `D_n` of Lemma 5.9 holds
 without the hypothesis `h59` (`exists_planarOmegaD_decay_holds`, from Lemmas 5.5 and 5.7 of the previous
@@ -1345,19 +1345,21 @@ some `α ∈ (0, 1/4]`. The quantity `ρ = sup_q |q|⁻² ω₊` has a measurabl
 most `C 3^{−nα}`, its truncated stationary version has expectation at most `C (1 + C₁) 3^{−nα}`, and
 sums of truncated versions over the subcubes of a cube of scale `n + 3 + j` satisfy the Chernoff
 bound of Step 2. Not proved: Proposition 5.2 in the `O_s` form, Steps 1 and 3 of Lemma 5.11 and
-Proposition 5.13 (`p.boundN`). Step 1 of Lemma 5.11 needs a stretched exponential tail of the sizes of
-the planar partition cubes, whereas the concentration of the partition proved here
-(`planarReachConcentration_holds`, `planarRHPartition_holds`) has the polynomial tail `C 3^{−Bk}`.
+Proposition 5.13 (`p.boundN`). Step 1 of Lemma 5.11 needs a stretched exponential tail of the minimal scale (the averages of the
+sizes of the cells over a cube, AD18.tex:1958 through Proposition 2.4), not of a single cell size, which
+is already available (`exists_measure_planarPartCube_scale_ge_le`); the concentration of the partition
+proved here (`planarReachConcentration_holds`, `planarRHPartition_holds`) has the polynomial tail
+`C 3^{−Bk}`.
 
 | Lean declaration | Statement |
 | --- | --- |
 | [`Rigidity.Proofs.Cluster.exists_planarOmegaD_decay_holds`](Rigidity/Proofs/Cluster/PlanarConvergenceRate.lean), [`exists_planarOmegaD_le_geometric`](Rigidity/Proofs/Cluster/PlanarConvergenceRate.lean), [`exists_planarTau_le_geometric`](Rigidity/Proofs/Cluster/PlanarConvergenceRate.lean) | AD Lemma 5.9 with no hypothesis, and the geometric decay `D_n, τ_n ≤ K l^n` for `n ≥ N`, `l < 1`. |
 | [`planarAhomInvLimit_eq_inv`](Rigidity/Proofs/Cluster/PlanarConvergenceRate.lean), [`exists_abs_planarAhom_inv_sub_planarAhomInvFinite_le`](Rigidity/Proofs/Cluster/PlanarConvergenceRate.lean) | AD Lemma 5.10, Step 4, `d = 2`: the limit of the finite-volume matrices is `ā⁻¹`, and `\|(ā⁻¹)_{ij} − (ā_{□_n}⁻¹)_{ij}\| ≤ K l^n` for `n ≥ N`. |
-| [`planar_convexp`](Rigidity/Proofs/Cluster/PlanarConvergenceRate.lean) | AD Proposition 5.2, display (5.3), `d = 2`: there are `α ∈ (0, 1/4]` and `C` with `\|E[−μ(□_n, q)] − (1/2) q · ā⁻¹ q\| + \|E[ν(□_n, ξ)] − (1/2) ξ · ā ξ\| ≤ C (\|ξ\|² + \|q\|²) 3^{−nα}` for all `n`, `ξ`, `q`. |
-| [`planar_omegadecayrate`](Rigidity/Proofs/Cluster/PlanarOmegaSupRate.lean) | AD Lemma 5.10, display (5.4), `d = 2`: for each `n` there is a measurable `M`, at least `ρ(□_n) = sup_q \|q\|⁻² ω₊(□_n, q)` almost surely, with `E[M] ≤ C 3^{−nα}`. |
+| [`planar_convexp`](Rigidity/Proofs/Cluster/PlanarConvergenceRate.lean) | AD Proposition 5.2, display (5.4), `d = 2`: there are `α ∈ (0, 1/4]` and `C` with `\|E[−μ(□_n, q)] − (1/2) q · ā⁻¹ q\| + \|E[ν(□_n, ξ)] − (1/2) ξ · ā ξ\| ≤ C (\|ξ\|² + \|q\|²) 3^{−nα}` for all `n`, `ξ`, `q`. |
+| [`planar_omegadecayrate`](Rigidity/Proofs/Cluster/PlanarOmegaSupRate.lean) | AD Lemma 5.10, display (5.42), `d = 2`: for each `n` there is a measurable `M`, at least `ρ(□_n) = sup_q \|q\|⁻² ω₊(□_n, q)` almost surely, with `E[M] ≤ C 3^{−nα}`. |
 | [`exists_integral_min_planarRhoStat_le`](Rigidity/Proofs/Cluster/PlanarSIStepTwo.lean) | AD Lemma 5.11, Step 2: the truncated stationary version `ρ_stat` of `ρ` on a cube `V` satisfies `E[min(ρ_stat, C₁)] ≤ C (1 + C₁) 3^{−nα}`. |
-| [`measureReal_sum_ge_le_of_bounded`](Rigidity/Proofs/Cluster/BoundedChernoff.lean), [`planar_SIupgrade_step2`](Rigidity/Proofs/Cluster/PlanarSIStepTwo.lean) | the Chernoff bound of Step 2 (variables in `[0, A]` with expectations at most `ε`, each independent of the sum of any set of the others not containing it: `P[∑ ≥ \|s\| t] ≤ exp(−\|s\|(t − (e − 1)ε)/A)`), and AD Lemma 5.11, Step 2, the display at AD18.tex:3950-3953: the sum of `min(ρ_stat, C₁)` over the 729 groups of subcubes of scale `n` of a cube of scale `n + 3 + j`, `9^j` per group, exceeds `729 · 9^j t` with probability at most `729 exp(−9^j (t − (e − 1) C (1 + C₁) 3^{−nα})/C₁)`. |
-| [`abs_quadratic_sub_half_le`](Rigidity/Proofs/Cluster/PlanarMinimalSet.lean), [`planar_minimalset`](Rigidity/Proofs/Cluster/PlanarMinimalSet.lean) | AD Lemma 5.3, `d = 2`, in a deterministic pointwise form: on the partition event for a resolved cube `U`, `\|μ(U, q) + (1/2) q · ā⁻¹ q\| ≤ (4 Y S + √(8 (Λ + 1)(ρ + Y S))) \|q\|²` and the corresponding bound for `ν(U, ā⁻¹ q) − (1/2) q · ā⁻¹ q`, with `Y` the random error of the comparison of Corollary 4.6, `Λ` the bound of `−μ` and `ρ` of Lemma 5.10. |
+| [`measureReal_sum_ge_le_of_bounded`](Rigidity/Proofs/Cluster/BoundedChernoff.lean), [`planar_SIupgrade_step2`](Rigidity/Proofs/Cluster/PlanarSIStepTwo.lean) | the Chernoff bound of Step 2 (variables in `[0, A]` with expectations at most `ε`, each independent of the sum of any set of the others not containing it: `P[∑ ≥ \|s\| t] ≤ exp(−\|s\|(t − (e − 1)ε)/A)`), and AD Lemma 5.11, Step 2, the display at AD18.tex:3944-3947: the sum of `min(ρ_stat, C₁)` over the 729 groups of subcubes of scale `n` of a cube of scale `n + 3 + j`, `9^j` per group, exceeds `729 · 9^j t` with probability at most `729 exp(−9^j (t − (e − 1) C (1 + C₁) 3^{−nα})/C₁)`. |
+| [`abs_quadratic_sub_half_le`](Rigidity/Proofs/Cluster/PlanarMinimalSet.lean), [`planar_minimalset`](Rigidity/Proofs/Cluster/PlanarMinimalSet.lean) | AD Lemma 5.3, `d = 2`, in a deterministic pointwise form: on the partition event for a resolved cube `U`, `\|μ(U, q) + (1/2) q · ā⁻¹ q\| ≤ (4 Y S + √(8 (Λ + 1)(ρ + Y S))) \|q\|²` and the corresponding bound for `ν(U, ā⁻¹ q) − (1/2) q · ā⁻¹ q`, with `Y` the random error of the comparison of Corollary 4.6, `Λ` the bound of `−μ`, `ρ` of Lemma 5.10 and `S` an `ℓ¹` operator bound of `ā⁻¹` (`‖ā⁻¹ v‖₁ ≤ S ‖v‖₁`); the statement assumes `Y(U) < ∞`, which holds almost surely since `E[Y] < ∞`. |
 
 The twelve declarations of the table have axiom reports in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean), and depend only on axioms among `propext`,
@@ -1365,10 +1367,10 @@ The twelve declarations of the table have axiom reports in
 
 Departures from Armstrong and Dario, which are choices of the formalization:
 
-- **Display (5.3).** The `μ` part follows from the rate of `ā_{□_n}⁻¹` (Lemma 5.10, Step 4, display (5.24)); the `ν` part is obtained by
-  summing the increments bounded by `τ_k` through (5.9), with `α ≤ 1/4`. AD derive (5.3) from (5.4) and Lemma 5.3.
-- **Zero off the event.** `ω`, `μ` and `ν` are set to `0` off the partition event and for unresolved cubes
-  (AD set `u = 0` there).
+- **Display (5.4).** The `μ` part follows from the rate of `ā_{□_n}⁻¹` (Lemma 5.10, Step 4, display (5.24)); the `ν` part is obtained by
+  summing the increments bounded by `τ_k` through (5.9), with `α ≤ 1/4`. AD derive (5.4) from (5.5) and Lemma 5.3.
+- **Zero off the event.** `μ` and `ν` are set to `0` off the partition event and for unresolved cubes
+  (AD set `u = 0` there); `ω` is then `−q · ā⁻¹ q`, so that `ω₊` and `ρ` are `0`.
 - **A measurable majorant for `ρ`.** The supremum over the uncountably many `q` is not shown measurable;
   Lemma 5.10 is stated through a measurable majorant `M`.
 - **The random error of Corollary 4.6.** The error `Y` of the comparison, of expectation at most `C 3^{−n/2}`, is kept random
@@ -1378,8 +1380,9 @@ Departures from Armstrong and Dario, which are choices of the formalization:
   position modulo `27`, and a union bound over the `729` groups replaces the single product of Step 2.
 - **Lemma 5.3.** A gradient step replaces the minimizer `q₀` (so no `k(□)` is needed), and the random factor
   `√(Λ(U) + 1)` multiplies `ρ^{1/2}`; the statement is deterministic and pointwise, with the errors named.
-- **Misprints.** There are misprints at AD18.tex:2232, :3929, :3975, :4003-4029 and :4195 whose meaning is
-  clear from the context.
+Misprints in the source whose meaning is clear: AD18.tex:2232 (`|q|²` appears twice); :3929 (`t := 1/K` with
+`K` undefined, `t = 1/C`); :3975 and :4003-4029 (`μ − (1/2) q · ā⁻¹ q` for `μ + (1/2) q · ā⁻¹ q`); :4018-4025
+(`exp(−C⁻¹ 3^{−αm})` for `exp(−C⁻¹ 3^{αm})`); :4195 (`(1/2) p · ā p + ν` for `(1/2) p · ā p − ν`).
 
 ## The Dirichlet problem and the excess-decay iteration
 

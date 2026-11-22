@@ -13,13 +13,13 @@ at an algebraic rate: there are `α ∈ (0, 1/4]` and `C` with
 
 `|E[μ(□_n, q)] + (1/2) q · ā⁻¹ q| + |E[ν(□_n, p)] - (1/2) p · ā p| ≤ C (|p|² + |q|²) 3^{-nα}`
 
-for every `n` and all `p, q` (display (5.3) of Armstrong and Dario, which they state for some
+for every `n` and all `p, q` (display (5.4) of Armstrong and Dario, which they state for some
 `α(d, 𝔭, λ) > 0`; the bound `α ≤ 1/4` is that of Proposition 5.2).
 
 The rate for `μ` is the rate of the finite-volume matrices `ā_{□_n}⁻¹`. The rate for `ν` is the sum
 of the increments `E[ν(□_k, ξ)] - E[ν(□_{k+1}, ξ)]` over `k ≥ n`: each increment is bounded below by
 the approximate monotonicity of `E[ν]` and above by `τ_k` through display (5.9), and `τ_k` decays
-geometrically. Armstrong and Dario derive display (5.3) from Lemma 5.3 and the bound (5.4) on
+geometrically. Armstrong and Dario derive display (5.4) from Lemma 5.3 and the bound (5.5) on
 `E[ω(□_n, ·)₊]`; the route here uses only the decay of `τ_k`, as in Step 4 of their proof of
 Lemma 5.10 for the matrices `ā_{□_n}`.
 
@@ -46,7 +46,7 @@ theorem exists_planarOmegaD_decay_holds {p : unitInterval}
 theorem three_rpow_neg_one_div_ten_lt_one : (3 : ℝ) ^ (-(1 / 10 : ℝ)) < 1 :=
   Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by norm_num)
 
-/-- **Geometric decay of `D_n`** (Armstrong and Dario, Lemma 5.10, (5.36), in dimension two,
+/-- **Geometric decay of `D_n`** (Armstrong and Dario, Lemma 5.10, (5.44), in dimension two,
 `p > p_c(2)`). -/
 theorem exists_planarOmegaD_le_geometric {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :
@@ -410,7 +410,7 @@ theorem abs_sub_le_two_mul_of_nonneg_of_le {a b M : ℝ} (ha : 0 ≤ a) (hb : 0 
   rw [abs_le]
   constructor <;> linarith
 
-/-- **Display (5.3) of Armstrong and Dario, the rate of Proposition 5.2 in expectation**
+/-- **Display (5.4) of Armstrong and Dario, the rate of Proposition 5.2 in expectation**
 (dimension two, `p > p_c(2)`, no other hypothesis). There are `α ∈ (0, 1/4]` and `C` such that
 for every `n` and all `p, q`,
 `|E[μ(□_n, q)] + (1/2) q · ā⁻¹ q| + |E[ν(□_n, p)] - (1/2) p · ā p| ≤ C (|p|² + |q|²) 3^{-nα}`;

@@ -7,7 +7,7 @@ import Rigidity.Proofs.Percolation.PlanarDuality
 For a triadic cube `U`, let `ω(U, q) = ν(U, ā⁻¹ q) - μ(U, q) - q · ā⁻¹ q` (with `μ` and `ν`
 replaced by `0` off the event that the partition exists and resolves `U`, as Armstrong and Dario
 set `u ≡ 0` there) and `ρ(U) = sup_q |q|⁻² ω(U, q)₊`. Lemma 5.10 of Armstrong and Dario
-(display (5.4)) states
+(display (5.42)) states
 
 `E[sup_q |q|⁻² ω(□_n, q)₊] ≤ C 3^{-nα}`.
 
@@ -17,7 +17,7 @@ supremum is finite (`bddAbove_planarOmega_ratio`); by the comparison of `μ` and
 (`sum_mul_le_planarNu_sub_planarMu`, Corollary 4.6 of Armstrong and Dario),
 `ω(U, q) + K Y |q|² ≥ 0` for a random `Y` with `E[Y] ≤ C 3^{-n/2}`
 (`planarComparisonError`), so that `ρ(U) ≤ 2 (ω(U, e₀) + ω(U, e₁)) + 4 K Y` (sums control suprema),
-and the expectation of `ω(□_n, eᵢ)` is at most `C 3^{-nα}` by display (5.3) (`planar_convexp`).
+and the expectation of `ω(□_n, eᵢ)` is at most `C 3^{-nα}` by display (5.4) (`planar_convexp`).
 
 The supremum is over an uncountable set; the bound is stated with a measurable majorant of `ρ(□_n)`
 whose expectation is at most `C 3^{-nα}`.
@@ -135,7 +135,7 @@ noncomputable def planarOmega (p : unitInterval) (ω : Configuration 2) (U : Tri
     ∑ i, q i * ((planarAhom p)⁻¹ *ᵥ q) i
 
 /-- **The quantity `ρ(U) = sup_q |q|⁻² ω(U, q)₊`** of Armstrong and Dario (proof of Lemma 5.11 and
-the left side of display (5.4)), in dimension two. -/
+the left side of display (5.42)), in dimension two. -/
 noncomputable def planarRho (p : unitInterval) (ω : Configuration 2) (U : TriadicCube 2) : ℝ :=
   ⨆ q : Fin 2 → ℝ, max (planarOmega p ω U q) 0 / (q 0 ^ 2 + q 1 ^ 2)
 
@@ -387,7 +387,7 @@ theorem exists_lintegral_planarComparisonError_le {p : unitInterval}
     _ ≤ _ := add_le_add (add_le_add le_rfl e4) e6
     _ ≤ _ := herr
 
-/-- `E[ω(□_n, q)] ≤ C (|ā⁻¹ q|² + |q|²) 3^{-nα}`, from display (5.3). -/
+/-- `E[ω(□_n, q)] ≤ C (|ā⁻¹ q|² + |q|²) 3^{-nα}`, from display (5.4). -/
 theorem exists_integral_planarOmega_le {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ α C : ℝ, 0 < α ∧ α ≤ 1 / 4 ∧ 0 ≤ C ∧ ∀ (n : ℕ) (q : Fin 2 → ℝ),
@@ -459,7 +459,7 @@ theorem lintegral_ofReal_le_ofReal_integral_add {α : Type*} [MeasurableSpace α
         refine ENNReal.ofReal_add_le.trans (le_of_eq ?_)
         rw [ENNReal.ofReal_toReal hfin2]
 
-/-- **Lemma 5.10 of Armstrong and Dario** (display (5.4), dimension two, `p > p_c(2)`, no other
+/-- **Lemma 5.10 of Armstrong and Dario** (display (5.42), dimension two, `p > p_c(2)`, no other
 hypothesis): there are `α ∈ (0, 1/4]` and `C` such that for every `n`, `ρ(□_n) =
 sup_q |q|⁻² ω(□_n, q)₊` has a measurable majorant `M` (almost surely) with `E[M] ≤ C 3^{-nα}`. -/
 theorem planar_omegadecayrate {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) :
