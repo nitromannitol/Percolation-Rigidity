@@ -3,10 +3,10 @@ import Rigidity.Proofs.Cluster.PlanarRestrictCoarse
 /-!
 # A triadic cube without its boundary layer
 
-For a triadic square `V` of scale `n` and `j < n`, `innerSquare V j` is the square obtained from
-`V` by removing the boundary layer of width `3^j`: the union of the triadic squares of scale `j`
-inside `V` which do not touch its boundary (the complement of the set `K_z` of Armstrong and Dario,
-proof of Lemma 5.5, Step 2, for `j = ⌈n/2⌉`). The layer has at most `4 · 3^{n+j}` vertices, and the inner
+For a triadic square `V` of scale `n` and `j < n`, `innerSquare V j` is the square obtained from `V`
+by removing the boundary layer of width `3^j`: the union of the triadic squares of scale `j` inside
+`V` which do not touch its boundary (the complement of the set `K_z` of Armstrong and Dario, proof
+of Lemma 5.5, Step 2, for `j = ⌈n/2⌉`). The layer has at most `4 · 3^{n+j}` vertices, and the inner
 square is resolved by the planar partition as soon as the partition cubes of the vertices of `V`
 have scale at most `j`: the corners of triadic squares of scale `j` differ from the corner of `V` by
 multiples of `3^j`.

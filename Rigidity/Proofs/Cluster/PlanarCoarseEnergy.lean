@@ -71,7 +71,7 @@ theorem sum_gradNormIn_coarse_sq_le_clusterForm (hP : PlanarPartitionEvent ω)
 (Armstrong and Dario, proof of Lemma 5.5, Steps 2 and 3, deterministic part, in dimension two).
 Under the hypotheses of `edgePairing_clusterExtend_sq_le_of_meyers`, with `V` resolved and
 `3 planarReach ≤ W` on `𝒞(V)`,
-`⟨∇[w]_𝒫, g⟩_V² ≤ (8 G² 9^n C² (∑_{𝒞(B)} Wt^{3q})^{1/q} C_M^{1/p} N + 64 G² 3^{n+j} C² W³) B(w, w)`.
+`⟨∇[w]_𝒫, g⟩_V² ≤ (8 G² 9^n C² A C_M^{1/p} N + 64 G² 3^{n+j} C² W³) B(w, w)`.
 -/
 theorem edgePairing_clusterExtend_sq_le_clusterForm (hP : PlanarPartitionEvent ω)
     {V : TriadicCube 2} (hVr : PlanarResolved ω V) {j : ℕ} (hj : j < V.scale)
@@ -79,10 +79,12 @@ theorem edgePairing_clusterExtend_sq_le_clusterForm (hP : PlanarPartitionEvent �
     {g : Vertex 2 → Fin 2 → ℝ} {G : ℝ} (hg : ∀ x i, |g x i| ≤ G) (Wt : Vertex 2 → ℝ)
     (hWt : ∀ z, 3 * planarReach ω z ≤ ENNReal.ofReal (Wt z)) {W : ℝ}
     (hW : ∀ z ∈ clusterVertices ω V, 3 * planarReach ω z ≤ ENNReal.ofReal W)
-    {p q CM : ℝ} (hpq : p.HolderConjugate q) (hCM : 0 ≤ CM) (I : Finset (ℕ × Vertex 2)) {N : ℕ}
+    {p q CM A : ℝ} (hpq : p.HolderConjugate q) (hCM : 0 ≤ CM) (hA0 : 0 ≤ A)
+    (I : Finset (ℕ × Vertex 2)) {N : ℕ}
     (hcov : ∀ z ∈ boxClusterVertices ω (innerSquare V j), ∃ c ∈ I, z ∈ cube c.1 c.2)
     (hV : ∀ c ∈ I, enl 1 c.1 c.2 ⊆ V.toIntegerCube.vertices)
     (hN : ∀ x, (I.filter fun c => x ∈ enl 1 c.1 c.2).card ≤ N)
+    (hA : ∀ c ∈ I, avg (cube c.1 c.2) (fun x => (Wt x ^ 3) ^ q) ^ (1 / q) ≤ A)
     (hM : ∀ c ∈ I, avg (cube c.1 c.2) (fun x =>
         clusterEnergy ω (clusterVertices ω V) (clusterExtend ω V w) x ^ p) ≤
       CM * avg (enl 1 c.1 c.2) (clusterEnergy ω (clusterVertices ω V) (clusterExtend ω V w)) ^ p) :
@@ -91,14 +93,13 @@ theorem edgePairing_clusterExtend_sq_le_clusterForm (hP : PlanarPartitionEvent �
       (8 * G ^ 2 * 9 ^ V.scale *
           ((2 * ((2 : ℕ) : ℝ) * (3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2) *
             (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 * (2 * √((2 : ℕ) : ℝ))) ^ 2 *
-            ((∑ z ∈ boxClusterVertices ω (innerSquare V j), (Wt z ^ 3) ^ q) ^ (1 / q) *
-              (CM ^ (1 / p) * (N : ℝ)))) +
+            (A * (CM ^ (1 / p) * (N : ℝ)))) +
         64 * G ^ 2 * 3 ^ (V.scale + j) *
           ((2 * ((2 : ℕ) : ℝ) * (3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2) *
             (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 * (2 * √((2 : ℕ) : ℝ))) ^ 2 * W ^ 3)) *
         clusterForm ω V w w := by
-  have h := edgePairing_clusterExtend_sq_le_of_meyers hP hj hres w hg Wt hWt hpq hCM I hcov hV
-    hN hM
+  have h := edgePairing_clusterExtend_sq_le_of_meyers hP hj hres w hg Wt hWt hpq hCM hA0 I hcov hV
+    hN hA hM
   have h2 := sum_gradNormIn_coarse_sq_le_clusterForm hP hVr w hW
   refine h.trans (le_of_le_of_eq (add_le_add_right
     (mul_le_mul_of_nonneg_left h2 (by positivity)) _) ?_)

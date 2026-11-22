@@ -3,13 +3,13 @@ import Rigidity.Proofs.Cluster.PlanarRestrictQuad
 /-!
 # The planar Meyers estimate for the harmonic functions of a resolved cube
 
-The quantities `μ` and `ν` of Armstrong and Dario are optimized over the space `A_*(V)` of
-functions on the cluster `𝒞(V)` harmonic at the vertices whose lattice neighbours lie in `V`
-(`clusterHarmonic`). At such a vertex all open neighbours lie in `𝒞(V)`, so the open Laplacian of the
-extension by zero is the Laplacian on the cluster (`openLaplacian_clusterExtend`). Hence the planar
-Meyers estimate `planar_meyers` applies to the functions of `A_*(V)` on every cube `□` whose triple
-`3□` has its lattice neighbours in `V` (`planar_meyers_clusterHarmonic`); this is the form in which
-it is used in the proof of Lemma 5.5 (for `u(·, □_m, q)|_V - u(·, V, q)`).
+The quantities `μ` and `ν` of Armstrong and Dario are optimized over the space `A_*(V)` of functions
+on the cluster `𝒞(V)` harmonic at the vertices whose lattice neighbours lie in `V`
+(`clusterHarmonic`). At such a vertex all open neighbours lie in `𝒞(V)`, so the open Laplacian of
+the extension by zero is the Laplacian on the cluster (`openLaplacian_clusterExtend`). Hence the
+planar Meyers estimate `planar_meyers` applies to the functions of `A_*(V)` on every cube `□` whose
+triple `3□` has its lattice neighbours in `V` (`planar_meyers_clusterHarmonic`); this is the form in
+which it is used in the proof of Lemma 5.5 (for `u(·, □_m, q)|_V - u(·, V, q)`).
 -/
 
 namespace Rigidity.Proofs.Cluster

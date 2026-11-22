@@ -8,13 +8,13 @@ For a function `w` on the cluster `𝒞(V)` of a triadic cube `V`, extended by z
 (`sum_clusterGradSq_eq_clusterForm`). Hence, combined with the removal of the boundary layer of
 width `3^j` and the Meyers estimate inside the inner square, the pairing of the coarsened gradient
 of `w` with a field `g`, `|g| ≤ G`, satisfies
-`⟨∇[w]_𝒫, g⟩_V² ≤ 8 G² |V| C² (∑ W^{3q})^{1/q} C_M^{1/p} N B(w, w)
-  + 64 G² 3^{n+j} ∑_V |∇[w]_𝒫|²`
-when the partition cubes of `V` have scale at most `j < n` and `W ≥ 3 planarReach`
-(`edgePairing_clusterExtend_sq_le_of_meyers`). With `w = u(·, □_m, q)|_V - u(·, V, q)` the form
-`B(w, w)` is twice the summand of the energy of the differences of Lemma 5.4 (`planarMuDefect`);
-this is the deterministic estimate behind display (5.19) of Armstrong and Dario (Lemma 5.5,
-Step 3), the boundary term being estimated in Steps 2 and 4.
+`⟨∇[w]_𝒫, g⟩_V² ≤ 8 G² |V| C² A C_M^{1/p} N B(w, w) + 64 G² 3^{n+j} ∑_V |∇[w]_𝒫|²`
+when the partition cubes of `V` have scale at most `j < n`, `W ≥ 3 planarReach` and `A` bounds
+the cell averages `(avg_{□'} W^{3q})^{1/q}` (`edgePairing_clusterExtend_sq_le_of_meyers`). With
+`w = u(·, □_m, q)|_V - u(·, V, q)` the form `B(w, w)` is twice the summand of the energy of the
+differences of Lemma 5.4 (`planarMuDefect`); this is the deterministic estimate behind display
+(5.19) of Armstrong and Dario (Lemma 5.5, Step 3), the boundary term being estimated in Steps 2
+and 4.
 -/
 
 namespace Rigidity.Proofs.Cluster
@@ -64,19 +64,20 @@ proof of Lemma 5.5, Steps 2 and 3, deterministic part, in dimension two). Let `V
 cube of scale `n` whose vertices have planar partition cubes of scale at most `j < n`, `w` a
 function on its cluster, `g` a field with `|g| ≤ G`, `W ≥ 3 planarReach` a weight, and let a finite
 family of cells cover the cluster of the inner square `innerSquare V j`, with triples inside `V`,
-overlap at most `N` and the Meyers estimate with exponent `p > 1` (Hölder conjugate `q`) and
-constant `C_M`. Then
-`⟨∇[w]_𝒫, g⟩_V² ≤ 8 G² 9^n C² (∑_{𝒞(B)} W^{3q})^{1/q} C_M^{1/p} N B(w, w)
-  + 64 G² 3^{n+j} ∑_V |∇[w]_𝒫|²`. -/
+overlap at most `N`, the Meyers estimate with exponent `p > 1` (Hölder conjugate `q`) and
+constant `C_M`, and `(avg_{□'} W^{3q})^{1/q} ≤ A`. Then
+`⟨∇[w]_𝒫, g⟩_V² ≤ 8 G² 9^n C² A C_M^{1/p} N B(w, w) + 64 G² 3^{n+j} ∑_V |∇[w]_𝒫|²`. -/
 theorem edgePairing_clusterExtend_sq_le_of_meyers (hP : PlanarPartitionEvent ω)
     {V : TriadicCube 2} {j : ℕ} (hj : j < V.scale)
     (hres : ∀ x ∈ V.vertices, (planarPartCube ω x).scale ≤ j) (w : ClusterFun ω V)
     {g : Vertex 2 → Fin 2 → ℝ} {G : ℝ} (hg : ∀ x i, |g x i| ≤ G) (Wt : Vertex 2 → ℝ)
     (hWt : ∀ z, 3 * planarReach ω z ≤ ENNReal.ofReal (Wt z))
-    {p q CM : ℝ} (hpq : p.HolderConjugate q) (hCM : 0 ≤ CM) (I : Finset (ℕ × Vertex 2)) {N : ℕ}
+    {p q CM A : ℝ} (hpq : p.HolderConjugate q) (hCM : 0 ≤ CM) (hA0 : 0 ≤ A)
+    (I : Finset (ℕ × Vertex 2)) {N : ℕ}
     (hcov : ∀ z ∈ boxClusterVertices ω (innerSquare V j), ∃ c ∈ I, z ∈ cube c.1 c.2)
     (hV : ∀ c ∈ I, enl 1 c.1 c.2 ⊆ V.toIntegerCube.vertices)
     (hN : ∀ x, (I.filter fun c => x ∈ enl 1 c.1 c.2).card ≤ N)
+    (hA : ∀ c ∈ I, avg (cube c.1 c.2) (fun x => (Wt x ^ 3) ^ q) ^ (1 / q) ≤ A)
     (hM : ∀ c ∈ I, avg (cube c.1 c.2) (fun x =>
         clusterEnergy ω (clusterVertices ω V) (clusterExtend ω V w) x ^ p) ≤
       CM * avg (enl 1 c.1 c.2) (clusterEnergy ω (clusterVertices ω V) (clusterExtend ω V w)) ^ p) :
@@ -85,8 +86,7 @@ theorem edgePairing_clusterExtend_sq_le_of_meyers (hP : PlanarPartitionEvent ω)
       8 * G ^ 2 * 9 ^ V.scale *
         ((2 * ((2 : ℕ) : ℝ) * (3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2) *
           (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 * (2 * √((2 : ℕ) : ℝ))) ^ 2 *
-          ((∑ z ∈ boxClusterVertices ω (innerSquare V j), (Wt z ^ 3) ^ q) ^ (1 / q) *
-            (CM ^ (1 / p) * ((N : ℝ) * clusterForm ω V w w)))) +
+          (A * (CM ^ (1 / p) * ((N : ℝ) * clusterForm ω V w w)))) +
       64 * G ^ 2 * 3 ^ (V.scale + j) *
         ∑ x ∈ V.toIntegerCube.vertices,
           gradNormIn (nearestNeighborGraph 2) V.toIntegerCube.vertices
@@ -108,8 +108,20 @@ theorem edgePairing_clusterExtend_sq_le_of_meyers (hP : PlanarPartitionEvent ω)
       have : (0 : ℝ) < (3 : ℝ) ^ (planarBoxCoarseData hP B hBr).pairReachScale z := by positivity
       exact absurd h1 (not_le.2 (ENNReal.ofReal_pos.2 this))
     exact (ENNReal.ofReal_le_ofReal_iff hpos.le).1 h1
+  have hWt0 : ∀ x, 0 ≤ Wt x := by
+    intro x
+    by_contra hcon
+    push Not at hcon
+    have h1 := hWt x
+    rw [ENNReal.ofReal_of_nonpos hcon.le] at h1
+    have h2 : (1 : ℝ≥0∞) ≤ planarReach ω x := one_le_planarReach hP x
+    have h4 : (3 : ℝ≥0∞) ≤ 3 * planarReach ω x := by
+      calc (3 : ℝ≥0∞) = 3 * 1 := (mul_one 3).symm
+        _ ≤ 3 * planarReach ω x := by gcongr
+    have h3 : (3 : ℝ≥0∞) ≤ 0 := h4.trans h1
+    exact absurd h3 (by norm_num)
   have h := edgePairing_coarse_sq_le_of_meyers hP hBr (innerSquare_subset hj)
-    (clusterExtend ω V w) hg Wt hWt' hpq hCM I hcov hV hN hM
+    (clusterExtend ω V w) hg Wt hWt0 hWt' hpq hCM hA0 I hcov hV hN hA hM
   have hsum : ∑ x ∈ V.toIntegerCube.vertices,
       clusterEnergy ω (clusterVertices ω V) (clusterExtend ω V w) x = clusterForm ω V w w := by
     rw [← sum_clusterGradSq_eq_clusterForm V w]
@@ -132,11 +144,7 @@ theorem edgePairing_clusterExtend_sq_le_of_meyers (hP : PlanarPartitionEvent ω)
         _ = 9 ^ V.scale := h2
     have hrest : 0 ≤ (2 * ((2 : ℕ) : ℝ) * (3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2) *
           (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 * (2 * √((2 : ℕ) : ℝ))) ^ 2 *
-          ((∑ z ∈ boxClusterVertices ω B, (Wt z ^ 3) ^ q) ^ (1 / q) *
-            (CM ^ (1 / p) * ((N : ℝ) * clusterForm ω V w w))) := by
-      have hq0 : 0 ≤ ∑ z ∈ boxClusterVertices ω B, (Wt z ^ 3) ^ q := by
-        refine Finset.sum_nonneg fun z hz => Real.rpow_nonneg (pow_nonneg ?_ 3) q
-        exact ((by positivity : (0 : ℝ) ≤ 3 ^ _).trans (hWt' z hz))
+          (A * (CM ^ (1 / p) * ((N : ℝ) * clusterForm ω V w w))) := by
       have hB0 := clusterForm_self_nonneg (ω := ω) (U := V) w
       positivity
     have hG : 0 ≤ 8 * G ^ 2 := by positivity
