@@ -1,30 +1,31 @@
 import Rigidity.Proofs.Cluster.MeyersUniform
 
 /-!
-# The partition for the reverse Hölder inequality and the averages of the reach, in dimension two
+# A Gehring partition in the form used by the planar Meyers estimate, and the averages of the reach
 
-Two probabilistic statements of Sections 2 and 3 of Armstrong and Dario, in the vocabulary of the
-planar modules, on which the proof of Lemma 5.5 rests.
+Two probabilistic statements in dimension two, in the vocabulary of the planar modules, on which
+the proof of Lemma 5.5 from `PlanarGehringPartition` rests.
 
-* `PlanarGehringPartition`: the partition `𝓡` of Definition 3.7 of Armstrong and Dario, obtained
-  by applying Proposition 2.1 to the cubes on which the reverse Hölder inequality holds, with the
-  minimal scales of Proposition 2.4. Its cells `cube (s x) x` form a partition of `ℤ²` with
-  comparable neighbours (Proposition 2.1 (ii)); every predecessor `□' = cube k y`, `s(y) ≤ k`, of a
-  cell is good (Proposition 2.1 (i)), good meaning here that the planar partition cubes of the
-  vertices of `3□'` have scale at most `k` and `∑_{z ∈ 3□'} planarReach(z)^8 ≤ C_G |3□'|` (the
-  hypotheses under which `planar_meyers` uses the reverse Hölder inequality of Lemma 3.6); and for
-  every exponent `t` the cells are small and their `t`-th moment is bounded on every triadic cube,
-  off an event of small probability (Propositions 2.1 (iii) and 2.4: Armstrong and Dario give a
-  stretched exponential bound; a bound `C 3^{-B k}` for every `B` is used here).
+* `PlanarGehringPartition`: a Gehring partition in the form used by the planar Meyers estimate
+  (`planar_meyers_uniform`), with minimal scales as in Proposition 2.4. Its cells `cube (s x) x`
+  form a partition of `ℤ²` with comparable neighbours (as in Proposition 2.1 (ii)); every
+  predecessor `□' = cube k y`, `s(y) ≤ k`, of a cell is good, good meaning here that the planar
+  partition cubes of the vertices of `3□'` have scale at most `k` and
+  `∑_{z ∈ 3□'} planarReach(z)^8 ≤ C_G |3□'|` (the hypotheses under which `planar_meyers` uses the
+  reverse Hölder inequality of Lemma 3.6); and for every exponent `t` the cells are small and their
+  `t`-th moment is bounded on every triadic cube, off an event of probability at most `C 3^{-B k}`
+  for every `B`.
 * `PlanarReachConcentration`: the analogue of Proposition 2.4 for the planar partition `𝒫` and the
   weights of the coarse gradients: for every power `τ`, `∑_{x ∈ □} planarReach(x)^τ ≤ A |□|` on
   every triadic cube `□` off an event of probability at most `C 3^{-B scale □}`.
 
-Armstrong and Dario apply Proposition 2.1 to the family of cubes on which the reverse Hölder
-inequality holds (Definition 3.7) and to the family on which the Meyers estimate holds
-(Definition 3.9), but these events depend on the partition `𝒫` through the clusters `𝒞_*(□)` and
-are not determined by the edges of `3□`, as the hypothesis (2.1) of Proposition 2.1 requires. The
-two statements are therefore kept as named hypotheses.
+The hypothesis `PlanarGehringPartition` is kept because its good cubes are not those of Armstrong
+and Dario. Armstrong and Dario apply Proposition 2.1 to `{RH ≤ C}` (Definition 3.7), whose events
+are local: `RH_s(□)` is defined through the crossing cluster of a good cube and `𝒞_max(3□)`. The
+Meyers estimate here (`planar_meyers_uniform`) uses instead the hypotheses of Lemma 3.6 on each
+predecessor (planar partition scales at most `k` on `3□'` and
+`∑_{z ∈ 3□'} planarReach(z)^8 ≤ C_G |3□'|`). This family depends on `𝒫` at every scale, so
+Propositions 2.1 (iv) and 2.4 do not apply to it as printed.
 -/
 
 namespace Rigidity.Proofs.Cluster
@@ -32,8 +33,9 @@ namespace Rigidity.Proofs.Cluster
 open MeasureTheory LatticeProb.Percolation Rigidity.Percolation
 open scoped ENNReal
 
-/-- **The partition `𝓡` for the reverse Hölder inequality and its minimal scales** (Armstrong and
-Dario, Definition 3.7 with Propositions 2.1 and 2.4, in dimension two). -/
+/-- **A Gehring partition in the form used by the planar Meyers estimate**, with its minimal scales
+(in dimension two). Its good cubes are those of the hypotheses of Lemma 3.6 for the planar
+partition, not the cubes `{RH ≤ C}` of Armstrong and Dario, Definition 3.7. -/
 def PlanarGehringPartition (p : unitInterval) : Prop :=
   ∃ CG : ℝ, 0 ≤ CG ∧ ∃ s : Configuration 2 → Vertex 2 → ℕ,
     (∀ᵐ ω ∂(latticeBondLaw 2 p),

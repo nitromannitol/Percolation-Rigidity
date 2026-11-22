@@ -5,8 +5,7 @@ import Rigidity.Proofs.Percolation.PlanarLocalStationary
 /-!
 # Lemma 5.7 of Armstrong and Dario in dimension two
 
-`PlanarWeakConvergence p` holds for `p > p_c(2)` from the partition for the reverse Hölder
-inequality (`planarWeakConvergence_of_gehring`):
+`PlanarWeakConvergence p` holds for `p > p_c(2)` from the Gehring partition (`planarWeakConvergence_of_gehring`):
 * for the cube `□_n` centred at the origin and `n ≥ 120`, the mean of the spatial average is
   `ā_{□_n}⁻¹ q` (display (5.23)) and its variance is controlled by
   `exists_variance_planarMuGradAvg_origin_le`;
@@ -16,8 +15,8 @@ inequality (`planarWeakConvergence_of_gehring`):
   the translation preserves the law of the bonds (the stationarity used by Armstrong and Dario to
   pass from `□_n` to `z + □_n`);
 * for `n < 120` the spatial average is bounded by a constant multiple of `|q|₁`.
-With Lemma 5.5 this gives Proposition 5.2, qualitative part, in dimension two from the partition
-for the reverse Hölder inequality alone (`planarMuLimit_eq_of_gehring_partition`).
+With Lemma 5.5 this gives Proposition 5.2, qualitative part, in dimension two from the Gehring partition
+`PlanarGehringPartition` alone (`planarMuLimit_eq_of_gehring_partition`).
 -/
 
 namespace Rigidity.Proofs.Cluster
@@ -198,7 +197,7 @@ theorem exists_exp_neg_mul_le {c : ℝ} (hc : 0 < c) :
         mul_le_mul_of_nonneg_left (inv_three_pow_le n) hK
 
 /-- **Lemma 5.7 of Armstrong and Dario** (display (5.25), in dimension two), for every triadic cube,
-from the partition for the reverse Hölder inequality. -/
+from the Gehring partition `PlanarGehringPartition`. -/
 theorem planarWeakConvergence_of_gehring {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hG : PlanarGehringPartition p) :
     PlanarWeakConvergence p := by
@@ -357,7 +356,7 @@ theorem planarWeakConvergence_of_gehring {p : unitInterval}
     linarith
 
 /-- **Proposition 5.2 of Armstrong and Dario, qualitative part** (dimension two), from the
-partition for the reverse Hölder inequality: `lim E[-μ(□_n, q)] = (1/2) q · ā⁻¹ q`. -/
+Gehring partition `PlanarGehringPartition`: `lim E[-μ(□_n, q)] = (1/2) q · ā⁻¹ q`. -/
 theorem planarMuLimit_eq_of_gehring_partition {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hG : PlanarGehringPartition p) (q : Fin 2 → ℝ) :
     planarMuLimit p q = 1 / 2 * ∑ i, q i * ((planarAhom p)⁻¹ *ᵥ q) i :=

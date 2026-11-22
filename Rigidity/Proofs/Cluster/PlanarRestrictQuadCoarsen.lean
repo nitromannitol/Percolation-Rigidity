@@ -7,8 +7,8 @@ import Rigidity.Proofs.Percolation.PlanarNuDefectTauCube
 
 The inputs `PlanarRestrictQuadCoarsenMu` and `PlanarRestrictQuadCoarsenNu` (display (5.12) of
 Lemma 5.5 for the minimizers of `μ` and the maximizers of `ν`) are
-proved from the two probabilistic statements `PlanarGehringPartition` (the partition `𝓡` of
-Definition 3.7 of Armstrong and Dario with its minimal scales) and `PlanarReachConcentration` (the
+proved from the two probabilistic statements `PlanarGehringPartition` (a Gehring partition in the
+form used by the planar Meyers estimate, with its minimal scales) and `PlanarReachConcentration` (the
 averages of the powers of the reach of the planar partition), following the proof of Armstrong
 and Dario with the repaired Step 3:
 * the Meyers estimate with the exponents chosen before the moment bound
@@ -133,7 +133,7 @@ theorem planarResolved_of_not_mem_restrictBad {ω : Configuration 2} (hP : Plana
   exact (hE2 hP z ((U.mem_toIntegerCube_vertices z).2 hz)).trans (by omega)
 
 /-- **Lemma 5.5 of Armstrong and Dario for `μ`** (display (5.12), first term, in dimension two),
-from the partition `𝓡` for the reverse Hölder inequality with its minimal scales and the
+from a Gehring partition in the form used by the planar Meyers estimate and the
 concentration of the averages of the reach. -/
 theorem planarRestrictQuadCoarsenMu_of_inputs {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hG : PlanarGehringPartition p)
@@ -230,7 +230,7 @@ theorem planarRestrictQuadCoarsenMu_of_inputs {p : unitInterval}
         nlinarith
 
 /-- **Lemma 5.5 of Armstrong and Dario for `ν`** (display (5.12), second term, in dimension two),
-from the partition `𝓡` for the reverse Hölder inequality with its minimal scales and the
+from a Gehring partition in the form used by the planar Meyers estimate and the
 concentration of the averages of the reach. -/
 theorem planarRestrictQuadCoarsenNu_of_inputs {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hG : PlanarGehringPartition p)

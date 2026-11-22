@@ -29,8 +29,9 @@ printed, in dimension two, in the vocabulary of the planar modules.
   `E[|□|⁻¹ ∫_□ |∇[u(·, □, q)]_P|²] ≤ C(δ) |q|² size(□)^δ`.
 
 The minimizers `planarMuMinimizer` and the maximizers `planarNuSolution` vanish off the partition
-event and for unresolved cubes, as in the convention of Armstrong and Dario that `u(·, □, q) = 0`
-and `v(·, □, p) = 0` when `□` is not in `P_*`. The bounds on
+event and for unresolved cubes. For `μ` this is the convention of Armstrong and Dario that
+`u(·, □, q) = 0` when `□` is not in `P_*`; for `ν` the convention `v(·, □, p) = 0` off `P_*` is the
+choice of this formalization. The bounds on
 expectations are bounds on the expectations of random variables; for the quantities of Lemma 5.5
 and of (4.24), (4.25), whose measurability is not proved here, the measurability is part of the
 statement.
@@ -55,7 +56,7 @@ noncomputable def planarMuGradAvg (ω : Configuration 2) (V : TriadicCube 2) (q 
   coarsePairing ω V (Pi.single j 1) (planarMuMinimizer ω V q) / V.volume
 
 /-- The maximizer `v(·, U, p)` of `ν(U, p)` on the partition event and for a resolved cube, and
-zero otherwise (the convention of Armstrong and Dario for cubes outside `P_*`). -/
+zero otherwise (a choice of this formalization for cubes outside `P_*`). -/
 noncomputable def planarNuSolution (ω : Configuration 2) (U : TriadicCube 2) (p : Fin 2 → ℝ) :
     ClusterFun ω U :=
   if PlanarPartitionEvent ω ∧ PlanarResolved ω U then planarNuMaximizer ω U p else 0

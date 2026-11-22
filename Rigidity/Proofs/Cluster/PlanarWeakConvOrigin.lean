@@ -66,7 +66,7 @@ theorem integral_le_of_lintegral_le {μ : Measure (Configuration 2)} {f : Config
   exact ENNReal.toReal_le_of_le_ofReal hB h
 
 /-- **The variance of the spatial average on `□_n`** (proof of Lemma 5.7, conclusion, in
-dimension two), for `n ≥ 120`, from the partition for the reverse Hölder inequality. -/
+dimension two), for `n ≥ 120`, from the Gehring partition `PlanarGehringPartition`. -/
 theorem exists_variance_planarMuGradAvg_origin_le {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hG : PlanarGehringPartition p) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ n : ℕ, 120 ≤ n → ∀ (q : Fin 2 → ℝ) (j : Fin 2),

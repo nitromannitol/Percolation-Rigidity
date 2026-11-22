@@ -6,8 +6,7 @@ import Rigidity.Proofs.Cluster.PlanarRestrictFieldCoarsen
 For a lattice field `g` with `|g| ≤ G`, `n ∈ [9m/10, m)` and every triadic cube `U` of scale `m`,
 `E[N⁻¹ ∑_V (⟨∇[u(·, U, q)]_𝒫, g⟩_V - ⟨∇[u(·, V, q)]_𝒫, g⟩_V)² / |V|²]
   ≤ C G² |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`
-(`exists_lintegral_planarMuRestrictFieldError_le`), from the partition for the reverse Hölder
-inequality, as for the constant directions in `planarRestrictQuadCoarsenMu_of_inputs`.
+(`exists_lintegral_planarMuRestrictFieldError_le`), from the Gehring partition, as for the constant directions in `planarRestrictQuadCoarsenMu_of_inputs`.
 -/
 
 namespace Rigidity.Proofs.Cluster

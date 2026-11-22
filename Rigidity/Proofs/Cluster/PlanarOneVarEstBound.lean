@@ -6,8 +6,7 @@ import Rigidity.Proofs.Cluster.PlanarOneVarEst
 For `n ≥ 9`, the solenoidal field `g` of scale `n` in direction `e` and the nine subcubes `V` of
 scale `n` of `□_{n+1}`,
 `E[|∑_V |□_n|⁻¹ ⟨∇[u(·, V, q)]_𝒫, g⟩_V|²] ≤ C |e|₁² |q|² (τ_n + 3^{-n/4})`
-(`exists_lintegral_sum_subcube_solenoidal_sq_le`), from the partition for the reverse Hölder
-inequality. The sum is minus the crossing term of Step 2 minus the sum of the differences of
+(`exists_lintegral_sum_subcube_solenoidal_sq_le`), from the Gehring partition. The sum is minus the crossing term of Step 2 minus the sum of the differences of
 Lemma 5.5 paired with `g`, because the pairing of `g` with the coarsened gradient of
 `u(·, □_{n+1}, q)` over `□_{n+1}` vanishes.
 -/
@@ -197,7 +196,7 @@ theorem oneVarEst_arith {C₁ C₂ G Q P τ x y K : ℝ} (hC₂ : 0 ≤ C₂) (h
   linarith
 
 /-- **Display (5.30) of Armstrong and Dario** (proof of Lemma 5.7, Step 3, in dimension two), from
-the partition for the reverse Hölder inequality: for `n ≥ 9`,
+the Gehring partition `PlanarGehringPartition`: for `n ≥ 9`,
 `E[|∑_V |□_n|⁻¹ ⟨∇[u(·, V, q)]_𝒫, g⟩_V|²] ≤ C |e|₁² |q|² (τ_n + 3^{-n/4})`, the sum running over
 the subcubes `V` of scale `n` of `□_{n+1}` and `g` being the solenoidal field of scale `n` in
 direction `e`. -/

@@ -5,11 +5,17 @@ import Rigidity.Proofs.Cluster.PlanarMeyersHarmonic
 # The Meyers estimate with the moment exponent chosen first
 
 In the proof of Proposition 3.8 of Armstrong and Dario the exponents `ε` (from the Gehring lemma)
-and `t = (2+ε)(1+ε)(d+1)/(2ε)` (of the moment of the cell sizes) depend only on the reverse Hölder
-constant, and only the final constant depends on the bound `K` of the moment
+and `t` (of the moment of the cell sizes) depend only on the reverse Hölder constant, and only the
+final constant depends on the bound `K` of the moment
 `∑_{x ∈ □} size(cell(x))^t ≤ K |□|`. This order matters when the moment bound comes from a minimal
 scale: Armstrong and Dario fix `t` first and then the minimal scale `𝓜_t(𝓡)`, whose constant
 depends on `t`.
+
+The exponent used here is `t = (2+ε)(1+ε)(d+1)/ε`, the one given by the Hölder inequality with the
+exponents `(2+2ε)/(2+ε)` and `(2+2ε)/ε`, which puts the cell sizes to the power
+`(d+1)(1+ε)(2+ε)/(d ε)` of `|□_𝓡(x)|`. The exponent printed by Armstrong and Dario at
+AD18.tex:1657-1663, `(2+ε)(1+ε)(d+1)/(2 ε d)` and hence `t = (2+ε)(1+ε)(d+1)/(2ε)`, has a harmless
+factor-2 slip.
 
 The theorems of this file restate `meyers_triadic`, `meyers_cluster_of_local`, `planar_meyers`,
 `planar_meyers_clusterHarmonic` and `partition_meyers` in the form `∃ ε t, ∀ K, ∃ C`; the proofs
