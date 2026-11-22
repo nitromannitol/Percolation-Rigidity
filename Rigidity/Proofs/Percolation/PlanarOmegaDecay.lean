@@ -350,4 +350,227 @@ theorem planarOmega_term_arith {p : unitInterval} {n : ℕ} (hn : 1 ≤ n) {ξ q
       3456 * (324 * Cu + Cv) * R := by ring
   linarith
 
+/-- The weights `3^{k-n} = (1/3)^{n-k}` for `k ≤ n`. -/
+theorem inv_three_pow_mul_sum_eq (n : ℕ) (τ : ℕ → ℝ) :
+    ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * τ k =
+      ∑ k ∈ Finset.range (n + 1), (1 / 3 : ℝ) ^ (n - k) * τ k := by
+  rw [Finset.mul_sum]
+  refine Finset.sum_congr rfl fun k hk => ?_
+  have hkn : k ≤ n := Nat.lt_succ_iff.1 (Finset.mem_range.1 hk)
+  have h3 : (3 : ℝ) ^ n = 3 ^ (n - k) * 3 ^ k := by rw [← pow_add, Nat.sub_add_cancel hkn]
+  rw [h3, one_div, inv_pow]
+  field_simp
+
+theorem three_rpow_neg_div_ten (n : ℕ) :
+    (3 : ℝ) ^ (-(n : ℝ) / 10) = ((3 : ℝ) ^ (-(1 / 10 : ℝ))) ^ n := by
+  rw [← Real.rpow_natCast, ← Real.rpow_mul (by norm_num)]
+  congr 1
+  ring
+
+set_option maxHeartbeats 400000 in
+/-- The term `i` of `D_n`, from the integrated bound and the bounds of the increments. -/
+theorem planarOmegaD_term_le {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) {n : ℕ}
+    (hn2 : 1 ≤ n) {CB CH Cu Cv Cμ CBad C1 c1 C3 c3 CG Ci ci Cj cj : ℝ} (hCB : 0 ≤ CB)
+    (hCH : 0 ≤ CH) (hCu : 0 ≤ Cu) (hCv : 0 ≤ Cv) (hCμ : 0 ≤ Cμ) (hCBad : 0 ≤ CBad)
+    (hC1 : 0 ≤ C1) (hc1 : 0 < c1) (hC3 : 0 ≤ C3) (hc3 : 0 < c3) (hCG : 0 ≤ CG) (hCi : 0 ≤ Ci)
+    (hci : 0 < ci) (hCj : 0 ≤ Cj) (hcj : 0 < cj)
+    (hraw :
+      ∀ (ξ q : Fin 2 → ℝ), 0 < |ξ 0| + |ξ 1| → 0 ≤ ∑ i, q i * ξ i →
+    planarAhomInvFinite p n *ᵥ q = ξ →
+    planarNuMean p n ξ + planarMuMean p n q +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * (⟨n + 1, 0⟩ : TriadicCube 2).volume *
+          (planarMuMean p (n + 1) q + planarNuMean p (n + 1) ξ) ≤
+      (∑ i, q i * ξ i + (∑ i, q i * ξ i) / ((⟨n, 0⟩ : TriadicCube 2).toIntegerCube.size : ℝ)) +
+        (|q 0| + |q 1|) * (CB * (|ξ 0| + |ξ 1|) /
+          Real.sqrt ((⟨n, 0⟩ : TriadicCube 2).toIntegerCube.size : ℝ)) +
+        48 / (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) *
+          (CH * ((|ξ 0| + |ξ 1|) ^ 2 + (|q 0| + |q 1|) ^ 2) *
+            (⟨n + 1, 0⟩ : TriadicCube 2).volume * (3 : ℝ) ^ (⟨n + 1, 0⟩ : TriadicCube 2).scale) +
+        96 * (⟨n + 1, 0⟩ : TriadicCube 2).volume /
+            (((3 : ℝ) ^ n - 1) ^ 2 * (⟨n, 0⟩ : TriadicCube 2).volume) *
+          (Cu * (q 0 ^ 2 + q 1 ^ 2) * (9 : ℝ) ^ n *
+              ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+                ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k) +
+            Cv * (ξ 0 ^ 2 + ξ 1 ^ 2) * (9 : ℝ) ^ n *
+              ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+                ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)) +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * (Cμ * ((|q 0| + |q 1|) ^ 2 *
+          (⟨n + 1, 0⟩ : TriadicCube 2).volume / Real.sqrt (3 ^ n))) +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * ((⟨n + 1, 0⟩ : TriadicCube 2).volume *
+          (planarMuMean p n q + C1 * ((|q 0| + |q 1|) ^ 2 * Real.exp (-c1 * (3 : ℝ) ^ n)))) +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * ((⟨n + 1, 0⟩ : TriadicCube 2).volume *
+          (planarNuMean p n ξ + C3 * ((|ξ 0| + |ξ 1|) ^ 2 * Real.exp (-c3 * (3 : ℝ) ^ n)))) +
+        CBad * (1 + (|ξ 0| + |ξ 1|) ^ 2 + (|q 0| + |q 1|) ^ 4) / (9 : ℝ) ^ n +
+        3 / (⟨n, 0⟩ : TriadicCube 2).volume * (CG * ((|ξ 0| + |ξ 1|) ^ 2 *
+          (⟨n + 1, 0⟩ : TriadicCube 2).volume / Real.sqrt (3 ^ n))) )
+    (hIμ : ∀ (k : ℕ) (q : Fin 2 → ℝ),
+      planarMuIncrement p k q ≤ 2 * (q 0 ^ 2 + q 1 ^ 2) * planarMuTau p k +
+        Ci * ((|q 0| + |q 1|) ^ 2 * (1 / Real.sqrt ((3 : ℝ) ^ k) + Real.exp (-ci * (3 : ℝ) ^ k))))
+    (hJν : ∀ (k : ℕ) (q : Fin 2 → ℝ),
+      planarNuIncrement p k ((planarAhom p)⁻¹ *ᵥ q) ≤ 2 * (q 0 ^ 2 + q 1 ^ 2) * planarNuTau p k +
+        Cj * ((|((planarAhom p)⁻¹ *ᵥ ![q 0, -q 1]) 0| +
+          |((planarAhom p)⁻¹ *ᵥ ![q 0, -q 1]) 1|) ^ 2 *
+          (1 / Real.sqrt ((3 : ℝ) ^ k) + Real.exp (-cj * (3 : ℝ) ^ k))))
+    (hinv : ∀ q : Fin 2 → ℝ, planarAhomInvFinite p n *ᵥ (planarAhomFinite p n *ᵥ q) = q)
+    (hlow : ∀ q : Fin 2 → ℝ, (q 0 ^ 2 + q 1 ^ 2) / 36 ≤ planarMuMean p n q) (i : Fin 2) :
+    planarNuMean p n (Pi.single i 1) + planarMuMean p n (planarAhomFinite p n *ᵥ Pi.single i 1) -
+        (planarAhomFinite p n *ᵥ Pi.single i 1) i ≤
+      (18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 3456 * (324 * Cu + Cv) + 27 * 1296 * Cμ +
+        27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+        27 * 1296 * Ci * (1 + ci⁻¹) +
+        27 * Cj * (∑ i : Fin 2, (|((planarAhom p)⁻¹ *ᵥ ![(planarAhom p *ᵥ Pi.single i 1) 0,
+          -(planarAhom p *ᵥ Pi.single i 1) 1]) 0| +
+          |((planarAhom p)⁻¹ *ᵥ ![(planarAhom p *ᵥ Pi.single i 1) 0,
+            -(planarAhom p *ᵥ Pi.single i 1) 1]) 1|) ^ 2) * (1 + cj⁻¹) + 27 * 648 +
+        54 * (∑ i : Fin 2, ((planarAhom p *ᵥ Pi.single i 1) 0 ^ 2 +
+          (planarAhom p *ᵥ Pi.single i 1) 1 ^ 2))) *
+        ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+          ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k) := by
+  set A := planarAhom p with hA
+  have hKA0 : 0 ≤ ∑ i : Fin 2, ((A *ᵥ Pi.single i 1) 0 ^ 2 + (A *ᵥ Pi.single i 1) 1 ^ 2) :=
+    Finset.sum_nonneg fun i _ => by positivity
+  have hKB0 : 0 ≤ ∑ i : Fin 2, (|(A⁻¹ *ᵥ ![(A *ᵥ Pi.single i 1) 0,
+      -(A *ᵥ Pi.single i 1) 1]) 0| + |(A⁻¹ *ᵥ ![(A *ᵥ Pi.single i 1) 0,
+      -(A *ᵥ Pi.single i 1) 1]) 1|) ^ 2 := Finset.sum_nonneg fun i _ => by positivity
+  have hq324 : (planarAhomFinite p n *ᵥ Pi.single i 1) 0 ^ 2 +
+      (planarAhomFinite p n *ᵥ Pi.single i 1) 1 ^ 2 ≤ 324 :=
+    planarAhomFinite_single_sq_le hpc hinv hlow i
+  have hξ1 : |(Pi.single i 1 : Fin 2 → ℝ) 0| + |(Pi.single i 1 : Fin 2 → ℝ) 1| = 1 := by
+    fin_cases i <;> simp
+  have hξ2 : (Pi.single i 1 : Fin 2 → ℝ) 0 ^ 2 + (Pi.single i 1 : Fin 2 → ℝ) 1 ^ 2 = 1 := by
+    fin_cases i <;> simp
+  have hsi : ∑ j, (planarAhomFinite p n *ᵥ Pi.single i 1) j * (Pi.single i 1 : Fin 2 → ℝ) j =
+      (planarAhomFinite p n *ᵥ Pi.single i 1) i := by
+    fin_cases i <;> simp [Fin.sum_univ_two]
+  have hs0 : 0 ≤ ∑ j, (planarAhomFinite p n *ᵥ Pi.single i 1) j *
+      (Pi.single i 1 : Fin 2 → ℝ) j := by
+    rw [hsi]; exact planarAhomFinite_single_self_nonneg hpc hinv i
+  have hq18 := abs_le_of_sq_add_sq_le
+    (show (planarAhomFinite p n *ᵥ Pi.single i 1) 0 ^ 2 +
+      (planarAhomFinite p n *ᵥ Pi.single i 1) 1 ^ 2 ≤ 18 ^ 2 by linarith) (by norm_num)
+  have hqi : (planarAhomFinite p n *ᵥ Pi.single i 1) i ≤ 18 := by
+    fin_cases i
+    · exact (abs_le.1 hq18.1).2
+    · exact (abs_le.1 hq18.2).2
+  have hs18 : ∑ j, (planarAhomFinite p n *ᵥ Pi.single i 1) j *
+      (Pi.single i 1 : Fin 2 → ℝ) j ≤ 18 := by rw [hsi]; exact hqi
+  have hr := hraw (Pi.single i 1) (planarAhomFinite p n *ᵥ Pi.single i 1) (by rw [hξ1]; norm_num)
+    hs0 (hinv _)
+  have hQ1 : (|(planarAhomFinite p n *ᵥ Pi.single i 1) 0| +
+      |(planarAhomFinite p n *ᵥ Pi.single i 1) 1|) ^ 2 ≤ 1296 := by
+    have h1 : |(planarAhomFinite p n *ᵥ Pi.single i 1) 0| +
+        |(planarAhomFinite p n *ᵥ Pi.single i 1) 1| ≤ 36 := by linarith [hq18.1, hq18.2]
+    calc _ ≤ (36 : ℝ) ^ 2 := pow_le_pow_left₀ (by positivity) h1 2
+      _ = 1296 := by norm_num
+  have hI : planarMuMean p n (planarAhomFinite p n *ᵥ Pi.single i 1) -
+      planarMuMean p (n + 1) (planarAhomFinite p n *ᵥ Pi.single i 1) ≤
+      2 * 324 * planarMuTau p n + Ci * 1296 * (1 / Real.sqrt ((3 : ℝ) ^ n) +
+        Real.exp (-ci * (3 : ℝ) ^ n)) := by
+    have h := hIμ n (planarAhomFinite p n *ᵥ Pi.single i 1)
+    have hμτ := planarMuTau_nonneg p n
+    have e1 := mul_le_mul_of_nonneg_right hq324 hμτ
+    have hpos : 0 ≤ 1 / Real.sqrt ((3 : ℝ) ^ n) + Real.exp (-ci * (3 : ℝ) ^ n) := by positivity
+    have e2 := mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hQ1 hpos) hCi
+    change planarMuIncrement p n _ ≤ _
+    linarith
+  have hJ : planarNuMean p n (Pi.single i 1) - planarNuMean p (n + 1) (Pi.single i 1) ≤
+      2 * (∑ i : Fin 2, ((A *ᵥ Pi.single i 1) 0 ^ 2 + (A *ᵥ Pi.single i 1) 1 ^ 2)) *
+        planarNuTau p n +
+      Cj * (∑ i : Fin 2, (|(A⁻¹ *ᵥ ![(A *ᵥ Pi.single i 1) 0,
+      -(A *ᵥ Pi.single i 1) 1]) 0| + |(A⁻¹ *ᵥ ![(A *ᵥ Pi.single i 1) 0,
+      -(A *ᵥ Pi.single i 1) 1]) 1|) ^ 2) * (1 / Real.sqrt ((3 : ℝ) ^ n) +
+        Real.exp (-cj * (3 : ℝ) ^ n)) := by
+    have hback : A⁻¹ *ᵥ (A *ᵥ Pi.single i 1) = Pi.single i 1 := ahom_inv_mulVec_ahom_mulVec hpc _
+    have h := hJν n (A *ᵥ Pi.single i 1)
+    rw [hback] at h
+    have hντ := planarNuTau_nonneg p n
+    have hKAi := Finset.single_le_sum (f := fun i : Fin 2 =>
+      (A *ᵥ Pi.single i 1) 0 ^ 2 + (A *ᵥ Pi.single i 1) 1 ^ 2) (fun i _ => by positivity)
+      (Finset.mem_univ i)
+    have hKBi := Finset.single_le_sum (f := fun i : Fin 2 =>
+      (|(A⁻¹ *ᵥ ![(A *ᵥ Pi.single i 1) 0, -(A *ᵥ Pi.single i 1) 1]) 0| +
+        |(A⁻¹ *ᵥ ![(A *ᵥ Pi.single i 1) 0, -(A *ᵥ Pi.single i 1) 1]) 1|) ^ 2)
+      (fun i _ => by positivity) (Finset.mem_univ i)
+    have hpos : 0 ≤ 1 / Real.sqrt ((3 : ℝ) ^ n) + Real.exp (-cj * (3 : ℝ) ^ n) := by positivity
+    have e1 := mul_le_mul_of_nonneg_right hKAi hντ
+    have e2 := mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hKBi hpos) hCj
+    change planarNuIncrement p n _ ≤ _
+    linarith
+  have harith := planarOmega_term_arith (p := p) hn2 hξ1 hξ2 hq324 hs18 hCB hCH hCu hCv hCμ
+    hCBad hC1 hc1 hC3 hc3 hCG hCi hci hCj hcj hKA0 hKB0 hr hI hJ
+  rw [hsi] at harith
+  exact harith
+
+/-- **Lemma 5.9 of Armstrong and Dario** (in dimension two, in the form used by Lemma 5.10): from
+Lemmas 5.7 and 5.5 and the energy bounds (4.24), (4.25),
+`D_n ≤ K (3^{-n/10} + ∑_{k ≤ n} 3^{k-n} τ_k)` for `n ≥ N`. -/
+theorem exists_planarOmegaD_le_of_inputs {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (h57 : PlanarWeakConvergence p)
+    (h55μ : PlanarRestrictQuadCoarsenMu p) (h55ν : PlanarRestrictQuadCoarsenNu p)
+    (hcgμ : PlanarCoarseGradMomentMu p) (hcgν : PlanarCoarseGradMomentNu p) :
+    ∃ K : ℝ, 0 ≤ K ∧ ∃ N : ℕ, ∀ n, N ≤ n →
+      planarOmegaD p n ≤ K * ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+        ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k) := by
+  obtain ⟨CB, CH, Cu, Cv, Cμ, CBad, C1, c1, C3, c3, CG, hCB, hCH, hCu, hCv, hCμ, hCBad, hC1, hc1,
+    hC3, hc3, hCG, N0, hraw⟩ := exists_planarOmegaD_term_raw hpc h57 h55μ h55ν hcgμ hcgν
+  obtain ⟨Cb0, -, N1, hN1⟩ := exists_planarAhomInvFinite_mulVec_planarAhomFinite hpc
+  obtain ⟨Ci, hCi, ci, hci, hIμ⟩ := exists_planarMuIncrement_le hpc
+  obtain ⟨Cj, hCj, cj, hcj, hJν⟩ := exists_planarNuIncrement_ahomInv_le hpc
+  refine ⟨2 * (18 + 36 * CB + 1296 * 1297 * 4 * 3 * CH + 3456 * (324 * Cu + Cv) + 27 * 1296 * Cμ +
+        27 * 1296 * C1 * c1⁻¹ + 27 * C3 * c3⁻¹ + CBad * (2 + 36 ^ 4) + 27 * CG +
+        27 * 1296 * Ci * (1 + ci⁻¹) +
+        27 * Cj * (∑ i : Fin 2, (|((planarAhom p)⁻¹ *ᵥ ![(planarAhom p *ᵥ Pi.single i 1) 0,
+          -(planarAhom p *ᵥ Pi.single i 1) 1]) 0| +
+          |((planarAhom p)⁻¹ *ᵥ ![(planarAhom p *ᵥ Pi.single i 1) 0,
+            -(planarAhom p *ᵥ Pi.single i 1) 1]) 1|) ^ 2) * (1 + cj⁻¹) + 27 * 648 +
+        54 * (∑ i : Fin 2, ((planarAhom p *ᵥ Pi.single i 1) 0 ^ 2 +
+          (planarAhom p *ᵥ Pi.single i 1) 1 ^ 2))), ?_, max (max N0 N1) 1, fun n hn => ?_⟩
+  · have hKA0 : 0 ≤ ∑ i : Fin 2, ((planarAhom p *ᵥ Pi.single i 1) 0 ^ 2 +
+        (planarAhom p *ᵥ Pi.single i 1) 1 ^ 2) := Finset.sum_nonneg fun i _ => by positivity
+    have hKB0 : 0 ≤ ∑ i : Fin 2, (|((planarAhom p)⁻¹ *ᵥ ![(planarAhom p *ᵥ Pi.single i 1) 0,
+          -(planarAhom p *ᵥ Pi.single i 1) 1]) 0| +
+          |((planarAhom p)⁻¹ *ᵥ ![(planarAhom p *ᵥ Pi.single i 1) 0,
+            -(planarAhom p *ᵥ Pi.single i 1) 1]) 1|) ^ 2 := Finset.sum_nonneg fun i _ => by
+      positivity
+    positivity
+  have hn0 : N0 ≤ n := le_trans (le_trans (le_max_left _ _) (le_max_left _ _)) hn
+  have hn1 : N1 ≤ n := le_trans (le_trans (le_max_right _ _) (le_max_left _ _)) hn
+  have hn2 : 1 ≤ n := le_trans (le_max_right _ _) hn
+  obtain ⟨hinv, -, hb⟩ := hN1 n hn1
+  have h0 := planarOmegaD_term_le hpc hn2 hCB hCH hCu hCv hCμ hCBad hC1 hc1 hC3 hc3 hCG hCi hci
+    hCj hcj (hraw n hn0) hIμ hJν hinv (fun q => (hb q).1) 0
+  have h1 := planarOmegaD_term_le hpc hn2 hCB hCH hCu hCv hCμ hCBad hC1 hc1 hC3 hc3 hCG hCi hci
+    hCj hcj (hraw n hn0) hIμ hJν hinv (fun q => (hb q).1) 1
+  rw [planarOmegaD, Fin.sum_univ_two]
+  linarith
+
+/-- **Lemma 5.9 of Armstrong and Dario in the form of the hypothesis of
+`planarMuLimit_eq_of_decay`** (dimension two): `D_n ≤ C σⁿ + C ∑_{l ≤ n} ρ^{n-l} τ_l` with
+`σ = 3^{-1/10}` and `ρ = 1/3`. -/
+theorem exists_planarOmegaD_decay {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
+    (h57 : PlanarWeakConvergence p) (h55μ : PlanarRestrictQuadCoarsenMu p)
+    (h55ν : PlanarRestrictQuadCoarsenNu p) (hcgμ : PlanarCoarseGradMomentMu p)
+    (hcgν : PlanarCoarseGradMomentNu p) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∃ N : ℕ, ∀ n, N ≤ n → planarOmegaD p n ≤
+      C * ((3 : ℝ) ^ (-(1 / 10 : ℝ))) ^ n +
+        C * ∑ l ∈ Finset.range (n + 1), (1 / 3 : ℝ) ^ (n - l) * planarTau p l := by
+  obtain ⟨K, hK, N, h⟩ := exists_planarOmegaD_le_of_inputs hpc h57 h55μ h55ν hcgμ hcgν
+  refine ⟨K, hK, N, fun n hn => ?_⟩
+  have := h n hn
+  rw [three_rpow_neg_div_ten, inv_three_pow_mul_sum_eq] at this
+  linarith
+
+/-- **Proposition 5.2 of Armstrong and Dario, qualitative part** (dimension two), from Lemma 5.7,
+Lemma 5.5 and the energy bounds (4.24), (4.25): `lim E[-μ(□_n, q)] = (1/2) q · ā⁻¹ q`. -/
+theorem planarMuLimit_eq_of_inputs {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
+    (h57 : PlanarWeakConvergence p) (h55μ : PlanarRestrictQuadCoarsenMu p)
+    (h55ν : PlanarRestrictQuadCoarsenNu p) (hcgμ : PlanarCoarseGradMomentMu p)
+    (hcgν : PlanarCoarseGradMomentNu p) (q : Fin 2 → ℝ) :
+    planarMuLimit p q = 1 / 2 * ∑ i, q i * ((planarAhom p)⁻¹ *ᵥ q) i := by
+  obtain ⟨C, hC, N, h⟩ := exists_planarOmegaD_decay hpc h57 h55μ h55ν hcgμ hcgν
+  have hσ0 : (0 : ℝ) ≤ (3 : ℝ) ^ (-(1 / 10 : ℝ)) := by positivity
+  have hσ1 : (3 : ℝ) ^ (-(1 / 10 : ℝ)) < 1 :=
+    Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by norm_num)
+  exact planarMuLimit_eq_of_decay hpc hC hσ0 hσ1 (by norm_num) (by norm_num) h q
+
 end Rigidity.Percolation
