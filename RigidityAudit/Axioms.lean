@@ -102,6 +102,48 @@ import Rigidity.Proofs.Cluster.PlanarRestrictQuad
 import Rigidity.Proofs.Cluster.PlanarSubcubePairing
 import Rigidity.Proofs.Cluster.ReverseHolderMoment
 import Rigidity.Proofs.Cluster.ReverseHolderPlanar
+import Rigidity.Proofs.Percolation.GeneralDim.CubeBoundaryErrorBound
+import Rigidity.Proofs.Percolation.GeneralDim.CubeBoundaryWeightBound
+import Rigidity.Proofs.Percolation.GeneralDim.CubeEnergy
+import Rigidity.Proofs.Percolation.GeneralDim.CubeEnergyBounds
+import Rigidity.Proofs.Percolation.GeneralDim.CubeExceptionalTail
+import Rigidity.Proofs.Percolation.GeneralDim.CubeMuLowerBound
+import Rigidity.Proofs.Percolation.GeneralDim.CubeMuMoment
+import Rigidity.Proofs.Percolation.GeneralDim.CubeMuNuComparison
+import Rigidity.Proofs.Percolation.GeneralDim.CubeMuUpperBound
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNablaAffine
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuDirichlet
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuEnergyDefect
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuLimit
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuLocal
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuLowerBound
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuLowerBoundMean
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuMonotone
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuSubadditiveError
+import Rigidity.Proofs.Percolation.GeneralDim.CubeSecondVariation
+import Rigidity.Proofs.Percolation.GeneralDim.CubeSizeMoments
+import Rigidity.Proofs.Percolation.GeneralDim.CubeStokes
+import Rigidity.Proofs.Percolation.GeneralDim.CubeSubadditive
+import Rigidity.Proofs.Percolation.GeneralDim.CubeSubcubes
+import Rigidity.Proofs.Percolation.GeneralDim.CubeVariations
+import Rigidity.Proofs.Percolation.PlanarCoarseEnergyMajorant
+import Rigidity.Proofs.Percolation.PlanarFlatnessAE
+import Rigidity.Proofs.Percolation.PlanarFlatnessBound
+import Rigidity.Proofs.Percolation.PlanarFlatnessInputs
+import Rigidity.Proofs.Percolation.PlanarFlatnessMu
+import Rigidity.Proofs.Percolation.PlanarFlatnessNu
+import Rigidity.Proofs.Percolation.PlanarFlatnessTools
+import Rigidity.Proofs.Percolation.PlanarNablaAffineMoments
+import Rigidity.Proofs.Percolation.PlanarNablaAffineSq
+import Rigidity.Proofs.Percolation.PlanarOmegaAssembly
+import Rigidity.Proofs.Percolation.PlanarOmegaBad
+import Rigidity.Proofs.Percolation.PlanarOmegaCaccioppoli
+import Rigidity.Proofs.Percolation.PlanarOmegaChain
+import Rigidity.Proofs.Percolation.PlanarOmegaDecay
+import Rigidity.Proofs.Percolation.PlanarOmegaIntegrals
+import Rigidity.Proofs.Percolation.PlanarOmegaMajorants
+import Rigidity.Proofs.Percolation.PlanarOmegaPointwise
+import Rigidity.Proofs.Percolation.PlanarOmegaRates
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -404,3 +446,99 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Cluster.sum_clusterGradSq_eq_clusterForm
 #print axioms Rigidity.Proofs.Cluster.edgePairing_clusterExtend_sq_le_of_meyers
 #print axioms Rigidity.Percolation.edgePairing_sub_sum_subcubes_sq_le
+
+-- The subadditive quantities on the clusters of triadic cubes of Z^d (Armstrong and Dario, Section 4 and
+-- Definition 5.1, every d >= 2)
+#print axioms Rigidity.Percolation.exists_cubeHarmonic_minimizer
+#print axioms Rigidity.Percolation.exists_cubeMu_minimizer
+#print axioms Rigidity.Percolation.exists_cubeNu_maximizer
+#print axioms Rigidity.Percolation.cubeMu
+#print axioms Rigidity.Percolation.cubeNu
+#print axioms Rigidity.Percolation.cubeMu_nonpos
+#print axioms Rigidity.Percolation.cubeNu_nonneg
+#print axioms Rigidity.Percolation.cubeNu_le
+#print axioms Rigidity.Percolation.cubeMu_mul_latticeVolume_add_cubeForm_sub
+#print axioms Rigidity.Percolation.cubeMu_mul_latticeVolume_eq
+#print axioms Rigidity.Percolation.cubeFluxPairing_sub_add_cubeForm_sub
+#print axioms Rigidity.Percolation.cubeNu_mul_latticeVolume_eq
+#print axioms Rigidity.Percolation.cubeNu_sub_cubeMu_eq
+#print axioms Rigidity.Percolation.cubeMu_smul_add_smul
+#print axioms Rigidity.Percolation.cubeNu_smul_add_smul
+#print axioms Rigidity.Percolation.crossingClusterVertices_subset_of_resolved
+#print axioms Rigidity.Percolation.cubeRestrictExt_mem_cubeHarmonic
+#print axioms Rigidity.Percolation.sum_cubeForm_restrictExt_le
+#print axioms Rigidity.Percolation.sum_cubeMu_subcubes_le
+#print axioms Rigidity.Percolation.cubeNu_le_sum_subcubes
+#print axioms Rigidity.Percolation.sum_cubeForm_sub_add_sum_cubeMu_subcubes_le
+#print axioms Rigidity.Percolation.sum_cubeForm_sub_add_cubeNu_le_sum_subcubes
+#print axioms Rigidity.Percolation.exists_cubeHarmonic_eq_on_boundary
+#print axioms Rigidity.Percolation.exists_cubeNu_maximizer_affine
+#print axioms Rigidity.Percolation.cubeNu_le_of_affine_boundary
+#print axioms Rigidity.Percolation.exists_cubeNu_eq_of_affine_boundary
+#print axioms Rigidity.Percolation.cubeCoarsePairing_eq_faces
+#print axioms Rigidity.Percolation.abs_cubeCoarsePairing_sub_le
+#print axioms Rigidity.Percolation.cubeBoundaryError_le
+#print axioms Rigidity.Percolation.cubeBoundaryWeight_le
+#print axioms Rigidity.Percolation.neg_cubeMu_le
+#print axioms Rigidity.Percolation.exists_abs_cubeNu_sub_cubeMu_sub_le
+#print axioms Rigidity.Percolation.exists_cubeMu_le_cubeNu_sub
+#print axioms Rigidity.Percolation.exists_cubeMu_le_neg_sum_sq
+#print axioms Rigidity.Percolation.le_cubeNu_add_of_resolved
+#print axioms Rigidity.Percolation.exists_le_integral_cubeNu
+#print axioms Rigidity.Percolation.exists_cubeAhom_lower_bound
+#print axioms Rigidity.Percolation.exists_integral_sum_faces_le
+#print axioms Rigidity.Percolation.exists_integral_sum_margin_le
+#print axioms Rigidity.Percolation.exists_lintegral_neg_cubeMu_le
+#print axioms Rigidity.Percolation.cubeNu_eq_of_equiv
+#print axioms Rigidity.Percolation.measurable_cubeNu
+#print axioms Rigidity.Percolation.integral_cubeNu_eq_of_scale_eq
+#print axioms Rigidity.Percolation.integrable_cubeNu
+#print axioms Rigidity.Percolation.flux_error_le
+#print axioms Rigidity.Percolation.cubeNu_mul_latticeVolume_le_sum_add
+#print axioms Rigidity.Percolation.sum_exp_neg_margin_le
+#print axioms Rigidity.Percolation.exists_integral_cubeNu_le_of_scale_le
+#print axioms Rigidity.Percolation.cubeNu_eq_sum_polarization
+#print axioms Rigidity.Percolation.exists_tendsto_cubeNuMean
+#print axioms Rigidity.Percolation.tendsto_cubeNuLimit
+#print axioms Rigidity.Percolation.cubeAhom
+#print axioms Rigidity.Percolation.cubeNuLimit_eq_cubeAhom
+#print axioms Rigidity.Percolation.cubeAhom_symm
+#print axioms Rigidity.Percolation.cubeAhom_bounds
+#print axioms Rigidity.Percolation.cubeNuDefect_add_le
+#print axioms Rigidity.Percolation.exists_lintegral_cubeNuDefect_le
+
+-- The flatness of the coarsened minimizers, the decay of omega and the qualitative part of Proposition 5.2
+-- (Armstrong and Dario, Lemmas 5.8 and 5.9, d = 2)
+#print axioms Rigidity.Percolation.PlanarWeakConvergence
+#print axioms Rigidity.Percolation.PlanarRestrictQuadCoarsenMu
+#print axioms Rigidity.Percolation.PlanarRestrictQuadCoarsenNu
+#print axioms Rigidity.Percolation.exists_coarseEnergyMu_majorant
+#print axioms Rigidity.Percolation.exists_coarseEnergyNu_majorant
+#print axioms Rigidity.Percolation.exists_flatness_le_multiscale
+#print axioms Rigidity.Percolation.exists_planarMuFlatness_majorant
+#print axioms Rigidity.Percolation.exists_lintegral_planarMuFlatness_le
+#print axioms Rigidity.Percolation.exists_planarNuFlatness_majorant
+#print axioms Rigidity.Percolation.exists_lintegral_planarNuFlatness_le
+#print axioms Rigidity.Percolation.exists_planarMuFlatness_majorant_ae
+#print axioms Rigidity.Percolation.exists_planarNuFlatness_majorant_ae
+#print axioms Rigidity.Percolation.sum_sq_planarNuGradAvg_sub_le
+#print axioms Rigidity.Percolation.exists_lintegral_planarNuGradAvg_sub_le
+#print axioms Rigidity.Percolation.caccioppoli_dist
+#print axioms Rigidity.Percolation.clusterForm_restrict_le_caccioppoli
+#print axioms Rigidity.Percolation.planarNu_sub_planarMu_sub_le
+#print axioms Rigidity.Percolation.planarOmega_chain
+#print axioms Rigidity.Percolation.planarOmega_real_le
+#print axioms Rigidity.Percolation.planarOmega_integral_le
+#print axioms Rigidity.Percolation.exists_boundaryMajorant
+#print axioms Rigidity.Percolation.exists_lintegral_not_resolved_le
+#print axioms Rigidity.Percolation.exists_badMajorant
+#print axioms Rigidity.Percolation.exists_lintegral_subMuSum_le
+#print axioms Rigidity.Percolation.exists_lintegral_subNuSum_le
+#print axioms Rigidity.Percolation.exists_lintegral_nuSubGap_le
+#print axioms Rigidity.Percolation.exists_muSubGap_majorant
+#print axioms Rigidity.Percolation.exists_subadditivityMajorant
+#print axioms Rigidity.Percolation.exists_coarseError_majorant
+#print axioms Rigidity.Percolation.planarTau_le_weighted
+#print axioms Rigidity.Percolation.exists_planarOmegaD_le_of_inputs
+#print axioms Rigidity.Percolation.exists_planarOmegaD_decay
+#print axioms Rigidity.Percolation.planarMuLimit_eq_of_inputs

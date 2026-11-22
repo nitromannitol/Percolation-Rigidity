@@ -995,7 +995,9 @@ and `PlanarMuEnergyDefect.lean` to `PlanarIdentification.lean`.
 
 Departures from Armstrong and Dario:
 
-- **Hypothesis of the identification.** The bound of Lemma 5.9 for `D_n` is not proved. Its proof
+- **Hypothesis of the identification.** In this section the bound of Lemma 5.9 for `D_n` is not proved
+  (it is proved from Lemmas 5.5 and 5.7 in
+  [Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 for d = 2](#lemmas-58-and-59-and-the-qualitative-part-of-proposition-52-for-d--2)). Its proof
   uses Lemmas 5.5 to 5.8, and Lemma 5.5, with Steps 2 and 3 of Lemma 5.7, needs the Meyers estimate
   of AD, Proposition 3.8, on the planar cluster, which is proved in a deterministic form with its
   good events as hypotheses in
@@ -1102,8 +1104,146 @@ Departures from Armstrong and Dario:
   `sum_edgePairing_sq_le_planarMuDefect` are deterministic: the good events they assume (the
   Gehring partition and the bounds on the reach over the triples, the partition scales and the
   Meyers estimate on the cells of the inner squares, the bounds on the cell averages of the weight)
-  are not shown to hold with high probability here. Consequently Lemma 5.5 itself, Lemma 5.7 Step 3,
-  Lemmas 5.8 and 5.9, and hence the hypothesis `h59` of `planarMuLimit_eq_of_decay`, are not proved.
+  are not shown to hold with high probability here. Consequently Lemma 5.5 itself and Lemma 5.7 Step 3
+  are not proved; Lemmas 5.8 and 5.9 are proved from Lemmas 5.5 and 5.7 in
+  [Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 for d = 2](#lemmas-58-and-59-and-the-qualitative-part-of-proposition-52-for-d--2).
+
+## The subadditive quantities on the clusters of triadic cubes of Z^d
+
+Section 4 of Armstrong and Dario defines `μ(U, q)` and `ν(U, p)` on the cluster `C_*(U)` of a
+resolved triadic cube `U` of `ℤ^d`, and proves their basic properties. For `d = 2` this is in
+[Localization of the subadditive quantities and the homogenized matrix for d = 2](#localization-of-the-subadditive-quantities-and-the-homogenized-matrix-for-d--2)
+and the sections after it. Here the same results are proved in every dimension `d ≥ 2`, in
+[`Rigidity/Proofs/Percolation/GeneralDim/`](Rigidity/Proofs/Percolation/GeneralDim/), with the names
+`cubeMu`, `cubeNu`, `cubeForm`, `cubeHarmonic` in place of the planar `planarMu`, `clusterForm`, and
+so on. On the partition event and for a resolved cube, `cl_𝒫(U) = U` and `C_*(U)` is the crossing
+cluster of `U`; the space `A_*(U)` of the paper is `cubeHarmonic`, the functions on `C_*(U)` harmonic
+at the vertices of `C_*(U)` in the lattice interior of `U`. AD numbering below is that of the arXiv v2
+source (Definition 4.1, Lemmas 4.2 to 4.5, Corollary 4.6, Lemmas 4.7 and 4.8, Definition 5.1).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.cubeMu`](Rigidity/Proofs/Percolation/GeneralDim/CubeEnergy.lean), [`cubeNu`](Rigidity/Proofs/Percolation/GeneralDim/CubeEnergy.lean), [`exists_cubeMu_minimizer`](Rigidity/Proofs/Percolation/GeneralDim/CubeEnergy.lean), [`exists_cubeNu_maximizer`](Rigidity/Proofs/Percolation/GeneralDim/CubeEnergy.lean) | AD Definition 4.1 and Lemma 4.2: `μ(U, q) = inf_{A_*(U)} (B(u, u)/2 − ℓ_q(u))/\|U\|` and `ν(U, p) = sup_{A_*(U)} (F_p(v) − B(v, v)/2)/\|U\|` are attained, at solutions of the first variation equations `B(w, u) = ℓ_q(w)` and `B(w, v) = F_p(w)` for `w ∈ A_*(U)`; here `B` is the Dirichlet form on the open edges of `C_*(U)`, `ℓ_q` the coarse pairing over the lattice edges inside `U`, and `F_p` the flux pairing. |
+| [`cubeMu_mul_latticeVolume_add_cubeForm_sub`](Rigidity/Proofs/Percolation/GeneralDim/CubeVariations.lean), [`cubeFluxPairing_sub_add_cubeForm_sub`](Rigidity/Proofs/Percolation/GeneralDim/CubeVariations.lean), [`cubeMu_mul_latticeVolume_eq`](Rigidity/Proofs/Percolation/GeneralDim/CubeVariations.lean), [`cubeNu_mul_latticeVolume_eq`](Rigidity/Proofs/Percolation/GeneralDim/CubeVariations.lean), [`cubeNu_sub_cubeMu_eq`](Rigidity/Proofs/Percolation/GeneralDim/CubeVariations.lean), [`cubeMu_smul_add_smul`](Rigidity/Proofs/Percolation/GeneralDim/CubeVariations.lean), [`cubeNu_smul_add_smul`](Rigidity/Proofs/Percolation/GeneralDim/CubeVariations.lean) | AD Lemma 4.2, (4.4), (4.6), (4.7) and (4.8): the second variations, the values `\|U\| μ(U, q) = −B(u, u)/2` and `\|U\| ν(U, p) = B(v, v)/2` at the optimizers, the comparison identity of `ν` and `μ`, and the quadratic dependence of `μ` and `ν` on `q` and `p`. |
+| [`cubeMu_nonpos`](Rigidity/Proofs/Percolation/GeneralDim/CubeEnergyBounds.lean), [`cubeNu_nonneg`](Rigidity/Proofs/Percolation/GeneralDim/CubeEnergyBounds.lean), [`cubeNu_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeEnergyBounds.lean), [`neg_cubeMu_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeMuUpperBound.lean), [`exists_lintegral_neg_cubeMu_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeMuMoment.lean) | `μ(U, q) ≤ 0 ≤ ν(U, p) ≤ (3^d/4) \|p\|₁²` ((4.13)); the bound of `−μ` by the partition sizes, `−μ(U, q) ≤ d C₃² \|q\|₁² \|U\|⁻¹ ∑_{z ∈ C_*(U)} size(□_𝒫(z))^{2d−2}` ((4.12)), through AD Lemma 3.3 with `s = 1`; and `E[−μ(U, q); partition event, U resolved] ≤ C \|q\|₁²` ((4.16), in expectation). |
+| [`exists_cubeNu_maximizer_affine`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuDirichlet.lean), [`exists_cubeHarmonic_eq_on_boundary`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuDirichlet.lean), [`cubeNu_le_of_affine_boundary`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuDirichlet.lean), [`exists_cubeNu_eq_of_affine_boundary`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuDirichlet.lean) | AD Lemma 4.3, (4.1) and (4.9): the functions vanishing outside the lattice interior of `U` are orthogonal to `A_*(U)`, the Dirichlet problem on `C_*(U)` with any boundary values is solvable, the maximizer of `ν(U, p)` is affine of slope `p` at the boundary vertices of `C_*(U)` up to a constant, and `ν(U, p) \|U\|` is the least half energy of a function with such boundary values. |
+| [`cubeCoarsePairing_eq_faces`](Rigidity/Proofs/Percolation/GeneralDim/CubeStokes.lean), [`abs_cubeCoarsePairing_sub_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeNablaAffine.lean), [`cubeBoundaryError_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeBoundaryErrorBound.lean), [`cubeBoundaryWeight_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeBoundaryWeightBound.lean), [`exists_integral_sum_faces_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeSizeMoments.lean), [`exists_integral_sum_margin_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeSizeMoments.lean) | AD Lemma 4.5, (4.26) and (4.27), in every dimension: by the discrete Stokes formula the coarse pairing is a sum of coarsened values over the faces of `U`; for the maximizer `v` of `ν(U, p)`, `\|ℓ_q(v) − (q · p) L^{d−1}(L − 1)\| ≤ \|q\|₁ E_p(v)`, the boundary error `E_p(v)` being a weighted variation of `v` over the partition cubes at the faces, bounded by the Hölder and Young inequalities through the weight `W_∂(z) ≤ ∑_i 2 size(□_𝒫(z))^{d−1} 1{margin_i(z) < size(□_𝒫(z))}`; and the expectations of the sums of the sizes over the faces and of the margin-weighted sums are at most `C L^{d−1}`. |
+| [`exists_abs_cubeNu_sub_cubeMu_sub_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeMuNuComparison.lean), [`exists_cubeMu_le_cubeNu_sub`](Rigidity/Proofs/Percolation/GeneralDim/CubeMuNuComparison.lean) | AD Corollary 4.6, (4.29): `\|ν(U, p) − μ(U, q) − q · p − B(v − u, v − u)/(2\|U\|)\| ≤ \|q · p\|/L + \|q\|₁ E_p(v)/\|U\|`, with `E_p(v)` the boundary error, and `μ(U, q) ≤ ν(U, p) − q · p` up to the same errors. |
+| [`exists_cubeMu_le_neg_sum_sq`](Rigidity/Proofs/Percolation/GeneralDim/CubeMuLowerBound.lean), [`le_cubeNu_add_of_resolved`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLowerBound.lean), [`exists_le_integral_cubeNu`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLowerBoundMean.lean) | AD Lemma 4.7, (4.30) and (4.31): `μ(U, q) ≤ −\|q\|²/(3^d d) + t \|q\|²/L + \|q\|₁ E_{tq}(v)/\|U\|` with `t = 2/(3^d d)`; `κ \|p\|² ≤ ν(U, p)` up to explicit errors for every `κ > 0`; and, in expectation, `c \|p\|² ≤ E[ν(U, p)] + C \|p\|₁² 3^{−m/2}` for every triadic cube `U` of scale `m`. |
+| [`sum_cubeMu_subcubes_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeSubadditive.lean), [`cubeNu_le_sum_subcubes`](Rigidity/Proofs/Percolation/GeneralDim/CubeSubadditive.lean), [`flux_error_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuSubadditiveError.lean), [`cubeNu_mul_latticeVolume_le_sum_add`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuSubadditiveError.lean), [`sum_exp_neg_margin_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeExceptionalTail.lean) | AD Lemma 4.8, (4.32) and (4.33): for a resolved `U` and `n ≤` the scale of `U`, the sum over the vertices `x` of `U` of `μ(V(x), q)` over the resolved subcubes `V(x)` of scale `n` is at most `\|U\| μ(U, q)` plus the coarse pairing of the minimizer over the exceptional lattice edges, and `\|U\| ν(U, p)` is at most the sum over `x` of `ν(V(x), p)` plus the flux pairing of the maximizer over the open edges not inside the cluster of a resolved subcube; the second is bounded by `(3^d/4) \|p\|₁² (s G + \|U\|/s)` for every `s > 0`, `G` the number of exceptional vertices. |
+| [`sum_cubeForm_sub_add_sum_cubeMu_subcubes_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeSecondVariation.lean), [`sum_cubeForm_sub_add_cubeNu_le_sum_subcubes`](Rigidity/Proofs/Percolation/GeneralDim/CubeSecondVariation.lean), [`cubeNuDefect_add_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuEnergyDefect.lean), [`exists_lintegral_cubeNuDefect_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuEnergyDefect.lean) | the subadditivity of `μ` and `ν` with the energies of the differences on the left side (AD, proof of Lemma 5.4, (5.11) and its analogue for `ν`): `∑_V B_V(u\|_V − u_V)/2 + ∑_V \|V\| μ(V, q) ≤ \|U\| μ(U, q) + E_q(u)` and `∑_V B_V(v\|_V − v_V)/2 + \|U\| ν(U, p) ≤ ∑_V \|V\| ν(V, p) + F_p^{exc}(v)`; and the expectation of the energy `D^ν_n(U, p)` of the differences of the maximizers of `ν` is at most `\|U\| (E[ν(V, p)] − E[ν(U, p)] + C \|p\|₁² 3^{−n/2})`. |
+| [`cubeNu_eq_of_equiv`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLocal.lean), [`measurable_cubeNu`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLocal.lean), [`integral_cubeNu_eq_of_scale_eq`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLocal.lean), [`integrable_cubeNu`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLocal.lean) | `ν(U, p)` depends only on the open edges inside `U`, is a measurable and integrable function of the configuration, and `E[ν(U, p)]` is the same for all triadic cubes of a given scale (exact stationarity). |
+| [`exists_integral_cubeNu_le_of_scale_le`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuMonotone.lean) | AD (4.49), every `d ≥ 2`: `E[ν(U, p)] ≤ E[ν(V, p)] + C \|p\|₁² 3^{−n/2}` for triadic cubes `V`, `U` of scales `n ≤ m`. |
+| [`cubeNu_eq_sum_polarization`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLimit.lean), [`exists_tendsto_cubeNuMean`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLimit.lean), [`tendsto_cubeNuLimit`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLimit.lean), [`cubeAhom`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLimit.lean), [`cubeNuLimit_eq_cubeAhom`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLimit.lean), [`cubeAhom_symm`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLimit.lean), [`cubeAhom_bounds`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLimit.lean), [`exists_cubeAhom_lower_bound`](Rigidity/Proofs/Percolation/GeneralDim/CubeNuLowerBoundMean.lean) | AD Definition 5.1 and (5.1), every `d ≥ 2`: `ν(U, ·)` is a quadratic form given by polarization; `E[ν(□_m, ξ)]` converges as `m → ∞`; the limit is `(1/2) ξ · ā ξ` for a symmetric matrix `ā = cubeAhom`, and `c \|ξ\|² ≤ (1/2) ξ · ā ξ ≤ (3^d/4) \|ξ\|₁²`. |
+
+The theorems of the table and their supporting results depend only on axioms among `propext`,
+`Classical.choice` and `Quot.sound`; fifty-seven of them (fifty-four theorems and three definitions)
+have axiom reports in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The modules are the
+twenty-four files of [`Rigidity/Proofs/Percolation/GeneralDim/`](Rigidity/Proofs/Percolation/GeneralDim/).
+The quantities `cubeMu` and `cubeNu` at `d = 2` are not identified with the planar `planarMu` and
+`planarNu`: the planar quantities are built on the meshed family of good squares, the general ones
+on the partition into good cubes of every dimension.
+
+1. **Cluster and variational structure** (`CubeEnergy.lean`, `CubeVariations.lean`,
+   `CubeEnergyBounds.lean`, `CubeNuDirichlet.lean`). The cluster, the Dirichlet form, the two
+   pairings and the quantities `μ`, `ν`, with their first and second variations and the Dirichlet
+   problem with affine data.
+2. **Boundary terms and comparison** (`CubeStokes.lean`, `CubeNablaAffine.lean`,
+   `CubeBoundaryErrorBound.lean`, `CubeBoundaryWeightBound.lean`, `CubeSizeMoments.lean`,
+   `CubeMuNuComparison.lean`, `CubeMuUpperBound.lean`, `CubeMuLowerBound.lean`,
+   `CubeNuLowerBound.lean`, `CubeNuLowerBoundMean.lean`, `CubeMuMoment.lean`). The coarse pairing as
+   a sum over the faces, the boundary error of the maximizer of `ν`, the bounds on `μ` and `ν`
+   and their expectations.
+3. **Subadditivity and the limit** (`CubeSubcubes.lean`, `CubeSubadditive.lean`,
+   `CubeSecondVariation.lean`, `CubeNuSubadditiveError.lean`, `CubeExceptionalTail.lean`,
+   `CubeNuMonotone.lean`, `CubeNuEnergyDefect.lean`, `CubeNuLocal.lean`, `CubeNuLimit.lean`). The
+   restriction of functions to resolved subcubes, the subadditivity inequalities, the exceptional
+   vertices, the stationarity and approximate monotonicity of `E[ν]`, and the homogenized matrix.
+
+Departures from Armstrong and Dario:
+
+- **Resolved triadic cubes.** `μ` and `ν` are defined for the triadic cubes `U` resolved by the
+  partition, where `cl_𝒫(U) = U` and `\|U\| = 3^{dn}`; `A_*(U)` is the space of functions on `C_*(U)`
+  harmonic at the vertices of `C_*(U)` in the lattice interior of `U` (the interior of `U` for the
+  lattice edges). For a cube that is not resolved the quantities are not used.
+- **Locality of `ν`.** `ν(U, p)` is defined through the crossing cluster of `U` and the open edges
+  inside it, hence is a local function of the configuration with exactly stationary expectation
+  (`cubeNu_eq_of_equiv`, `integral_cubeNu_eq_of_scale_eq`). This replaces AD Proposition 4.9 and
+  (4.40) for `ν`. The expectation `E[ν(U, p)]` is taken without the indicator of the event that `U`
+  is resolved. The quantity `μ`, which uses the anchors of the partition, is not shown to be local;
+  its localization, stationarity and the limit of `E[−μ]` are proved here only for `d = 2`, in the
+  sections cited above.
+- **Rates.** (4.49) holds with the rate `3^{−n/2}` in place of `3^{−n}`, and the lower bound (4.31)
+  in expectation is proved with a deterministic slope `κ p` in place of the random one of AD, with
+  the error `3^{−m/2}`.
+- **Boundary error (4.27).** The paths of the cluster of the partition cubes at the faces stay in
+  the crossing clusters of the partition cubes of the boundary vertices; the Hölder step uses the
+  weight `W_∂` above and the moments of the partition sizes.
+- **Definition 5.1.** The homogenized matrix `ā` is defined by polarization of the limit of
+  `E[ν(□_m, ξ)]`, and bounded above and below by (5.1).
+- **Counting convention.** AD write `⟨q, ∇[u]_𝒫⟩` as a sum over ordered pairs; the coarse pairing here
+  counts each lattice edge once, as in the planar modules. The first line of AD (4.19) has a sign
+  misprint: `μ(U, q) = −(1/2) ⟨∇u, a ∇u⟩_{C_*(U)}/\|U\|`.
+
+## Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 for d = 2
+
+Lemma 5.8 (flatness of the coarsened minimizers of `μ` and maximizers of `ν`) and Lemma 5.9 (the
+decay of `D_n`) of Armstrong and Dario are proved in `d = 2`, in
+[`Rigidity/Proofs/Percolation/`](Rigidity/Proofs/Percolation/) from `PlanarFlatnessInputs.lean` to
+`PlanarOmegaDecay.lean`, from the weak convergence of the spatial averages of the coarsened gradients
+(Lemma 5.7, display (5.25)) and the almost additivity of these averages (Lemma 5.5, display (5.12))
+alone. The proofs use the coarse energy bounds (4.24), (4.25) and the display (4.26) in `L²`, which are
+proved here, not assumed. With Lemma 5.10 and `planarMuLimit_eq_of_decay` this gives the
+identification `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q` (the qualitative part of Proposition 5.2) with
+the following three hypotheses, for `𝔭_c(2) < p < 1`:
+
+- [`PlanarWeakConvergence`](Rigidity/Proofs/Percolation/PlanarFlatnessInputs.lean), display (5.25) of
+  Lemma 5.7: `E[\|\|□\|⁻¹ ⟨∇[u(·, □, q)]_𝒫⟩_□ − ā_{□_n}⁻¹ q\|²] ≤ C \|q\|² (τ_n + 3^{−n/4})` for every
+  triadic cube `□` of scale `n`;
+- [`PlanarRestrictQuadCoarsenMu`](Rigidity/Proofs/Percolation/PlanarFlatnessInputs.lean) and
+  [`PlanarRestrictQuadCoarsenNu`](Rigidity/Proofs/Percolation/PlanarFlatnessInputs.lean), display
+  (5.12) of Lemma 5.5, for `n ∈ [(9/10) m, m)`, with the almost-sure measurability of the quantities
+  of the display.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.exists_coarseEnergyMu_majorant`](Rigidity/Proofs/Percolation/PlanarCoarseEnergyMajorant.lean), [`exists_coarseEnergyNu_majorant`](Rigidity/Proofs/Percolation/PlanarCoarseEnergyMajorant.lean) | AD (4.24) and (4.25), `d = 2`: for every `δ > 0` the normalized energy of the coarsened minimizer of `μ` and of the coarsened maximizer of `ν` on a cube `□` is almost surely below a measurable function of expectation at most `C(δ) \|q\|² size(□)^δ`. |
+| [`sum_sq_planarNuGradAvg_sub_le`](Rigidity/Proofs/Percolation/PlanarNablaAffineSq.lean), [`exists_lintegral_planarNuGradAvg_sub_le`](Rigidity/Proofs/Percolation/PlanarNablaAffineMoments.lean) | AD (4.26) in `L²(P)`, `d = 2`: the spatial average of the coarsened gradient of the maximizer of `ν(V, p)` is within `C \|p\|² 3^{−n/4}`, in the second moment, of `p`. |
+| [`exists_flatness_le_multiscale`](Rigidity/Proofs/Percolation/PlanarFlatnessBound.lean) | the multiscale Poincaré inequality (AD Proposition A.2) in the form of the first display of the proof of Lemma 5.8: the mean square of `w − ℓ_ξ` minus its mean is at most `C 3^{2n}(‖∇w‖² + \|ξ\|²) + C 3^m ∑_{k=n}^{m−1} 3^k (…)`. |
+| [`exists_planarMuFlatness_majorant`](Rigidity/Proofs/Percolation/PlanarFlatnessMu.lean), [`exists_lintegral_planarMuFlatness_le`](Rigidity/Proofs/Percolation/PlanarFlatnessMu.lean), [`exists_planarNuFlatness_majorant`](Rigidity/Proofs/Percolation/PlanarFlatnessNu.lean), [`exists_lintegral_planarNuFlatness_le`](Rigidity/Proofs/Percolation/PlanarFlatnessNu.lean), [`exists_planarMuFlatness_majorant_ae`](Rigidity/Proofs/Percolation/PlanarFlatnessAE.lean), [`exists_planarNuFlatness_majorant_ae`](Rigidity/Proofs/Percolation/PlanarFlatnessAE.lean) | AD Lemma 5.8, (5.32) and (5.33), `d = 2`: `E[\|□_{n+1}\|⁻¹ ∑ \|[u]_𝒫(x) − x · ā_{□_n}⁻¹ q − c\|²] ≤ C \|q\|² 3^{2n}(3^{−n/10} + 3^{−n} ∑_{k ≤ n} 3^k τ_k)` and the same for `v` and `ξ`, `c` the mean; the `_ae` forms hold from Lemmas 5.7 and 5.5 alone, with an almost-sure measurable majorant. |
+| [`caccioppoli_dist`](Rigidity/Proofs/Percolation/PlanarOmegaCaccioppoli.lean), [`clusterForm_restrict_le_caccioppoli`](Rigidity/Proofs/Percolation/PlanarOmegaCaccioppoli.lean) | AD Lemma 3.5 from `□_{n+1}` to `□_n` on planar clusters: `B_{□_n}(w, w) ≤ 16 (3^n − 1)⁻² ∑_{C_*(□_{n+1})} (w − c)²` for `w` harmonic in the interior (the Caccioppoli step (5.39) of the proof of Lemma 5.9). |
+| [`planarNu_sub_planarMu_sub_le`](Rigidity/Proofs/Percolation/PlanarOmegaPointwise.lean), [`planarOmega_chain`](Rigidity/Proofs/Percolation/PlanarOmegaChain.lean), [`planarOmega_real_le`](Rigidity/Proofs/Percolation/PlanarOmegaAssembly.lean), [`planarOmega_integral_le`](Rigidity/Proofs/Percolation/PlanarOmegaAssembly.lean) | the pointwise chain of the proof of Lemma 5.9, (5.38) to (5.41): `ν(V, p) − μ(V, q) − q · p` is bounded by the boundary error, three times the energies of the differences of Lemma 5.4, and the Caccioppoli term in the coarsening errors and the flatness errors of Lemma 5.8, and then, summed over the subcubes, by the subadditivity gaps; its integrated form. |
+| [`exists_boundaryMajorant`](Rigidity/Proofs/Percolation/PlanarOmegaBad.lean), [`exists_lintegral_not_resolved_le`](Rigidity/Proofs/Percolation/PlanarOmegaBad.lean), [`exists_badMajorant`](Rigidity/Proofs/Percolation/PlanarOmegaBad.lean), [`exists_lintegral_subMuSum_le`](Rigidity/Proofs/Percolation/PlanarOmegaIntegrals.lean), [`exists_lintegral_subNuSum_le`](Rigidity/Proofs/Percolation/PlanarOmegaIntegrals.lean), [`exists_lintegral_nuSubGap_le`](Rigidity/Proofs/Percolation/PlanarOmegaIntegrals.lean), [`exists_muSubGap_majorant`](Rigidity/Proofs/Percolation/PlanarOmegaIntegrals.lean), [`exists_subadditivityMajorant`](Rigidity/Proofs/Percolation/PlanarOmegaMajorants.lean), [`exists_coarseError_majorant`](Rigidity/Proofs/Percolation/PlanarOmegaMajorants.lean), [`planarTau_le_weighted`](Rigidity/Proofs/Percolation/PlanarOmegaRates.lean) | the expectations of the terms of the chain: the boundary term (`C \|p\|₁ 3^{−n/2}`), the event that `□_n` is resolved and `□_{n+1}` is not (`C 9^{−n}`), the sums of `−μ` and `ν` over the subcubes by approximate stationarity, the subadditivity gaps (`C \|ξ\|₁² \|U\| 3^{−n/2}`), and the coarsening error through the reach of the partition, each with a measurable majorant, and the comparison `τ_n ≤ 3^{−n} ∑_{k ≤ n} 3^k τ_k`. |
+| [`exists_planarOmegaD_le_of_inputs`](Rigidity/Proofs/Percolation/PlanarOmegaDecay.lean), [`exists_planarOmegaD_decay`](Rigidity/Proofs/Percolation/PlanarOmegaDecay.lean) | AD Lemma 5.9, (5.37), `d = 2`, in the form used by Lemma 5.10: for `n ≥ N`, `D_n ≤ K (3^{−n/10} + 3^{−n} ∑_{k ≤ n} 3^k τ_k)`, that is `D_n ≤ C σⁿ + C ∑_{l ≤ n} ρ^{n−l} τ_l` with `σ = 3^{−1/10}` and `ρ = 1/3`, without the absolute value. |
+| [`Rigidity.Percolation.planarMuLimit_eq_of_inputs`](Rigidity/Proofs/Percolation/PlanarOmegaDecay.lean) | AD Proposition 5.2, qualitative part, `d = 2`: `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q` from `PlanarWeakConvergence`, `PlanarRestrictQuadCoarsenMu` and `PlanarRestrictQuadCoarsenNu`; the hypothesis `h59` of `planarMuLimit_eq_of_decay` is discharged by `exists_planarOmegaD_decay`. |
+
+The theorems of the table and their supporting results depend only on axioms among `propext`,
+`Classical.choice` and `Quot.sound`; thirty-three of them (thirty theorems and three definitions,
+those of the three hypotheses) have axiom reports in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The remaining hypotheses of the
+identification are Lemma 5.7 (`PlanarWeakConvergence`) and Lemma 5.5
+(`PlanarRestrictQuadCoarsenMu`, `PlanarRestrictQuadCoarsenNu`), which are the inputs that
+[Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5](#clusters-of-integer-cubes-the-meyers-estimate-and-the-coarse-energy-bounds-toward-lemma-55)
+reduces to the good events of the Meyers estimate; they are not proved here.
+
+Departures from Armstrong and Dario:
+
+- **Index of the sum in (5.12).** AD print the sum `∑_{k=n}^{m+1} τ_k` in display (5.12) of
+  Lemma 5.5; the last display of its proof and its use in the proof of Lemma 5.8 give
+  `∑_{k=n}^{m−1} τ_k`, and the hypotheses `PlanarRestrictQuadCoarsenMu` and
+  `PlanarRestrictQuadCoarsenNu` are stated with the sum over `k ∈ [n, m)`.
+- **Lemma 5.7 for every cube.** `PlanarWeakConvergence` is stated for every triadic cube of scale `n`;
+  AD state it for `□_n` and use it for every translate `z + □_n` by stationarity.
+- **Flatness.** The flatness is measured with the mean of `w − ℓ_ξ` subtracted instead of AD's additive
+  normalization of `u` and `v`; both rates in Lemma 5.8 are `3^{−n/10}` (AD print `3^{−2n/(2d+1)}` for
+  `v`), which suffices for Lemma 5.9.
+- **Lemma 5.9.** It is stated without the absolute value, as used in Lemma 5.10 and in the hypothesis
+  `h59` of `planarMuLimit_eq_of_decay`.
+- **The maximizer of `ν`.** `planarNuSolution` is the maximizer on the partition event for resolved
+  cubes and `0` otherwise, AD's convention `v(·, □, p) = 0` off `𝒫_*`.
+- **Measurability.** Lower integrals are subadditive only for measurable summands. In the proof of
+  Lemma 5.9 only one summand, the gap of `ν`, is not shown to be measurable; every other term has a
+  measurable majorant, and measurability of the quantities of Lemma 5.5 is part of its hypothesis.
 
 ## The Dirichlet problem and the excess-decay iteration
 
@@ -1195,7 +1335,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 227 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 317 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1218,9 +1358,13 @@ Departures from Armstrong and Dario:
   [Energy defects, finite-volume matrices and the identification of the limit for d = 2](#energy-defects-finite-volume-matrices-and-the-identification-of-the-limit-for-d--2),
   the sixty-one theorems and four definitions of
   [Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5](#clusters-of-integer-cubes-the-meyers-estimate-and-the-coarse-energy-bounds-toward-lemma-55),
+  the fifty-four theorems and three definitions of
+  [The subadditive quantities on the clusters of triadic cubes of Z^d](#the-subadditive-quantities-on-the-clusters-of-triadic-cubes-of-zd),
+  the thirty theorems and three definitions of
+  [Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 for d = 2](#lemmas-58-and-59-and-the-qualitative-part-of-proposition-52-for-d--2),
   and the nineteen theorems of
   [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration).
-  Each of the 227 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 317 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1251,10 +1395,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1149 Lean files with 208,619 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1191 Lean files with 219,599 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (406 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (544 lines) are counted separately.
 
 ## Building
 

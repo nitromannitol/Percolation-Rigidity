@@ -342,7 +342,18 @@ fidelity:
     bounds on the reach and on the cell averages of the weight remain hypotheses, so that Lemma 5.5
     and the steps of Lemma 5.7 are not proved; the second inequality of the display in Step 3 of
     Lemma 5.5 does not hold as written and is replaced by the Hoelder inequality inside each cell
-    with the cell average of the weight), and for the Dirichlet problem and
+    with the cell average of the weight), for the subadditive quantities on the clusters of
+    triadic cubes of Z^d (Armstrong and Dario, Section 4 and Definition 5.1, every d >= 2: mu and
+    nu on resolved triadic cubes, nu local with exactly stationary expectation in place of (4.40),
+    the expectation of nu without the indicator of the resolved event, the rate 3^(-n/2) in place of
+    3^(-n) in (4.49), Lemma 4.7 in expectation with a deterministic slope, and the homogenized matrix
+    by polarization of the limit; the localization of mu and the limit of its expectation are proved
+    for d = 2 only), for Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 in
+    dimension two (Armstrong and Dario, from Lemma 5.7 and from Lemma 5.5, which remain the
+    hypotheses PlanarWeakConvergence, PlanarRestrictQuadCoarsenMu and PlanarRestrictQuadCoarsenNu;
+    the sum in (5.12) is taken over k = n, ..., m - 1 in place of the printed upper limit m + 1,
+    the flatness is measured with the mean subtracted, and both flatness rates are 3^(-n/10)), and
+    for the Dirichlet problem and
     the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,
     a Hardy-weighted boundary-layer estimate in place of the Meyers and H^2 estimates of
