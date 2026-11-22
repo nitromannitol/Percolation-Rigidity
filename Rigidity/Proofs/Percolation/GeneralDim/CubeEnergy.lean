@@ -207,12 +207,12 @@ theorem cubeEval_apply {U : TriadicCube d} (x : Vertex d) (u : CubeFun ω U) :
     cubeEval ω U x u = cubeExtend ω U u x := rfl
 
 /-- Evaluation of a function on the cluster at a vertex of the cluster. -/
-noncomputable def cubeProj {U : TriadicCube d} (y : ↥(crossingClusterVertices ω U)) :
+noncomputable def cubeClusterProj {U : TriadicCube d} (y : ↥(crossingClusterVertices ω U)) :
     Module.Dual ℝ (CubeFun ω U) :=
   LinearMap.proj (R := ℝ) (φ := fun _ : ↥(crossingClusterVertices ω U) => ℝ) y
 
-theorem cubeProj_apply {U : TriadicCube d} (y : ↥(crossingClusterVertices ω U))
-    (u : CubeFun ω U) : cubeProj y u = u y := rfl
+theorem cubeClusterProj_apply {U : TriadicCube d} (y : ↥(crossingClusterVertices ω U))
+    (u : CubeFun ω U) : cubeClusterProj y u = u y := rfl
 
 /-- **Coarse pairing.** `ℓ_q u = ∑ q_i ([u]_𝒫(x + e_i) - [u]_𝒫(x))` over the lattice edges inside
 `U`, which is `⟨q, ∇[u]_𝒫⟩_U` with each edge counted once. -/
@@ -242,7 +242,7 @@ noncomputable def cubeFluxPairing (ω : Configuration d) (U : TriadicCube d) (p 
     Module.Dual ℝ (CubeFun ω U) :=
   (1 / 2 : ℝ) • ∑ x : ↥(crossingClusterVertices ω U), ∑ y : ↥(crossingClusterVertices ω U),
     if (openGraph ω).Adj x.1 y.1 then
-      (∑ i, p i * ((y.1 i : ℝ) - x.1 i)) • (cubeProj y - cubeProj x)
+      (∑ i, p i * ((y.1 i : ℝ) - x.1 i)) • (cubeClusterProj y - cubeClusterProj x)
     else 0
 
 theorem cubeFluxPairing_apply {U : TriadicCube d} (p : Fin d → ℝ) (u : CubeFun ω U) :
@@ -253,7 +253,7 @@ theorem cubeFluxPairing_apply {U : TriadicCube d} (p : Fin d → ℝ) (u : CubeF
   congr 1
   refine Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => ?_
   split_ifs
-  · simp only [LinearMap.smul_apply, LinearMap.sub_apply, cubeProj_apply, smul_eq_mul]
+  · simp only [LinearMap.smul_apply, LinearMap.sub_apply, cubeClusterProj_apply, smul_eq_mul]
   · simp
 
 /-- A vertex lies in the lattice interior `int(U)` of a triadic cube when all its lattice
@@ -265,7 +265,7 @@ def TriadicCube.IsLatticeInterior (U : TriadicCube d) (x : Vertex d) : Prop :=
 noncomputable def cubeLaplacianAt (ω : Configuration d) (U : TriadicCube d)
     (x : ↥(crossingClusterVertices ω U)) : Module.Dual ℝ (CubeFun ω U) :=
   ∑ y : ↥(crossingClusterVertices ω U),
-    if (openGraph ω).Adj x.1 y.1 then cubeProj y - cubeProj x else 0
+    if (openGraph ω).Adj x.1 y.1 then cubeClusterProj y - cubeClusterProj x else 0
 
 theorem cubeLaplacianAt_apply {U : TriadicCube d} (x : ↥(crossingClusterVertices ω U))
     (u : CubeFun ω U) :
@@ -273,7 +273,7 @@ theorem cubeLaplacianAt_apply {U : TriadicCube d} (x : ↥(crossingClusterVertic
   simp only [cubeLaplacianAt, LinearMap.sum_apply]
   refine Finset.sum_congr rfl fun y _ => ?_
   split_ifs
-  · simp only [LinearMap.sub_apply, cubeProj_apply]
+  · simp only [LinearMap.sub_apply, cubeClusterProj_apply]
   · simp
 
 /-- The space `A_*(U)` of functions on the cluster harmonic at its vertices in `int(U)`. -/

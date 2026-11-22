@@ -111,17 +111,17 @@ theorem exists_cubeHarmonic_eq_on_boundary {U : TriadicCube d} (g : CubeFun ω U
     exact h.2
 
 /-- The affine function `x ↦ p · x` on the cluster. -/
-noncomputable def cubeAffine (ω : Configuration d) (U : TriadicCube d) (p : Fin d → ℝ) :
+noncomputable def cubeClusterAffine (ω : Configuration d) (U : TriadicCube d) (p : Fin d → ℝ) :
     CubeFun ω U :=
   fun x => ∑ i, p i * (x.1 i : ℝ)
 
 /-- The flux pairing is the Dirichlet form against the affine function. -/
 theorem cubeFluxPairing_eq_cubeForm {U : TriadicCube d} (p : Fin d → ℝ) (w : CubeFun ω U) :
-    cubeFluxPairing ω U p w = cubeForm ω U w (cubeAffine ω U p) := by
+    cubeFluxPairing ω U p w = cubeForm ω U w (cubeClusterAffine ω U p) := by
   rw [cubeFluxPairing_apply, cubeForm_apply]
   congr 1
   refine Finset.sum_congr rfl fun x _ => Finset.sum_congr rfl fun y _ => ?_
-  simp only [cubeFormTerm, cubeAffine]
+  simp only [cubeFormTerm, cubeClusterAffine]
   split_ifs
   · have e : ∑ i, p i * (x.1 i : ℝ) - ∑ i, p i * (y.1 i : ℝ) =
         -∑ i, p i * ((y.1 i : ℝ) - x.1 i) := by
@@ -139,7 +139,7 @@ theorem exists_affine_boundary_of_cubeNu_variation (hd : 0 < d) (hP : PartitionE
     (hvar : ∀ w ∈ cubeHarmonic ω U, cubeForm ω U w v = cubeFluxPairing ω U p w) :
     ∃ c : ℝ, ∀ x : ↥(crossingClusterVertices ω U), ¬ U.IsLatticeInterior x.1 →
       v x = ∑ i, p i * (x.1 i : ℝ) + c := by
-  set a := cubeAffine ω U p
+  set a := cubeClusterAffine ω U p
   have horth : ∀ w ∈ cubeHarmonic ω U, cubeForm ω U w (v - a) = 0 := by
     intro w hw
     rw [map_sub, hvar w hw, cubeFluxPairing_eq_cubeForm, sub_self]
@@ -192,13 +192,13 @@ theorem cubeForm_le_of_cubeNu_variation {U : TriadicCube d} (p : Fin d → ℝ) 
 most half the energy of any function on the cluster equal to `x ↦ p · x` up to a function
 vanishing at the boundary vertices. -/
 theorem cubeNu_le_of_affine_boundary {U : TriadicCube d} (p : Fin d → ℝ)
-    {w : CubeFun ω U} (hw : w - cubeAffine ω U p ∈ cubeZeroBoundary ω U) :
+    {w : CubeFun ω U} (hw : w - cubeClusterAffine ω U p ∈ cubeZeroBoundary ω U) :
     cubeNu ω U p ≤ cubeForm ω U w w / 2 / U.latticeVolume := by
   obtain ⟨v, hv, hvar, hν⟩ := exists_cubeNu_maximizer (ω := ω) (U := U) p
   rw [hν]
   have hvol := U.latticeVolume_pos
   refine div_le_div_of_nonneg_right ?_ hvol.le
-  set a := cubeAffine ω U p
+  set a := cubeClusterAffine ω U p
   have h1 : cubeFluxPairing ω U p v = cubeForm ω U v w := by
     rw [cubeFluxPairing_eq_cubeForm]
     have h0 := cubeForm_eq_zero_of_mem hw hv
@@ -224,11 +224,11 @@ vertices (the lower bound is `cubeNu_le_of_affine_boundary`), at the maximizer m
 constant. -/
 theorem exists_cubeNu_eq_of_affine_boundary (hd : 0 < d) (hP : PartitionEvent ω)
     {U : TriadicCube d} (hU : PartitionResolved ω U) (p : Fin d → ℝ) :
-    ∃ w : CubeFun ω U, w - cubeAffine ω U p ∈ cubeZeroBoundary ω U ∧
+    ∃ w : CubeFun ω U, w - cubeClusterAffine ω U p ∈ cubeZeroBoundary ω U ∧
       cubeNu ω U p = cubeForm ω U w w / 2 / U.latticeVolume := by
   obtain ⟨v, -, -, hν, c, hc⟩ := exists_cubeNu_maximizer_affine hd hP hU p
   refine ⟨v - fun _ => c, fun x hx => ?_, ?_⟩
-  · simp only [Pi.sub_apply, cubeAffine]
+  · simp only [Pi.sub_apply, cubeClusterAffine]
     rw [hc x hx]
     ring
   · rw [hν]
