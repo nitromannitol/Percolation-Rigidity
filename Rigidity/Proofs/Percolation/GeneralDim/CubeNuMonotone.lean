@@ -13,8 +13,8 @@ For supercritical bond percolation on `ℤ^d`, `d ≥ 2`, and triadic cubes `V`,
 The subadditivity of `ν` with the exceptional vertices (`CubeNuSubadditiveError`), integrated
 with `s = 3^{n/2}`, the exact stationarity of `E[ν]` across cubes of the same scale
 (`CubeNuLocal`) and the bound `E[G] ≤ |U| (C exp(-c 3ⁿ) + C' 3^{-n})` on the expected number of
-exceptional vertices give the bound. This is Armstrong and Dario, (4.48) for `ν` (with the rate
-from (4.33) in expectation), in every dimension `d ≥ 2`; the planar form is in
+exceptional vertices give the bound. This is Armstrong and Dario, (4.49), in every dimension
+`d ≥ 2`, with the rate `3^{-n/2}` in place of their `3^{-n}`; the planar form is in
 `PlanarNuConvergence`.
 -/
 
@@ -263,8 +263,8 @@ theorem integral_cubeNu_le_of_scale_le_aux [NeZero d] (hd : 2 ≤ d) {prob : uni
   rw [e]
   exact div_nonneg hmono hvol.le
 
-/-- **Approximate monotonicity of `E[ν]` in the scale** (Armstrong and Dario, (4.48) for `ν`, in
-every dimension `d ≥ 2`): for triadic cubes `V`, `U` of scales `n ≤ m`,
+/-- **Approximate monotonicity of `E[ν]` in the scale** (Armstrong and Dario, (4.49), in every
+dimension `d ≥ 2`, with the rate `3^{-n/2}`): for triadic cubes `V`, `U` of scales `n ≤ m`,
 `E[ν(U, p)] ≤ E[ν(V, p)] + C |p|₁² / 3^{n/2}`. -/
 theorem exists_integral_cubeNu_le_of_scale_le [NeZero d] (hd : 2 ≤ d) {prob : unitInterval}
     (hpc : criticalProbability d < (prob : ℝ)) :
