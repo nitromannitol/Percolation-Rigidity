@@ -368,7 +368,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.three_pow_reachScale_le_partitionReach_box
 
 -- The coarse energy, the pairings with bounded fields and the restriction defect (Armstrong and Dario,
--- display (4.10), Lemmas 5.5 and 5.7, d = 2)
+-- display (4.24), Lemmas 5.5 and 5.7, d = 2)
 #print axioms Rigidity.Proofs.Cluster.sum_gradNormIn_coarse_sq_le_clusterForm
 #print axioms Rigidity.Proofs.Cluster.edgePairing_clusterExtend_sq_le_clusterForm
 #print axioms Rigidity.Proofs.Cluster.sup_planarReach_pow_seven_le

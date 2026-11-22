@@ -7,7 +7,7 @@ On a triadic cube `V` resolved by the planar partition, Lemma 3.3 with `s = 2` a
 between the energy densities and the Dirichlet form give, for a function `w` on the cluster and a
 weight `W ≥ 3 planarReach` on `V`,
 `∑_{x ∈ V} |∇[w]_𝒫|²(x) ≤ C² (max_V W)³ B(w, w)` (`sum_gradNormIn_coarse_sq_le_clusterForm`),
-the deterministic part of display (4.10) of Armstrong and Dario (the bound on the coarsened
+the deterministic part of display (4.24) of Armstrong and Dario (the bound on the coarsened
 gradient of the minimizers of `μ`, used with `B(u, u) = -2 |V| μ(V, q)` for the minimizer). With
 the per-subcube estimate through the Meyers estimate, the pairing of the coarsened gradient of
 `w` with a bounded field on `V` is then bounded by a multiple of `B(w, w)` alone

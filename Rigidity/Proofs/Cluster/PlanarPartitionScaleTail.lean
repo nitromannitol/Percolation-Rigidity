@@ -10,8 +10,9 @@ most `2 exp(-3^s/θ)` (`exists_measure_isMaximalStopping_le`). Summing over the 
 set `S` and the scales `s > j`, for every `m` there is `C < ∞` with
 `P[some vertex of S has a partition cube of scale > j] ≤ C |S| 3^{-(j+1)(m+1)}`
 (`exists_measure_partitionScale_gt_le`). With `S` a triadic cube of scale `m₀` and `j = ⌈n/2⌉`,
-`n ≥ 9 m₀ / 10`, this is the event `Γ` of the proof of Lemma 5.5 of Armstrong and Dario (all
-partition cubes at most `3^{n/2}`), on which the inner squares of the subcubes are resolved.
+`n ≥ 9 m₀ / 10`, this bounds the event that some cube of the partition has scale above `j`
+(all partition cubes of scale at most `n/2` off it, in the proof of Lemma 5.5 of Armstrong and Dario),
+on which the inner squares of the subcubes are resolved.
 -/
 
 namespace Rigidity.Percolation

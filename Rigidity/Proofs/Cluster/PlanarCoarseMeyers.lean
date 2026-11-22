@@ -4,7 +4,7 @@ import Rigidity.Proofs.Cluster.MeyersPlanarBox
 # Coarse gradients through the Meyers estimate
 
 The deterministic core of Step 3 of the proof of Lemma 5.5 of Armstrong and Dario, display
-(5.18) there, in dimension two. The coarsening `[w]_𝒫` of a function `w` on the cluster `𝒞(V)` of
+(5.16) there, in dimension two. The coarsening `[w]_𝒫` of a function `w` on the cluster `𝒞(V)` of
 a triadic cube `V` has, on a resolved integer square `B` whose cluster lies in `𝒞(V)`, the energy
 bound of Lemma 3.3 with the weight `(3^{ρ'(z)})³`, where `ρ'` is the pair reach scale of `B`
 (`planarBox_sum_gradNormIn_sq_le_clusterGradSq`). In each cell `□'` of a finite family covering
@@ -259,7 +259,7 @@ theorem planarBox_sum_gradNormIn_sq_le_clusterGradSq (hP : PlanarPartitionEvent 
   exact mul_le_mul_of_nonneg_left (clusterGradSq_le_of_subset ω hBU w z) (by positivity)
 
 /-- **Coarse gradients through the Meyers estimate** (the deterministic core of Step 3 of the proof
-of Lemma 5.5 of Armstrong and Dario, display (5.18), in dimension two). Let `B` be a resolved
+of Lemma 5.5 of Armstrong and Dario, display (5.16), in dimension two). Let `B` be a resolved
 integer square whose cluster lies in the cluster `𝒞(V)` of a triadic cube `V`, `w` a function,
 `E = |∇w 1_{𝐚≠0}|²` on `𝒞(V)`, `W ≥ 0` a weight with `W ≥ 3^{ρ'}` on `𝒞(B)`, `p > 1` with Hölder
 conjugate `q`, and let a finite family of cells `□'` cover `𝒞(B)`, with `3□' ⊆ V`, overlap of the

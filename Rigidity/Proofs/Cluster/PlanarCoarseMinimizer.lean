@@ -12,7 +12,7 @@ minimizer `u` of `μ(V, q)`, `B(u, u) = -2 |V| μ(V, q)` and `-μ(V, q) ≤ 9 |q
 (`ofReal_neg_planarMu_le`), so that
 `∑_{x ∈ V} |∇[u]_𝒫|²(x) ≤ 18 C² |q|₁² (3 max_V R)³ ∑_{a ∈ V} 234256 R(a)⁴`
 with `R = planarReach` (`ofReal_sum_gradNormIn_coarse_planarMuMinimizer_le`). This is the
-deterministic part of display (4.10) of Armstrong and Dario in dimension two, with the reach of the
+deterministic part of display (4.24) of Armstrong and Dario in dimension two, with the reach of the
 planar partition in place of the sizes of the partition cubes; its expectation is controlled by the
 moments of the reach.
 -/
@@ -112,7 +112,7 @@ theorem ofReal_sum_gradNormIn_coarse_sq_le (hP : PlanarPartitionEvent ω) {V : T
         gcongr
     _ = _ := by ring
 
-/-- **The coarsened gradient of the minimizer of `μ`** (Armstrong and Dario, (4.10),
+/-- **The coarsened gradient of the minimizer of `μ`** (Armstrong and Dario, (4.24),
 deterministic part, in dimension two): on a resolved cube `V`,
 `∑_{x ∈ V} |∇[u(·, V, q)]_𝒫|²(x) ≤ 18 C² |q|₁² (3 max_V R)³ ∑_{a ∈ V} 234256 R(a)⁴`. -/
 theorem ofReal_sum_gradNormIn_coarse_planarMuMinimizer_le (hP : PlanarPartitionEvent ω)

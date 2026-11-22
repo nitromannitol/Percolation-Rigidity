@@ -13,7 +13,7 @@ when the partition cubes of `V` have scale at most `j < n`, `W ≥ 3 planarReach
 the cell averages `(avg_{□'} W^{3q})^{1/q}` (`edgePairing_clusterExtend_sq_le_of_meyers`). With
 `w = u(·, □_m, q)|_V - u(·, V, q)` the form `B(w, w)` is twice the summand of the energy of the
 differences of Lemma 5.4 (`planarMuDefect`); this is the deterministic estimate behind display
-(5.19) of Armstrong and Dario (Lemma 5.5, Step 3), the boundary term being estimated in Steps 2
+(5.15) and (5.16) of Armstrong and Dario (Lemma 5.5, Step 3), the boundary term being estimated in Steps 2
 and 4.
 -/
 

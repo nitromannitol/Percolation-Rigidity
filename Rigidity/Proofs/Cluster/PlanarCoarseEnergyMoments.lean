@@ -4,7 +4,7 @@ import Rigidity.Proofs.Percolation.PlanarReachMoments
 /-!
 # The expected energy of the coarsened minimizer of `μ`
 
-Armstrong and Dario, display (4.10), in expectation, in dimension two: for every `a ≥ 2` there is
+Armstrong and Dario, display (4.24), in expectation, in dimension two: for every `a ≥ 2` there is
 `C < ∞` such that for every triadic cube `V` and slope `q`,
 `E[∑_{x ∈ V} |∇[u(·, V, q)]_𝒫|²(x)] ≤ C |q|₁² |V|^{1 + 1/a}`
 (`exists_lintegral_coarse_minimizer_le`), the expectation being taken on the planar partition event
@@ -96,7 +96,7 @@ theorem ofReal_coarse_minimizer_le_reachSum (hP : PlanarPartitionEvent ω) {V : 
           S ^ 7 := by ring
     _ ≤ _ := by gcongr
 
-/-- **The expected energy of the coarsened minimizer of `μ`** (Armstrong and Dario, (4.10), in
+/-- **The expected energy of the coarsened minimizer of `μ`** (Armstrong and Dario, (4.24), in
 expectation, in dimension two). For every `a ≥ 2` there is `C < ∞` with
 `E[∑_{x ∈ V} |∇[u(·, V, q)]_𝒫|²(x)] ≤ C |q|₁² |V| |V|^{1/a}` for every triadic cube `V` and slope
 `q`, on the partition event and the resolution of `V`. -/
