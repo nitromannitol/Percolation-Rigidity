@@ -147,6 +147,14 @@ import Rigidity.Proofs.Percolation.PlanarOmegaRates
 import Rigidity.Proofs.Regularity.ClusterOrderOne
 import Rigidity.Proofs.Regularity.OrderOneEndpoint
 import Rigidity.Proofs.Regularity.OrderOneOrigin
+import Rigidity.Proofs.Cluster.PlanarRHLocal
+import Rigidity.Proofs.Cluster.PlanarRHMeyers
+import Rigidity.Proofs.Cluster.PlanarRHPartition
+import Rigidity.Proofs.Cluster.PlanarRHEvent
+import Rigidity.Proofs.Cluster.PlanarRHProb
+import Rigidity.Proofs.Cluster.PlanarRHRestrictGood
+import Rigidity.Proofs.Cluster.PlanarRHRestrictQuad
+import Rigidity.Proofs.Cluster.PlanarRHWeakConv
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -557,3 +565,15 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Regularity.exists_forall_le_of_orderOneEndpoint
 #print axioms Rigidity.Proofs.Regularity.orderOneEndpointData_cluster
 #print axioms Rigidity.Proofs.Regularity.clusterLiftMap_mem_harmonicGrowthSpace
+-- The partition of Definition 3.7 of Armstrong and Dario from the local family of reverse Hoelder
+-- cubes, and Lemmas 5.5 and 5.7 and Proposition 5.2, qualitative part, for p > p_c (d = 2)
+#print axioms Rigidity.Proofs.Cluster.measurableSet_not_mem_planarRHGood_local
+#print axioms Rigidity.Proofs.Cluster.planar_meyers_rh_uniform
+#print axioms Rigidity.Proofs.Cluster.planarRHPartition_of_failureBound
+#print axioms Rigidity.Proofs.Cluster.planarRHCube_of_scales
+#print axioms Rigidity.Proofs.Cluster.planarRHFailureBound_holds
+#print axioms Rigidity.Proofs.Cluster.planarRHPartition_holds
+#print axioms Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenMu_holds
+#print axioms Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenNu_holds
+#print axioms Rigidity.Proofs.Cluster.planarWeakConvergence_holds
+#print axioms Rigidity.Proofs.Cluster.planarMuLimit_eq

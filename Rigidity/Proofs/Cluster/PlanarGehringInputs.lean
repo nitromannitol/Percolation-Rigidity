@@ -26,6 +26,11 @@ Meyers estimate here (`planar_meyers_uniform`) uses instead the hypotheses of Le
 predecessor (planar partition scales at most `k` on `3□'` and
 `∑_{z ∈ 3□'} planarReach(z)^8 ≤ C_G |3□'|`). This family depends on `𝒫` at every scale, so
 Propositions 2.1 (iv) and 2.4 do not apply to it as printed.
+
+The theorems from `p > p_c(2)` alone (`planarRestrictQuadCoarsenMu_holds`,
+`planarRestrictQuadCoarsenNu_holds`, `planarWeakConvergence_holds`, `planarMuLimit_eq`) do not use
+`PlanarGehringPartition`: they use the partition `𝓡` of Definition 3.7 built from the local family
+`planarRHGood` of reverse Hölder cubes (`planarRHPartition_holds`).
 -/
 
 namespace Rigidity.Proofs.Cluster

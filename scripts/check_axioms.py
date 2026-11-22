@@ -370,6 +370,18 @@ further = {
          'Rigidity.Proofs.Regularity.exists_forall_le_of_orderOneEndpoint',
          'Rigidity.Proofs.Regularity.orderOneEndpointData_cluster',
          'Rigidity.Proofs.Regularity.clusterLiftMap_mem_harmonicGrowthSpace'],
+    'the partition of Definition 3.7 of Armstrong and Dario from the local family of reverse Hölder '
+    'cubes, and Lemmas 5.5 and 5.7 and Proposition 5.2, qualitative part, for p > p_c (d = 2)':
+        ['Rigidity.Proofs.Cluster.measurableSet_not_mem_planarRHGood_local',
+         'Rigidity.Proofs.Cluster.planar_meyers_rh_uniform',
+         'Rigidity.Proofs.Cluster.planarRHPartition_of_failureBound',
+         'Rigidity.Proofs.Cluster.planarRHCube_of_scales',
+         'Rigidity.Proofs.Cluster.planarRHFailureBound_holds',
+         'Rigidity.Proofs.Cluster.planarRHPartition_holds',
+         'Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenMu_holds',
+         'Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenNu_holds',
+         'Rigidity.Proofs.Cluster.planarWeakConvergence_holds',
+         'Rigidity.Proofs.Cluster.planarMuLimit_eq'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
