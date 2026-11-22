@@ -6,8 +6,8 @@ import Rigidity.Proofs.Percolation.PlanarFiniteVolumeRate
 
 For `p > p_c(2)`, Lemma 5.9 of Armstrong and Dario holds in the form of the hypothesis `h59` of
 `exists_planarOmegaD_le_pow_of_decay`, `exists_planarTau_le_pow_of_decay` and
-`exists_abs_planarAhomInvLimit_sub_le_of_decay` (`exists_planarOmegaD_decay` with Lemmas 5.5 and 5.7,
-which are theorems in dimension two). Hence `D_n`, `τ_n` and the distance from `ā_{□_n}⁻¹` to
+`exists_abs_planarAhomInvLimit_sub_le_of_decay` (`exists_planarOmegaD_decay` with Lemmas 5.5 and
+5.7, which are theorems in dimension two). Hence `D_n`, `τ_n` and the distance from `ā_{□_n}⁻¹` to
 `ā⁻¹` decay geometrically (Lemma 5.10, Steps 3 and 4), and the expectations of `μ` and `ν` converge
 at an algebraic rate: there are `α ∈ (0, 1/4]` and `C` with
 
@@ -80,10 +80,6 @@ theorem exists_abs_planarAhom_inv_sub_planarAhomInvFinite_le {p : unitInterval}
   have h' := exists_abs_planarAhomInvLimit_sub_le_of_decay hpc hC (by positivity)
     three_rpow_neg_one_div_ten_lt_one (by norm_num) (by norm_num) h
   rwa [planarAhomInvLimit_eq_inv hpc] at h'
-
-/-- `(|q₀| + |q₁|)² ≤ 2 (q₀² + q₁²)`. -/
-theorem abs_add_abs_sq_le (q : Fin 2 → ℝ) : (|q 0| + |q 1|) ^ 2 ≤ 2 * (q 0 ^ 2 + q 1 ^ 2) := by
-  nlinarith [sq_abs (q 0), sq_abs (q 1), sq_nonneg (|q 0| - |q 1|)]
 
 /-- The `ℓ¹` norm of `M v` is at most the sum of the absolute values of the entries of `M` times
 the `ℓ¹` norm of `v`. -/
@@ -365,7 +361,8 @@ theorem exists_le_three_rpow_of_geometric {ι : Type*} {x : ι → ℕ → ℝ} 
       have : (n : ℝ) ≤ N := by exact_mod_cast hn.le
       nlinarith
     have b : M * w i ≤ max M 0 * w i := mul_le_mul_of_nonneg_right (le_max_left _ _) hwi
-    have c : max M 0 * w i ≤ max M 0 * (3 : ℝ) ^ ((N : ℝ) * α) * w i * (3 : ℝ) ^ (-(n : ℝ) * α) := by
+    have c : max M 0 * w i ≤
+        max M 0 * (3 : ℝ) ^ ((N : ℝ) * α) * w i * (3 : ℝ) ^ (-(n : ℝ) * α) := by
       have hmw : 0 ≤ max M 0 * w i := mul_nonneg (le_max_right _ _) hwi
       calc max M 0 * w i = max M 0 * w i * 1 := (mul_one _).symm
         _ ≤ max M 0 * w i * ((3 : ℝ) ^ ((N : ℝ) * α) * (3 : ℝ) ^ (-(n : ℝ) * α)) :=
