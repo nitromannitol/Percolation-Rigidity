@@ -334,7 +334,7 @@ fidelity:
     field of Lemma 5.7, Step 1, as the exactly divergence free discrete curl of a cut off stream
     function, the bound of Lemma 5.9 for the quantity D_n a hypothesis of the identification and of
     the geometric rates of Lemma 5.10, whose Step 2 is proved through exact recursions for the
-    weighted averages, and the rate of Proposition 5.2 not proved), for the Sobolev inequality, the
+    weighted averages), for the Sobolev inequality, the
     reverse Hoelder inequality and the Meyers estimate on the clusters of integer cubes and the
     coarse energy bounds toward Lemma 5.5 (Armstrong and Dario, Lemma 3.6, Propositions 3.4 and
     3.8 with the Sobolev hypothesis proved on the cluster of the triple of each Gehring cube, the
@@ -363,6 +363,15 @@ fidelity:
     estimate is restated with the exponents chosen before the moment bound and the moment exponent
     (2+e)(1+e)(d+1)/e; the Hoelder inequality is applied inside the cells, the decay of the failure
     probabilities is polynomial, and the cap in (5.31) is at n/12), for
+    the rate of Proposition 5.2 in expectation (display (5.3)), Lemma 5.10 (display (5.4)) and
+    Step 2 of Lemma 5.11 in dimension two for p above the critical value with no hypothesis, and
+    Lemma 5.3 in a deterministic pointwise form (the nu part of (5.3) by increments bounded by tau_k,
+    a measurable majorant for rho, the random error of Corollary 4.6 kept random, the subcubes
+    grouped by position modulo 27 with a union bound over 729 groups because independence is used
+    only for disjoint local regions, a gradient step in place of the minimizer q0 and the random
+    factor sqrt(Lambda + 1); Proposition 5.2 in the O_s form, Steps 1 and 3 of Lemma 5.11 and
+    Proposition 5.13 are not proved, as Step 1 needs a stretched exponential tail of the sizes of
+    the planar partition cubes), for
     Theorem 2(iii) of Armstrong and Dario at k = 1 at the origin (a theorem from the mesoscopic
     estimate (7.18) at k = 2, ArmstrongDarioMesoscopicDegreeTwo, and the corrector inputs, by an
     endpoint iteration that lifts only the affine functions in place of the argument of
