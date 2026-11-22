@@ -155,6 +155,34 @@ import Rigidity.Proofs.Cluster.PlanarRHProb
 import Rigidity.Proofs.Cluster.PlanarRHRestrictGood
 import Rigidity.Proofs.Cluster.PlanarRHRestrictQuad
 import Rigidity.Proofs.Cluster.PlanarRHWeakConv
+import Rigidity.Proofs.Cluster.MeyersUniform
+import Rigidity.Proofs.Cluster.PlanarGehringInputs
+import Rigidity.Proofs.Cluster.PlanarMidCells
+import Rigidity.Proofs.Cluster.PlanarOneVarEst
+import Rigidity.Proofs.Cluster.PlanarOneVarEstBound
+import Rigidity.Proofs.Cluster.PlanarReachConcentrationHolds
+import Rigidity.Proofs.Cluster.PlanarRestrictBad
+import Rigidity.Proofs.Cluster.PlanarRestrictErrorGood
+import Rigidity.Proofs.Cluster.PlanarRestrictErrorMajorant
+import Rigidity.Proofs.Cluster.PlanarRestrictField
+import Rigidity.Proofs.Cluster.PlanarRestrictFieldCoarsen
+import Rigidity.Proofs.Cluster.PlanarRestrictFieldQuad
+import Rigidity.Proofs.Cluster.PlanarRestrictQuadCoarsen
+import Rigidity.Proofs.Cluster.PlanarRestrictQuadGehring
+import Rigidity.Proofs.Cluster.PlanarRestrictQuadGood
+import Rigidity.Proofs.Cluster.PlanarSwitchLocCompare
+import Rigidity.Proofs.Cluster.PlanarSwitchLocCore
+import Rigidity.Proofs.Cluster.PlanarSwitchLocGeom
+import Rigidity.Proofs.Cluster.PlanarSwitchLocLocal
+import Rigidity.Proofs.Cluster.PlanarSwitchLocProb
+import Rigidity.Proofs.Cluster.PlanarWeakConvHolds
+import Rigidity.Proofs.Cluster.PlanarWeakConvOrigin
+import Rigidity.Proofs.Cluster.PlanarWeakConvVariance
+import Rigidity.Proofs.Percolation.PlanarDefectTauCube
+import Rigidity.Proofs.Percolation.PlanarMuGeneral
+import Rigidity.Proofs.Percolation.PlanarNuDefectTauCube
+import Rigidity.Proofs.Percolation.PlanarReachDomination
+import Rigidity.Proofs.Percolation.PlanarRestrictErrorMeasurable
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -577,3 +605,36 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenNu_holds
 #print axioms Rigidity.Proofs.Cluster.planarWeakConvergence_holds
 #print axioms Rigidity.Proofs.Cluster.planarMuLimit_eq
+
+-- The inputs of Lemmas 5.5 and 5.7 in dimension two from the partition hypothesis PlanarGehringPartition (the earlier
+-- form of Lemmas 5.5 and 5.7 and of the qualitative part of Proposition 5.2, d = 2)
+#print axioms Rigidity.Proofs.Cluster.PlanarGehringPartition
+#print axioms Rigidity.Proofs.Cluster.PlanarReachConcentration
+#print axioms Rigidity.Proofs.Cluster.planarReachConcentration_holds
+#print axioms Rigidity.Proofs.Cluster.meyers_triadic_uniform
+#print axioms Rigidity.Proofs.Cluster.meyers_cluster_of_local_uniform
+#print axioms Rigidity.Proofs.Cluster.planar_meyers_uniform
+#print axioms Rigidity.Proofs.Cluster.planar_meyers_clusterHarmonic_uniform
+#print axioms Rigidity.Proofs.Cluster.partition_meyers_uniform
+#print axioms Rigidity.Proofs.Cluster.measure_restrictBad_le
+#print axioms Rigidity.Proofs.Cluster.exists_planarMuRestrictError_majorant
+#print axioms Rigidity.Proofs.Cluster.exists_planarNuRestrictError_majorant
+#print axioms Rigidity.Proofs.Cluster.exists_lintegral_planarMuRestrictFieldError_le
+#print axioms Rigidity.Proofs.Cluster.exists_lintegral_sum_subcube_solenoidal_sq_le
+#print axioms Rigidity.Proofs.Cluster.exists_lintegral_sq_sub_switchLoc_le
+#print axioms Rigidity.Proofs.Cluster.exists_measure_not_planarCapGood_le
+#print axioms Rigidity.Proofs.Cluster.exists_variance_planarMuGradAvg_origin_le
+#print axioms Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenMu_of_inputs
+#print axioms Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenNu_of_inputs
+#print axioms Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenMu_of_gehring
+#print axioms Rigidity.Proofs.Cluster.planarRestrictQuadCoarsenNu_of_gehring
+#print axioms Rigidity.Proofs.Cluster.planarMuLimit_eq_of_gehring
+#print axioms Rigidity.Proofs.Cluster.planarWeakConvergence_of_gehring
+#print axioms Rigidity.Proofs.Cluster.planarMuLimit_eq_of_gehring_partition
+#print axioms Rigidity.Percolation.exists_lintegral_planarMuDefect_le_tau
+#print axioms Rigidity.Percolation.exists_lintegral_planarNuDefect_le_tau
+#print axioms Rigidity.Percolation.exists_measure_not_mem_planarCoarseGood_le
+#print axioms Rigidity.Percolation.planarReach_le_stoppingSize
+#print axioms Rigidity.Percolation.measurable_planarMuRestrictError
+#print axioms Rigidity.Percolation.measurable_planarNuRestrictError
+#print axioms Rigidity.Percolation.measurable_planarMuGen_indicator
