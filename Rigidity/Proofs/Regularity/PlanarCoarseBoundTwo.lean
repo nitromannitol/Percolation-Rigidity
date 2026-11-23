@@ -8,7 +8,7 @@ import Rigidity.Proofs.Regularity.PlanarCoarseBound
 minimal scale `𝒳 ≤ O_s(θ)`: `‖[u]_𝒫 - a‖_{L̲²(□_j)} ≤ K ‖u - a‖_{L̲²(C_*(□_{j+3}))}` for the
 functions harmonic on `𝒞_∞ ∩ B_R`, `2 · 3^{j+3} ≤ R`. The inputs are the minimal scales of
 Proposition 2.4 (`PlanarMinimalScalesTwo p`), the density of the infinite cluster, the planar
-Meyers estimate and the comparison (7.4) (`planarCoarseComparisonTwo_of_minimalScales`).
+Meyers estimate and the comparison (7.8) (`planarCoarseComparisonTwo_of_minimalScales`).
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -162,7 +162,7 @@ theorem planarCoarseBoundTwo_of_minimalScales {p : unitInterval}
     (hres (i + 1) (by omega)) (hincl _ _ (by omega) (by omega)) (hsub (i + 1 + 2) (by omega))
     (hsucc (i + 1 + 2) (by omega)) hharm hq hCM hKr hMeyj hpair' a
   rw [← hK₁'def] at hPo
-  -- the comparison (7.4)
+  -- the comparison (7.8)
   have h74 := hω₀ h R u hu (i + 1) hjX₀ hjR
   have h74' := h74.trans (mul_le_mul_of_nonneg_left
     (clusterSquareOsc_le_clusterSquareL2 (uniqueInfiniteComponent h) u (i + 1 + 3) a)

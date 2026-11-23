@@ -14,7 +14,7 @@ estimate (`abs_le_of_condLaplacian_constCond_eq_zero`) on cubes of side `3^i` gi
 `y, z` are then at most `|z - y|_1` times this bound (`abs_sub_le_of_grad_le`).
 
 These are the bounds on `∇w` in Armstrong and Dario (arXiv:1609.09431v2), proof of Lemma 7.1,
-(e.wgradbound), for the discrete homogenized solution `w = u_hom`.
+(7.6), for the discrete homogenized solution `w = u_hom`.
 -/
 
 namespace Rigidity.Proofs.Regularity

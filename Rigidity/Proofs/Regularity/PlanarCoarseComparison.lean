@@ -4,7 +4,7 @@ import Rigidity.Proofs.Cluster.PlanarCoarseReach
 import Rigidity.Proofs.Cluster.PlanarRHMeyers
 
 /-!
-# The comparison (7.4) of a harmonic function with its coarsening on planar squares
+# The comparison (7.8) of a harmonic function with its coarsening on planar squares
 
 Armstrong and Dario (arXiv:1609.09431v2), proof of Lemma 7.1, Step 3: for `3^j` above the minimal
 scale and `u` harmonic on the cluster,
@@ -245,7 +245,7 @@ theorem energy_enl_le_caccioppoli (C : OpenComponent ω) (u : C → ℝ) {j : �
 theorem three_pow_two_mul (j : ℕ) : (3 : ℝ) ^ (2 * j) = 9 ^ j := by
   rw [pow_mul]; norm_num
 
-/-- **The comparison (7.4) in `L²` on one square** (Armstrong–Dario, proof of Lemma 7.1, Step 3,
+/-- **The comparison (7.8) in `L²` on one square** (Armstrong–Dario, proof of Lemma 7.1, Step 3,
 in dimension two): from Lemma 3.2 with the reach scales, the Hölder inequality with the moments of
 the reach scales, the Meyers estimate `hM` on `□_j` for the restriction of `u` to the cluster of
 `□_{j+2}`, and the Caccioppoli inequality on `𝒞 ∩ □_{j+2}`. -/

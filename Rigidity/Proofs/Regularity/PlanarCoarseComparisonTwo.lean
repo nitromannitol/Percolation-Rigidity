@@ -1,9 +1,9 @@
 import Rigidity.Proofs.Regularity.PlanarCoarseComparison
 
 /-!
-# The comparison (7.4) on planar squares, almost surely above a minimal scale
+# The comparison (7.8) on planar squares, almost surely above a minimal scale
 
-`planarCoarseComparisonTwo_of_minimalScales` proves the comparison (7.4) of the proof of
+`planarCoarseComparisonTwo_of_minimalScales` proves the comparison (7.8) of the proof of
 Armstrong–Dario, Lemma 7.1 (arXiv:1609.09431v2), in `L²` on the squares of the plane, almost surely
 above a minimal scale `𝒳 ≤ O_s(θ)`, from the minimal scales of Proposition 2.4
 (`PlanarMinimalScalesTwo p`), the density of the infinite cluster (proved) and the planar Meyers
@@ -174,7 +174,7 @@ theorem two_mul_le_of_three_pow_le_rpow_half {a m : ℕ}
   rw [← Real.sqrt_eq_rpow, Real.sq_sqrt (by positivity), ← pow_mul] at hsq
   exact (pow_le_pow_iff_right₀ (by norm_num : (1 : ℝ) < 3)).1 hsq
 
-/-- The comparison (7.4) of the proof of Armstrong–Dario, Lemma 7.1, in `L²` on the squares
+/-- The comparison (7.8) of the proof of Armstrong–Dario, Lemma 7.1, in `L²` on the squares
 `□_j` of the plane, almost surely on the infinite cluster above a minimal scale `𝒳 ≤ O_s(θ)`, for
 the functions harmonic on `𝒞_∞ ∩ B_R`, `2 · 3^{j+3} ≤ R`. -/
 def PlanarCoarseComparisonTwo (p : unitInterval) : Prop :=
@@ -218,7 +218,7 @@ theorem harm_on_square_of_isHarmonicInBall {C : OpenComponent ω} {R : ℝ} {u :
       (latticeEuclideanEmbedding (0 : Vertex 2))
     linarith
 
-/-- **The comparison (7.4) on planar squares almost surely**, from the minimal scales of
+/-- **The comparison (7.8) on planar squares almost surely**, from the minimal scales of
 Proposition 2.4. -/
 theorem planarCoarseComparisonTwo_of_minimalScales {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) (hM5 : PlanarMinimalScalesTwo p) :

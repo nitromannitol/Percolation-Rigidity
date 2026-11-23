@@ -16,7 +16,7 @@ In place of the Sobolev step in `L^{p'}` of the paper the proof splits `[u]_𝒫
   and the moments of the pair reach scales, and the Caccioppoli inequality bound `[u]_𝒫 - m`;
 * `squareL2_coarse_sub_le`: averaging `m - a = (m - [u]_𝒫) + ([u]_𝒫 - u) + (u - a)` over the
   cluster `C_*(□_j)`, which carries a fixed proportion of `□_j`, bounds `m - a` by the first part,
-  the comparison (7.4) and `u - a`.
+  the comparison (7.8) and `u - a`.
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -362,7 +362,7 @@ theorem squareL2_coarse_sub_le (C : OpenComponent ω) (u : C → ℝ) {j : ℕ} 
   rw [hrhs]
   exact Real.sqrt_le_sqrt (div_le_div_of_nonneg_right hB hN.le)
 
-/-- The sums of squares from the comparison (7.4) in the normalized form. -/
+/-- The sums of squares from the comparison (7.8) in the normalized form. -/
 theorem sum_sq_le_of_clusterSquareL2_le {j : ℕ} {g f : Vertex 2 → ℝ} {K : ℝ}
     (h : clusterSquareL2 ω j g ≤ K / 3 ^ j * clusterSquareL2 ω (j + 3) f) :
     ∑ x ∈ clusterVertices ω ⟨j, 0⟩, g x ^ 2 ≤
