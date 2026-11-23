@@ -195,4 +195,71 @@ theorem tsum_edge_energy_le (ω : Configuration 2) {w ψ : Vertex 2 → ℝ} {B 
   have := edge_energy_ge (w x) (w (x + unit i)) (ψ x) (ψ (x + unit i))
   linarith
 
+/-- The error term of `tsum_edge_energy_le` as a weighted sum of `w²`:
+`Σ_x Σ_i a_i(x) (D_iψ)² (w(x)² + w(x + e_i)²)/2 = Σ_x w(x)² κ(x)` with
+`κ(x) = Σ_i (a_i(x) (ψ(x + e_i) - ψ(x))² + a_i(x - e_i) (ψ(x) - ψ(x - e_i))²)/2`, the half sum of the
+squared differences of `ψ` along the open edges at `x`. -/
+theorem tsum_edge_weight_eq (ω : Configuration 2) {w ψ : Vertex 2 → ℝ} {B : ℝ}
+    (hw : Summable fun x => w x ^ 2) (hψ : ∀ x, |ψ x| ≤ B) :
+    ∑' x, ∑ i : Fin 2, openCond ω i x *
+        ((ψ (x + unit i) - ψ x) ^ 2 * (w x ^ 2 + w (x + unit i) ^ 2) / 2) =
+      ∑' x, w x ^ 2 * ∑ i : Fin 2, (openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 +
+        openCond ω i (x - unit i) * (ψ x - ψ (x - unit i)) ^ 2) / 2 := by
+  have hB : ∀ x z, (ψ z - ψ x) ^ 2 ≤ 4 * B ^ 2 := fun x z => by
+    have h1 := hψ x
+    have h2 := hψ z
+    nlinarith [abs_nonneg (ψ x), sq_abs (ψ x), sq_abs (ψ z), abs_nonneg (ψ z),
+      sq_nonneg (ψ z + ψ x)]
+  have hcb : ∀ i x z, |openCond ω i x * (ψ z - ψ x) ^ 2| ≤ 4 * B ^ 2 := fun i x z => by
+    rw [abs_mul, abs_of_nonneg (sq_nonneg (ψ z - ψ x))]
+    calc |openCond ω i x| * (ψ z - ψ x) ^ 2 ≤ 1 * (4 * B ^ 2) :=
+          mul_le_mul (abs_openCond_le ω i x) (hB x z) (sq_nonneg _) zero_le_one
+      _ = 4 * B ^ 2 := one_mul _
+  have hS : ∀ (g : Vertex 2 → ℝ) (c : Vertex 2 → ℝ), (∀ x, |c x| ≤ 4 * B ^ 2) →
+      Summable (fun x => g x ^ 2) → Summable fun x => c x * g x ^ 2 := by
+    intro g c hc hg
+    refine Summable.of_norm_bounded (hg.mul_left (4 * B ^ 2)) fun x => ?_
+    rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (sq_nonneg (g x))]
+    exact mul_le_mul_of_nonneg_right (hc x) (sq_nonneg _)
+  have hA : ∀ i : Fin 2, Summable fun x => openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w x ^ 2 :=
+    fun i => hS w _ (fun x => hcb i x _) hw
+  have hA' : ∀ i : Fin 2, Summable fun x =>
+      openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w (x + unit i) ^ 2 :=
+    fun i => hS (fun x => w (x + unit i)) _ (fun x => hcb i x _) (summable_sq_add_shift hw _)
+  have hC : ∀ i : Fin 2, Summable fun x =>
+      openCond ω i (x - unit i) * (ψ x - ψ (x - unit i)) ^ 2 * w x ^ 2 :=
+    fun i => hS w _ (fun x => hcb i (x - unit i) x) hw
+  have hshift : ∀ i : Fin 2,
+      ∑' x, openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w (x + unit i) ^ 2 =
+        ∑' x, openCond ω i (x - unit i) * (ψ x - ψ (x - unit i)) ^ 2 * w x ^ 2 := by
+    intro i
+    rw [← (Equiv.addRight (unit i)).tsum_eq
+      (fun x => openCond ω i (x - unit i) * (ψ x - ψ (x - unit i)) ^ 2 * w x ^ 2)]
+    refine tsum_congr fun x => ?_
+    simp only [Equiv.coe_addRight, add_sub_cancel_right]
+  calc ∑' x, ∑ i : Fin 2, openCond ω i x *
+        ((ψ (x + unit i) - ψ x) ^ 2 * (w x ^ 2 + w (x + unit i) ^ 2) / 2)
+      = ∑' x, ∑ i : Fin 2, ((openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w x ^ 2 +
+          openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w (x + unit i) ^ 2) / 2) :=
+        tsum_congr fun x => Finset.sum_congr rfl fun i _ => by ring
+    _ = ∑ i : Fin 2, ((∑' x, openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w x ^ 2 +
+          ∑' x, openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w (x + unit i) ^ 2) / 2) := by
+        rw [Summable.tsum_finsetSum fun i _ => ((hA i).add (hA' i)).div_const 2]
+        refine Finset.sum_congr rfl fun i _ => ?_
+        rw [tsum_div_const, (hA i).tsum_add (hA' i)]
+    _ = ∑ i : Fin 2, ((∑' x, openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w x ^ 2 +
+          ∑' x, openCond ω i (x - unit i) * (ψ x - ψ (x - unit i)) ^ 2 * w x ^ 2) / 2) :=
+        Finset.sum_congr rfl fun i _ => by rw [hshift i]
+    _ = ∑' x, ∑ i : Fin 2, ((openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 * w x ^ 2 +
+          openCond ω i (x - unit i) * (ψ x - ψ (x - unit i)) ^ 2 * w x ^ 2) / 2) := by
+        rw [Summable.tsum_finsetSum fun i _ => ((hA i).add (hC i)).div_const 2]
+        refine Finset.sum_congr rfl fun i _ => ?_
+        rw [tsum_div_const, (hA i).tsum_add (hC i)]
+    _ = ∑' x, w x ^ 2 * ∑ i : Fin 2, (openCond ω i x * (ψ (x + unit i) - ψ x) ^ 2 +
+          openCond ω i (x - unit i) * (ψ x - ψ (x - unit i)) ^ 2) / 2 := by
+        refine tsum_congr fun x => ?_
+        rw [Finset.mul_sum]
+        refine Finset.sum_congr rfl fun i _ => ?_
+        ring
+
 end Rigidity.Green
