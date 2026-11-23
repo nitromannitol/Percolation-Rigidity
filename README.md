@@ -1924,7 +1924,9 @@ Departures from Armstrong and Dario:
 - **(1.22) from the uniform bound.** The bound in the uniform norm of the remark after (1.19) is proved with a minimal
   scale of class `O_s` by a union bound over the triadic boxes, with the Lipschitz estimate in the form of the order-zero
   regularity at the centre, and the corrected planes of every slope are reduced to those of `e₀, e₁` by the Liouville
-  theorem of order zero.
+  theorem of order zero. The exponent obtained is `R^{1−δ/4}` (`7η = δ/4`, with `δ = min(δ₁, 1)` for the exponent `δ₁`
+  of (1.18)), against `r^{1−δ/2}` in the remark after (1.19) (AD18.tex:554-559). This does not affect the statement,
+  which asks only for some `δ ∈ (0, 1]`.
 
 ## The corrector estimate, the Green column and the Green function estimate in dimension two
 
@@ -2313,7 +2315,7 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1403 Lean files with 275,727 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1403 Lean files with 275,728 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
 `RigidityAudit/Axioms.lean` (1,080 lines) are counted separately.

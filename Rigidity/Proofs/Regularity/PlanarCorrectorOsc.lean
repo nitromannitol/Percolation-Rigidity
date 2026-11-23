@@ -16,7 +16,8 @@ order-zero regularity and the minimal scales:
 * a corrected plane of slope `q` differs from `q₀ u₀ + q₁ u₁` by a constant: the difference is
   harmonic and sublinear, hence constant by the Liouville theorem of order zero
   (`Rigidity.Proofs.Section5.sublinearLiouvilleStep_two`);
-* `Z_R = 2 C max(R, 9 max(X, 1))^{1-7η}` is measurable and at most `20 C R^{1-7η} max(X, 1)`.
+* `Z_R = 2 (C + 1) max(R, 9 max(X, 1))^{1-7η}` is measurable and at most
+  `18 (C + 1) R^{1-7η} max(X, 1)`.
 -/
 
 namespace Rigidity.Proofs.Regularity
