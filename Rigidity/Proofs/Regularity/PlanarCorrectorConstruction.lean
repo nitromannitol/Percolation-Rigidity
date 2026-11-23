@@ -161,4 +161,109 @@ theorem telescoping_bound (C : OpenComponent ω) (ℓ : C → ℝ) (v : ℕ → 
         linarith
     _ = _ := by ring
 
+theorem componentBallL2_sub_le' (C : OpenComponent ω) (z : Vertex 2) (r : ℝ) (f g : C → ℝ) :
+    componentBallL2 C z r (fun x => f x - g x) ≤
+      componentBallL2 C z r f + componentBallL2 C z r g := by
+  have h := Rigidity.Proofs.S2.componentBallL2_add_le C z r f (fun x => -g x)
+  rw [Rigidity.Proofs.S2.componentBallL2_neg] at h
+  simpa only [sub_eq_add_neg] using h
+
+theorem componentBallL2_const_eq (C : OpenComponent ω) (z : Vertex 2) (r c : ℝ)
+    (hpos : 0 < (componentEuclideanBall C z r).card) :
+    componentBallL2 C z r (fun _ => c) = |c| := by
+  unfold componentBallL2
+  have hn : ((componentEuclideanBall C z r).card : ℝ) ≠ 0 := by exact_mod_cast hpos.ne'
+  rw [Finset.sum_const, nsmul_eq_mul, mul_div_cancel_left₀ _ hn, Real.sqrt_sq_eq_abs]
+
+/-- The ratio of the normalized norms on two triadic balls. -/
+theorem componentBallL2_le_ratio (C : OpenComponent ω) {m : ℕ} {ρ : ℝ} (hρ : 0 ≤ ρ)
+    (hpos : 0 < (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card)
+    (hratio : ((componentEuclideanBall C 0 ((3 : ℝ) ^ (m + 1))).card : ℝ) ≤
+      ρ ^ 2 * (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card) (f : C → ℝ) :
+    componentBallL2 C 0 (3 ^ m) f ≤ ρ * componentBallL2 C 0 (3 ^ (m + 1)) f := by
+  have h := Rigidity.Proofs.S2.componentBallL2_le_sqrt_card_div_mul C 0
+    (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 3) (Nat.le_succ m)) hpos f
+  refine h.trans (mul_le_mul_of_nonneg_right ?_ (componentBallL2_nonneg _ _ _ _))
+  have hn : (0 : ℝ) < (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card := by exact_mod_cast hpos
+  rw [Real.sqrt_le_left hρ, div_le_iff₀ hn]
+  exact hratio
+
+/-- **The bounds of Step 3 for the differences** `w_m = v_{m+1} - v_m` and their constants. -/
+theorem difference_bounds (C : OpenComponent ω) (ℓ : C → ℝ) (v : ℕ → C → ℝ) {m₀ m : ℕ}
+    {A ε ρ X₀ C₀ : ℝ} (hA : 0 ≤ A) (hε : 0 < ε) (hρ : 0 ≤ ρ) (hC₀ : 0 ≤ C₀) (hm : m₀ + 1 ≤ m)
+    (hX₀ : X₀ ≤ 3 ^ m₀)
+    (hv : ∀ m, m₀ ≤ m → componentBallL2 C 0 (3 ^ m) (fun x => v m x - ℓ x) ≤ A * 3 ^ m * ε ^ m)
+    (hpos : ∀ m, m₀ ≤ m → 0 < (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card)
+    (hratio : ∀ m, m₀ ≤ m → ((componentEuclideanBall C 0 ((3 : ℝ) ^ (m + 1))).card : ℝ) ≤
+      ρ ^ 2 * (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card)
+    {c : ℝ} (hc : ∀ r : ℝ, X₀ ≤ r → r ≤ 3 ^ m / 2 →
+      componentBallL2 C 0 r ((fun x => v (m + 1) x - v m x) - fun _ => c) ≤
+        C₀ * (r / 3 ^ m) * componentBallL2 C 0 (3 ^ m) (fun x => v (m + 1) x - v m x)) :
+    (∀ j, m₀ ≤ j → j < m → componentBallL2 C 0 (3 ^ j) (fun x => v (m + 1) x - v m x - c) ≤
+        C₀ * A * (3 * ρ * ε + 1) * 3 ^ j * ε ^ m) ∧
+      componentBallL2 C 0 (3 ^ m) (fun x => v (m + 1) x - v m x - c) ≤
+        (1 + ρ + C₀) * A * (3 * ρ * ε + 1) * 3 ^ m * ε ^ m ∧
+      |c| ≤ (ρ + C₀) * A * (3 * ρ * ε + 1) * 3 ^ m * ε ^ m := by
+  have h3m : (0 : ℝ) < 3 ^ m := by positivity
+  -- the norm of the difference
+  have hW : componentBallL2 C 0 (3 ^ m) (fun x => v (m + 1) x - v m x) ≤
+      A * (3 * ρ * ε + 1) * 3 ^ m * ε ^ m := by
+    have e : (fun x => v (m + 1) x - v m x) = fun x => (v (m + 1) x - ℓ x) - (v m x - ℓ x) := by
+      funext x; ring
+    rw [e]
+    refine (componentBallL2_sub_le' C 0 _ _ _).trans ?_
+    have h1 := (componentBallL2_le_ratio C hρ (hpos m (by omega)) (hratio m (by omega))
+      (fun x => v (m + 1) x - ℓ x)).trans
+      (mul_le_mul_of_nonneg_left (hv (m + 1) (by omega)) hρ)
+    have h2 := hv m (by omega)
+    calc _ ≤ ρ * (A * 3 ^ (m + 1) * ε ^ (m + 1)) + A * 3 ^ m * ε ^ m := add_le_add h1 h2
+      _ = A * (3 * ρ * ε + 1) * 3 ^ m * ε ^ m := by ring
+  set W := A * (3 * ρ * ε + 1) * 3 ^ m * ε ^ m with hWdef
+  have hW0 : 0 ≤ W := by rw [hWdef]; positivity
+  have hX₀m : ∀ j, m₀ ≤ j → X₀ ≤ 3 ^ j := fun j hj =>
+    hX₀.trans (pow_le_pow_right₀ (by norm_num) hj)
+  have hjm : ∀ j, j < m → (3 : ℝ) ^ j ≤ 3 ^ m / 2 := by
+    intro j hj
+    have : (3 : ℝ) ^ (j + 1) ≤ 3 ^ m := pow_le_pow_right₀ (by norm_num) hj
+    rw [pow_succ] at this
+    linarith
+  have hc' : ∀ j, m₀ ≤ j → j < m →
+      componentBallL2 C 0 (3 ^ j) (fun x => v (m + 1) x - v m x - c) ≤ C₀ * (3 ^ j / 3 ^ m) * W := by
+    intro j hj hjm'
+    have := hc (3 ^ j) (hX₀m j hj) (hjm j hjm')
+    exact this.trans (mul_le_mul_of_nonneg_left hW (by positivity))
+  -- the constant
+  have hcabs : |c| ≤ (ρ + C₀) * W := by
+    have hpm := hpos (m - 1) (by omega)
+    have e1 : m - 1 + 1 = m := by omega
+    rw [← componentBallL2_const_eq C 0 _ c hpm]
+    have hdec : (fun _ : C => c) = fun x => (v (m + 1) x - v m x) - (v (m + 1) x - v m x - c) := by
+      funext x; ring
+    rw [hdec]
+    refine (componentBallL2_sub_le' C 0 _ _ _).trans ?_
+    have hr1 : ((componentEuclideanBall C 0 ((3 : ℝ) ^ (m - 1 + 1))).card : ℝ) ≤
+        ρ ^ 2 * (componentEuclideanBall C 0 ((3 : ℝ) ^ (m - 1))).card := hratio (m - 1) (by omega)
+    have h1 := componentBallL2_le_ratio C hρ hpm hr1 (fun x => v (m + 1) x - v m x)
+    rw [e1] at h1
+    have h2 := hc' (m - 1) (by omega) (by omega)
+    have h3 : (3 : ℝ) ^ (m - 1) / 3 ^ m ≤ 1 := by
+      rw [div_le_one h3m]; exact pow_le_pow_right₀ (by norm_num) (by omega)
+    calc _ ≤ ρ * componentBallL2 C 0 (3 ^ m) (fun x => v (m + 1) x - v m x) +
+          C₀ * (3 ^ (m - 1) / 3 ^ m) * W := add_le_add h1 h2
+      _ ≤ ρ * W + C₀ * 1 * W := by
+          gcongr
+      _ = (ρ + C₀) * W := by ring
+  refine ⟨fun j hj hjm' => ?_, ?_, ?_⟩
+  · refine (hc' j hj hjm').trans (le_of_eq ?_)
+    rw [hWdef]; field_simp
+  · have hdec : (fun x => v (m + 1) x - v m x - c) =
+        fun x => (v (m + 1) x - v m x) - (fun _ => c) x := by funext x; rfl
+    rw [hdec]
+    refine (componentBallL2_sub_le' C 0 _ _ _).trans ?_
+    have := (componentBallL2_const_le C 0 (3 ^ m) c).trans hcabs
+    calc _ ≤ W + (ρ + C₀) * W := add_le_add hW this
+      _ = (1 + ρ + C₀) * A * (3 * ρ * ε + 1) * 3 ^ m * ε ^ m := by rw [hWdef]; ring
+  · calc |c| ≤ (ρ + C₀) * W := hcabs
+      _ = _ := by rw [hWdef]; ring
+
 end Rigidity.Proofs.Regularity
