@@ -506,4 +506,32 @@ noncomputable def cubeOmegaD (p : unitInterval) (n : ℕ) : ℝ :=
     cubeMuMean p n (cubeAhomFinite p n *ᵥ Pi.single i 1) -
     (cubeAhomFinite p n *ᵥ Pi.single i 1) i)
 
+theorem sum_single_mul_eq (i : Fin d) (x : Fin d → ℝ) :
+    ∑ j, (Pi.single i 1 : Fin d → ℝ) j * x j = x i := by
+  rw [Finset.sum_eq_single i (fun j _ hj => by simp [hj]) (by simp)]
+  simp
+
+/-- **Step 1 of the proof of Lemma 5.10, first part** (every dimension `d ≥ 2`): when
+`ā_{□_{n+1}}⁻¹` is invertible, testing the minimum characterization of `ā_{□_{n+1}} eᵢ` with
+`ā_{□_n} eᵢ` gives `D_{n+1} ≤ D_n - ∑ᵢ J_n(eᵢ) - ∑ᵢ I_n(ā_{□_n} eᵢ)`, with `I_n`, `J_n` the
+increments of `E[-μ]` and `E[ν]`. -/
+theorem cubeOmegaD_succ_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) {n : ℕ}
+    (hinv : cubeAhomInvFinite p (n + 1) * cubeAhomFinite (d := d) p (n + 1) = 1) :
+    cubeOmegaD (d := d) p (n + 1) ≤ cubeOmegaD (d := d) p n -
+      ∑ i : Fin d, cubeNuIncrement p n (Pi.single i 1) -
+      ∑ i : Fin d, cubeMuIncrement p n (cubeAhomFinite p n *ᵥ Pi.single i 1) := by
+  have hmin : ∀ i : Fin d,
+      cubeMuMean p (n + 1) (cubeAhomFinite p (n + 1) *ᵥ Pi.single i 1) -
+        (cubeAhomFinite p (n + 1) *ᵥ Pi.single i 1) i ≤
+      cubeMuMean p (n + 1) (cubeAhomFinite p n *ᵥ Pi.single i 1) -
+        (cubeAhomFinite p n *ᵥ Pi.single i 1) i := by
+    intro i
+    have h := cubeMuMean_cubeAhomFinite_sub_le hd hpc hinv (Pi.single i 1)
+      (cubeAhomFinite p n *ᵥ Pi.single i 1)
+    rwa [sum_single_mul_eq, sum_single_mul_eq] at h
+  unfold cubeOmegaD cubeNuIncrement cubeMuIncrement
+  rw [← Finset.sum_sub_distrib, ← Finset.sum_sub_distrib]
+  exact Finset.sum_le_sum fun i _ => by linarith [hmin i]
+
 end Rigidity.Percolation
