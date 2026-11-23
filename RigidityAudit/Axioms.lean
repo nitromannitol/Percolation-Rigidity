@@ -365,6 +365,10 @@ import Rigidity.Proofs.Corrector.DarioFiniteEnergyGrowth
 import Rigidity.Proofs.Corrector.DarioFiniteEnergySublinear
 import Rigidity.Proofs.Corrector.DarioFlipCluster
 import Rigidity.Proofs.Corrector.DarioLemmaThreeThreeFlip
+import Rigidity.Proofs.Corrector.DarioHeatSquareSum
+import Rigidity.Proofs.Corrector.DarioFlipTermTwoSummable
+import Rigidity.Proofs.Corrector.DarioStepOneSum
+import Rigidity.Proofs.Corrector.DarioStepOneHolds
 import Rigidity.Proofs.Corrector.PeriodicHeatDecay
 import Rigidity.Proofs.Regularity.PlanarCorrectorL2
 import Rigidity.Proofs.Regularity.PlanarScaleMaxima
@@ -1312,3 +1316,39 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Green.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_poincare_dario
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_flipSum
+
+-- Lemma 3.3 of Dario in dimension two: the heat square sum, Lemma 3.5 for the planar partition, the split (3.15), Steps 1 and 2 and the reduction of (3.13) to Lemma 3.5 and the Step 2 sum
+#print axioms Rigidity.Corrector.exists_tsum_latticeHeat_sq_le
+#print axioms Rigidity.Percolation.TriadicCube.planarAnchor_eq_of_agree_off
+#print axioms Rigidity.Corrector.planarPartCube_eq_and_anchor_eq_of_resample
+#print axioms Rigidity.Corrector.resampleLocal_of_bound
+#print axioms Rigidity.Corrector.sq_tsum_partitionChange_le
+#print axioms Rigidity.Corrector.bondFlipDiff_heatCoarseComp_eq
+#print axioms Rigidity.Corrector.sq_bondFlipDiff_heatCoarseComp_le
+#print axioms Rigidity.Corrector.ae_heatComp_coarse_sub_eq_zero
+#print axioms Rigidity.Corrector.bondFlipDiff_eq_flipTermOne_add_flipTermTwo
+#print axioms Rigidity.Corrector.flipTermOne_eq_tsum_partitionChange
+#print axioms Rigidity.Corrector.darioFlipSumBound_of_terms
+#print axioms Rigidity.Corrector.ae_flipSeries_summable
+#print axioms Rigidity.Corrector.darioFlipSumBound_of_sums
+#print axioms Rigidity.Corrector.ae_summable_heat_stepRegion
+#print axioms Rigidity.Corrector.summable_heat_coarse_of_le
+#print axioms Rigidity.Corrector.ae_flipTermTwoSummable
+#print axioms Rigidity.Corrector.darioFlipSumBound_of_stepSums
+#print axioms Rigidity.Corrector.flipTermOne_sq_le
+#print axioms Rigidity.Corrector.isOsBond_heatSqSum_of_moments
+#print axioms Rigidity.Corrector.flipTermOne_sq_le_of_bound
+#print axioms Rigidity.Corrector.ae_flipSumOne_le
+#print axioms Rigidity.Corrector.flipSumOne_isOsBond_of_moments
+#print axioms Rigidity.Corrector.lintegral_tsum_rpow_le_of_decay
+#print axioms Rigidity.Corrector.tsum_exp_neg_norm_bondBase_le
+#print axioms Rigidity.Corrector.measure_le_mul_stoppingSize_le
+#print axioms Rigidity.Corrector.lintegral_indicator_rpow_le
+#print axioms Rigidity.Corrector.lintegral_randomBallSum_rpow_le_of_growth
+#print axioms Rigidity.Corrector.stepOne_lipschitz_data
+#print axioms Rigidity.Corrector.stepOneFactor_eq_self
+#print axioms Rigidity.Corrector.measurable_stepOneFactorSelf
+#print axioms Rigidity.Corrector.stepOneFactorSelf_le
+#print axioms Rigidity.Corrector.stepOneW_moments
+#print axioms Rigidity.Corrector.flipSumOne_isOsBond_of_resample
+#print axioms Rigidity.Corrector.darioFlipSumBound_of_resample

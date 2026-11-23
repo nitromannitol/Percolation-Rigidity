@@ -2088,8 +2088,9 @@ inequality, (1.22) and `DarioLemmaThreeThree`. The statement (1.22) is proved in
 [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two)),
 so `darioLemmaThreeTwo_holds` is Lemma 3.2 with no hypothesis.
 The seven reports for these declarations are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Lemma 3.3 is
-reduced to the named input `DarioFlipSumBound`, the estimate (3.13) in flip form; its proof, which needs Lemma 3.5 for
-the planar partition, is not formalized.
+reduced to the named input `DarioFlipSumBound`, the estimate (3.13) in flip form; its proof is reduced to Lemma 3.5 for
+the planar partition and the Step 2 sum in
+[Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition).
 
 Departures from Dario:
 
@@ -2183,8 +2184,8 @@ are proved, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/) (thirt
 direction, component, radius `r ≥ 1` and point, the sum over bonds `e` of the squared flip differences
 `(X(ω^{e,1}) − X(ω^{e,0}))²` of `X = Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)` is at most `O_s(C/r²)`. Lemma 3.5 (the partition of the
 resampled configuration agrees with 𝒫 away from a ball around the resampled bond) is not proved for the planar
-partition of the repository, and the printed sums of Step 1 and Step 2 over the random weights `c_e²`, which use the Meyers
-estimate with a divergence source (Proposition 3.6) and Lemma 3.7, are not formalized.
+partition of the repository. Step 1 of the proof of Lemma 3.3 is proved from Lemma 3.5, and the sum of Step 2 is reduced to a named
+statement, in [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2214,7 +2215,9 @@ The thirty-five reports for the first table of this section and the eight report
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Exactly the following named inputs remain for these results. Theorem 1 of Dario, R5 and R4: `DarioFlipSumBound` (or `DarioLemmaThreeThree`),
-and nothing else. Dario and Gu, Theorem 1: `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
+and nothing else; by [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition),
+`DarioFlipSumBound` follows from Lemma 3.5 in the adapted form `DarioResamplePartitionTwo` and the Step 2 sum (H2), so that Theorem 1 of Dario, R4 and R5 in `d = 2`
+rest on these two statements; (H2) needs Proposition 3.6, Lemma 3.7 and Definition 3.8. Dario and Gu, Theorem 1: `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
 `CarneVaropoulosTwo`; the last has since been proved, and the inputs of Theorem 1 of Dario and Gu are given in
 [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality).
 The module [`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1
@@ -2234,6 +2237,66 @@ Departures from Dario:
   (`reachIn_planarAnchor_of_near`), in place of `□_𝒫(z) ∪ □_𝒫(z')`.
 - **(3.22) in flip form.** It is proved for the corrected planes of `ω^{e,1}` and `ω^{e,0}`, the sublinear growth of the potential of the gradient of the Green function
   from the partition chains and the minimal scales with exponent `1/16`, and the increment (3.24) through the partition of `ω^{e,0}` without Lemma 3.5.
+
+## Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition
+
+The estimate (3.13) in flip form, `DarioFlipSumBound`, is reduced to two statements, in
+[`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/) (sixteen files `DarioHeatSquareSum`, `DarioResamplePartition`,
+`DarioStepOneLocal`, `DarioFlipSplit`, `DarioStepTwoCases`, `DarioFlipSumTerms`, `DarioFlipSumReduce`, `DarioStepRegionSummable`,
+`DarioFlipTermTwoSummable`, `DarioStepOneLipschitz`, `DarioStepOneMoments`, `DarioStepOneBound`, `DarioStepOneSum`,
+`DarioStepOneGrowth`, `DarioStepOneW`, `DarioStepOneHolds`):
+
+* Lemma 3.5 for the planar partition, in the adapted form `DarioResamplePartitionTwo` below, which is a hypothesis and is not proved;
+* the Step 2 sum (H2): for the conull sets `G` of the measurable corrector, for some `s, C > 0`, all `i, j`, `r ≥ 1` and `x`, the sum
+  `flipSumTwo` over the bonds `e` of the squares `T₂(e)²` of the change-of-corrector terms of (3.15) is almost surely finite and
+  `≤ O_s(C/r²)`.
+
+`darioFlipSumBound_of_resample` is the implication from these two statements to `DarioFlipSumBound`. Hence Theorem 1 of Dario in
+`d = 2`, `CorrectorQuantitativeInputTwo` (R5) and `ArmstrongDarioOrderOneOriginTwo` (R4) rest on Lemma 3.5 in the adapted form and on
+the Step 2 sum (H2), and on nothing else of Lemma 3.3. The Step 2 sum (H2) needs Proposition 3.6 (the Meyers estimate with a divergence
+source, of which Dario gives only a sketch in Appendix B), Lemma 3.7 and Definition 3.8, which are not formalized. In Step 2, Cases 1 and 2
+are proved (the term vanishes) and Case 3 is the pairing of the table of
+[Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1).
+
+`DarioResamplePartitionTwo` is the statement that there are `C₀ > 0` and `C` such that, for each bond `e`, configurations `ω, ω'` on which
+the planar partition is defined and which are equal off `e`, each endpoint `x` of `e` and each `z`: if `|z − x|_∞ < C₀ size(□_{𝒫(ω)}(x))`,
+then `size(□_{𝒫(ω')}(z)) ≤ C size(□_{𝒫(ω)}(x))`; otherwise `□_{𝒫(ω')}(z) = □_{𝒫(ω)}(z)` and the anchors of this cube for `ω` and `ω'` agree.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Corrector.exists_tsum_latticeHeat_sq_le`](Rigidity/Proofs/Corrector/DarioHeatSquareSum.lean) | the square sum of the heat kernel of `ℤ²`: `Σ_y Φ_{r²}(x, y)² ≤ C/r²` for `r ≥ 1`, the form in `d = 2` of the bound on `Σ_y ζ_r(y)²` in the proof of Lemma 3.3. |
+| [`Rigidity.Corrector.ResamplePartitionBound`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean), [`DarioResamplePartitionTwo`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean) | Lemma 3.5 for the planar partition with the anchors, as defined above (hypothesis, not proved). |
+| [`Rigidity.Percolation.TriadicCube.planarAnchor_eq_of_agree_off`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean), [`Rigidity.Corrector.planarPartCube_eq_and_anchor_eq_of_resample`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean) | the anchor of a triadic cube depends only on the bonds inside its square of side nine times its own, and the two clauses of `ResamplePartitionBound` for the configurations `ω^{e,1}` and `ω^{e,0}`. |
+| [`Rigidity.Corrector.resampleLocal_of_bound`](Rigidity/Proofs/Corrector/DarioStepOneLocal.lean), [`sq_tsum_partitionChange_le`](Rigidity/Proofs/Corrector/DarioStepOneLocal.lean) | Step 1, (3.16) in flip form: from Lemma 3.5 the change of partition is local (`ResampleLocal` with radius `C₀ s₀` and size `C s₀`), and the square of the sum of the weights times the change of the coarse gradient is at most the number of points of the box times the square sum of the weights over the box times the square of the total variation over a larger box. |
+| [`Rigidity.Corrector.bondFlipDiff_heatCoarseComp_eq`](Rigidity/Proofs/Corrector/DarioFlipSplit.lean), [`sq_bondFlipDiff_heatCoarseComp_le`](Rigidity/Proofs/Corrector/DarioFlipSplit.lean) | the split (3.15) in flip form: the flip difference is the change of partition for the corrector with the bond open plus the change of corrector for the partition with the bond closed, and the square of the sum is at most twice the sum of the squares. |
+| [`Rigidity.Corrector.ae_heatComp_coarse_sub_eq_zero`](Rigidity/Proofs/Corrector/DarioStepTwoCases.lean) | Step 2, Cases 1 and 2: almost surely, when the endpoints of the bond are not both in the infinite cluster with the bond closed, the change-of-corrector term (ii) of (3.15) is zero. |
+| [`Rigidity.Corrector.bondFlipDiff_eq_flipTermOne_add_flipTermTwo`](Rigidity/Proofs/Corrector/DarioFlipSumTerms.lean), [`flipTermOne_eq_tsum_partitionChange`](Rigidity/Proofs/Corrector/DarioFlipSumTerms.lean), [`darioFlipSumBound_of_terms`](Rigidity/Proofs/Corrector/DarioFlipSumTerms.lean) | the terms `T₁, T₂` of (3.15), `D_e X = T₁ + T₂`, the sums `flipSumOne`, `flipSumTwo`, and `DarioFlipSumBound` from the bounds of the two sums. |
+| [`Rigidity.Corrector.ae_flipSeries_summable`](Rigidity/Proofs/Corrector/DarioFlipSumReduce.lean), [`darioFlipSumBound_of_sums`](Rigidity/Proofs/Corrector/DarioFlipSumReduce.lean), [`ae_summable_heat_stepRegion`](Rigidity/Proofs/Corrector/DarioStepRegionSummable.lean), [`summable_heat_coarse_of_le`](Rigidity/Proofs/Corrector/DarioFlipTermTwoSummable.lean), [`ae_flipTermTwoSummable`](Rigidity/Proofs/Corrector/DarioFlipTermTwoSummable.lean) | the summability of the series of (3.15): the heat series over the anchor regions converge almost surely for the flips, by the second moments of the partition sizes, so that the series defining the terms are summable. |
+| [`Rigidity.Corrector.darioFlipSumBound_of_stepSums`](Rigidity/Proofs/Corrector/DarioFlipTermTwoSummable.lean) | `DarioFlipSumBound` from the bounds `≤ O_s(C/r²)` of the two sums (H1) `flipSumOne` and (H2) `flipSumTwo`, with the finiteness. |
+| [`Rigidity.Corrector.flipTermOne_sq_le`](Rigidity/Proofs/Corrector/DarioStepOneLipschitz.lean), [`flipTermOne_sq_le_of_bound`](Rigidity/Proofs/Corrector/DarioStepOneBound.lean), [`isOsBond_heatSqSum_of_moments`](Rigidity/Proofs/Corrector/DarioStepOneMoments.lean) | Step 1: `T₁(e)²` is bounded by Cauchy-Schwarz over the box and the Lipschitz bounds of the corrector, and a sum `Σ_y Φ_{r²}(x, y)² W(y)` with `E[W(y)^q] ≤ (A q^k)^q` uniformly in `y` is `O_s(C/r²)`. |
+| [`Rigidity.Corrector.ae_flipSumOne_le`](Rigidity/Proofs/Corrector/DarioStepOneSum.lean), [`flipSumOne_isOsBond_of_moments`](Rigidity/Proofs/Corrector/DarioStepOneSum.lean) | the sums (3.18) `W(y) = Σ_e 1{y ∈ B_e} F_e` (`stepOneW`), `flipSumOne` almost surely at most the square sum against `W`, and (H1) from the moments of `W`. |
+| [`Rigidity.Corrector.lintegral_tsum_rpow_le_of_decay`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`tsum_exp_neg_norm_bondBase_le`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`measure_le_mul_stoppingSize_le`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`lintegral_indicator_rpow_le`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`lintegral_randomBallSum_rpow_le_of_growth`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean) | the moment tools of Step 1: Jensen's inequality over a countable family with exponentially decaying moments, the sum of the weights over the bonds, the tail of a multiple of the partition size, Cauchy-Schwarz on an event, and moments of sums over balls of random radius in growth form. |
+| [`Rigidity.Corrector.stepOne_lipschitz_data`](Rigidity/Proofs/Corrector/DarioStepOneW.lean), [`stepOneFactor_eq_self`](Rigidity/Proofs/Corrector/DarioStepOneW.lean), [`measurable_stepOneFactorSelf`](Rigidity/Proofs/Corrector/DarioStepOneW.lean), [`stepOneFactorSelf_le`](Rigidity/Proofs/Corrector/DarioStepOneW.lean) | the Lipschitz bounds `Λ` of the corrector with `E[(1 + Λ)^q] ≤ (B q^κ)^q`, the local factor of Step 1 as a function of the configuration itself, and its bound on the partition event by the indicator of an event of exponentially small probability times the cube of a sum of `1 + Λ` over a ball. |
+| [`Rigidity.Corrector.stepOneW_moments`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | `E[W(y)^q] ≤ (A q^k)^q` uniformly in `y`, for `k = 3(κ + 2) + 2`, from `ResamplePartitionBound` and the order-zero regularity `armstrongDarioOrderZeroTwo_holds`. |
+| [`Rigidity.Corrector.flipSumOne_isOsBond_of_resample`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | (H1): `flipSumOne` is almost surely finite and `O_s(C/r²)`, from `ResamplePartitionBound` alone. |
+| [`Rigidity.Corrector.darioFlipSumBound_of_resample`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | `DarioFlipSumBound` from `DarioResamplePartitionTwo` and the Step 2 sum (H2). |
+
+The thirty-four reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Dario:
+
+- **Flips.** As in the section above, the configurations `ω^{e,1}` and `ω^{e,0}` replace the doubled probability space; Step 1 and the split (3.15)
+  are proved for them, and the expectation under a flip is bounded by `p^{-1}` times the expectation (the form of (3.12)).
+- **Moments in place of `ζ_r`.** The bounds (3.17) to (3.19) by the supremum and infimum of the weights `ζ_r` and the calculus of the random
+  radii `O_s` are replaced by the moments of the sums (3.18): the Lipschitz bounds of the corrector, with `E[(1 + Λ)^q] ≤ (B q^κ)^q`, a bound of
+  the local factor by the cube of a sum over a ball, Jensen's inequality over the bonds with weights decaying exponentially in the distance, and
+  moments of order `q` of the sums over balls. Only the bound `Σ_y Φ_{r²}(x, y)² ≤ C/r²` of the weights is used.
+- **Cauchy-Schwarz over the box.** In Step 1 the square of the sum over the box of radius `C₀ s₀` is bounded by Cauchy-Schwarz, by the number
+  of points of the box times the sum of the squares; the ball `B(x, r)` is the box in the supremum norm.
+- **Lemma 3.5 with the anchors.** The anchors of the planar partition depend on the bonds of the square of side nine times the side of the cube, so
+  `DarioResamplePartitionTwo` states the second clause for the cube and for its anchor. If a large partition cube has the bond in its ninefold
+  square far from `x` in units of `size(□_{𝒫(ω)}(x))`, the radius `C₀ size(□_{𝒫(ω)}(x))` may be too small for the clause on the anchor.
 
 ## Theorem 1 of Dario and Gu in dimension two
 
@@ -2502,7 +2565,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 775 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 809 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2549,6 +2612,8 @@ Departures from Armstrong and Dario:
   [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1),
   the thirty-five theorems of
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
+  the thirty-four theorems of
+  [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition),
   the ten theorems of
   [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two),
   the thirteen theorems of
@@ -2567,7 +2632,7 @@ Departures from Armstrong and Dario:
   [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 775 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 809 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2598,10 +2663,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1482 Lean files with 296,118 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1498 Lean files with 298,889 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (1,314 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (1,354 lines) are counted separately.
 
 ## Building
 
