@@ -188,4 +188,100 @@ theorem planarNuRestrictError_le_of_reach (hP : PlanarPartitionEvent ω) {U : Tr
     nlinarith
   exact hR.trans (mul_le_mul_of_nonneg_left hdef hΛ)
 
+theorem abs_single_add (i : Fin 2) :
+    |(Pi.single i 1 : Fin 2 → ℝ) 0| + |(Pi.single i 1 : Fin 2 → ℝ) 1| = 1 := by
+  fin_cases i <;> simp
+
+theorem sq_single_add (i : Fin 2) :
+    (Pi.single i 1 : Fin 2 → ℝ) 0 ^ 2 + (Pi.single i 1 : Fin 2 → ℝ) 1 ^ 2 = 1 := by
+  fin_cases i <;> simp
+
+/-- **(5.33) for one configuration with a bounded reach**, for the slopes `e₀, e₁`: the flatness
+error of the coarsened maximizer of `ν(□_m, e_i)` is bounded by the reach `S`, the subadditivity
+errors `ε` and the constant `Λ` of Lemma 5.5. -/
+theorem exists_planarFlatness_le_of_reach :
+    ∃ CM : ℝ, 0 ≤ CM ∧ ∀ (ω : Configuration 2), PlanarPartitionEvent ω → ∀ (m : ℕ) (i : Fin 2)
+      {S ε Λ νb : ℝ}, 9 ≤ m → 1 ≤ S → S ≤ 3 ^ ((9 * m + 9) / 10) →
+      (∀ z ∈ (⟨m, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+        planarReach ω z ≤ ENNReal.ofReal S) → 0 ≤ Λ →
+      (∀ k ∈ Finset.Ico ((9 * m + 9) / 10) m,
+        planarNuRestrictError ω ⟨m, 0⟩ k (Pi.single i 1) ≤
+          Λ * (planarNuDefect ω ⟨m, 0⟩ k (Pi.single i 1) / (⟨m, 0⟩ : TriadicCube 2).volume)) →
+      (∀ k ∈ Finset.Ico ((9 * m + 9) / 10) m,
+        ∀ x ∈ (⟨m, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+          |planarNu ω (scaleCube k x) (Pi.single i 1) - νb| ≤ ε) →
+      |planarNu ω ⟨m, 0⟩ (Pi.single i 1) - νb| ≤ ε →
+      planarFlatnessError ⟨m, 0⟩
+          (coarsen ω ⟨m, 0⟩ (planarNuSolution ω ⟨m, 0⟩ (Pi.single i 1))) (Pi.single i 1) ≤
+        CM * (9 : ℝ) ^ ((9 * m + 9) / 10) *
+            ((2 * ((2 : ℕ) : ℝ) * (3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2) *
+              (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 * (2 * √((2 : ℕ) : ℝ))) ^ 2 * (3 * S) ^ 3 * (9 / 2)) +
+          ∑ k ∈ Finset.Ico ((9 * m + 9) / 10) m,
+            3 * CM * (3 : ℝ) ^ m * (3 : ℝ) ^ k *
+              (Λ * (2 * ε + 4365 * S / (4 * 3 ^ (k / 2))) +
+                1296 * 162001 ^ 2 * (16 * S ^ 8 + 1) / 3 ^ k) +
+          (CM * (9 : ℝ) ^ ((9 * m + 9) / 10) +
+            ∑ k ∈ Finset.Ico ((9 * m + 9) / 10) m, CM * (3 : ℝ) ^ m * (3 : ℝ) ^ k * ((9 : ℝ) ^ k)⁻¹) := by
+  obtain ⟨CM, hCM, hpw⟩ := exists_planarNuFlatness_le_pointwise
+  refine ⟨CM, hCM, fun ω hP m i S ε Λ νb hm hS1 hSm hreach hΛ hR hsub hUe => ?_⟩
+  set U : TriadicCube 2 := ⟨m, 0⟩ with hUdef
+  set n₀ := (9 * m + 9) / 10 with hn₀
+  set ξ : Fin 2 → ℝ := Pi.single i 1 with hξ
+  have hξ1 : |ξ 0| + |ξ 1| = 1 := abs_single_add i
+  have hξ2 : ξ 0 ^ 2 + ξ 1 ^ 2 = 1 := sq_single_add i
+  have hn₀m : n₀ ≤ m := by omega
+  have hn₀2 : (m : ℝ) / 2 ≤ n₀ := by
+    have h : m ≤ 2 * n₀ := by omega
+    have h' : (m : ℝ) ≤ 2 * n₀ := by exact_mod_cast h
+    linarith
+  have hSk : ∀ k, n₀ ≤ k → S ≤ 3 ^ k := fun k hk =>
+    hSm.trans (pow_le_pow_right₀ (by norm_num) hk)
+  have hU : PlanarResolved ω U := planarResolved_of_reach hP (subset_refl _) hreach (hSk m hn₀m)
+  have hres : ∀ k ∈ Finset.Ico n₀ m, ∀ x ∈ U.toIntegerCube.vertices,
+      PlanarResolved ω (scaleCube k x) := by
+    intro k hk x hx
+    have hkm : k ≤ m := (Finset.mem_Ico.1 hk).2.le
+    refine planarResolved_of_reach hP (scaleCube_subset hkm ((U.mem_toIntegerCube_vertices x).1 hx))
+      hreach ?_
+    rw [scale_scaleCube]
+    exact hSk k (Finset.mem_Ico.1 hk).1
+  have hpw' := hpw m n₀ hn₀2 hn₀m ω ξ ξ (fun _ => ξ)
+  refine hpw'.trans ?_
+  -- the coarse energy
+  have hE := coarseEnergy_le_of_reach hP hU ξ (by linarith) hreach
+  rw [hξ1, one_pow, mul_one] at hE
+  -- the restrict errors and the averages
+  have hRk : ∀ k ∈ Finset.Ico n₀ m, planarNuRestrictError ω U k ξ ≤
+      Λ * (2 * ε + 4365 * S / (4 * 3 ^ (k / 2))) := by
+    intro k hk
+    have h := planarNuRestrictError_le_of_reach hP hU (Finset.mem_Ico.1 hk).2.le ξ
+      (hres k hk) (by linarith) hreach hΛ (hR k hk) (hsub k hk) hUe
+    rw [hξ1] at h
+    convert h using 3
+    ring
+  have hNk : ∀ k ∈ Finset.Ico n₀ m,
+      ((subcubesAt U k).card : ℝ)⁻¹ * ∑ V ∈ subcubesAt U k, ∑ j : Fin 2,
+        (planarNuGradAvg ω V ξ j - ξ j) ^ 2 ≤ 1296 * 162001 ^ 2 * (16 * S ^ 8 + 1) / 3 ^ k := by
+    intro k hk
+    have hkm : k ≤ m := (Finset.mem_Ico.1 hk).2.le
+    have hne : (subcubesAt U k).Nonempty := by
+      obtain ⟨z, hz⟩ := TriadicCube.toIntegerCube_vertices_nonempty U
+      exact ⟨scaleCube k z, Finset.mem_image_of_mem _ hz⟩
+    have hc : (0 : ℝ) < (subcubesAt U k).card := by exact_mod_cast hne.card_pos
+    rw [inv_mul_le_iff₀ hc]
+    calc ∑ V ∈ subcubesAt U k, ∑ j : Fin 2, (planarNuGradAvg ω V ξ j - ξ j) ^ 2
+        ≤ ∑ _V ∈ subcubesAt U k, 1296 * 162001 ^ 2 * (16 * S ^ 8 + 1) / 3 ^ k := by
+          refine Finset.sum_le_sum fun V hV => ?_
+          obtain ⟨x, hx, rfl⟩ := Finset.mem_image.1 hV
+          have h := sum_sq_planarNuGradAvg_le_of_reach hP (hres k hk x hx) ξ
+            (fun z hz => hreach z (toIntegerCube_vertices_subset_of_mem_subcubesAt hkm hV hz))
+          rwa [hξ2, mul_one, scale_scaleCube] at h
+      _ = _ := by rw [Finset.sum_const, nsmul_eq_mul]
+  have hzero : 3 * ∑ j : Fin 2, (ξ j - ξ j) ^ 2 = 0 := by simp
+  refine add_le_add (add_le_add ?_ ?_) (le_of_eq ?_)
+  · exact mul_le_mul_of_nonneg_left hE (by positivity)
+  · exact Finset.sum_le_sum fun k hk =>
+      mul_le_mul_of_nonneg_left (add_le_add (hRk k hk) (hNk k hk)) (by positivity)
+  · simp only [hzero, zero_add, hξ2, mul_one]
+
 end Rigidity.Proofs.Regularity
