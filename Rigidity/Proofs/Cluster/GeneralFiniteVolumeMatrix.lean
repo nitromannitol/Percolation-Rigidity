@@ -292,4 +292,61 @@ theorem exists_abs_cubeAhomInvLimit_sub_le [NeZero d] (hd : 2 ≤ d) {p : unitIn
     ((tendsto_cubeAhomInvFinite hd hpc i j).sub_const _).abs
   exact le_of_tendsto ht (eventually_atTop.2 ⟨n, hbound⟩)
 
+/-- `q ↦ lim E[-μ(□_n, q)]` is quadratic, with matrix `(1/2) lim ā_{□_n}⁻¹`. -/
+theorem isSlopeQuadratic_cubeMuLimit [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) : IsSlopeQuadratic (cubeMuLimit (d := d) p) := by
+  intro q
+  have e : (fun n => cubeMuMean p n q) = fun n =>
+      1 / 2 * ∑ i, ∑ j, q i * q j * cubeAhomInvFinite p n i j :=
+    funext fun n => isSlopeQuadratic_cubeMuMean hd hpc n q
+  have h : Tendsto (fun n => cubeMuMean p n q) atTop
+      (𝓝 (1 / 2 * ∑ i, ∑ j, q i * q j * cubeAhomInvLimit p i j)) := by
+    rw [e]
+    exact Tendsto.const_mul _ (tendsto_finsetSum _ fun i _ => tendsto_finsetSum _ fun j _ =>
+      Tendsto.const_mul _ (tendsto_cubeAhomInvFinite hd hpc i j))
+  exact tendsto_nhds_unique (tendsto_cubeMuLimit hd hpc q) h
+
+/-- **Display (5.22)** (every dimension `d ≥ 2`): from some scale on,
+`c |q|² ≤ (1/2) q · ā_{□_n}⁻¹ q ≤ C |q|²`. -/
+theorem exists_cubeAhomInvFinite_bounds [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ c C : ℝ, 0 < c ∧ 0 ≤ C ∧ ∃ N : ℕ, ∀ n, N ≤ n → ∀ q : Fin d → ℝ,
+      c * ∑ i, q i ^ 2 ≤ 1 / 2 * ∑ i, q i * (cubeAhomInvFinite p n *ᵥ q) i ∧
+        1 / 2 * ∑ i, q i * (cubeAhomInvFinite p n *ᵥ q) i ≤ C * ∑ i, q i ^ 2 := by
+  obtain ⟨c, C, hc, hC, hlim⟩ := exists_cubeMuLimit_two_sided hd hpc
+  obtain ⟨C₀, hC₀, hup⟩ := exists_lintegral_neg_cubeMu_le hd hpc
+  have hT : Tendsto (fun n => ∑ i, ∑ j,
+      |(cubeAhomInvFinite p n i j - cubeAhomInvLimit (d := d) p i j) / 2|) atTop (𝓝 0) := by
+    have h := tendsto_finsetSum (Finset.univ : Finset (Fin d)) fun i _ =>
+      tendsto_finsetSum (Finset.univ : Finset (Fin d)) fun j _ =>
+        (((tendsto_cubeAhomInvFinite hd hpc i j).sub_const (cubeAhomInvLimit p i j)).div_const
+          2).abs
+    simpa using h
+  obtain ⟨N, hN⟩ := eventually_atTop.1 (hT.eventually (gt_mem_nhds (by positivity :
+    (0 : ℝ) < c / 2)))
+  refine ⟨c / 2, C₀ * d, by positivity, by positivity, N, fun n hn q => ?_⟩
+  rw [half_sum_mul_cubeAhomInvFinite_eq hd hpc n q]
+  have hg : IsSlopeQuadratic fun x : Fin d → ℝ => cubeMuMean p n x - cubeMuLimit p x :=
+    (isSlopeQuadratic_cubeMuMean hd hpc n).sub (isSlopeQuadratic_cubeMuLimit hd hpc)
+  have hM : ∀ i j : Fin d, slopeMatrix (fun x : Fin d → ℝ => cubeMuMean p n x - cubeMuLimit p x) i j =
+      (cubeAhomInvFinite p n i j - cubeAhomInvLimit p i j) / 2 := by
+    intro i j
+    simp only [slopeMatrix, slopePolar, cubeAhomInvFinite, cubeAhomInvLimit]
+    ring
+  have habs := hg.abs_le q
+  beta_reduce at habs
+  simp only [hM] at habs
+  have hq0 : 0 ≤ ∑ i, q i ^ 2 := Finset.sum_nonneg fun _ _ => sq_nonneg _
+  constructor
+  · have h1 := (hlim q).1
+    have h2 : |cubeMuMean p n q - cubeMuLimit p q| ≤ c / 2 * ∑ i, q i ^ 2 :=
+      habs.trans (mul_le_mul_of_nonneg_right (hN n hn).le hq0)
+    rw [abs_le] at h2
+    linarith [h2.1]
+  · have h1 : cubeMuMean p n q ≤ C₀ * (∑ i, |q i|) ^ 2 :=
+      ENNReal.toReal_le_of_le_ofReal (by positivity) (hup ⟨n, 0⟩ q)
+    have h2 := sq_sum_abs_le_card_mul q
+    have := mul_le_mul_of_nonneg_left h2 hC₀
+    nlinarith
+
 end Rigidity.Percolation
