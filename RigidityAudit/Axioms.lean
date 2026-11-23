@@ -221,6 +221,16 @@ import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationSquares
 import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationTwo
 import Rigidity.Proofs.Regularity.PlanarOrderZero
 import Rigidity.Proofs.Regularity.PlanarOrderZeroInput
+import Rigidity.Proofs.Regularity.PlanarHarmonicRegularityThree
+import Rigidity.Proofs.Regularity.LatticeHarmonicExcessThree
+import Rigidity.Proofs.Regularity.LatticeCubicComparison
+import Rigidity.Proofs.Regularity.LatticeKIterationTwo
+import Rigidity.Proofs.Regularity.LatticeHarmonicMeanValue
+import Rigidity.Proofs.Regularity.PlanarMesoscopicTwoTopBounds
+import Rigidity.Proofs.Regularity.PlanarMesoscopicTwoMain
+import Rigidity.Proofs.Regularity.PlanarMesoscopicDegreeTwo
+import Rigidity.Proofs.Regularity.OrderOneOriginTwo
+import Rigidity.Proofs.Regularity.PlanarOrderOneOriginInputs
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -236,7 +246,8 @@ good cubes and the functional and elliptic inequalities on the cluster of Armstr
 expectations and the homogenized matrix (§4.3 and the start of §5, `d = 2`), the convergence of
 the finite-volume matrices and the energy defects of the planar subadditive quantities with the
 identification of the limit from the decay of `ω` (§5, `d = 2`), and the deterministic
-steps of the homogenization of the Dirichlet problem and of the excess-decay iteration (§§6–7);
+steps of the homogenization of the Dirichlet problem and of the excess-decay iteration (§§6–7),
+and Lemma 7.3 at `k = 2` with Theorem 2(iii) at `k = 1` in dimension two (§7);
 `scripts/check_axioms.py` checks it.
 
 Each proved result is reported through its Lean theorem. A result cited from the literature is
@@ -765,3 +776,26 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_of_orderOne
 #print axioms Rigidity.Proofs.Regularity.clusterRestrictTo_mem_clusterHarmonic
 #print axioms Rigidity.Proofs.Regularity.clusterForm_clusterRestrictTo_le
+
+-- Lemma 7.3, (7.18) at k = 2, and Theorem 2(iii) at k = 1 in dimension two (Armstrong and Dario)
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_two_planar
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_two_planar
+#print axioms Rigidity.Proofs.Regularity.harmonicRegularity_three_latticeHarmonicClass
+#print axioms Rigidity.Proofs.Regularity.polynomialComparison_latticeHarmonicCubic
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_two_latticeHarmonic
+#print axioms Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_two_latticeHarmonic
+#print axioms Rigidity.Proofs.Regularity.componentBallL2_le_sum_abs_of_latticeHarmonic
+#print axioms Rigidity.Proofs.Regularity.coarse_top_bounds
+#print axioms Rigidity.Proofs.Regularity.harmonicApproximation_error_le
+#print axioms Rigidity.Proofs.Regularity.mesoscopicDegreeTwo_core
+#print axioms Rigidity.Proofs.Regularity.mesoscopicDegreeTwoAt_of_inputs
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwoPlanar_of_inputs
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_inputs
+#print axioms Rigidity.Proofs.Regularity.orderOneOrigin_of_mesoscopicDegreeTwoAt
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_mesoscopicDegreeTwoPlanar
+#print axioms Rigidity.Proofs.Regularity.planarCoarseHarmonicApproximationTwo_iff
+#print axioms Rigidity.Proofs.Regularity.planarPartCubeMoments_holds
+#print axioms Rigidity.Proofs.Regularity.planarPartitionSizeScale_of_partCubeMoments
+#print axioms Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_of_squareEstimates_holds
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwoPlanar_of_squareEstimates
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_squareEstimates

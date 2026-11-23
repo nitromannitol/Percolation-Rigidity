@@ -317,6 +317,10 @@ The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate 
 and the corrector inputs
 ([`armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo`](Rigidity/Proofs/Regularity/OrderOneOrigin.lean)); see
 [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate).
+In dimension two, (7.18) at `k = 2` is proved from the estimates on squares of the proof of AD Lemma 7.1, and
+`ArmstrongDarioOrderOneOriginTwo` from them with Theorem 1 of Dario, the existence of corrected planes and the bound
+`dim 𝒜₁ ≤ 3`; see
+[Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -1530,7 +1534,9 @@ at `k = 1`) is a theorem from one new hypothesis and two inputs that are already
 for bond percolation at the origin, with `Ā₂` the harmonic quadratic polynomials and the normalization
 `r^{−d/2} ‖·‖_{L²(𝒞_∞ ∩ B_r)}`, together with `Rigidity.External.CorrectorQuantitativeInput` and
 `LatticeProb.External.SupercriticalBondCorrectorInput`. The mesoscopic estimate itself needs the
-harmonic approximation of AD Lemma 7.1, hence Theorem 1 (Sections 5 and 6), and is not proved.
+harmonic approximation of AD Lemma 7.1, hence Theorem 1 (Sections 5 and 6), and is not proved in general; in
+dimension two it is proved from the estimates on squares of Lemma 7.1 (see
+[Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two)).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1565,8 +1571,10 @@ Departures from Armstrong and Dario:
 Two reductions of the planar inputs are proved in
 [`Rigidity/Proofs/Regularity/`](Rigidity/Proofs/Regularity/), together with deterministic steps of the proof of
 AD Lemma 7.1 in dimension two. Lemma 7.1 itself is not proved: its estimates on squares
-(`PlanarSquareEstimatesTwo`, which rests on Theorem 1, Sections 5 and 6) and the bound on the scales of the
-partition cubes (`PlanarPartitionSizeScale`) are named hypotheses.
+(`PlanarSquareEstimatesTwo`, which rests on Theorem 1, Sections 5 and 6) are a named hypothesis. The bound on the
+scales of the partition cubes (`PlanarPartitionSizeScale`) follows from the minimal scales of Proposition 2.4
+(`planarPartitionSizeScale_of_partCubeMoments`, see
+[Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two)).
 
 * **R3 in dimension two** (`ArmstrongDarioOrderZeroTwo`, AD Theorem 2(iii) at `k = 0`) from
   `PlanarHarmonicApproximationTwo`, the statement of Lemma 7.1: for `𝔭_c(2) < p < 1` there are `s, θ, A, α, K`
@@ -1579,7 +1587,7 @@ partition cubes (`PlanarPartitionSizeScale`) are named hypotheses.
   estimate (7.7), the `L²` form of (7.8) and the bound of Step 2 for constant `w`, on the squares `□_j` above a
   minimal scale `X ≤ O_s(θ)`, for the functions harmonic on balls of `𝒞_∞`) and `PlanarPartitionSizeScale p`
   (the partition cubes of the vertices of `□_m` have scale at most `m − 2` above a minimal scale
-  `M ≤ O_s(θ)`). Neither is proved here.
+  `M ≤ O_s(θ)`). The first is not proved here; the second is proved in the next section.
 * **R2 in dimension two** (`SupercriticalBondCorrectorInputTwo`) from `ArmstrongDarioOrderZeroTwo`,
   `PlanarCorrectedPlaneExistenceTwo` (every slope has a corrected plane on the planar infinite cluster, AD
   Theorem 2(ii) at `k = 1`, with the sublinearity in the uniform norm of AD Remark 1.1 and (1.22)) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
@@ -1609,6 +1617,64 @@ Departures from Armstrong and Dario:
 Misprint in the source whose meaning is clear: in the iteration of Step 4 of the proof of Lemma 7.1
 (AD18.tex:5296-5318) the squares are `□_{m+3(k+1)}`, with the factor `3^{−k(m + 3(k+1)/2)}`, where
 AD18.tex:5137-5146 prints `□_{m+3k}`. It does not affect Lemma 7.3.
+
+## Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two
+
+AD Lemma 7.3, display (7.18) at `k = 2`, is proved for planar bond percolation
+(`ArmstrongDarioMesoscopicDegreeTwoPlanar`, the planar case of `ArmstrongDarioMesoscopicDegreeTwo`) from the
+estimates on squares of the proof of Lemma 7.1 (`PlanarSquareEstimatesTwo`). With it,
+`Rigidity.External.ArmstrongDarioOrderOneOriginTwo` (AD Theorem 2(iii) at `k = 1`, at the origin, in the plane)
+is proved from `PlanarSquareEstimatesTwo`, Theorem 1 of Dario in dimension two (`DarioOptimalCorrectorTwo`),
+`PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`. The other inputs are proved: the minimal
+scales of AD Proposition 2.4 (`Rigidity.Proofs.Cluster.planarMinimalScales_holds`), which also give the
+hypothesis `PlanarPartitionSizeScale` of Lemma 7.1, and the density of the infinite cluster in cubes.
+
+The proof follows AD on the lattice. Lemma 7.2 at `k = 2` is applied to the coarsening `[u]_𝒫` on the balls of
+`ℤ²`, with the lattice harmonic functions as `Ā`, the lattice harmonic quadratic functions as `Ā₂` and the
+lattice harmonic cubic polynomials as `Ā₃`, up to the top scale `T = R/(8A)`; the excesses of `[u]_𝒫` are then
+transferred to `u` on the cluster balls (Steps 1 and 2 of the proof of Lemma 7.3, (7.21)–(7.23)).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_squareEstimates`](Rigidity/Proofs/Regularity/PlanarOrderOneOriginInputs.lean) | `ArmstrongDarioOrderOneOriginTwo` from `PlanarSquareEstimatesTwo`, `DarioOptimalCorrectorTwo`, `PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`. |
+| [`armstrongDarioMesoscopicDegreeTwoPlanar_of_squareEstimates`](Rigidity/Proofs/Regularity/PlanarOrderOneOriginInputs.lean), [`planarHarmonicApproximationTwo_of_squareEstimates_holds`](Rigidity/Proofs/Regularity/PlanarOrderOneOriginInputs.lean) | (7.18) at `k = 2` in the plane, and `PlanarHarmonicApproximationTwo`, from `PlanarSquareEstimatesTwo` alone. |
+| [`planarPartCubeMoments_holds`](Rigidity/Proofs/Regularity/PlanarOrderOneOriginInputs.lean), [`planarPartitionSizeScale_of_partCubeMoments`](Rigidity/Proofs/Regularity/PlanarOrderOneOriginInputs.lean), [`planarCoarseHarmonicApproximationTwo_iff`](Rigidity/Proofs/Regularity/PlanarOrderOneOriginInputs.lean) | the moments and the maxima of the sizes of the planar partition cubes on `□_m` above a minimal scale (part of Proposition 2.4), the bound `PlanarPartitionSizeScale` on their scales (with `t = 1`, `α = 1/2`, above `max(M, 81)`), and the identity of the two statements of Lemma 7.1 in dimension two. |
+| [`mesoscopicDegreeTwoAt_of_inputs`](Rigidity/Proofs/Regularity/PlanarMesoscopicDegreeTwo.lean), [`armstrongDarioMesoscopicDegreeTwoPlanar_of_inputs`](Rigidity/Proofs/Regularity/PlanarMesoscopicDegreeTwo.lean), [`armstrongDarioOrderOneOriginTwo_of_inputs`](Rigidity/Proofs/Regularity/PlanarMesoscopicDegreeTwo.lean) | (7.18) at `k = 2` almost surely, for one law and for every supercritical law, from Lemma 7.1 (`PlanarCoarseHarmonicApproximationTwo`) and the minimal scales of the partition cubes (`PlanarPartCubeMoments`), with `δ = α/2`; and Theorem 2(iii) at `k = 1` in the plane with the planar corrector inputs. |
+| [`mesoscopicDegreeTwo_core`](Rigidity/Proofs/Regularity/PlanarMesoscopicTwoMain.lean) | (7.18) at `k = 2` for one configuration, on `[r₀X, R/2]`, from Lemma 7.1 in the form of the proof of Lemma 7.3, partition cubes of side at most `c R^{α/2}` in `B_R` whose sizes have moments of orders one and two at most `K R²`, and the density of the cluster in cubes. |
+| [`coarse_top_bounds`](Rigidity/Proofs/Regularity/PlanarMesoscopicTwoTopBounds.lean), [`harmonicApproximation_error_le`](Rigidity/Proofs/Regularity/PlanarMesoscopicTwoTopBounds.lean) | the excesses of `[u]_𝒫` over the lattice harmonic quadratic functions and over the constants at the top scale `T` bounded by the cluster excesses of `u` on `B_R` and the harmonic-approximation error at `4T`; that error bounded through the crude bound of the coarse oscillation at `R/2`. |
+| [`armstrongDario_lemma_7_2_two_latticeHarmonic`](Rigidity/Proofs/Regularity/LatticeKIterationTwo.lean), [`armstrongDario_lemma_7_3_two_latticeHarmonic`](Rigidity/Proofs/Regularity/LatticeKIterationTwo.lean) | AD Lemma 7.2 at `k = 2` and its iteration for the harmonic functions on the balls of `ℤ²`, from the harmonic-approximation hypothesis alone. |
+| [`harmonicRegularity_three_latticeHarmonicClass`](Rigidity/Proofs/Regularity/LatticeHarmonicExcessThree.lean), [`polynomialComparison_latticeHarmonicCubic`](Rigidity/Proofs/Regularity/LatticeCubicComparison.lean) | the excess decay of order three of the harmonic functions on the balls of `ℤ²` (harmonic third-order expansion at a corner and fourth differences), and the comparison of the excesses of the lattice harmonic cubic polynomials over the harmonic quadratic functions on two balls (third differences). |
+| [`componentBallL2_le_sum_abs_of_latticeHarmonic`](Rigidity/Proofs/Regularity/LatticeHarmonicMeanValue.lean) | the `ℓ^∞`–`ℓ¹` bound `‖g‖_{L̲²(B_ρ)} ≤ C ρ^{−2} Σ_{B_{4ρ}} \|g\|` for `g` lattice harmonic on `B_{4ρ}`, by an absorption over boxes. |
+| [`orderOneOrigin_of_mesoscopicDegreeTwoAt`](Rigidity/Proofs/Regularity/OrderOneOriginTwo.lean), [`armstrongDarioOrderOneOriginTwo_of_mesoscopicDegreeTwoPlanar`](Rigidity/Proofs/Regularity/OrderOneOriginTwo.lean) | the reduction of Theorem 2(iii) at `k = 1` to (7.18) at `k = 2` for one dimension and one law, and its planar case. |
+| [`armstrongDario_lemma_7_2_two_planar`](Rigidity/Proofs/Regularity/PlanarHarmonicRegularityThree.lean), [`armstrongDario_lemma_7_3_two_planar`](Rigidity/Proofs/Regularity/PlanarHarmonicRegularityThree.lean) | AD Lemma 7.2 at `k = 2` and its iteration in the plane for the continuum norms, with the harmonic cubic polynomials as `Ā₃`. |
+
+The twenty-one reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean); they depend only on `propext`, `Classical.choice` and
+`Quot.sound`.
+
+Departures from Armstrong and Dario:
+
+- **The lattice route.** As for Lemma 7.1, `Ā` is the space of the lattice harmonic functions on the balls of
+  `ℤ²`, and `Ā₃` is the space of the lattice harmonic cubic polynomials. The passage from the `L²` excess of
+  `[u]_𝒫` to its `L¹` excess (the display after (7.19), from (7.11)) uses the `ℓ^∞`–`ℓ¹` bound of lattice
+  harmonic functions.
+- **The exponent.** `δ = α′/2` with `α′ = min(α, 1)` and `α` the exponent of Lemma 7.1; the
+  harmonic-approximation hypothesis for `α` implies it for `α′` above the scale `1`.
+- **The order of the steps.** The Lipschitz bound `D̃_0(s) ≤ C s R^{−1} D̃_0(R)` (the case `k = 0` of the same
+  argument) is proved first, by an induction over the scales `s, As, A²s, …`; it bounds the coarsening error
+  `K s^{−1} D̃_0(As)` of (7.8) in Step 1, for `k = 0` and `k = 2`.
+- **The random scale.** `X = c₀ max(X_{L7.1}, M₁, M₂, M_cube)` with `c₀` deterministic, `M₁`, `M₂` the minimal
+  scales of the moments of orders one and two of the sizes of the partition cubes with the exponent `α′/2`, and
+  `M_cube` the scale of the density of the cluster in cubes.
+
+A step of the source is repaired. After (7.19), AD18.tex:5525-5528 states
+`D_k(cR) ≤ C inf_w ‖[u]_𝒫 − w‖_{L̲¹(B_{cR})}` "using (7.11)"; but (7.11) has a second term, the
+harmonic-approximation error `inf_v ‖[u]_𝒫 − v‖_{L̲²}` at the top scale, which is dropped. By (7.2) that error
+contains `sup_{s ∈ [Ac′R, R]} D_0([u]_𝒫; s)/s`, and the term `D_0(cR)/(cR)` of (7.19) and (7.20) is not bounded
+by `D̃_0(R)/R` in Step 3 either. Here the coarse oscillations at the top scales are bounded crudely through the
+largest partition cube in `B_R`, of side at most `c R^{α′/2}` above the minimal scale
+(`harmonicApproximation_error_le`); the loss `R^{α′/2}` is absorbed by the factor `(4T)^{−α′}` of the
+harmonic-approximation error, which leaves `δ = α′/2` in (7.18).
 
 ## The corrector estimate, the Green column and the Green function estimate in dimension two
 
@@ -1708,9 +1774,11 @@ exponent of the tail).
   [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two),
   the nineteen theorems of
   [Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71),
+  the twenty-one theorems of
+  [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two),
   and the twenty-seven theorems of
   [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
-  Each of the 448 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 469 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1741,10 +1809,10 @@ exponent of the tail).
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1268 Lean files with 241,172 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1286 Lean files with 246,397 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (767 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (801 lines) are counted separately.
 
 ## Building
 

@@ -498,6 +498,28 @@ further = {
          'Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_of_orderOne',
          'Rigidity.Proofs.Regularity.clusterRestrictTo_mem_clusterHarmonic',
          'Rigidity.Proofs.Regularity.clusterForm_clusterRestrictTo_le'],
+    'Lemma 7.3 of Armstrong and Dario, (7.18) at k = 2, and Theorem 2(iii) at k = 1 in dimension two, from the estimates on squares of Lemma 7.1':
+        ['Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_two_planar',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_two_planar',
+         'Rigidity.Proofs.Regularity.harmonicRegularity_three_latticeHarmonicClass',
+         'Rigidity.Proofs.Regularity.polynomialComparison_latticeHarmonicCubic',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_2_two_latticeHarmonic',
+         'Rigidity.Proofs.Regularity.armstrongDario_lemma_7_3_two_latticeHarmonic',
+         'Rigidity.Proofs.Regularity.componentBallL2_le_sum_abs_of_latticeHarmonic',
+         'Rigidity.Proofs.Regularity.coarse_top_bounds',
+         'Rigidity.Proofs.Regularity.harmonicApproximation_error_le',
+         'Rigidity.Proofs.Regularity.mesoscopicDegreeTwo_core',
+         'Rigidity.Proofs.Regularity.mesoscopicDegreeTwoAt_of_inputs',
+         'Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwoPlanar_of_inputs',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_inputs',
+         'Rigidity.Proofs.Regularity.orderOneOrigin_of_mesoscopicDegreeTwoAt',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_mesoscopicDegreeTwoPlanar',
+         'Rigidity.Proofs.Regularity.planarCoarseHarmonicApproximationTwo_iff',
+         'Rigidity.Proofs.Regularity.planarPartCubeMoments_holds',
+         'Rigidity.Proofs.Regularity.planarPartitionSizeScale_of_partCubeMoments',
+         'Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_of_squareEstimates_holds',
+         'Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwoPlanar_of_squareEstimates',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_squareEstimates'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
