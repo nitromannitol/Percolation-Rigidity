@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Cluster.GeneralMuEnergyDefect
 import Rigidity.Proofs.Cluster.GeneralMinimalSet
+import Rigidity.Proofs.Percolation.GeneralDim.CubeNuEnergyDefect
 
 /-!
 # The quantity `τ_k` and display (5.9) of Armstrong and Dario, in every dimension
@@ -332,7 +333,6 @@ theorem exists_lintegral_cubeMuDefect_le_tau [NeZero d] (hd : 2 ≤ d) {p : unit
   have hρn0 : 0 ≤ ρn := by positivity
   have hτ0 : 0 ≤ ∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k :=
     Finset.sum_nonneg fun k _ => cubeTau_nonneg p k
-  -- the decrease of `E[-μ]`
   have hdec : cubeMuMean p n q - cubeMuMean p m q ≤
       d * N * (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k) +
         d * N * (C₂ * (1 + 1 / c₂) * (1 / (1 - r) * ρn)) := by
@@ -371,6 +371,91 @@ theorem exists_lintegral_cubeMuDefect_le_tau [NeZero d] (hd : 2 ≤ d) {p : unit
       _ = C₁ * d * (1 + 1 / c₁) * N * ρn := by ring
   have hfin : d * N * (C₂ * (1 + 1 / c₂) * (1 / (1 - r) * ρn)) + C₁ * d * (1 + 1 / c₁) * N * ρn =
       K * N * ρn := by
+    rw [hK]
+    ring
+  have k1 : 0 ≤ K * N * (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k) := by positivity
+  have k2 : 0 ≤ d * N * ρn := by positivity
+  nlinarith
+
+theorem one_div_sqrt_three_pow_le (k : ℕ) :
+    1 / √3 ^ k ≤ 1 / √(√((3 : ℝ) ^ k)) := by
+  rw [one_div_sqrt_sqrt_three_pow, ← one_div_pow]
+  refine pow_le_pow_left₀ (by positivity) ?_ k
+  have h1 : (0 : ℝ) < √(√(3 : ℝ)) := Real.sqrt_pos.2 (Real.sqrt_pos.2 (by norm_num))
+  have h2 : √(√(3 : ℝ)) ≤ √3 := Real.sqrt_le_iff.2 ⟨Real.sqrt_nonneg _, by
+    rw [Real.sq_sqrt (by norm_num)]
+    exact Real.sqrt_le_iff.2 ⟨by norm_num, by norm_num⟩⟩
+  exact one_div_le_one_div_of_le h1 h2
+
+/-- **Lemma 5.4 of Armstrong and Dario for `ν`** (display (5.10), second term, every dimension
+`d ≥ 2`, at the slope `ā⁻¹ q`): for `n ≤ m`,
+`E[|□_m|⁻¹ D^ν_n(□_m, ā⁻¹ q)] ≤ C |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`. -/
+theorem exists_lintegral_cubeNuDefect_le_tau [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (n m : ℕ) (q : Fin d → ℝ), n ≤ m →
+      ∫⁻ ω, ENNReal.ofReal (cubeNuDefect ω ⟨m, 0⟩ n ((cubeAhom p)⁻¹ *ᵥ q))
+          ∂(latticeBondLaw d p) ≤
+        ENNReal.ofReal ((⟨m, 0⟩ : TriadicCube d).latticeVolume * (C * (∑ i, q i ^ 2) *
+          (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k + 1 / √(√((3 : ℝ) ^ n))))) := by
+  obtain ⟨C₁, hC₁, hdef⟩ := exists_lintegral_cubeNuDefect_le hd hpc
+  obtain ⟨C₂, hC₂, hinc⟩ := exists_cubeNuIncrement_le hd hpc
+  set B := (cubeAhom (d := d) p)⁻¹ with hB
+  set S := ∑ i, ∑ j, |B i j| with hS
+  have hS0 : 0 ≤ S := Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => abs_nonneg _
+  set r := 1 / √(√(3 : ℝ)) with hr
+  have hr1 : r < 1 := one_div_sqrt_sqrt_three_lt_one
+  have hr0 : 0 < 1 - r := by linarith
+  set K := d * C₂ * (1 / (1 - r)) + C₁ * S ^ 2 * d with hK
+  have hK0 : 0 ≤ K := by positivity
+  refine ⟨d + K, by positivity, fun n m q hnm => ?_⟩
+  set V := (⟨m, 0⟩ : TriadicCube d).latticeVolume with hV
+  have hV0 : 0 < V := TriadicCube.latticeVolume_pos _
+  have h := hdef ⟨m, 0⟩ ⟨n, 0⟩ (B *ᵥ q) hnm
+  refine h.trans (ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left ?_ hV0.le))
+  change cubeNuMean p n (B *ᵥ q) - cubeNuMean p m (B *ᵥ q) +
+      C₁ * (∑ i, |(B *ᵥ q) i|) ^ 2 / √3 ^ n ≤ _
+  set N := ∑ i, q i ^ 2 with hN
+  have hN0 : 0 ≤ N := Finset.sum_nonneg fun _ _ => sq_nonneg _
+  set ρn := 1 / √(√((3 : ℝ) ^ n)) with hρn
+  have hρn0 : 0 ≤ ρn := by positivity
+  have hτ0 : 0 ≤ ∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k :=
+    Finset.sum_nonneg fun k _ => cubeTau_nonneg p k
+  have hdec : cubeNuMean p n (B *ᵥ q) - cubeNuMean p m (B *ᵥ q) ≤
+      d * N * (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k) +
+        d * N * (C₂ * (1 / (1 - r) * ρn)) := by
+    rw [cubeNuMean_sub_eq_sum p hnm]
+    have hterm : ∀ k ∈ Finset.Ico n m, cubeNuIncrement p k (B *ᵥ q) ≤
+        d * N * cubeTau (d := d) p k + d * N * (C₂ * (1 / √(√((3 : ℝ) ^ k)))) := by
+      intro k _
+      have h1 := hinc k q
+      have h3 : cubeNuTau (d := d) p k ≤ cubeTau (d := d) p k :=
+        le_add_of_nonneg_left (cubeMuTau_nonneg p k)
+      have h4 : C₂ / √3 ^ k ≤ C₂ * (1 / √(√((3 : ℝ) ^ k))) := by
+        rw [div_eq_mul_one_div]
+        exact mul_le_mul_of_nonneg_left (one_div_sqrt_three_pow_le k) hC₂
+      have hdN : 0 ≤ (d : ℝ) * N := by positivity
+      have := mul_le_mul_of_nonneg_left (add_le_add h3 h4) hdN
+      nlinarith
+    refine (Finset.sum_le_sum hterm).trans ?_
+    rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum, ← Finset.mul_sum]
+    have hg := sum_Ico_one_div_sqrt_sqrt_three_pow_le n m
+    have hdN : 0 ≤ (d : ℝ) * N := by positivity
+    have := mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hg hC₂) hdN
+    linarith
+  have hBq : (∑ i, |(B *ᵥ q) i|) ^ 2 ≤ S ^ 2 * (d * N) := by
+    have h1 := sum_abs_mulVec_le B q
+    have h2 := sq_sum_abs_le_card_mul q
+    have h0 : 0 ≤ ∑ i, |(B *ᵥ q) i| := Finset.sum_nonneg fun _ _ => abs_nonneg _
+    calc (∑ i, |(B *ᵥ q) i|) ^ 2 ≤ (S * ∑ i, |q i|) ^ 2 := pow_le_pow_left₀ h0 h1 2
+      _ = S ^ 2 * (∑ i, |q i|) ^ 2 := by ring
+      _ ≤ S ^ 2 * (d * N) := mul_le_mul_of_nonneg_left h2 (sq_nonneg S)
+  have herr : C₁ * (∑ i, |(B *ᵥ q) i|) ^ 2 / √3 ^ n ≤ C₁ * S ^ 2 * d * N * ρn := by
+    have h1 := one_div_sqrt_three_pow_le n
+    rw [div_eq_mul_one_div]
+    calc C₁ * (∑ i, |(B *ᵥ q) i|) ^ 2 * (1 / √3 ^ n) ≤ C₁ * (S ^ 2 * (d * N)) * ρn := by
+          gcongr
+      _ = C₁ * S ^ 2 * d * N * ρn := by ring
+  have hfin : d * N * (C₂ * (1 / (1 - r) * ρn)) + C₁ * S ^ 2 * d * N * ρn = K * N * ρn := by
     rw [hK]
     ring
   have k1 : 0 ≤ K * N * (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k) := by positivity
