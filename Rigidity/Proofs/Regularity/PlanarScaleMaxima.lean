@@ -170,4 +170,121 @@ theorem ae_eventually_scale_le {p : unitInterval} {Y : Vertex 2 → Configuratio
   push Not at hlt
   exact hk (Set.mem_biUnion hz hlt)
 
+/-- The box `{z ∈ ℤ² : |z_i| ≤ 3^{k+2}}`. -/
+noncomputable def triScaleBox (k : ℕ) : Finset (Vertex 2) :=
+  Fintype.piFinset fun _ => Finset.Icc (-(3 : ℤ) ^ (k + 2)) (3 ^ (k + 2))
+
+theorem mem_triScaleBox {k : ℕ} {z : Vertex 2} : z ∈ triScaleBox k ↔ ∀ i, |z i| ≤ 3 ^ (k + 2) := by
+  simp only [triScaleBox, Fintype.mem_piFinset, Finset.mem_Icc, abs_le]
+
+theorem card_triScaleBox_le (k : ℕ) : ((triScaleBox k).card : ℝ) ≤ 9 ^ 3 * 9 ^ k := by
+  have hI : ((Finset.Icc (-(3 : ℤ) ^ (k + 2)) (3 ^ (k + 2))).card : ℝ) =
+      2 * (3 : ℝ) ^ (k + 2) + 1 := by
+    rw [Int.card_Icc, show (3 : ℤ) ^ (k + 2) + 1 - -(3 : ℤ) ^ (k + 2) = 2 * 3 ^ (k + 2) + 1 by ring]
+    have h0 : (0 : ℤ) ≤ 2 * 3 ^ (k + 2) + 1 := by positivity
+    have e := Int.toNat_of_nonneg h0
+    have : (((2 * 3 ^ (k + 2) + 1 : ℤ).toNat : ℕ) : ℝ) = (((2 * 3 ^ (k + 2) + 1 : ℤ).toNat : ℤ) : ℝ) :=
+      rfl
+    rw [this, e]
+    push_cast
+    ring
+  have h1 : ((triScaleBox k).card : ℝ) = (2 * (3 : ℝ) ^ (k + 2) + 1) ^ 2 := by
+    rw [triScaleBox, Fintype.card_piFinset, Finset.prod_const, Finset.card_univ, Fintype.card_fin]
+    push_cast
+    rw [hI]
+  rw [h1]
+  have h2 : (2 * (3 : ℝ) ^ (k + 2) + 1) ≤ 3 ^ (k + 3) := by
+    have : (1 : ℝ) ≤ 3 ^ (k + 2) := one_le_pow₀ (by norm_num)
+    have e : (3 : ℝ) ^ (k + 3) = 3 * 3 ^ (k + 2) := by ring
+    linarith
+  calc (2 * (3 : ℝ) ^ (k + 2) + 1) ^ 2 ≤ ((3 : ℝ) ^ (k + 3)) ^ 2 :=
+        pow_le_pow_left₀ (by positivity) h2 2
+    _ = 9 ^ 3 * 9 ^ k := by
+        rw [← pow_mul, show (k + 3) * 2 = 2 * (k + 3) by ring, pow_mul]
+        norm_num
+        ring
+
+/-- **The maximum of the minimal scales over the triadic boxes**, almost surely for all large `k`. -/
+theorem ae_eventually_scale_le_three {p : unitInterval} {Y : Vertex 2 → Configuration 2 → ℝ}
+    {s θ γ : ℝ} (hs : 0 < s) (hθ : 0 < θ) (hγ : 0 < γ)
+    (hYi : ∀ z, Integrable (fun ω => Real.exp (Real.rpow (Y z ω / θ) s)) (latticeBondLaw 2 p))
+    (hYb : ∀ z, (∫ ω, Real.exp (Real.rpow (Y z ω / θ) s) ∂latticeBondLaw 2 p) ≤ 2) :
+    ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ᶠ k : ℕ in atTop, ∀ z ∈ triScaleBox k,
+      Y z ω ≤ (3 : ℝ) ^ ((k : ℝ) * γ) := by
+  obtain ⟨n, hn⟩ : ∃ n : ℕ, 3 ≤ γ * s * n := by
+    obtain ⟨n, hn⟩ := exists_nat_ge (3 / (γ * s))
+    refine ⟨n, ?_⟩
+    rw [div_le_iff₀ (by positivity)] at hn
+    linarith
+  set E : ℕ → Set (Configuration 2) := fun k =>
+    ⋃ z ∈ triScaleBox k, {ω | (3 : ℝ) ^ ((k : ℝ) * γ) < Y z ω} with hEdef
+  set A : ℝ := 2 * 9 ^ 3 * (n ! : ℝ) * θ ^ (s * n) with hAdef
+  have hA0 : 0 ≤ A := by rw [hAdef]; positivity
+  have hbound : ∀ k : ℕ, (latticeBondLaw 2 p) (E k) ≤ ENNReal.ofReal (A * (1 / 3) ^ k) := by
+    intro k
+    have ht0 : (0 : ℝ) ≤ (3 : ℝ) ^ ((k : ℝ) * γ) := by positivity
+    have hx : 0 < Real.rpow ((3 : ℝ) ^ ((k : ℝ) * γ) / θ) s :=
+      Real.rpow_pos_of_pos (by positivity) _
+    have hxpow : Real.rpow ((3 : ℝ) ^ ((k : ℝ) * γ) / θ) s ^ n =
+        (3 : ℝ) ^ ((k : ℝ) * (γ * s * n)) / θ ^ (s * n) := by
+      change (((3 : ℝ) ^ ((k : ℝ) * γ) / θ) ^ s) ^ n = _
+      rw [Real.div_rpow (by positivity) hθ.le, div_pow, ← Real.rpow_natCast,
+        ← Real.rpow_natCast, ← Real.rpow_mul (by positivity), ← Real.rpow_mul (by positivity),
+        ← Real.rpow_mul hθ.le]
+      congr 2
+      ring
+    have hpt : ∀ z ∈ triScaleBox k, (latticeBondLaw 2 p).real
+        {ω | (3 : ℝ) ^ ((k : ℝ) * γ) < Y z ω} ≤
+          2 * (n ! : ℝ) * θ ^ (s * n) / (3 : ℝ) ^ ((k : ℝ) * (γ * s * n)) := by
+      intro z _
+      refine (measureReal_lt_le hs hθ ht0 (hYi z) (hYb z)).trans ?_
+      have h1 := inv_exp_le_factorial_div_pow hx n
+      rw [hxpow] at h1
+      have e : 2 / Real.exp (Real.rpow ((3 : ℝ) ^ ((k : ℝ) * γ) / θ) s) =
+          2 * (1 / Real.exp (Real.rpow ((3 : ℝ) ^ ((k : ℝ) * γ) / θ) s)) := by ring
+      rw [e]
+      calc 2 * (1 / Real.exp (Real.rpow ((3 : ℝ) ^ ((k : ℝ) * γ) / θ) s))
+          ≤ 2 * ((n ! : ℝ) / ((3 : ℝ) ^ ((k : ℝ) * (γ * s * n)) / θ ^ (s * n))) :=
+            mul_le_mul_of_nonneg_left h1 (by norm_num)
+        _ = 2 * (n ! : ℝ) * θ ^ (s * n) / (3 : ℝ) ^ ((k : ℝ) * (γ * s * n)) := by
+            field_simp
+    have h8 : (27 : ℝ) ^ k ≤ (3 : ℝ) ^ ((k : ℝ) * (γ * s * n)) := by
+      calc (27 : ℝ) ^ k = ((3 : ℝ) ^ (3 : ℝ)) ^ (k : ℝ) := by
+            rw [show (3 : ℝ) ^ (3 : ℝ) = 27 by norm_num, Real.rpow_natCast]
+        _ = (3 : ℝ) ^ ((k : ℝ) * 3) := by rw [← Real.rpow_mul (by norm_num), mul_comm]
+        _ ≤ _ := Real.rpow_le_rpow_of_exponent_le (by norm_num)
+            (mul_le_mul_of_nonneg_left hn (Nat.cast_nonneg k))
+    have hunion : (latticeBondLaw 2 p) (E k) ≤ ∑ z ∈ triScaleBox k,
+        (latticeBondLaw 2 p) {ω | (3 : ℝ) ^ ((k : ℝ) * γ) < Y z ω} :=
+      measure_biUnion_finset_le _ _
+    refine hunion.trans ?_
+    have hfin : ∀ z ∈ triScaleBox k, (latticeBondLaw 2 p) {ω | (3 : ℝ) ^ ((k : ℝ) * γ) < Y z ω} =
+        ENNReal.ofReal ((latticeBondLaw 2 p).real {ω | (3 : ℝ) ^ ((k : ℝ) * γ) < Y z ω}) :=
+      fun z _ => (ofReal_measureReal (measure_ne_top _ _)).symm
+    rw [Finset.sum_congr rfl hfin, ← ENNReal.ofReal_sum_of_nonneg fun _ _ => measureReal_nonneg]
+    refine ENNReal.ofReal_le_ofReal ?_
+    calc ∑ z ∈ triScaleBox k, (latticeBondLaw 2 p).real {ω | (3 : ℝ) ^ ((k : ℝ) * γ) < Y z ω}
+        ≤ ∑ _z ∈ triScaleBox k, 2 * (n ! : ℝ) * θ ^ (s * n) / (3 : ℝ) ^ ((k : ℝ) * (γ * s * n)) :=
+          Finset.sum_le_sum hpt
+      _ = (triScaleBox k).card * (2 * (n ! : ℝ) * θ ^ (s * n) /
+            (3 : ℝ) ^ ((k : ℝ) * (γ * s * n))) := by
+          rw [Finset.sum_const, nsmul_eq_mul]
+      _ ≤ 9 ^ 3 * 9 ^ k * (2 * (n ! : ℝ) * θ ^ (s * n) / 27 ^ k) := by
+          gcongr
+          · exact card_triScaleBox_le k
+      _ = A * (1 / 3) ^ k := by
+          rw [hAdef, div_pow, one_pow, show (27 : ℝ) ^ k = 9 ^ k * 3 ^ k by
+            rw [← mul_pow]; norm_num]
+          field_simp
+  have hsum : ∑' k, (latticeBondLaw 2 p) (E k) ≠ ∞ := by
+    refine ne_top_of_le_ne_top ?_ (ENNReal.tsum_le_tsum hbound)
+    rw [← ENNReal.ofReal_tsum_of_nonneg (fun k => by positivity)
+      ((summable_geometric_of_lt_one (by norm_num) (by norm_num)).mul_left A)]
+    exact ENNReal.ofReal_ne_top
+  filter_upwards [ae_eventually_notMem hsum] with ω hω
+  filter_upwards [hω] with k hk z hz
+  by_contra hlt
+  push Not at hlt
+  exact hk (Set.mem_biUnion hz hlt)
+
 end Rigidity.Proofs.Regularity
