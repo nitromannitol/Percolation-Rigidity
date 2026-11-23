@@ -472,4 +472,38 @@ theorem exists_cubeAhomInvFinite_mul_cubeAhomFinite [NeZero d] (hd : 2 ≤ d) {p
     linarith
   exact ⟨Matrix.mul_nonsing_inv _ hdet, Matrix.nonsing_inv_mul _ hdet⟩
 
+/-- **The minimum characterization of `ā_{□_n} ξ`**: when `ā_{□_n}⁻¹ ā_{□_n} = 1`, the function
+`x ↦ E[-μ(□_n, x)] - ξ · x` is minimal at `x = ā_{□_n} ξ`. -/
+theorem cubeMuMean_cubeAhomFinite_sub_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) {n : ℕ}
+    (hinv : cubeAhomInvFinite p n * cubeAhomFinite (d := d) p n = 1) (ξ x : Fin d → ℝ) :
+    cubeMuMean p n (cubeAhomFinite p n *ᵥ ξ) - ∑ i, ξ i * (cubeAhomFinite p n *ᵥ ξ) i ≤
+      cubeMuMean p n x - ∑ i, ξ i * x i := by
+  set y := cubeAhomFinite (d := d) p n *ᵥ ξ with hy
+  set w := x - y with hw
+  have hx : x = y + w := by rw [hw]; abel
+  have hBy : cubeAhomInvFinite p n *ᵥ y = ξ := by
+    rw [hy, Matrix.mulVec_mulVec, hinv, Matrix.one_mulVec]
+  have hpol := (isSlopeQuadratic_cubeMuMean hd hpc n).add_sub_sub_eq y w
+  have hP : ∑ i, ∑ j, y i * w j * slopePolar (cubeMuMean p n) i j = ∑ j, ξ j * w j := by
+    rw [← hBy, Finset.sum_comm]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    simp only [Matrix.mulVec, dotProduct, cubeAhomInvFinite, Finset.sum_mul]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [slopePolar_comm]
+    ring
+  have hw0 : 0 ≤ cubeMuMean p n w := ENNReal.toReal_nonneg
+  have hξx : ∑ i, ξ i * x i = ∑ i, ξ i * y i + ∑ i, ξ i * w i := by
+    rw [← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun i _ => by rw [hx, Pi.add_apply]; ring
+  rw [hξx, hx]
+  linarith
+
+/-- The quantity `D_n = ∑ᵢ (E[ν(□_n, eᵢ)] + E[-μ(□_n, ā_{□_n} eᵢ)] - eᵢ · ā_{□_n} eᵢ)` of Armstrong
+and Dario (proof of Lemma 5.10), in every dimension. -/
+noncomputable def cubeOmegaD (p : unitInterval) (n : ℕ) : ℝ :=
+  ∑ i : Fin d, (cubeNuMean p n (Pi.single i 1) +
+    cubeMuMean p n (cubeAhomFinite p n *ᵥ Pi.single i 1) -
+    (cubeAhomFinite p n *ᵥ Pi.single i 1) i)
+
 end Rigidity.Percolation
