@@ -166,4 +166,93 @@ theorem exists_abs_cubeAhomInvFinite_sub_le [NeZero d] (hd : 2 ≤ d) {p : unitI
   rw [abs_le] at h1' h2 h3 ⊢
   constructor <;> linarith [h1'.1, h1'.2, h2.1, h2.2, h3.1, h3.2]
 
+theorem sum_range_one_div_sqrt_sqrt_three_pow_le (K : ℕ) :
+    ∑ k ∈ Finset.range K, 1 / √(√((3 : ℝ) ^ k)) ≤ 1 / (1 - 1 / √(√(3 : ℝ))) := by
+  have h := sum_Ico_one_div_sqrt_sqrt_three_pow_le 0 K
+  rw [← Finset.range_eq_Ico] at h
+  refine h.trans (le_of_eq ?_)
+  simp
+
+/-- **`τ_k` is summable** (every dimension `d ≥ 2`): the increments of `E[-μ]` and `E[ν]`
+telescope, and their negative parts are summable by the approximate monotonicity. -/
+theorem summable_cubeTau [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) : Summable (cubeTau (d := d) p) := by
+  obtain ⟨C₀, hC₀, c₀, hc₀, hlowμ⟩ := exists_neg_le_cubeMuIncrement hd hpc
+  obtain ⟨C₁, hC₁, hlowν⟩ := exists_neg_le_cubeNuIncrement hd hpc
+  have hr1 : 1 / √(√(3 : ℝ)) < 1 := one_div_sqrt_sqrt_three_lt_one
+  have hr0 : 0 < 1 - 1 / √(√(3 : ℝ)) := by linarith
+  set G := 1 / (1 - 1 / √(√(3 : ℝ))) with hG
+  have hG0 : 0 ≤ G := by positivity
+  set f : Fin d → Fin d → ℝ := fun i => (cubeAhom (d := d) p)⁻¹ *ᵥ Pi.single i 1 with hf
+  set Aμ : Fin d → ℝ := fun i => (∑ j, |(Pi.single i 1 : Fin d → ℝ) j|) ^ 2 with hAμ
+  set Aν : Fin d → ℝ := fun i => (∑ j, |f i j|) ^ 2 with hAν
+  refine summable_of_sum_range_le (fun k => cubeTau_nonneg p k)
+    (c := ∑ i, (cubeMuMean p 0 (Pi.single i 1) + C₀ * Aμ i * ((1 + 1 / c₀) * G) +
+      (cubeNuMean p 0 (f i) + C₁ * Aν i * G))) fun K => ?_
+  have hterm : ∀ k, cubeTau (d := d) p k ≤ ∑ i,
+      ((cubeMuIncrement p k (Pi.single i 1) +
+          C₀ * (Aμ i * (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₀ * (3 : ℝ) ^ k)))) +
+        (cubeNuIncrement p k (f i) + C₁ * Aν i * (1 / √3 ^ k))) := by
+    intro k
+    unfold cubeTau cubeMuTau cubeNuTau
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_le_sum fun i _ => add_le_add ?_ ?_
+    · have h := hlowμ k (Pi.single i 1)
+      have h0 : 0 ≤ C₀ * (Aμ i * (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₀ * (3 : ℝ) ^ k))) := by
+        simp only [hAμ]
+        positivity
+      have e : C₀ * ((∑ j, |(Pi.single i 1 : Fin d → ℝ) j|) ^ 2 *
+          (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₀ * (3 : ℝ) ^ k))) =
+          C₀ * (Aμ i * (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₀ * (3 : ℝ) ^ k))) := rfl
+      rw [e] at h
+      exact max_le (by linarith) (by linarith)
+    · have h := hlowν k (f i)
+      have h0 : 0 ≤ C₁ * Aν i * (1 / √3 ^ k) := by
+        simp only [hAν]
+        positivity
+      have e : C₁ * (∑ j, |f i j|) ^ 2 / √3 ^ k = C₁ * Aν i * (1 / √3 ^ k) := by
+        simp only [hAν]
+        ring
+      rw [e] at h
+      exact max_le (by linarith) (by linarith)
+  refine (Finset.sum_le_sum fun k _ => hterm k).trans ?_
+  rw [Finset.sum_comm]
+  refine Finset.sum_le_sum fun i _ => ?_
+  rw [Finset.sum_add_distrib, Finset.sum_add_distrib, Finset.sum_add_distrib]
+  have hμsum : ∑ k ∈ Finset.range K, cubeMuIncrement p k (Pi.single i 1) ≤
+      cubeMuMean p 0 (Pi.single i 1) := by
+    rw [Finset.range_eq_Ico, ← cubeMuMean_sub_eq_sum p (Nat.zero_le K)]
+    have : 0 ≤ cubeMuMean p K (Pi.single i 1) := ENNReal.toReal_nonneg
+    linarith
+  have hνsum : ∑ k ∈ Finset.range K, cubeNuIncrement p k (f i) ≤ cubeNuMean p 0 (f i) := by
+    rw [Finset.range_eq_Ico, ← cubeNuMean_sub_eq_sum p (Nat.zero_le K)]
+    have : 0 ≤ cubeNuMean p K (f i) := integral_nonneg fun ω => cubeNu_nonneg _
+    linarith
+  have hAμ0 : 0 ≤ Aμ i := by simp only [hAμ]; positivity
+  have hAν0 : 0 ≤ Aν i := by simp only [hAν]; positivity
+  have hg := sum_range_one_div_sqrt_sqrt_three_pow_le K
+  have hb1 : ∑ k ∈ Finset.range K,
+      C₀ * (Aμ i * (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₀ * (3 : ℝ) ^ k))) ≤
+      C₀ * Aμ i * ((1 + 1 / c₀) * G) := by
+    have hk : ∀ k ∈ Finset.range K,
+        C₀ * (Aμ i * (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₀ * (3 : ℝ) ^ k))) ≤
+        C₀ * Aμ i * (1 + 1 / c₀) * (1 / √(√((3 : ℝ) ^ k))) := by
+      intro k _
+      have h2 := exp_neg_mul_three_pow_le hc₀ k
+      have h3 : Aμ i * (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₀ * (3 : ℝ) ^ k)) ≤
+          Aμ i * ((1 + 1 / c₀) * (1 / √(√((3 : ℝ) ^ k)))) :=
+        mul_le_mul_of_nonneg_left (by linarith) hAμ0
+      calc _ ≤ C₀ * (Aμ i * ((1 + 1 / c₀) * (1 / √(√((3 : ℝ) ^ k))))) :=
+            mul_le_mul_of_nonneg_left h3 hC₀
+        _ = _ := by ring
+    refine (Finset.sum_le_sum hk).trans ?_
+    rw [← Finset.mul_sum]
+    have := mul_le_mul_of_nonneg_left hg (by positivity : (0 : ℝ) ≤ C₀ * Aμ i * (1 + 1 / c₀))
+    linarith
+  have hb2 : ∑ k ∈ Finset.range K, C₁ * Aν i * (1 / √3 ^ k) ≤ C₁ * Aν i * G := by
+    rw [← Finset.mul_sum]
+    refine mul_le_mul_of_nonneg_left ((Finset.sum_le_sum fun k _ =>
+      one_div_sqrt_three_pow_le k).trans hg) (by positivity)
+  linarith
+
 end Rigidity.Percolation
