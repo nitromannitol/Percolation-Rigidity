@@ -406,6 +406,13 @@ fidelity:
     z in 3^k Z^2, k = ceil(m/8), in place of z + Q_n, n = ceil(m/4) of Definition 5.12, the bound
     of the gradient of the homogenized solution in homogeneous form, and the homogenized matrix
     proved to be a multiple of the identity from the symmetries of the plane), and
+    for the partition of Definition 3.7 with its minimal scales and the Meyers estimate of
+    Proposition 3.8 above it, in every dimension d >= 2 for p above the critical value with no
+    further hypothesis (the local family of cubes on whose children the reverse Hoelder inequality
+    holds for all closed subsets of the triple, with a failure probability bounded through the
+    partition into good cubes), for the homogenized matrix as a multiple of the identity in every
+    dimension from the invariance of nu under the signed permutations of the coordinates, for the
+    estimate (3.3) and Step 3 of the proof of Lemma 3.2 of Dario in dimension two, and
     for Lemma 7.1 and the order-zero regularity of Theorem 2(iii) at k = 0 in dimension two with no
     hypothesis beyond p above the critical value (the estimates on the squares of the proof from
     Theorem 1 with the discrete homogenized solution and the minimal scales of Proposition 2.4, the

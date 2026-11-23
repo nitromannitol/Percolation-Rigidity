@@ -1793,7 +1793,7 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
   from `ArmstrongDarioOrderZeroTwo`
   (`supercriticalBondGreenQuantitativeTwo_of_darioGu_of_correctorInput`, `..._of_orderZero`). The small-time bound
   of the Carne–Varopoulos type is proved for the lazy walk (`lazyPow_le_carneVaropoulos`, `heatSmallTimeTwo`), so
-  the hypothesis `CarneVaropoulosTwo` is not used.
+  the hypothesis `CarneVaropoulosTwo` is not used in this reduction.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1892,9 +1892,16 @@ The thirty-two reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Lemmas 3.2 and 3.3 of Dario rest on steps that Dario only sketches, which are not formalized and are part of the
-named inputs `DarioLemmaThreeTwo` and `DarioLemmaThreeThree`: the stationary part of the partition (3.3), proved
-"similarly to Proposition 2.1 (iv) of Armstrong and Dario"; Lemma 3.5 on resampling the partition; and the Green
-gradient bounds of Propositions 2.11 and 2.12, which are proved by "standard arguments".
+named inputs `DarioLemmaThreeTwo` and `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, and the Green
+gradient bounds of Propositions 2.11 and 2.12, which are proved by "standard arguments". The estimate (3.3) for the
+stationary partitions, which Dario proves "similarly to Proposition 2.1 (iv) of Armstrong and Dario", is proved
+(`dario_errorstatpart`): the stationary partition is the planar partition capped at the scale `k`, which exists
+deterministically and is stationary under the translations by `3^k ℤ²`
+(`Rigidity/Proofs/Corrector/DarioStationaryPartition.lean`), and `P[∃ x ∈ □, □_𝒫(x) ≠ □_{𝒫_stat^k}(x)] ≤ C exp(−c 3^k)` for
+every triadic cube `□` of scale `k` follows from the localization of the planar partition. Step 3 of the proof of
+Lemma 3.2 is proved as well (`abs_tsum_openHeat_mul_periodic_le_exp`, `Rigidity/Proofs/Corrector/PeriodicHeatDecay.lean`):
+for a `3^k`-periodic function `f` of sum zero over a period and `9^k ≤ r`, `|Φ_{r²} * f(x)| ≤ e^{−16 r} Σ_{period} |f|`, by the
+discrete Fourier transform. The other steps of Lemma 3.2 are not formalized.
 
 Departures from Dario:
 
@@ -1967,18 +1974,72 @@ Points in the source that are not detailed, and an issue of normalization, with 
 - the estimate of the term `h − p̄/θ` in the proof of (4.47) (DG21.tex:2556-2562) is left to the reader, as are details
   of Proposition 4.3 (DG21.tex:2274, :2411) and the proofs of Propositions 2.9 and 2.11 (DG21.tex:1018, :1053);
 - Theorem 4, stated for the constant speed random walk with conductances `0` or `1`, is used for the variable speed
-  walk (DG21.tex:1253);
+  walk (DG21.tex:1252);
 - the weighted `L²` bounds (4.3), (4.24), (4.46) and (4.49), with the weight `exp(Ψ_C)`, `Ψ_C = −ln Φ_C` (3.3), carry
   the normalization `t^{d/2}` differently from the Gaussian factor `exp(|x|²/(Ct))` used in (4.48); the Lean weight is
   `exp(dgExponent)`;
-- the decomposition (4.47) has `+w` where `w := h − v − q` gives `−w` (compare DG21.tex:1939).
+- the decomposition (4.47) has `+w` where `w := h − v − q` gives `−w` (compare DG21.tex:1944-1948).
+
+## Section 3 and the isotropy of the homogenized matrix in every dimension
+
+For every `d ≥ 2` and `𝔭_c(d) < p < 1`, with no further hypothesis, the partition `𝓡` of Definition 3.7 of Armstrong and
+Dario, the Meyers estimate of Proposition 3.8 above it, and the isotropy of the homogenized matrix are proved, in
+[`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/) (namespace `Rigidity.Proofs.Cluster.GeneralDim` for the first
+five modules). The construction is that of the planar section
+[Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two) in every dimension: Propositions 2.1 and 2.4 are
+applied to a local family of cubes, the cubes on whose children the reverse Hölder inequality holds, whose failure is
+bounded through the partition into good cubes.
+
+* **The local family** (`rhGood`, from `RHCube`, the reverse Hölder inequality with exponent `2d/(d+1)` for every set of
+  the triple closed under the open edges and every function harmonic on it): its failure events are determined by the open
+  edges of the threefold enlargement, the hypothesis (2.1) of Proposition 2.1 (`measurableSet_not_mem_rhGood_local`).
+* **Lemma 3.6, deterministic part** (`rhCube_of_scales`): a cube whose triple has partition cubes of scale at most `k − 2`
+  and `∑_{3□} partitionReach^{2d(d+2)} ≤ C_G 3^{(k+1)d}` is a reverse Hölder cube. A vertex joined by an open path to the
+  boundary of the box of its partition cube is joined to its anchor inside the parent of the partition cube and the box
+  (`reachable_partitionAnchor_of_exit`, `mem_partitionBoxCluster_of_exit`), and a part of a closed set that no open edge
+  leaves carries no energy (`clusterGradSq_eq_zero_of_closed`).
+* **The failure bound (2.2)** (`rhFailureBound_holds`): the scale tail of the partition cubes, the stretched exponential
+  concentration of the reach on a triple (`exists_measure_sum_reach_enl_gt_le`, with the exponent `1/(2(d + 2d(d+2) + 1))`),
+  and Lemma 3.6. The reach of the partition is dominated by the stopping size of the partition into coarsely good cubes,
+  whose failure events are local and of probability at most `C exp(−c 3^n)`
+  (`partitionReach_le_stoppingSize_coarseGood`, `exists_measure_not_mem_coarseGood_le`, Lemma 2.7).
+* **The partition `𝓡`** (`rhPartition_holds`): the maximal stopping cubes of the local family form almost surely a partition
+  with comparable neighbours, every predecessor of a cell is in the local family, and for every exponent the moments of the
+  sizes of the cells over a triadic cube are at most `K |□|` off an event of probability `C 3^{−Bk}`
+  (`rhPartition_of_failureBound`).
+* **Proposition 3.8 above `𝓡`** (`meyers_rh_uniform`): the Meyers estimate with exponents `ε, t` depending only on the
+  reverse Hölder constant, for every set `U₀` closed under the open edges inside the triple `3□`
+  (`avg_clusterEnergy_le_of_rhGood`, with the constant `3^{d+1} max(1, A₀)`).
+* **Isotropy** (`exists_cubeAhom_eq_smul_one`, `Rigidity.Percolation`): `ā = σ I` with `σ > 0`, for `d ≥ 2` and
+  `𝔭_c(d) < p < 1` (the remark after (5.22) of Armstrong and Dario). The signed permutations of `ℤ^d` carry crossing
+  clusters to crossing clusters and leave `ν`, its expectations on the cube at the origin and their limit invariant
+  (`cubeNu_signedPerm`, `cubeNuLimit_signedPermSlope`); only the crossing cluster is used, since the rounded three-quarter
+  cubes of the good cubes are not reflection-symmetric, so no goodness is needed.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Cluster.GeneralDim.measurableSet_not_mem_rhGood_local`](Rigidity/Proofs/Cluster/GeneralRHLocal.lean) | the failure event of a cube of the local family `rhGood` is determined by the open edges of the threefold enlargement, as the hypothesis (2.1) of Proposition 2.1 requires. |
+| [`rhCube_of_scales`](Rigidity/Proofs/Cluster/GeneralRHEvent.lean), [`mem_partitionBoxCluster_of_exit`](Rigidity/Proofs/Cluster/GeneralRHEvent.lean), [`Rigidity.Percolation.reachable_partitionAnchor_of_exit`](Rigidity/Proofs/Cluster/GeneralRHExit.lean) | AD Lemma 3.6, deterministic part, in every dimension, in the form of a reverse Hölder cube for every closed set of the triple, with the exit lemma that joins a vertex to its anchor. |
+| [`Rigidity.Percolation.partitionReach_le_stoppingSize_coarseGood`](Rigidity/Proofs/Cluster/GeneralReachDomination.lean), [`exists_measure_not_mem_coarseGood_le`](Rigidity/Proofs/Cluster/GeneralReachDomination.lean), [`Rigidity.Proofs.Cluster.GeneralDim.exists_measure_sum_reach_enl_gt_le`](Rigidity/Proofs/Cluster/GeneralRHProb.lean) | the reach of the partition into good cubes is at most the stopping size of the partition into coarsely good cubes, the failure bound of the coarsely good cubes (Lemma 2.7), and the concentration of the sums of the powers of the reach on a triple. |
+| [`rhFailureBound_holds`](Rigidity/Proofs/Cluster/GeneralRHProb.lean), [`rhPartition_holds`](Rigidity/Proofs/Cluster/GeneralRHPartition.lean) | the failure bound (2.2) of the local family and the partition `𝓡` of Definition 3.7 with its minimal scales (Propositions 2.1 and 2.4), `d ≥ 2`, `p > 𝔭_c(d)`. |
+| [`meyers_rh_uniform`](Rigidity/Proofs/Cluster/GeneralRHMeyers.lean) | AD Proposition 3.8 above the partition `𝓡`, in every dimension, with `ε` and `t` depending only on the reverse Hölder constant. |
+| [`Rigidity.Percolation.cubeNu_signedPerm`](Rigidity/Proofs/Cluster/GeneralAhomIsotropic.lean), [`cubeNuLimit_signedPermSlope`](Rigidity/Proofs/Cluster/GeneralAhomIsotropic.lean), [`exists_cubeAhom_eq_smul_one`](Rigidity/Proofs/Cluster/GeneralAhomIsotropic.lean) | the invariance of `ν` and of the limit of its expectations under the signed permutations of the coordinates, and `ā = σ I` with `σ > 0` in every dimension `d ≥ 2`. |
+
+The thirteen reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Definition 3.9 (the partition `𝓠_a` for the Meyers
+estimate) and the localization of `μ` in dimension `d ≥ 3` (Proposition 4.10, Lemma 4.11) are not proved here.
+
+Departures from Armstrong and Dario: the good cubes of the local family ask the reverse Hölder inequality for all sets of
+the triple of each child closed under the open edges and all functions harmonic on them, not only for `𝒞_max(3□)` with the
+numerator `𝒞_*(□)`; the failure probability is bounded through the partition into good cubes with polynomial rates in
+place of the stretched exponentials of the tails of `𝓡`, as in the planar section.
 
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 544 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 560 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2027,9 +2088,11 @@ Points in the source that are not detailed, and an issue of normalization, with 
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
   the ten theorems of
   [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two),
+  the thirteen theorems of
+  [Section 3 and the isotropy of the homogenized matrix in every dimension](#section-3-and-the-isotropy-of-the-homogenized-matrix-in-every-dimension),
   and the twenty-seven theorems of
   [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
-  Each of the 544 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 560 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2060,10 +2123,10 @@ Points in the source that are not detailed, and an issue of normalization, with 
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1356 Lean files with 264,444 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1366 Lean files with 267,233 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (954 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (982 lines) are counted separately.
 
 ## Building
 
