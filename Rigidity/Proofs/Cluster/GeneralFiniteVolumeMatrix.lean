@@ -19,7 +19,7 @@ at most `C (∑_{k=n}^{m-1} τ_k + 3^{-n/4})` (`exists_abs_cubeAhomInvFinite_sub
 Armstrong and Dario, in every dimension `d ≥ 2`).
 -/
 
-open MeasureTheory LatticeProb LatticeProb.Percolation Rigidity.External
+open MeasureTheory Filter Topology LatticeProb LatticeProb.Percolation Rigidity.External
 open scoped ENNReal Classical Matrix
 
 namespace Rigidity.Percolation
@@ -254,5 +254,42 @@ theorem summable_cubeTau [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     refine mul_le_mul_of_nonneg_left ((Finset.sum_le_sum fun k _ =>
       one_div_sqrt_three_pow_le k).trans hg) (by positivity)
   linarith
+
+/-- The limit of the matrices `ā_{□_n}⁻¹`: the polarization matrix of `q ↦ lim_n E[-μ(□_n, q)]`. -/
+noncomputable def cubeAhomInvLimit (p : unitInterval) : Matrix (Fin d) (Fin d) ℝ :=
+  fun i j => slopePolar (cubeMuLimit (d := d) p) i j
+
+theorem tendsto_cubeAhomInvFinite [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (i j : Fin d) :
+    Tendsto (fun n => cubeAhomInvFinite p n i j) atTop (𝓝 (cubeAhomInvLimit p i j)) := by
+  simp only [cubeAhomInvFinite, cubeAhomInvLimit, slopePolar]
+  exact ((tendsto_cubeMuLimit hd hpc _).sub (tendsto_cubeMuLimit hd hpc _)).sub
+    (tendsto_cubeMuLimit hd hpc _)
+
+/-- **The rate of `ā_{□_n}⁻¹`** (display (5.24) with `m → ∞`, every dimension `d ≥ 2`): every
+entry of `lim ā_{□_m}⁻¹ - ā_{□_n}⁻¹` is at most `C (∑_{k ≥ n} τ_k + 3^{-n/4})`. -/
+theorem exists_abs_cubeAhomInvLimit_sub_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (n : ℕ) (i j : Fin d),
+      |cubeAhomInvLimit p i j - cubeAhomInvFinite p n i j| ≤
+        C * (∑' k, cubeTau (d := d) p (k + n) + 1 / √(√((3 : ℝ) ^ n))) := by
+  obtain ⟨C, hC, h⟩ := exists_abs_cubeAhomInvFinite_sub_le hd hpc
+  refine ⟨C, hC, fun n i j => ?_⟩
+  have hs : Summable fun k => cubeTau (d := d) p (k + n) :=
+    (summable_nat_add_iff n).2 (summable_cubeTau hd hpc)
+  have hbound : ∀ m, n ≤ m → |cubeAhomInvFinite p m i j - cubeAhomInvFinite p n i j| ≤
+      C * (∑' k, cubeTau (d := d) p (k + n) + 1 / √(√((3 : ℝ) ^ n))) := by
+    intro m hnm
+    refine (h n m hnm i j).trans (mul_le_mul_of_nonneg_left (add_le_add ?_ le_rfl) hC)
+    rw [Finset.sum_Ico_eq_sum_range]
+    calc ∑ k ∈ Finset.range (m - n), cubeTau (d := d) p (n + k)
+        = ∑ k ∈ Finset.range (m - n), cubeTau (d := d) p (k + n) :=
+          Finset.sum_congr rfl fun k _ => by rw [add_comm]
+      _ ≤ ∑' k, cubeTau (d := d) p (k + n) :=
+          hs.sum_le_tsum _ fun k _ => cubeTau_nonneg p _
+  have ht : Tendsto (fun m => |cubeAhomInvFinite p m i j - cubeAhomInvFinite p n i j|) atTop
+      (𝓝 |cubeAhomInvLimit p i j - cubeAhomInvFinite p n i j|) :=
+    ((tendsto_cubeAhomInvFinite hd hpc i j).sub_const _).abs
+  exact le_of_tendsto ht (eventually_atTop.2 ⟨n, hbound⟩)
 
 end Rigidity.Percolation
