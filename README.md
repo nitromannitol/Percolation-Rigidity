@@ -1615,7 +1615,7 @@ Departures from Armstrong and Dario:
   Campanato iteration, and the transfer from `[u]_𝒫` to `u` by the iteration over the radii `A^k s`.
 
 Misprint in the source whose meaning is clear: in the iteration of Step 4 of the proof of Lemma 7.1
-(AD18.tex:5296-5318) the squares are `□_{m+3(k+1)}`, with the factor `3^{−k(m + 3(k+1)/2)}`, where
+(AD18.tex:5292-5316) the squares are `□_{m+3(k+1)}`, with the factor `3^{−k(m + 3(k+1)/2)}`, where
 AD18.tex:5137-5146 prints `□_{m+3k}`. It does not affect Lemma 7.3.
 
 ## Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two
@@ -1809,7 +1809,7 @@ exponent of the tail).
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1286 Lean files with 246,397 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1286 Lean files with 246,406 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
 `RigidityAudit/Axioms.lean` (801 lines) are counted separately.
