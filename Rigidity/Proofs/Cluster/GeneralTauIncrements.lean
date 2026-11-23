@@ -247,4 +247,134 @@ theorem cubeNuMean_sub_eq_sum (p : unitInterval) {n m : ℕ} (h : n ≤ m) (ξ :
     unfold cubeNuIncrement
     ring
 
+theorem sqrt_pow_eq_pow_sqrt {x : ℝ} (hx : 0 ≤ x) (k : ℕ) : √(x ^ k) = √x ^ k := by
+  rw [show x ^ k = (√x ^ k) ^ 2 by rw [← pow_mul, mul_comm, pow_mul, Real.sq_sqrt hx],
+    Real.sqrt_sq (pow_nonneg (Real.sqrt_nonneg x) k)]
+
+/-- `3^{-k/4} = r^k` with `r = 3^{-1/4}`. -/
+theorem one_div_sqrt_sqrt_three_pow (k : ℕ) :
+    1 / √(√((3 : ℝ) ^ k)) = (1 / √(√(3 : ℝ))) ^ k := by
+  rw [sqrt_pow_eq_pow_sqrt (by norm_num), sqrt_pow_eq_pow_sqrt (Real.sqrt_nonneg _), one_div_pow]
+
+theorem one_div_sqrt_sqrt_three_lt_one : 1 / √(√(3 : ℝ)) < 1 := by
+  have h : 1 < √(√(3 : ℝ)) :=
+    (Real.lt_sqrt zero_le_one).2 (by rw [one_pow]; exact (Real.lt_sqrt zero_le_one).2 (by norm_num))
+  rw [div_lt_one (by linarith)]
+  exact h
+
+theorem one_third_le_one_div_sqrt_sqrt_three : (1 / 3 : ℝ) ≤ 1 / √(√(3 : ℝ)) := by
+  have h1 : (0 : ℝ) < √(√(3 : ℝ)) := Real.sqrt_pos.2 (Real.sqrt_pos.2 (by norm_num))
+  have h2 : √(√(3 : ℝ)) ≤ 3 := Real.sqrt_le_iff.2 ⟨by norm_num,
+    Real.sqrt_le_iff.2 ⟨by norm_num, by norm_num⟩⟩
+  exact one_div_le_one_div_of_le h1 h2
+
+/-- `exp(-c 3ᵏ) ≤ c⁻¹ 3^{-k/4}`. -/
+theorem exp_neg_mul_three_pow_le {c : ℝ} (hc : 0 < c) (k : ℕ) :
+    Real.exp (-c * (3 : ℝ) ^ k) ≤ 1 / c * (1 / √(√((3 : ℝ) ^ k))) := by
+  have hy : 0 < c * (3 : ℝ) ^ k := by positivity
+  have h1 : Real.exp (-c * (3 : ℝ) ^ k) ≤ 1 / (c * (3 : ℝ) ^ k) := by
+    have h2 : c * (3 : ℝ) ^ k + 1 ≤ Real.exp (c * (3 : ℝ) ^ k) := Real.add_one_le_exp _
+    have h3 : Real.exp (-c * (3 : ℝ) ^ k) = 1 / Real.exp (c * (3 : ℝ) ^ k) := by
+      rw [neg_mul, Real.exp_neg, one_div]
+    rw [h3]
+    exact one_div_le_one_div_of_le hy (by linarith)
+  calc Real.exp (-c * (3 : ℝ) ^ k) ≤ 1 / (c * (3 : ℝ) ^ k) := h1
+    _ = 1 / c * (1 / 3 : ℝ) ^ k := by rw [one_div_pow, one_div_mul_one_div]
+    _ ≤ 1 / c * (1 / √(√((3 : ℝ) ^ k))) := by
+        rw [one_div_sqrt_sqrt_three_pow]
+        exact mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (by norm_num)
+          one_third_le_one_div_sqrt_sqrt_three k) (by positivity)
+
+/-- `∑_{k ∈ [n, m)} 3^{-k/4} ≤ C 3^{-n/4}`. -/
+theorem sum_Ico_one_div_sqrt_sqrt_three_pow_le (n m : ℕ) :
+    ∑ k ∈ Finset.Ico n m, 1 / √(√((3 : ℝ) ^ k)) ≤
+      1 / (1 - 1 / √(√(3 : ℝ))) * (1 / √(√((3 : ℝ) ^ n))) := by
+  simp only [one_div_sqrt_sqrt_three_pow]
+  refine (geom_sum_Ico_le_of_lt_one (by positivity) one_div_sqrt_sqrt_three_lt_one).trans
+    (le_of_eq ?_)
+  ring
+
+theorem integral_neg_cubeMu_indicator_eq_cubeMuMean (hd : 0 < d) (p : unitInterval) (m : ℕ)
+    (q : Fin d → ℝ) :
+    ∫ ω, (if PartitionEvent ω ∧ PartitionResolved ω (⟨m, 0⟩ : TriadicCube d) then
+      -cubeMu ω ⟨m, 0⟩ q else 0) ∂(latticeBondLaw d p) = cubeMuMean p m q :=
+  integral_neg_cubeMu_indicator_eq_toReal hd p ⟨m, 0⟩ q
+
+/-- **Lemma 5.4 of Armstrong and Dario for `μ`** (display (5.10), first term, every dimension
+`d ≥ 2`): for `n ≤ m`,
+`E[|□_m|⁻¹ D^μ_n(□_m, q)] ≤ C |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`. -/
+theorem exists_lintegral_cubeMuDefect_le_tau [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (n m : ℕ) (q : Fin d → ℝ), n ≤ m →
+      ∫⁻ ω, ENNReal.ofReal (cubeMuDefect ω ⟨m, 0⟩ n q) ∂(latticeBondLaw d p) ≤
+        ENNReal.ofReal ((⟨m, 0⟩ : TriadicCube d).latticeVolume * (C * (∑ i, q i ^ 2) *
+          (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k + 1 / √(√((3 : ℝ) ^ n))))) := by
+  have hd0 : 0 < d := by omega
+  obtain ⟨C₁, hC₁, c₁, hc₁, hdef⟩ := exists_lintegral_cubeMuDefect_le hd hpc
+  obtain ⟨C₂, hC₂, c₂, hc₂, hinc⟩ := exists_cubeMuIncrement_le hd hpc
+  set r := 1 / √(√(3 : ℝ)) with hr
+  have hr1 : r < 1 := one_div_sqrt_sqrt_three_lt_one
+  have hr0 : 0 < 1 - r := by linarith
+  set K := d * (C₂ * (1 + 1 / c₂)) * (1 / (1 - r)) + C₁ * d * (1 + 1 / c₁) with hK
+  have hK0 : 0 ≤ K := by positivity
+  refine ⟨d + K, by positivity, fun n m q hnm => ?_⟩
+  set V := (⟨m, 0⟩ : TriadicCube d).latticeVolume with hV
+  have hV0 : 0 < V := TriadicCube.latticeVolume_pos _
+  have h := hdef ⟨m, 0⟩ ⟨n, 0⟩ q hnm
+  rw [integral_neg_cubeMu_indicator_eq_cubeMuMean hd0, integral_neg_cubeMu_indicator_eq_cubeMuMean hd0]
+    at h
+  refine h.trans (ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left ?_ hV0.le))
+  change cubeMuMean p n q - cubeMuMean p m q + C₁ * (∑ i, |q i|) ^ 2 *
+      (1 / √(√((3 : ℝ) ^ n)) + Real.exp (-c₁ * (3 : ℝ) ^ n)) ≤ _
+  set N := ∑ i, q i ^ 2 with hN
+  have hN0 : 0 ≤ N := Finset.sum_nonneg fun _ _ => sq_nonneg _
+  set ρn := 1 / √(√((3 : ℝ) ^ n)) with hρn
+  have hρn0 : 0 ≤ ρn := by positivity
+  have hτ0 : 0 ≤ ∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k :=
+    Finset.sum_nonneg fun k _ => cubeTau_nonneg p k
+  -- the decrease of `E[-μ]`
+  have hdec : cubeMuMean p n q - cubeMuMean p m q ≤
+      d * N * (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k) +
+        d * N * (C₂ * (1 + 1 / c₂) * (1 / (1 - r) * ρn)) := by
+    rw [cubeMuMean_sub_eq_sum p hnm]
+    have hterm : ∀ k ∈ Finset.Ico n m, cubeMuIncrement p k q ≤
+        d * N * cubeTau (d := d) p k +
+          d * N * (C₂ * (1 + 1 / c₂) * (1 / √(√((3 : ℝ) ^ k)))) := by
+      intro k _
+      have h1 := hinc k q
+      have h2 := exp_neg_mul_three_pow_le hc₂ k
+      have h3 : cubeMuTau (d := d) p k ≤ cubeTau (d := d) p k :=
+        le_add_of_nonneg_right (cubeNuTau_nonneg p k)
+      have h4 : C₂ * (1 / √(√((3 : ℝ) ^ k)) + Real.exp (-c₂ * (3 : ℝ) ^ k)) ≤
+          C₂ * (1 + 1 / c₂) * (1 / √(√((3 : ℝ) ^ k))) := by
+        have := mul_le_mul_of_nonneg_left h2 hC₂
+        nlinarith
+      have hdN : 0 ≤ (d : ℝ) * N := by positivity
+      have := mul_le_mul_of_nonneg_left (add_le_add h3 h4) hdN
+      nlinarith
+    refine (Finset.sum_le_sum hterm).trans ?_
+    rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum, ← Finset.mul_sum]
+    have hg := sum_Ico_one_div_sqrt_sqrt_three_pow_le n m
+    have hdN : 0 ≤ (d : ℝ) * N := by positivity
+    have := mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hg (by positivity :
+      (0 : ℝ) ≤ C₂ * (1 + 1 / c₂))) hdN
+    linarith
+  have hQ : (∑ i, |q i|) ^ 2 ≤ d * N := sq_sum_abs_le_card_mul q
+  have he := exp_neg_mul_three_pow_le hc₁ n
+  have herr : C₁ * (∑ i, |q i|) ^ 2 * (ρn + Real.exp (-c₁ * (3 : ℝ) ^ n)) ≤
+      C₁ * d * (1 + 1 / c₁) * N * ρn := by
+    have h1 : ρn + Real.exp (-c₁ * (3 : ℝ) ^ n) ≤ (1 + 1 / c₁) * ρn := by
+      rw [hρn]; linarith
+    have h2 : 0 ≤ ρn + Real.exp (-c₁ * (3 : ℝ) ^ n) := by positivity
+    calc C₁ * (∑ i, |q i|) ^ 2 * (ρn + Real.exp (-c₁ * (3 : ℝ) ^ n))
+        ≤ C₁ * (d * N) * ((1 + 1 / c₁) * ρn) := by gcongr
+      _ = C₁ * d * (1 + 1 / c₁) * N * ρn := by ring
+  have hfin : d * N * (C₂ * (1 + 1 / c₂) * (1 / (1 - r) * ρn)) + C₁ * d * (1 + 1 / c₁) * N * ρn =
+      K * N * ρn := by
+    rw [hK]
+    ring
+  have k1 : 0 ≤ K * N * (∑ k ∈ Finset.Ico n m, cubeTau (d := d) p k) := by positivity
+  have k2 : 0 ≤ d * N * ρn := by positivity
+  nlinarith
+
 end Rigidity.Percolation
