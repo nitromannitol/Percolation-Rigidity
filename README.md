@@ -1198,9 +1198,9 @@ Departures from Armstrong and Dario:
   inside it, hence is a local function of the configuration with exactly stationary expectation
   (`cubeNu_eq_of_equiv`, `integral_cubeNu_eq_of_scale_eq`). This replaces AD Proposition 4.9, Proposition 4.10 and
   (4.40) for `ν`. The expectation `E[ν(U, p)]` is taken without the indicator of the event that `U`
-  is resolved. The quantity `μ`, which uses the anchors of the partition, is not shown to be local;
-  its localization, stationarity and the limit of `E[−μ]` are proved here only for `d = 2`, in the
-  sections cited above.
+  is resolved. The quantity `μ`, which uses the anchors of the partition, is localized, and its
+  stationarity and the limit of `E[−μ]` are proved, in
+  [Localization, stationarity and the limit of μ, and Definition 3.9, in every dimension](#localization-stationarity-and-the-limit-of-μ-and-definition-39-in-every-dimension).
 - **Rates.** (4.49) holds with the rate `3^{−n/2}` in place of `3^{−n}`, and the lower bound (4.31)
   in expectation is proved with a deterministic slope `κ p` in place of the random one of AD, with
   the error `3^{−m/2}`.
@@ -2213,19 +2213,67 @@ bounded through the partition into good cubes.
 
 The thirteen reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Definition 3.9 (the partition `𝓠_a` for the Meyers
-estimate) and the localization of `μ` in dimension `d ≥ 3` (Proposition 4.10, Lemma 4.11) are not proved here.
+estimate) and the localization of `μ` are proved in
+[Localization, stationarity and the limit of μ, and Definition 3.9, in every dimension](#localization-stationarity-and-the-limit-of-μ-and-definition-39-in-every-dimension).
 
 Departures from Armstrong and Dario: the good cubes of the local family ask the reverse Hölder inequality for all sets of
 the triple of each child closed under the open edges and all functions harmonic on them, not only for `𝒞_max(3□)` with the
 numerator `𝒞_*(□)`; the failure probability is bounded through the partition into good cubes with polynomial rates in
 place of the stretched exponentials of the tails of `𝓡`, as in the planar section.
 
+## Localization, stationarity and the limit of μ, and Definition 3.9, in every dimension
+
+For every `d ≥ 2` and `𝔭_c(d) < p < 1`, the localization of the partition and of `μ` (Propositions 4.9 and 4.10),
+the locality (4.39) and stationarity (4.40), the subadditivity error (4.32) in expectation, the approximate
+monotonicity (4.48) and the limit of `E[−μ(□_m, q)]`, with the duality inequality and the bounds (5.1) for `μ`, and the
+partition `𝓠_a` of Definition 3.9 with its minimal scales, are proved in
+[`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/) (the eleven files `GeneralMu*.lean` and
+`GeneralMeyersPartition.lean`; namespace `Rigidity.Percolation`, and `Rigidity.Proofs.Cluster.GeneralDim` for the last
+file). They continue the section
+[The subadditive quantities on the clusters of triadic cubes of Z^d](#the-subadditive-quantities-on-the-clusters-of-triadic-cubes-of-zd)
+and
+[Section 3 and the isotropy of the homogenized matrix in every dimension](#section-3-and-the-isotropy-of-the-homogenized-matrix-in-every-dimension).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Percolation.exists_measure_ne_cappedCube_goodCubes_le`](Rigidity/Proofs/Cluster/GeneralMuLocal.lean), [`Rigidity.Percolation.exists_measure_cubeCappedDiscrepancy_le`](Rigidity/Proofs/Cluster/GeneralMuLocal.lean) | AD Proposition 4.9 in every dimension `d ≥ 2`: the partition into good cubes differs at some vertex of a triadic cube `A` of scale `m` from the partition capped at the scale `n` with probability at most `C (2·3^{m−n} + 29)^d exp(−c 3ⁿ)`; the second form is for `n` the scale of the cube `V` on which the discrepancy is read. |
+| [`Rigidity.Percolation.measurable_cubeMuLoc_localBondSigma`](Rigidity/Proofs/Cluster/GeneralMuLocal.lean), [`Rigidity.Percolation.indepFun_cubeMuLoc`](Rigidity/Proofs/Cluster/GeneralMuLocal.lean), [`Rigidity.Percolation.measurable_cubeNu_localBondSigma`](Rigidity/Proofs/Cluster/GeneralMuLocal.lean), [`Rigidity.Percolation.indepFun_cubeNu`](Rigidity/Proofs/Cluster/GeneralMuLocal.lean) | AD (4.39), every `d ≥ 2`: the local version of `−μ(V, q)` is measurable for the bonds inside the local region of `V` (the cube of side `14·3ⁿ + 1` around it), `ν(V, ξ)` for the bonds inside `V`, and versions on cubes with disjoint regions are independent. |
+| [`Rigidity.Percolation.exists_cubeMuLoc_localization`](Rigidity/Proofs/Cluster/GeneralMuLocal.lean) | AD Proposition 4.10 for `μ`, every `d ≥ 2`: the expectations of the local version and of `1{𝒫, V res}(−μ(V, q))` differ by at most `C \|q\|₁² exp(−c 3ⁿ)`, `n` the scale of `V`. For `ν` no localization is needed, because `ν` is local (`measurable_cubeNu_localBondSigma`). |
+| [`Rigidity.Percolation.map_cubeMuStat_shift`](Rigidity/Proofs/Cluster/GeneralMuStationary.lean), [`Rigidity.Percolation.exists_cubeMuStat_localization`](Rigidity/Proofs/Cluster/GeneralMuStationary.lean), [`Rigidity.Percolation.exists_lintegral_neg_cubeMu_le_of_scale_eq`](Rigidity/Proofs/Cluster/GeneralMuStationary.lean) | AD (4.40), every `d ≥ 2`: the law of the stationary local version of `−μ(z + V, q)` does not depend on `z ∈ 3ⁿ ℤ^d`; the same localization error for the stationary version; hence `E[−μ]` is stationary up to `C \|q\|₁² exp(−c 3ⁿ)`. |
+| [`Rigidity.Percolation.exists_lintegral_sum_cubeMu_subcubes_sub_le`](Rigidity/Proofs/Cluster/GeneralMuSubadditiveMoments.lean), [`Rigidity.Percolation.sum_cubeMu_subcubes_sub_le`](Rigidity/Proofs/Cluster/GeneralMuSubadditiveError.lean), [`Rigidity.Percolation.exceptionalEdgeCount_le`](Rigidity/Proofs/Cluster/GeneralMuSubadditiveError.lean) | AD (4.32) in expectation, every `d ≥ 2`: the error of the subadditivity of `μ` over the subcubes is at most `C \|q\|² \|U\| 3^{−n/4}` in expectation, from a deterministic bound by the number of exceptional edges. |
+| [`Rigidity.Percolation.exists_lintegral_neg_cubeMu_le_of_scale_le`](Rigidity/Proofs/Cluster/GeneralMuConvergence.lean) | AD (4.48), every `d ≥ 2`: for triadic cubes `V`, `U` with the scale `n` of `V` at most that of `U`, `E[−μ(U, q); 𝒫, U res] ≤ E[−μ(V, q); 𝒫, V res] + C \|q\|₁² (3^{−n/4} + exp(−c 3ⁿ))`. |
+| [`Rigidity.Percolation.exists_tendsto_cubeMuMean`](Rigidity/Proofs/Cluster/GeneralMuConvergence.lean), [`Rigidity.Percolation.tendsto_lintegral_neg_cubeMu_of_scale`](Rigidity/Proofs/Cluster/GeneralMuConvergence.lean), [`Rigidity.Percolation.tendsto_lintegral_cubeMuLoc_of_scale`](Rigidity/Proofs/Cluster/GeneralMuConvergence.lean), [`Rigidity.Percolation.tendsto_lintegral_cubeMuStat_of_scale`](Rigidity/Proofs/Cluster/GeneralMuConvergence.lean) | The limit `lim E[−μ(□_m, q)]` exists, lies between `0` and `C \|q\|₁²`, and is the limit of `E[−μ(V_m, q)]` for every sequence of cubes of scales `m`, and of the expectations of the local and stationary local versions. |
+| [`Rigidity.Percolation.cubeMuLimit_smul_add_smul`](Rigidity/Proofs/Cluster/GeneralMuQuadratic.lean), [`Rigidity.Percolation.exists_cubeMuLimit_bounds`](Rigidity/Proofs/Cluster/GeneralMuQuadratic.lean) | The limit of `E[−μ(□_m, q)]` is a quadratic form in `q`, bounded above by `C \|q\|₁²`. |
+| [`Rigidity.Percolation.sum_mul_le_neg_cubeMu_add_cubeNu`](Rigidity/Proofs/Cluster/GeneralMuDuality.lean), [`Rigidity.Percolation.sum_mul_le_cubeMuLimit_add_cubeNuLimit`](Rigidity/Proofs/Cluster/GeneralMuDuality.lean) | AD Corollary 4.6 with its face errors, and the duality inequality between the limits, every `d ≥ 2`: `q · ξ ≤ lim E[−μ(□_m, q)] + lim E[ν(□_m, ξ)]`. |
+| [`Rigidity.Percolation.exists_cubeMuLimit_two_sided`](Rigidity/Proofs/Cluster/GeneralMuDuality.lean) | The bounds (5.1) for `μ`, every `d ≥ 2`: `c \|q\|² ≤ lim E[−μ(□_m, q)] ≤ C \|q\|₁²`, from the duality inequality and `ā = σ I`. |
+| [`Rigidity.Proofs.Cluster.GeneralDim.exists_meyersFailureBound`](Rigidity/Proofs/Cluster/GeneralMeyersPartition.lean), [`Rigidity.Proofs.Cluster.GeneralDim.exists_measure_stoppingScale_large_le`](Rigidity/Proofs/Cluster/GeneralMeyersPartition.lean) | AD (3.17) as the failure bound (2.2) for the good cubes of the Meyers estimate, `C₁ exp(−c 3^{ns})` for a cube of scale `n`, and the tail bound of the minimal scales of a local family (Propositions 2.1 and 2.4). |
+| [`Rigidity.Proofs.Cluster.GeneralDim.meyersPartition_holds`](Rigidity/Proofs/Cluster/GeneralMeyersPartition.lean) | AD Definition 3.9, every `d ≥ 2` and `p > 𝔭_c(d)`: the partition `𝓠_a` with minimal scales whose tails `P[cells near □_k too large, or Σ size^t > K \|□_k\|] ≤ C exp(−c 3^{kr})` are stretched exponential, for every `t > 0`. |
+
+The forty-three reports for the declarations of this section, which include the supporting declarations named in the
+source files, are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Lemma 4.11 is not proved: Armstrong and
+Dario use it only for (5.31) in the proof of Lemma 5.7, and the planar proof of that lemma replaces it by the local
+version of the planar section [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
+
+Departures from Armstrong and Dario:
+
+- **Localization.** `μ` is localized, as in dimension two, through the partition capped at the scale of `V` on the
+  region of side `14·3ⁿ + 1` around `V`, in place of `𝒫_loc^{(n)}(□)` and `𝒞_*^{(n)}(□)`; the error is
+  `exp(−c 3ⁿ)`. The exact stationarity (4.40) holds for the stationary local versions `cubeMuStat`; for `E[−μ]` it holds
+  up to `C \|q\|₁² exp(−c 3ⁿ)`.
+- **Subadditivity error (4.32).** The error in expectation is bounded through the exceptional edges (those that leave
+  the subcube or are unresolved), counted at exceptional vertices, with Young's inequality at the parameter
+  `3^{−n/4}`; the rate in (4.48) is `3^{−n/4}`, as printed.
+- **Definition 3.9.** `meyersGood` asks the Meyers estimate on each child, for every set of the triple closed under its
+  open edges and every function harmonic on it, as `rhGood` does for `𝓡`, in place of the estimate `ME_ε(□)` with
+  `𝒞_max(3□)`. The printed family has `ME_ε(□_m) ≤ C` where `ME_ε(□) ≤ C` is meant. The minimal scales have the
+  stretched exponential tails stated in the table.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 622 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 665 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2282,9 +2330,11 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
   [Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two),
   the seven theorems on Lemma 3.2 of Dario from (1.22) in
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
-  and the twenty-three theorems of
-  [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two).
-  Each of the 622 reports lists only axioms among `propext`, `Classical.choice` and
+  the twenty-three theorems of
+  [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two),
+  and the forty-three theorems of
+  [Localization, stationarity and the limit of μ, and Definition 3.9, in every dimension](#localization-stationarity-and-the-limit-of-μ-and-definition-39-in-every-dimension).
+  Each of the 665 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2315,10 +2365,10 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1403 Lean files with 275,728 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1414 Lean files with 279,071 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (1,080 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (1,136 lines) are counted separately.
 
 ## Building
 

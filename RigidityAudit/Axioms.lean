@@ -309,6 +309,17 @@ import Rigidity.Proofs.Cluster.GeneralRHMeyers
 import Rigidity.Proofs.Cluster.GeneralRHPartition
 import Rigidity.Proofs.Cluster.GeneralRHProb
 import Rigidity.Proofs.Cluster.GeneralReachDomination
+import Rigidity.Proofs.Cluster.GeneralMeyersPartition
+import Rigidity.Proofs.Cluster.GeneralMuConvergence
+import Rigidity.Proofs.Cluster.GeneralMuDuality
+import Rigidity.Proofs.Cluster.GeneralMuLimits
+import Rigidity.Proofs.Cluster.GeneralMuLocal
+import Rigidity.Proofs.Cluster.GeneralMuLocality
+import Rigidity.Proofs.Cluster.GeneralMuMeasurable
+import Rigidity.Proofs.Cluster.GeneralMuQuadratic
+import Rigidity.Proofs.Cluster.GeneralMuStationary
+import Rigidity.Proofs.Cluster.GeneralMuSubadditiveError
+import Rigidity.Proofs.Cluster.GeneralMuSubadditiveMoments
 import Rigidity.Proofs.Corrector.DarioStationaryPartition
 import Rigidity.Proofs.Corrector.PeriodicHeatDecay
 import Rigidity.Proofs.Regularity.PlanarCorrectorL2
@@ -1078,3 +1089,48 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.darioLemmaThreeTwo_holds
 #print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_lemmaThreeThree
 #print axioms Rigidity.Corrector.correctorQuantitativeInputTwo_of_lemmaThreeThree
+
+-- Localization, stationarity and limits of the subadditive quantity mu in every dimension, and the partition of Definition 3.9 (Armstrong and Dario, Section 4, Definition 3.9)
+#print axioms Rigidity.Percolation.cubeMu_eq_of_equiv
+#print axioms Rigidity.Percolation.cubeMu_eq_of_adj_iff_of_anchor_eq
+#print axioms Rigidity.Percolation.cubeMu_shift_translation_of_partition
+#print axioms Rigidity.Percolation.cappedCube_goodCubes_eq_of_localBonds
+#print axioms Rigidity.Percolation.anchor_cappedCube_goodCubes_eq_of_localBonds
+#print axioms Rigidity.Percolation.exists_measure_ne_cappedCube_goodCubes_le
+#print axioms Rigidity.Percolation.exists_measure_cubeCappedDiscrepancy_le
+#print axioms Rigidity.Percolation.exists_measure_not_cubeLocalGood_le
+#print axioms Rigidity.Percolation.neg_cubeMu_le_latticeVolume_sq
+#print axioms Rigidity.Percolation.cubeMuLoc_eq_of_good
+#print axioms Rigidity.Percolation.measurable_cubeMuLoc_localBondSigma
+#print axioms Rigidity.Percolation.indepFun_cubeMuLoc
+#print axioms Rigidity.Percolation.exists_cubeMuLoc_localization
+#print axioms Rigidity.Percolation.measurable_cubeNu_localBondSigma
+#print axioms Rigidity.Percolation.indepFun_cubeNu
+#print axioms Rigidity.Percolation.map_cubeMuStat_shift
+#print axioms Rigidity.Percolation.indepFun_cubeMuStat
+#print axioms Rigidity.Percolation.cubeMuStat_eq_of_good
+#print axioms Rigidity.Percolation.exists_cubeMuStat_localization
+#print axioms Rigidity.Percolation.exists_lintegral_neg_cubeMu_le_of_scale_eq
+#print axioms Rigidity.Percolation.tendsto_lintegral_cubeMuLoc_of_tendsto
+#print axioms Rigidity.Percolation.tendsto_lintegral_neg_cubeMu_of_tendsto
+#print axioms Rigidity.Percolation.measurable_cubeMu_indicator
+#print axioms Rigidity.Percolation.exceptionalMajorant_of_isExceptionalEdge
+#print axioms Rigidity.Percolation.exceptionalEdgeCount_le
+#print axioms Rigidity.Percolation.sum_cubeMu_subcubes_sub_le
+#print axioms Rigidity.Percolation.exists_lintegral_sum_cubeMu_subcubes_sub_le
+#print axioms Rigidity.Percolation.exists_lintegral_neg_cubeMu_le_of_scale_le
+#print axioms Rigidity.Percolation.exists_tendsto_cubeMuMean
+#print axioms Rigidity.Percolation.tendsto_lintegral_neg_cubeMu_of_scale
+#print axioms Rigidity.Percolation.tendsto_lintegral_cubeMuLoc_of_scale
+#print axioms Rigidity.Percolation.tendsto_lintegral_cubeMuStat_of_scale
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.exists_measure_stoppingScale_large_le
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.measurableSet_not_mem_meyersGood_local
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.exists_meyersFailureBound
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.meyersPartition_holds
+#print axioms Rigidity.Percolation.cubeMuLimit_smul_add_smul
+#print axioms Rigidity.Percolation.exists_cubeMuLimit_bounds
+#print axioms Rigidity.Percolation.sum_mul_le_neg_cubeMu_add_cubeNu
+#print axioms Rigidity.Percolation.exists_sum_mul_le_cubeMuMean_add_cubeNuMean
+#print axioms Rigidity.Percolation.sum_mul_le_cubeMuLimit_add_cubeNuLimit
+#print axioms Rigidity.Percolation.cubeMuLimit_ge_of_cubeAhom_eq_smul_one
+#print axioms Rigidity.Percolation.exists_cubeMuLimit_two_sided
