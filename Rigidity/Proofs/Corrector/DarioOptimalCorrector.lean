@@ -8,7 +8,7 @@ import Rigidity.Proofs.Corrector.DarioLinftyIteration
   `|F_0(x) - F_0(0)| ≤ O_s(C log^{1/2}(2 + |x|))` for every `s < 1/k` (`isOsBond_of_moment_le`),
   since `m + 2 ≤ (3 / log 2) log(2 + |x|)`.
 * Step 6 and the assembly (`darioOptimalCorrectorTwo_of_coarsened`): the coarsening error
-  `|χ_p(x) - [χ_p]_𝒫(x)| 1_{x ∈ 𝒞_∞} ≤ O_s(C)` of Step 6 (eq:TV10432302), taken as a hypothesis
+  `|χ_p(x) - [χ_p]_𝒫(x)| 1_{x ∈ 𝒞_∞} ≤ O_s(C)` of Step 6 (5.10), taken as a hypothesis
   for the increments between two points, and the uniqueness of corrected planes, which gives the
   bound for every slope from the two coordinate slopes, give `DarioOptimalCorrectorTwo`.
 
@@ -185,10 +185,10 @@ theorem isOsBond_zero_scale {p : unitInterval} (X : Configuration 2 → ℝ) {s 
   simp only [h1]
   exact ⟨integrable_const 1, by simp⟩
 
-/-- **The coarsening error of Dario, Step 6 (eq:TV10432302), for increments** (hypothesis): for
+/-- **The coarsening error of Dario, Step 6 (5.10), for increments** (hypothesis): for
 every slope `e_i` and points `x, y`, there is `E ≤ O_{s₆}(C₆)` such that for every corrected plane
 `ℓ` of slope `e_i`, the corrector increment `χ(x) - χ(y)` differs from the field increment
-`G i y 0 (x - y) - G i y 0 0` by at most `E`. This is (eq:TV10432302) at `x` and at `y` combined by
+`G i y 0 (x - y) - G i y 0 0` by at most `E`. This is (5.10) at `x` and at `y` combined by
 the triangle inequality. -/
 def CoarseningErrorTwo (p : unitInterval)
     (G : Fin 2 → Vertex 2 → Vertex 2 → Vertex 2 → Configuration 2 → ℝ) (s₆ C₆ : ℝ) : Prop :=

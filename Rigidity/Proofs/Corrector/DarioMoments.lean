@@ -8,7 +8,7 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 Two facts used in the proof of Dario's Theorem 1 (*Optimal corrector estimates on percolation
 clusters*, §5).
 
-* (est.exp.pol): if `X ≤ O_s(θ)`, then `E[X^q] ≤ 2 θ^q (q/s)^{q/s} e^{-q/s}` for every `q > 0`, from
+* (5.1): if `X ≤ O_s(θ)`, then `E[X^q] ≤ 2 θ^q (q/s)^{q/s} e^{-q/s}` for every `q > 0`, from
   `y^a ≤ a^a e^{-a} e^y`. Dario prints the weaker factor `e^{q/s}`.
 * Step 5 of the proof of Theorem 1: if `E[X^q] ≤ (A q^k)^q` for every `q ≥ 1`, then `X ≤ O_s(C)` for
   every `s < 1/k`, with `C` depending only on `A, k, s`. As printed, the exponential is expanded in
@@ -42,7 +42,7 @@ theorem rpow_le_rpow_mul_exp {y a : ℝ} (hy : 0 ≤ y) (ha : 0 < a) :
       _ = a ^ a * Real.exp (-a) * Real.exp y := by
           rw [Real.exp_add, Real.exp_add, Real.rpow_def_of_pos ha, mul_comm (Real.log a) a]
 
-/-- **Dario, (est.exp.pol)**: `X ≤ O_s(θ)` gives `E[X^q] ≤ 2 θ^q (q/s)^{q/s} e^{-q/s}` for `q > 0`. -/
+/-- **Dario, (5.1)**: `X ≤ O_s(θ)` gives `E[X^q] ≤ 2 θ^q (q/s)^{q/s} e^{-q/s}` for `q > 0`. -/
 theorem IsOsBond.integral_rpow_le {X : Configuration d → ℝ} {s θ q : ℝ} (hs : 0 < s) (hθ : 0 < θ)
     (hq : 0 < q) (hX : Measurable X) (hX0 : ∀ ω, 0 ≤ X ω) (h : IsOsBond d p X s θ) :
     Integrable (fun ω => X ω ^ q) (latticeBondLaw d p) ∧

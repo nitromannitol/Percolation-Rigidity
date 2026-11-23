@@ -10,11 +10,11 @@ The argument uses three properties of the fields `F_y = [χ_p]_{𝒫_y}`, coarse
 translated partitions `𝒫_y = y + 𝒫(τ_{-y} a)`, which we take as hypotheses
 (`LinftyIterationData`):
 
-* `thm2`: (step1LinftyLp), Theorem 2 for `F_0` on the box `□_m`, in moment form,
+* `thm2`: (5.5), Theorem 2 for `F_0` on the box `□_m`, in moment form,
   `E[3^{-dm} Σ_{z ∈ □_m} |F_0(z) - (F_0)_{□_m}|^q] ≤ (A q^k)^q m^{q/2}`;
-* `stat`: (e.stat.corr), `F_0(z) - F_0(w) = (F_y(z + y) - F_y(w + y)) ∘ τ` for a measure-preserving
+* `stat`: (2.3), `F_0(z) - F_0(w) = (F_y(z + y) - F_y(w + y)) ∘ τ` for a measure-preserving
   translation `τ` of the configurations;
-* `comp`: (est.PPy) in moment form, `E|F_y(z) - F_0(z)|^q ≤ (B q^k)^q`.
+* `comp`: (5.7) in moment form, `E|F_y(z) - F_0(z)|^q ≤ (B q^k)^q`.
 
 Steps 1–3 compare `F_0(0)` and `F_0(x)` with the double average
 `D_m(x) = 3^{-2dm} Σ_{y ∈ □_m} Σ_{z ∈ x + y + □_m} F_0(z)`; Step 3 uses `x + □_m ⊆ □_{m+2}`. The

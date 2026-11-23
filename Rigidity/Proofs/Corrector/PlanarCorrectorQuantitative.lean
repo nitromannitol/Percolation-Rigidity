@@ -5,7 +5,7 @@ import LatticeProb.Prob.Percolation.CorrectedPlaneAlgebra
 /-!
 # The quantitative sublinearity of the planar corrector (Dario–Gu, Proposition 2.12)
 
-Dario–Gu, Proposition 2.12 (arXiv:1909.10439v4, p. 22) asserts that for every `α > 0` there are
+Dario–Gu, Proposition 2.12, asserts that for every `α > 0` there are
 `s, C` and, for every `y ∈ ℤ^d`, a minimal scale `M_corr,α(y) ≤ O_s(C)` such that
 `osc_{𝒞_∞ ∩ B_r(y)} χ_p ≤ C |p| r^α` for every `r ≥ M_corr,α(y)` and every `p`. The proof printed
 there combines the optimal corrector bound of Dario (Theorem 1 of *Optimal corrector estimates on

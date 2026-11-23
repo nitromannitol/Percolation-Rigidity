@@ -19,7 +19,7 @@ lemma (`Rigidity.Percolation.ae_exceptionalScale_ne_top`) this supremum is almos
 that almost surely `3^n ≤ M` whenever `X_n ≥ 1`. The source proof prints `3^{-nβ}` for `3^{nβ}` in
 the tail of `X_n` (Armstrong–Dario, proof of Lemma 2.3).
 
-**Dario, Lemma C.3** (`lemmafromperc.0`): if `X_n ≤ K + O_s(K 3^{-nβ})`, the random scale
+**Dario, Lemma C.3**: if `X_n ≤ K + O_s(K 3^{-nβ})`, the random scale
 `sup {3^n : X_n ≥ K + 1}` is `O_{βs}(C)`; as printed, this is Lemma 1.6 applied to
 `max(X_n - K, 0)`.
 -/
@@ -131,8 +131,8 @@ theorem isOsBond_max_zero_iff {X : Configuration d → ℝ} {s θ : ℝ} (hθ : 
   unfold IsOsBond
   simp only [heq]
 
-/-- **Dario, Lemma C.3** (`lemmafromperc.0` of *Optimal corrector estimates on percolation
-clusters*). For `K ≥ 1` and `s, β > 0` there is `C(s, β, K)` such that, if `X_n ≤ K + Y_n` with
+/-- **Dario, Lemma C.3** (of *Optimal corrector estimates on percolation clusters*). For `K ≥ 1`
+and `s, β > 0` there is `C(s, β, K)` such that, if `X_n ≤ K + Y_n` with
 `Y_n ≤ O_s(K 3^{-nβ})`, the random scale `sup {3^n : X_n ≥ K + 1}`, that is the triadic scale of
 `max(X_n - K, 0)`, satisfies `≤ O_{βs}(C)`, and almost surely `3^n` is at most this scale whenever
 `X_n ≥ K + 1`. -/

@@ -5,11 +5,11 @@ import Rigidity.Proofs.Corrector.DarioOptimalCorrector
 
 Dario states the inputs of the proof of Theorem 1 with the `O_s` notation:
 
-* (maintoolstep1Linfty), proved in Step 1 of the proof of Theorem 2:
+* (5.4), proved in Step 1 of the proof of Theorem 2:
   `(3^{-dm} ∑_{y ∈ □_m} |[χ]_𝒫(y) - ([χ]_𝒫)_{□_m}|^q)^{1/q} ≤ O_s(C q^k √m)`;
-* (est.PPy): `|[χ]_{𝒫_y}(z) - [χ]_𝒫(z)| ≤ O_s(C)`.
+* (5.7): `|[χ]_{𝒫_y}(z) - [χ]_𝒫(z)| ≤ O_s(C)`.
 
-By (est.exp.pol) these give the moment forms (step1LinftyLp) and the moment form of (est.PPy) used
+By (5.1) these give the moment forms (5.5) and the moment form of (5.7) used
 by Steps 1–4 (`LinftyIterationData`), with `k` replaced by `k + 1/s`
 (`CoarsenedOsData.linftyIterationData`). Hence Theorem 1 follows from the inputs of the paper in
 their printed form (`darioOptimalCorrectorTwo_of_coarsenedOs`).
@@ -22,7 +22,7 @@ open scoped ENNReal
 
 variable {p : unitInterval}
 
-/-- **(est.exp.pol), as used for (step1LinftyLp)**: if `S^{1/q} ≤ O_s(θ)` for a nonnegative `S`,
+/-- **(5.1), as used for (5.5)**: if `S^{1/q} ≤ O_s(θ)` for a nonnegative `S`,
 then `E[S] ≤ (2 θ (1/s)^{1/s} q^{1/s})^q`. -/
 theorem lintegral_le_of_isOsBond_rpow_inv {S : Configuration 2 → ℝ} {s θ q : ℝ} (hs : 0 < s)
     (hθ : 0 < θ) (hq : 1 ≤ q) (hS : Measurable S) (hS0 : ∀ ω, 0 ≤ S ω)
@@ -59,7 +59,7 @@ theorem lintegral_le_of_isOsBond_rpow_inv {S : Configuration 2 → ℝ} {s θ q 
   nlinarith [mul_nonneg hTX (sub_nonneg.2 he), mul_nonneg hTX (sub_nonneg.2 h2),
     mul_nonneg hTX he0]
 
-/-- **(est.exp.pol), as used for the moment form of (est.PPy)**: if `|f| ≤ O_s(θ)`, then
+/-- **(5.1), as used for the moment form of (5.7)**: if `|f| ≤ O_s(θ)`, then
 `E|f|^q ≤ (2 θ (1/s)^{1/s} q^{1/s})^q`. -/
 theorem mom_le_of_isOsBond {f : Configuration 2 → ℝ} {s θ q : ℝ} (hs : 0 < s) (hθ : 0 < θ)
     (hq : 1 ≤ q) (hf : Measurable f) (h : IsOsBond 2 p (fun ω => |f ω|) s θ) :
@@ -73,8 +73,8 @@ theorem mom_le_of_isOsBond {f : Configuration 2 → ℝ} {s θ q : ℝ} (hs : 0 
   exact h
 
 /-- **The inputs of Dario's §5 in the form printed in the paper**, for fields `F y z`
-(`[χ]_{𝒫_y}(z)`): (maintoolstep1Linfty) at the origin, the stationarity (e.stat.corr) and the
-comparison (est.PPy) of the translated partitions. -/
+(`[χ]_{𝒫_y}(z)`): (5.4) at the origin, the stationarity (2.3) and the
+comparison (5.7) of the translated partitions. -/
 structure CoarsenedOsData (p : unitInterval) (F : Vertex 2 → Vertex 2 → Configuration 2 → ℝ)
     (s C k : ℝ) : Prop where
   hs : 0 < s
@@ -90,7 +90,7 @@ structure CoarsenedOsData (p : unitInterval) (F : Vertex 2 → Vertex 2 → Conf
       ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ z w, F 0 z ω - F 0 w ω = F y (z + y) (T ω) - F y (w + y) (T ω)
   ppy : ∀ y z, IsOsBond 2 p (fun ω => |F y z ω - F 0 z ω|) s C
 
-/-- (maintoolstep1Linfty) and (est.PPy) give (step1LinftyLp) and the moment form of (est.PPy),
+/-- (5.4) and (5.7) give (5.5) and the moment form of (5.7),
 with `A = B = 2 C (1/s)^{1/s}` and the exponent `k + 1/s`. -/
 theorem CoarsenedOsData.linftyIterationData {F : Vertex 2 → Vertex 2 → Configuration 2 → ℝ}
     {s C k : ℝ} (h : CoarsenedOsData p F s C k) :
@@ -133,7 +133,7 @@ theorem CoarsenedOsData.linftyIterationData {F : Vertex 2 → Vertex 2 → Confi
       _ = _ := rfl
 
 /-- **The coarsened corrector of Dario, §5, with the inputs in the printed form**: fields `G i y`
-satisfying (maintoolstep1Linfty), (e.stat.corr) and (est.PPy) (`CoarsenedOsData`), and the
+satisfying (5.4), (2.3) and (5.7) (`CoarsenedOsData`), and the
 coarsening error of Step 6 (`CoarseningErrorTwo`). -/
 def DarioCoarsenedCorrectorOsTwo (p : unitInterval) : Prop :=
   ∃ s C k s₆ C₆ : ℝ, 0 < s₆ ∧ 0 < C₆ ∧

@@ -4,18 +4,18 @@ import Rigidity.Proofs.Corrector.DarioCoarsenedOs
 # Step 1 of the proof of Dario's Theorem 2 in dimension two, in moment form
 
 Step 1 of the proof of Theorem 2 (Dario, §4) combines the multiscale Poincaré inequality
-(Proposition 2.11, (heatmultscaleP.ver)) with the bound of Proposition 3.1 on the heat-kernel
+(Proposition 2.19, (2.26)) with the bound of Proposition 3.1 on the heat-kernel
 averages of the gradient of the coarsened corrector, `|Φ_{r²} * ∇[χ]_𝒫(x)| ≤ O_s(C r^{-d/2})` for
-`r ≥ 1`, and with the Lipschitz bound (lipboundcoarcorr) for `r ≤ 1`, to obtain
-(maintoolstep1Linfty).
+`r ≥ 1`, and with the Lipschitz bound (2.22) for `r ≤ 1`, to obtain
+(5.4).
 
 Here the three inputs are hypotheses on a family `S r x` standing for `|Φ_{r²} * ∇u(x)|`, and the
-conclusion (`lintegral_boxOsc_le_of_poincare`) is the moment form (step1LinftyLp), the form used by
+conclusion (`lintegral_boxOsc_le_of_poincare`) is the moment form (5.5), the form used by
 Steps 1–4 of the proof of Theorem 1 (`LinftyIterationData.thm2`), with the exponent `k = 3/2 + 1/s`
-of the paper. The `O_s`-averaging (e.Oavgs) of the paper is replaced by moments: Jensen's
+of the paper. The `O_s`-averaging (1.12) of the paper is replaced by moments: Jensen's
 inequality in `r` for the measure `min(r, 1/r) dr` on `(0, 2R]`, of mass at most `1/2 + log 2R`,
 Tonelli's theorem, and the lattice sum `Σ_x R^{-2} e^{-|x|/2R} ≤ 100`. The multiscale Poincaré
-inequality is used in the cube form at `R = 3^m`, the form in which (maintoolstep1Linfty) is
+inequality is used in the cube form at `R = 3^m`, the form in which (5.4) is
 applied; the exponents `1 ≤ q < 2` are reduced to `q = 2` by Jensen's inequality, as in the paper.
 -/
 
@@ -334,7 +334,7 @@ theorem lintegral_rpow_heatSquare_le {S : ℝ → Vertex 2 → Configuration 2 �
           ENNReal.rpow_one]
 
 
-/-- The normalized oscillation `3^{-dm} Σ_{z ∈ □_m} |u(z) - (u)_{□_m}|^q` of (maintoolstep1Linfty). -/
+/-- The normalized oscillation `3^{-dm} Σ_{z ∈ □_m} |u(z) - (u)_{□_m}|^q` of (5.4). -/
 noncomputable def boxOsc (u : Vertex 2 → Configuration 2 → ℝ) (m : ℕ) (q : ℝ)
     (ω : Configuration 2) : ℝ :=
   (∑ z ∈ boxAt 0 m, |u z ω - boxAvg u 0 m ω| ^ q) / 9 ^ m
@@ -352,8 +352,8 @@ theorem measurable_boxOsc {u : Vertex 2 → Configuration 2 → ℝ} (hu : ∀ z
 noncomputable def poincareStepConst (A₀ C s : ℝ) : ℝ :=
   400 * A₀ * C * (1 / s) ^ (1 / s) * 2 ^ (3 / 2 + 1 / s)
 
-/-- **The multiscale Poincaré inequality (heatmultscaleP.ver) in cube form at `R = 3^m`**, for
-`q ≥ 2` with the constant `A₀ q^{3/2}` of Proposition 2.11, `S r x` standing for
+/-- **The multiscale Poincaré inequality (2.26) in cube form at `R = 3^m`**, for
+`q ≥ 2` with the constant `A₀ q^{3/2}` of Proposition 2.19, `S r x` standing for
 `|Φ_{r²} * ∇u(x)|`. -/
 def PoincareCubeTwo (p : unitInterval) (u : Vertex 2 → Configuration 2 → ℝ)
     (S : ℝ → Vertex 2 → Configuration 2 → ℝ) (A₀ : ℝ) : Prop :=
@@ -366,7 +366,7 @@ def PoincareCubeTwo (p : unitInterval) (u : Vertex 2 → Configuration 2 → ℝ
 
 /-- **Dario, Theorem 2, Step 1, in dimension two, moment form**: from the multiscale Poincaré
 inequality (`PoincareCubeTwo`), Proposition 3.1 (`S r x ≤ O_s(C/r)` for `r ≥ 1`) and the
-Lipschitz bound (`S r x ≤ O_s(C)` for `r ≤ 1`), (step1LinftyLp) with `k = 3/2 + 1/s`. -/
+Lipschitz bound (`S r x ≤ O_s(C)` for `r ≤ 1`), (5.5) with `k = 3/2 + 1/s`. -/
 theorem lintegral_boxOsc_le_of_poincare {u : Vertex 2 → Configuration 2 → ℝ}
     {S : ℝ → Vertex 2 → Configuration 2 → ℝ} {A₀ C s : ℝ} (hA₀ : 0 < A₀) (hC : 0 < C)
     (hs : 0 < s) (hu : ∀ z, Measurable (u z))
@@ -533,7 +533,7 @@ theorem lintegral_boxOsc_le_of_poincare {u : Vertex 2 → Configuration 2 → �
 
 /-- **The inputs of Dario's §5 with Theorem 2 replaced by its own inputs**, for fields `F y z`
 (`[χ]_{𝒫_y}(z)`) and `S r x` (`|Φ_{r²} * ∇[χ]_𝒫(x)|`): the multiscale Poincaré inequality,
-Proposition 3.1, the Lipschitz bound, the stationarity (e.stat.corr) and the comparison (est.PPy)
+Proposition 3.1, the Lipschitz bound, the stationarity (2.3) and the comparison (5.7)
 of the translated partitions. -/
 structure PoincareCoarsenedData (p : unitInterval) (F : Vertex 2 → Vertex 2 → Configuration 2 → ℝ)
     (S : ℝ → Vertex 2 → Configuration 2 → ℝ) (A₀ C s : ℝ) : Prop where
