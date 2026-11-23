@@ -5,7 +5,7 @@ import Rigidity.Proofs.Green.DarioGuGaussian
 
 * `far_bound`: for `|x - z| ≥ t ≥ 1`, the Carne–Varopoulos bound of `p` (Proposition 2.15) and the
   Gaussian bound of `p̄` give `|p - θ^{-1} p̄| ≤ c t^{-k} Φ_c(t, x - z)` for every `k ∈ [0, 1]`
-  (lines 2577-2578 of the source: "otherwise we necessarily have `|x - z| ≥ t` and the inequality
+  (line 2564 of the source: "otherwise we necessarily have `|x - z| ≥ t` and the inequality
   (4.45) is satisfied by Proposition 2.15 and Remark 2.16").
 * `exists_lattice_near_midpoint`: a lattice point within distance `1` of `(x + z)/2`.
 * the exponent inequalities (4.42) for `α = δ/2`, `κ = δ/4` (`d = 2`).
@@ -24,7 +24,7 @@ theorem exp_neg_le_two_div_sq {u : ℝ} (hu : 0 < u) : Real.exp (-u) ≤ 2 / u ^
 theorem rpow_neg_le_of_le {t a b : ℝ} (ht : 1 ≤ t) (hab : a ≤ b) : t ^ (-b) ≤ t ^ (-a) :=
   Real.rpow_le_rpow_of_exponent_le ht (by linarith)
 
-/-- The far region (Dario–Gu, lines 2577-2578). -/
+/-- The far region (Dario–Gu, line 2564). -/
 theorem far_bound {θ σ Ccv : ℝ} (hθ : 0 < θ) (hσ : 0 < σ) (hCcv : 0 < Ccv) :
     ∃ c : ℝ, 0 < c ∧ ∀ t r k a : ℝ, 1 ≤ t → t ≤ r → 0 ≤ k → k ≤ 1 → 0 ≤ a →
       a ≤ Ccv * Real.exp (-(r / Ccv * (1 + Real.log (r / t)))) →

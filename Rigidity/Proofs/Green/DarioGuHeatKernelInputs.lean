@@ -62,7 +62,7 @@ constant `C < ∞` such that for each `y`, there exists a random time `T_NA(y)` 
 `t ≥ T_NA(y)`, and every point `x ∈ 𝒞_∞`, `p(t, x, y) ≤ Φ_C(t, x - y)`.*
 
 Citing lines: "we record the result of Barlow [Ba], who established Gaussian bounds on the
-transition kernel" (1185); "The stochastic integrability estimate (3.4) is not stated in
+transition kernel" (1186); "The stochastic integrability estimate (3.4) is not stated in
 Theorem 1.1 of [Ba] but is mentioned in its remark equation (0.5) following the theorem"
 (1231-1232); "the result of Barlow is proved for the heat kernel associated to the constant speed
 random walk and on the percolation cluster only ... The adaptation to the variable speed random
