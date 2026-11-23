@@ -86,22 +86,21 @@ theorem exists_scale_le_log (x : Vertex 2) :
 
 /-- **Dario, Step 5 of the proof of Theorem 1**: under the hypotheses of Steps 1–4, for every
 `s < 1/k`, `|F_0(x) - F_0(0)| ≤ O_s(C log^{1/2}(2 + |x|))` with `C` independent of `x`. -/
-theorem isOsBond_sub_of_linftyIterationData {p : unitInterval}
-    {F : Vertex 2 → Vertex 2 → Configuration 2 → ℝ} {A B k : ℝ}
-    (hD : LinftyIterationData p F A B k) {s : ℝ} (hs : 0 < s) (hsk : s * k < 1) :
-    ∃ C : ℝ, 0 < C ∧ ∀ x : Vertex 2,
+theorem isOsBond_sub_of_linftyIterationData {p : unitInterval} {A B k : ℝ} (hA : 0 ≤ A)
+    {s : ℝ} (hs : 0 < s) (hsk : s * k < 1) :
+    ∃ C : ℝ, 0 < C ∧ ∀ F : Vertex 2 → Vertex 2 → Configuration 2 → ℝ,
+      LinftyIterationData p F A B k → ∀ x : Vertex 2,
       IsOsBond 2 p (fun ω => |F 0 x ω - F 0 0 ω|) s
         (C * Real.sqrt (Real.log (2 + ‖latticeEuclideanEmbedding x‖))) := by
   obtain ⟨C₁, hC₁, hmom⟩ := isOsBond_of_moment_le (d := 2) (p := p) (A := 1) one_pos hs hsk
   set K := 6084 * max A B with hK
   have hK0 : 0 ≤ K := by
-    have := hD.hA
-    have : 0 ≤ max A B := le_trans hD.hA (le_max_left _ _)
+    have : 0 ≤ max A B := le_trans hA (le_max_left _ _)
     positivity
   set K₀ := 3 / Real.log 2 with hK₀
   have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
   have hK₀0 : 0 < K₀ := by positivity
-  refine ⟨C₁ * (K + 1) * Real.sqrt K₀, by positivity, fun x => ?_⟩
+  refine ⟨C₁ * (K + 1) * Real.sqrt K₀, by positivity, fun F hD x => ?_⟩
   obtain ⟨m, hm1, hx, hmL⟩ := exists_scale_le_log x
   set L := Real.log (2 + ‖latticeEuclideanEmbedding x‖) with hL
   have hL0 : 0 < L := Real.log_pos (by linarith [norm_nonneg (latticeEuclideanEmbedding x)])
@@ -163,5 +162,172 @@ theorem isOsBond_sub_of_linftyIterationData {p : unitInterval}
     ring
   rw [heq, hscale] at h2
   exact h2
+
+
+/-! ### Step 6 and the assembly -/
+
+theorem latticeEuclideanEmbedding_sub (x y : Vertex 2) :
+    latticeEuclideanEmbedding (x - y) = latticeEuclideanEmbedding x - latticeEuclideanEmbedding y := by
+  refine PiLp.ext fun i => ?_
+  rw [PiLp.sub_apply]
+  change (((x - y) i : ℤ) : ℝ) = ((x i : ℤ) : ℝ) - ((y i : ℤ) : ℝ)
+  rw [Pi.sub_apply, Int.cast_sub]
+
+/-- The scale `0` is degenerate: `X ≤ O_s(0)` for every `X`, since `X/0 = 0`. -/
+theorem isOsBond_zero_scale {p : unitInterval} (X : Configuration 2 → ℝ) {s : ℝ} (hs : 0 < s) :
+    IsOsBond 2 p X s 0 := by
+  have h1 : ∀ ω, Real.exp (Real.rpow (max (X ω / 0) 0) s) = 1 := by
+    intro ω
+    rw [div_zero, max_self]
+    change Real.exp ((0 : ℝ) ^ s) = 1
+    rw [Real.zero_rpow hs.ne', Real.exp_zero]
+  unfold IsOsBond
+  simp only [h1]
+  exact ⟨integrable_const 1, by simp⟩
+
+/-- **The coarsened corrector of Dario, §5, in dimension two** (hypothesis): for every base point
+`y` and every coordinate slope `e_i`, fields `G i y` satisfying the hypotheses of Steps 1–4
+(`LinftyIterationData`; `G i y y' z` stands for `[χ_{e_i}]_{𝒫_{y + y'}}(y + z)`), and the
+coarsening error of Step 6 (eq:TV10432302 at the two points `x` and `y`): for every corrected plane
+`ℓ` of slope `e_i`, the corrector increment `χ(x) - χ(y)` differs from the field increment
+`G i y 0 (x - y) - G i y 0 0` by at most a random variable `E ≤ O_{s₆}(C₆)`. -/
+def DarioCoarsenedCorrectorTwo (p : unitInterval) : Prop :=
+  ∃ A B k s₆ C₆ : ℝ, 0 < s₆ ∧ 0 < C₆ ∧
+    ∃ G : Fin 2 → Vertex 2 → Vertex 2 → Vertex 2 → Configuration 2 → ℝ,
+      (∀ i y, LinftyIterationData p (G i y) A B k) ∧
+      ∀ (i : Fin 2) (x y : Vertex 2), ∃ E : Configuration 2 → ℝ, Measurable E ∧
+        IsOsBond 2 p E s₆ C₆ ∧
+        ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
+          ∀ ℓ : uniqueInfiniteComponent h → ℝ,
+            IsCorrectedPlane (uniqueInfiniteComponent h) (Pi.single i 1) ℓ →
+          ∀ (hx : x ∈ (uniqueInfiniteComponent h).supp) (hy : y ∈ (uniqueInfiniteComponent h).supp),
+            |((ℓ ⟨x, hx⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * x j) -
+                (ℓ ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * y j)) -
+              (G i y 0 (x - y) ω - G i y 0 0 ω)| ≤ E ω
+
+/-- **Dario's Theorem 1 in dimension two** (`DarioOptimalCorrectorTwo`) from the coarsened
+corrector data of §5 (`DarioCoarsenedCorrectorTwo`: Theorem 2 at the box, the stationarity, the
+comparison of the translated partitions and the coarsening error) and the planar qualitative
+corrector input (linearity of the corrector in the slope). -/
+theorem darioOptimalCorrectorTwo_of_coarsened
+    (hG : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      DarioCoarsenedCorrectorTwo p)
+    (hC : SupercriticalBondCorrectorInputTwo) : DarioOptimalCorrectorTwo := by
+  intro p hpc hp1
+  obtain ⟨A, B, k, s₆, C₆, hs₆, hC₆, G, hGD, hE⟩ := hG p hpc hp1
+  have hA : 0 ≤ A := (hGD 0 0).hA
+  set s₅ : ℝ := 1 / (2 * (|k| + 1)) with hs₅def
+  have hs₅ : 0 < s₅ := by positivity
+  have hs₅k : s₅ * k < 1 := by
+    have hk : k ≤ |k| := le_abs_self k
+    rw [hs₅def, div_mul_eq_mul_div, one_mul, div_lt_one (by positivity)]
+    linarith [abs_nonneg k]
+  obtain ⟨C₅, hC₅, h5⟩ := isOsBond_sub_of_linftyIterationData (p := p) (B := B) hA hs₅ hs₅k
+  set s' := min s₆ s₅ with hs'def
+  have hs' : 0 < s' := lt_min hs₆ hs₅
+  have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  set Θ : ℝ := 2 * ((C₆ * 6 ^ (1 / s') / Real.sqrt (Real.log 2) + C₅ * 6 ^ (1 / s')) *
+    4 ^ (1 / s')) with hΘ
+  have hΘ0 : 0 < Θ := by positivity
+  refine ⟨s', Θ * 4 ^ (1 / s'), hs', by positivity, fun q x y => ?_⟩
+  set L := Real.log (2 + ‖latticeEuclideanEmbedding x - latticeEuclideanEmbedding y‖) with hL
+  have hL2 : Real.log 2 ≤ L :=
+    Real.log_le_log (by norm_num) (by linarith [norm_nonneg (latticeEuclideanEmbedding x -
+      latticeEuclideanEmbedding y)])
+  have hL0 : 0 < L := lt_of_lt_of_le hl2 hL2
+  have hsqL : Real.sqrt (Real.log 2) ≤ Real.sqrt L := Real.sqrt_le_sqrt hL2
+  have hsl2 : 0 < Real.sqrt (Real.log 2) := Real.sqrt_pos.2 hl2
+  choose E hEm hEO hEae using fun i : Fin 2 => hE i x y
+  set Gd : Fin 2 → Configuration 2 → ℝ := fun i ω => |G i y 0 (x - y) ω - G i y 0 0 ω| with hGd
+  have hGdm : ∀ i, Measurable (Gd i) := fun i =>
+    (((hGD i y).meas 0 (x - y)).sub ((hGD i y).meas 0 0)).abs
+  have hGdO : ∀ i, IsOsBond 2 p (Gd i) s₅ (C₅ * Real.sqrt L) := by
+    intro i
+    have := h5 (G i y) (hGD i y) (x - y)
+    rwa [latticeEuclideanEmbedding_sub] at this
+  set Y : Fin 2 → Configuration 2 → ℝ := fun i ω => 2 * max (E i ω) (Gd i ω) with hY
+  have hYm : ∀ i, Measurable (Y i) := fun i => ((hEm i).max (hGdm i)).const_mul 2
+  have hYO : ∀ i, IsOsBond 2 p (Y i) s' (Θ * Real.sqrt L) := by
+    intro i
+    have hE' := IsOsBond.mono_exponent hs' (min_le_left _ _) (hEm i) (hEO i)
+    have hG' := IsOsBond.mono_exponent hs' (min_le_right _ _) (hGdm i) (hGdO i)
+    have hmax := IsOsBond.max hs' (by positivity) (by positivity) (hEm i) (hGdm i) hE' hG'
+    have h2 := IsOsBond.const_mul (two_pos) hmax
+    refine IsOsBond.mono_scale hs' (by positivity) ?_ (hYm i) h2
+    have hC6 : C₆ * 6 ^ (1 / s') ≤ C₆ * 6 ^ (1 / s') / Real.sqrt (Real.log 2) * Real.sqrt L := by
+      rw [div_mul_eq_mul_div, le_div_iff₀ hsl2]
+      exact mul_le_mul_of_nonneg_left hsqL (by positivity)
+    have hmx : max (C₆ * 6 ^ (1 / s')) (C₅ * Real.sqrt L * 6 ^ (1 / s')) ≤
+        (C₆ * 6 ^ (1 / s') / Real.sqrt (Real.log 2) + C₅ * 6 ^ (1 / s')) * Real.sqrt L := by
+      refine max_le ?_ ?_
+      · have : 0 ≤ C₅ * 6 ^ (1 / s') * Real.sqrt L := by positivity
+        nlinarith
+      · have : 0 ≤ C₆ * 6 ^ (1 / s') / Real.sqrt (Real.log 2) * Real.sqrt L := by positivity
+        nlinarith
+    rw [hΘ]
+    calc 2 * (max (C₆ * 6 ^ (1 / s')) (C₅ * Real.sqrt L * 6 ^ (1 / s')) * 4 ^ (1 / s'))
+        ≤ 2 * ((C₆ * 6 ^ (1 / s') / Real.sqrt (Real.log 2) + C₅ * 6 ^ (1 / s')) * Real.sqrt L *
+          4 ^ (1 / s')) := by gcongr
+      _ = _ := by ring
+  set Ym : Configuration 2 → ℝ := fun ω => max (Y 0 ω) (Y 1 ω) with hYmdef
+  have hYmm : Measurable Ym := (hYm 0).max (hYm 1)
+  have hYmO : IsOsBond 2 p Ym s' (Θ * 4 ^ (1 / s') * Real.sqrt L) := by
+    have := IsOsBond.max hs' (by positivity) (by positivity) (hYm 0) (hYm 1) (hYO 0) (hYO 1)
+    rw [max_self] at this
+    have e : Θ * 4 ^ (1 / s') * Real.sqrt L = Θ * Real.sqrt L * 4 ^ (1 / s') := by ring
+    rw [e]
+    exact this
+  set Q := ∑ i, |q i| with hQ
+  have hQ0 : 0 ≤ Q := Finset.sum_nonneg fun i _ => abs_nonneg _
+  refine ⟨fun ω => Q * Ym ω, hYmm.const_mul Q, ?_, ?_⟩
+  · rcases hQ0.eq_or_lt with hQz | hQp
+    · rw [← hQz, mul_zero, zero_mul]
+      exact isOsBond_zero_scale _ hs'
+    · have := IsOsBond.const_mul hQp hYmO
+      convert this using 1
+      ring
+  · filter_upwards [hEae 0, hEae 1, hC p hpc hp1] with ω h0 h1 hR2
+    intro h ℓ hℓ hx hy
+    obtain ⟨ℓ₀, ⟨hℓ₀, -⟩, -⟩ := (hR2 h).1 (Pi.single 0 1) ⟨x, hx⟩
+    obtain ⟨ℓ₁, ⟨hℓ₁, -⟩, -⟩ := (hR2 h).1 (Pi.single 1 1) ⟨x, hx⟩
+    have hlin := corrector_sub_eq (hR2 h).1 hℓ hℓ₀ hℓ₁ ⟨x, hx⟩ ⟨y, hy⟩
+    dsimp only at hlin
+    have hi : ∀ i : Fin 2, ∀ ℓi : uniqueInfiniteComponent h → ℝ,
+        IsCorrectedPlane (uniqueInfiniteComponent h) (Pi.single i 1) ℓi →
+        |(ℓi ⟨x, hx⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * x j) -
+          (ℓi ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * y j)| ≤ Y i ω := by
+      intro i ℓi hℓi
+      have hb : |((ℓi ⟨x, hx⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * x j) -
+          (ℓi ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * y j)) -
+          (G i y 0 (x - y) ω - G i y 0 0 ω)| ≤ E i ω := by
+        fin_cases i
+        · exact h0 h ℓi hℓi hx hy
+        · exact h1 h ℓi hℓi hx hy
+      have hle : |(ℓi ⟨x, hx⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * x j) -
+          (ℓi ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * y j)| ≤ E i ω + Gd i ω := by
+        have := abs_sub_abs_le_abs_sub ((ℓi ⟨x, hx⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j *
+          x j) - (ℓi ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * y j))
+          (G i y 0 (x - y) ω - G i y 0 0 ω)
+        simp only [hGd]
+        linarith
+      calc _ ≤ E i ω + Gd i ω := hle
+        _ ≤ 2 * max (E i ω) (Gd i ω) := by
+            have := le_max_left (E i ω) (Gd i ω)
+            have := le_max_right (E i ω) (Gd i ω)
+            linarith
+    have hb0 := hi 0 ℓ₀ hℓ₀
+    have hb1 := hi 1 ℓ₁ hℓ₁
+    change |(ℓ ⟨x, hx⟩ - ∑ i, q i * x i) - (ℓ ⟨y, hy⟩ - ∑ i, q i * y i)| ≤ Q * Ym ω
+    rw [hlin]
+    have hY0 : Y 0 ω ≤ Ym ω := le_max_left _ _
+    have hY1 : Y 1 ω ≤ Ym ω := le_max_right _ _
+    calc _ ≤ |q 0| * Y 0 ω + |q 1| * Y 1 ω := by
+          refine (abs_add_le _ _).trans ?_
+          rw [abs_mul, abs_mul]
+          exact add_le_add (mul_le_mul_of_nonneg_left hb0 (abs_nonneg _))
+            (mul_le_mul_of_nonneg_left hb1 (abs_nonneg _))
+      _ ≤ (|q 0| + |q 1|) * Ym ω := by
+          nlinarith [abs_nonneg (q 0), abs_nonneg (q 1)]
+      _ = Q * Ym ω := by rw [hQ, Fin.sum_univ_two]
 
 end Rigidity.Corrector
