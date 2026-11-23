@@ -10,7 +10,8 @@ For the tail form `LatticeProb.OsBound P s θ X` (`P[max(X, 0) > tθ] ≤ exp(-t
 indicators of events of small probability are `O_1` (`osBound_indicator`), sums
 (`OsBound.add`), products of nonnegative variables (`OsBound.mul`, the rule
 `O_s(a) · O_q(b) ≤ O_{sq/(s+q)}(C a b)` of Armstrong and Dario, (2.5)), maxima of finitely many
-variables (`osBound_finset_sup'`), and variables with an exponential moment (`osBound_of_exp_moment`).
+variables (`osBound_finset_sup'`), and variables with an exponential moment
+(`osBound_of_exp_moment`).
 A tail bound gives the exponential-moment form `IsOsBond` used in the statements of the inputs
 (`isOsBond_of_osBound`).
 -/
@@ -205,9 +206,41 @@ theorem osBound_of_exp_moment {P : Measure Ω} [IsFiniteMeasure P] {S : Ω → �
     rw [Real.rpow_one] at this
     linarith
 
+/-- **Scaling.** -/
+theorem OsBound.const_mul {P : Measure Ω} {s θ c : ℝ} {X : Ω → ℝ} (hc : 0 < c)
+    (hX : OsBound P s θ X) : OsBound P s (c * θ) (fun ω => c * X ω) := by
+  intro t ht
+  refine le_trans (measure_mono fun ω hω => ?_) (hX t ht)
+  simp only [Set.mem_setOf_eq] at hω ⊢
+  have e : max (c * X ω) 0 = c * max (X ω) 0 := by
+    rw [mul_max_of_nonneg _ _ hc.le, mul_zero]
+  rw [e] at hω
+  nlinarith
+
+/-- **Almost-everywhere domination.** -/
+theorem OsBound.mono_ae {P : Measure Ω} {s θ θ' : ℝ} {X Y : Ω → ℝ} (hθθ' : θ ≤ θ')
+    (hXY : ∀ᵐ ω ∂P, X ω ≤ Y ω) (hY : OsBound P s θ Y) : OsBound P s θ' X := by
+  intro t ht
+  have ht0 : 0 ≤ t := zero_le_one.trans ht
+  set N := {ω | ¬ X ω ≤ Y ω} with hN
+  have hN0 : P N = 0 := ae_iff.1 hXY
+  have hsub : {ω | t * θ' < max (X ω) 0} ⊆ {ω | t * θ < max (Y ω) 0} ∪ N := by
+    intro ω hω
+    by_cases h : X ω ≤ Y ω
+    · left
+      simp only [Set.mem_setOf_eq] at hω ⊢
+      have h1 : t * θ ≤ t * θ' := mul_le_mul_of_nonneg_left hθθ' ht0
+      have h2 : max (X ω) 0 ≤ max (Y ω) 0 := max_le_max h le_rfl
+      linarith
+    · right; exact h
+  calc P {ω | t * θ' < max (X ω) 0} ≤ P ({ω | t * θ < max (Y ω) 0} ∪ N) := measure_mono hsub
+    _ ≤ P {ω | t * θ < max (Y ω) 0} + P N := measure_union_le _ _
+    _ ≤ _ := by rw [hN0, add_zero]; exact hY t ht
+
 /-- **From the tail form to the exponential-moment form `IsOsBond`.** -/
-theorem isOsBond_of_osBound {d : ℕ} {p : unitInterval} {X : LatticeProb.Percolation.Configuration d → ℝ}
-    {s θ : ℝ} (hs : 0 < s) (hθ : 0 < θ) (hXm : Measurable X)
+theorem isOsBond_of_osBound {d : ℕ} {p : unitInterval}
+    {X : LatticeProb.Percolation.Configuration d → ℝ} {s θ : ℝ} (hs : 0 < s) (hθ : 0 < θ)
+    (hXm : Measurable X)
     (hX : OsBound (LatticeProb.Percolation.latticeBondLaw d p) s θ X) :
     Rigidity.External.IsOsBond d p X s (θ * 2 ^ (1 / s) * Real.exp 2 ^ (1 / s)) := by
   obtain ⟨hint, hle⟩ := Rigidity.Proofs.S2.integrable_half_exponential_of_osBound _ X s θ hs hθ
