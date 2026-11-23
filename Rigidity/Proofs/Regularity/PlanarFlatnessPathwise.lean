@@ -137,4 +137,55 @@ theorem sum_sq_planarNuGradAvg_le_of_reach (hP : PlanarPartitionEvent ω) {V : T
         mul_le_mul_of_nonneg_left key (by positivity)
     _ = _ := by ring
 
+/-- **The quantity of (5.12)** with a bounded reach and small subadditivity errors. -/
+theorem planarNuRestrictError_le_of_reach (hP : PlanarPartitionEvent ω) {U : TriadicCube 2}
+    (hU : PlanarResolved ω U) {k : ℕ} (hk : k ≤ U.scale) (ξ : Fin 2 → ℝ)
+    (hres : ∀ x ∈ U.toIntegerCube.vertices, PlanarResolved ω (scaleCube k x)) {S ε Λ νb : ℝ}
+    (hS : 0 < S) (hreach : ∀ z ∈ U.toIntegerCube.vertices, planarReach ω z ≤ ENNReal.ofReal S)
+    (hΛ : 0 ≤ Λ) (hR : planarNuRestrictError ω U k ξ ≤ Λ * (planarNuDefect ω U k ξ / U.volume))
+    (hV : ∀ x ∈ U.toIntegerCube.vertices, |planarNu ω (scaleCube k x) ξ - νb| ≤ ε)
+    (hUe : |planarNu ω U ξ - νb| ≤ ε) :
+    planarNuRestrictError ω U k ξ ≤
+      Λ * (2 * ε + (|ξ 0| + |ξ 1|) * (4356 + 9 * (|ξ 0| + |ξ 1|) ^ 2) * S /
+        (4 * 3 ^ (k / 2))) := by
+  set t : ℝ := S / 3 ^ (k / 2) with ht
+  have ht0 : 0 < t := by positivity
+  have hD := planarNuDefect_le_of_errors hP hU hk ξ hres hV hUe ht0
+  have hG := sum_exceptionalIndicator_le_of_reach hP hk hres hS.le hreach
+  set G := ∑ x ∈ U.toIntegerCube.vertices, exceptionalIndicator ω k x with hGdef
+  set P := |ξ 0| + |ξ 1| with hPdef
+  have hP0 : 0 ≤ P := by positivity
+  have hv := U.volume_pos
+  have h3 : (3 : ℝ) ^ (k / 2) * 3 ^ (k / 2) ≤ 3 ^ k := by
+    rw [← pow_add]; exact pow_le_pow_right₀ (by norm_num) (by omega)
+  have h3p : (0 : ℝ) < 3 ^ (k / 2) := by positivity
+  have hGt : 9 * G / t ≤ 9 * 484 * S * U.volume / 3 ^ (k / 2) := by
+    rw [ht, div_div_eq_mul_div, div_le_div_iff₀ hS h3p]
+    have hG' : G * 3 ^ k ≤ 484 * S ^ 2 * U.volume := by
+      rwa [le_div_iff₀ (by positivity)] at hG
+    have hG0 : 0 ≤ G := Finset.sum_nonneg fun x _ => exceptionalIndicator_nonneg k x
+    have : G * (3 ^ (k / 2) * 3 ^ (k / 2)) ≤ G * 3 ^ k := mul_le_mul_of_nonneg_left h3 hG0
+    nlinarith [mul_pos hS h3p]
+  have hdef : planarNuDefect ω U k ξ / U.volume ≤
+      2 * ε + P * (4356 + 9 * P ^ 2) * S / (4 * 3 ^ (k / 2)) := by
+    rw [div_le_iff₀ hv]
+    have e : t * (9 * P ^ 2 * U.volume) = 9 * P ^ 2 * S * U.volume / 3 ^ (k / 2) := by
+      rw [ht]; field_simp
+    rw [e] at hD
+    have hsum : 9 * G / t + 9 * P ^ 2 * S * U.volume / 3 ^ (k / 2) ≤
+        (4356 + 9 * P ^ 2) * S * U.volume / 3 ^ (k / 2) := by
+      have : (4356 + 9 * P ^ 2) * S * U.volume / 3 ^ (k / 2) =
+          9 * 484 * S * U.volume / 3 ^ (k / 2) + 9 * P ^ 2 * S * U.volume / 3 ^ (k / 2) := by
+        ring
+      linarith
+    have h4 : P * (9 * G / t + 9 * P ^ 2 * S * U.volume / 3 ^ (k / 2)) / 4 ≤
+        P * ((4356 + 9 * P ^ 2) * S * U.volume / 3 ^ (k / 2)) / 4 := by
+      have := mul_le_mul_of_nonneg_left hsum hP0
+      linarith
+    have e2 : P * ((4356 + 9 * P ^ 2) * S * U.volume / 3 ^ (k / 2)) / 4 =
+        P * (4356 + 9 * P ^ 2) * S / (4 * 3 ^ (k / 2)) * U.volume := by
+      field_simp
+    nlinarith
+  exact hR.trans (mul_le_mul_of_nonneg_left hdef hΛ)
+
 end Rigidity.Proofs.Regularity
