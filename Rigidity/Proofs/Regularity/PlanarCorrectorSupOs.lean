@@ -179,4 +179,90 @@ theorem abs_corrector_le_of_minimalScales {ω : Configuration 2} (hP : PlanarPar
     _ ≤ _ := hs
     _ = _ := by ring
 
+/-- **The uniform bound of the correctors above a minimal scale of class `O_s`**, from (1.18) in the
+form `O_s`, the order-zero regularity and the minimal scales of Proposition 2.4. -/
+theorem exists_corrector_sup_os (h118 : PlanarCorrectorSublinearL2Two)
+    (hR3 : ArmstrongDarioOrderZeroTwo)
+    (hM5 : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarMinimalScalesTwo p) (p : unitInterval) (hpc : criticalProbability 2 < (p : ℝ))
+    (hp1 : (p : ℝ) < 1) :
+    ∃ s θ η Cs : ℝ, 0 < s ∧ 0 < θ ∧ 0 < η ∧ η ≤ 1 / 28 ∧ 0 ≤ Cs ∧
+      ∃ X : Configuration 2 → ℝ, Measurable X ∧ (∀ ω, 0 ≤ X ω) ∧ IsOsBond 2 p X s θ ∧
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ q : Fin 2 → ℝ,
+        ∃ u : uniqueInfiniteComponent h → ℝ, u ∈ harmonicGrowthSpace (uniqueInfiniteComponent h) 1 ∧
+          ∀ m : ℕ, X ω ≤ 3 ^ m → ∀ x : uniqueInfiniteComponent h, (∀ i, |x.val i| ≤ 9 * 3 ^ m) →
+            |componentCorrector (uniqueInfiniteComponent h) q u x| ≤
+              Cs * (|q 0| + |q 1|) * ((3 : ℝ) ^ m) ^ (1 - 7 * η) := by
+  obtain ⟨s₁, δ₁, θ₁, K, hs₁, hδ₁, hθ₁, hK, X₁, hX₁m, -, hX₁os, hae₁⟩ := h118 p hpc hp1
+  obtain ⟨δ, hδdef⟩ : ∃ δ : ℝ, δ = min δ₁ 1 := ⟨_, rfl⟩
+  have hδ0 : 0 < δ := by rw [hδdef]; exact lt_min hδ₁ one_pos
+  have hδ1 : δ ≤ 1 := by rw [hδdef]; exact min_le_right _ _
+  have hδδ : δ ≤ δ₁ := by rw [hδdef]; exact min_le_left _ _
+  have hη : 0 < δ / 28 := by positivity
+  have hη28 : δ / 28 ≤ 1 / 28 := by linarith
+  obtain ⟨s₃, θ₃, C₀, hs₃, hθ₃, hC₀, Y, hYm, -, hYi, hYb, hae₃⟩ :=
+    exists_planar_all_centres_constant_approximation hR3 p hpc hp1
+  obtain ⟨rB, θB, hrB, hθB, XB, hXBm, -, hXBos, haeB⟩ :=
+    exists_isOsBond_scale_le_three hs₃ hθ₃ hη hYm hYi hYb
+  obtain ⟨A₀, sc, -, hmoms⟩ := hM5 p hpc hp1
+  obtain ⟨K₆, r₆, θ₆, -, hr₆, hθ₆, M₆, hM₆m, -, hM₆os, hM₆ae⟩ := hmoms 1 one_pos (δ / 28) hη
+  have hθp : 0 < theta 2 p := Rigidity.Percolation.theta_pos_of_criticalProbability_lt 2 p hpc
+  obtain ⟨s₄, θ₄, hs₄, hθ₄, hcube⟩ := exists_clusterCubeDensity_of_concentration (d := 2) le_rfl p
+    (cluster_density_concentration 2 le_rfl p hpc hp1) 54
+  obtain ⟨M₄, hM₄m, -, hM₄os, hM₄ae⟩ := hcube 0
+  obtain ⟨mc, hmc⟩ := exists_nat_ge (1 / (7 * (δ / 28)))
+  -- the minimal scale
+  obtain ⟨θa, hθa, ha⟩ := exists_isOsBond_max hs₁ hrB hθ₁ hθB hX₁m hXBm hX₁os hXBos
+  obtain ⟨θb, hθb, hb⟩ := exists_isOsBond_max hr₆ hs₄ hθ₆ hθ₄ hM₆m hM₄m hM₆os hM₄os
+  obtain ⟨θc, hθc, hc⟩ := exists_isOsBond_max (lt_min hs₁ hrB) (lt_min hr₆ hs₄) hθa hθb
+    (hX₁m.max hXBm) (hM₆m.max hM₄m) ha hb
+  set s := min (min s₁ rB) (min r₆ s₄) with hs
+  have hs0 : 0 < s := lt_min (lt_min hs₁ hrB) (lt_min hr₆ hs₄)
+  have hconst := isOsBond_const (d := 2) (p := p) (by positivity : (0 : ℝ) < 3 ^ (mc + 3)) hs0
+  obtain ⟨θd, hθd, hd⟩ := exists_isOsBond_max hs0 hs0 hθc (by positivity)
+    ((hX₁m.max hXBm).max (hM₆m.max hM₄m)) measurable_const hc hconst
+  refine ⟨_, θd, δ / 28,
+    3 * (729 ^ 2 * (196 * C₀ * (Real.sqrt (18225 / (theta 2 p / 2)) * (6 * K) + 1) + 1)) +
+      9 * √(4050 * (6 * K) ^ 2 + 8 * 729 ^ 4 *
+        (196 * C₀ * (Real.sqrt (18225 / (theta 2 p / 2)) * (6 * K) + 1) + 1) ^ 2),
+    lt_min hs0 hs0, hθd, hη, hη28, by positivity,
+    fun ω => max (max (max (X₁ ω) (XB ω)) (max (M₆ ω) (M₄ ω))) (3 ^ (mc + 3)),
+    ((hX₁m.max hXBm).max (hM₆m.max hM₄m)).max measurable_const,
+    fun ω => (by positivity : (0 : ℝ) ≤ 3 ^ (mc + 3)).trans (le_max_right _ _), hd, ?_⟩
+  filter_upwards [hae₁, hae₃, haeB, hM₆ae, hM₄ae, ae_planarPartitionEvent hpc] with
+    ω hω₁ hω₃ hωB hω₆ hω₄ hP
+  intro h q
+  obtain ⟨u, hu, hL2⟩ := hω₁ h q
+  refine ⟨u, hu, fun m hm x hx => ?_⟩
+  obtain ⟨-, hω₃'⟩ := hω₃
+  have hR3ω := hω₃' h
+  have hinf := uniqueInfiniteComponent_infinite h
+  have hX₁ : X₁ ω ≤ 3 ^ m :=
+    (((le_max_left _ _).trans (le_max_left _ _)).trans (le_max_left _ _)).trans hm
+  have hXB : XB ω ≤ 3 ^ m :=
+    (((le_max_right _ _).trans (le_max_left _ _)).trans (le_max_left _ _)).trans hm
+  have hM₆ : M₆ ω ≤ 3 ^ m :=
+    (((le_max_left _ _).trans (le_max_right _ _)).trans (le_max_left _ _)).trans hm
+  have hM₄ : M₄ ω ≤ 3 ^ m :=
+    (((le_max_right _ _).trans (le_max_right _ _)).trans (le_max_left _ _)).trans hm
+  have hmc3 : mc + 3 ≤ m :=
+    (pow_le_pow_iff_right₀ (by norm_num : (1 : ℝ) < 3)).1 ((le_max_right _ _).trans hm)
+  have hYle : ∀ a ∈ triScaleBox (m + 1), Y a ω ≤ (3 : ℝ) ^ (((m + 1 : ℕ) : ℝ) * (δ / 28)) :=
+    fun a ha => hωB (m + 1) (hXB.trans_lt (pow_lt_pow_right₀ (by norm_num) (by omega))) a ha
+  have hM6 : M₆ ω ≤ 3 ^ (m + 4) := hM₆.trans (pow_le_pow_right₀ (by norm_num) (by omega))
+  have hsize := (hω₆ (m + 4) hM6).2.2.2.1
+  have h6N : X₁ ω ≤ 6 * (9 * 3 ^ m) := by
+    have : (0 : ℝ) ≤ 3 ^ m := by positivity
+    linarith
+  have hL2' : componentBallL2 (uniqueInfiniteComponent h) 0 (6 * (9 * 3 ^ m))
+      (componentCorrector (uniqueInfiniteComponent h) q u) ≤
+      K * (|q 0| + |q 1|) * (6 * (9 * 3 ^ m)) ^ (1 - δ) := by
+    refine (hL2 _ h6N).trans (mul_le_mul_of_nonneg_left ?_ (by positivity))
+    have hN1 : (1 : ℝ) ≤ 6 * (9 * 3 ^ m) := by
+      have : (1 : ℝ) ≤ 3 ^ m := one_le_pow₀ (by norm_num)
+      linarith
+    exact Real.rpow_le_rpow_of_exponent_le hN1 (by linarith)
+  exact abs_corrector_le_of_minimalScales hP (uniqueInfiniteComponent h) hinf q u hu hδ0 hδ1 hmc
+    hmc3 hK hC₀ (by positivity) (hω₄ h) hM₄ (fun a => Y a ω) hR3ω hYle hsize hL2' x hx
+
 end Rigidity.Proofs.Regularity
