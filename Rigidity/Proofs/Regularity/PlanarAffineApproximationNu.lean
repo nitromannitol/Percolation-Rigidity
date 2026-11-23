@@ -192,4 +192,135 @@ theorem radicand_le {j : ℕ} (hj : 1 ≤ j) {Q Q₁ μ δ κ KL : ℝ} (hQQ : Q
   have hKL : 0 ≤ KL ^ 2 := sq_nonneg _
   nlinarith
 
+theorem four_mul_le_of_three_pow_le_rpow_quarter {a m : ℕ}
+    (h : (3 : ℝ) ^ a ≤ ((3 : ℝ) ^ m) ^ (1 / 4 : ℝ)) : a * 4 ≤ m := by
+  have hsq := pow_le_pow_left₀ (by positivity) h 4
+  rw [← Real.rpow_natCast (((3 : ℝ) ^ m) ^ (1 / 4 : ℝ)), ← Real.rpow_mul (by positivity)] at hsq
+  norm_num at hsq
+  rw [← pow_mul] at hsq
+  exact (pow_le_pow_iff_right₀ (by norm_num : (1 : ℝ) < 3)).1 hsq
+
+theorem sqrt_le_three_rpow_neg {μ : ℝ} (hμ0 : 0 < μ) :
+    Real.sqrt μ ≤ (3 : ℝ) ^ (-(Real.log μ⁻¹ / (2 * Real.log 3))) := by
+  have hl3 : 0 < Real.log 3 := Real.log_pos (by norm_num)
+  rw [Real.sqrt_eq_rpow, Real.rpow_def_of_pos hμ0, Real.rpow_def_of_pos (by norm_num),
+    Real.log_inv]
+  apply le_of_eq
+  congr 1
+  field_simp
+
+/-- **The approximation of affine functions on growing balls of the planar cluster, almost surely
+above a finite scale**, from (5.33) in expectation, the geometric decay of `τ` and the minimal
+scales of Proposition 2.4. -/
+theorem planarAffineApproximationAeTwo_of_nuFlatness
+    (hflat : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarNuFlatnessMajorantTwo p)
+    (htau : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarTauGeometricTwo p)
+    (hM5 : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarMinimalScalesTwo p) :
+    PlanarAffineApproximationAeTwo := by
+  intro p hpc hp1
+  obtain ⟨μ, hμ0, hμ1, hfl⟩ := ae_eventually_planarNuFlatness_le (hflat p hpc hp1)
+    (htau p hpc hp1)
+  have hlog : 0 < Real.log μ⁻¹ := Real.log_pos (one_lt_inv_iff₀.2 ⟨hμ0, hμ1⟩)
+  have hl3 : 0 < Real.log 3 := Real.log_pos (by norm_num)
+  set δ : ℝ := min (Real.log μ⁻¹ / (2 * Real.log 3)) (1 / 2) with hδdef
+  have hδ0 : 0 < δ := lt_min (by positivity) (by norm_num)
+  have hδ2 : δ ≤ 1 / 2 := min_le_right _ _
+  have hμδ : Real.sqrt μ ≤ (3 : ℝ) ^ (-δ) :=
+    (sqrt_le_three_rpow_neg hμ0).trans (Real.rpow_le_rpow_of_exponent_le (by norm_num)
+      (neg_le_neg (min_le_left _ _)))
+  obtain ⟨A₀, sc, -, hmoms⟩ := hM5 p hpc hp1
+  obtain ⟨K₆, r₆, θ₆, -, -, -, M₆, -, hM₆0, -, hM₆ae⟩ := hmoms 1 one_pos (1 / 4) (by norm_num)
+  have hθp : 0 < theta 2 p := Rigidity.Percolation.theta_pos_of_criticalProbability_lt 2 p hpc
+  obtain ⟨s₄, θ₄, -, -, hcube⟩ := exists_clusterCubeDensity_of_concentration (d := 2) le_rfl p
+    (cluster_density_concentration 2 le_rfl p hpc hp1) 54
+  obtain ⟨M₄, -, hM₄0, -, hM₄ae⟩ := hcube 0
+  set κ : ℝ := theta 2 p / 2 with hκdef
+  have hκ : 0 < κ := by positivity
+  set KL : ℝ := planarCoarseConst with hKL
+  set K : ℝ := Real.sqrt ((8 * 9 ^ 5 + 18 * 9 ^ 5 * KL ^ 2) / κ) with hK
+  refine ⟨δ, K, hδ0, Real.sqrt_nonneg _, ?_⟩
+  filter_upwards [hfl (Pi.single 0 1), hfl (Pi.single 1 1), hM₆ae, hM₄ae,
+    ae_planarPartitionEvent hpc] with ω h0 h1 h6 h4 hP
+  intro h q
+  have hinf := uniqueInfiniteComponent_infinite h
+  obtain ⟨N₀, hN₀⟩ := Filter.eventually_atTop.1 h0
+  obtain ⟨N₁, hN₁⟩ := Filter.eventually_atTop.1 h1
+  obtain ⟨ma, hma⟩ := eventually_le_three_pow (max (M₆ ω) (M₄ ω))
+  refine ⟨max (max N₀ N₁) ma + 4, fun m hm => ?_⟩
+  obtain ⟨j, rfl⟩ : ∃ j, m = j + 1 := ⟨m - 1, by omega⟩
+  have hj3 : 3 ≤ j := by omega
+  have hM6 : M₆ ω ≤ 3 ^ (j + 3) := (le_max_left _ _).trans (hma (j + 3) (by omega))
+  have hM4 : M₄ ω ≤ 3 ^ (j - 1) := (le_max_right _ _).trans (hma (j - 1) (by omega))
+  obtain ⟨-, -, -, hsize, -, hreach⟩ := h6 (j + 3) hM6
+  have hscale : ∀ z ∈ triadicCubeFinset 2 (j + 3) 0, (planarPartCube ω z).scale * 4 ≤ j + 3 :=
+    fun z hz => four_mul_le_of_three_pow_le_rpow_quarter (hsize z (mem_cube_of_mem_square hz))
+  have hres : PlanarResolved ω ⟨j + 3, 0⟩ := by
+    intro z hz
+    have hz' : z ∈ triadicCubeFinset 2 (j + 3) 0 :=
+      mem_square_iff_int.2 (mem_triadicCube_zero_iff.1 hz)
+    have := hscale z hz'
+    show (planarPartCube ω z).scale ≤ j + 3
+    omega
+  have hsc : ∀ x ∈ triadicCubeFinset 2 (j + 3) 0, (planarPartCube ω x).scale ≤ j := by
+    intro x hx; have := hscale x hx; omega
+  have hD : ∀ z ∈ clusterVertices ω ⟨j + 3, 0⟩,
+      (3 : ℝ) ^ (planarCoarseData hP ⟨j + 3, 0⟩ hres).reachScale z ≤
+        ((3 : ℝ) ^ (j + 3)) ^ (1 / 4 : ℝ) := by
+    intro z hz
+    refine three_pow_le_of_planarReach_le (by positivity)
+      ((three_pow_reachScale_le_planarReach hP hres z).trans (hreach z ?_))
+    exact mem_cube_of_mem_square (mem_square_of_mem_clusterVertices hz)
+  have hflat' : ∀ i : Fin 2, planarFlatnessError ⟨j + 3, 0⟩
+      (coarsen ω ⟨j + 3, 0⟩ (planarNuSolution ω ⟨j + 3, 0⟩ (Pi.single i 1))) (Pi.single i 1) ≤
+        2 * 9 ^ (j + 2) * μ ^ (j + 2) := by
+    intro i
+    fin_cases i
+    · have := hN₀ (j + 2) (by omega)
+      refine this.trans (le_of_eq ?_)
+      norm_num
+    · have := hN₁ (j + 2) (by omega)
+      refine this.trans (le_of_eq ?_)
+      norm_num
+  have hcard := card_componentEuclideanBall_ge (uniqueInfiniteComponent h) (h4 h)
+    (m := j - 1) hM4 (x := (0 : Vertex 2)) fun i => by
+      simp only [Pi.zero_apply, abs_zero]; positivity
+  have e9 : (9 : ℝ) * 3 ^ (j - 1) = 3 ^ (j + 1) := by
+    rw [show (9 : ℝ) = 3 ^ 2 by norm_num, ← pow_add]; congr 1; omega
+  rw [e9] at hcard
+  obtain ⟨v, hvH, hvL2⟩ := affineApproximation_at_scale hP (uniqueInfiniteComponent h) hinf hres hsc
+    hD hflat' (κ' := κ * 9 ^ (j - 1)) (by positivity) hcard q
+  refine ⟨v, hvH, hvL2.trans ?_⟩
+  have hvol : (⟨j + 3, 0⟩ : TriadicCube 2).volume = 9 ^ (j + 3) := rfl
+  rw [hvol]
+  have hQQ : q 0 ^ 2 + q 1 ^ 2 ≤ (|q 0| + |q 1|) ^ 2 := by
+    have h0 := abs_nonneg (q 0)
+    have h1 := abs_nonneg (q 1)
+    nlinarith [sq_abs (q 0), sq_abs (q 1)]
+  have hr := radicand_le (j := j) (by omega) (Q := q 0 ^ 2 + q 1 ^ 2) (Q₁ := |q 0| + |q 1|)
+    (KL := KL) hQQ hμ0 hμ1.le hμδ hδ2 hκ
+  have hnonneg : 0 ≤ K * (|q 0| + |q 1|) * ((3 : ℝ) ^ (j + 1)) ^ (1 - δ) := by positivity
+  calc Real.sqrt (2 * (2 * 9 ^ (j + 3) * ((q 0 ^ 2 + q 1 ^ 2) * (2 * 9 ^ (j + 2) * μ ^ (j + 2))) +
+        planarCoarseConst ^ 2 * (((3 : ℝ) ^ (j + 3)) ^ (1 / 4 : ℝ)) ^ 4 *
+          (9 * (q 0 ^ 2 + q 1 ^ 2) * 9 ^ (j + 3))) / (κ * 9 ^ (j - 1)))
+      ≤ Real.sqrt ((K * (|q 0| + |q 1|) * ((3 : ℝ) ^ (j + 1)) ^ (1 - δ)) ^ 2) :=
+        Real.sqrt_le_sqrt hr
+    _ = K * (|q 0| + |q 1|) * ((3 : ℝ) ^ (j + 1)) ^ (1 - δ) := Real.sqrt_sq hnonneg
+
+/-- **Every slope has a corrected plane on the planar cluster** from (5.33) in expectation, the
+decay of `τ`, the minimal scales of Proposition 2.4 and the order-zero regularity, by Step 3 of
+Proposition 3.1 of Armstrong, Kuusi and Mourrat. -/
+theorem planarCorrectedPlaneExistenceTwo_of_nuFlatness
+    (hflat : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarNuFlatnessMajorantTwo p)
+    (htau : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarTauGeometricTwo p)
+    (hM5 : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarMinimalScalesTwo p)
+    (hR3 : ArmstrongDarioOrderZeroTwo) : PlanarCorrectedPlaneExistenceTwo :=
+  planarCorrectedPlaneExistenceTwo_of_affineApproximationAe
+    (planarAffineApproximationAeTwo_of_nuFlatness hflat htau hM5) hR3 hM5
+
 end Rigidity.Proofs.Regularity
