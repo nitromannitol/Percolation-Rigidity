@@ -17,6 +17,8 @@ import Rigidity.Proofs.Corrector.DarioPropThreeOne
   `e^{-16 r}` times its sum over a period.
 
 The polynomial factors are absorbed by `e^{-c √r / 6}` (`exp_bound_lemmaThreeTwo`).
+`darioOptimalCorrectorTwo_of_osc` composes Dario's Theorem 1 in dimension two with Lemma 3.2
+replaced by (1.22).
 -/
 
 namespace Rigidity.Corrector
@@ -336,5 +338,13 @@ theorem darioLemmaThreeTwo_of_osc (hR3 : ArmstrongDarioOrderZeroTwo)
     _ = Real.exp (-(16 * r)) * 9 ^ k * (2 * A + 2 * B) + 2 * B := by ring
     _ ≤ (A / 64 + 4 * K') / r := hfin
     _ ≤ (A / 64 + 4 * K' + 1) / r := div_le_div_of_nonneg_right (by linarith) hr0.le
+
+/-- **Dario's Theorem 1 in dimension two** from R2, R3, the multiscale Poincaré inequality, the
+concentration inequality, the quantitative sublinearity (1.22) and Lemma 3.3. -/
+theorem darioOptimalCorrectorTwo_of_osc (hR2 : SupercriticalBondCorrectorInputTwo)
+    (hR3 : ArmstrongDarioOrderZeroTwo) {A₀ : ℝ} (hA₀ : 0 < A₀) (hMSP : MultiscalePoincareTwo A₀)
+    (hconc : ConcentrationTwo) (h122 : CorrectorOscSublinearTwo) (h33 : DarioLemmaThreeThree) :
+    DarioOptimalCorrectorTwo :=
+  darioOptimalCorrectorTwo_of_lemmas hR2 hR3 hA₀ hMSP hconc (darioLemmaThreeTwo_of_osc hR3 h122) h33
 
 end Rigidity.Corrector
