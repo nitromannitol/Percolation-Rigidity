@@ -310,4 +310,131 @@ theorem cubeNuLimit_signedPermSlope (prob : unitInterval) (p : Fin d → ℝ) :
 
 end SignedPermCluster
 
+section Isotropy
+
+theorem signedPermSlope_add (π : Equiv.Perm (Fin d)) (s : Fin d → ℤˣ) (p q : Fin d → ℝ) :
+    signedPermSlope π s (p + q) = signedPermSlope π s p + signedPermSlope π s q := by
+  funext i
+  simp only [signedPermSlope, Pi.add_apply]
+  ring
+
+/-- The signs of the reflection of one coordinate. -/
+def reflectAt (i : Fin d) : Fin d → ℤˣ := fun k => if k = i then -1 else 1
+
+theorem signedPermSlope_reflectAt_single_add {i j : Fin d} (hij : i ≠ j) :
+    signedPermSlope (Equiv.refl (Fin d)) (reflectAt i) (Pi.single i 1 + Pi.single j 1) =
+      -Pi.single i 1 + Pi.single j 1 := by
+  funext k
+  simp only [signedPermSlope, reflectAt, Equiv.refl_apply, Pi.add_apply, Pi.neg_apply]
+  by_cases hk : k = i
+  · subst hk
+    simp [hij]
+  · by_cases hkj : k = j
+    · subst hkj
+      simp [hk]
+    · simp [hk, hkj]
+
+theorem signedPermSlope_swap_single (i j : Fin d) :
+    signedPermSlope (Equiv.swap i j) (fun _ => 1) (Pi.single i 1) = Pi.single j 1 := by
+  funext k
+  simp only [signedPermSlope, Units.val_one, Int.cast_one, one_mul]
+  by_cases hk : k = j
+  · subst hk
+    simp
+  · rw [Pi.single_apply, Pi.single_apply, if_neg hk, if_neg]
+    intro h
+    apply hk
+    rw [Equiv.swap_apply_eq_iff] at h
+    simpa using h
+
+/-- The parallelogram identity for a quadratic form. -/
+theorem quadForm_parallelogram (A : Matrix (Fin d) (Fin d) ℝ) (x y : Fin d → ℝ) :
+    1 / 2 * ∑ a, ∑ b, (x + y) a * A a b * (x + y) b +
+        1 / 2 * ∑ a, ∑ b, (x - y) a * A a b * (x - y) b =
+      2 * (1 / 2 * ∑ a, ∑ b, x a * A a b * x b) + 2 * (1 / 2 * ∑ a, ∑ b, y a * A a b * y b) := by
+  have key : ∀ a b, (x + y) a * A a b * (x + y) b + (x - y) a * A a b * (x - y) b =
+      2 * (x a * A a b * x b) + 2 * (y a * A a b * y b) := fun a b => by
+    simp only [Pi.add_apply, Pi.sub_apply]
+    ring
+  calc 1 / 2 * ∑ a, ∑ b, (x + y) a * A a b * (x + y) b +
+        1 / 2 * ∑ a, ∑ b, (x - y) a * A a b * (x - y) b
+      = 1 / 2 * ∑ a, ∑ b, ((x + y) a * A a b * (x + y) b +
+          (x - y) a * A a b * (x - y) b) := by
+        rw [← mul_add, ← Finset.sum_add_distrib]
+        congr 1
+        exact Finset.sum_congr rfl fun a _ => Finset.sum_add_distrib.symm
+    _ = 1 / 2 * ∑ a, ∑ b, (2 * (x a * A a b * x b) + 2 * (y a * A a b * y b)) := by
+        simp only [key]
+    _ = _ := by
+        simp only [Finset.sum_add_distrib, ← Finset.mul_sum]
+        ring
+
+/-- **The homogenized matrix is a multiple of the identity** (Armstrong and Dario, the remark
+after (5.22), in every dimension `d ≥ 2`): `ā = σ I` with `σ > 0`. -/
+theorem exists_cubeAhom_eq_smul_one [NeZero d] (hd : 2 ≤ d) {prob : unitInterval}
+    (hpc : criticalProbability d < (prob : ℝ)) :
+    ∃ σ : ℝ, 0 < σ ∧ cubeAhom (d := d) prob = σ • (1 : Matrix (Fin d) (Fin d) ℝ) := by
+  have hL := cubeNuLimit_eq_cubeAhom hd hpc
+  have hoff : ∀ i j, i ≠ j → cubeAhom (d := d) prob i j = 0 := by
+    intro i j hij
+    have h1 := cubeNuLimit_signedPermSlope (Equiv.refl (Fin d)) (reflectAt i) prob
+      (Pi.single i 1 + Pi.single j 1)
+    rw [signedPermSlope_reflectAt_single_add hij] at h1
+    have hpar := quadForm_parallelogram (cubeAhom (d := d) prob) (Pi.single j 1) (Pi.single i 1)
+    rw [← hL, ← hL, ← hL, ← hL] at hpar
+    have e1 : (Pi.single j 1 + Pi.single i 1 : Fin d → ℝ) = Pi.single i 1 + Pi.single j 1 :=
+      add_comm _ _
+    have e2 : (Pi.single j 1 - Pi.single i 1 : Fin d → ℝ) = -Pi.single i 1 + Pi.single j 1 := by
+      abel
+    rw [e1, e2, h1] at hpar
+    change cubeNuLimit prob (Pi.single i 1 + Pi.single j 1) - cubeNuLimit prob (Pi.single i 1) -
+      cubeNuLimit prob (Pi.single j 1) = 0
+    linarith
+  have hdiag : ∀ i, cubeAhom (d := d) prob i i = cubeAhom (d := d) prob 0 0 := by
+    intro i
+    by_cases hi : i = 0
+    · rw [hi]
+    have h1 := cubeNuLimit_signedPermSlope (Equiv.swap i 0) (fun _ => 1) prob (Pi.single i 1)
+    rw [signedPermSlope_swap_single] at h1
+    have h2 := cubeNuLimit_signedPermSlope (Equiv.swap i 0) (fun _ => 1) prob
+      (Pi.single i 1 + Pi.single i 1)
+    rw [signedPermSlope_add, signedPermSlope_swap_single] at h2
+    change cubeNuLimit prob (Pi.single i 1 + Pi.single i 1) - cubeNuLimit prob (Pi.single i 1) -
+        cubeNuLimit prob (Pi.single i 1) =
+      cubeNuLimit prob (Pi.single 0 1 + Pi.single 0 1) - cubeNuLimit prob (Pi.single 0 1) -
+        cubeNuLimit prob (Pi.single 0 1)
+    rw [← h1, ← h2]
+  have h00 : cubeNuLimit (d := d) prob (Pi.single 0 1) = 1 / 2 * cubeAhom (d := d) prob 0 0 := by
+    rw [hL]
+    simp [Pi.single_apply]
+  obtain ⟨c, C, hc, hC, hlow⟩ := exists_le_integral_cubeNu hd hpc
+  have hpos : c ≤ cubeNuLimit (d := d) prob (Pi.single 0 1) := by
+    have hsq : ∀ m : ℕ, √((3 : ℝ) ^ m) = √3 ^ m := fun m =>
+      (Real.sqrt_eq_iff_mul_self_eq_of_pos (by positivity)).2
+        (by rw [← mul_pow, Real.mul_self_sqrt (by norm_num)])
+    have ht : Tendsto (fun m : ℕ => cubeNuMean (d := d) prob m (Pi.single 0 1) + C * (1 / √3 ^ m))
+        atTop (𝓝 (cubeNuLimit (d := d) prob (Pi.single 0 1) + C * 0)) :=
+      (tendsto_cubeNuLimit hd hpc _).add (tendsto_one_div_sqrt_three_pow'.const_mul C)
+    rw [mul_zero, add_zero] at ht
+    refine ge_of_tendsto' ht fun m => ?_
+    have h := hlow ⟨m, 0⟩ (Pi.single 0 1)
+    have hs1 : ∑ i : Fin d, (Pi.single (0 : Fin d) (1 : ℝ) i) ^ 2 = (1 : ℝ) := by
+      simp [Pi.single_apply]
+    have hs2 : ∑ i : Fin d, |Pi.single (0 : Fin d) (1 : ℝ) i| = (1 : ℝ) := by
+      simp [Pi.single_apply, apply_ite (abs : ℝ → ℝ)]
+    rw [hs1, hs2, mul_one, one_pow, mul_one] at h
+    change c ≤ cubeNuMean (d := d) prob m (Pi.single 0 1) + C / √((3 : ℝ) ^ m) at h
+    rw [hsq m] at h
+    calc c ≤ cubeNuMean (d := d) prob m (Pi.single 0 1) + C / √3 ^ m := h
+      _ = cubeNuMean (d := d) prob m (Pi.single 0 1) + C * (1 / √3 ^ m) := by ring
+  refine ⟨cubeAhom (d := d) prob 0 0, by linarith, ?_⟩
+  ext i j
+  rw [Matrix.smul_apply, smul_eq_mul]
+  by_cases hij : i = j
+  · subst hij
+    rw [Matrix.one_apply_eq, mul_one, hdiag]
+  · rw [Matrix.one_apply_ne hij, mul_zero, hoff i j hij]
+
+end Isotropy
+
 end Rigidity.Percolation
