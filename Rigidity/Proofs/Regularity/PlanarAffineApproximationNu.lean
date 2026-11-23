@@ -122,4 +122,74 @@ theorem affineApproximation_at_scale (hP : PlanarPartitionEvent ω) (C : OpenCom
     nlinarith
   exact componentBallL2_le_of_sums C v q c hκ' (fun x hx => (hin x hx).1) hcard hF' hG'
 
+theorem three_pow_le_of_planarReach_le {n : ℕ} {x : ℝ} (hx : 0 ≤ x)
+    (h : (3 : ℝ≥0∞) ^ n ≤ ENNReal.ofReal x) : (3 : ℝ) ^ n ≤ x := by
+  have e : (3 : ℝ≥0∞) ^ n = ENNReal.ofReal ((3 : ℝ) ^ n) := by
+    rw [ENNReal.ofReal_pow (by norm_num)]; norm_num
+  rw [e, ENNReal.ofReal_le_ofReal_iff hx] at h
+  exact h
+
+/-- The final bound at one scale. -/
+theorem radicand_le {j : ℕ} (hj : 1 ≤ j) {Q Q₁ μ δ κ KL : ℝ} (hQQ : Q ≤ Q₁ ^ 2)
+    (hμ0 : 0 < μ) (hμ1 : μ ≤ 1) (hμδ : Real.sqrt μ ≤ (3 : ℝ) ^ (-δ))
+    (hδ2 : δ ≤ 1 / 2) (hκ : 0 < κ) :
+    2 * (2 * (9 : ℝ) ^ (j + 3) * (Q * (2 * 9 ^ (j + 2) * μ ^ (j + 2))) +
+        KL ^ 2 * (((3 : ℝ) ^ (j + 3)) ^ (1 / 4 : ℝ)) ^ 4 * (9 * Q * 9 ^ (j + 3))) /
+        (κ * 9 ^ (j - 1)) ≤
+      (Real.sqrt ((8 * 9 ^ 5 + 18 * 9 ^ 5 * KL ^ 2) / κ) * Q₁ *
+        ((3 : ℝ) ^ (j + 1)) ^ (1 - δ)) ^ 2 := by
+  set M : ℝ := (3 : ℝ) ^ (j + 1) with hM
+  set W : ℝ := (9 : ℝ) ^ (j - 1) with hW
+  have hW0 : 0 < W := by positivity
+  have hM1 : 1 ≤ M := one_le_pow₀ (by norm_num)
+  have hD4 : (((3 : ℝ) ^ (j + 3)) ^ (1 / 4 : ℝ)) ^ 4 = 9 * M := by
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity)]
+    norm_num
+    rw [hM]; ring
+  have e1 : (9 : ℝ) ^ (j + 3) = 6561 * W := by
+    rw [hW, show j + 3 = 4 + (j - 1) by omega, pow_add]; norm_num
+  have e2 : (9 : ℝ) ^ (j + 2) = 729 * W := by
+    rw [hW, show j + 2 = 3 + (j - 1) by omega, pow_add]; norm_num
+  have e3 : M ^ 2 = 81 * W := by
+    rw [hM, hW, ← pow_mul, show (j + 1) * 2 = 4 + 2 * (j - 1) by omega, pow_add, pow_mul]; norm_num
+  rw [hD4, e1, e2]
+  -- the radicand
+  have hrad : 2 * (2 * (6561 * W) * (Q * (2 * (729 * W) * μ ^ (j + 2))) +
+        KL ^ 2 * (9 * M) * (9 * Q * (6561 * W))) / (κ * W) =
+      (8 * 9 ^ 5 * (Q * (M ^ 2 * μ ^ (j + 2))) + 18 * 9 ^ 5 * KL ^ 2 * (Q * M)) / κ := by
+    rw [e3]; field_simp; ring
+  rw [hrad]
+  -- the powers of `M`
+  set ε : ℝ := (3 : ℝ) ^ (-δ) with hε
+  have hε0 : 0 < ε := by positivity
+  set z : ℝ := M ^ (1 - δ) with hz
+  have hzM : z = M * ε ^ (j + 1) := by rw [hz, hM, three_pow_rpow_eq]
+  have hz0 : 0 ≤ z := by positivity
+  have h1 : M ^ 2 * μ ^ (j + 2) ≤ z ^ 2 := by
+    have hμ2 : μ ^ (j + 2) ≤ μ ^ (j + 1) := pow_le_pow_of_le_one hμ0.le hμ1 (by omega)
+    have hμs : μ ^ (j + 1) = (Real.sqrt μ ^ 2) ^ (j + 1) := by rw [Real.sq_sqrt hμ0.le]
+    have hμε : μ ^ (j + 1) ≤ (ε ^ 2) ^ (j + 1) := by
+      rw [hμs]
+      exact pow_le_pow_left₀ (by positivity) (pow_le_pow_left₀ (Real.sqrt_nonneg _) hμδ 2) _
+    rw [hzM]
+    calc M ^ 2 * μ ^ (j + 2) ≤ M ^ 2 * (ε ^ 2) ^ (j + 1) :=
+          mul_le_mul_of_nonneg_left (hμ2.trans hμε) (by positivity)
+      _ = (M * ε ^ (j + 1)) ^ 2 := by ring
+  have h2 : M ≤ z ^ 2 := by
+    have hhalf : M ^ (1 / 2 : ℝ) ≤ z := by
+      rw [hz]; exact Real.rpow_le_rpow_of_exponent_le hM1 (by linarith)
+    have := pow_le_pow_left₀ (by positivity) hhalf 2
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity)] at this
+    norm_num at this
+    exact this
+  have hrhs : (Real.sqrt ((8 * 9 ^ 5 + 18 * 9 ^ 5 * KL ^ 2) / κ) * Q₁ * z) ^ 2 =
+      (8 * 9 ^ 5 + 18 * 9 ^ 5 * KL ^ 2) / κ * (Q₁ ^ 2 * z ^ 2) := by
+    rw [mul_pow, mul_pow, Real.sq_sqrt (by positivity)]; ring
+  rw [hrhs, div_mul_eq_mul_div, div_le_div_iff_of_pos_right hκ]
+  have hQ1 : Q * (M ^ 2 * μ ^ (j + 2)) ≤ Q₁ ^ 2 * z ^ 2 :=
+    mul_le_mul hQQ h1 (by positivity) (sq_nonneg _)
+  have hQ2 : Q * M ≤ Q₁ ^ 2 * z ^ 2 := mul_le_mul hQQ h2 (by linarith) (sq_nonneg _)
+  have hKL : 0 ≤ KL ^ 2 := sq_nonneg _
+  nlinarith
+
 end Rigidity.Proofs.Regularity
