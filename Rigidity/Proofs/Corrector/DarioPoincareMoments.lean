@@ -333,4 +333,268 @@ theorem lintegral_rpow_heatSquare_le {S : ℝ → Vertex 2 → Configuration 2 �
         conv_rhs => rw [show a = 1 + (a - 1) by ring, ENNReal.rpow_add _ _ hW0 hWt,
           ENNReal.rpow_one]
 
+
+/-- The normalized oscillation `3^{-dm} Σ_{z ∈ □_m} |u(z) - (u)_{□_m}|^q` of (maintoolstep1Linfty). -/
+noncomputable def boxOsc (u : Vertex 2 → Configuration 2 → ℝ) (m : ℕ) (q : ℝ)
+    (ω : Configuration 2) : ℝ :=
+  (∑ z ∈ boxAt 0 m, |u z ω - boxAvg u 0 m ω| ^ q) / 9 ^ m
+
+theorem boxOsc_nonneg (u : Vertex 2 → Configuration 2 → ℝ) (m : ℕ) (q : ℝ) (ω : Configuration 2) :
+    0 ≤ boxOsc u m q ω :=
+  div_nonneg (Finset.sum_nonneg fun _ _ => by positivity) (by positivity)
+
+theorem measurable_boxOsc {u : Vertex 2 → Configuration 2 → ℝ} (hu : ∀ z, Measurable (u z))
+    (m : ℕ) (q : ℝ) : Measurable (boxOsc u m q) :=
+  (Finset.measurable_sum _ fun z _ =>
+    ((hu z).sub (measurable_boxAvg hu 0 m)).abs.pow_const q).div_const _
+
+/-- The constant of `lintegral_boxOsc_le_of_poincare`. -/
+noncomputable def poincareStepConst (A₀ C s : ℝ) : ℝ :=
+  400 * A₀ * C * (1 / s) ^ (1 / s) * 2 ^ (3 / 2 + 1 / s)
+
+/-- **The multiscale Poincaré inequality (heatmultscaleP.ver) in cube form at `R = 3^m`**, for
+`q ≥ 2` with the constant `A₀ q^{3/2}` of Proposition 2.11, `S r x` standing for
+`|Φ_{r²} * ∇u(x)|`. -/
+def PoincareCubeTwo (p : unitInterval) (u : Vertex 2 → Configuration 2 → ℝ)
+    (S : ℝ → Vertex 2 → Configuration 2 → ℝ) (A₀ : ℝ) : Prop :=
+  ∀ m : ℕ, 1 ≤ m → ∀ q : ℝ, 2 ≤ q → ∀ᵐ ω ∂latticeBondLaw 2 p,
+    ENNReal.ofReal (boxOsc u m q ω) ≤
+      ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
+        ∑' x : Vertex 2, ENNReal.ofReal
+          (Real.exp (-‖latticeEuclideanEmbedding x‖ / (2 * 3 ^ m)) / 9 ^ m) *
+          (∫⁻ r in Ioc 0 (2 * 3 ^ m), ENNReal.ofReal (r * S r x ω ^ 2)) ^ (q / 2)
+
+/-- **Dario, Theorem 2, Step 1, in dimension two, moment form**: from the multiscale Poincaré
+inequality (`PoincareCubeTwo`), Proposition 3.1 (`S r x ≤ O_s(C/r)` for `r ≥ 1`) and the
+Lipschitz bound (`S r x ≤ O_s(C)` for `r ≤ 1`), (step1LinftyLp) with `k = 3/2 + 1/s`. -/
+theorem lintegral_boxOsc_le_of_poincare {u : Vertex 2 → Configuration 2 → ℝ}
+    {S : ℝ → Vertex 2 → Configuration 2 → ℝ} {A₀ C s : ℝ} (hA₀ : 0 < A₀) (hC : 0 < C)
+    (hs : 0 < s) (hu : ∀ z, Measurable (u z))
+    (hSm : ∀ x, Measurable fun rω : ℝ × Configuration 2 => S rω.1 x rω.2)
+    (hS0 : ∀ r x ω, 0 ≤ S r x ω) (hmsp : PoincareCubeTwo p u S A₀)
+    (hlarge : ∀ r : ℝ, 1 ≤ r → ∀ x, IsOsBond 2 p (S r x) s (C / r))
+    (hsmall : ∀ r : ℝ, 0 < r → r ≤ 1 → ∀ x, IsOsBond 2 p (S r x) s C)
+    {m : ℕ} (hm : 1 ≤ m) {q : ℝ} (hq : 1 ≤ q) :
+    ∫⁻ ω, ENNReal.ofReal (boxOsc u m q ω) ∂latticeBondLaw 2 p ≤
+      ENNReal.ofReal ((poincareStepConst A₀ C s * q ^ (3 / 2 + 1 / s)) ^ q *
+        (m : ℝ) ^ (q / 2)) := by
+  set k : ℝ := 3 / 2 + 1 / s with hk
+  have hk0 : 0 ≤ k := by positivity
+  set σ := (1 / s) ^ (1 / s) with hσ
+  have hσ0 : 0 < σ := by positivity
+  set A₁ : ℝ := 400 * A₀ * C * σ with hA₁
+  have hA₁0 : 0 < A₁ := by positivity
+  have hm0 : (0 : ℝ) < m := by exact_mod_cast hm
+  -- the case `q ≥ 2`
+  have h2 : ∀ q : ℝ, 2 ≤ q → ∫⁻ ω, ENNReal.ofReal (boxOsc u m q ω) ∂latticeBondLaw 2 p ≤
+      ENNReal.ofReal ((A₁ * q ^ k) ^ q * (m : ℝ) ^ (q / 2)) := by
+    intro q hq2
+    have hq0 : 0 < q := by linarith
+    set T : ℝ := 2 * 3 ^ m with hT
+    have hT1 : 1 ≤ T := by
+      have : (1 : ℝ) ≤ 3 ^ m := one_le_pow₀ (by norm_num)
+      linarith
+    set ψ : Vertex 2 → ℝ≥0∞ := fun x => ENNReal.ofReal
+      (Real.exp (-‖latticeEuclideanEmbedding x‖ / (2 * 3 ^ m)) / 9 ^ m) with hψ
+    set I : Vertex 2 → Configuration 2 → ℝ≥0∞ := fun x ω =>
+      ∫⁻ r in Ioc 0 T, ENNReal.ofReal (r * S r x ω ^ 2) with hI
+    have hIm : ∀ x, Measurable (I x) := fun x =>
+      Measurable.lintegral_prod_left' (μ := volume.restrict (Ioc 0 T))
+        ((measurable_fst.mul ((hSm x).pow_const 2)).ennreal_ofReal)
+    set K := (2 * C * σ * q ^ (1 / s)) ^ q with hK
+    have hmomx : ∀ x, ∫⁻ ω, I x ω ^ (q / 2) ∂latticeBondLaw 2 p ≤
+        ENNReal.ofReal K * ENNReal.ofReal (1 / 2 + Real.log T) ^ (q / 2) :=
+      fun x => lintegral_rpow_heatSquare_le hC hs hSm hS0 hlarge hsmall hT1 hq2 x
+    have hW : ENNReal.ofReal (1 / 2 + Real.log T) ^ (q / 2) ≤
+        ENNReal.ofReal (((4 : ℝ) * m) ^ (q / 2)) := by
+      rw [ENNReal.ofReal_rpow_of_nonneg (x := 1 / 2 + Real.log T)
+        (by linarith [Real.log_nonneg hT1]) (by linarith : (0 : ℝ) ≤ q / 2)]
+      exact ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow (by linarith [Real.log_nonneg hT1])
+        (half_add_log_le hm) (by linarith : (0 : ℝ) ≤ q / 2))
+    calc ∫⁻ ω, ENNReal.ofReal (boxOsc u m q ω) ∂latticeBondLaw 2 p
+        ≤ ∫⁻ ω, ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
+            ∑' x, ψ x * I x ω ^ (q / 2) ∂latticeBondLaw 2 p :=
+          lintegral_mono_ae (hmsp m hm q hq2)
+      _ = ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
+            ∑' x, ψ x * ∫⁻ ω, I x ω ^ (q / 2) ∂latticeBondLaw 2 p := by
+          rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top,
+            lintegral_tsum fun x => (((hIm x).pow_const _).const_mul _).aemeasurable]
+          congr 1
+          exact tsum_congr fun x => lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
+      _ ≤ ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
+            ∑' x, ψ x * (ENNReal.ofReal K * ENNReal.ofReal (((4 : ℝ) * m) ^ (q / 2))) := by
+          refine mul_le_mul_right (ENNReal.tsum_le_tsum fun x => mul_le_mul_right ?_ _) _
+          exact (hmomx x).trans (mul_le_mul_right hW _)
+      _ = ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
+            ((∑' x, ψ x) * (ENNReal.ofReal K * ENNReal.ofReal (((4 : ℝ) * m) ^ (q / 2)))) := by
+          rw [ENNReal.tsum_mul_right]
+      _ ≤ ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
+            (ENNReal.ofReal 100 * (ENNReal.ofReal K * ENNReal.ofReal (((4 : ℝ) * m) ^ (q / 2)))) :=
+          mul_le_mul_right (mul_le_mul_left (tsum_poincareWeight_le m) _) _
+      _ = ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q * (100 * (K * ((4 : ℝ) * m) ^ (q / 2)))) := by
+          rw [← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_mul (by positivity),
+            ← ENNReal.ofReal_mul (by positivity)]
+      _ ≤ ENNReal.ofReal ((A₁ * q ^ k) ^ q * (m : ℝ) ^ (q / 2)) := by
+          refine ENNReal.ofReal_le_ofReal ?_
+          set B := 4 * A₀ * C * σ * q ^ k with hB
+          have h4 : ((4 : ℝ) * m) ^ (q / 2) = 2 ^ q * (m : ℝ) ^ (q / 2) := by
+            rw [Real.mul_rpow (by norm_num) hm0.le,
+              show (4 : ℝ) = 2 ^ (2 : ℝ) by rw [Real.rpow_two]; norm_num,
+              ← Real.rpow_mul (by norm_num), show (2 : ℝ) * (q / 2) = q by ring]
+          have hqk : q ^ k = q ^ (3 / 2 : ℝ) * q ^ (1 / s) := by rw [hk, Real.rpow_add hq0]
+          have hq32 : 0 ≤ q ^ (3 / 2 : ℝ) := Real.rpow_nonneg hq0.le _
+          have hq1s : 0 ≤ q ^ (1 / s) := Real.rpow_nonneg hq0.le _
+          have hX1 : 0 ≤ A₀ * q ^ (3 / 2 : ℝ) := mul_nonneg hA₀.le hq32
+          have hX2 : 0 ≤ 2 * C * σ * q ^ (1 / s) := by positivity
+          have hB0 : 0 ≤ B := by rw [hB]; positivity
+          have hBeq : B = (A₀ * q ^ (3 / 2 : ℝ)) * (2 * C * σ * q ^ (1 / s)) * 2 := by
+            rw [hB, hqk]
+            ring
+          have hBq : B ^ q = (A₀ * q ^ (3 / 2 : ℝ)) ^ q * K * 2 ^ q := by
+            rw [hBeq, Real.mul_rpow (mul_nonneg hX1 hX2) (by norm_num), Real.mul_rpow hX1 hX2, hK]
+          have hL : (A₀ * q ^ (3 / 2 : ℝ)) ^ q * (100 * (K * ((4 : ℝ) * m) ^ (q / 2))) =
+              100 * (B ^ q * (m : ℝ) ^ (q / 2)) := by
+            rw [h4, hBq]
+            ring
+          have hR : (A₁ * q ^ k) ^ q = 100 ^ q * B ^ q := by
+            rw [← Real.mul_rpow (by norm_num) hB0]
+            congr 1
+            rw [hA₁, hB]
+            ring
+          rw [hL, hR]
+          have h100 : (100 : ℝ) ≤ 100 ^ q := by
+            simpa using Real.rpow_le_rpow_of_exponent_le (by norm_num : (1 : ℝ) ≤ 100)
+              (by linarith : 1 ≤ q)
+          have : 0 ≤ B ^ q * (m : ℝ) ^ (q / 2) := by positivity
+          nlinarith
+  rcases le_or_gt 2 q with hq2 | hq2
+  · refine (h2 q hq2).trans (ENNReal.ofReal_le_ofReal ?_)
+    refine mul_le_mul_of_nonneg_right (Real.rpow_le_rpow (by positivity) ?_ (by linarith))
+      (by positivity)
+    have h2k : (1 : ℝ) ≤ 2 ^ k := Real.one_le_rpow (by norm_num) hk0
+    have : 0 ≤ A₁ * q ^ k := by positivity
+    calc A₁ * q ^ k = A₁ * q ^ k * 1 := by ring
+      _ ≤ A₁ * q ^ k * 2 ^ k := mul_le_mul_of_nonneg_left h2k this
+      _ = poincareStepConst A₀ C s * q ^ k := by
+          rw [poincareStepConst, hA₁, hσ, hk]
+          ring
+  · have hq0 : 0 < q := by linarith
+    have hpm : ∀ ω, boxOsc u m q ω ≤ boxOsc u m 2 ω ^ (q / 2) := by
+      intro ω
+      have h := abs_sum_div_rpow_le (boxAt 0 m) (fun z => |u z ω - boxAvg u 0 m ω| ^ q)
+        (card_boxAt_real 0 m) (by positivity)
+        (show 1 ≤ 2 / q by rw [le_div_iff₀ hq0]; linarith)
+      beta_reduce at h
+      have hpt : ∀ z, |(|u z ω - boxAvg u 0 m ω| ^ q)| ^ (2 / q) =
+          |u z ω - boxAvg u 0 m ω| ^ (2 : ℝ) := by
+        intro z
+        rw [abs_of_nonneg (by positivity), ← Real.rpow_mul (abs_nonneg _),
+          mul_div_cancel₀ _ hq0.ne']
+      have h' : boxOsc u m q ω ^ (2 / q) ≤ boxOsc u m 2 ω := by
+        have e1 : |(∑ z ∈ boxAt 0 m, |u z ω - boxAvg u 0 m ω| ^ q) / 9 ^ m| =
+            boxOsc u m q ω := abs_of_nonneg (boxOsc_nonneg u m q ω)
+        rw [e1] at h
+        refine h.trans_eq ?_
+        unfold boxOsc
+        congr 1
+        exact Finset.sum_congr rfl fun z _ => hpt z
+      calc boxOsc u m q ω = (boxOsc u m q ω ^ (2 / q)) ^ (q / 2) := by
+            rw [← Real.rpow_mul (boxOsc_nonneg u m q ω), show 2 / q * (q / 2) = 1 by
+              field_simp, Real.rpow_one]
+        _ ≤ boxOsc u m 2 ω ^ (q / 2) :=
+            Real.rpow_le_rpow (by have := boxOsc_nonneg u m q ω; positivity) h' (by linarith)
+    calc ∫⁻ ω, ENNReal.ofReal (boxOsc u m q ω) ∂latticeBondLaw 2 p
+        ≤ ∫⁻ ω, ENNReal.ofReal (boxOsc u m 2 ω) ^ (q / 2) ∂latticeBondLaw 2 p := by
+          refine lintegral_mono fun ω => ?_
+          rw [ENNReal.ofReal_rpow_of_nonneg (boxOsc_nonneg u m 2 ω) (by linarith)]
+          exact ENNReal.ofReal_le_ofReal (hpm ω)
+      _ ≤ (∫⁻ ω, ENNReal.ofReal (boxOsc u m 2 ω) ∂latticeBondLaw 2 p) ^ (q / 2) :=
+          lintegral_rpow_le_rpow_lintegral (measurable_boxOsc hu m 2).ennreal_ofReal.aemeasurable
+            (by linarith) (by linarith)
+      _ ≤ (ENNReal.ofReal ((A₁ * 2 ^ k) ^ (2 : ℝ) * (m : ℝ) ^ ((2 : ℝ) / 2))) ^ (q / 2) :=
+          ENNReal.rpow_le_rpow (h2 2 le_rfl) (by linarith)
+      _ = ENNReal.ofReal ((A₁ * 2 ^ k) ^ q * (m : ℝ) ^ (q / 2)) := by
+          rw [ENNReal.ofReal_rpow_of_nonneg
+            (x := (A₁ * 2 ^ k) ^ (2 : ℝ) * (m : ℝ) ^ ((2 : ℝ) / 2)) (by positivity)
+            (by linarith : (0 : ℝ) ≤ q / 2)]
+          congr 1
+          rw [Real.mul_rpow (by positivity) (by positivity), ← Real.rpow_mul (by positivity),
+            ← Real.rpow_mul hm0.le, show (2 : ℝ) * (q / 2) = q by ring,
+            show (2 : ℝ) / 2 * (q / 2) = q / 2 by ring]
+      _ ≤ ENNReal.ofReal ((poincareStepConst A₀ C s * q ^ k) ^ q * (m : ℝ) ^ (q / 2)) := by
+          refine ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_right
+            (Real.rpow_le_rpow (by positivity) ?_ hq0.le) (by positivity))
+          have hqk : 1 ≤ q ^ k := Real.one_le_rpow hq hk0
+          have : 0 ≤ A₁ * 2 ^ k := by positivity
+          calc A₁ * 2 ^ k = A₁ * 2 ^ k * 1 := by ring
+            _ ≤ A₁ * 2 ^ k * q ^ k := mul_le_mul_of_nonneg_left hqk this
+            _ = poincareStepConst A₀ C s * q ^ k := by
+                rw [poincareStepConst, hA₁, hσ, hk]
+
+/-- **The inputs of Dario's §5 with Theorem 2 replaced by its own inputs**, for fields `F y z`
+(`[χ]_{𝒫_y}(z)`) and `S r x` (`|Φ_{r²} * ∇[χ]_𝒫(x)|`): the multiscale Poincaré inequality,
+Proposition 3.1, the Lipschitz bound, the stationarity (e.stat.corr) and the comparison (est.PPy)
+of the translated partitions. -/
+structure PoincareCoarsenedData (p : unitInterval) (F : Vertex 2 → Vertex 2 → Configuration 2 → ℝ)
+    (S : ℝ → Vertex 2 → Configuration 2 → ℝ) (A₀ C s : ℝ) : Prop where
+  hA₀ : 0 < A₀
+  hC : 0 < C
+  hs : 0 < s
+  meas : ∀ y z, Measurable (F y z)
+  measS : ∀ x, Measurable fun rω : ℝ × Configuration 2 => S rω.1 x rω.2
+  nonnegS : ∀ r x ω, 0 ≤ S r x ω
+  poincare : PoincareCubeTwo p (F 0) S A₀
+  prop31 : ∀ r : ℝ, 1 ≤ r → ∀ x, IsOsBond 2 p (S r x) s (C / r)
+  lip : ∀ r : ℝ, 0 < r → r ≤ 1 → ∀ x, IsOsBond 2 p (S r x) s C
+  stat : ∀ y, ∃ T : Configuration 2 → Configuration 2,
+    MeasurePreserving T (latticeBondLaw 2 p) (latticeBondLaw 2 p) ∧
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ z w, F 0 z ω - F 0 w ω = F y (z + y) (T ω) - F y (w + y) (T ω)
+  ppy : ∀ y z, IsOsBond 2 p (fun ω => |F y z ω - F 0 z ω|) s C
+
+theorem PoincareCoarsenedData.linftyIterationData {F : Vertex 2 → Vertex 2 → Configuration 2 → ℝ}
+    {S : ℝ → Vertex 2 → Configuration 2 → ℝ} {A₀ C s : ℝ} (h : PoincareCoarsenedData p F S A₀ C s) :
+    LinftyIterationData p F (poincareStepConst A₀ C s) (2 * C * (1 / s) ^ (1 / s))
+      (3 / 2 + 1 / s) where
+  hA := by have := h.hA₀; have := h.hC; have := h.hs; unfold poincareStepConst; positivity
+  hB := by have := h.hs; have := h.hC; positivity
+  meas := h.meas
+  thm2 := fun m hm q hq => lintegral_boxOsc_le_of_poincare h.hA₀ h.hC h.hs (h.meas 0) h.measS
+    h.nonnegS h.poincare h.prop31 h.lip hm hq
+  stat := h.stat
+  comp := by
+    intro y z q hq
+    have hs := h.hs
+    have hC := h.hC
+    have hq0 : 0 < q := by linarith
+    refine (mom_le_of_isOsBond hs hC hq ((h.meas y z).sub (h.meas 0 z)) (h.ppy y z)).trans
+      (ENNReal.ofReal_le_ofReal ?_)
+    refine Real.rpow_le_rpow (by positivity) ?_ hq0.le
+    have h1 : q ^ (1 / s) ≤ q ^ (3 / 2 + 1 / s) :=
+      Real.rpow_le_rpow_of_exponent_le hq (by linarith)
+    have h2 : 0 ≤ 2 * C * (1 / s) ^ (1 / s) := by positivity
+    exact mul_le_mul_of_nonneg_left h1 h2
+
+/-- **The coarsened corrector of Dario, §4–§5, in dimension two** (hypothesis): fields `G i y` and
+`S i y` satisfying `PoincareCoarsenedData`, and the coarsening error of Step 6. -/
+def DarioPoincareCorrectorTwo (p : unitInterval) : Prop :=
+  ∃ A₀ C s s₆ C₆ : ℝ, 0 < s₆ ∧ 0 < C₆ ∧
+    ∃ (G : Fin 2 → Vertex 2 → Vertex 2 → Vertex 2 → Configuration 2 → ℝ)
+      (S : Fin 2 → Vertex 2 → ℝ → Vertex 2 → Configuration 2 → ℝ),
+      (∀ i y, PoincareCoarsenedData p (G i y) (S i y) A₀ C s) ∧ CoarseningErrorTwo p G s₆ C₆
+
+theorem darioCoarsenedCorrectorTwo_of_poincare (h : DarioPoincareCorrectorTwo p) :
+    DarioCoarsenedCorrectorTwo p := by
+  obtain ⟨A₀, C, s, s₆, C₆, hs₆, hC₆, G, S, hG, hE⟩ := h
+  exact ⟨_, _, _, s₆, C₆, hs₆, hC₆, G, fun i y => (hG i y).linftyIterationData, hE⟩
+
+/-- **Dario's Theorem 1 in dimension two** from the multiscale Poincaré inequality,
+Proposition 3.1, the Lipschitz bound, the stationarity, the comparison of the translated
+partitions, the coarsening error and the planar qualitative corrector input. -/
+theorem darioOptimalCorrectorTwo_of_poincare
+    (hG : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      DarioPoincareCorrectorTwo p)
+    (hC : SupercriticalBondCorrectorInputTwo) : DarioOptimalCorrectorTwo :=
+  darioOptimalCorrectorTwo_of_coarsened
+    (fun p hpc hp1 => darioCoarsenedCorrectorTwo_of_poincare (hG p hpc hp1)) hC
+
 end Rigidity.Corrector
