@@ -1580,6 +1580,48 @@ Departures from Armstrong and Dario:
 Misprint in the source whose meaning is clear: the display (1.14) at AD18.tex:446 (`e.homogbnd`) prints on the right
 side the mean of `|∇u 1_{𝐚≠0}|^p`, which is not homogeneous in `u` while the left side is quadratic.
 
+## Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1
+
+Lemma 7.1 of Armstrong and Dario, the harmonic approximation of the coarsening `[u]_𝒫` on the balls of the
+cluster, holds in `d = 2` for `𝔭_c(2) < p < 1` with no hypothesis, and so does the order-zero regularity of
+Theorem 2(iii) at `k = 0` ([`planarHarmonicApproximationTwo_holds`, `armstrongDarioOrderZeroTwo_holds`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationHolds.lean)).
+The three estimates on the squares `□_j` of the proof of Lemma 7.1 (the statement `PlanarSquareEstimatesTwo p`, with
+`L = 6`) are proved almost surely above one minimal scale `X ≤ O_s(θ)`, from Theorem 1
+([Theorem 1 of Armstrong and Dario in dimension two](#theorem-1-of-armstrong-and-dario-in-dimension-two)) and the
+minimal scales of Proposition 2.4
+([Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two)):
+the statements `PlanarMinimalScalesTwo p` and `PlanarHomogenizationErrorTwo p p'` of the files on Lemma 7.1 are the
+statements `Rigidity.Proofs.Cluster.PlanarMinimalScales p` and `Rigidity.Dirichlet.PlanarHomogenizationError p p'`
+(`planarMinimalScalesTwo_holds`, `planarHomogenizationErrorTwo_holds`).
+Theorem 2(iii) at `k = 1` at the origin in dimension two follows from this and from three named hypotheses,
+`DarioOptimalCorrectorTwo` (Theorem 1 of Dario), `PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`
+(`armstrongDarioOrderOneOriginTwo_of_dario`).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Regularity.planarHarmonicDistTwo_of_homogenizationError`](Rigidity/Proofs/Regularity/PlanarHarmonicDistTwo.lean) | AD (7.7) on the planar squares above a minimal scale: the coarsening `[u]_𝒫` is within `C 3^{−jα} Γ_{j+3}` of a lattice harmonic function on `□_j`. The function is `u_hom` of Theorem 1 on `□_{j+1}`; its gradient is bounded by the interior estimate for the lattice Laplacian, the anchors are counted with the sizes at most `(3^{j+1})^{α'/2}`, `α' = min(α, 1)`, and the gradient norm of Theorem 1 is bounded by the Meyers estimate from `□_{j+1}` to `□_{j+2}` and the Caccioppoli inequality on `𝒞_*(□_{j+3})` (`PlanarGradNormBound`, `PlanarHarmonicComparison`, `PlanarHomogenizedGradient`). |
+| [`planarCoarseComparisonTwo_of_minimalScales`](Rigidity/Proofs/Regularity/PlanarCoarseComparisonTwo.lean), [`coarseComparison_on_square`](Rigidity/Proofs/Regularity/PlanarCoarseComparison.lean) | AD (7.8) in the `L²` form on the planar squares above a minimal scale: `3^{−j} ‖u − [u]_𝒫‖_{L²(𝒞_*(□_j))} ≤ K Γ_{j+3}` from Lemma 3.2 with the reach scales, the Hölder inequality, the planar Meyers estimate on the cells of the minimal scales, and the Caccioppoli inequality. |
+| [`planarCoarseBoundTwo_of_minimalScales`](Rigidity/Proofs/Regularity/PlanarCoarseBoundTwo.lean), [`sum_sq_coarse_sub_mean_le`](Rigidity/Proofs/Regularity/PlanarCoarseBound.lean), [`squareL2_coarse_sub_le`](Rigidity/Proofs/Regularity/PlanarCoarseBound.lean) | the bound of Step 2 of the proof of Lemma 7.1 for a constant `w = a`: the coarsened function minus its mean on `□_j` by the Poincaré inequality, Lemma 3.3 with the pair reach scales, the Meyers and Caccioppoli inequalities; and minus a constant by averaging over the cluster of the square, which carries a fixed proportion of it, with (7.8). |
+| [`planarSquareEstimatesTwo_of_parts`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationInputs.lean), [`planarSquareEstimatesTwo_holds`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationHolds.lean) | the three estimates combined into `PlanarSquareEstimatesTwo p`, with the common minimal scale the maximum of the three, and then with no hypothesis. |
+| [`planarHarmonicApproximationTwo_of_inputs`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationInputs.lean), [`planarHarmonicApproximationTwo_holds`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationHolds.lean) | AD Lemma 7.1 in dimension two, from `PlanarMinimalScalesTwo` and `PlanarHomogenizationErrorTwo` for every supercritical `p`, and then with no hypothesis. |
+| [`armstrongDarioOrderZeroTwo_of_inputs`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationInputs.lean), [`armstrongDarioOrderZeroTwo_holds`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationHolds.lean) | AD Theorem 2(iii) at `k = 0` in dimension two (`ArmstrongDarioOrderZeroTwo`), from the same inputs and then with no hypothesis. |
+| [`planarPartitionSizeScale_of_minimalScales`](Rigidity/Proofs/Regularity/PlanarPartitionSizeScale.lean) | the partition cubes of the vertices of `□_m` have scale at most `m − 2` above a minimal scale, from the minimal scales of Proposition 2.4 with `t = 1` and `α = 1/2`. |
+| [`armstrongDarioOrderOneOriginTwo_of_dario`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationHolds.lean) | AD Theorem 2(iii) at `k = 1` at the origin in dimension two (`ArmstrongDarioOrderOneOriginTwo`), from `DarioOptimalCorrectorTwo`, `PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`, by the route of the section on Lemma 7.3 at `k = 2`. |
+
+The sixteen reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Armstrong and Dario: those of the section on order-zero regularity above (the lattice route, with
+`Ā` the lattice harmonic functions and the discrete `u_hom` of Theorem 1), and the following.
+
+- **One minimal scale.** The three estimates share the scale `X`, the maximum of the minimal scales of the three
+  estimates, in the form `PlanarSquareEstimatesTwo` with `L = 6`.
+- **The `L²` form of (7.8).** The comparison of `u` with `[u]_𝒫` is proved in `L²`, in place of the exponent `p'`
+  of the source.
+
+Misprint in the source whose meaning is clear: AD18.tex:5137-5146 (the squares of (7.2)), as noted in the section on
+order-zero regularity above.
+
 ## Regularity of order one at the origin from the mesoscopic estimate
 
 `Rigidity.External.ArmstrongDarioOrderOneOrigin` (Theorem 2.4, part (iii) at `k = 1`; AD Theorem 2(iii)
@@ -1589,7 +1631,7 @@ for bond percolation at the origin, with `Ā₂` the harmonic quadratic polynomi
 `r^{−d/2} ‖·‖_{L²(𝒞_∞ ∩ B_r)}`, together with `Rigidity.External.CorrectorQuantitativeInput` and
 `LatticeProb.External.SupercriticalBondCorrectorInput`. The mesoscopic estimate itself needs the
 harmonic approximation of AD Lemma 7.1, hence Theorem 1 (Sections 5 and 6), and is not proved in general; in
-dimension two it is proved from the estimates on squares of Lemma 7.1 (see
+dimension two it is proved from the estimates on squares of Lemma 7.1, which are proved in [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1) (see
 [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two)).
 
 | Lean declaration | Statement |
@@ -1624,8 +1666,8 @@ Departures from Armstrong and Dario:
 
 Two reductions of the planar inputs are proved in
 [`Rigidity/Proofs/Regularity/`](Rigidity/Proofs/Regularity/), together with deterministic steps of the proof of
-AD Lemma 7.1 in dimension two. Lemma 7.1 itself is not proved: its estimates on squares
-(`PlanarSquareEstimatesTwo`, which rests on Theorem 1, Sections 5 and 6) are a named hypothesis. The bound on the
+AD Lemma 7.1 in dimension two. Lemma 7.1 itself, with the estimates on squares
+(`PlanarSquareEstimatesTwo`), is proved in [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1). The bound on the
 scales of the partition cubes (`PlanarPartitionSizeScale`) follows from the minimal scales of Proposition 2.4
 (`planarPartitionSizeScale_of_partCubeMoments`, see
 [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two)).
@@ -1641,7 +1683,7 @@ scales of the partition cubes (`PlanarPartitionSizeScale`) follows from the mini
   estimate (7.7), the `L²` form of (7.8) and the bound of Step 2 for constant `w`, on the squares `□_j` above a
   minimal scale `X ≤ O_s(θ)`, for the functions harmonic on balls of `𝒞_∞`) and `PlanarPartitionSizeScale p`
   (the partition cubes of the vertices of `□_m` have scale at most `m − 2` above a minimal scale
-  `M ≤ O_s(θ)`). The first is not proved here; the second is proved in the next section.
+  `M ≤ O_s(θ)`). Both are proved for `𝔭_c(2) < p < 1` (see the sections on Lemma 7.1 and on Lemma 7.3 at `k = 2`).
 * **R2 in dimension two** (`SupercriticalBondCorrectorInputTwo`) from `ArmstrongDarioOrderZeroTwo`,
   `PlanarCorrectedPlaneExistenceTwo` (every slope has a corrected plane on the planar infinite cluster, AD
   Theorem 2(ii) at `k = 1`, with the sublinearity in the uniform norm of AD Remark 1.1 and (1.22)) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
@@ -1679,7 +1721,8 @@ AD Lemma 7.3, display (7.18) at `k = 2`, is proved for planar bond percolation
 estimates on squares of the proof of Lemma 7.1 (`PlanarSquareEstimatesTwo`). With it,
 `Rigidity.External.ArmstrongDarioOrderOneOriginTwo` (AD Theorem 2(iii) at `k = 1`, at the origin, in the plane)
 is proved from `PlanarSquareEstimatesTwo`, Theorem 1 of Dario in dimension two (`DarioOptimalCorrectorTwo`),
-`PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`. The other inputs are proved: the minimal
+`PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`; the estimates on squares are proved
+in [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1), so that only the last three are hypotheses (`armstrongDarioOrderOneOriginTwo_of_dario`). The other inputs are proved: the minimal
 scales of AD Proposition 2.4 (`Rigidity.Proofs.Cluster.planarMinimalScales_holds`), which also give the
 hypothesis `PlanarPartitionSizeScale` of Lemma 7.1, and the density of the infinite cluster in cubes.
 
@@ -1789,7 +1832,7 @@ exponent of the tail).
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 486 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 502 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1832,9 +1875,11 @@ exponent of the tail).
   [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two),
   the seventeen theorems of
   [Theorem 1 of Armstrong and Dario in dimension two](#theorem-1-of-armstrong-and-dario-in-dimension-two),
+  the sixteen theorems of
+  [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1),
   and the twenty-seven theorems of
   [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
-  Each of the 486 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 502 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1865,10 +1910,10 @@ exponent of the tail).
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1310 Lean files with 252,083 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1321 Lean files with 254,853 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (844 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (873 lines) are counted separately.
 
 ## Building
 

@@ -378,9 +378,8 @@ fidelity:
     proved first as a tail bound and Lemma 5.11 in the O_s form is derived from it; in
     Proposition 5.13 the translates are taken for every point of the cube and the scales are
     floor(m/2) in Lemma 5.11), for the order-zero regularity in dimension two as a theorem from the
-    harmonic approximation of Lemma 7.1 (PlanarHarmonicApproximationTwo, itself reduced to the
-    estimates on squares and the bound on the scales of the partition cubes, which are not
-    proved; the lattice harmonic functions replace the continuum ones), for the planar qualitative
+    harmonic approximation of Lemma 7.1 (PlanarHarmonicApproximationTwo, proved below; the lattice
+    harmonic functions replace the continuum ones), for the planar qualitative
     corrector input as a theorem from the order-zero regularity, the existence of corrected planes and
     the bound dim A_1 <= 3, and for the planar Green-column existence, the quantitative corrector
     estimate and the quantitative Green estimate as theorems from the qualitative corrector input
@@ -399,6 +398,12 @@ fidelity:
     z in 3^k Z^2, k = ceil(m/8), in place of z + Q_n, n = ceil(m/4) of Definition 5.12, the bound
     of the gradient of the homogenized solution in homogeneous form, and the homogenized matrix
     proved to be a multiple of the identity from the symmetries of the plane), and
+    for Lemma 7.1 and the order-zero regularity of Theorem 2(iii) at k = 0 in dimension two with no
+    hypothesis beyond p above the critical value (the estimates on the squares of the proof from
+    Theorem 1 with the discrete homogenized solution and the minimal scales of Proposition 2.4, the
+    lattice harmonic functions in place of the continuum ones, the comparison of u with its
+    coarsening in L2), and for Theorem 2(iii) at k = 1 at the origin in dimension two from the
+    optimal corrector estimate of Dario, the existence of corrected planes and dim A_1 <= 3, and
     for the Dirichlet problem and
     the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,
