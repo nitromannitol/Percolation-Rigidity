@@ -1,6 +1,7 @@
 import Rigidity.Proofs.Corrector.PlanarDarioCorrector
 import Rigidity.Proofs.Green.LazyHeatMass
 import Rigidity.Proofs.Green.PlanarHeatKernelInputs
+import Rigidity.Proofs.Green.LazyCarneVaropoulos
 import Mathlib.MeasureTheory.Constructions.Polish.Basic
 
 /-!
@@ -15,6 +16,8 @@ walk on the lattice (the open graph of the configuration with every bond open), 
   `|Φ_{r²} * ∇[χ]_𝒫(x)| ≤ O_s(C)` with `s, C` independent of `r, x` — the bound used by Dario for
   `r ≤ 1`, from the Lipschitz bound (2.22) of the coarsened corrector (here: main's coarse
   gradients and the sums of (5.10)) and the mass one of `Φ`;
+* `ae_summable_heat_coarseField`: almost surely these convolutions converge absolutely, for
+  every point, direction and radius;
 * `darioOptimalCorrectorTwo_of_prop31`: Dario's Theorem 1 in dimension two from R2, R3, the
   multiscale Poincaré inequality (`MultiscalePoincareTwo`, Proposition 2.19 in cube form,
   deterministic) and Proposition 3.1 (`DarioPropThreeOneTwo`) for this `heatGradient`.
@@ -49,6 +52,29 @@ theorem tsum_ofReal_latticeHeat {t : ℝ} (ht : 0 ≤ t) (x : Vertex 2) :
 
 theorem continuous_latticeHeat (x y : Vertex 2) : Continuous fun t => latticeHeat t x y :=
   Rigidity.Green.continuous_openHeat _ x y
+
+/-- `Φ(t, x, y) ≤ 3 e^{T/18} e^{-|y - x|/18}` for `0 < t ≤ T`, from the bound of the heat kernel
+for times below the distance and the bound one. -/
+theorem latticeHeat_le_exp {t T : ℝ} (ht : 0 < t) (htT : t ≤ T) (x y : Vertex 2) :
+    latticeHeat t x y ≤
+      3 * Real.exp (T / 18) * Real.exp (-‖latticeEuclideanEmbedding (y - x)‖ / 18) := by
+  have hn : ‖latticeEuclideanEmbedding (y - x)‖ = ‖Rigidity.Green.edz x y‖ := by
+    rw [latticeEuclideanEmbedding_sub, ← norm_neg, neg_sub]
+  rw [hn]
+  by_cases h : t ≤ ‖Rigidity.Green.edz x y‖
+  · calc latticeHeat t x y ≤ 3 * Real.exp (-(‖Rigidity.Green.edz x y‖ / 18)) :=
+          Rigidity.Green.openHeat_le_exp_of_le_norm _ ht h
+      _ ≤ 3 * Real.exp (T / 18) * Real.exp (-‖Rigidity.Green.edz x y‖ / 18) := by
+          rw [mul_assoc, neg_div]
+          refine mul_le_mul_of_nonneg_left ?_ (by norm_num)
+          exact le_mul_of_one_le_left (Real.exp_pos _).le (Real.one_le_exp (by linarith))
+  · have h' := not_le.mp h
+    have h1 : 1 ≤ Real.exp (T / 18 + -‖Rigidity.Green.edz x y‖ / 18) :=
+      Real.one_le_exp (by linarith)
+    calc latticeHeat t x y ≤ 1 := Rigidity.Green.openHeat_le_one _ ht.le x y
+      _ ≤ 3 * Real.exp (T / 18) * Real.exp (-‖Rigidity.Green.edz x y‖ / 18) := by
+          rw [mul_assoc, ← Real.exp_add]
+          linarith
 
 /-- `|Φ_{r²} * ∇u(x)|`, with the `ℓ¹` norm of the two components of the gradient. -/
 noncomputable def heatGradient (u : Vertex 2 → ℝ) (r : ℝ) (x : Vertex 2) : ℝ :=
@@ -263,6 +289,61 @@ theorem heatGradient_coarseField_isOsBond (hR3 : ArmstrongDarioOrderZeroTwo) {p 
     fun q hq => lintegral_heatSum_rpow_le (tsum_ofReal_latticeHeat (sq_nonneg r) x)
       (fun y => measurable_stepSixSum (hΛm i) y) hq hA0.le (fun y => hmom6 i y q hq)
 
+/-- **The heat-kernel averages of the gradient of the coarsened corrector converge**: almost
+surely, for every point, direction and radius, `Σ_y Φ(r², x, y) ∇_j[χ]_𝒫(y)` converges
+absolutely, since `Φ(r², x, ·)` decays exponentially and the sums of (5.10) have bounded means. -/
+theorem ae_summable_heat_coarseField (hR3 : ArmstrongDarioOrderZeroTwo) {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw 2 p, ω ∈ G) (i : Fin 2) :
+    ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ (x : Vertex 2) (j : Fin 2) (r : ℝ), 0 < r →
+      Summable fun y => latticeHeat (r ^ 2) x y *
+        (coarseField hG hGv i 0 (y + LatticeProb.unit j) ω - coarseField hG hGv i 0 y ω) := by
+  obtain ⟨Λ, A, k, -, -, hΛm, hΛ0, hlip, hmom6⟩ := stepSix_data hG hGv hR3 hpc hp1 hGae
+  have hgm : ∀ (j : Fin 2) (y : Vertex 2), Measurable fun ω =>
+      stepSixSum (Λ i) (y + LatticeProb.unit j) ω + stepSixSum (Λ i) y ω := fun j y =>
+    (measurable_stepSixSum (hΛm i) _).add (measurable_stepSixSum (hΛm i) _)
+  have h1 : ∀ v, ∫⁻ ω, stepSixSum (Λ i) v ω ∂latticeBondLaw 2 p ≤ ENNReal.ofReal A := by
+    intro v
+    have := hmom6 i v 1 le_rfl
+    simpa only [ENNReal.rpow_one, Real.one_rpow, mul_one, Real.rpow_one] using this
+  have hfin : ∀ (x : Vertex 2) (j : Fin 2), ∀ᵐ ω ∂latticeBondLaw 2 p,
+      ∑' y, ENNReal.ofReal (Real.exp (-‖latticeEuclideanEmbedding (y - x)‖ / 18)) *
+        (stepSixSum (Λ i) (y + LatticeProb.unit j) ω + stepSixSum (Λ i) y ω) < ∞ := by
+    intro x j
+    refine ae_lt_top (Measurable.tsum fun y => (hgm j y).const_mul _) ?_
+    rw [lintegral_tsum fun y => ((hgm j y).const_mul _).aemeasurable]
+    refine ne_top_of_le_ne_top (b := ∑' y : Vertex 2,
+      ENNReal.ofReal (Real.exp (-‖latticeEuclideanEmbedding (y - x)‖ / 18)) *
+        (2 * ENNReal.ofReal A)) ?_ ?_
+    · rw [ENNReal.tsum_mul_right]
+      exact ENNReal.mul_ne_top (ne_top_of_le_ne_top ENNReal.ofReal_ne_top
+        (tsum_exp_neg_norm_sub_le x (by norm_num : (0 : ℝ) < 18)))
+        (ENNReal.mul_ne_top ENNReal.ofNat_ne_top ENNReal.ofReal_ne_top)
+    · refine ENNReal.tsum_le_tsum fun y => ?_
+      rw [lintegral_const_mul _ (hgm j y),
+        lintegral_add_left (measurable_stepSixSum (hΛm i) _)]
+      exact mul_le_mul_right (by rw [two_mul]; exact add_le_add (h1 _) (h1 _)) _
+  have hfin' : ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ (x : Vertex 2) (j : Fin 2),
+      ∑' y, ENNReal.ofReal (Real.exp (-‖latticeEuclideanEmbedding (y - x)‖ / 18)) *
+        (stepSixSum (Λ i) (y + LatticeProb.unit j) ω + stepSixSum (Λ i) y ω) < ∞ :=
+    ae_all_iff.2 fun x => ae_all_iff.2 fun j => hfin x j
+  have hall : ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ x, ω ∈ infiniteComponentEvent x → ∀ y,
+      (openGraph ω).Adj x y → |correctorDiff hG hGv (Pi.single i 1) ω x y| ≤ Λ i x ω :=
+    ae_all_iff.2 fun x => hlip i x
+  filter_upwards [hGae, ae_planarPartitionEvent hpc, hall, hfin'] with ω hω hP hl hf x j r hr
+  have hs : Summable fun y => Real.exp (-‖latticeEuclideanEmbedding (y - x)‖ / 18) *
+      |coarseField hG hGv i 0 (y + LatticeProb.unit j) ω - coarseField hG hGv i 0 y ω| := by
+    refine (ENNReal.summable_toReal (ne_top_of_le_ne_top (hf x j).ne
+      (ENNReal.tsum_le_tsum fun y => ?_))).congr fun y => ENNReal.toReal_ofReal (by positivity)
+    rw [ENNReal.ofReal_mul (Real.exp_pos _).le]
+    exact mul_le_mul_right
+      (ofReal_abs_coarseField_step_le hG hGv hω hP (fun x => hΛ0 i x ω) hl y j) _
+  refine summable_abs_iff.mp (Summable.of_nonneg_of_le (fun y => abs_nonneg _) (fun y => ?_)
+    (hs.mul_left (3 * Real.exp (r ^ 2 / 18))))
+  rw [abs_mul, abs_of_nonneg (latticeHeat_nonneg (sq_nonneg r) x y), ← mul_assoc]
+  exact mul_le_mul_of_nonneg_right (latticeHeat_le_exp (pow_pos hr 2) le_rfl x y)
+    (abs_nonneg _)
+
 end Carrier
 
 /-- The normalized oscillation `3^{-2m} Σ_{z ∈ □_m} |u(z) - (u)_{□_m}|^q` of a function. -/
@@ -270,10 +351,15 @@ noncomputable def boxOscFun (u : Vertex 2 → ℝ) (m : ℕ) (q : ℝ) : ℝ :=
   (∑ z ∈ boxAt 0 m, |u z - (∑ w ∈ boxAt 0 m, u w) / 9 ^ m| ^ q) / 9 ^ m
 
 /-- **The multiscale Poincaré inequality of Dario, Proposition 2.19 (2.26), in cube form at
-`R = 3^m`** (hypothesis, cited by Dario from Armstrong, Kuusi and Mourrat, Proposition D.1, with
-the bound `C(d, q) ≤ A₀ q^{3/2}` for `q ≥ 2`). -/
+`R = 3^m`** (hypothesis: Dario proves the continuum version in Appendix A from Armstrong, Kuusi
+and Mourrat, Proposition D.1 and Remark D.6, and Gilbarg and Trudinger, Lemma 7.12 and
+Proposition 9.9, and states that the lattice version follows by standard arguments), with the
+bound `C(d, q) ≤ A₀ q^{3/2}` for `q ≥ 2`. The convolutions `Φ_{r²} * ∇u` of (2.26) are required
+to converge absolutely. -/
 def MultiscalePoincareTwo (A₀ : ℝ) : Prop :=
-  ∀ (u : Vertex 2 → ℝ) (m : ℕ), 1 ≤ m → ∀ q : ℝ, 2 ≤ q →
+  ∀ u : Vertex 2 → ℝ, (∀ (x : Vertex 2) (j : Fin 2) (r : ℝ), 0 < r →
+      Summable fun y => latticeHeat (r ^ 2) x y * (u (y + LatticeProb.unit j) - u y)) →
+    ∀ m : ℕ, 1 ≤ m → ∀ q : ℝ, 2 ≤ q →
     ENNReal.ofReal (boxOscFun u m q) ≤
       ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
         ∑' x : Vertex 2, ENNReal.ofReal
@@ -305,7 +391,8 @@ theorem darioOptimalCorrectorTwo_of_prop31 (hR2 : SupercriticalBondCorrectorInpu
   refine ⟨fun i r x ω => heatGradient (fun z => coarseField hG hGv i 0 z ω) r x, A₀, C, s, hA₀, hC,
     hs, fun i x => measurable_heatGradient (fun z => measurable_coarseField hG hGv i 0 z) x,
     fun i r x ω => heatGradient_nonneg _ _ _,
-    fun i m hm q hq => Eventually.of_forall fun ω => hMSP (fun z => coarseField hG hGv i 0 z ω) m hm q hq,
+    fun i m hm q hq => (ae_summable_heat_coarseField hG hGv hR3 hpc hp1 hGae i).mono fun ω hω =>
+      hMSP (fun z => coarseField hG hGv i 0 z ω) hω m hm q hq,
     fun i r hr x => ?_, fun i r _ _ x => ?_⟩
   · have hm := measurable_heatGradient_const (fun z => measurable_coarseField hG hGv i 0 z) r x
     have := IsOsBond.mono_exponent hs (min_le_left _ _) hm (h1 i r hr x)
