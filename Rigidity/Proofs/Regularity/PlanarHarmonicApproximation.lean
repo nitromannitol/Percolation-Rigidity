@@ -19,14 +19,15 @@ This file states the outcome in the form used by the iteration
 (`PlanarHarmonicApproximationTwo`): above a minimal scale `𝒳 ≤ O_s(θ)`, for `R ≥ A 𝒳` and `u`
 harmonic on `𝒞_∞ ∩ B_R`, the coarsening `[u]_𝒫` (`planarCoarse`, the value of `u` at the anchor
 of the partition cube) satisfies the hypothesis of Lemma 7.2 on the balls of the lattice with
-`E = K R^{-1} inf_a R^{-1} ‖u - a‖_{L²(𝒞_∞ ∩ B_R)}`, and `u` is close to `[u]_𝒫` on the cluster
-balls (the `L²` form of (7.4)).
+`E = K R^{-1} inf_a R^{-1} ‖u - a‖_{L²(𝒞_∞ ∩ B_R)}`, `u` is close to `[u]_𝒫` on the cluster
+balls (the `L²` form of (7.4)), and the normalized norms of `[u]_𝒫 - a` on the balls of the
+lattice are bounded by those of `u - a` on larger cluster balls.
 
 It also introduces the normalized `ℓ²` norms on the squares `□_m = ℤ² ∩ (-3^m/2, 3^m/2)²`
 (`squareL2`), the oscillation `inf_a ‖f - a‖_{L̲²(□_m)}` (`squareOsc`) and the distance to the
-lattice harmonic functions on `□_m` (`squareHarmonicDist`), and compares them with the normalized
-norms on the balls of the lattice: a ball inside a square (`ballDist_le_squareHarmonicDist`) and a
-square inside a ball (`squareOsc_le_ballExcess`).
+lattice harmonic functions on `□_m` (`squareHarmonicDist`), and compares the normalized norms on
+squares and on the balls of the lattice: a ball inside a square (`componentBallL2_le_squareL2`) and
+a square inside a ball (`squareL2_le_componentBallL2`).
 -/
 
 namespace Rigidity.Proofs.Regularity
@@ -40,30 +41,38 @@ noncomputable def planarCoarse {ω : Configuration 2} (C : OpenComponent ω) (u 
     Vertex 2 → ℝ :=
   fun y => Rigidity.Section3.extend C u (planarCoarseAnchor ω y)
 
-/-- **Armstrong–Dario, Lemma 7.1, in dimension two**, in the form used in the proof of Lemma 7.3:
-above a minimal scale `𝒳 ≤ O_s(θ)`, for `R ≥ A 𝒳` and `u` harmonic on `𝒞_∞ ∩ B_R`, the
-coarsening `[u]_𝒫` satisfies on the balls of `ℤ²` the harmonic approximation hypothesis of
-Lemma 7.2 with the lattice harmonic functions and
-`E = K R^{-1} inf_a R^{-1} ‖u - a‖_{L²(𝒞_∞ ∩ B_R)}`, and for `r ∈ [𝒳, R / A]`
-`r^{-1} ‖u - [u]_𝒫‖_{L²(𝒞_∞ ∩ B_r)} ≤ K r^{-1} inf_a (A r)^{-1} ‖u - a‖_{L²(𝒞_∞ ∩ B_{A r})}`
-(the `L²` form of (7.4)). -/
+/-- The conclusion of Armstrong–Dario, Lemma 7.1, in dimension two, for one cluster `C` above the
+scale `X`, in the form used in the proof of Lemma 7.3: for `R ≥ A X` and `u` harmonic on
+`C ∩ B_R`, the coarsening `[u]_𝒫` satisfies on the balls of `ℤ²` the harmonic approximation
+hypothesis of Lemma 7.2 with the lattice harmonic functions and
+`E = K R^{-1} inf_a R^{-1} ‖u - a‖_{L²(C ∩ B_R)}`; for `r ∈ [X, R / A]`,
+`r^{-1} ‖u - [u]_𝒫‖_{L²(C ∩ B_r)} ≤ K r^{-1} inf_a (A r)^{-1} ‖u - a‖_{L²(C ∩ B_{A r})}`
+(the `L²` form of (7.4)); and, for every `a ∈ ℝ`,
+`‖[u]_𝒫 - a‖_{L̲²(B_r)} ≤ K (A r)^{-1} ‖u - a‖_{L²(C ∩ B_{A r})}` on the balls of `ℤ²` (the bound
+of Step 2 of the proof of Lemma 7.1 with `w` constant). -/
+def PlanarHarmonicApproximationAt {ω : Configuration 2} (C : OpenComponent ω) (A α K X : ℝ) :
+    Prop :=
+  ∀ R : ℝ, A * X ≤ R → ∀ u : C → ℝ, IsHarmonicInBall C R u →
+    HarmonicApproximation (componentBallSeminorm (latticeComponent 2) 0)
+        (latticeHarmonicClass 0) (clusterConstants (latticeComponent 2)) A α X R
+        (K / R * ⨅ a : ℝ, clusterBallVolumeL2 C R (u - fun _ => a))
+        (fun x => planarCoarse C u x.val) ∧
+      (∀ r : ℝ, X ≤ r → r ≤ R / A →
+        clusterBallVolumeL2 C r (u - fun x => planarCoarse C u x.val) ≤
+          K / r * ⨅ a : ℝ, clusterBallVolumeL2 C (A * r) (u - fun _ => a)) ∧
+      ∀ r : ℝ, X ≤ r → r ≤ R / A → ∀ a : ℝ,
+        componentBallL2 (latticeComponent 2) 0 r (fun x => planarCoarse C u x.val - a) ≤
+          K * clusterBallVolumeL2 C (A * r) (u - fun _ => a)
+
+/-- **Armstrong–Dario, Lemma 7.1, in dimension two**, in the form used in the proof of Lemma 7.3
+(`PlanarHarmonicApproximationAt`), almost surely on the infinite cluster above a minimal scale
+`𝒳 ≤ O_s(θ)`. -/
 def PlanarHarmonicApproximationTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∃ (s θ A α K : ℝ), 0 < s ∧ 0 < θ ∧ 2 ≤ A ∧ 0 < α ∧ 0 ≤ K ∧
       ∃ X : Configuration 2 → ℝ, Measurable X ∧ (∀ ω, 1 ≤ X ω) ∧ IsOsBond 2 p X s θ ∧
       ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
-        ∀ R : ℝ, A * X ω ≤ R → ∀ u : uniqueInfiniteComponent h → ℝ,
-          IsHarmonicInBall (uniqueInfiniteComponent h) R u →
-          HarmonicApproximation (componentBallSeminorm (latticeComponent 2) 0)
-              (latticeHarmonicClass 0) (clusterConstants (latticeComponent 2)) A α (X ω) R
-              (K / R * ⨅ a : ℝ,
-                clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => a))
-              (fun x => planarCoarse (uniqueInfiniteComponent h) u x.val) ∧
-            ∀ r : ℝ, X ω ≤ r → r ≤ R / A →
-              clusterBallVolumeL2 (uniqueInfiniteComponent h) r
-                  (u - fun x => planarCoarse (uniqueInfiniteComponent h) u x.val) ≤
-                K / r * ⨅ a : ℝ,
-                  clusterBallVolumeL2 (uniqueInfiniteComponent h) (A * r) (u - fun _ => a)
+        PlanarHarmonicApproximationAt (uniqueInfiniteComponent h) A α K (X ω)
 
 /-! ### Squares of the lattice -/
 
