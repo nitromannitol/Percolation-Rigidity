@@ -2008,8 +2008,8 @@ following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Correc
   Lemma 7.12 and Proposition 9.9 of Gilbarg and Trudinger, and states the version on the lattice by "standard
   arguments". The named input `MultiscalePoincareTwo` remains the hypothesis of the older theorems of this section;
   the bridge theorems of the next paragraph discharge it;
-* `ConcentrationTwo`: the concentration inequality of Dario, Proposition 2.17, as printed, for integrable variables with
-  finite resampling variance almost surely. It is proved (`Rigidity.Corrector.concentrationTwo_holds`, see
+* `ConcentrationTwo`: the concentration inequality of Dario, Proposition 2.17, for integrable variables with
+  finite resampling variance almost surely, in the moment-inequality form of Boucheron, Bousquet, Lugosi and Massart. The constant `C` depends on `p` as well as on `β`, where Dario prints `C(d, β)`. It is proved (`Rigidity.Corrector.concentrationTwo_holds`, see
   [The concentration inequality of Proposition 2.17](#the-concentration-inequality-of-proposition-217)); it remains
   a hypothesis of the older theorems of this section;
 * `DarioLemmaThreeTwo` and `DarioLemmaThreeThree`: Lemmas 3.2 and 3.3 of Dario for the coarsened correctors at every

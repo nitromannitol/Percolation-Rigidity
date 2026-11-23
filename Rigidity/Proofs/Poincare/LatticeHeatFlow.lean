@@ -221,7 +221,7 @@ theorem hasSum_poissonWeight_mul_pow_real (t μ : ℝ) :
   unfold poissonWeight
   push_cast
   rw [mul_pow]
-  ring
+  ring_nf
 
 /-- **The heat kernel on the weight**: `Σ_x Φ_s(y, x) coshW(x) = e^{4s(cosh a - 1)} coshW(y)`. -/
 theorem hasSum_openHeat_mul_coshW (a : ℝ) {s : ℝ} (hs : 0 ≤ s) (y : Vertex 2) :

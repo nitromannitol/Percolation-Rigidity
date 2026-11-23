@@ -56,7 +56,7 @@ theorem edgeDiv_dartField {u v : Vertex 2} (h : (openGraph ω).Adj u v) (z : Ver
     rw [dartField_unit_add, lp.coeFn_neg, edgeDiv_neg,
       edgeDiv_single ω (a := (v, i)) h.symm z]
     simp only [edgeHead]
-    ring
+    ring_nf
 
 /-- **The field of a walk from `x` to `y` has divergence `δ_x - δ_y`.** -/
 theorem edgeDiv_pathField {x y : Vertex 2} (p : (openGraph ω).Walk x y) (z : Vertex 2) :

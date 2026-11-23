@@ -4,12 +4,12 @@ import Rigidity.Proofs.Corrector.PlanarHeatSmoothing
 # Dario's Proposition 3.1 from Lemmas 3.2 and 3.3 and the concentration inequality
 
 Dario proves Proposition 3.1, `|Φ_{r²} * ∇[χ_p]_𝒫(x)| ≤ O_s(C |p| r^{-d/2})`, by applying the
-concentration inequality of Proposition 2.17 (Armstrong, Kuusi and Mourrat, Proposition 2.2) to
+concentration inequality of Proposition 2.17 (Armstrong and Lin, ARMA 225, 2017, Proposition 2.2) to
 `X = Φ_{r²} * ∇[χ_p]_𝒫(0)`, with the bound `|E[X]| ≤ C r^{-d/2}` of Lemma 3.2 and the bound
 `𝕍[X] ≤ O_s(C r^{-d})` of Lemma 3.3. In dimension two, for the coarsened correctors
 `coarseField` and the components `heatComp u r x j = Σ_y Φ(r², x, y) (u(y + e_j) - u(y))`:
 
-* `ConcentrationTwo`: Proposition 2.17 as printed (hypothesis, cited), for integrable `X` with
+* `ConcentrationTwo`: Proposition 2.17 (proved as `concentrationTwo_holds`), for integrable `X` with
   `𝕍[X] < ∞` almost surely, where `resampleVar p X = Σ_e (X - E[X | F(𝓑_d \ {e})])²`;
 * `DarioLemmaThreeTwo`, `DarioLemmaThreeThree`: Lemmas 3.2 and 3.3 (hypotheses), at every point
   `x`; Dario states them at `x = 0` and reduces to it by stationarity, which for the partition
@@ -55,7 +55,7 @@ noncomputable def resampleVar (p : unitInterval) (X : Configuration 2 → ℝ) (
     ℝ≥0∞ :=
   ∑' e : Bond 2, ENNReal.ofReal ((X ω - condExp (bondsExcept e) (latticeBondLaw 2 p) X ω) ^ 2)
 
-/-- **Dario, Proposition 2.17** (Armstrong, Kuusi and Mourrat, Proposition 2.2; hypothesis, cited):
+/-- **Dario, Proposition 2.17** (Armstrong and Lin, ARMA 225, 2017, Proposition 2.2; proved as `concentrationTwo_holds`):
 for `β ∈ (0, 2)` there is `C(d, β) < ∞` such that for every random variable `X`,
 `E[exp(|X - E[X]|^β)] ≤ C E[exp((C 𝕍[X])^{β/(2-β)})]^{(2-β)/β}`; here for integrable `X` with
 `𝕍[X] < ∞` almost surely. -/
