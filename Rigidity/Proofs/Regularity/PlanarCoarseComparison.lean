@@ -242,4 +242,169 @@ theorem energy_enl_le_caccioppoli (C : OpenComponent ω) (u : C → ℝ) {j : �
     _ ≤ _ := hcac
     _ ≤ _ := mul_le_mul_of_nonneg_left hsumU (by positivity)
 
+theorem three_pow_two_mul (j : ℕ) : (3 : ℝ) ^ (2 * j) = 9 ^ j := by
+  rw [pow_mul]; norm_num
+
+/-- **The comparison (7.4) in `L²` on one square** (Armstrong–Dario, proof of Lemma 7.1, Step 3,
+in dimension two): from Lemma 3.2 with the reach scales, the Hölder inequality with the moments of
+the reach scales, the Meyers estimate `hM` on `□_j` for the restriction of `u` to the cluster of
+`□_{j+2}`, and the Caccioppoli inequality on `𝒞 ∩ □_{j+2}`. -/
+theorem coarseComparison_on_square (hP : PlanarPartitionEvent ω) (C : OpenComponent ω)
+    (u : C → ℝ) {j : ℕ} (hres0 : PlanarResolved ω ⟨j, 0⟩)
+    (h02 : clusterVertices ω ⟨j, 0⟩ ⊆ clusterVertices ω ⟨j + 2, 0⟩)
+    (h2C : ∀ x ∈ clusterVertices ω ⟨j + 2, 0⟩, x ∈ C.supp)
+    (hU3 : ∀ x ∈ triadicCubeFinset 2 (j + 2) 0, x ∈ C.supp → x ∈ clusterVertices ω ⟨j + 3, 0⟩)
+    (hharm : ∀ (x : Vertex 2) (hx : x ∈ C.supp), x ∈ triadicCubeFinset 2 (j + 3) 0 →
+      componentLaplacian C u ⟨x, hx⟩ = 0)
+    {q CM Kρ : ℝ} (hq : 1 < q) (hCM : 0 ≤ CM) (hKρ : 0 ≤ Kρ)
+    (hM : avg (cube j (0 : Vertex 2)) (fun x => clusterEnergy ω (clusterVertices ω ⟨j + 2, 0⟩)
+        (clusterExtend ω ⟨j + 2, 0⟩ (clusterRestrictTo C u ⟨j + 2, 0⟩)) x ^ q) ≤
+      CM * avg (enl 1 j (0 : Vertex 2)) (clusterEnergy ω (clusterVertices ω ⟨j + 2, 0⟩)
+        (clusterExtend ω ⟨j + 2, 0⟩ (clusterRestrictTo C u ⟨j + 2, 0⟩))) ^ q)
+    (hmom : ∑ z ∈ clusterVertices ω ⟨j, 0⟩,
+        (((3 : ℝ) ^ (planarCoarseData hP ⟨j, 0⟩ hres0).reachScale z) ^ (4 : ℕ)) ^
+          Real.conjExponent q ≤ Kρ * 9 ^ j) :
+    clusterSquareL2 ω j (fun x => Rigidity.Section3.extend C u x - planarCoarse C u x) ≤
+      12 * planarCoarseConst * Real.sqrt (CM ^ (1 / q) * Kρ ^ (1 / Real.conjExponent q)) /
+        3 ^ j * clusterSquareOsc C u (j + 3) := by
+  obtain ⟨E, hEdef⟩ : ∃ E : Vertex 2 → ℝ, E = clusterEnergy ω (clusterVertices ω ⟨j + 2, 0⟩)
+      (clusterExtend ω ⟨j + 2, 0⟩ (clusterRestrictTo C u ⟨j + 2, 0⟩)) := ⟨_, rfl⟩
+  rw [← hEdef] at hM
+  have hE0 : ∀ z, 0 ≤ E z := fun z => by rw [hEdef]; exact clusterEnergy_nonneg _ _ _ _
+  obtain ⟨A, hAdef⟩ : ∃ A : ℝ, A = ∑ z ∈ enl 1 j (0 : Vertex 2), E z := ⟨_, rfl⟩
+  have hA0 : 0 ≤ A := by rw [hAdef]; exact Finset.sum_nonneg fun z _ => hE0 z
+  have hN : (0 : ℝ) < 9 ^ j := by positivity
+  have hcube : ((cube j (0 : Vertex 2)).card : ℝ) = 9 ^ j := by
+    rw [card_cube, ← pow_mul, mul_comm j 2, pow_mul]; norm_num
+  have henl : ((enl 1 j (0 : Vertex 2)).card : ℝ) = 9 * 9 ^ j := by
+    rw [card_enl, ← pow_mul, mul_comm (j + 1) 2, pow_mul]; norm_num; ring
+  -- Lemma 3.2
+  have hL : ∑ x ∈ clusterVertices ω ⟨j, 0⟩,
+      (Rigidity.Section3.extend C u x - planarCoarse C u x) ^ 2 ≤
+      planarCoarseConst ^ 2 * ∑ z ∈ clusterVertices ω ⟨j, 0⟩,
+        ((3 : ℝ) ^ (planarCoarseData hP ⟨j, 0⟩ hres0).reachScale z) ^ (4 : ℕ) *
+          gradNormIn (openGraph ω) (clusterVertices ω ⟨j, 0⟩)
+            (Rigidity.Section3.extend C u) z ^ 2 := by
+    have h := planar_sum_abs_sub_coarseAnchor_rpow_le hP hres0 (Rigidity.Section3.extend C u)
+      (s := 2) (by norm_num)
+    have e1 : ∀ x ∈ clusterVertices ω ⟨j, 0⟩,
+        |Rigidity.Section3.extend C u x -
+          Rigidity.Section3.extend C u (planarCoarseAnchor ω x)| ^ (2 : ℝ) =
+        (Rigidity.Section3.extend C u x - planarCoarse C u x) ^ 2 := fun x _ => by
+      rw [Real.rpow_two, sq_abs]; rfl
+    have e2 : ∀ z ∈ clusterVertices ω ⟨j, 0⟩,
+        ((3 : ℝ) ^ (planarCoarseData hP ⟨j, 0⟩ hres0).reachScale z) ^ ((2 : ℝ) * ((2 : ℕ) : ℝ)) *
+          gradNormIn (openGraph ω) (clusterVertices ω ⟨j, 0⟩)
+            (Rigidity.Section3.extend C u) z ^ (2 : ℝ) =
+        ((3 : ℝ) ^ (planarCoarseData hP ⟨j, 0⟩ hres0).reachScale z) ^ (4 : ℕ) *
+          gradNormIn (openGraph ω) (clusterVertices ω ⟨j, 0⟩)
+            (Rigidity.Section3.extend C u) z ^ 2 := fun z _ => by
+      rw [show (2 : ℝ) * ((2 : ℕ) : ℝ) = ((4 : ℕ) : ℝ) by norm_num, Real.rpow_natCast,
+        Real.rpow_two]
+    rw [Finset.sum_congr rfl e1, Finset.sum_congr rfl e2, Real.rpow_two] at h
+    exact h
+  -- the energy bound for the gradients on `C_*(□_j)`
+  have hgE : ∀ z ∈ clusterVertices ω ⟨j, 0⟩, gradNormIn (openGraph ω) (clusterVertices ω ⟨j, 0⟩)
+      (Rigidity.Section3.extend C u) z ^ 2 ≤ E z := by
+    intro z hz
+    have hz2 := h02 hz
+    rw [gradNormIn, Real.sq_sqrt (mul_nonneg (by norm_num) (Finset.sum_nonneg fun y _ => by
+      split_ifs <;> positivity)), hEdef, clusterEnergy, if_pos hz2, clusterGradSq,
+      ← Finset.sum_filter]
+    apply mul_le_mul_of_nonneg_left _ (by norm_num)
+    calc ∑ y ∈ (clusterVertices ω ⟨j, 0⟩).filter (fun y => (openGraph ω).Adj z y),
+          (Rigidity.Section3.extend C u z - Rigidity.Section3.extend C u y) ^ 2
+        ≤ ∑ y ∈ ((openGraph ω).neighborFinset z).filter (· ∈ clusterVertices ω ⟨j + 2, 0⟩),
+            (Rigidity.Section3.extend C u z - Rigidity.Section3.extend C u y) ^ 2 :=
+          Finset.sum_le_sum_of_subset_of_nonneg (fun y hy => by
+            obtain ⟨hy1, hy2⟩ := Finset.mem_filter.1 hy
+            exact Finset.mem_filter.2 ⟨(SimpleGraph.mem_neighborFinset _ _ _).2 hy2, h02 hy1⟩)
+            fun _ _ _ => sq_nonneg _
+      _ = ∑ y ∈ ((openGraph ω).neighborFinset z).filter (· ∈ clusterVertices ω ⟨j + 2, 0⟩),
+            (clusterExtend ω ⟨j + 2, 0⟩ (clusterRestrictTo C u ⟨j + 2, 0⟩) z -
+              clusterExtend ω ⟨j + 2, 0⟩ (clusterRestrictTo C u ⟨j + 2, 0⟩) y) ^ 2 :=
+          Finset.sum_congr rfl fun y hy => by
+            rw [clusterExtend_clusterRestrictTo C u hz2,
+              clusterExtend_clusterRestrictTo C u (Finset.mem_filter.1 hy).2]
+  -- the Hölder step with the Meyers estimate
+  have hbq : ∑ z ∈ clusterVertices ω ⟨j, 0⟩, (gradNormIn (openGraph ω)
+      (clusterVertices ω ⟨j, 0⟩) (Rigidity.Section3.extend C u) z ^ 2) ^ q ≤
+      CM * 9 ^ j * (A / (9 * 9 ^ j)) ^ q := by
+    have hq0 : 0 ≤ q := by linarith
+    calc ∑ z ∈ clusterVertices ω ⟨j, 0⟩, (gradNormIn (openGraph ω)
+          (clusterVertices ω ⟨j, 0⟩) (Rigidity.Section3.extend C u) z ^ 2) ^ q
+        ≤ ∑ z ∈ clusterVertices ω ⟨j, 0⟩, E z ^ q :=
+          Finset.sum_le_sum fun z hz => Real.rpow_le_rpow (sq_nonneg _) (hgE z hz) hq0
+      _ ≤ ∑ z ∈ cube j (0 : Vertex 2), E z ^ q :=
+          Finset.sum_le_sum_of_subset_of_nonneg
+            (fun z hz => mem_cube_of_mem_square (mem_square_of_mem_clusterVertices hz))
+            fun z _ _ => Real.rpow_nonneg (hE0 z) _
+      _ = 9 ^ j * avg (cube j (0 : Vertex 2)) (fun x => E x ^ q) := by
+          rw [avg, hcube]; field_simp
+      _ ≤ 9 ^ j * (CM * avg (enl 1 j (0 : Vertex 2)) E ^ q) :=
+          mul_le_mul_of_nonneg_left hM hN.le
+      _ = CM * 9 ^ j * (A / (9 * 9 ^ j)) ^ q := by
+          rw [avg, henl, ← hAdef]; ring
+  have hHold := holder_meyers_bound (clusterVertices ω ⟨j, 0⟩)
+    (a := fun z => ((3 : ℝ) ^ (planarCoarseData hP ⟨j, 0⟩ hres0).reachScale z) ^ (4 : ℕ))
+    (b := fun z => gradNormIn (openGraph ω) (clusterVertices ω ⟨j, 0⟩)
+      (Rigidity.Section3.extend C u) z ^ 2)
+    (fun z _ => by positivity) (fun z _ => sq_nonneg _) hq hKρ hCM hN hA0 hbq hmom
+  set P := CM ^ (1 / q) * Kρ ^ (1 / Real.conjExponent q) with hPdef
+  have hP0 : 0 ≤ P := by positivity
+  have hsum : ∑ x ∈ clusterVertices ω ⟨j, 0⟩,
+      (Rigidity.Section3.extend C u x - planarCoarse C u x) ^ 2 ≤
+      planarCoarseConst ^ 2 * P * (A / 9) := by
+    have e : ∑ z ∈ clusterVertices ω ⟨j, 0⟩,
+        ((3 : ℝ) ^ (planarCoarseData hP ⟨j, 0⟩ hres0).reachScale z) ^ (4 : ℕ) *
+          gradNormIn (openGraph ω) (clusterVertices ω ⟨j, 0⟩)
+            (Rigidity.Section3.extend C u) z ^ 2 =
+        ∑ z ∈ clusterVertices ω ⟨j, 0⟩, gradNormIn (openGraph ω) (clusterVertices ω ⟨j, 0⟩)
+            (Rigidity.Section3.extend C u) z ^ 2 *
+          ((3 : ℝ) ^ (planarCoarseData hP ⟨j, 0⟩ hres0).reachScale z) ^ (4 : ℕ) :=
+      Finset.sum_congr rfl fun z _ => mul_comm _ _
+    rw [e] at hL
+    calc _ ≤ _ := hL
+      _ ≤ planarCoarseConst ^ 2 * (P * (A / 9)) :=
+          mul_le_mul_of_nonneg_left hHold (sq_nonneg _)
+      _ = planarCoarseConst ^ 2 * P * (A / 9) := by ring
+  -- the bound for every constant
+  have hK0 : 0 ≤ 12 * planarCoarseConst * Real.sqrt P / 3 ^ j := by
+    have := planarCoarseConst_nonneg; positivity
+  rw [clusterSquareOsc, Real.mul_iInf_of_nonneg hK0]
+  refine le_ciInf fun c => ?_
+  have hcac := energy_enl_le_caccioppoli C u h2C
+    (fun x hx => mem_square_of_mem_clusterVertices hx) hU3 hharm c
+  rw [← hEdef, ← hAdef] at hcac
+  set Ssum := ∑ x ∈ clusterVertices ω ⟨j + 3, 0⟩, (Rigidity.Section3.extend C u x - c) ^ 2
+    with hSsum
+  have hSsum0 : 0 ≤ Ssum := Finset.sum_nonneg fun _ _ => sq_nonneg _
+  have h3j : (0 : ℝ) < 3 ^ j := by positivity
+  have hfin : ∑ x ∈ clusterVertices ω ⟨j, 0⟩,
+      (Rigidity.Section3.extend C u x - planarCoarse C u x) ^ 2 ≤
+      planarCoarseConst ^ 2 * P * (16 / 81) * Ssum / 9 ^ j := by
+    have h1 := mul_le_mul_of_nonneg_left hcac (by positivity : (0 : ℝ) ≤ planarCoarseConst ^ 2 * P / 9)
+    have e : planarCoarseConst ^ 2 * P / 9 * (16 / 9 ^ (j + 1) * Ssum) =
+        planarCoarseConst ^ 2 * P * (16 / 81) * Ssum / 9 ^ j := by
+      rw [pow_succ]; field_simp; ring
+    calc _ ≤ planarCoarseConst ^ 2 * P * (A / 9) := hsum
+      _ = planarCoarseConst ^ 2 * P / 9 * A := by ring
+      _ ≤ _ := h1
+      _ = _ := e
+  unfold clusterSquareL2
+  rw [three_pow_two_mul, show 2 * (j + 3) = 2 * j + 6 by ring, pow_add, three_pow_two_mul]
+  have hrhs : 12 * planarCoarseConst * Real.sqrt P / 3 ^ j *
+      Real.sqrt (Ssum / (9 ^ j * 3 ^ 6)) =
+      Real.sqrt (planarCoarseConst ^ 2 * P * (16 / 81) * Ssum / 9 ^ j / 9 ^ j) := by
+    have hC0 := planarCoarseConst_nonneg
+    rw [← Real.sqrt_sq (by positivity : (0 : ℝ) ≤ 12 * planarCoarseConst * Real.sqrt P / 3 ^ j),
+      ← Real.sqrt_mul (sq_nonneg _)]
+    congr 1
+    rw [div_pow, mul_pow, mul_pow, Real.sq_sqrt hP0, ← pow_mul, mul_comm j 2, pow_mul]
+    norm_num
+    field_simp
+    ring
+  rw [hrhs]
+  exact Real.sqrt_le_sqrt (div_le_div_of_nonneg_right hfin hN.le)
+
 end Rigidity.Proofs.Regularity
