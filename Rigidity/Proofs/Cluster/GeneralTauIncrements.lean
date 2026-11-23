@@ -179,4 +179,72 @@ theorem exists_cubeMuIncrement_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     _ ≤ d * (∑ i, q i ^ 2) * (cubeMuTau (d := d) p k + d * d * C * ε) :=
         mul_le_mul_of_nonneg_left hsum hq0
 
+/-- **Display (5.9) for `ν`** (every dimension `d ≥ 2`):
+`E[ν(□_k, ā⁻¹ q)] - E[ν(□_{k+1}, ā⁻¹ q)] ≤ d |q|² (τ^ν_k + C 3^{-k/2})`. -/
+theorem exists_cubeNuIncrement_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ C : ℝ, 0 ≤ C ∧ ∀ (k : ℕ) (q : Fin d → ℝ),
+      cubeNuIncrement p k ((cubeAhom p)⁻¹ *ᵥ q) ≤ d * (∑ i, q i ^ 2) *
+        (cubeNuTau (d := d) p k + C / √3 ^ k) := by
+  obtain ⟨C, hC, hlow⟩ := exists_neg_le_cubeNuIncrement hd hpc
+  set B := (cubeAhom (d := d) p)⁻¹ with hB
+  set S₂ := ∑ i : Fin d, ∑ j, (B *ᵥ Pi.single i 1) j ^ 2 with hS₂
+  have hS₂0 : 0 ≤ S₂ := Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => sq_nonneg _
+  refine ⟨C * d * S₂, by positivity, fun k q => ?_⟩
+  set ε := 1 / √3 ^ k with hε
+  have hε0 : 0 ≤ ε := by positivity
+  set G : (Fin d → ℝ) → ℝ := fun x => cubeNuIncrement p k x + C * ε * d * ∑ i, x i ^ 2 with hG
+  have hGq : IsSlopeQuadratic G :=
+    ((isSlopeQuadratic_cubeNuMean p k).sub (isSlopeQuadratic_cubeNuMean p (k + 1))).add
+      (isSlopeQuadratic_sum_sq.const_mul (C * ε * d))
+  have hG0 : ∀ x, 0 ≤ G x := fun x => by
+    have h1 := hlow k x
+    have h2 := sq_sum_abs_le_card_mul x
+    have h3 : C * (∑ i, |x i|) ^ 2 / √3 ^ k ≤ C * ε * d * ∑ i, x i ^ 2 := by
+      have e : C * (∑ i, |x i|) ^ 2 / √3 ^ k = C * ε * (∑ i, |x i|) ^ 2 := by
+        rw [hε]
+        ring
+      rw [e]
+      have := mul_le_mul_of_nonneg_left h2 (mul_nonneg hC hε0)
+      nlinarith
+    simp only [hG]
+    linarith
+  have hle := (hGq.comp_mulVec B).le_of_nonneg (fun x => hG0 _) q
+  have hsum : ∑ i, G (B *ᵥ Pi.single i 1) ≤ cubeNuTau (d := d) p k + C * ε * d * S₂ := by
+    simp only [hG, Finset.sum_add_distrib]
+    have h1 : ∑ i : Fin d, cubeNuIncrement p k (B *ᵥ Pi.single i 1) ≤
+        cubeNuTau (d := d) p k := Finset.sum_le_sum fun i _ => le_max_left _ _
+    have e : ∑ i : Fin d, C * ε * d * ∑ j, (B *ᵥ Pi.single i 1) j ^ 2 = C * ε * d * S₂ := by
+      rw [hS₂, Finset.mul_sum]
+    linarith
+  have hq0 : 0 ≤ (d : ℝ) * ∑ i, q i ^ 2 := by positivity
+  calc cubeNuIncrement p k (B *ᵥ q) ≤ G (B *ᵥ q) := by
+        simp only [hG]
+        have : 0 ≤ C * ε * d * ∑ i, (B *ᵥ q) i ^ 2 := by positivity
+        linarith
+    _ ≤ d * (∑ i, q i ^ 2) * ∑ i, G (B *ᵥ Pi.single i 1) := hle
+    _ ≤ d * (∑ i, q i ^ 2) * (cubeNuTau (d := d) p k + C * ε * d * S₂) :=
+        mul_le_mul_of_nonneg_left hsum hq0
+    _ = d * (∑ i, q i ^ 2) * (cubeNuTau (d := d) p k + C * d * S₂ / √3 ^ k) := by
+        rw [hε]
+        ring
+
+theorem cubeMuMean_sub_eq_sum (p : unitInterval) {n m : ℕ} (h : n ≤ m) (q : Fin d → ℝ) :
+    cubeMuMean p n q - cubeMuMean p m q = ∑ k ∈ Finset.Ico n m, cubeMuIncrement p k q := by
+  induction m, h using Nat.le_induction with
+  | base => simp
+  | succ m hnm ih =>
+    rw [Finset.sum_Ico_succ_top hnm, ← ih]
+    unfold cubeMuIncrement
+    ring
+
+theorem cubeNuMean_sub_eq_sum (p : unitInterval) {n m : ℕ} (h : n ≤ m) (ξ : Fin d → ℝ) :
+    cubeNuMean p n ξ - cubeNuMean p m ξ = ∑ k ∈ Finset.Ico n m, cubeNuIncrement p k ξ := by
+  induction m, h using Nat.le_induction with
+  | base => simp
+  | succ m hnm ih =>
+    rw [Finset.sum_Ico_succ_top hnm, ← ih]
+    unfold cubeNuIncrement
+    ring
+
 end Rigidity.Percolation
