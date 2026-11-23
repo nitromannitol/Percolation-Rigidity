@@ -393,6 +393,12 @@ fidelity:
     estimate (7.18) at k = 2, ArmstrongDarioMesoscopicDegreeTwo, and the corrector inputs, by an
     endpoint iteration that lifts only the affine functions in place of the argument of
     Armstrong, Kuusi and Mourrat, Proposition 3.1), and
+    for Theorem 1 of Armstrong and Dario in dimension two for p above the critical value and every
+    exponent p' > 2 with no further hypothesis (the discrete homogenized solution of the Dirichlet
+    problem on the lattice cube in place of the continuum one, the triadic mesoscopic cubes z + Q_k,
+    z in 3^k Z^2, k = ceil(m/8), in place of z + Q_n, n = ceil(m/4) of Definition 5.12, the bound
+    of the gradient of the homogenized solution in homogeneous form, and the homogenized matrix
+    proved to be a multiple of the identity from the symmetries of the plane), and
     for the Dirichlet problem and
     the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,

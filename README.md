@@ -1526,6 +1526,60 @@ Departures from Armstrong and Dario:
   over the polynomials of degree `k`, whose details AD omit, referring to Step 3 of the proof of
   Lemma 2.4 of Armstrong, Kuusi and Mourrat.
 
+## Theorem 1 of Armstrong and Dario in dimension two
+
+Theorem 1 of Armstrong and Dario (the homogenization error for the Dirichlet problem on the cluster of a cube)
+is proved in `d = 2` for every `𝔭_c(2) < p < 1` and every exponent `p' > 2`, with no further hypothesis
+([`Rigidity.Dirichlet.planarHomogenizationError_holds`](Rigidity/Proofs/Dirichlet/PlanarTheoremOneHolds.lean)),
+in the form `PlanarHomogenizationError p p'`
+([`PlanarStatements.lean`](Rigidity/Proofs/Dirichlet/PlanarStatements.lean)): `ā = σ I` with `σ > 0`, and there
+are `s, α, C > 0` and a measurable random scale `X ≤ O_s(C)` such that, whenever `X ≤ 3^m`, the partition event
+holds, the cube `□_m` is resolved and, for every `u` harmonic on the cluster `𝒞_*(□_m)` off the boundary of the
+cube, there is a discrete harmonic function `u_hom` on the lattice cube (for the constant conductance `1`) that
+equals `u` on `𝒞_*(□_m)` off the interior of the cube, with
+`|□_m|⁻¹ Σ_{edges of □_m} |∇u_hom|² ≤ C M²` and
+`3^{−m} (|□_m|⁻¹ Σ_{𝒞_*(□_m)} (u − u_hom)²)^{1/2} ≤ C 3^{−mα} M`,
+where `M = (|□_m|⁻¹ Σ_{𝒞_*(□_m)} |∇u 1_{𝐚≠0}|^{p'})^{1/p'}`. The rate is `α' = c₀/32` with
+`c₀ = min(8α, 1/2, 4(1 − 2/t), 4γ)`, `t = (2 + p')/2` and `γ = min(1/16, (t − 2)/(2t))`, where `α` is the exponent of
+the convergence of `μ` and `ν`.
+
+The proof is the chain of Section 6, with the two inputs of the source in Section 5 and Section 2 supplied by
+theorems:
+
+* the convergence of `μ` and `ν` on the mesoscopic cubes, Definition 5.12, Proposition 5.13 and (6.4)–(6.5)
+  (`planarMesoscopicConvergence_holds`, from
+  [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two));
+* the minimal scales of the planar partition, both bounds of (2.13) (`planarMinimalScales_partition_holds`, from
+  the same section).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Dirichlet.planarHomogenizationError_of_inputs`](Rigidity/Proofs/Dirichlet/PlanarTheoremOne.lean), [`planarHomogenizationError_holds`](Rigidity/Proofs/Dirichlet/PlanarTheoremOneHolds.lean) | AD Theorem 1, `d = 2`, `PlanarHomogenizationError p p'` for `p' > 2`: from the two inputs `PlanarMesoscopicConvergence p` and `PlanarMinimalScales p`, and then with no hypothesis. |
+| [`Rigidity.Percolation.exists_planarAhom_eq_smul_one`](Rigidity/Proofs/Cluster/PlanarAhomIsotropic.lean), [`planarNuLimit_signedPermSlope`](Rigidity/Proofs/Cluster/PlanarSignedPermCluster.lean) | the remark after (5.22): `ā = σ I` with `σ > 0`, from the invariance of the limit of the expectations of `ν` under the reflection and the transposition of the coordinates, which carry the planar partition, the cluster of a resolved cube and `ν` to those of the transported configuration. |
+| [`Rigidity.Dirichlet.planarMu_le_test`](Rigidity/Proofs/Dirichlet/PlanarMuTest.lean), [`exists_mu_test_of_subcubes`](Rigidity/Proofs/Dirichlet/SubcubeMuTest.lean), [`sum_subcube_errors_le`](Rigidity/Proofs/Dirichlet/SubcubeMuTest.lean) | the `μ` test of display (6.9) on a resolved subcube, the `μ` test on a translate of a mesoscopic cube from the tests on a block of its subcubes, and the sum of the errors of these tests over the translates. |
+| [`planar_lemmaSixTwo`](Rigidity/Proofs/Dirichlet/PlanarLemmaSixTwo.lean), [`planar_lemmaSixThree`](Rigidity/Proofs/Dirichlet/PlanarLemmaSixThree.lean) | AD Lemma 6.2 (the `μ` test at every translate of the mesoscopic cube from the tests on its triadic tiles) and Lemma 6.3 (ii) (the patch of the maximizers of `ν` on the tiles), `d = 2`, with explicit errors. |
+| [`planar_sum_abs_grad_boundaryInterpolation_rpow_div_le`](Rigidity/Proofs/Dirichlet/PlanarInterpolation.lean), [`sum_three_pow_pairReachScale_rpow_le`](Rigidity/Proofs/Dirichlet/PlanarInterpolation.lean), [`exists_planar_sum_sq_le_of_eq_zero`](Rigidity/Proofs/Dirichlet/PlanarPoincareZero.lean) | AD Lemma 6.4 (iii) for the planar partition with the reach scales, the bound of the moments of the pair reach scales by the moments of the sizes of the partition cubes, and the Poincaré inequality on the cluster of a planar cube for functions vanishing on its boundary (Proposition 3.4 with `s = 2`). |
+| [`planar_sum_sq_sub_uhom_le`](Rigidity/Proofs/Dirichlet/PlanarPropSixOne.lean), [`planar_error_chain`](Rigidity/Proofs/Dirichlet/PlanarErrorChain.lean), [`chain_le`](Rigidity/Proofs/Dirichlet/PlanarChainBound.lean) | AD Proposition 6.1 in `d = 2` from Lemmas 6.2 and 6.3, the error chain `Σ_{𝒞_*} (u − u_hom)² ≤ 2 P (δ₁ + δ₂) + 2 δ₃` with explicit errors, and its bound by a power of the tile size, `B Λ¹² L⁴ M² K^{−c₀}`. |
+
+The seventeen reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Armstrong and Dario:
+
+- **The homogenized solution is discrete.** `u_hom` is the solution of the discrete Dirichlet problem for the
+  constant conductance `σ = ā` on the lattice cube, with the datum built from the coarsened `u` (as in
+  [The Dirichlet problem and the excess-decay iteration](#the-dirichlet-problem-and-the-excess-decay-iteration)); AD
+  take an `ā`-harmonic function on the continuum cube.
+- **Triadic mesoscopic cubes.** The cubes are `z + □_k` with `z ∈ 3^k ℤ²` and `k = ⌈m/8⌉`, the triadic subcubes of
+  `□_m`, in place of `z + □_n` with `n = ⌈m/4⌉` of Definition 5.12; Lemma 6.2 then averages the triadic tests over all
+  translates.
+- **The gradient bound in homogeneous form.** The bound is stated as
+  `|□_m|⁻¹ Σ |∇u_hom|² ≤ C M²`, with `M` the normalized `p'`-norm of the open gradient of `u`, which is what
+  Lemma 6.4 (iii) and the Dirichlet principle give.
+
+Misprint in the source whose meaning is clear: the display (1.14) at AD18.tex:446 (`e.homogbnd`) prints on the right
+side the mean of `|∇u 1_{𝐚≠0}|^p`, which is not homogeneous in `u` while the left side is quadratic.
+
 ## Regularity of order one at the origin from the mesoscopic estimate
 
 `Rigidity.External.ArmstrongDarioOrderOneOrigin` (Theorem 2.4, part (iii) at `k = 1`; AD Theorem 2(iii)
@@ -1735,7 +1789,7 @@ exponent of the tail).
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 448 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 486 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1776,9 +1830,11 @@ exponent of the tail).
   [Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71),
   the twenty-one theorems of
   [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two),
+  the seventeen theorems of
+  [Theorem 1 of Armstrong and Dario in dimension two](#theorem-1-of-armstrong-and-dario-in-dimension-two),
   and the twenty-seven theorems of
   [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
-  Each of the 469 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 486 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1809,10 +1865,10 @@ exponent of the tail).
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1286 Lean files with 246,406 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1310 Lean files with 252,083 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (801 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (844 lines) are counted separately.
 
 ## Building
 
