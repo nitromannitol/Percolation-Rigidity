@@ -103,4 +103,52 @@ theorem sum_sq_extend_sub_coarsen_le (hP : PlanarPartitionEvent ω) {V : Triadic
   intro z hz
   exact mul_le_mul_of_nonneg_right (pow_le_pow_left₀ (by positivity) (hD z hz) 4) (sq_nonneg _)
 
+open Rigidity.Proofs.Multiscale (affineFun finsetMean) in
+/-- **The flatness of a combination** of two coarsened functions, against the affine function of the
+combined slope: `Σ_V (a g₀ + b g₁)² ≤ 2 |V| (a² flat₀ + b² flat₁)`. -/
+theorem sum_sq_coarsen_combo_le {V : TriadicCube 2} (v₀ v₁ : ClusterFun ω V) (q : Fin 2 → ℝ) :
+    ∑ x ∈ V.toIntegerCube.vertices,
+        (coarsen ω V (q 0 • v₀ + q 1 • v₁) x - affineFun q x -
+          (q 0 * finsetMean V.toIntegerCube.vertices
+              (fun y => coarsen ω V v₀ y - affineFun (Pi.single 0 1) y) +
+            q 1 * finsetMean V.toIntegerCube.vertices
+              (fun y => coarsen ω V v₁ y - affineFun (Pi.single 1 1) y))) ^ 2 ≤
+      2 * V.volume * (q 0 ^ 2 * planarFlatnessError V (coarsen ω V v₀) (Pi.single 0 1) +
+        q 1 ^ 2 * planarFlatnessError V (coarsen ω V v₁) (Pi.single 1 1)) := by
+  set m₀ := finsetMean V.toIntegerCube.vertices
+    (fun y => coarsen ω V v₀ y - affineFun (Pi.single 0 1) y) with hm₀
+  set m₁ := finsetMean V.toIntegerCube.vertices
+    (fun y => coarsen ω V v₁ y - affineFun (Pi.single 1 1) y) with hm₁
+  set g₀ : Vertex 2 → ℝ := fun x => coarsen ω V v₀ x - affineFun (Pi.single 0 1) x - m₀ with hg₀
+  set g₁ : Vertex 2 → ℝ := fun x => coarsen ω V v₁ x - affineFun (Pi.single 1 1) x - m₁ with hg₁
+  have hlin : ∀ x, coarsen ω V (q 0 • v₀ + q 1 • v₁) x - affineFun q x - (q 0 * m₀ + q 1 * m₁) =
+      q 0 * g₀ x + q 1 * g₁ x := by
+    intro x
+    have hc : coarsen ω V (q 0 • v₀ + q 1 • v₁) x = q 0 * coarsen ω V v₀ x + q 1 * coarsen ω V v₁ x := by
+      unfold coarsen
+      simp only [map_add, map_smul, Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+    have ha : affineFun q x = q 0 * affineFun (Pi.single 0 1) x + q 1 * affineFun (Pi.single 1 1) x := by
+      simp [affineFun, Fin.sum_univ_two]
+    rw [hc, ha, hg₀, hg₁]
+    ring
+  have hf₀ : ∑ x ∈ V.toIntegerCube.vertices, g₀ x ^ 2 =
+      V.volume * planarFlatnessError V (coarsen ω V v₀) (Pi.single 0 1) := by
+    unfold planarFlatnessError
+    rw [← mul_assoc, mul_inv_cancel₀ V.volume_pos.ne', one_mul]
+  have hf₁ : ∑ x ∈ V.toIntegerCube.vertices, g₁ x ^ 2 =
+      V.volume * planarFlatnessError V (coarsen ω V v₁) (Pi.single 1 1) := by
+    unfold planarFlatnessError
+    rw [← mul_assoc, mul_inv_cancel₀ V.volume_pos.ne', one_mul]
+  calc ∑ x ∈ V.toIntegerCube.vertices,
+        (coarsen ω V (q 0 • v₀ + q 1 • v₁) x - affineFun q x - (q 0 * m₀ + q 1 * m₁)) ^ 2
+      = ∑ x ∈ V.toIntegerCube.vertices, (q 0 * g₀ x + q 1 * g₁ x) ^ 2 :=
+        Finset.sum_congr rfl fun x _ => by rw [hlin]
+    _ ≤ ∑ x ∈ V.toIntegerCube.vertices, (2 * q 0 ^ 2 * g₀ x ^ 2 + 2 * q 1 ^ 2 * g₁ x ^ 2) :=
+        Finset.sum_le_sum fun x _ => by
+          nlinarith [sq_nonneg (q 0 * g₀ x - q 1 * g₁ x)]
+    _ = 2 * q 0 ^ 2 * ∑ x ∈ V.toIntegerCube.vertices, g₀ x ^ 2 +
+          2 * q 1 ^ 2 * ∑ x ∈ V.toIntegerCube.vertices, g₁ x ^ 2 := by
+        rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+    _ = _ := by rw [hf₀, hf₁]; ring
+
 end Rigidity.Proofs.Regularity
