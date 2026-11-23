@@ -5,8 +5,9 @@ import Rigidity.Proofs.Regularity.PlanarMesoscopicTwoSteps
 
 At the top scale `T = R / (8A)` of the iteration of Lemma 7.2 for the coarsening `U = [u]_𝒫` of a
 function `u` harmonic on `𝒞_∞ ∩ B_R` (Armstrong and Dario, arXiv:1609.09431v2, proof of
-Lemma 7.3, Step 2, (7.21)–(7.23)), the excesses of `U` over the lattice harmonic quadratic
-functions and over the constants on `B_T` are bounded by the excesses of `u` on the cluster ball
+Lemma 7.3, the passage from (7.19) to (7.20) and Step 2, (7.22)–(7.23)), the excesses of `U`
+over the lattice harmonic quadratic functions and over the constants on `B_T` are bounded by the
+excesses of `u` on the cluster ball
 `B_R`, by the oscillation `G = R^{-1} inf_a R^{-1} ‖u - a‖_{ℓ²(𝒞_∞ ∩ B_R)}` and by the harmonic
 approximation error at the scale `4T` (`ballExcess_two_top_le`, `ballExcess_zero_top_le`):
 a lattice harmonic approximant `v` on `B_{4T}`, the `ℓ^∞`–`ℓ¹` bound of `v - W` for a harmonic

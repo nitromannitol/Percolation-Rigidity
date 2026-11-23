@@ -12,10 +12,11 @@ The steps of the proof of Lemma 7.3 of Armstrong and Dario (arXiv:1609.09431v2) 
 harmonic polynomials of degree `k` in the normalization `r^{-1} ‖·‖_{ℓ²(C ∩ B_r)}`
 (`clusterBallVolumeL2`) and `D_k(r)` the excess of `U` on the lattice ball:
 
-* `clusterExcess_two_le`, `clusterExcess_zero_le` (Step 1, (7.20)):
+* `clusterExcess_two_le`, `clusterExcess_zero_le` (Step 1, (7.21)):
   `D̃_k(r) ≤ r^{-1} ‖u - U‖_{ℓ²(C ∩ B_r)} + 3 D_k(r)`, the lattice harmonic quadratic functions
   restricting to harmonic quadratic polynomials of the cluster;
-* `componentBallL2_coarse_sub_quad_le` (Step 2, (7.21)–(7.23), at the top scale `T`): for a lattice
+* `componentBallL2_coarse_sub_quad_le` (the passage from (7.19) to (7.20)
+  through (7.11), and Step 2, (7.22)–(7.23), at the top scale `T`): for a lattice
   harmonic function `v` on `B_{4T}` and a harmonic quadratic polynomial `W`,
   `‖U - W‖_{L̲²(B_T)} ≤ C ‖U - v‖_{L̲²(B_{4T})} + C T^{-2} ∑_{B_{4T}} |U - W|`, by the `ℓ^∞`–`ℓ¹`
   bound of lattice harmonic functions applied to `v - W`; the sum is bounded by

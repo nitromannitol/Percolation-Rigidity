@@ -9,7 +9,7 @@ For `W(y) = a + ⟪p, y⟫ + q_M(y)` on `ℤ²` and `|xᵢ|, |yᵢ| ≤ ρ`,
 `Λ = |p₀| + |p₁| + 2 (|M₀₀| + |M₀₁ + M₁₀| + |M₁₁|) ρ` (`abs_quadratic_sub_le`). Under the density
 of the cluster in cubes, the cluster ball of radius `R` controls these coefficients:
 `(|p₀| + |p₁|) R + (|M₀₀| + |M₀₁ + M₁₀| + |M₁₁|) R² ≤ C ‖W - c‖_{L̲²(C ∩ B_R)}` for every constant
-`c` (`coeff_le_componentBallL2_sub_const`), the bound (7.22) of the proof of Lemma 7.3 of Armstrong
+`c` (`coeff_le_componentBallL2_sub_const`), the bound (7.23) of the proof of Lemma 7.3 of Armstrong
 and Dario (arXiv:1609.09431v2) for the harmonic quadratic polynomials. The cluster balls carry at
 least `κ R² / 72` points (`le_card_componentEuclideanBall`), so that `‖·‖_{L̲²(C ∩ B_R)}` is at
 most `√72 / √κ` times `R^{-1} ‖·‖_{ℓ²(C ∩ B_R)}`.
