@@ -166,4 +166,123 @@ theorem abs_corrector_le_at_scale (hP : PlanarPartitionEvent ω) (C : OpenCompon
     ht ht1 hq rfl (by rw [hBdef])
   convert this using 2
 
+theorem le_three_rpow {x : ℝ} (hx : 0 ≤ x) : x ≤ (3 : ℝ) ^ x := by
+  rw [Real.rpow_def_of_pos (by norm_num)]
+  have h1 := Real.add_one_le_exp (Real.log 3 * x)
+  have h2 : (1 : ℝ) ≤ Real.log 3 := by
+    rw [Real.le_log_iff_exp_le (by norm_num)]
+    have := Real.exp_one_lt_d9
+    linarith
+  have h3 : x ≤ Real.log 3 * x := by
+    have := mul_le_mul_of_nonneg_right h2 hx
+    linarith
+  linarith
+
+/-- **The slope asymptotics from the bounds at all large scales**: if for all large `m` the corrector
+is at most `c₃ y_m⁷ + c₄ 9 · 3^m / y_m⁷` on `{|x_i| ≤ 9 · 3^m}`, with `y_m = 3^{(m+1) η}`,
+`0 < η ≤ 1/28`, then it is sublinear in the uniform norm. -/
+theorem componentSlopeAsymptotics_of_scales (C : OpenComponent ω) (q : Fin 2 → ℝ) (u : C → ℝ)
+    {η c₃ c₄ : ℝ} (hη : 0 < η) (hη28 : η ≤ 1 / 28) (hc₄ : 0 ≤ c₄) {m₀ : ℕ}
+    (h : ∀ m : ℕ, m₀ ≤ m → ∀ x : C, (∀ i, |x.val i| ≤ 9 * 3 ^ m) →
+      |componentCorrector C q u x| ≤
+        c₃ * ((3 : ℝ) ^ (((m + 1 : ℕ) : ℝ) * η)) ^ 7 +
+          c₄ * (9 * 3 ^ m) / ((3 : ℝ) ^ (((m + 1 : ℕ) : ℝ) * η)) ^ 7) :
+    componentSlopeAsymptotics C q u := by
+  intro ε hε
+  -- the scale above which both terms are small
+  obtain ⟨m₁, hm₁⟩ := exists_nat_ge (max (54 * c₄ / ε) (2 * c₃ / ε) / (7 * η))
+  set m₂ := max m₀ m₁ with hm₂
+  refine ⟨9 * 3 ^ m₂, by positivity, fun R hR x hx => ?_⟩
+  have hR0 : 0 ≤ R := le_trans (by positivity) hR
+  -- the scale of `R`
+  set n : ℕ := ⌊R / 9⌋₊ with hn
+  have h3m₂ : 3 ^ m₂ ≤ n := by
+    rw [hn]; apply Nat.le_floor; rw [le_div_iff₀ (by norm_num)]; push_cast; linarith
+  have hn1 : 1 ≤ n := le_trans (Nat.one_le_pow _ _ (by norm_num)) h3m₂
+  set m : ℕ := Nat.log 3 n + 1 with hmdef
+  have hlow : 3 ^ (m - 1) ≤ n := by
+    rw [hmdef, Nat.add_sub_cancel]; exact Nat.pow_log_le_self 3 (by omega)
+  have hhigh : n < 3 ^ m := by rw [hmdef]; exact Nat.lt_pow_succ_log_self (by norm_num) n
+  have hm₂m : m₂ + 1 ≤ m := by
+    have h2 : m₂ ≤ Nat.log 3 n := Nat.le_log_of_pow_le (by norm_num) h3m₂
+    omega
+  have hRN : R < 9 * 3 ^ m := by
+    have h1 : (R / 9 : ℝ) < n + 1 := Nat.lt_floor_add_one _
+    have h2 : (n : ℝ) + 1 ≤ 3 ^ m := by exact_mod_cast hhigh
+    have : R / 9 < 3 ^ m := by linarith
+    rw [div_lt_iff₀ (by norm_num)] at this
+    linarith
+  have hlowR : (3 : ℝ) ^ (m + 1) ≤ R := by
+    have h1 : ((3 ^ (m - 1) : ℕ) : ℝ) ≤ n := by exact_mod_cast hlow
+    have h2 : (n : ℝ) ≤ R / 9 := Nat.floor_le (div_nonneg hR0 (by norm_num))
+    have e : (3 : ℝ) ^ (m + 1) = 9 * 3 ^ (m - 1) := by
+      rw [show (9 : ℝ) = 3 ^ 2 by norm_num, ← pow_add]; congr 1; omega
+    push_cast at h1
+    rw [e]
+    rw [le_div_iff₀ (by norm_num)] at h2
+    linarith
+  have hNR : 9 * (3 : ℝ) ^ m ≤ 27 * R := by
+    have : (3 : ℝ) ^ (m + 1) = 3 * 3 ^ m := by ring
+    linarith
+  have hxN : ∀ i, |x.val i| ≤ 9 * 3 ^ m := by
+    intro i
+    have hd : dist (latticeEuclideanEmbedding x.val) (latticeEuclideanEmbedding (0 : Vertex 2)) <
+        R := by
+      rw [mem_componentEuclideanBall] at hx; exact hx
+    have hc := abs_sub_le_dist_latticeEuclideanEmbedding x.val (0 : Vertex 2) i
+    have hc' : |((x.val i : ℤ) : ℝ)| < 9 * 3 ^ m := by
+      have e : (((0 : Vertex 2) i : ℤ) : ℝ) = 0 := by simp
+      rw [e, sub_zero] at hc
+      linarith
+    have : ((|x.val i| : ℤ) : ℝ) < ((9 * 3 ^ m : ℤ) : ℝ) := by push_cast; exact hc'
+    exact_mod_cast this.le
+  have hbound := h m (by omega) x hxN
+  have hcorr : |u x - componentSlope C q x| = |componentCorrector C q u x| := rfl
+  rw [hcorr]
+  refine hbound.trans ?_
+  -- the two terms
+  set y : ℝ := (3 : ℝ) ^ (((m + 1 : ℕ) : ℝ) * η) with hy
+  have hypow : ∀ k : ℕ, y ^ k = (3 : ℝ) ^ (k * ((((m + 1 : ℕ) : ℝ)) * η)) := fun k => by
+    rw [hy, ← Real.rpow_natCast, ← Real.rpow_mul (by norm_num)]; ring_nf
+  have hy7pos : 0 < y ^ 7 := by positivity
+  have hlarge : max (54 * c₄ / ε) (2 * c₃ / ε) ≤ y ^ 7 := by
+    rw [hypow]
+    refine le_trans ?_ (le_three_rpow (by positivity))
+    have hm1 : (m₁ : ℝ) ≤ ((m + 1 : ℕ) : ℝ) := by
+      have : m₁ ≤ m + 1 := by omega
+      exact_mod_cast this
+    rw [div_le_iff₀ (by positivity)] at hm₁
+    have h7 := mul_le_mul_of_nonneg_right hm1 (by positivity : (0 : ℝ) ≤ 7 * η)
+    calc max (54 * c₄ / ε) (2 * c₃ / ε) ≤ (m₁ : ℝ) * (7 * η) := hm₁
+      _ ≤ ((m + 1 : ℕ) : ℝ) * (7 * η) := h7
+      _ = ((7 : ℕ) : ℝ) * ((((m + 1 : ℕ) : ℝ)) * η) := by push_cast; ring
+  have hy14 : y ^ 7 * y ^ 7 ≤ (3 : ℝ) ^ (m + 1) := by
+    rw [← pow_add, hypow, ← Real.rpow_natCast]
+    apply Real.rpow_le_rpow_of_exponent_le (by norm_num)
+    have h0 : (0 : ℝ) ≤ ((m + 1 : ℕ) : ℝ) := Nat.cast_nonneg _
+    have := mul_le_mul_of_nonneg_left hη28 h0
+    calc (((7 + 7 : ℕ) : ℝ)) * ((((m + 1 : ℕ) : ℝ)) * η) = 14 * ((((m + 1 : ℕ) : ℝ)) * η) := by
+          push_cast; ring
+      _ ≤ 14 * ((((m + 1 : ℕ) : ℝ)) * (1 / 28)) := by linarith
+      _ ≤ ((m + 1 : ℕ) : ℝ) := by linarith
+  have hc3 : c₃ ≤ ε / 2 * y ^ 7 := by
+    have := (le_max_right _ _).trans hlarge
+    rw [div_le_iff₀ hε] at this
+    linarith
+  have hc4 : 27 * c₄ ≤ ε / 2 * y ^ 7 := by
+    have := (le_max_left _ _).trans hlarge
+    rw [div_le_iff₀ hε] at this
+    linarith
+  have t1 : c₃ * y ^ 7 ≤ ε / 2 * R := by
+    calc c₃ * y ^ 7 ≤ ε / 2 * y ^ 7 * y ^ 7 := mul_le_mul_of_nonneg_right hc3 hy7pos.le
+      _ = ε / 2 * (y ^ 7 * y ^ 7) := by ring
+      _ ≤ ε / 2 * R := mul_le_mul_of_nonneg_left (hy14.trans hlowR) (by positivity)
+  have t2 : c₄ * (9 * 3 ^ m) / y ^ 7 ≤ ε / 2 * R := by
+    rw [div_le_iff₀ hy7pos]
+    calc c₄ * (9 * 3 ^ m) ≤ c₄ * (27 * R) := mul_le_mul_of_nonneg_left hNR hc₄
+      _ = 27 * c₄ * R := by ring
+      _ ≤ ε / 2 * y ^ 7 * R := mul_le_mul_of_nonneg_right hc4 (by linarith)
+      _ = ε / 2 * R * y ^ 7 := by ring
+  linarith
+
 end Rigidity.Proofs.Regularity
