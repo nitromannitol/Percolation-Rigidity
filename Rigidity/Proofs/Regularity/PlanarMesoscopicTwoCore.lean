@@ -43,8 +43,8 @@ theorem iInf_clusterBallVolumeL2_le_of_le {ι : Type*} [Nonempty ι] (C : OpenCo
     (⨅ i, clusterBallVolumeL2 C s (u - w i)) ≤ 0 + R / s * ⨅ i, clusterBallVolumeL2 C R (u - w i) :=
   le_add_mul_iInf (div_nonneg (hs.le.trans hsR) hs.le) fun i => by
     rw [zero_add]
-    exact (iInf_le_of_le (fun _ => clusterBallVolumeL2_nonneg _ _ _) i).trans
-      (clusterBallVolumeL2_le_of_le C hs hsR _)
+    exact (iInf_le_of_le (fun _ => clusterBallVolumeL2_nonneg' _ _ _) i).trans
+      (clusterBallVolumeL2_le_of_le' C hs hsR _)
 
 theorem rpow_cube_le {r R β : ℝ} (hr : 1 ≤ r) (hrR : r ≤ R) (hβ : 0 ≤ β) :
     (r / R) ^ 3 * R ^ (1 - β) ≤ r ^ (1 - β) := by

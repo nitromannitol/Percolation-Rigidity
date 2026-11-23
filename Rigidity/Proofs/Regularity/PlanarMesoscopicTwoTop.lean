@@ -116,7 +116,7 @@ theorem sum_abs_coarse_sub_quad_top_le (hP : PlanarPartitionEvent ω)
   rw [hcl] at h1
   refine h1.trans (add_le_add ?_ ?_)
   · exact mul_le_mul_of_nonneg_right (Real.sqrt_le_sqrt hm₂') (by
-      have := clusterBallVolumeL2_nonneg (uniqueInfiniteComponent h) R
+      have := clusterBallVolumeL2_nonneg' (uniqueInfiniteComponent h) R
         (u - fun x => latticeQuadFun a p M x.val)
       positivity)
   · exact mul_le_mul_of_nonneg_left hm₁' (by positivity)
@@ -128,7 +128,7 @@ theorem clusterBallVolumeL2_neg (C : OpenComponent ω) (r : ℝ) (f : C → ℝ)
 theorem clusterBallVolumeL2_sub_le (C : OpenComponent ω) (r : ℝ) (f g : C → ℝ) :
     clusterBallVolumeL2 C r (f - g) ≤ clusterBallVolumeL2 C r f + clusterBallVolumeL2 C r g := by
   rw [sub_eq_add_neg, ← clusterBallVolumeL2_neg C r g]
-  exact clusterBallVolumeL2_add_le C r f (-g)
+  exact clusterBallVolumeL2_add_le' C r f (-g)
 
 /-- `‖·‖_{L̲²(C ∩ B_R)} ≤ √(72/κ) R^{-1} ‖·‖_{ℓ²(C ∩ B_R)}` under the density in cubes. -/
 theorem componentBallL2_le_clusterBallVolumeL2 (C : OpenComponent ω) {ℓ κ R : ℝ} (hκ : 0 < κ)

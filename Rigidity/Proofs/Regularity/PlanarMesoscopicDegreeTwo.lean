@@ -91,7 +91,7 @@ theorem coarseApproximationAt_of_planar {ω : Configuration 2}
   obtain ⟨h1, h2, -⟩ := H R hR u hu
   have hR0 : 0 ≤ R := le_trans (mul_nonneg (by linarith) (by linarith)) hR
   exact ⟨h1.mono_exponent hX (by linarith) (mul_nonneg (div_nonneg hK hR0)
-    (iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg _ _ _)) hαα, h2⟩
+    (iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg' _ _ _)) hαα, h2⟩
 
 /-- The ball `B_R` lies in the triadic cube `□_m ∋ 0` when `2R + 1 ≤ 3^m`. -/
 theorem mem_cube_zero_of_dist_lt {R : ℝ} {m : ℕ} (hm : 2 * R + 1 ≤ (3 : ℝ) ^ m) {y : Vertex 2}

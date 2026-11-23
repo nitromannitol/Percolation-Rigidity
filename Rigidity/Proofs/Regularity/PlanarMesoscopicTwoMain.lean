@@ -415,8 +415,8 @@ theorem mesoscopicDegreeTwo_core {A α K K₁ K₂ κ cS : ℝ} (hA : 2 ≤ A) (
   have hS'16 : cS * R ^ (α / 2) ≤ R / 16 := mul_rpow_half_le hcS hα1 (hr₀g.trans hr₀R)
   have hS'8 : cS * R ^ (α / 2) ≤ R / 8 := by linarith
   -- the hypotheses at the radii `T`, `R / 2` and `R`
-  obtain ⟨HA_T, -⟩ := hca T hAXT u (harm.mono (hTR.trans (half_le_self hR0.le)))
-  obtain ⟨HA_H, -⟩ := hca (R / 2) (hAXT.trans hTR) u (harm.mono (half_le_self hR0.le))
+  obtain ⟨HA_T, -⟩ := hca T hAXT u (harm.mono' (hTR.trans (half_le_self hR0.le)))
+  obtain ⟨HA_H, -⟩ := hca (R / 2) (hAXT.trans hTR) u (harm.mono' (half_le_self hR0.le))
   obtain ⟨-, CC⟩ := hca R ((hAXT.trans hTR).trans (half_le_self hR0.le)) u harm
   obtain ⟨D0R, hD0R⟩ : ∃ x : ℝ,
       x = ⨅ a : ℝ, clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => a) :=
@@ -424,9 +424,9 @@ theorem mesoscopicDegreeTwo_core {A α K K₁ K₂ κ cS : ℝ} (hA : 2 ≤ A) (
   obtain ⟨D2R, hD2R⟩ : ∃ x : ℝ, x = ⨅ w : clusterHarmonicQuadratic (uniqueInfiniteComponent h),
       clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - w) := ⟨_, rfl⟩
   have hD0R0 : 0 ≤ D0R := by
-    rw [hD0R]; exact iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg _ _ _
+    rw [hD0R]; exact iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg' _ _ _
   have hD2R0 : 0 ≤ D2R := by
-    rw [hD2R]; exact iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg _ _ _
+    rw [hD2R]; exact iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg' _ _ _
   -- the harmonic approximation error at `4T` and the top-scale bounds
   have hB := harmonicApproximation_error_le hP h u hA hK hR12 hS'0 hS'8
     (by rw [← hT]; exact hX4T) hsize HA_H
@@ -451,7 +451,7 @@ theorem mesoscopicDegreeTwo_core {A α K K₁ K₂ κ cS : ℝ} (hA : 2 ≤ A) (
   have hET0 : 0 ≤ ET := by
     rw [hET]
     exact mul_nonneg (div_nonneg hK hT0.le)
-      (iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg _ _ _)
+      (iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg' _ _ _)
   have hETG : ET ≤ 64 * K * A ^ 2 * G := by
     have h1 := iInf_clusterBallVolumeL2_le_of_le (ι := ℝ) (uniqueInfiniteComponent h) hT0
       (hTR.trans (half_le_self hR0.le)) u fun a => fun _ => a
@@ -514,12 +514,12 @@ theorem mesoscopicDegreeTwo_core {A α K K₁ K₂ κ cS : ℝ} (hA : 2 ≤ A) (
   have hGu : G ≤ clusterBallVolumeL2 (uniqueInfiniteComponent h) R u / R := by
     have h1 : (⨅ a : ℝ, clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => a)) ≤
         clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => (0 : ℝ)) :=
-      iInf_le_of_le (fun _ => clusterBallVolumeL2_nonneg _ _ _) 0
+      iInf_le_of_le (fun _ => clusterBallVolumeL2_nonneg' _ _ _) 0
     have e : (u - fun _ => (0 : ℝ)) = u := by funext x; simp
     rw [e, ← hD0R] at h1
     rw [hG]
     exact div_le_div_of_nonneg_right h1 hR0.le
-  have hu0 := clusterBallVolumeL2_nonneg (uniqueInfiniteComponent h) R u
+  have hu0 := clusterBallVolumeL2_nonneg' (uniqueInfiniteComponent h) R u
   rw [← hD2R]
   by_cases hrT : r ≤ T / 2
   · -- below the top scale

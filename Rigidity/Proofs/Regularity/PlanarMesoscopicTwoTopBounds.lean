@@ -48,7 +48,7 @@ theorem harmonicApproximation_error_le (hP : PlanarPartitionEvent ω)
   have hT0 : 0 < T := by positivity
   set D0R := ⨅ a : ℝ, clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => a)
     with hD0R
-  have hD0R0 : 0 ≤ D0R := iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg _ _ _
+  have hD0R0 : 0 ≤ D0R := iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg' _ _ _
   set U : latticeComponent 2 → ℝ := fun x => coarseAtAnchor (uniqueInfiniteComponent h) u x.val
     with hU
   have h4T : 4 * T ≤ R / 2 / A := by
@@ -88,8 +88,8 @@ theorem harmonicApproximation_error_le (hP : PlanarPartitionEvent ω)
     apply le_add_mul_iInf (by norm_num)
     intro c
     have h1 := iInf_le_of_le (f := fun a : ℝ => clusterBallVolumeL2 (uniqueInfiniteComponent h)
-      (R / 2) (u - fun _ => a)) (fun _ => clusterBallVolumeL2_nonneg _ _ _) c
-    have h2 := clusterBallVolumeL2_le_of_le (uniqueInfiniteComponent h) (by linarith : 0 < R / 2)
+      (R / 2) (u - fun _ => a)) (fun _ => clusterBallVolumeL2_nonneg' _ _ _) c
+    have h2 := clusterBallVolumeL2_le_of_le' (uniqueInfiniteComponent h) (by linarith : 0 < R / 2)
       (by linarith : R / 2 ≤ R) (u - fun _ => c)
     have e : R / (R / 2) = 2 := by field_simp
     rw [e] at h2
@@ -216,7 +216,7 @@ theorem coarse_top_bounds {A K₁ K₂ κ : ℝ} (hA : 2 ≤ A) (hK₁ : 0 ≤ K
     with hU
   set D0R := ⨅ a : ℝ, clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => a)
     with hD0R
-  have hD0R0 : 0 ≤ D0R := iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg _ _ _
+  have hD0R0 : 0 ≤ D0R := iInf_nonneg_of_nonneg fun _ => clusterBallVolumeL2_nonneg' _ _ _
   have hCt := coarseTopConst_nonneg
   -- a near approximant at `4T`
   have hv : ∀ η : ℝ, 0 < η → ∃ v ∈ latticeHarmonicClass (0 : Vertex 2) (4 * T),
@@ -255,7 +255,7 @@ theorem coarse_top_bounds {A K₁ K₂ κ : ℝ} (hA : 2 ≤ A) (hK₁ : 0 ≤ K
       rw [← hKc, ← hD0R] at hslope
       set E := clusterBallVolumeL2 (uniqueInfiniteComponent h) R
         (u - fun x => latticeQuadFun a p M x.val) with hE
-      have hE0 : 0 ≤ E := clusterBallVolumeL2_nonneg _ _ _
+      have hE0 : 0 ≤ E := clusterBallVolumeL2_nonneg' _ _ _
       set ΛR := (|p 0| + |p 1| + 2 * (|M 0 0| + |M 0 1 + M 1 0| + |M 1 1|) * R) * R with hΛR
       have hc0 : 0 ≤ C₁ * (2 * K₁) := by positivity
       have hthird : C₁ * (2 * K₁) * ΛR / R ≤
@@ -320,7 +320,7 @@ theorem coarse_top_bounds {A K₁ K₂ κ : ℝ} (hA : 2 ≤ A) (hK₁ : 0 ≤ K
             |(0 : Matrix (Fin 2) (Fin 2) ℝ) 1 1|) * R) * R = 0 := by simp
       rw [hzero, mul_zero, zero_div, add_zero] at h1
       set E := clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => c)
-      have hE0 : 0 ≤ E := clusterBallVolumeL2_nonneg _ _ _
+      have hE0 : 0 ≤ E := clusterBallVolumeL2_nonneg' _ _ _
       have hCa'' : C₁ * (Real.sqrt K₂ * E) ≤ C₁ * (Real.sqrt K₂ + 2 * K₁ * Kc) * E := by
         have : 0 ≤ C₁ * (2 * K₁ * Kc) * E := by positivity
         nlinarith

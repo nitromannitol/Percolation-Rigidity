@@ -53,17 +53,17 @@ theorem iInf_nonneg_of_nonneg {ι : Type*} {f : ι → ℝ} (hf : ∀ i, 0 ≤ f
 theorem iInf_le_of_le {ι : Type*} {f : ι → ℝ} (hf : ∀ i, 0 ≤ f i) (i : ι) : ⨅ i, f i ≤ f i :=
   ciInf_le ⟨0, fun _ ⟨j, hj⟩ => hj ▸ hf j⟩ i
 
-theorem IsHarmonicInBall.mono {C : OpenComponent ω} {R R' : ℝ} {u : C → ℝ}
+theorem IsHarmonicInBall.mono' {C : OpenComponent ω} {R R' : ℝ} {u : C → ℝ}
     (h : IsHarmonicInBall C R u) (hR : R' ≤ R) : IsHarmonicInBall C R' u :=
   fun x hx hnb => h x (componentEuclideanBall_mono C 0 hR hx)
     fun y hy => componentEuclideanBall_mono C 0 hR (hnb y hy)
 
-theorem clusterBallVolumeL2_nonneg (C : OpenComponent ω) (r : ℝ) (f : C → ℝ) :
+theorem clusterBallVolumeL2_nonneg' (C : OpenComponent ω) (r : ℝ) (f : C → ℝ) :
     0 ≤ clusterBallVolumeL2 C r f :=
   Real.sqrt_nonneg _
 
 /-- The normalized cluster norm on a smaller ball. -/
-theorem clusterBallVolumeL2_le_of_le (C : OpenComponent ω) {s R : ℝ} (hs : 0 < s) (hsR : s ≤ R)
+theorem clusterBallVolumeL2_le_of_le' (C : OpenComponent ω) {s R : ℝ} (hs : 0 < s) (hsR : s ≤ R)
     (f : C → ℝ) : clusterBallVolumeL2 C s f ≤ R / s * clusterBallVolumeL2 C R f := by
   have hR : 0 < R := hs.trans_le hsR
   have hsum : ∑ x ∈ componentEuclideanBall C 0 s, f x ^ 2 ≤
@@ -81,7 +81,7 @@ theorem clusterBallVolumeL2_le_of_le (C : OpenComponent ω) {s R : ℝ} (hs : 0 
     _ = R ^ 2 / s ^ 2 * ((∑ x ∈ componentEuclideanBall C 0 R, f x ^ 2) / R ^ 2) := by
         field_simp
 
-theorem clusterBallVolumeL2_add_le (C : OpenComponent ω) (r : ℝ) (f g : C → ℝ) :
+theorem clusterBallVolumeL2_add_le' (C : OpenComponent ω) (r : ℝ) (f g : C → ℝ) :
     clusterBallVolumeL2 C r (f + g) ≤ clusterBallVolumeL2 C r f + clusterBallVolumeL2 C r g := by
   rcases le_or_gt r 0 with hr | hr
   · simp [clusterBallVolumeL2, componentEuclideanBall_eq_empty C 0 hr]
@@ -108,10 +108,10 @@ theorem clusterExcess_two_le (h : HasUniqueInfiniteOpenComponent ω)
   set U : Vertex 2 → ℝ := coarseAtAnchor (uniqueInfiniteComponent h) u with hU
   have h1 := iInf_le_of_le (f := fun w : clusterHarmonicQuadratic (uniqueInfiniteComponent h) =>
     clusterBallVolumeL2 (uniqueInfiniteComponent h) r (u - w))
-    (fun _ => clusterBallVolumeL2_nonneg _ _ _) ⟨w, hmem⟩
+    (fun _ => clusterBallVolumeL2_nonneg' _ _ _) ⟨w, hmem⟩
   have e : u - w = (u - fun x => U x.val) + fun x => (fun y => U y - latticeQuadFun a p M y) x.val := by
     funext x; simp only [Pi.sub_apply, Pi.add_apply, hw]; ring
-  have h2 := clusterBallVolumeL2_add_le (uniqueInfiniteComponent h) r (u - fun x => U x.val)
+  have h2 := clusterBallVolumeL2_add_le' (uniqueInfiniteComponent h) r (u - fun x => U x.val)
     (fun x => (fun y => U y - latticeQuadFun a p M y) x.val)
   have h3 := clusterBallVolumeL2_le_three_mul (uniqueInfiniteComponent h) hr
     (fun y => U y - latticeQuadFun a p M y)
@@ -142,10 +142,10 @@ theorem clusterExcess_zero_le (h : HasUniqueInfiniteOpenComponent ω)
   set U : Vertex 2 → ℝ := coarseAtAnchor (uniqueInfiniteComponent h) u with hU
   have h1 := iInf_le_of_le (f := fun a : ℝ =>
     clusterBallVolumeL2 (uniqueInfiniteComponent h) r (u - fun _ => a))
-    (fun _ => clusterBallVolumeL2_nonneg _ _ _) c
+    (fun _ => clusterBallVolumeL2_nonneg' _ _ _) c
   have e : (u - fun _ => c) = (u - fun x => U x.val) + fun x => (fun y => U y - c) x.val := by
     funext x; simp only [Pi.sub_apply, Pi.add_apply]; ring
-  have h2 := clusterBallVolumeL2_add_le (uniqueInfiniteComponent h) r (u - fun x => U x.val)
+  have h2 := clusterBallVolumeL2_add_le' (uniqueInfiniteComponent h) r (u - fun x => U x.val)
     (fun x => (fun y => U y - c) x.val)
   have h3 := clusterBallVolumeL2_le_three_mul (uniqueInfiniteComponent h) hr (fun y => U y - c)
   have e2 : componentBallL2 (latticeComponent 2) 0 r (fun x => (fun y => U y - c) x.val) =

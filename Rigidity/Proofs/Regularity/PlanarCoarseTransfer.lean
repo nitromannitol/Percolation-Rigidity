@@ -10,7 +10,7 @@ value at the anchor of the partition cube), in the normalizations `r^{-1} ‖·�
 (`clusterBallVolumeL2`) on `C` and `‖·‖_{L̲²(B_r)}` (`componentBallL2` of `latticeComponent 2`) on
 the lattice:
 
-* the lattice balls have at least `ρ²` points (`le_card_latticeBall`), and the cluster ball of
+* the lattice balls have at least `ρ²` points (`le_card_latticeBall'`), and the cluster ball of
   radius `r ≥ 3` carries at most `9` times the normalized norm of the lattice ball
   (`clusterBallVolumeL2_le_three_mul`);
 * if the anchors of the points of `B_ρ` lie in `C ∩ B_R` and the partition cubes there have at most
@@ -61,7 +61,7 @@ theorem sum_le_sum_componentEuclideanBall (C : OpenComponent ω) {S : Finset (Ve
     (hS y hy)) fun y _ _ => hf y
 
 /-- **A lattice ball of radius `ρ ≥ 3` has at least `ρ²` points.** -/
-theorem le_card_latticeBall (z : Vertex 2) {ρ : ℝ} (hρ : 3 ≤ ρ) :
+theorem le_card_latticeBall' (z : Vertex 2) {ρ : ℝ} (hρ : 3 ≤ ρ) :
     ρ ^ 2 ≤ ((componentEuclideanBall (latticeComponent 2) z ρ).card : ℝ) := by
   classical
   set L := ⌊7 * ρ / 10⌋₊ with hL
@@ -124,7 +124,7 @@ theorem clusterBallVolumeL2_le_three_mul (C : OpenComponent ω) {r : ℝ} (hr : 
         ring
 
 /-- The cluster function as a function on `ℤ²`, `0` off the cluster. -/
-theorem extend_val (C : OpenComponent ω) (f : C → ℝ) (x : C) :
+theorem extend_val' (C : OpenComponent ω) (f : C → ℝ) (x : C) :
     Rigidity.Section3.extend C f x.val = f x := by
   rw [Rigidity.Section3.extend]
   exact dif_pos (show x.val ∈ C.supp from x.2)
@@ -166,10 +166,10 @@ theorem componentBallL2_coarse_sub_const_le (hP : PlanarPartitionEvent ω)
         (by positivity))]
       have e : ∀ x : (uniqueInfiniteComponent h),
           f x.val ^ 2 = ((u - fun _ => a : uniqueInfiniteComponent h → ℝ) x) ^ 2 := fun x => by
-        simp only [hf, extend_val, Pi.sub_apply]
+        simp only [hf, extend_val', Pi.sub_apply]
       rw [sum_congr rfl fun x _ => e x]
       field_simp
-  have hcard := le_card_latticeBall 0 hρ
+  have hcard := le_card_latticeBall' 0 hρ
   have hK : 0 ≤ S * R / ρ * clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => a) := by
     rcases le_or_gt R 0 with hR | hR
     · have : clusterBallVolumeL2 (uniqueInfiniteComponent h) R (u - fun _ => a) = 0 := by
@@ -224,7 +224,7 @@ theorem sum_abs_coarse_sub_le (hP : PlanarPartitionEvent ω)
         exact ⟨planarCoarseAnchor_mem_uniqueInfiniteComponent hP h x, hanchor x hx⟩)
       (fun y => f y ^ 2) fun _ => sq_nonneg _
     refine this.trans (le_of_eq (sum_congr rfl fun x _ => ?_))
-    simp only [hf, extend_val]
+    simp only [hf, extend_val']
   have hA0 : 0 ≤ ∑ y ∈ latticeBallPoints 0 ρ, ((3 : ℝ) ^ (planarPartCube ω y).scale) ^ 2 :=
     sum_nonneg fun _ _ => sq_nonneg _
   have hfirst : ∑ y ∈ latticeBallPoints 0 ρ, |f (planarCoarseAnchor ω y)| ≤
