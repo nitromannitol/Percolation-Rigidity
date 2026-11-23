@@ -321,6 +321,19 @@ import Rigidity.Proofs.Cluster.GeneralMuStationary
 import Rigidity.Proofs.Cluster.GeneralMuSubadditiveError
 import Rigidity.Proofs.Cluster.GeneralMuSubadditiveMoments
 import Rigidity.Proofs.Corrector.DarioStationaryPartition
+import Rigidity.Proofs.Corrector.DarioBondResampling
+import Rigidity.Proofs.Corrector.DarioCaseOneTwo
+import Rigidity.Proofs.Corrector.DarioCaseThree
+import Rigidity.Proofs.Corrector.DarioCaseThreeAe
+import Rigidity.Proofs.Corrector.DarioCaseThreeClosed
+import Rigidity.Proofs.Corrector.DarioCaseThreeCorrector
+import Rigidity.Proofs.Corrector.DarioCaseThreePairing
+import Rigidity.Proofs.Corrector.DarioClusterGreen
+import Rigidity.Proofs.Corrector.DarioCoarseHeatField
+import Rigidity.Proofs.Corrector.DarioFiniteEnergyGrowth
+import Rigidity.Proofs.Corrector.DarioFiniteEnergySublinear
+import Rigidity.Proofs.Corrector.DarioFlipCluster
+import Rigidity.Proofs.Corrector.DarioLemmaThreeThreeFlip
 import Rigidity.Proofs.Corrector.PeriodicHeatDecay
 import Rigidity.Proofs.Regularity.PlanarCorrectorL2
 import Rigidity.Proofs.Regularity.PlanarScaleMaxima
@@ -1134,3 +1147,40 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.sum_mul_le_cubeMuLimit_add_cubeNuLimit
 #print axioms Rigidity.Percolation.cubeMuLimit_ge_of_cubeAhom_eq_smul_one
 #print axioms Rigidity.Percolation.exists_cubeMuLimit_two_sided
+
+-- Lemma 3.3 of Dario in dimension two: the flip form of (3.13), Propositions 2.11 and 2.12 as an orthogonal projection, (3.22), (3.26), (3.27), and Cases 1 to 3 of Step 2
+#print axioms Rigidity.Corrector.condExp_bondsExcept_ae_eq
+#print axioms Rigidity.Corrector.ae_resampleVar_le_tsum_bondFlipDiff
+#print axioms Rigidity.Corrector.lintegral_eq_setBond
+#print axioms Rigidity.Corrector.IsOsBond.comp_setBond
+#print axioms Rigidity.Corrector.darioLemmaThreeThree_of_flipSum
+#print axioms Rigidity.Corrector.edgeDiv_greenProj
+#print axioms Rigidity.Corrector.eq_greenProj_of_edgeDiv_eq
+#print axioms Rigidity.Corrector.exists_isGradOf_greenProj
+#print axioms Rigidity.Corrector.norm_greenProj_le
+#print axioms Rigidity.Corrector.inner_greenProj_comm
+#print axioms Rigidity.Corrector.greenProj_apply_eq_tsum
+#print axioms Rigidity.Corrector.heatComp_coarse_eq_inner
+#print axioms Rigidity.Corrector.abs_coarseHeatField_apply_le
+#print axioms Rigidity.Corrector.abs_sub_coarseAnchor_zero_le
+#print axioms Rigidity.Corrector.ae_abs_sub_coarseAnchor_le_of_finiteEnergy
+#print axioms Rigidity.Corrector.laplacian_openGraph_eq_edgeDiv
+#print axioms Rigidity.Corrector.localEnergy_le_of_isGradOf
+#print axioms Rigidity.Corrector.edgeGrad_eq_smul_greenProj_of_div
+#print axioms Rigidity.Corrector.ae_sublinearOn_of_isGradOf
+#print axioms Rigidity.Corrector.ae_edgeGrad_eq_smul_greenProj_of_div
+#print axioms Rigidity.Corrector.ae_edgeGrad_eq_smul_greenProj
+#print axioms Rigidity.Corrector.edgeDiv_edgeGrad_setBond
+#print axioms Rigidity.Corrector.ae_setBond
+#print axioms Rigidity.Corrector.mem_supp_iff_of_mem_supp_setBond_false
+#print axioms Rigidity.Corrector.ae_correctedPlane_sub_eq_smul_greenProj
+#print axioms Rigidity.Corrector.heatComp_coarse_eq_smul_greenProj
+#print axioms Rigidity.Corrector.ae_heatComp_coarse_sub_eq_smul_greenProj
+#print axioms Rigidity.Corrector.abs_sub_le_two_mul_edgeVariation
+#print axioms Rigidity.Corrector.heatComp_coarse_eq_smul_inner_greenProj
+#print axioms Rigidity.Corrector.edgeDiv_pathField
+#print axioms Rigidity.Corrector.ae_correctedPlane_sub_eq_smul_greenProj_closed
+#print axioms Rigidity.Corrector.ae_heatComp_coarse_sub_eq_walkSum_closed
+#print axioms Rigidity.Corrector.isCorrectedPlane_of_harmonic
+#print axioms Rigidity.Corrector.le_of_finite_piece
+#print axioms Rigidity.Corrector.ae_exists_correctedPlane_eq_add_const
