@@ -107,7 +107,7 @@ theorem lazyPow_symm (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) (n : ℕ) (x 
   exact LatticeProb.kernelPow_symm (lazyKernel_nonneg hD hdeg) (hasSum_lazyKernel hD)
     lazyKernel_symm n x y
 
-theorem hasSum_lazyPow (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) (n : ℕ) (x : V) :
+theorem hasSum_lazyPow_of_degree_le (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) (n : ℕ) (x : V) :
     HasSum (lazyPow G D n x) 1 := by
   rw [lazyPow_eq_kernelPow hD hdeg]
   exact LatticeProb.kernelPow_hasSum (lazyKernel_nonneg hD hdeg) (hasSum_lazyKernel hD) n x
@@ -119,7 +119,7 @@ theorem lazyPow_add (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) (m n : ℕ) (x
 
 theorem summable_lazyPow_mul (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) (m n : ℕ) (x z : V) :
     Summable fun y => lazyPow G D m x y * lazyPow G D n y z :=
-  (hasSum_lazyPow hD hdeg m x).summable.of_nonneg_of_le
+  (hasSum_lazyPow_of_degree_le hD hdeg m x).summable.of_nonneg_of_le
     (fun y => mul_nonneg (lazyPow_mem_Icc hD hdeg m x y).1 (lazyPow_mem_Icc hD hdeg n y z).1)
     (fun y => mul_le_of_le_one_right (lazyPow_mem_Icc hD hdeg m x y).1
       (lazyPow_mem_Icc hD hdeg n y z).2)
@@ -162,7 +162,7 @@ theorem ofReal_vsrwHeat (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {t : ℝ} 
 theorem tsum_ofReal_lazyPow (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) (n : ℕ) (x : V) :
     ∑' y, ENNReal.ofReal (lazyPow G D n x y) = 1 := by
   rw [← ENNReal.ofReal_tsum_of_nonneg (fun y => (lazyPow_mem_Icc hD hdeg n x y).1)
-    (hasSum_lazyPow hD hdeg n x).summable, (hasSum_lazyPow hD hdeg n x).tsum_eq,
+    (hasSum_lazyPow_of_degree_le hD hdeg n x).summable, (hasSum_lazyPow_of_degree_le hD hdeg n x).tsum_eq,
     ENNReal.ofReal_one]
 
 theorem tsum_ofReal_poissonWeight {t : ℝ} (ht : 0 ≤ t) :
