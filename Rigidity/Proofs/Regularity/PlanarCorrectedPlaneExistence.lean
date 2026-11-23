@@ -27,15 +27,35 @@ theorem eventually_le_three_pow (B : ℝ) : ∃ m₀ : ℕ, ∀ m : ℕ, m₀ �
   obtain ⟨m₀, hm₀⟩ := pow_unbounded_of_one_lt B (by norm_num : (1 : ℝ) < 3)
   exact ⟨m₀, fun m hm => hm₀.le.trans (pow_le_pow_right₀ (by norm_num) hm)⟩
 
-/-- **Every slope has a corrected plane on the planar cluster**, from (1.18), the order-zero
-regularity and the minimal scales of Proposition 2.4. -/
-theorem planarCorrectedPlaneExistenceTwo_of_sublinearL2 (h118 : PlanarCorrectorSublinearL2Two)
+/-- (1.18) with an almost surely finite minimal scale (the form used for the corrected planes). -/
+def PlanarCorrectorSublinearL2AeTwo : Prop :=
+  ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+    ∃ δ K : ℝ, 0 < δ ∧ 0 ≤ K ∧
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ q : Fin 2 → ℝ,
+        ∃ u : uniqueInfiniteComponent h → ℝ,
+          u ∈ harmonicGrowthSpace (uniqueInfiniteComponent h) 1 ∧ ∃ X : ℝ, ∀ r : ℝ, X ≤ r →
+            componentBallL2 (uniqueInfiniteComponent h) 0 r
+                (fun x => u x - componentSlope (uniqueInfiniteComponent h) q x) ≤
+              K * (|q 0| + |q 1|) * r ^ (1 - δ)
+
+theorem planarCorrectorSublinearL2AeTwo_of_sublinearL2 (h118 : PlanarCorrectorSublinearL2Two) :
+    PlanarCorrectorSublinearL2AeTwo := by
+  intro p hpc hp1
+  obtain ⟨s, δ, θ, K, -, hδ, -, hK, X, -, -, -, hae⟩ := h118 p hpc hp1
+  refine ⟨δ, K, hδ, hK, ?_⟩
+  filter_upwards [hae] with ω hω h q
+  obtain ⟨u, hu, hb⟩ := hω h q
+  exact ⟨u, hu, X ω, hb⟩
+
+/-- **Every slope has a corrected plane on the planar cluster**, from (1.18) with an almost surely
+finite minimal scale, the order-zero regularity and the minimal scales of Proposition 2.4. -/
+theorem planarCorrectedPlaneExistenceTwo_of_sublinearL2Ae (h118 : PlanarCorrectorSublinearL2AeTwo)
     (hR3 : ArmstrongDarioOrderZeroTwo)
     (hM5 : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
       PlanarMinimalScalesTwo p) :
     PlanarCorrectedPlaneExistenceTwo := by
   intro p hpc hp1
-  obtain ⟨s₁, δ₁, θ₁, K, hs₁, hδ₁, hθ₁, hK, X₁, -, -, -, hae₁⟩ := h118 p hpc hp1
+  obtain ⟨δ₁, K, hδ₁, hK, hae₁⟩ := h118 p hpc hp1
   obtain ⟨δ, hδdef⟩ : ∃ δ : ℝ, δ = min δ₁ 1 := ⟨_, rfl⟩
   have hδ0 : 0 < δ := by rw [hδdef]; exact lt_min hδ₁ one_pos
   have hδ1 : δ ≤ 1 := by rw [hδdef]; exact min_le_right _ _
@@ -55,7 +75,7 @@ theorem planarCorrectedPlaneExistenceTwo_of_sublinearL2 (h118 : PlanarCorrectorS
   filter_upwards [hae₁, hae₃, hBC, hM₆ae, hM₄ae, ae_planarPartitionEvent hpc] with
     ω hω₁ hω₃ hωBC hω₆ hω₄ hP
   intro h q
-  obtain ⟨u, hu, hL2⟩ := hω₁ h q
+  obtain ⟨u, hu, X₁, hL2⟩ := hω₁ h q
   refine ⟨u, hu, ?_⟩
   obtain ⟨-, hω₃'⟩ := hω₃
   have hR3ω := hω₃' h
@@ -64,7 +84,7 @@ theorem planarCorrectedPlaneExistenceTwo_of_sublinearL2 (h118 : PlanarCorrectorS
   have hκ : 0 < theta 2 p / 2 := by positivity
   -- the thresholds
   obtain ⟨ma, hma⟩ := eventually_le_three_pow (max (M₆ ω) (M₄ ω))
-  obtain ⟨mb, hmb⟩ := eventually_le_three_pow (X₁ ω)
+  obtain ⟨mb, hmb⟩ := eventually_le_three_pow X₁
   obtain ⟨mc, hmc⟩ := exists_nat_ge (1 / (7 * η))
   set m₀ := max (max (max ma mb) (mc + 3)) k₀ with hm₀
   set K' : ℝ := 6 * K with hK'
@@ -115,7 +135,7 @@ theorem planarCorrectedPlaneExistenceTwo_of_sublinearL2 (h118 : PlanarCorrectorS
   -- (1.18) at `6N`
   have hL2' : componentBallL2 (uniqueInfiniteComponent h) 0 (6 * (9 * 3 ^ m)) (componentCorrector (uniqueInfiniteComponent h) q u) ≤
       K' * qn * (9 * 3 ^ m) / y ^ 28 := by
-    have hX : X₁ ω ≤ 6 * (9 * 3 ^ m) := by
+    have hX : X₁ ≤ 6 * (9 * 3 ^ m) := by
       have := hmb m hmb'
       have h3 : (0 : ℝ) ≤ 3 ^ m := by positivity
       linarith
@@ -190,6 +210,16 @@ theorem planarCorrectedPlaneExistenceTwo_of_sublinearL2 (h118 : PlanarCorrectorS
   refine hmain.trans (le_of_eq ?_)
   rw [hCL, hqn]
   ring
+
+/-- **Every slope has a corrected plane on the planar cluster**, from (1.18), the order-zero
+regularity and the minimal scales of Proposition 2.4. -/
+theorem planarCorrectedPlaneExistenceTwo_of_sublinearL2 (h118 : PlanarCorrectorSublinearL2Two)
+    (hR3 : ArmstrongDarioOrderZeroTwo)
+    (hM5 : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarMinimalScalesTwo p) :
+    PlanarCorrectedPlaneExistenceTwo :=
+  planarCorrectedPlaneExistenceTwo_of_sublinearL2Ae
+    (planarCorrectorSublinearL2AeTwo_of_sublinearL2 h118) hR3 hM5
 
 /-- **The planar corrector input** (R2) from (1.18), the order-zero regularity, the minimal scales
 of Proposition 2.4 and the bound `dim 𝒜_1 ≤ 3` of Theorem 2 (i). -/
