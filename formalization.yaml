@@ -383,8 +383,15 @@ fidelity:
     corrector input as a theorem from the order-zero regularity, the existence of corrected planes and
     the bound dim A_1 <= 3, and for the planar Green-column existence, the quantitative corrector
     estimate and the quantitative Green estimate as theorems from the qualitative corrector input
-    with Theorem 1 of Dario (DarioOptimalCorrectorTwo) and the heat kernel estimate of Dario and Gu
-    (DarioGuHeatKernelTwo, for t >= 1), whose proofs are not included (the Carne-Varopoulos bound
+    with Theorem 1 of Dario (DarioOptimalCorrectorTwo, proved from the multiscale Poincare inequality
+    in cube form and Proposition 3.1 of Dario as named inputs, with moments in place of the O_s
+    calculus, the Lipschitz bound with max(X, 2)^2 and the log factor log(2 + |x - y|)) and the heat
+    kernel estimate of Dario and Gu
+    (DarioGuHeatKernelTwo, for t >= 1, proved by the induction of Section 4.3 from Lemma 4.1,
+    Proposition 4.3 and Proposition A.7 of Dario and Gu as named inputs, with Barlow's Gaussian bound and
+    the Carne-Varopoulos bound cited; Lemma 4.2 and the two-scale initial error are proved, the source
+    leaving the latter to the reader, and Proposition A.7 is used off the lattice by rounding)
+    (the Carne-Varopoulos bound
     for small times is proved for the lazy walk; the pairs of points in a ball are treated by a
     union bound and the time integral of the Gaussian kernel is normalized by its value at a unit
     vector), for

@@ -1786,7 +1786,7 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
   (`correctorQuantitativeInputTwo_of_dario`). `DarioOptimalCorrectorTwo` states: for every `p ∈ (𝔭_c(2), 1)`
   there are `s, C > 0` such that for all `x, y ∈ ℤ²` and every slope `q` there is a measurable `Z` with
   `Z ≤ O_s(C ‖q‖₁ √(log(2 + ‖x − y‖)))` and, almost surely, every corrected plane `ℓ` of slope `q` satisfies
-  `|(ℓ(x) − q·x) − (ℓ(y) − q·y)| ≤ Z` for `x, y` in the infinite cluster. It is a named hypothesis.
+  `|(ℓ(x) − q·x) − (ℓ(y) − q·y)| ≤ Z` for `x, y` in the infinite cluster. It is derived from named inputs in [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two).
 * **R7 in dimension two** (`SupercriticalBondGreenQuantitativeTwo`, Dario and Gu, Theorem 2) from
   `DarioGuHeatKernelTwo`, Theorem 1 of Dario and Gu for the heat kernel `openHeat` of the infinite cluster (for
   `t ≥ 1`), and the Liouville theorem at order zero, which follows from `SupercriticalBondCorrectorInputTwo` or
@@ -1807,9 +1807,11 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
 
 The twenty-seven reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). With the previous section, the three planar inputs
-are consequences of `DarioOptimalCorrectorTwo`, `DarioGuHeatKernelTwo`, `PlanarHarmonicApproximationTwo`,
-`PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`. The proofs of `DarioOptimalCorrectorTwo` and
-`DarioGuHeatKernelTwo` are not part of this repository.
+are consequences of `PlanarCorrectedPlaneExistenceTwo`, `PlanarOrderOneDimensionTwo`, `DarioGuHeatKernelTwo`,
+and the two inputs `MultiscalePoincareTwo` and `DarioPropThreeOneTwo` of [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two) (the order-zero regularity
+`PlanarHarmonicApproximationTwo` is proved, in
+[Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1)).
+`DarioGuHeatKernelTwo` is proved from named inputs in [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two).
 
 Departures from Dario and from Dario and Gu:
 
@@ -1827,12 +1829,148 @@ Misprints in the sources whose meaning is clear: Dario18.tex:216 and DG21.tex:10
 vanishes at `|x − y| = 1`, and the Lean statement uses `log^{1/2}(2 + |x − y|)`; AD18.tex:837-848 (the sign of the
 exponent of the tail).
 
+## Theorem 1 of Dario in dimension two
+
+Theorem 1 of Dario (*Optimal corrector estimates on percolation clusters*) in `d = 2`, the statement
+`DarioOptimalCorrectorTwo` (`|χ_q(x) − χ_q(y)| 1_{x, y ∈ 𝒞_∞} ≤ O_s(C ‖q‖₁ √(log(2 + ‖x − y‖)))`, see
+[the corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two)),
+and with it the quantitative corrector input `CorrectorQuantitativeInputTwo` of Dario and Gu are proved from the
+following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/)
+([`darioOptimalCorrectorTwo_of_inputs`, `correctorQuantitativeInputTwo_of_inputs`](Rigidity/Proofs/Corrector/PlanarDarioCorrectorHolds.lean)):
+
+* `SupercriticalBondCorrectorInputTwo` (R2), which follows from `PlanarCorrectedPlaneExistenceTwo` and
+  `PlanarOrderOneDimensionTwo`
+  ([Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71));
+* `MultiscalePoincareTwo A₀` with some `A₀ > 0`: the multiscale Poincaré inequality of Dario, Proposition 2.19,
+  display (2.26), in cube form at `R = 3^m`, with the constant `A₀ q^{3/2}` for `q ≥ 2` (printed in Dario as a
+  consequence of Proposition D.1 of Armstrong, Kuusi and Mourrat, for balls);
+* `DarioPropThreeOneTwo`: Dario's Proposition 3.1 for the coarsened correctors, `|Φ_{r²} * ∇[χ_{e_i}]_𝒫(x)| ≤ O_s(C/r)`
+  for `r ≥ 1`, whose proof in Dario uses the concentration inequality of Proposition 2.17 (Proposition 2.2 of
+  Armstrong, Kuusi and Mourrat, *Optimal quantitative estimates*, the exponential Efron–Stein inequality).
+
+The order-zero regularity input (R3), which Dario uses in Proposition 2.14, is proved in dimension two
+(`armstrongDarioOrderZeroTwo_holds`, see
+[Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1)).
+
+The proof is that of Sections 4 and 5 of Dario with the following steps proved:
+
+* **Section 5, Theorem 1 from Theorem 2** (Steps 1 to 6). The moments of the increments of the coarsened corrector,
+  from (5.5) (Theorem 2 on the box), the stationarity (2.3) of the translated fields and the comparison (5.7) of the
+  translated partitions, grow like `q^{kq} m^{q/2}` (`LinftyIterationData.mom_sub_le`, Steps 1 to 4); the moments give
+  a stretched exponential bound (5.1) (`isOsBond_of_moment_le`, Step 5); the coarsening error (5.10) and the
+  uniqueness of corrected planes give the bound for the corrector itself (`darioOptimalCorrectorTwo_of_coarsened`,
+  Step 6).
+* **Section 4, Step 1 of Theorem 2** in moment form: the multiscale Poincaré inequality (2.26), Proposition 3.1 and
+  the Lipschitz bound (2.22) give (5.4) and (5.5) (`lintegral_boxOsc_le_of_poincare`).
+* **Proposition 2.15 at the origin** from the order-zero regularity (Proposition 2.14) and the local gradient bound
+  of the cluster (`lipschitz_correctedPlane_origin`), the measurable planar corrector increments
+  (`correctorDiff`), the anchors of the translated partitions (`shiftedAnchor`), the coarsening error (5.10) and the
+  comparison (5.7) for the planar partition (`baseCoarseningError`, `baseComparison`), and the bound of the
+  heat-kernel averages of the gradient of the coarsened corrector by `O_s(C)`, uniformly in the radius and the point
+  (`heatGradient_coarseField_isOsBond`).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Corrector.darioOptimalCorrectorTwo_of_prop31`](Rigidity/Proofs/Corrector/PlanarHeatSmoothing.lean), [`darioOptimalCorrectorTwo_of_inputs`](Rigidity/Proofs/Corrector/PlanarDarioCorrectorHolds.lean) | Dario's Theorem 1 in `d = 2` from R2, R3, `MultiscalePoincareTwo A₀` (`A₀ > 0`) and `DarioPropThreeOneTwo`, and then with R3 discharged. |
+| [`correctorQuantitativeInputTwo_of_inputs`](Rigidity/Proofs/Corrector/PlanarDarioCorrectorHolds.lean) | `CorrectorQuantitativeInputTwo` (R5) from R2, `MultiscalePoincareTwo` and `DarioPropThreeOneTwo`, by `correctorQuantitativeInputTwo_of_dario`. |
+| [`darioOptimalCorrectorTwo_of_orderZero`](Rigidity/Proofs/Corrector/PlanarDarioCorrector.lean), [`darioOptimalCorrectorTwo_of_poincareInputs`](Rigidity/Proofs/Corrector/PlanarDarioCorrector.lean), [`darioOptimalCorrectorTwo_of_coarsened`](Rigidity/Proofs/Corrector/DarioOptimalCorrector.lean), [`darioOptimalCorrectorTwo_of_coarsenedOs`](Rigidity/Proofs/Corrector/DarioCoarsenedOs.lean), [`darioOptimalCorrectorTwo_of_poincare`](Rigidity/Proofs/Corrector/DarioPoincareMoments.lean) | the chain of weaker forms: Theorem 1 from Theorem 2 at the origin for the coarsened correctors, from the Poincaré inputs, and from the coarsened corrector data in moment form and in the printed `O_s` form. |
+| [`lipschitz_correctedPlane_origin`](Rigidity/Proofs/Corrector/PlanarCorrectorLipschitz.lean) | Dario's Proposition 2.15 at the origin in `d = 2`: `\|ℓ(a) − ℓ(b)\| ≤ L max(X, 2)² Σ \|q_i\|` for every open edge `ab` at the origin, from the order-zero regularity. |
+| [`baseCoarseningError`](Rigidity/Proofs/Corrector/PlanarCoarseningError.lean), [`baseComparison`](Rigidity/Proofs/Corrector/PlanarPartitionComparison.lean), [`lintegral_randomBallSum_le`](Rigidity/Proofs/Corrector/RandomBallSums.lean) | the coarsening error (5.10) at every vertex and the comparison (5.7) of the translated partitions for the planar partition, with `O_s` bounds uniform in the vertex, from the Lipschitz bound and the exponential moments of the partition sizes. |
+| [`correctorDiff_translation`](Rigidity/Proofs/Corrector/PlanarMeasurableCorrector.lean), [`measurable_guardAnchor`](Rigidity/Proofs/Corrector/PlanarShiftedAnchor.lean), [`infinite_planarCoarseAnchor`](Rigidity/Proofs/Corrector/PlanarShiftedAnchor.lean), [`darioCoarsenedCorrectorTwo_of_base`](Rigidity/Proofs/Corrector/DarioCoarsenedFields.lean) | the measurable corrector increments with the stationarity (2.3), the measurable anchors of the planar partition in the infinite cluster, and the reduction of the coarsened corrector data of Section 5 to its statements at the base point. |
+| [`lintegral_boxOsc_le_of_poincare`](Rigidity/Proofs/Corrector/DarioPoincareMoments.lean), [`lintegral_rpow_heatSquare_le`](Rigidity/Proofs/Corrector/DarioPoincareMoments.lean), [`tsum_poincareWeight_le`](Rigidity/Proofs/Corrector/DarioPoincareMoments.lean), [`heatGradient_coarseField_isOsBond`](Rigidity/Proofs/Corrector/PlanarHeatSmoothing.lean), [`tsum_ofReal_vsrwHeat`](Rigidity/Proofs/Green/LazyHeatMass.lean) | Step 1 of Theorem 2 in moment form from (2.26), Proposition 3.1 and (2.22), the moment of the heat-kernel square function at a point, the lattice sum of the weights, the bound of the heat-kernel averages uniform in the radius, and the mass one of the heat kernel of the lazy walk. |
+| [`IsOsBond.integral_rpow_le`](Rigidity/Proofs/Corrector/DarioMoments.lean), [`isOsBond_of_moment_le`](Rigidity/Proofs/Corrector/DarioMoments.lean), [`isOsBond_sub_of_linftyIterationData`](Rigidity/Proofs/Corrector/DarioOptimalCorrector.lean), [`LinftyIterationData.mom_sub_le`](Rigidity/Proofs/Corrector/DarioLinftyIteration.lean) | the moments of an `O_s` variable (5.1), the converse of Step 5, Step 5 for the increments of the coarsened corrector, and the moment bound of Steps 1 to 4. |
+
+The twenty-eight reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+The proof of Proposition 3.1 in Dario has points that are only sketched, which are part of the named input
+`DarioPropThreeOneTwo` and are not formalized: the stationary part of the partition (3.3), proved "similarly to
+Proposition 2.1 (iv) of Armstrong and Dario"; Lemma 3.5 on resampling the partition; and the Green gradient
+bounds of Propositions 2.11 and 2.12, which are proved by "standard arguments".
+
+Departures from Dario:
+
+- **Moments in place of the `O_s` calculus.** The averaging of `O_s` variables, (1.12) and (1.14), is replaced by
+  moment bounds: Jensen's inequality in `r` for the measure `min(r, 1/r) dr`, Tonelli's theorem and lattice sums of
+  exponential weights (`DarioMoments`, `DarioPoincareMoments`, `RandomBallSums`); the sums over balls of random
+  radius of (2.24), (5.7) and (5.10) are bounded by `lintegral_randomBallSum_le`. The exponent of the moments is
+  `k = 3/2 + 1/s`, and the exponential moment (5.1) is proved with the factor `e^{−q/s}`, where (5.1) prints
+  `e^{q/s}`, which is weaker.
+- **The multiscale Poincaré inequality in cube form.** Proposition 2.19 is stated for balls `B_R`; it is used on
+  the cubes of side `R = 3^m`, the form in which (5.4) is applied, and the exponents `1 ≤ q < 2` are reduced to
+  `q = 2` by Jensen's inequality.
+- **Proposition 2.15 at the origin.** The Lipschitz bound is `L max(X, 2)²`, where Dario has `X^{d/2}`, because the
+  cluster ball `B_{4r}` is bounded by the lattice ball `B_{5r}`; it is again `O_{s/2}(C)`.
+- **Step 6 in pair form.** The coarsening error (5.10) is stated for the increment between two points.
+- **The translated partitions.** The partition `𝒫_y = y + 𝒫(τ_{−y} a)` is built from the anchors of the planar
+  partition of the repository, and the bounds of the partition sizes are those of the planar partition.
+- **The logarithm.** Theorem 1 is stated with `log^{1/2}(2 + |x − y|)`, as in the section on the corrector estimate.
+
+## Theorem 1 of Dario and Gu in dimension two
+
+Theorem 1 of Dario and Gu (quantitative local limit theorem for the heat kernel of the infinite cluster), in the form
+`DarioGuHeatKernelTwo` (`d = 2`, for `t ≥ 1`, with a diffusivity `σ > 0`), is proved in
+[`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) by the induction of Section 4.3 over the exponents of (4.43)
+([`darioGuHeatKernelTwo_of_reduced`, `darioGuHeatKernelTwo_of_reduced_dario`](Rigidity/Proofs/Green/DarioGuTheoremOneReduced.lean)),
+from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
+
+* Lemma 4.1 (`DarioGuApproxLemmaTwo p σ`, in the form of the iteration step used at (4.45)), Proposition 4.3
+  (`DarioGuTwoScaleErrorTwo p σ`) and Proposition A.7 (`DarioGuDensityGaussianTwo p σ`, the Gaussian mass of the
+  infinite cluster), which Dario and Gu prove from Sections 3 and 4.1–4.2 and Appendix A and which are not formalized
+  here: Lemma 4.1 needs the gradient estimate of Theorem 3 and the Poincaré inequality of Proposition 2.7;
+  Proposition 4.3 needs the flux estimate of Proposition 2.13 and weak norms; Proposition A.7 rests on the concentration
+  inequality of Proposition A.3 (cited);
+* the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu), and the
+  Carne–Varopoulos bound of Proposition 2.15 (`CarneVaropoulosTwo`, cited, Davies 1993);
+* the qualitative corrector input `SupercriticalBondCorrectorInputTwo` (R2) and the quantitative corrector estimate
+  of Proposition 2.12 (`CorrectorQuantitativeInputTwo`, R5), the latter by `correctorQuantitativeInputTwo_of_inputs` of
+  [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two) or from `DarioOptimalCorrectorTwo`
+  (`darioGuHeatKernelTwo_of_reduced_dario`).
+
+Lemma 3.11 (Lemma 8.9 of Armstrong, Kuusi and Mourrat, `AKMLemmaEightNineTwo`) is stated, since it is used in the
+proof of Proposition 3.9, which is not formalized.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.darioGuHeatKernelTwo_of_sections`](Rigidity/Proofs/Green/DarioGuTheoremOne.lean), [`darioGuHeatKernelTwo_of_reduced`](Rigidity/Proofs/Green/DarioGuTheoremOneReduced.lean), [`darioGuHeatKernelTwo_of_reduced_dario`](Rigidity/Proofs/Green/DarioGuTheoremOneReduced.lean) | Theorem 1 of Dario and Gu in `d = 2` from `DarioGuSectionFourTwo p σ` (all five statements of Section 4), and from Lemma 4.1, Proposition 4.3 and Proposition A.7 with the inputs above. |
+| [`darioGuCorrectorLemmaTwo_of_inputs`](Rigidity/Proofs/Green/DarioGuCorrectorLemma.lean) | Lemma 4.2 of Dario and Gu in `d = 2`, `\|v(t, x, τ, y)\| ≤ C τ^{−1/2+α/2} Φ_C(t, x − y)`, from Proposition 2.12, Theorem 4 at the points near `y`, Proposition 2.15 at the far points and the semigroup property (3.2) of `Φ_C`. |
+| [`darioGuTwoScaleInitialTwo_of_correctorQuantitative`](Rigidity/Proofs/Green/DarioGuTwoScaleInitial.lean) | the estimate of the two-scale initial error `h − p̄/θ` of Section 4.3 (the term of (4.47) that the source leaves to the reader) from Proposition 2.12. |
+| [`heatLevel_step`](Rigidity/Proofs/Green/DarioGuStep.lean), [`pointwise_of_weightedL2`](Rigidity/Proofs/Green/DarioGuPointwise.lean) | the iteration step of Section 4.3: the statement (4.45) at an exponent `k ≤ 1/2 − δ` implies it at `min((1 − κ) k + κ/2, 1/2 − δ)`, through the weighted `L²` estimate (4.49) and the pointwise estimate (4.48). |
+| [`hasSum_vsrwHeat_mul`](Rigidity/Proofs/Green/OpenHeatSemigroup.lean), [`sum_dgPhi_mul_dgPhi_le`](Rigidity/Proofs/Green/DarioGuPhiConvolution.lean), [`hasTail_latticeSup`](Rigidity/Proofs/Green/DarioGuLatticeSup.lean) | the semigroup property of the heat kernel of the variable speed random walk, the semigroup bound (3.2) of `Φ_C`, and the tail of the lattice minimal time of a family of minimal times with a uniform stretched exponential tail (3.52), (4.44). |
+
+The ten reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Dario and Gu:
+
+- The functions `q` and `v` are defined by the semigroup formula, and the corrector is normalized by `χ(y) = 0` for
+  `y ∈ 𝒞_∞`.
+- Lemma 4.1 is used in the input form of the proof of the induction at (4.7) (DG21.tex:2618): `ε Φ_C(τ, ·)` is replaced
+  by `C(ε (τ/t)^{1/2} + τ^{−1/2+α}) Φ_C(t, ·)`.
+- The minimal times of the three propositions are merged into one `M` with `τ ≥ M` and `t ≥ 3τ`; the sequence `κ_n`
+  starts at `k₀ = 0`, with `k₁` the exponent `κ₀` of Dario and Gu; the scale `T_par` of (4.44) is the lattice supremum of
+  the point times (`hasTail_latticeSup`); and the statement is proved for `t ≥ 8`.
+- Proposition A.7, printed for lattice centres `y ∈ ℤ^d`, is used at the centre `(x + z)/2` of (4.48) (DG21.tex:2602);
+  here the centre is rounded to a lattice point and the Lipschitz bound of the Gaussian kernel summed over the lattice
+  is used (`DarioGuGaussian`).
+
+Points in the source that are not detailed, and an issue of normalization, with their numbers in the compiled source:
+
+- the estimate of the term `h − p̄/θ` in the proof of (4.47) (DG21.tex:2556-2562) is left to the reader, as are details
+  of Proposition 4.3 (DG21.tex:2274, :2411) and the proofs of Propositions 2.9 and 2.11 (DG21.tex:1018, :1053);
+- Theorem 4, stated for the constant speed random walk with conductances `0` or `1`, is used for the variable speed
+  walk (DG21.tex:1253);
+- the weighted `L²` bounds (4.3), (4.24), (4.46) and (4.49), with the weight `exp(Ψ_C)`, `Ψ_C = −ln Φ_C` (3.3), carry
+  the normalization `t^{d/2}` differently from the Gaussian factor `exp(|x|²/(Ct))` used in (4.48); the Lean weight is
+  `exp(dgExponent)`;
+- the decomposition (4.47) has `+w` where `w := h − v − q` gives `−w` (compare DG21.tex:1939).
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 502 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 540 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1877,9 +2015,13 @@ exponent of the tail).
   [Theorem 1 of Armstrong and Dario in dimension two](#theorem-1-of-armstrong-and-dario-in-dimension-two),
   the sixteen theorems of
   [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1),
+  the twenty-eight theorems of
+  [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
+  the ten theorems of
+  [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two),
   and the twenty-seven theorems of
   [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
-  Each of the 502 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 540 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1910,10 +2052,10 @@ exponent of the tail).
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1321 Lean files with 254,853 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1355 Lean files with 263,954 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (873 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (949 lines) are counted separately.
 
 ## Building
 

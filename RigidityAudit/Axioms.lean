@@ -266,6 +266,40 @@ import Rigidity.Proofs.Regularity.PlanarHarmonicDistTwo
 import Rigidity.Proofs.Regularity.PlanarHomogenizedGradient
 import Rigidity.Proofs.Regularity.PlanarPartitionSizeScale
 import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationHolds
+import Rigidity.Proofs.Corrector.DarioBoxMoments
+import Rigidity.Proofs.Corrector.DarioCoarsenedFields
+import Rigidity.Proofs.Corrector.DarioCoarsenedOs
+import Rigidity.Proofs.Corrector.DarioLinftyIteration
+import Rigidity.Proofs.Corrector.DarioMoments
+import Rigidity.Proofs.Corrector.DarioOptimalCorrector
+import Rigidity.Proofs.Corrector.DarioPoincareMoments
+import Rigidity.Proofs.Corrector.PlanarCoarseningError
+import Rigidity.Proofs.Corrector.PlanarCorrectorLipschitz
+import Rigidity.Proofs.Corrector.PlanarDarioCorrector
+import Rigidity.Proofs.Corrector.PlanarDarioCorrectorHolds
+import Rigidity.Proofs.Corrector.PlanarHeatSmoothing
+import Rigidity.Proofs.Corrector.PlanarMeasurableCorrector
+import Rigidity.Proofs.Corrector.PlanarPartitionComparison
+import Rigidity.Proofs.Corrector.PlanarShiftedAnchor
+import Rigidity.Proofs.Corrector.RandomBallSums
+import Rigidity.Proofs.Green.LazyHeatMass
+import Rigidity.Proofs.Green.DarioGuCorrectorLemma
+import Rigidity.Proofs.Green.DarioGuGaussian
+import Rigidity.Proofs.Green.DarioGuHeatKernelInputs
+import Rigidity.Proofs.Green.DarioGuLatticeSup
+import Rigidity.Proofs.Green.DarioGuLevels
+import Rigidity.Proofs.Green.DarioGuPhiCalculus
+import Rigidity.Proofs.Green.DarioGuPhiConvolution
+import Rigidity.Proofs.Green.DarioGuPointwise
+import Rigidity.Proofs.Green.DarioGuStep
+import Rigidity.Proofs.Green.DarioGuStepEstimates
+import Rigidity.Proofs.Green.DarioGuTail
+import Rigidity.Proofs.Green.DarioGuTheoremOne
+import Rigidity.Proofs.Green.DarioGuTheoremOneCorrector
+import Rigidity.Proofs.Green.DarioGuTheoremOneReduced
+import Rigidity.Proofs.Green.DarioGuTwoScaleInitial
+import Rigidity.Proofs.Green.DarioGuWeightedL2
+import Rigidity.Proofs.Green.OpenHeatSemigroup
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -871,3 +905,45 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_holds
 #print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_holds
 #print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_dario
+
+-- Theorem 1 of Dario in dimension two and the quantitative corrector input
+#print axioms Rigidity.Corrector.IsOsBond.integral_rpow_le
+#print axioms Rigidity.Corrector.isOsBond_of_moment_le
+#print axioms Rigidity.Corrector.LinftyIterationData.mom_sub_le
+#print axioms Rigidity.Corrector.isOsBond_sub_of_linftyIterationData
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_coarsened
+#print axioms Rigidity.Corrector.lintegral_le_of_isOsBond_rpow_inv
+#print axioms Rigidity.Corrector.CoarsenedOsData.linftyIterationData
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_coarsenedOs
+#print axioms Rigidity.Corrector.lintegral_rpow_heatSquare_le
+#print axioms Rigidity.Corrector.tsum_poincareWeight_le
+#print axioms Rigidity.Corrector.lintegral_boxOsc_le_of_poincare
+#print axioms Rigidity.Corrector.PoincareCoarsenedData.linftyIterationData
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_poincare
+#print axioms Rigidity.Corrector.correctorDiff_translation
+#print axioms Rigidity.Corrector.measurable_guardAnchor
+#print axioms Rigidity.Corrector.infinite_planarCoarseAnchor
+#print axioms Rigidity.Corrector.darioCoarsenedCorrectorTwo_of_base
+#print axioms Rigidity.Corrector.lipschitz_correctedPlane_origin
+#print axioms Rigidity.Corrector.lintegral_randomBallSum_le
+#print axioms Rigidity.Corrector.baseCoarseningError
+#print axioms Rigidity.Corrector.baseComparison
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_orderZero
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_poincareInputs
+#print axioms Rigidity.Corrector.heatGradient_coarseField_isOsBond
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_prop31
+#print axioms Rigidity.Green.tsum_ofReal_vsrwHeat
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_inputs
+#print axioms Rigidity.Corrector.correctorQuantitativeInputTwo_of_inputs
+
+-- Theorem 1 of Dario and Gu in dimension two from Lemma 4.1, Proposition 4.3 and Proposition A.7
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_sections
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_reduced
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_reduced_dario
+#print axioms Rigidity.Green.darioGuCorrectorLemmaTwo_of_inputs
+#print axioms Rigidity.Green.darioGuTwoScaleInitialTwo_of_correctorQuantitative
+#print axioms Rigidity.Green.heatLevel_step
+#print axioms Rigidity.Green.pointwise_of_weightedL2
+#print axioms Rigidity.Green.hasSum_vsrwHeat_mul
+#print axioms Rigidity.Green.sum_dgPhi_mul_dgPhi_le
+#print axioms Rigidity.Green.hasTail_latticeSup
