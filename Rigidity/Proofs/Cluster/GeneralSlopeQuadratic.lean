@@ -204,6 +204,93 @@ theorem sum_abs_mulVec_le (B : Matrix (Fin d) (Fin d) ℝ) (v : Fin d → ℝ) :
   exact mul_le_mul_of_nonneg_left
     (Finset.single_le_sum (fun k _ => abs_nonneg (v k)) (Finset.mem_univ j)) (abs_nonneg _)
 
+theorem IsSlopeQuadratic.const_mul {g : (Fin d → ℝ) → ℝ} (hg : IsSlopeQuadratic g) (c : ℝ) :
+    IsSlopeQuadratic fun x => c * g x :=
+  isSlopeQuadratic_of_eq_dotProduct (c • slopeMatrix g) fun x => by
+    rw [hg.eq_dotProduct x, Matrix.smul_mulVec, Finset.mul_sum]
+    exact Finset.sum_congr rfl fun i _ => by
+      simp only [Pi.smul_apply, smul_eq_mul]
+      ring
+
+theorem isSlopeQuadratic_sum_sq : IsSlopeQuadratic fun x : Fin d → ℝ => ∑ i, x i ^ 2 :=
+  isSlopeQuadratic_of_eq_dotProduct 1 fun x => by
+    rw [Matrix.one_mulVec]
+    exact Finset.sum_congr rfl fun i _ => sq (x i)
+
+/-- `g(c r) = c² g(r)`. -/
+theorem IsSlopeQuadratic.smul {g : (Fin d → ℝ) → ℝ} (hg : IsSlopeQuadratic g) (c : ℝ)
+    (r : Fin d → ℝ) : g (c • r) = c ^ 2 * g r := by
+  have h := hg.sub_smul 0 r (-c)
+  have e : (0 : Fin d → ℝ) - (-c) • r = c • r := by
+    rw [neg_smul, sub_neg_eq_add, zero_add]
+  have hgrad : ∀ i, slopeGrad g 0 i = 0 := fun i => by simp [slopeGrad]
+  rw [e] at h
+  rw [h, hg.apply_zero]
+  simp only [hgrad, mul_zero, Finset.sum_const_zero]
+  ring
+
+/-- For a nonnegative quadratic function, `g(a + b) ≤ (1 + t) g(a) + (1 + 1/t) g(b)`, `t > 0`. -/
+theorem IsSlopeQuadratic.add_le_of_nonneg {g : (Fin d → ℝ) → ℝ} (hg : IsSlopeQuadratic g)
+    (h0 : ∀ x, 0 ≤ g x) (a b : Fin d → ℝ) {t : ℝ} (ht : 0 < t) :
+    g (a + b) ≤ (1 + t) * g a + (1 + 1 / t) * g b := by
+  have h1 := hg.sub_smul b a t
+  have h2 := hg.sub_smul b a (-1)
+  have e : b - (-1 : ℝ) • a = a + b := by
+    rw [neg_smul, one_smul, sub_neg_eq_add, add_comm]
+  rw [e] at h2
+  have hnn := h0 (b - t • a)
+  set X := ∑ i, a i * slopeGrad g b i with hX
+  have hX1 : t * X ≤ g b + t * (t * g a) := by nlinarith
+  have hX2 : X ≤ 1 / t * g b + t * g a := by
+    have : X ≤ (g b + t * (t * g a)) / t := by
+      rw [le_div_iff₀ ht]
+      linarith
+    refine this.trans (le_of_eq ?_)
+    field_simp
+  rw [h2]
+  nlinarith
+
+/-- For a nonnegative quadratic function, `g(∑_{i ∈ s} vᵢ) ≤ |s| ∑_{i ∈ s} g(vᵢ)`. -/
+theorem IsSlopeQuadratic.sum_le_of_nonneg {g : (Fin d → ℝ) → ℝ} (hg : IsSlopeQuadratic g)
+    (h0 : ∀ x, 0 ≤ g x) {ι : Type*} (s : Finset ι) (v : ι → Fin d → ℝ) :
+    g (∑ i ∈ s, v i) ≤ s.card * ∑ i ∈ s, g (v i) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty => simp [hg.apply_zero]
+  | @insert j s hj ih =>
+    rw [Finset.sum_insert hj, Finset.sum_insert hj, Finset.card_insert_of_notMem hj]
+    rcases Nat.eq_zero_or_pos s.card with hk | hk
+    · have hs : s = ∅ := Finset.card_eq_zero.1 hk
+      subst hs
+      simp
+    · have hk' : (0 : ℝ) < s.card := by exact_mod_cast hk
+      have h := hg.add_le_of_nonneg h0 (v j) (∑ i ∈ s, v i) hk'
+      have h2 := mul_le_mul_of_nonneg_left ih (by positivity : (0 : ℝ) ≤ 1 + 1 / (s.card : ℝ))
+      have e : (1 + 1 / (s.card : ℝ)) * ((s.card : ℝ) * ∑ i ∈ s, g (v i)) =
+          ((s.card : ℝ) + 1) * ∑ i ∈ s, g (v i) := by
+        field_simp
+      push_cast
+      nlinarith [h0 (v j)]
+
+/-- **A nonnegative quadratic function is controlled by its values at the unit vectors**:
+`g(q) ≤ d |q|² ∑ᵢ g(eᵢ)`. -/
+theorem IsSlopeQuadratic.le_of_nonneg {g : (Fin d → ℝ) → ℝ} (hg : IsSlopeQuadratic g)
+    (h0 : ∀ x, 0 ≤ g x) (q : Fin d → ℝ) :
+    g q ≤ d * (∑ i, q i ^ 2) * ∑ i, g (Pi.single i 1) := by
+  have hq : q = ∑ i, q i • (Pi.single i 1 : Fin d → ℝ) := by
+    funext k
+    simp [Finset.sum_apply, Pi.single_apply]
+  have h := hg.sum_le_of_nonneg h0 Finset.univ (fun i => q i • (Pi.single i 1 : Fin d → ℝ))
+  beta_reduce at h
+  rw [← hq, Finset.card_univ, Fintype.card_fin] at h
+  refine h.trans ?_
+  simp only [hg.smul]
+  rw [mul_assoc]
+  refine mul_le_mul_of_nonneg_left ?_ (Nat.cast_nonneg d)
+  rw [Finset.mul_sum]
+  refine Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_right ?_ (h0 _)
+  exact Finset.single_le_sum (fun j _ => sq_nonneg (q j)) (Finset.mem_univ i)
+
 /-- `|x|² ≤ |x|₁²`. -/
 theorem sum_sq_le_sq_sum_abs (x : Fin d → ℝ) : ∑ i, x i ^ 2 ≤ (∑ i, |x i|) ^ 2 := by
   have e : (∑ i, |x i|) ^ 2 = ∑ i, |x i| * ∑ j, |x j| := by rw [sq, Finset.sum_mul]
