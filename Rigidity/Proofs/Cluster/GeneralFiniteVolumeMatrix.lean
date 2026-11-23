@@ -436,4 +436,40 @@ theorem integral_cubeCoarsePairing_cubeMuMinimizer [NeZero d] (hd : 2 ≤ d) {p 
     rw [slopePolar_comm]
     ring
 
+/-- **The matrix `ā_{□_n}`**: the inverse of `ā_{□_n}⁻¹`. -/
+noncomputable def cubeAhomFinite (p : unitInterval) (n : ℕ) : Matrix (Fin d) (Fin d) ℝ :=
+  (cubeAhomInvFinite (d := d) p n)⁻¹
+
+/-- A matrix with `c |q|² ≤ q · A q`, `c > 0`, is invertible. -/
+theorem isUnit_det_of_le_sum_mul {A : Matrix (Fin d) (Fin d) ℝ} {c : ℝ} (hc : 0 < c)
+    (h : ∀ q : Fin d → ℝ, c * ∑ i, q i ^ 2 ≤ ∑ i, q i * (A *ᵥ q) i) : IsUnit A.det := by
+  rw [← Matrix.isUnit_iff_isUnit_det, ← Matrix.mulVec_injective_iff_isUnit]
+  intro x y hxy
+  have h0 : A *ᵥ (x - y) = 0 := by
+    rw [Matrix.mulVec_sub, hxy, sub_self]
+  have h1 := h (x - y)
+  rw [h0] at h1
+  simp only [Pi.zero_apply, mul_zero, Finset.sum_const_zero] at h1
+  have h2 : ∑ i, (x - y) i ^ 2 = 0 := le_antisymm
+    (by nlinarith [Finset.sum_nonneg fun i (_ : i ∈ Finset.univ) => sq_nonneg ((x - y) i)])
+    (Finset.sum_nonneg fun i _ => sq_nonneg _)
+  funext i
+  have := (Finset.sum_eq_zero_iff_of_nonneg fun j _ => sq_nonneg ((x - y) j)).1 h2 i
+    (Finset.mem_univ i)
+  have h3 : (x - y) i = 0 := pow_eq_zero_iff (n := 2) (by norm_num) |>.1 this
+  simpa [sub_eq_zero] using h3
+
+/-- **Invertibility of `ā_{□_n}⁻¹` from some scale on**: `ā_{□_n}⁻¹ ā_{□_n} = 1`. -/
+theorem exists_cubeAhomInvFinite_mul_cubeAhomFinite [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ N : ℕ, ∀ n, N ≤ n → cubeAhomInvFinite p n * cubeAhomFinite (d := d) p n = 1 ∧
+      cubeAhomFinite (d := d) p n * cubeAhomInvFinite p n = 1 := by
+  obtain ⟨c, C, hc, -, N, hN⟩ := exists_cubeAhomInvFinite_bounds hd hpc
+  refine ⟨N, fun n hn => ?_⟩
+  have hdet : IsUnit (cubeAhomInvFinite (d := d) p n).det := by
+    refine isUnit_det_of_le_sum_mul (c := 2 * c) (by positivity) fun q => ?_
+    have := (hN n hn q).1
+    linarith
+  exact ⟨Matrix.mul_nonsing_inv _ hdet, Matrix.nonsing_inv_mul _ hdet⟩
+
 end Rigidity.Percolation
