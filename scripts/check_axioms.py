@@ -446,7 +446,7 @@ further = {
          'Rigidity.Proofs.Cluster.osBound_coarse_bound',
          'Rigidity.Proofs.Cluster.OsBound.mul',
          'Rigidity.Proofs.Cluster.OsBound.add',
-         'Rigidity.Proofs.Cluster.osBound_finset_sup'',
+         "Rigidity.Proofs.Cluster.osBound_finset_sup'",
          'Rigidity.Proofs.Cluster.osBound_indicator',
          'Rigidity.Proofs.Cluster.isOsBond_of_osBound',
          'Rigidity.Proofs.Cluster.planar_SIupgrade_os',
