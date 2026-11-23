@@ -255,6 +255,17 @@ import Rigidity.Proofs.Dirichlet.PlanarTheoremOneHolds
 import Rigidity.Proofs.Dirichlet.PlanarTilePatch
 import Rigidity.Proofs.Dirichlet.PlanarTileSums
 import Rigidity.Proofs.Dirichlet.SubcubeMuTest
+import Rigidity.Proofs.Regularity.PlanarCoarseBound
+import Rigidity.Proofs.Regularity.PlanarCoarseBoundTwo
+import Rigidity.Proofs.Regularity.PlanarCoarseComparison
+import Rigidity.Proofs.Regularity.PlanarCoarseComparisonTwo
+import Rigidity.Proofs.Regularity.PlanarGradNormBound
+import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationInputs
+import Rigidity.Proofs.Regularity.PlanarHarmonicComparison
+import Rigidity.Proofs.Regularity.PlanarHarmonicDistTwo
+import Rigidity.Proofs.Regularity.PlanarHomogenizedGradient
+import Rigidity.Proofs.Regularity.PlanarPartitionSizeScale
+import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationHolds
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -842,3 +853,21 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Dirichlet.chain_le
 #print axioms Rigidity.Dirichlet.planarHomogenizationError_of_inputs
 #print axioms Rigidity.Dirichlet.planarHomogenizationError_holds
+
+-- Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1 (Armstrong and Dario)
+#print axioms Rigidity.Proofs.Regularity.planarPartitionSizeScale_of_minimalScales
+#print axioms Rigidity.Proofs.Regularity.coarseComparison_on_square
+#print axioms Rigidity.Proofs.Regularity.planarCoarseComparisonTwo_of_minimalScales
+#print axioms Rigidity.Proofs.Regularity.sum_sq_coarse_sub_mean_le
+#print axioms Rigidity.Proofs.Regularity.squareL2_coarse_sub_le
+#print axioms Rigidity.Proofs.Regularity.planarCoarseBoundTwo_of_minimalScales
+#print axioms Rigidity.Proofs.Regularity.planarHarmonicDistTwo_of_homogenizationError
+#print axioms Rigidity.Proofs.Regularity.planarSquareEstimatesTwo_of_parts
+#print axioms Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_of_inputs
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_of_inputs
+#print axioms Rigidity.Proofs.Regularity.planarMinimalScalesTwo_holds
+#print axioms Rigidity.Proofs.Regularity.planarHomogenizationErrorTwo_holds
+#print axioms Rigidity.Proofs.Regularity.planarSquareEstimatesTwo_holds
+#print axioms Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_holds
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_holds
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_dario

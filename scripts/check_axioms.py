@@ -538,6 +538,23 @@ further = {
          'Rigidity.Dirichlet.chain_le',
          'Rigidity.Dirichlet.planarHomogenizationError_of_inputs',
          'Rigidity.Dirichlet.planarHomogenizationError_holds'],
+    'Lemma 7.1 and the order-zero regularity of Armstrong and Dario in dimension two from Theorem 1 and the minimal scales':
+        ['Rigidity.Proofs.Regularity.planarPartitionSizeScale_of_minimalScales',
+         'Rigidity.Proofs.Regularity.coarseComparison_on_square',
+         'Rigidity.Proofs.Regularity.planarCoarseComparisonTwo_of_minimalScales',
+         'Rigidity.Proofs.Regularity.sum_sq_coarse_sub_mean_le',
+         'Rigidity.Proofs.Regularity.squareL2_coarse_sub_le',
+         'Rigidity.Proofs.Regularity.planarCoarseBoundTwo_of_minimalScales',
+         'Rigidity.Proofs.Regularity.planarHarmonicDistTwo_of_homogenizationError',
+         'Rigidity.Proofs.Regularity.planarSquareEstimatesTwo_of_parts',
+         'Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_of_inputs',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_of_inputs',
+         'Rigidity.Proofs.Regularity.planarMinimalScalesTwo_holds',
+         'Rigidity.Proofs.Regularity.planarHomogenizationErrorTwo_holds',
+         'Rigidity.Proofs.Regularity.planarSquareEstimatesTwo_holds',
+         'Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_holds',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_holds',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_dario'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
