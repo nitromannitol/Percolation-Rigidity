@@ -110,9 +110,6 @@ theorem reachable_openIn_configurationMap_iff (ω : Configuration d) {B B' : Set
         rw [openGraph_adj_configurationMap_iff, hB, hB] }
   exact SimpleGraph.Iso.reachable_iff (φ := φ)
 
-theorem signedPermIso_apply (x : Vertex d) (i : Fin d) :
-    signedPermIso π s x i = (s i : ℤ) * x (π i) := rfl
-
 /-- **Lower faces of the image cube.** -/
 theorem signedPerm_mem_lowerFace_iff (Q : TriadicCube d) {y : Vertex d} (hy : y ∈ Q.vertices)
     (j : Fin d) :
