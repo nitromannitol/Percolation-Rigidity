@@ -347,8 +347,8 @@ fidelity:
     nu on resolved triadic cubes, nu local with exactly stationary expectation in place of (4.40),
     the expectation of nu without the indicator of the resolved event, the rate 3^(-n/2) in place of
     3^(-n) in (4.49), Lemma 4.7 in expectation with a deterministic slope, and the homogenized matrix
-    by polarization of the limit; the localization of mu and the limit of its expectation are proved
-    for d = 2 only), for Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 in
+    by polarization of the limit; the localization, stationarity and limit of mu are described in the
+    clause on the subadditive quantity mu below), for Lemmas 5.8 and 5.9 and the qualitative part of Proposition 5.2 in
     dimension two (Armstrong and Dario, from Lemma 5.7 and from Lemma 5.5, which are the
     hypotheses PlanarWeakConvergence, PlanarRestrictQuadCoarsenMu and PlanarRestrictQuadCoarsenNu, discharged below;
     the sum in (5.12) is taken over k = n, ..., m - 1 in place of the printed upper limit m + 1,
@@ -435,6 +435,20 @@ fidelity:
     minimal scale of class O_s and not only in expectation, and the bound in the uniform norm of
     the remark after (1.19) by a union bound over the triadic boxes), and with them Lemma 3.2 of
     Dario with no hypothesis, and
+    for the localization, stationarity and limit of the subadditive quantity mu in every dimension
+    d >= 2 and for Definition 3.9 (Armstrong and Dario, Propositions 4.9 and 4.10, (4.32), (4.39),
+    (4.40), (4.48) and (3.17): the local versions of mu are built from the partition capped at the
+    scale of the cube V on the region of side 14 3^n + 1 around V, in place of the partitions
+    P_loc^(n) and the clusters C_*^(n) of the printed proof, with error exp(-c 3^n); Proposition
+    4.10 is proved in expectation, the local version agreeing with mu exactly off a small event; the
+    stationarity (4.40) is exact for the stationary local versions and holds for E[-mu] up to the
+    localization error; independence is proved for pairs of cubes; (4.32) holds in expectation
+    with the error counted over the exceptional edges and Young parameter 3^(-n/4), giving the rate
+    3^(-n/4) in (4.48); Lemma 4.11 and (4.44) are not proved, since they are used only for (5.31) in
+    Lemma 5.7, which the planar sections prove by a local version; the family of Definition 3.9 asks
+    for the Meyers estimate on each cell and its ancestors, for every set of the triple closed under
+    the open edges and every harmonic function on it, in place of the estimate with the maximal
+    cluster of 3 times the cube), and
     for the Dirichlet problem and
     the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,
