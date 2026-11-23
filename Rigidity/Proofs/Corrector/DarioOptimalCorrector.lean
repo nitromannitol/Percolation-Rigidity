@@ -185,25 +185,31 @@ theorem isOsBond_zero_scale {p : unitInterval} (X : Configuration 2 → ℝ) {s 
   simp only [h1]
   exact ⟨integrable_const 1, by simp⟩
 
+/-- **The coarsening error of Dario, Step 6 (eq:TV10432302), for increments** (hypothesis): for
+every slope `e_i` and points `x, y`, there is `E ≤ O_{s₆}(C₆)` such that for every corrected plane
+`ℓ` of slope `e_i`, the corrector increment `χ(x) - χ(y)` differs from the field increment
+`G i y 0 (x - y) - G i y 0 0` by at most `E`. This is (eq:TV10432302) at `x` and at `y` combined by
+the triangle inequality. -/
+def CoarseningErrorTwo (p : unitInterval)
+    (G : Fin 2 → Vertex 2 → Vertex 2 → Vertex 2 → Configuration 2 → ℝ) (s₆ C₆ : ℝ) : Prop :=
+  ∀ (i : Fin 2) (x y : Vertex 2), ∃ E : Configuration 2 → ℝ, Measurable E ∧
+    IsOsBond 2 p E s₆ C₆ ∧
+    ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
+      ∀ ℓ : uniqueInfiniteComponent h → ℝ,
+        IsCorrectedPlane (uniqueInfiniteComponent h) (Pi.single i 1) ℓ →
+      ∀ (hx : x ∈ (uniqueInfiniteComponent h).supp) (hy : y ∈ (uniqueInfiniteComponent h).supp),
+        |((ℓ ⟨x, hx⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * x j) -
+            (ℓ ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * y j)) -
+          (G i y 0 (x - y) ω - G i y 0 0 ω)| ≤ E ω
+
 /-- **The coarsened corrector of Dario, §5, in dimension two** (hypothesis): for every base point
 `y` and every coordinate slope `e_i`, fields `G i y` satisfying the hypotheses of Steps 1–4
 (`LinftyIterationData`; `G i y y' z` stands for `[χ_{e_i}]_{𝒫_{y + y'}}(y + z)`), and the
-coarsening error of Step 6 (eq:TV10432302 at the two points `x` and `y`): for every corrected plane
-`ℓ` of slope `e_i`, the corrector increment `χ(x) - χ(y)` differs from the field increment
-`G i y 0 (x - y) - G i y 0 0` by at most a random variable `E ≤ O_{s₆}(C₆)`. -/
+coarsening error of Step 6 (`CoarseningErrorTwo`). -/
 def DarioCoarsenedCorrectorTwo (p : unitInterval) : Prop :=
   ∃ A B k s₆ C₆ : ℝ, 0 < s₆ ∧ 0 < C₆ ∧
     ∃ G : Fin 2 → Vertex 2 → Vertex 2 → Vertex 2 → Configuration 2 → ℝ,
-      (∀ i y, LinftyIterationData p (G i y) A B k) ∧
-      ∀ (i : Fin 2) (x y : Vertex 2), ∃ E : Configuration 2 → ℝ, Measurable E ∧
-        IsOsBond 2 p E s₆ C₆ ∧
-        ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
-          ∀ ℓ : uniqueInfiniteComponent h → ℝ,
-            IsCorrectedPlane (uniqueInfiniteComponent h) (Pi.single i 1) ℓ →
-          ∀ (hx : x ∈ (uniqueInfiniteComponent h).supp) (hy : y ∈ (uniqueInfiniteComponent h).supp),
-            |((ℓ ⟨x, hx⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * x j) -
-                (ℓ ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin 2 → ℝ) j * y j)) -
-              (G i y 0 (x - y) ω - G i y 0 0 ω)| ≤ E ω
+      (∀ i y, LinftyIterationData p (G i y) A B k) ∧ CoarseningErrorTwo p G s₆ C₆
 
 /-- **Dario's Theorem 1 in dimension two** (`DarioOptimalCorrectorTwo`) from the coarsened
 corrector data of §5 (`DarioCoarsenedCorrectorTwo`: Theorem 2 at the box, the stationarity, the
