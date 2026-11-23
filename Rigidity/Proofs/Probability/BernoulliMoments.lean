@@ -212,6 +212,61 @@ theorem lintegral_vertSum_condExp_le [Countable ι] (S : Finset ι) {X : (ι →
         filter_upwards [hWV, hW0] with ω hω hω0
         exact ENNReal.ofReal_le_ofReal (Real.rpow_le_rpow hω0 hω (by linarith))
 
+/-- **The moment inequality on countably many coordinates**: for `p ∈ (0, 1)`, `q ≥ 2` and
+`c = min(p, 1 - p)`, `E[|X - E X|^q] ≤ 2 (3q/c)^{q/2} E[𝕍[X]^{q/2}]`. -/
+theorem lintegral_abs_sub_rpow_le_vertSum [Countable ι] [Nonempty ι] (hp0 : 0 < (p : ℝ))
+    (hp1 : (p : ℝ) < 1) {X : (ι → Bool) → ℝ} (hXm : Measurable X)
+    (hX : Integrable X (bernProd ι p)) (hfin : ∀ᵐ ω ∂(bernProd ι p), vertSum p X ω < ∞)
+    {q : ℝ} (hq : 2 ≤ q) :
+    ∫⁻ ω, ENNReal.ofReal (|X ω - ∫ ω', X ω' ∂(bernProd ι p)| ^ q) ∂(bernProd ι p) ≤
+      ENNReal.ofReal (2 * (3 / min (p : ℝ) (1 - p) * q) ^ (q / 2)) *
+        ∫⁻ ω, ENNReal.ofReal ((vertSum p X ω).toReal ^ (q / 2)) ∂(bernProd ι p) := by
+  set μ := bernProd ι p with hμ
+  set m := ∫ ω', X ω' ∂μ with hm
+  obtain ⟨f, hf⟩ := exists_surjective_nat ι
+  set S : ℕ → Finset ι := fun n => (Finset.range n).image f with hS
+  have hSmono : Monotone S := fun a b hab => Finset.image_subset_image (Finset.range_mono hab)
+  let ℱ : Filtration ℕ (inferInstance : MeasurableSpace (ι → Bool)) :=
+    { seq := fun n => coordSigma (S n : Set ι)
+      mono' := fun a b hab => coordSigma_mono (Finset.coe_subset.2 (hSmono hab))
+      le' := fun n => coordSigma_le _ }
+  have hsup : (⨆ n, ℱ n) = (inferInstance : MeasurableSpace (ι → Bool)) := by
+    refine le_antisymm (iSup_le fun n => ℱ.le n) ?_
+    show (MeasurableSpace.pi : MeasurableSpace (ι → Bool)) ≤ _
+    refine iSup_le fun i => ?_
+    obtain ⟨k, rfl⟩ := hf i
+    have hk : f k ∈ (S (k + 1) : Set ι) :=
+      Finset.mem_coe.2 (Finset.mem_image_of_mem f (Finset.mem_range.2 (Nat.lt_succ_self k)))
+    exact le_trans (le_iSup₂ (f := fun j (_ : j ∈ (S (k + 1) : Set ι)) =>
+      MeasurableSpace.comap (fun ω : ι → Bool => ω j) inferInstance) (f k) hk)
+      (le_iSup (fun n => ℱ n) (k + 1))
+  have hconv := hX.tendsto_ae_condExp (ℱ := ℱ) (by rw [hsup]; exact hXm.stronglyMeasurable)
+  have hbound : ∀ n, ∫⁻ ω, ENNReal.ofReal (|μ[X | ℱ n] ω - m| ^ q) ∂μ ≤
+      ENNReal.ofReal (2 * (3 / min (p : ℝ) (1 - p) * q) ^ (q / 2)) *
+        ∫⁻ ω, ENNReal.ofReal ((vertSum p X ω).toReal ^ (q / 2)) ∂μ := by
+    intro n
+    refine (lintegral_abs_condExp_sub_rpow_le p hp0 hp1 (S n) X hq).trans ?_
+    exact mul_le_mul_right
+      (lintegral_vertSum_condExp_le p (S n) hXm hX hfin (r := q / 2) (by linarith)) _
+  have hcont : Continuous fun x : ℝ => ENNReal.ofReal (|x - m| ^ q) :=
+    ENNReal.continuous_ofReal.comp ((continuous_abs.comp (continuous_id.sub continuous_const)).rpow_const
+      fun _ => Or.inr (by linarith))
+  have hlim : ∀ᵐ ω ∂μ, Tendsto (fun n => ENNReal.ofReal (|μ[X | ℱ n] ω - m| ^ q)) atTop
+      (𝓝 (ENNReal.ofReal (|X ω - m| ^ q))) := by
+    filter_upwards [hconv] with ω hω
+    exact (hcont.tendsto _).comp hω
+  calc ∫⁻ ω, ENNReal.ofReal (|X ω - m| ^ q) ∂μ
+      = ∫⁻ ω, liminf (fun n => ENNReal.ofReal (|μ[X | ℱ n] ω - m| ^ q)) atTop ∂μ := by
+        refine lintegral_congr_ae ?_
+        filter_upwards [hlim] with ω hω
+        exact hω.liminf_eq.symm
+    _ ≤ liminf (fun n => ∫⁻ ω, ENNReal.ofReal (|μ[X | ℱ n] ω - m| ^ q) ∂μ) atTop :=
+        lintegral_liminf_le' fun n => (hcont.measurable.comp
+          (stronglyMeasurable_condExp.mono (ℱ.le n)).measurable).aemeasurable
+    _ ≤ _ := by
+        refine (liminf_le_liminf (Filter.Eventually.of_forall hbound)).trans ?_
+        rw [liminf_const]
+
 end Bernoulli
 
 end Rigidity.Probability
