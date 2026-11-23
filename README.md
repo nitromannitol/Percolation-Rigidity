@@ -2306,7 +2306,7 @@ Four inputs of the induction of Section 4.3 of Dario and Gu are proved in dimens
   over the averages on the triadic cubes of the scales `3^k ≤ √t` (`abs_sum_mul_le_multiscale`); the scales below `t^α`
   are bounded trivially, the larger ones by a union bound over the cubes with Proposition A.1 and Markov's inequality
   (`exists_minimalScale_of_summable`); the oscillation of the Gaussian kernel and its lattice sums are bounded directly,
-  and the mass of the Gaussian kernel on the lattice is bounded by `C t^{−1/2}` through the Poisson summation formula
+  and the mass of the Gaussian kernel on the lattice is within `C t^{−1/2}` of 1, for `t ≥ 1`, through the Poisson summation formula
   (`Real.tsum_exp_neg_mul_int_sq`).
 * **Proposition 2.15** (`carneVaropoulosTwo_holds`, `CarneVaropoulosTwo`, with `C = 200`): for `|x − y| ≤ t` the lazy
   Carne bound (`lazyPow_le_carneVaropoulos`) for the steps `n` below `16t + 2^{−16t} e^{4t}`, for `t ≤ r ≤ 256t` the
