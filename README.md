@@ -306,6 +306,13 @@ and [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rig
 derives it in every dimension from the planar order-zero estimate `ArmstrongDarioOrderZeroTwo`; see
 [Green columns for d ≥ 3](#green-columns-for-d--3).
 
+In dimension two the planar inputs are reduced further. `ArmstrongDarioOrderZeroTwo` follows from the harmonic
+approximation `PlanarHarmonicApproximationTwo` of AD Lemma 7.1, and `SupercriticalBondCorrectorInputTwo` follows from
+`ArmstrongDarioOrderZeroTwo` with the existence of corrected planes and the bound `dim 𝒜₁ ≤ 3` (see
+[Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71)). The planar Green-column input follows from `SupercriticalBondCorrectorInputTwo`, the quantitative
+corrector estimate from it with Theorem 1 of Dario, and the quantitative Green estimate with Theorem 1 of Dario and Gu
+(see [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two)).
+
 The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
 and the corrector inputs
 ([`armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo`](Rigidity/Proofs/Regularity/OrderOneOrigin.lean)); see
@@ -1010,8 +1017,8 @@ Departures from Armstrong and Dario:
   The theorem `planarMuLimit_eq_of_decay` and the geometric rates derived from Lemma 5.10 therefore
   take the bound as the explicit hypothesis `h59`; without it, the identification is reduced to the
   vanishing of the limit of `E[ω]`. The rate of Proposition 5.2 in expectation, Lemma 5.10, Lemma 5.11 Step 2 and a deterministic form of
-  Lemma 5.3 are proved for `p > 𝔭_c(2)` in [The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two](#the-rate-of-proposition-52-and-lemmas-53-510-and-511-step-2-in-dimension-two); Proposition 5.2 in the `O_s` form and Lemma 5.11 Steps 1
-  and 3 are not proved. Lemmas 5.5 and 5.7 in `d = 2` are proved in [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
+  Lemma 5.3 are proved for `p > 𝔭_c(2)` in [The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two](#the-rate-of-proposition-52-and-lemmas-53-510-and-511-step-2-in-dimension-two); Proposition 5.2 in the `O_s` form, Lemma 5.11 and
+  Proposition 5.13 are proved in [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two). Lemmas 5.5 and 5.7 in `d = 2` are proved in [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
 - **Lemma 5.4.** The estimate is proved for every `n ≤ m` with the error
   `C\|q\|₁² (∑_k ε_k + ε_n)`, `ε_k = 3^{−k/2} + exp(−c 3ᵏ)`, where AD take `n ∈ [m/2, m)` and the
   error `3^{−n/4}`; the quantity `τ^ν` is built at `ā⁻¹ e_i`, as in AD.
@@ -1344,12 +1351,12 @@ section), `τ_n` and the finite-volume matrices `ā_{□_n}⁻¹` converge to `�
 some `α ∈ (0, 1/4]`. The quantity `ρ = sup_q |q|⁻² ω₊` has a measurable majorant of expectation at
 most `C 3^{−nα}`, its truncated stationary version has expectation at most `C (1 + C₁) 3^{−nα}`, and
 sums of truncated versions over the subcubes of a cube of scale `n + 3 + j` satisfy the Chernoff
-bound of Step 2. Not proved: Proposition 5.2 in the `O_s` form, Steps 1 and 3 of Lemma 5.11 and
-Proposition 5.13 (`p.boundN`). Step 1 of Lemma 5.11 needs a stretched exponential tail of the minimal scale (the averages of the
-sizes of the cells over a cube, AD18.tex:1958 through Proposition 2.4), not of a single cell size, which
-is already available (`exists_measure_planarPartCube_scale_ge_le`); the concentration of the partition
-proved here (`planarReachConcentration_holds`, `planarRHPartition_holds`) has the polynomial tail
-`C 3^{−Bk}`.
+bound of Step 2. Proposition 5.2 in the `O_s` form, Steps 1 and 3 of Lemma 5.11 and
+Proposition 5.13 (`p.boundN`) are not proved in this section: Step 1 of Lemma 5.11 needs a stretched
+exponential tail of the minimal scale (the averages of the sizes of the cells over a cube, AD18.tex:1958
+through Proposition 2.4), whereas the concentration of the partition proved here
+(`planarReachConcentration_holds`, `planarRHPartition_holds`) has the polynomial tail `C 3^{−Bk}`. They are
+proved in [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1384,6 +1391,51 @@ Departures from Armstrong and Dario, which are choices of the formalization:
 Misprints in the source whose meaning is clear: AD18.tex:2232 (`|q|²` appears twice); :3929 (`t := 1/K` with
 `K` undefined, `t = 1/C`); :3975 and :4003-4029 (`μ − (1/2) q · ā⁻¹ q` for `μ + (1/2) q · ā⁻¹ q`); :4003, :4012-4016,
 :4018-4025 and :4029 (`exp(−C⁻¹ 3^{−αm})` for `exp(−C⁻¹ 3^{αm})`); :4195 (`(1/2) p · ā p + ν` for `(1/2) p · ā p − ν`).
+
+## Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two
+
+For `𝔭_c(2) < p < 1` and with no other hypothesis, the stretched exponential form of the convergence of
+the subadditive quantities (Proposition 5.2, displays (5.2) and (5.3)), Lemma 5.11, the random scale of
+Proposition 5.13 and the minimal scales of Proposition 2.4 are proved, in
+[`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/). The bounds are stated with `IsOsBond`, the
+stretched exponential moment (`X ≤ O_r(θ)`) of the source, and are stable statements that the later results of
+the dimension-two chain take as hypotheses
+([`PlanarScaleStatements.lean`](Rigidity/Proofs/Cluster/PlanarScaleStatements.lean)).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Cluster.exists_planar_minimalScale`](Rigidity/Proofs/Cluster/PlanarMinimalScales.lean) | AD Proposition 2.4 for a family of cubes with the local measurability (2.1) and the failure bound (2.2): for every `τ` and `α > 0` a minimal scale `M ≤ O_r(θ)` such that, whenever `M ≤ 3^m`, the `τ`-th moment of the sizes on `□_m` is at most `K \|□_m\|` and every size is at most `3^{α m}`. |
+| [`Rigidity.Proofs.Cluster.planarMinimalScales_holds`](Rigidity/Proofs/Cluster/PlanarMinimalScales.lean) | the statement `PlanarMinimalScales p` ([`PlanarScaleStatements.lean`](Rigidity/Proofs/Cluster/PlanarScaleStatements.lean)): the partition `𝓡` of Definition 3.7 (maximal stopping cubes of the local family `planarRHGood`), with, for all `t, α > 0`, a minimal scale `M ≤ O_r(θ)` above which on `□_m` the `t`-th moments of the sizes of the cells of `𝓡`, of the planar partition cubes and of `planarReach` are at most `K \|□_m\|` and these sizes are at most `3^{α m}`. |
+| [`planarMinimalScales_partition_holds`](Rigidity/Proofs/Cluster/PlanarScaleForms.lean), [`planarMesoscopicConvergence_holds`](Rigidity/Proofs/Cluster/PlanarScaleForms.lean) | the two statements `Rigidity.Dirichlet.PlanarMinimalScales` and `Rigidity.Dirichlet.PlanarMesoscopicConvergence`, in the form of the inputs of the proof of Theorem 1 in dimension two: both bounds of (2.12) for the planar partition (`t ≥ 1`), and Proposition 5.13 on the triadic subcubes of `□_m` of scale `⌈m/8⌉`. |
+| [`exists_measure_not_planarReachLe_le`](Rigidity/Proofs/Cluster/PlanarReachEvent.lean), [`planarRho_le_avg_of_planarReachLe`](Rigidity/Proofs/Cluster/PlanarReachErrors.lean), [`planarComparisonError_le_of_planarReachLe`](Rigidity/Proofs/Cluster/PlanarReachErrors.lean), [`sum_subcubesAt_eq_sum_sum`](Rigidity/Proofs/Cluster/PlanarSubcubeIndex.lean) | the event that the reach is at most `3^ℓ` on a cube and the deterministic bounds on it: `-μ`, the error of the comparison of Corollary 4.6, the subadditivity errors and the subadditivity (5.55) of `ρ`; the subcubes of `□_{n+3+j}` are the cubes `⟨n, a + 27 b⟩`. |
+| [`exists_planarRho_tail`](Rigidity/Proofs/Cluster/PlanarSIUpgrade.lean) | AD Lemma 5.11, Steps 1 to 3: the stretched exponential tail of `ρ(□_{n+3+j})` at an explicit threshold, together with the event that the reach is at most `3^ℓ`. |
+| [`exists_planarSubaddGood_tail`](Rigidity/Proofs/Cluster/PlanarSubaddTail.lean), [`exists_planarSubaddGood_tail_cube`](Rigidity/Proofs/Cluster/PlanarBoundN.lean) | AD Proposition 5.2 as a tail bound: `\|μ(V, q) + (1/2) q · ā⁻¹ q\| ≤ K \|q\|² 3^{−β scale V}` and `\|ν(V, ξ) − (1/2) ξ · ā ξ\| ≤ K \|ξ\|² 3^{−β scale V}` on the partition event with `V` resolved, off an event of probability at most `K' exp(−c 3^{m s})`, for `□_m` and then for every triadic cube and every translate. |
+| [`planar_subadd_os`](Rigidity/Proofs/Cluster/PlanarSubaddOsMain.lean) | AD Proposition 5.2, displays (5.2) and (5.3), `d = 2`: there are `r, α, C > 0` such that, for every triadic cube `V`, the random error `X(V)` of `μ(V, ·) + (1/2) q · ā⁻¹ q` and `ν(V, ·) − (1/2) ξ · ā ξ` (with `μ = ν = 0` off the event that the partition exists and resolves `V`) is measurable with `X(V) ≤ O_r(C 3^{−α scale V})`, `\|μ-error(q)\| ≤ X \|q\|²` and `\|ν-error(ξ)\| ≤ X \|ξ\|²`. |
+| [`planar_SIupgrade_os`](Rigidity/Proofs/Cluster/PlanarSIUpgradeOs.lean) | AD Lemma 5.11, `d = 2`: `sup_q \|q\|⁻² \|ω(V, q)\| ≤ O_r(C 3^{−α scale V})`, with a measurable majorant, for every triadic cube `V`. |
+| [`planar_muupbound_os`](Rigidity/Proofs/Cluster/PlanarSIUpgradeOs.lean) | AD (4.15), `d = 2`, with the rate `size^{−α}` in place of `size^{−1}`: `−μ(V, q) ≤ (K + Z(V)) \|q\|²` with `Z(V) ≤ O_r(C 3^{−α scale V})`. |
+| [`planarBoundN_holds`](Rigidity/Proofs/Cluster/PlanarBoundN.lean), [`exists_planarBoundN_general`](Rigidity/Proofs/Cluster/PlanarBoundN.lean) | AD Proposition 5.13, `d = 2` (the statement `PlanarBoundN p`): a random scale `N ≤ O_r(θ)` such that, whenever `N ≤ 3^m` and `n = ⌈m/4⌉`, on the triadic cubes `V` of scale `n` in `□_m`, and on `□_n` in the configuration translated by `−z` for every `z ∈ □_m`, the partition event holds, the cube is resolved, and `\|μ + (1/2) q · ā⁻¹ q\| ≤ C \|q\|² 3^{−mα}`, `\|ν − (1/2) ξ · ā ξ\| ≤ C \|ξ\|² 3^{−mα}`; the second theorem allows any `n(m)` with `n(m) ≤ m ≤ L n(m)`. |
+| [`osBound_indicator`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.add`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.mul`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`osBound_finset_sup'`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`isOsBond_of_osBound`](Rigidity/Proofs/Cluster/OsTailCalculus.lean) | the calculus of the stretched exponential bounds used above, in the tail form: indicators, sums, products (AD (1.9)), maxima of finitely many variables, and the passage to `IsOsBond`. |
+
+The thirty-five reports of the declarations of this section and of the `O_s` calculus are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Armstrong and Dario:
+
+- **Lemma 5.11, Step 1.** The bad event is that the reach exceeds `3^ℓ` somewhere on `□_m`, of probability
+  at most `9^m · 2 exp(−3^ℓ/θ)`, with the constant `C₁ = C 81^ℓ` growing with `ℓ` and `3^ℓ ≈ 3^{nα/24}`. AD obtain a
+  fixed constant `C₁` through the minimal scales ((4.15)).
+- **Lemma 5.11, Step 3.** On that event the errors of the subadditivity (5.55) are bounded deterministically,
+  by `C (ℓ + 1) 531441^ℓ 3^{−n/2}`, in place of an `O_s(C 3^{−k/4})` bound.
+- **Proposition 5.2.** It is proved first as a tail bound and transported from `□_m` to every triadic cube and
+  every translate; the `O_s` form follows from the bound `X ≤ 12 K 3^{−βm} + c (1 + M⁴) 1_{bad}`, with `M` the
+  largest size of a partition cube meeting `V` and the tail calculus at the exponent `r = 1/5`. Lemma 5.11 in the
+  `O_s` form is derived from Proposition 5.2, whereas AD derive Proposition 5.2 from Lemma 5.11 and Lemma 5.3.
+- **Proposition 5.13.** The translates `z + □_n` are taken for every `z ∈ □_m` (AD take `z ∈ 3^k ℤ²` with
+  `k = ⌈m/8⌉`), as `□_n` in the translated configuration, together with the triadic subcubes of scale `n` for the
+  partition of `ω`; the scale is `N = 3 sup{3^m : the bound fails at m}`, controlled through the exponential
+  moment of the exceptional scale of Lemma 2.3; and the scales are `n = ⌊m/2⌋` in Lemma 5.11 (AD take `⌈m/2⌉`).
+- **Signs in Proposition 5.13.** The statement uses the signs of Proposition 5.2, `μ + (1/2) q · ā⁻¹ q` and
+  `ν − (1/2) ξ · ā ξ`.
 
 ## The Dirichlet problem and the excess-decay iteration
 
@@ -1508,12 +1560,116 @@ Departures from Armstrong and Dario:
 - **The random scale.** `X = c_0 max(X_{(7.18)}, M_cube, M_corr(0), 1)` with `c_0` deterministic, and the
   exponent `s` is the minimum of the three exponents.
 
+## Order-zero regularity and the planar corrector input from Lemma 7.1
+
+Two reductions of the planar inputs are proved in
+[`Rigidity/Proofs/Regularity/`](Rigidity/Proofs/Regularity/), together with deterministic steps of the proof of
+AD Lemma 7.1 in dimension two. Lemma 7.1 itself is not proved: its estimates on squares
+(`PlanarSquareEstimatesTwo`, which rests on Theorem 1, Sections 5 and 6) and the bound on the scales of the
+partition cubes (`PlanarPartitionSizeScale`) are named hypotheses.
+
+* **R3 in dimension two** (`ArmstrongDarioOrderZeroTwo`, AD Theorem 2(iii) at `k = 0`) from
+  `PlanarHarmonicApproximationTwo`, the statement of Lemma 7.1: for `𝔭_c(2) < p < 1` there are `s, θ, A, α, K`
+  and a measurable scale `X ≥ 1` with `X ≤ O_s(θ)` such that almost surely, for every `R` with `A X ≤ R` and
+  every `u` harmonic on `𝒞_∞ ∩ B_R`, the coarsening `[u]_𝒫(x) = u(anchor of the planar partition cube of x)`
+  satisfies the harmonic approximation against the lattice harmonic functions on the balls of `ℤ²`, and its
+  `L²` comparison with `u` and with constants holds on the balls.
+* **`PlanarHarmonicApproximationTwo` from the estimates on squares.**
+  `planarHarmonicApproximationTwo_of_squareEstimates` derives it from `PlanarSquareEstimatesTwo p` (the
+  estimate (7.7), the `L²` form of (7.8) and the bound of Step 2 for constant `w`, on the squares `□_j` above a
+  minimal scale `X ≤ O_s(θ)`, for the functions harmonic on balls of `𝒞_∞`) and `PlanarPartitionSizeScale p`
+  (the partition cubes of the vertices of `□_m` have scale at most `m − 2` above a minimal scale
+  `M ≤ O_s(θ)`). Neither is proved here.
+* **R2 in dimension two** (`SupercriticalBondCorrectorInputTwo`) from `ArmstrongDarioOrderZeroTwo`,
+  `PlanarCorrectedPlaneExistenceTwo` (every slope has a corrected plane on the planar infinite cluster, AD
+  Theorem 2(ii) at `k = 1`) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
+  The last two are named hypotheses.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_of_planarHarmonicApproximation`](Rigidity/Proofs/Regularity/PlanarOrderZeroInput.lean) | `PlanarHarmonicApproximationTwo → ArmstrongDarioOrderZeroTwo`; the other inputs it uses (the density of the infinite cluster in cubes and its concentration) are proved. |
+| [`exists_planarOrderZeroDecay`](Rigidity/Proofs/Regularity/PlanarOrderZero.lean), [`le_of_geometric_step`](Rigidity/Proofs/Regularity/PlanarOrderZero.lean) | the Campanato iteration on the lattice balls of `𝒞_∞` that turns the harmonic approximation into the decay of the oscillation of `u`, and its elementary step. |
+| [`planarHarmonicApproximationTwo_of_squareEstimates`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationTwo.lean), [`planarHarmonicApproximationAt_of_squareEstimates`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationSquares.lean), [`harmonicApproximation_of_squares`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationBalls.lean) | Lemma 7.1 in dimension two from the estimates on the squares `□_j`, by the iteration of Step 4 (`le_sum_squareIterCoeff`) and the comparison of the norms on squares and on lattice balls (`componentBallL2_le_squareL2`, `squareL2_le_componentBallL2`). |
+| [`mem_clusterVertices_succ`](Rigidity/Proofs/Regularity/PlanarClusterInclusions.lean), [`mem_supp_of_mem_clusterVertices`](Rigidity/Proofs/Regularity/PlanarClusterInclusions.lean) | the inclusions of the clusters used in the proof: `𝒞_*(□_j) ⊆ 𝒞_∞` for a resolved square meeting `𝒞_∞`, and `𝒞_∞ ∩ □_m ⊆ 𝒞_*(□_{m+1})` when the partition scales on `□_m` are at most `m − 2`. |
+| [`clusterRestrictTo_mem_clusterHarmonic`](Rigidity/Proofs/Regularity/PlanarClusterRestriction.lean), [`clusterForm_clusterRestrictTo_le`](Rigidity/Proofs/Regularity/PlanarClusterRestriction.lean) | the restriction of a function harmonic on `𝒞_∞` to `𝒞_*(V)`, for a resolved `V` with `𝒞_*(V) ⊆ 𝒞_∞`, is harmonic there, and the Caccioppoli inequality from `□_{n+1}` to `□_n` for it. |
+| [`supercriticalBondCorrectorInputTwo_of_orderOne`](Rigidity/Proofs/Regularity/PlanarCorrectorReduction.lean), [`eq_zero_of_slopeAsymptotics_zero`](Rigidity/Proofs/Regularity/PlanarCorrectorReduction.lean) | `ArmstrongDarioOrderZeroTwo → PlanarCorrectedPlaneExistenceTwo → PlanarOrderOneDimensionTwo → SupercriticalBondCorrectorInputTwo`, with the fact that on a cluster with the cap density the zero function determines its slope. |
+
+The nineteen reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Armstrong and Dario:
+
+- **The lattice route.** `Ā` is the space of the lattice harmonic functions on the balls of `ℤ²` (the discrete
+  `u_hom` of the Dirichlet problem section, with `ā = σ I`), not the continuum `ā`-harmonic functions; the
+  coarsening `[u]_𝒫(x)` is `u` at the anchor of the planar partition cube of `x`, with `u` extended by `0` off the
+  cluster.
+- **Order zero.** `ArmstrongDarioOrderZeroTwo` is obtained from the lattice form of Lemma 7.2 at `k = 0` by a
+  Campanato iteration, and the transfer from `[u]_𝒫` to `u` by the iteration over the radii `A^k s`.
+
+Misprint in the source whose meaning is clear: in the iteration of Step 4 of the proof of Lemma 7.1
+(AD18.tex:5296-5318) the squares are `□_{m+3(k+1)}`, with the factor `3^{−k(m + 3(k+1)/2)}`, where
+AD18.tex:5137-5146 prints `□_{m+3k}`. It does not affect Lemma 7.3.
+
+## The corrector estimate, the Green column and the Green function estimate in dimension two
+
+Three planar inputs are reduced to named statements of Dario and of Dario and Gu, in
+[`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/) and [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/):
+
+* **R6 in dimension two** (`SupercriticalBondGreenColumnExistenceTwo`) from `SupercriticalBondCorrectorInputTwo`
+  alone: the existence of the planar Green columns is proved, and the uniqueness follows from the uniqueness of the
+  zero-slope corrected plane (`supercriticalBondGreenColumnExistenceTwo_of_correctorInput`).
+* **R5 in dimension two** (`CorrectorQuantitativeInputTwo`, Dario and Gu, Proposition 2.12) from
+  `DarioOptimalCorrectorTwo`, Theorem 1 of Dario in dimension two, and `SupercriticalBondCorrectorInputTwo`
+  (`correctorQuantitativeInputTwo_of_dario`). `DarioOptimalCorrectorTwo` states: for every `p ∈ (𝔭_c(2), 1)`
+  there are `s, C > 0` such that for all `x, y ∈ ℤ²` and every slope `q` there is a measurable `Z` with
+  `Z ≤ O_s(C ‖q‖₁ √(log(2 + ‖x − y‖)))` and, almost surely, every corrected plane `ℓ` of slope `q` satisfies
+  `|(ℓ(x) − q·x) − (ℓ(y) − q·y)| ≤ Z` for `x, y` in the infinite cluster. It is a named hypothesis.
+* **R7 in dimension two** (`SupercriticalBondGreenQuantitativeTwo`, Dario and Gu, Theorem 2) from
+  `DarioGuHeatKernelTwo`, Theorem 1 of Dario and Gu for the heat kernel `openHeat` of the infinite cluster (for
+  `t ≥ 1`), and the Liouville theorem at order zero, which follows from `SupercriticalBondCorrectorInputTwo` or
+  from `ArmstrongDarioOrderZeroTwo`
+  (`supercriticalBondGreenQuantitativeTwo_of_darioGu_of_correctorInput`, `..._of_orderZero`). The small-time bound
+  of the Carne–Varopoulos type is proved for the lazy walk (`lazyPow_le_carneVaropoulos`, `heatSmallTimeTwo`), so
+  the hypothesis `CarneVaropoulosTwo` is not used.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.supercriticalBondGreenColumnExistenceTwo_of_correctorInput`](Rigidity/Proofs/Green/PlanarGreenColumnCorrector.lean), [`sublinearLiouville_two_of_correctorInput`](Rigidity/Proofs/Green/PlanarGreenColumnCorrector.lean) | `SupercriticalBondCorrectorInputTwo → SupercriticalBondGreenColumnExistenceTwo`, and the sublinear Liouville theorem from the corrector input. |
+| [`Rigidity.Corrector.correctorQuantitativeInputTwo_of_dario`](Rigidity/Proofs/Corrector/PlanarCorrectorQuantitative.lean), [`isOsBond_triadicScale`](Rigidity/Proofs/Corrector/OsCalculus.lean), [`isOsBond_triadicScale_shift`](Rigidity/Proofs/Corrector/OsCalculus.lean) | `DarioOptimalCorrectorTwo → SupercriticalBondCorrectorInputTwo → CorrectorQuantitativeInputTwo`, and the calculus of stretched exponential bounds for the triadic scales used in it. |
+| [`Rigidity.Green.vsrwHeat_le_one`](Rigidity/Proofs/Green/LazyHeatKernel.lean), [`hasDerivAt_vsrwHeat`](Rigidity/Proofs/Green/LazyHeatKernel.lean), [`measurable_openHeat`](Rigidity/Proofs/Green/PlanarHeatKernelInputs.lean) | the heat kernel of the lazy walk and its time derivative, and the measurability of the heat kernel of the infinite cluster. |
+| [`Rigidity.Green.frullani`](Rigidity/Proofs/Green/FrullaniGaussian.lean), [`integral_gaussianHeat_sub`](Rigidity/Proofs/Green/FrullaniGaussian.lean), [`integral_rpow_neg_mul_exp_neg_div`](Rigidity/Proofs/Green/FrullaniGaussian.lean) | Frullani's integral, the time integral `∫_0^∞ (p̄(t, z) − p̄(t, e)) dt = −log \|z\| / (π σ)` of the Gaussian kernel, and `∫_0^∞ t^{−β} e^{−a/t} dt = a^{1−β} Γ(β − 1)`. |
+| [`Rigidity.Green.HeatBounds.laplacian_timeGreen`](Rigidity/Proofs/Green/PlanarGreenDeterministic.lean), [`abs_timeGreen_sub_le`](Rigidity/Proofs/Green/PlanarGreenQuantitative.lean), [`measurable_greenConstant`](Rigidity/Proofs/Green/PlanarGreenQuantitative.lean) | the Green function as the time integral `∫_0^∞ (p(t, x, y) − p(t, y, y)) dt` of the heat kernel and its Laplacian, the comparison with the homogenized Green function from the heat kernel estimate, and the measurability of the constant. |
+| [`lazyPow_le_carneVaropoulos`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`openHeat_le_exp_of_le_norm`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`heatSmallTimeTwo`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean) | the Carne–Varopoulos bound for the lazy walk on an infinite open component of `ℤ²` and the small-time heat kernel bound derived from it, with no hypothesis. |
+| [`supercriticalBondGreenQuantitativeTwo_of_darioGu`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`..._of_darioGu_of_correctorInput`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`..._of_darioGu_of_orderZero`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`supercriticalBondGreenQuantitativeTwo_of_heatKernel`](Rigidity/Proofs/Green/PlanarGreenQuantitative.lean), [`supercriticalBondGreenQuantitativeTwo_of_smallTime`](Rigidity/Proofs/Green/PlanarGreenQuantitative.lean) | `SupercriticalBondGreenQuantitativeTwo` from `DarioGuHeatKernelTwo` and the Liouville theorem at order zero (as a hypothesis, from `SupercriticalBondCorrectorInputTwo`, or from `ArmstrongDarioOrderZeroTwo`); the last two take the small-time heat kernel bound as a hypothesis. |
+
+The twenty-seven reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). With the previous section, the three planar inputs
+are consequences of `DarioOptimalCorrectorTwo`, `DarioGuHeatKernelTwo`, `PlanarHarmonicApproximationTwo`,
+`PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`. The proofs of `DarioOptimalCorrectorTwo` and
+`DarioGuHeatKernelTwo` are not part of this repository.
+
+Departures from Dario and from Dario and Gu:
+
+- **Pairs of points.** Theorem 1 of Dario is applied to the pairs of points in the ball around `x`, with a union
+  bound over the pairs, in the passage to `CorrectorQuantitativeInputTwo`.
+- **Time range.** The heat kernel estimate `DarioGuHeatKernelTwo` is stated for `t ≥ 1`; the small times are
+  covered by the Carne–Varopoulos bound for the lazy walk.
+- **Normalization.** Dario and Gu normalize the time integral of `p̄` by its mean over the unit ball, which
+  produces the constant `K₁`; here it is normalized by `p̄(t, e)` with `|e| = 1`, which gives the homogenized Green
+  function `ḡ` without a constant.
+- **Green function as a time integral.** The identity `g(x, y) = ∫_0^∞ (p(t, x, y) − p(t, y, y)) dt` (DG21.tex:333
+  and :2654), which the source states without proof, is proved here for planar clusters.
+
+Misprints in the sources whose meaning is clear: Dario18.tex:218 and DG21.tex:1094 print `log^{1/2}|x − y|`, which
+vanishes at `|x − y| = 1`, and the Lean statement uses `log^{1/2}(2 + |x − y|)`; AD18.tex:837-848 (the sign of the
+exponent of the tail).
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 379 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 449 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1546,9 +1702,15 @@ Departures from Armstrong and Dario:
   [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two),
   the twelve theorems of
   [The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two](#the-rate-of-proposition-52-and-lemmas-53-510-and-511-step-2-in-dimension-two),
-  and the nine theorems and one definition of
-  [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate).
-  Each of the 379 reports lists only axioms among `propext`, `Classical.choice` and
+  the nine theorems and one definition of
+  [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate),
+  the twenty-four theorems of
+  [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two),
+  the nineteen theorems of
+  [Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71),
+  and the twenty-seven theorems of
+  [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
+  Each of the 449 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1579,10 +1741,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1236 Lean files with 232,564 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1268 Lean files with 241,172 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (660 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (768 lines) are counted separately.
 
 ## Building
 
