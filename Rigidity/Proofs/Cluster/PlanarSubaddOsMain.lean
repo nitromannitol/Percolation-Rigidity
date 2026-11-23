@@ -6,7 +6,7 @@ import Rigidity.Proofs.Cluster.PlanarSubaddOs
 `planar_subadd_os`: there are `r, α, C > 0` such that for every triadic cube `V` the random error
 `X(V) = planarSubaddErr p V` of Proposition 5.2 (with `|μ(V, q) + (1/2) q · ā⁻¹ q| ≤ X(V) |q|²` and
 `|ν(V, ξ) - (1/2) ξ · ā ξ| ≤ X(V) |ξ|²`, `abs_planarMuErr_le`, `abs_planarNuErr_le`) satisfies
-`X(V) ≤ O_r(C 3^{-α scale V})`, displays (5.1) and (5.2) of the source.
+`X(V) ≤ O_r(C 3^{-α scale V})`, displays (5.2) and (5.3) of the source.
 -/
 
 namespace Rigidity.Proofs.Cluster
@@ -101,7 +101,7 @@ theorem osBound_coarse_bound {p : unitInterval} {θ₀ c₃ : ℝ} (hθ₀ : 0 <
   rw [hθM]
   ring
 
-/-- **Armstrong and Dario, Proposition 5.2, displays (5.1) and (5.2)** (dimension two,
+/-- **Armstrong and Dario, Proposition 5.2, displays (5.2) and (5.3)** (dimension two,
 `p > p_c(2)`): there are `r, α, C > 0` such that for every triadic cube `V` the random error
 `X(V)` of `μ(V, ·) + (1/2) q · ā⁻¹ q` and `ν(V, ·) - (1/2) ξ · ā ξ` (with `μ = ν = 0` off the
 event that the partition exists and resolves `V`) is measurable and

@@ -20,7 +20,7 @@ This file states the outcome in the form used by the iteration
 harmonic on `𝒞_∞ ∩ B_R`, the coarsening `[u]_𝒫` (`planarCoarse`, the value of `u` at the anchor
 of the partition cube) satisfies the hypothesis of Lemma 7.2 on the balls of the lattice with
 `E = K R^{-1} inf_a R^{-1} ‖u - a‖_{L²(𝒞_∞ ∩ B_R)}`, `u` is close to `[u]_𝒫` on the cluster
-balls (the `L²` form of (7.4)), and the normalized norms of `[u]_𝒫 - a` on the balls of the
+balls (the `L²` form of (7.8)), and the normalized norms of `[u]_𝒫 - a` on the balls of the
 lattice are bounded by those of `u - a` on larger cluster balls.
 
 It also introduces the normalized `ℓ²` norms on the squares `□_m = ℤ² ∩ (-3^m/2, 3^m/2)²`
@@ -47,7 +47,7 @@ scale `X`, in the form used in the proof of Lemma 7.3: for `R ≥ A X` and `u` h
 hypothesis of Lemma 7.2 with the lattice harmonic functions and
 `E = K R^{-1} inf_a R^{-1} ‖u - a‖_{L²(C ∩ B_R)}`; for `r ∈ [X, R / A]`,
 `r^{-1} ‖u - [u]_𝒫‖_{L²(C ∩ B_r)} ≤ K r^{-1} inf_a (A r)^{-1} ‖u - a‖_{L²(C ∩ B_{A r})}`
-(the `L²` form of (7.4)); and, for every `a ∈ ℝ`,
+(the `L²` form of (7.8)); and, for every `a ∈ ℝ`,
 `‖[u]_𝒫 - a‖_{L̲²(B_r)} ≤ K (A r)^{-1} ‖u - a‖_{L²(C ∩ B_{A r})}` on the balls of `ℤ²` (the bound
 of Step 2 of the proof of Lemma 7.1 with `w` constant). -/
 def PlanarHarmonicApproximationAt {ω : Configuration 2} (C : OpenComponent ω) (A α K X : ℝ) :

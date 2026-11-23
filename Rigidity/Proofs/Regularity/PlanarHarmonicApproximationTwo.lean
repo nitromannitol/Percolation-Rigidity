@@ -8,7 +8,7 @@ import Rigidity.Proofs.Regularity.PlanarOrderZeroInput
 two statements on the planar partition, taken as hypotheses:
 
 * `PlanarSquareEstimatesTwo p`: above a minimal scale `𝒳 ≤ O_s(θ)`, every `u` harmonic on
-  `𝒞_∞ ∩ B_R` satisfies the estimates (7.3), (7.4) and the bound of Step 2 of the proof of Lemma 7.1
+  `𝒞_∞ ∩ B_R` satisfies the estimates (7.7), (7.8) and the bound of Step 2 of the proof of Lemma 7.1
   on the squares `□_j`, `3^j ≥ 𝒳`, `L 3^{j + 3} ≤ R` (`PlanarSquareEstimates`);
 * `PlanarPartitionSizeScale p`: above a minimal scale `𝓜 ≤ O_s(θ)`, the partition cubes of the
   vertices of `□_m` have scale at most `m - 2` (the second bound of (2.12) of the source,

@@ -9,8 +9,8 @@ balls at the start of the proof of Lemma 7.3. On `ℤ²`, for a function `f` (th
 `inf_a |□_j|^{-1/2} ‖u - a‖_{L²(𝒞_*(□_j))}` of `u` on the cluster), the proof of Lemma 7.1 gives,
 for `3^j` above a scale `X₀` and `□_{j + 3}` inside the domain,
 
-* (7.3) `inf_{w ∈ Ā(□_m)} ‖f - w‖_{L̲²(□_m)} ≤ C₁ 3^{-m α} Γ_{m + 3}`;
-* the inequality of Step 4, `Γ_j ≤ inf_a ‖f - a‖_{L̲²(□_j)} + K 3^{-j} Γ_{j + 3}`, from (7.4) and
+* (7.7) `inf_{w ∈ Ā(□_m)} ‖f - w‖_{L̲²(□_m)} ≤ C₁ 3^{-m α} Γ_{m + 3}`;
+* the inequality of Step 4, `Γ_j ≤ inf_a ‖f - a‖_{L̲²(□_j)} + K 3^{-j} Γ_{j + 3}`, from (7.8) and
   the triangle inequality;
 * and, on the whole domain `B_R`, `Γ_j ≤ (R / 3^j) B` with
   `B = inf_a R^{-1} ‖u - a‖_{L²(𝒞_∞ ∩ B_R)}`.

@@ -7,9 +7,9 @@ import Rigidity.Proofs.Percolation.PlanarCubeEnergy
 The proof of Lemma 7.1 of Armstrong and Dario (arXiv:1609.09431v2) consists of three estimates on
 the triadic cube `□_j` for `3^j` above the minimal scale, followed by an iteration (Step 4):
 
-* (7.3), the harmonic approximation of the coarsening on `□_j` (Steps 1 and 2):
+* (7.7), the harmonic approximation of the coarsening on `□_j` (Steps 1 and 2):
   `inf_{w ∈ Ā(□_j)} ‖[u]_𝒫 - w‖_{L̲²(□_j)} ≤ C₁ 3^{-j α} Γ_{j + 3}`;
-* (7.4), the comparison of `u` with its coarsening (Step 3), in `L²`:
+* (7.8), the comparison of `u` with its coarsening (Step 3), in `L²`:
   `3^{-j} ‖u - [u]_𝒫‖_{L²(C_*(□_j))} ≤ K₂ 3^{-j} Γ_{j + 3}`;
 * the bound of Step 2 for constant `w = a`:
   `‖[u]_𝒫 - a‖_{L̲²(□_j)} ≤ K₃ 3^{-j-3} ‖u - a‖_{L²(C_*(□_{j + 3}))}`;
@@ -59,8 +59,8 @@ noncomputable def clusterSquareOsc {ω : Configuration 2} (C : OpenComponent ω)
     (j : ℕ) : ℝ :=
   ⨅ a : ℝ, clusterSquareL2 ω j (fun x => Rigidity.Section3.extend C u x - a)
 
-/-- The estimates of the proof of Armstrong–Dario, Lemma 7.1, on the square `□_j`: (7.3), the
-`L²` form of (7.4), and the bound of Step 2 for constant `w`. -/
+/-- The estimates of the proof of Armstrong–Dario, Lemma 7.1, on the square `□_j`: (7.7), the
+`L²` form of (7.8), and the bound of Step 2 for constant `w`. -/
 def PlanarSquareEstimates {ω : Configuration 2} (C : OpenComponent ω) (C₁ K₂ K₃ α : ℝ) (j : ℕ)
     (u : C → ℝ) : Prop :=
   squareHarmonicDist j (planarCoarse C u) ≤ C₁ / ((3 : ℝ) ^ j) ^ α * clusterSquareOsc C u (j + 3) ∧

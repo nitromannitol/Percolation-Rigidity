@@ -17,7 +17,7 @@ The steps follow the proof of Lemma 7.3 for `k = 0`:
   (`armstrongDario_orderZero_origin_latticeHarmonic`) give one constant `c` with
   `‖[u]_𝒫 - c‖_{L̲²(B_t)} ≤ C₀ (A t / R) B` for `t ≤ R / (2A)`, `B` bounding
   `D_0(R / A) + (R / A) E` by the bound of Step 2 of Lemma 7.1;
-* the comparison (7.4) of `u` with `[u]_𝒫` gives, for the oscillation `Γ(t)` of `u` on `C ∩ B_t`,
+* the comparison (7.8) of `u` with `[u]_𝒫` gives, for the oscillation `Γ(t)` of `u` on `C ∩ B_t`,
   `Γ(t) ≤ K t^{-1} Γ(A t) + 5 C₀ A (t / R) B`, which is iterated over the radii `A^k t` up to `R`
   (`le_sum_prod_of_step`, Step 1 of the proof of Lemma 7.3);
 * the large radii `r > R / (2A²)` use the size of the constant `c`.

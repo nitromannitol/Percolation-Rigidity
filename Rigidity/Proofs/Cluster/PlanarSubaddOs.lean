@@ -9,7 +9,7 @@ and resolves `V` (the convention `u ≡ 0` of the source), let
 `f_μ(q) = μ(V, q) + (1/2) q · ā⁻¹ q` and `f_ν(ξ) = ν(V, ξ) - (1/2) ξ · ā ξ`. Both are quadratic
 forms, so `|f_μ(q)| ≤ X(V) |q|²` and `|f_ν(ξ)| ≤ X(V) |ξ|²` for the measurable random variable
 `X(V) = planarSubaddErr p V` built from their values at three slopes. Proposition 5.2
-(displays (5.1) and (5.2)) is `X(V) ≤ O_r(C 3^{-α scale V})` for every triadic cube
+(displays (5.2) and (5.3)) is `X(V) ≤ O_r(C 3^{-α scale V})` for every triadic cube
 (`planar_subadd_os`).
 
 The proof: `X(V) ≤ 12 K 3^{-β scale V}` where Proposition 5.2 holds

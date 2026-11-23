@@ -9,7 +9,7 @@ import Rigidity.Proofs.Partition.GeneralPartition
 For the tail form `LatticeProb.OsBound P s θ X` (`P[max(X, 0) > tθ] ≤ exp(-t^s)` for `t ≥ 1`):
 indicators of events of small probability are `O_1` (`osBound_indicator`), sums
 (`OsBound.add`), products of nonnegative variables (`OsBound.mul`, the rule
-`O_s(a) · O_q(b) ≤ O_{sq/(s+q)}(C a b)` of Armstrong and Dario, (2.5)), maxima of finitely many
+`O_s(a) · O_q(b) ≤ O_{sq/(s+q)}(C a b)` of Armstrong and Dario, (1.9)), maxima of finitely many
 variables (`osBound_finset_sup'`), and variables with an exponential moment
 (`osBound_of_exp_moment`).
 A tail bound gives the exponential-moment form `IsOsBond` used in the statements of the inputs
@@ -98,7 +98,7 @@ theorem OsBound.add {P : Measure Ω} {s a b : ℝ} {X Y : Ω → ℝ} (hs : 0 < 
         have := two_mul_exp_le ht hs
         linarith
 
-/-- **Products** of nonnegative variables (Armstrong and Dario, (2.5)). -/
+/-- **Products** of nonnegative variables (Armstrong and Dario, (1.9)). -/
 theorem OsBound.mul {P : Measure Ω} {s q a b : ℝ} {X Y : Ω → ℝ} (hs : 0 < s) (hq : 0 < q)
     (ha : 0 ≤ a) (hX0 : ∀ ω, 0 ≤ X ω) (hY0 : ∀ ω, 0 ≤ Y ω)
     (hX : OsBound P s a X) (hY : OsBound P q b Y) :
