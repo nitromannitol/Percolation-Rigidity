@@ -11,13 +11,11 @@ Steps 2 and 3 of the proof of Lemma 4.1 (lines 2029-2148 of the source). For the
   `Σ_z |w(z)| |g(z) - (g)_{U_0}| ≤ Σ_n a_n O_n (1 + |U_n|/|U_0|)`, `O_n = Σ_{U_n} |g - (g)_{U_n}|`
   ((4.11): the average on `U_0` is replaced by the average on `U_n` at the cost of
   `|U_n| O_n / |U_0|`, the term (4.11)-b).
-* `approx_term_le`: with `a_n = Φ_{C₀}(τ, ρ_n)`, `ρ_0 = 0`, `ρ_n = 2^{n-1} √τ`,
-  `a_n O_n (1 + |U_n|/|U_0|) ≤ K 64^n e^{-2^n/(4C₀)} (τ/t)^{1/2} Φ_{C*}(t, x - y)`:
-  - at the scales `4 (2^n √τ)² ≤ s` when `|x - y| ≤ s`, by the Poincaré inequality and the gradient
-    bound (Theorem 3), as in (4.9)-(4.10) and (4.13);
-  - at the other scales, by (eq:PhiCTrick) and the computation (4.15), as in (4.14)-(4.16); when
-    `|x - y| > s`, the factor `(τ/t)^{1/2}` comes from `Φ_C(t, r) ≤ C t^{-1/2} Φ_{2C}(t, r)` for
-    `r ≥ 2t/3` (Theorem 3 is not available there: Remark 1.3 requires `t ≥ |x - y|`).
+* `dgPhi_annulusInner_le`, `dgPhi_annulusInner_le_mul_dgPhi`: the bounds on `a_n = Φ_{C₀}(τ, ρ_n)`,
+  `ρ_0 = 0`, `ρ_n = 2^{n-1} √τ`, used with Theorem 3 and with (eq:PhiCTrick) respectively.
+* `approx_O_le`: `O_n ≤ 25 C_P C_G 8^n τ^{3/2} s^{-3/2} e^{-|x - y|²/(C_G s)}` from the Poincaré
+  inequality and the gradient bound ((4.9), (4.10), (4.13)); `approx_real_A`, `approx_real_B1`: the
+  arithmetic of the scales.
 -/
 
 open Finset LatticeProb.Percolation Rigidity.External
