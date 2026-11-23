@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Cluster.GeneralMuSubadditiveError
+import Rigidity.Proofs.Percolation.GeneralDim.CubeSizeMoments
 
 /-!
 # The expected error in the subadditivity of `μ` on triadic cubes of `ℤ^d`
@@ -30,11 +31,6 @@ noncomputable def exceptionalSizeSum (ω : Configuration d) (S : Finset (Vertex 
     ℝ :=
   ∑ z ∈ S, TriadicCube.stoppingSize (TriadicCube.goodCubes ω) z ^ (2 * d) *
     {ω' : Configuration d | ExceptionalMajorant ω' n z}.indicator 1 ω
-
-theorem measurable_stoppingSize_goodCubes (z : Vertex d) :
-    Measurable fun ω : Configuration d =>
-      TriadicCube.stoppingSize (TriadicCube.goodCubes ω) z :=
-  TriadicCube.measurable_stoppingSize _ TriadicCube.measurableSet_mem_goodCubes z
 
 theorem stoppingSize_goodCubes_nonneg (ω : Configuration d) (z : Vertex d) :
     0 ≤ TriadicCube.stoppingSize (TriadicCube.goodCubes ω) z :=
