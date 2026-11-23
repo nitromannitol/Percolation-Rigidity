@@ -137,4 +137,62 @@ theorem edge_energy_ge (a b p q : ℝ) :
     (q * b - p * a) ^ 2 - (q - p) ^ 2 * (a ^ 2 + b ^ 2) / 2 ≤ (q ^ 2 * b - p ^ 2 * a) * (b - a) := by
   nlinarith [mul_nonneg (sq_nonneg (q - p)) (sq_nonneg (a - b))]
 
+/-- **The lower bound of the left side of (4.28)** without (4.27): for `w` square summable and
+`ψ` bounded, `-Σ_x (Δw)(x) ψ(x)² w(x)` is at least
+`Σ_x Σ_i a_i(x) ((ψw)(x + e_i) - (ψw)(x))² - Σ_x Σ_i a_i(x) (ψ(x + e_i) - ψ(x))² (w(x)² + w(x + e_i)²)/2`. -/
+theorem tsum_edge_energy_le (ω : Configuration 2) {w ψ : Vertex 2 → ℝ} {B : ℝ}
+    (hw : Summable fun x => w x ^ 2) (hψ : ∀ x, |ψ x| ≤ B) :
+    ∑' x, ∑ i : Fin 2, openCond ω i x *
+        ((ψ (x + unit i) * w (x + unit i) - ψ x * w x) ^ 2 -
+          (ψ (x + unit i) - ψ x) ^ 2 * (w x ^ 2 + w (x + unit i) ^ 2) / 2) ≤
+      -∑' x, openLaplacian ω w x * (ψ x ^ 2 * w x) := by
+  have hB : ∀ x, ψ x ^ 2 ≤ B ^ 2 := fun x => by
+    have := hψ x
+    nlinarith [abs_nonneg (ψ x), sq_abs (ψ x)]
+  have hψw : Summable fun x => (ψ x * w x) ^ 2 := by
+    refine Summable.of_nonneg_of_le (fun x => sq_nonneg _) (fun x => ?_) (hw.mul_left (B ^ 2))
+    rw [mul_pow]
+    exact mul_le_mul_of_nonneg_right (hB x) (sq_nonneg _)
+  have hφ : Summable fun x => (ψ x ^ 2 * w x) ^ 2 := by
+    refine Summable.of_nonneg_of_le (fun x => sq_nonneg _) (fun x => ?_)
+      (hw.mul_left (B ^ 2 * B ^ 2))
+    rw [mul_pow, ← pow_mul]
+    have h4 : ψ x ^ (2 * 2) ≤ B ^ 2 * B ^ 2 := by
+      rw [pow_mul]
+      have := hB x
+      have h0 : 0 ≤ ψ x ^ 2 := sq_nonneg _
+      nlinarith
+    exact mul_le_mul_of_nonneg_right h4 (sq_nonneg _)
+  rw [tsum_openLaplacian_mul ω hw hφ, neg_neg]
+  have hL : ∀ i : Fin 2, Summable fun x => openCond ω i x *
+      ((ψ (x + unit i) * w (x + unit i) - ψ x * w x) ^ 2 -
+        (ψ (x + unit i) - ψ x) ^ 2 * (w x ^ 2 + w (x + unit i) ^ 2) / 2) := by
+    intro i
+    have h1 : Summable fun x => (ψ (x + unit i) * w (x + unit i) - ψ x * w x) ^ 2 :=
+      summable_sq_sub (summable_sq_add_shift hψw (unit i)) hψw
+    have h2 : Summable fun x => (ψ (x + unit i) - ψ x) ^ 2 * (w x ^ 2 + w (x + unit i) ^ 2) / 2 := by
+      refine Summable.of_nonneg_of_le (fun x => by positivity) (fun x => ?_)
+        ((hw.add (summable_sq_add_shift hw (unit i))).mul_left (2 * B ^ 2))
+      have hd : (ψ (x + unit i) - ψ x) ^ 2 ≤ 4 * B ^ 2 := by
+        nlinarith [hB x, hB (x + unit i), sq_nonneg (ψ (x + unit i) + ψ x)]
+      have hw0 : 0 ≤ w x ^ 2 + w (x + unit i) ^ 2 := by positivity
+      nlinarith [mul_le_mul_of_nonneg_right hd hw0]
+    have h12 := h1.sub h2
+    refine Summable.of_norm_bounded h12.abs fun x => ?_
+    rw [Real.norm_eq_abs, abs_mul]
+    exact (mul_le_mul_of_nonneg_right (abs_openCond_le ω i x) (abs_nonneg _)).trans (one_mul _).le
+  have hR : ∀ i : Fin 2, Summable fun x => openCond ω i x * (w (x + unit i) - w x) *
+      (ψ (x + unit i) ^ 2 * w (x + unit i) - ψ x ^ 2 * w x) :=
+    fun i => summable_mul_mul_of_abs_le (abs_openCond_le ω i)
+      (summable_mul_of_sq (summable_sq_sub (summable_sq_add_shift hw _) hw)
+        (summable_sq_sub (summable_sq_add_shift hφ _) hφ))
+  refine Summable.tsum_le_tsum (fun x => ?_) (summable_sum fun i _ => hL i)
+    (summable_sum fun i _ => hR i)
+  refine Finset.sum_le_sum fun i _ => ?_
+  have hc : 0 ≤ openCond ω i x := by unfold openCond; split_ifs <;> norm_num
+  rw [mul_assoc]
+  refine mul_le_mul_of_nonneg_left ?_ hc
+  have := edge_energy_ge (w x) (w (x + unit i)) (ψ x) (ψ (x + unit i))
+  linarith
+
 end Rigidity.Green
