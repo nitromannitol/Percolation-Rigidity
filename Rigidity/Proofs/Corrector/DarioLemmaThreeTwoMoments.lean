@@ -187,22 +187,21 @@ theorem abs_le_mul_sq_add_inv {e η : ℝ} (hη : 0 < η) :
       have : 0 ≤ η⁻¹ := (inv_pos.2 hη).le
       nlinarith [abs_nonneg e]
 
-/-- **Dario, Lemma 3.2, Step 1, at one vertex**: there are `K, c, θ₀ > 0` with
-`E|χ(z̄_stat(z)) - χ(z̄(z))| ≤ K (1 + θ₀ 9^k)^4 e^{-c 3^k / 2}` for every `k`, `z` and `i`. -/
-theorem exists_lintegral_abs_statDiscrepancy_le (hR3 : ArmstrongDarioOrderZeroTwo)
+/-- **The second moment of the discrepancy**: there are `K₁, θ₀ > 0` with
+`E[|χ(z̄_stat(z)) - χ(z̄(z))|²] ≤ K₁ (1 + θ₀ 9^k)^4` for every `k`, `z` and `i`. -/
+theorem exists_lintegral_sq_statDiscrepancy_le (hR3 : ArmstrongDarioOrderZeroTwo)
     {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw 2 p, ω ∈ G) :
-    ∃ K c θ₀ : ℝ, 0 < K ∧ 0 < c ∧ 0 < θ₀ ∧ ∀ (i : Fin 2) (k : ℕ) (z : Vertex 2),
-      ∫⁻ ω, ENNReal.ofReal |statDiscrepancy hG hGv i k z ω| ∂latticeBondLaw 2 p ≤
-        ENNReal.ofReal (K * (1 + θ₀ * 9 ^ k) ^ 4 * Real.exp (-(c * 3 ^ k / 2))) := by
+    ∃ K₁ θ₀ : ℝ, 0 < K₁ ∧ 0 < θ₀ ∧ ∀ (i : Fin 2) (k : ℕ) (z : Vertex 2),
+      ∫⁻ ω, ENNReal.ofReal |statDiscrepancy hG hGv i k z ω| ^ (2 : ℝ) ∂latticeBondLaw 2 p ≤
+        ENNReal.ofReal (K₁ * (1 + θ₀ * 9 ^ k) ^ 4) := by
   obtain ⟨Λ, A, κ, hA0, -, hΛm, hΛ0, hlip, hmom6⟩ := stepSix_data hG hGv hR3 hpc hp1 hGae
   obtain ⟨θ, hθ, hexp⟩ := (planar_meshed_partition_estimates hpc).2.1
-  obtain ⟨C₃, hC₃, c₃, hc₃, h33⟩ := dario_errorstatpart hpc
   set M : ℝ := (A * 4 ^ κ) ^ 2 with hM
   have hM0 : 0 ≤ M := by positivity
   set θ₀ : ℝ := 36 * θ + 8 with hθ₀
   set K₁ : ℝ := 9 * (4 * 256 * (Real.sqrt 2 * 4 * 64 * M)) with hK₁
-  refine ⟨K₁ + C₃.toReal + 1, c₃, θ₀, by positivity, hc₃, by positivity, fun i k z => ?_⟩
+  refine ⟨K₁, θ₀, by positivity, by positivity, fun i k z => ?_⟩
   set θk := statTailScale θ k with hθk
   have hθk0 : 0 < θk := statTailScale_pos hθ k
   have hθkle : θk ≤ θ₀ * 9 ^ k := statTailScale_le hθ k
@@ -243,31 +242,46 @@ theorem exists_lintegral_abs_statDiscrepancy_le (hR3 : ArmstrongDarioOrderZeroTw
       _ ≤ 4 * (256 * (1 + θk) ^ 2) * ((64 * (1 + θk) ^ 2) * (Real.sqrt 2 * 4 * M)) := by
           gcongr
       _ = 4 * 256 * (Real.sqrt 2 * 4 * 64 * M) * (1 + θk) ^ 4 := by ring
-  have hε2 : ∫⁻ ω, ENNReal.ofReal |ε ω| ^ (2 : ℝ) ∂latticeBondLaw 2 p ≤
-      ENNReal.ofReal (K₁ * (1 + θ₀ * 9 ^ k) ^ 4) := by
-    calc ∫⁻ ω, ENNReal.ofReal |ε ω| ^ (2 : ℝ) ∂latticeBondLaw 2 p
-        ≤ ∫⁻ ω, 9 * T ω ^ (2 : ℝ) ∂latticeBondLaw 2 p := by
-          refine lintegral_mono_ae ?_
-          filter_upwards [hpt] with ω hω
-          calc ENNReal.ofReal |ε ω| ^ (2 : ℝ) ≤ (3 * T ω) ^ (2 : ℝ) :=
-                ENNReal.rpow_le_rpow hω (by norm_num)
-            _ = 9 * T ω ^ (2 : ℝ) := by
-                rw [ENNReal.mul_rpow_of_nonneg _ _ (by norm_num)]
-                congr 1
-                rw [show (2 : ℝ) = ((2 : ℕ) : ℝ) by norm_num, ENNReal.rpow_natCast]
-                norm_num
-      _ = 9 * ∫⁻ ω, T ω ^ (2 : ℝ) ∂latticeBondLaw 2 p :=
-          lintegral_const_mul' _ _ (by norm_num)
-      _ ≤ 9 * ENNReal.ofReal (4 * 256 * (Real.sqrt 2 * 4 * 64 * M) * (1 + θk) ^ 4) :=
-          mul_le_mul_right hT2 _
-      _ ≤ ENNReal.ofReal (K₁ * (1 + θ₀ * 9 ^ k) ^ 4) := by
-          rw [← ENNReal.ofReal_ofNat 9, ← ENNReal.ofReal_mul (by norm_num)]
-          refine ENNReal.ofReal_le_ofReal ?_
-          have h4 : (1 + θk) ^ 4 ≤ (1 + θ₀ * 9 ^ k) ^ 4 :=
-            pow_le_pow_left₀ (by positivity) (by linarith) 4
-          rw [hK₁]
-          have : 0 ≤ 4 * 256 * (Real.sqrt 2 * 4 * 64 * M) := by positivity
-          nlinarith
+  show ∫⁻ ω, ENNReal.ofReal |ε ω| ^ (2 : ℝ) ∂latticeBondLaw 2 p ≤
+      ENNReal.ofReal (K₁ * (1 + θ₀ * 9 ^ k) ^ 4)
+  calc ∫⁻ ω, ENNReal.ofReal |ε ω| ^ (2 : ℝ) ∂latticeBondLaw 2 p
+      ≤ ∫⁻ ω, 9 * T ω ^ (2 : ℝ) ∂latticeBondLaw 2 p := by
+        refine lintegral_mono_ae ?_
+        filter_upwards [hpt] with ω hω
+        calc ENNReal.ofReal |ε ω| ^ (2 : ℝ) ≤ (3 * T ω) ^ (2 : ℝ) :=
+              ENNReal.rpow_le_rpow hω (by norm_num)
+          _ = 9 * T ω ^ (2 : ℝ) := by
+              rw [ENNReal.mul_rpow_of_nonneg _ _ (by norm_num)]
+              congr 1
+              rw [show (2 : ℝ) = ((2 : ℕ) : ℝ) by norm_num, ENNReal.rpow_natCast]
+              norm_num
+    _ = 9 * ∫⁻ ω, T ω ^ (2 : ℝ) ∂latticeBondLaw 2 p :=
+        lintegral_const_mul' _ _ (by norm_num)
+    _ ≤ 9 * ENNReal.ofReal (4 * 256 * (Real.sqrt 2 * 4 * 64 * M) * (1 + θk) ^ 4) :=
+        mul_le_mul_right hT2 _
+    _ ≤ ENNReal.ofReal (K₁ * (1 + θ₀ * 9 ^ k) ^ 4) := by
+        rw [← ENNReal.ofReal_ofNat 9, ← ENNReal.ofReal_mul (by norm_num)]
+        refine ENNReal.ofReal_le_ofReal ?_
+        have h4 : (1 + θk) ^ 4 ≤ (1 + θ₀ * 9 ^ k) ^ 4 :=
+          pow_le_pow_left₀ (by positivity) (by linarith) 4
+        rw [hK₁]
+        have : 0 ≤ 4 * 256 * (Real.sqrt 2 * 4 * 64 * M) := by positivity
+        nlinarith
+
+/-- **Dario, Lemma 3.2, Step 1, at one vertex**: there are `K, c, θ₀ > 0` with
+`E|χ(z̄_stat(z)) - χ(z̄(z))| ≤ K (1 + θ₀ 9^k)^4 e^{-c 3^k / 2}` for every `k`, `z` and `i`. -/
+theorem exists_lintegral_abs_statDiscrepancy_le (hR3 : ArmstrongDarioOrderZeroTwo)
+    {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw 2 p, ω ∈ G) :
+    ∃ K c θ₀ : ℝ, 0 < K ∧ 0 < c ∧ 0 < θ₀ ∧ ∀ (i : Fin 2) (k : ℕ) (z : Vertex 2),
+      ∫⁻ ω, ENNReal.ofReal |statDiscrepancy hG hGv i k z ω| ∂latticeBondLaw 2 p ≤
+        ENNReal.ofReal (K * (1 + θ₀ * 9 ^ k) ^ 4 * Real.exp (-(c * 3 ^ k / 2))) := by
+  obtain ⟨K₁, θ₀, hK₁, hθ₀, hsq⟩ := exists_lintegral_sq_statDiscrepancy_le hG hGv hR3 hpc hp1 hGae
+  obtain ⟨C₃, hC₃, c₃, hc₃, h33⟩ := dario_errorstatpart hpc
+  refine ⟨K₁ + C₃.toReal + 1, c₃, θ₀, by positivity, hc₃, hθ₀, fun i k z => ?_⟩
+  set ε : Configuration 2 → ℝ := statDiscrepancy hG hGv i k z with hε
+  have hεm : Measurable ε := measurable_statDiscrepancy hG hGv i k z
+  have hε2 := hsq i k z
   -- the probability of a discrepancy
   obtain ⟨V, ⟨hVk, hzV⟩, -⟩ := TriadicCube.existsUnique_mem 2 k z
   have hprob : latticeBondLaw 2 p {ω | ε ω ≠ 0} ≤
