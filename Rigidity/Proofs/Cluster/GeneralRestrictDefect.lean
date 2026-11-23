@@ -8,14 +8,15 @@ The deterministic part of Lemma 5.5 of Armstrong and Dario, summed over the subc
 dimension `d ≥ 1`. Let `U` be a triadic cube resolved by the partition, `n ≤ scale U`, and for each
 resolved subcube `V` of scale `n` let `w_V = u(·, U, q)|_V - u(·, V, q)`. If every such `V`
 satisfies the hypotheses of `latticeEdgePairing_innerCubeCells_sq_le` (partition scales less than
-`j` on `V`, the Meyers estimate for `w_V` on the cells of scale `j` of the inner cube, the bounds `A`
-on the cell averages of the weight and `W` on the weight), then
+`j` on `V`, the Meyers estimate for `w_V` on the cells of scale `j` of the inner cube, the bounds
+`A` on the cell averages of the weight and `W` on the weight), then
 
 `∑_V ⟨∇[w_V]_𝒫, g⟩_V² ≤ 2 Λ D_n(U, q)`,
 `Λ = 4d G² 3^{dn} K² A C_M^{1/p} 3^d + 16 d² G² 3^{(d-1)n + j} K² W^{2d-1}`,
 
 where `D_n(U, q) = ∑_V B(w_V, w_V)/2` is the energy of the differences of Lemma 5.4
-(`cubeMuDefect`), as in the two-dimensional `Rigidity.Proofs.Cluster.sum_edgePairing_sq_le_planarMuDefect`.
+(`cubeMuDefect`), as in the two-dimensional
+`Rigidity.Proofs.Cluster.sum_edgePairing_sq_le_planarMuDefect`.
 -/
 
 open LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Cluster

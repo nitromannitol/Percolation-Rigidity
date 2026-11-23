@@ -39,7 +39,8 @@ theorem exp_neg_mul_three_pow_le_one_div_sqrt {c : ℝ} (hc : 0 < c) (n : ℕ) :
   have h3 : (1 : ℝ) ≤ 3 ^ n := one_le_pow₀ (by norm_num)
   have hs : √((3 : ℝ) ^ n) ≤ 3 ^ n := Real.sqrt_le_iff.2 ⟨by positivity, by nlinarith⟩
   have hs0 : 0 < √((3 : ℝ) ^ n) := Real.sqrt_pos.2 (by positivity)
-  calc Real.exp (-c * (3 : ℝ) ^ n) ≤ 1 / (c * 3 ^ n) := exp_neg_mul_le_one_div_mul hc (by positivity)
+  calc Real.exp (-c * (3 : ℝ) ^ n) ≤ 1 / (c * 3 ^ n) :=
+        exp_neg_mul_le_one_div_mul hc (by positivity)
     _ ≤ 1 / (c * √((3 : ℝ) ^ n)) :=
         one_div_le_one_div_of_le (mul_pos hc hs0) (mul_le_mul_of_nonneg_left hs hc.le)
     _ = 1 / c * (1 / √((3 : ℝ) ^ n)) := by rw [one_div_mul_one_div]

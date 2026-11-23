@@ -125,7 +125,8 @@ theorem card_sdiff_innerCube_le {V : TriadicCube d} {j : ℕ} (hj : j < V.scale)
     linarith
   · obtain ⟨n, rfl⟩ := Nat.exists_eq_add_of_lt hd
     simp only [zero_add] at hcardR ⊢
-    have h := pow_sub_pow_le_card_mul hb0 (by linarith : (3 : ℝ) ^ V.scale - 2 * 3 ^ j ≤ 3 ^ V.scale) n
+    have h := pow_sub_pow_le_card_mul hb0
+      (by linarith : (3 : ℝ) ^ V.scale - 2 * 3 ^ j ≤ 3 ^ V.scale) n
     have e : (n + 1 - 1 : ℕ) = n := by omega
     rw [e]
     push_cast

@@ -234,7 +234,8 @@ theorem exists_cubeOmegaD_succ_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
           rw [← Finset.sum_mul, ← Finset.mul_sum]
   have hνpart : -∑ i : Fin d, cubeNuIncrement p n (Pi.single i 1) ≤
       -(cubeNuTau (d := d) p n / (d * F + 1)) + d * K₂ * d := by
-    have e : ∑ j : Fin d, gJ (Pi.single j 1) = ∑ i : Fin d, cubeNuIncrement p n (Pi.single i 1) + d * K₂ * d := by
+    have e : ∑ j : Fin d, gJ (Pi.single j 1) =
+        ∑ i : Fin d, cubeNuIncrement p n (Pi.single i 1) + d * K₂ * d := by
       simp only [hgJ, hs, mul_one]
       rw [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ, Fintype.card_fin,
         nsmul_eq_mul]

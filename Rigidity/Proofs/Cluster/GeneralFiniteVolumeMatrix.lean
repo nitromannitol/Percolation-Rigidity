@@ -328,7 +328,8 @@ theorem exists_cubeAhomInvFinite_bounds [NeZero d] (hd : 2 ≤ d) {p : unitInter
   rw [half_sum_mul_cubeAhomInvFinite_eq hd hpc n q]
   have hg : IsSlopeQuadratic fun x : Fin d → ℝ => cubeMuMean p n x - cubeMuLimit p x :=
     (isSlopeQuadratic_cubeMuMean hd hpc n).sub (isSlopeQuadratic_cubeMuLimit hd hpc)
-  have hM : ∀ i j : Fin d, slopeMatrix (fun x : Fin d → ℝ => cubeMuMean p n x - cubeMuLimit p x) i j =
+  have hM : ∀ i j : Fin d,
+      slopeMatrix (fun x : Fin d → ℝ => cubeMuMean p n x - cubeMuLimit p x) i j =
       (cubeAhomInvFinite p n i j - cubeAhomInvLimit p i j) / 2 := by
     intro i j
     simp only [slopeMatrix, slopePolar, cubeAhomInvFinite, cubeAhomInvLimit]

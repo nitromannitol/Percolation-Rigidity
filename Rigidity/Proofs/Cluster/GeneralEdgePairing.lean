@@ -14,7 +14,8 @@ the edges of `V` with an endpoint in `V \ B`, of which there are at most `2d |V 
 `|⟨∇f, g⟩_V|² ≤ 4d G² |B| ∑_B |∇f|² + 8d G² |V \ B| ∑_V |∇f|²` when `|g| ≤ G`
 (`latticeEdgePairing_sq_le_of_subset`). This is Step 2 of the proof of Lemma 5.5 of Armstrong and
 Dario (the removal of the boundary layer `K_z`), in a form which also serves Step 2 of Lemma 5.7,
-in every dimension; the two-dimensional version is `Rigidity.Percolation.edgePairing_sq_le_of_subset`.
+in every dimension; the two-dimensional version is
+`Rigidity.Percolation.edgePairing_sq_le_of_subset`.
 -/
 
 namespace Rigidity.Percolation

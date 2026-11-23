@@ -19,7 +19,8 @@ Here (`cube_minimalset`), on the partition event and for a resolved cube, with
 * `S` an `ℓ¹` operator bound of `ā⁻¹` (for instance `∑_{i,j} |(ā⁻¹)ᵢⱼ|`, `sum_abs_mulVec_le`),
 
 `|μ(U, q) + (1/2) q · ā⁻¹ q| ≤ (d/2) (2 d Y S + √(4 d (Λ + 1) (ρ(U) + Y S))) |q|²` and
-`|ν(U, ā⁻¹ q) - (1/2) q · ā⁻¹ q| ≤ (ρ(U) + d Y S + (d/2) (2 d Y S + √(4 d (Λ + 1) (ρ(U) + Y S)))) |q|²`.
+`|ν(U, ā⁻¹ q) - (1/2) q · ā⁻¹ q| ≤`
+`(ρ(U) + d Y S + (d/2) (2 d Y S + √(4 d (Λ + 1) (ρ(U) + Y S)))) |q|²`.
 
 The comparison is Corollary 4.6 with Young's parameter chosen for each slope `ξ`
 (`le_two_mul_of_forall_le_div_add_mul`), so that the error is proportional to `|q|₁ |ξ|₁` as in

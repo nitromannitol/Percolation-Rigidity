@@ -317,7 +317,8 @@ theorem exists_integral_subaddBound_le [NeZero d] (hd : 2 ≤ d) {p : unitInterv
     simp only [Pi.add_apply]
     field_simp
   have hB_le : ∫ ω, exceptionalSizeSum ω S n ∂μ ≤ U.latticeVolume * M' / X := by
-    have h1 : ∫ ω, exceptionalSizeSum ω S n ∂μ ≤ ∫ ω, (lam / 2 * partitionSizeSum ω S (2 * (2 * d)) +
+    have h1 : ∫ ω, exceptionalSizeSum ω S n ∂μ ≤
+        ∫ ω, (lam / 2 * partitionSizeSum ω S (2 * (2 * d)) +
         1 / (2 * lam) * ∑ z ∈ S, {ω' : Configuration d | ExceptionalMajorant ω' n z}.indicator
           (1 : Configuration d → ℝ) ω) ∂μ := by
       refine integral_mono hB_int ((hA4_int.const_mul _).add (hE_int.const_mul _)) fun ω => ?_

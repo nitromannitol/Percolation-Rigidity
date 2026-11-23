@@ -162,7 +162,8 @@ theorem exists_abs_cubeMuMean_sub_le_of_decay [NeZero d] (hd : 2 ≤ d) {p : uni
   beta_reduce at habs
   simp only [hM] at habs
   have hS : ∑ i : Fin d, ∑ j : Fin d,
-      |(cubeAhomInvFinite p n i j - cubeAhomInvLimit (d := d) p i j) / 2| ≤ d * d * K / 2 * l ^ n := by
+      |(cubeAhomInvFinite p n i j - cubeAhomInvLimit (d := d) p i j) / 2| ≤
+        d * d * K / 2 * l ^ n := by
     have h1 : ∑ i : Fin d, ∑ j : Fin d,
         |(cubeAhomInvFinite p n i j - cubeAhomInvLimit (d := d) p i j) / 2| ≤
         ∑ _i : Fin d, ∑ _j : Fin d, K * l ^ n / 2 := by
