@@ -104,7 +104,8 @@ theorem osBound_coarse_bound {p : unitInterval} {θ₀ c₃ : ℝ} (hθ₀ : 0 <
 /-- **Armstrong and Dario, Proposition 5.2, displays (5.1) and (5.2)** (dimension two,
 `p > p_c(2)`): there are `r, α, C > 0` such that for every triadic cube `V` the random error
 `X(V)` of `μ(V, ·) + (1/2) q · ā⁻¹ q` and `ν(V, ·) - (1/2) ξ · ā ξ` (with `μ = ν = 0` off the
-event that the partition exists and resolves `V`) is measurable and `X(V) ≤ O_r(C 3^{-α scale V})`. -/
+event that the partition exists and resolves `V`) is measurable and
+`X(V) ≤ O_r(C 3^{-α scale V})`. -/
 theorem planar_subadd_os {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ r α C : ℝ, 0 < r ∧ 0 < α ∧ 0 < C ∧ ∀ V : TriadicCube 2,
       Measurable (planarSubaddErr p V) ∧ (∀ ω, 0 ≤ planarSubaddErr p V ω) ∧
