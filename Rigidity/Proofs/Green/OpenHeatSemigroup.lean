@@ -13,7 +13,7 @@ and the binomial identity `Pois(D(s+t)) = Pois(Ds) * Pois(Dt)` give, for `s, t �
 * `vsrwHeat_symm`: `p_t(x, y) = p_t(y, x)`;
 * `hasSum_vsrwHeat`: `Σ_y p_t(x, y) = 1`;
 * `hasSum_vsrwHeat_mul`: `Σ_y p_s(x, y) p_t(y, z) = p_{s+t}(x, z)` (the semigroup property used in
-  Dario–Gu, (4.21) and in the Duhamel formula (4.4)),
+  Dario–Gu, (4.48) and in the Duhamel formula (4.6)),
 
 and `p_t(x, y) = 0` when `y` is not reachable from `x` (`vsrwHeat_eq_zero_of_not_reachable`).
 -/
