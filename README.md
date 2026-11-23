@@ -2557,9 +2557,13 @@ Departures from Armstrong and Dario:
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
   the twenty-three theorems of
   [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two),
-  and the forty-three theorems of
-  [Localization, stationarity and the limit of μ, and Definition 3.9, in every dimension](#localization-stationarity-and-the-limit-of-μ-and-definition-39-in-every-dimension).
-  Each of the 665 reports lists only axioms among `propext`, `Classical.choice` and
+  the forty-three theorems of
+  [Localization, stationarity and the limit of μ, and Definition 3.9, in every dimension](#localization-stationarity-and-the-limit-of-μ-and-definition-39-in-every-dimension),
+  the fifteen theorems of
+  [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
+  and the thirty-five theorems of
+  [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
+  Each of the 775 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2590,10 +2594,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1458 Lean files with 289,389 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1482 Lean files with 296,118 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (1,246 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (1,314 lines) are counted separately.
 
 ## Building
 
