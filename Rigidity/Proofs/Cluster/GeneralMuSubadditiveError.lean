@@ -371,4 +371,139 @@ theorem exceptionalEdgeCount_le (hP : PartitionEvent ω) (U : TriadicCube d) (n 
     rintro ⟨hexc, hz⟩
     exact hEM (exceptionalMajorant_of_isExceptionalEdge hP hexc hz)
 
+/-- The constant of the subadditivity error of `μ`. -/
+noncomputable def muSubaddConst (d : ℕ) : ℝ :=
+  8 * (d : ℝ) ^ 2 * coarseGradConstant d ^ 2 + (d : ℝ) ^ 2 * 9 ^ d
+
+theorem muSubaddConst_nonneg (d : ℕ) : 0 ≤ muSubaddConst d := by
+  unfold muSubaddConst
+  positivity
+
+/-- Young's inequality `2ab ≤ τ a² + b²/τ`. -/
+theorem two_mul_mul_le_add_div {τ : ℝ} (hτ : 0 < τ) (a b : ℝ) :
+    2 * (a * b) ≤ τ * a ^ 2 + b ^ 2 / τ := by
+  have h : τ * a ^ 2 + b ^ 2 / τ - 2 * (a * b) = (τ * a - b) ^ 2 / τ := by
+    field_simp
+    ring
+  have h2 : 0 ≤ (τ * a - b) ^ 2 / τ := div_nonneg (sq_nonneg _) hτ.le
+  linarith
+
+/-- **The error in the subadditivity of `μ`** (Armstrong and Dario, Lemma 4.8, (4.32), with the
+error over the exceptional edges). On the partition event, for a resolved cube `U`, `n ≤` the
+scale of `U` and `t > 0`,
+`∑_{x ∈ U} 1{V(x) res} μ(V(x), q) - |U| μ(U, q) ≤
+  K |q|₁² (t ∑_{z ∈ U} size(z)^{2d-2} + t⁻¹ ∑_{z ∈ U} size(z)^{2d} 1{z exceptional}) / 2`. -/
+theorem sum_cubeMu_subcubes_sub_le (hd : 0 < d) (hP : PartitionEvent ω) {U : TriadicCube d}
+    (hU : PartitionResolved ω U) {n : ℕ} (hn : n ≤ U.scale) (q : Fin d → ℝ) {t : ℝ}
+    (ht : 0 < t) :
+    ∑ x ∈ U.toIntegerCube.vertices,
+        (if PartitionResolved ω (triadicCubeAt n x) then cubeMu ω (triadicCubeAt n x) q
+          else 0) - cubeMu ω U q * U.latticeVolume ≤
+      muSubaddConst d * (∑ i, |q i|) ^ 2 *
+        (t * ∑ z ∈ U.toIntegerCube.vertices,
+            ((3 : ℝ) ^ (partitionCube ω z).scale) ^ (2 * (d - 1)) +
+          (∑ z ∈ U.toIntegerCube.vertices, ((3 : ℝ) ^ (partitionCube ω z).scale) ^ (2 * d) *
+            (if ExceptionalMajorant ω n z then 1 else 0)) / t) / 2 := by
+  obtain ⟨u, hu, hvar, hsub⟩ := sum_cubeMu_subcubes_le hd hP hU hn q
+  set C := crossingClusterVertices ω U with hC
+  set v : Vertex d → ℝ := fun z => vertexVariation ω C (cubeExtend ω U u) z with hv
+  set N : Vertex d → ℝ := fun z => exceptionalEdgeCount ω U n z with hN
+  set Q := ∑ i, |q i| with hQ
+  set S := ∑ z ∈ U.toIntegerCube.vertices,
+    ((3 : ℝ) ^ (partitionCube ω z).scale) ^ (2 * (d - 1)) with hS
+  set SF := ∑ z ∈ U.toIntegerCube.vertices, ((3 : ℝ) ^ (partitionCube ω z).scale) ^ (2 * d) *
+    (if ExceptionalMajorant ω n z then 1 else 0) with hSF
+  set K := muSubaddConst d with hK
+  have hQ0 : 0 ≤ Q := Finset.sum_nonneg fun _ _ => abs_nonneg _
+  have hS0 : 0 ≤ S := Finset.sum_nonneg fun _ _ => by positivity
+  have hSF0 : 0 ≤ SF := Finset.sum_nonneg fun _ _ => mul_nonneg (by positivity)
+    (by split_ifs <;> norm_num)
+  have hK0 : 0 ≤ K := muSubaddConst_nonneg d
+  set Err := ∑ x ∈ U.toIntegerCube.vertices, ∑ i : Fin d,
+      (if x + LatticeProb.unit i ∈ U.toIntegerCube.vertices ∧
+          ¬ (PartitionResolved ω (triadicCubeAt n x) ∧
+            x + LatticeProb.unit i ∈ (triadicCubeAt n x).toIntegerCube.vertices) then
+        q i * (cubeCoarsen ω U u (x + LatticeProb.unit i) - cubeCoarsen ω U u x) else 0)
+    with hErr
+  have herr : Err ≤ Q * ∑ z ∈ C, v z * N z := exceptional_error_le hd hP hU n q u
+  have hlhs : ∑ x ∈ U.toIntegerCube.vertices,
+      (if PartitionResolved ω (triadicCubeAt n x) then cubeMu ω (triadicCubeAt n x) q
+        else 0) - cubeMu ω U q * U.latticeVolume ≤ Err := by linarith [hsub]
+  have hRHS0 : 0 ≤ K * Q ^ 2 * (t * S + SF / t) / 2 := by positivity
+  have hvN0 : 0 ≤ ∑ z ∈ C, v z * N z := Finset.sum_nonneg fun z _ =>
+    mul_nonneg (vertexVariation_nonneg _ _ _ _) (exceptionalEdgeCount_nonneg _ _ _)
+  by_cases hQz : Q = 0
+  · have : Err ≤ 0 := by rw [hQz, zero_mul] at herr; exact herr
+    linarith
+  have hQpos : 0 < Q := lt_of_le_of_ne hQ0 (Ne.symm hQz)
+  -- the energy of the minimizer
+  have hB : cubeForm ω U u u ≤ 2 * d * coarseGradConstant d ^ 2 * Q ^ 2 * S := by
+    have h := cubeForm_cubeMu_minimizer_le hd hP hU q hu hvar
+    rw [div_le_div_iff_of_pos_right U.latticeVolume_pos] at h
+    refine h.trans (mul_le_mul_of_nonneg_left ?_ (by positivity))
+    exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _)
+      fun _ _ _ => by positivity
+  have hv2 : ∑ z ∈ C, v z ^ 2 ≤ 4 * d * cubeForm ω U u u := by
+    rw [← sum_gradNormIn_sq_eq_cubeForm u, Finset.mul_sum]
+    refine Finset.sum_le_sum fun z _ => ?_
+    have h1 := vertexVariation_le_gradNormIn ω C (cubeExtend ω U u) z
+    have h0 := vertexVariation_nonneg ω C (cubeExtend ω U u) z
+    have hd' : (√(d : ℝ)) ^ 2 = d := Real.sq_sqrt (Nat.cast_nonneg d)
+    calc v z ^ 2 ≤ (2 * √(d : ℝ) * gradNormIn (openGraph ω) C (cubeExtend ω U u) z) ^ 2 :=
+          pow_le_pow_left₀ h0 h1 2
+      _ = 4 * d * gradNormIn (openGraph ω) C (cubeExtend ω U u) z ^ 2 := by
+          rw [mul_pow, mul_pow, hd']
+          ring
+  have h9 : (9 : ℝ) ^ d = ((3 : ℝ) ^ d) ^ 2 := by
+    rw [← pow_mul, mul_comm, pow_mul]
+    norm_num
+  have hN2 : ∑ z ∈ C, N z ^ 2 ≤ d ^ 2 * 9 ^ d * SF := by
+    calc ∑ z ∈ C, N z ^ 2 ≤ ∑ z ∈ U.toIntegerCube.vertices, N z ^ 2 :=
+          Finset.sum_le_sum_of_subset_of_nonneg (Finset.filter_subset _ _)
+            fun _ _ _ => sq_nonneg _
+      _ ≤ ∑ z ∈ U.toIntegerCube.vertices, d ^ 2 * 9 ^ d *
+            (((3 : ℝ) ^ (partitionCube ω z).scale) ^ (2 * d) *
+              (if ExceptionalMajorant ω n z then 1 else 0)) := by
+          refine Finset.sum_le_sum fun z _ => ?_
+          have h := exceptionalEdgeCount_le hP U n z
+          have h0 := exceptionalEdgeCount_nonneg (ω := ω) U n z
+          have h2 := pow_le_pow_left₀ h0 h 2
+          refine h2.trans (le_of_eq ?_)
+          rw [h9]
+          split_ifs <;> ring
+      _ = d ^ 2 * 9 ^ d * SF := by rw [hSF, Finset.mul_sum]
+  set τ := t / Q with hτdef
+  have hτ : 0 < τ := div_pos ht hQpos
+  have hY : ∑ z ∈ C, v z * N z ≤ (τ * ∑ z ∈ C, v z ^ 2 + (∑ z ∈ C, N z ^ 2) / τ) / 2 := by
+    have h : ∑ z ∈ C, 2 * (v z * N z) ≤ ∑ z ∈ C, (τ * v z ^ 2 + N z ^ 2 / τ) :=
+      Finset.sum_le_sum fun z _ => two_mul_mul_le_add_div hτ _ _
+    rw [← Finset.mul_sum, Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.sum_div] at h
+    linarith
+  have hfin : Q * ((τ * (4 * d * (2 * d * coarseGradConstant d ^ 2 * Q ^ 2 * S)) +
+      (d ^ 2 * 9 ^ d * SF) / τ) / 2) =
+      (t * (8 * d ^ 2 * coarseGradConstant d ^ 2) * Q ^ 2 * S +
+        Q ^ 2 * ((d : ℝ) ^ 2 * 9 ^ d) * SF / t) / 2 := by
+    rw [hτdef]
+    field_simp
+    ring
+  have hsplit : K * Q ^ 2 * (t * S + SF / t) / 2 =
+      (t * (8 * d ^ 2 * coarseGradConstant d ^ 2) * Q ^ 2 * S +
+        Q ^ 2 * ((d : ℝ) ^ 2 * 9 ^ d) * SF / t) / 2 +
+      (Q ^ 2 * ((d : ℝ) ^ 2 * 9 ^ d) * (t * S) +
+        8 * d ^ 2 * coarseGradConstant d ^ 2 * Q ^ 2 * (SF / t)) / 2 := by
+    rw [hK, muSubaddConst]
+    ring
+  have hextra : 0 ≤ (Q ^ 2 * ((d : ℝ) ^ 2 * 9 ^ d) * (t * S) +
+      8 * d ^ 2 * coarseGradConstant d ^ 2 * Q ^ 2 * (SF / t)) / 2 := by positivity
+  calc _ ≤ Err := hlhs
+    _ ≤ Q * ∑ z ∈ C, v z * N z := herr
+    _ ≤ Q * ((τ * ∑ z ∈ C, v z ^ 2 + (∑ z ∈ C, N z ^ 2) / τ) / 2) :=
+        mul_le_mul_of_nonneg_left hY hQ0
+    _ ≤ Q * ((τ * (4 * d * (2 * d * coarseGradConstant d ^ 2 * Q ^ 2 * S)) +
+          (d ^ 2 * 9 ^ d * SF) / τ) / 2) := by
+        gcongr
+        · exact hv2.trans (mul_le_mul_of_nonneg_left hB (by positivity))
+    _ = _ := hfin
+    _ ≤ K * Q ^ 2 * (t * S + SF / t) / 2 := by linarith
+
 end Rigidity.Percolation
