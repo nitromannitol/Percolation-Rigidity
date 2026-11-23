@@ -17,7 +17,9 @@ concentration inequality of Proposition 2.17 (Armstrong, Kuusi and Mourrat, Prop
 * `lintegral_abs_sub_integral_rpow_le`: the concentration inequality and `𝕍[X] ≤ O_s(θ)` bound
   the moments of `|X - E[X]|` by `(A √θ q^{(1+s)/(2s)})^q`, with `β = 2s/(1+s)`;
 * `darioPropThreeOneTwo_of_lemmas`: Proposition 3.1 (`DarioPropThreeOneTwo`) from these and R3,
-  which gives the integrability of `X` (`heatGradient_coarseField_isOsBond`).
+  which gives the integrability of `X` (`heatGradient_coarseField_isOsBond`);
+* `darioOptimalCorrectorTwo_of_lemmas`: Dario's Theorem 1 in dimension two from R2, R3, the
+  multiscale Poincaré inequality, the concentration inequality and Lemmas 3.2 and 3.3.
 -/
 
 namespace Rigidity.Corrector
@@ -382,5 +384,14 @@ theorem darioPropThreeOneTwo_of_lemmas (hR3 : ArmstrongDarioOrderZeroTwo)
     rw [← ENNReal.ofReal_rpow_of_nonneg (by norm_num) hq0.le, ENNReal.ofReal_ofNat]
   rw [h4, ← ENNReal.ofReal_mul (by positivity), ← Real.mul_rpow (by norm_num) (by positivity),
     ← mul_assoc]
+
+/-- **Dario's Theorem 1 in dimension two** from R2, R3, the multiscale Poincaré inequality
+(Proposition 2.19), the concentration inequality (Proposition 2.17) and Lemmas 3.2 and 3.3. -/
+theorem darioOptimalCorrectorTwo_of_lemmas (hR2 : SupercriticalBondCorrectorInputTwo)
+    (hR3 : ArmstrongDarioOrderZeroTwo) {A₀ : ℝ} (hA₀ : 0 < A₀) (hMSP : MultiscalePoincareTwo A₀)
+    (hconc : ConcentrationTwo) (h32 : DarioLemmaThreeTwo) (h33 : DarioLemmaThreeThree) :
+    DarioOptimalCorrectorTwo :=
+  darioOptimalCorrectorTwo_of_prop31 hR2 hR3 hA₀ hMSP
+    (darioPropThreeOneTwo_of_lemmas hR3 hconc h32 h33)
 
 end Rigidity.Corrector
