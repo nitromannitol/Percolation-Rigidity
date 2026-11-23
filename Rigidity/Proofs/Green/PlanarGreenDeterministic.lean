@@ -9,7 +9,7 @@ Dario–Gu, §5, in dimension two: on an infinite open component `K ∋ y`, if t
 bound `p(t, x, y) ≤ C₂ e^{-|x-y|/C₂}` for `t ≤ |x - y|` (`HeatBounds`), then
 
 * `G(x) = ∫_0^∞ (p(t, x, y) - p(t, y, y)) dt` converges, and it is a Green column with pole `y`
-  (the identity `g(x, y) = ∫_0^∞ (p(t, x, y) - p(t, y, y)) dt` of Dario–Gu, DG21.tex:333 and (5.4), which
+  (the identity `g(x, y) = ∫_0^∞ (p(t, x, y) - p(t, y, y)) dt` of Dario–Gu, DG21.tex:336-338 and (5.4), which
   the source states without proof): `-Δ G = δ_y` follows from the heat equation and
   `p(t, x, y) → 0`, and `G` grows logarithmically;
 * `G(x) - ḡ(x - y) - K = ∫_0^∞ (p(t, x, y) - θ^{-1} p̄(t, x - y)) dt` with

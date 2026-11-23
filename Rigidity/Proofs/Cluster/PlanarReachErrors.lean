@@ -9,13 +9,13 @@ on `U`), the random quantities of Section 5 of Armstrong and Dario are bounded b
 ones, polynomial in `3^ℓ`:
 
 * `-μ(V, q) ≤ 2108304 · 81^ℓ |q|₁²` for every triadic cube `V ⊆ U` of scale at least `ℓ`
-  (`neg_planarMu_le_of_planarReachLe`, from the upper bound (4.14) of `-μ` by the reach), hence
+  (`neg_planarMu_le_of_planarReachLe`, from the upper bound (4.12) of `-μ` by the reach), hence
   `ρ(V)` is bounded (`planarRho_le_of_planarReachLe`, the bound `ρ ≤ C₁` of Step 1 of the proof of
   Lemma 5.11);
 * the error `Y(U)` of the comparison of `μ` and `ν` (Corollary 4.6) is at most
   `10⁹ (ℓ + 1) 729^ℓ 3^{-U.scale/2}` (`planarComparisonError_le_of_planarReachLe`);
-* the errors in the subadditivity of `μ` and `ν` over the subcubes of scale `n ≥ ℓ` ((4.30),
-  (4.31)) are at most `C (ℓ + 1) 531441^ℓ |q|₁² |U| 3^{-n/2}`
+* the errors in the subadditivity of `μ` and `ν` over the subcubes of scale `n ≥ ℓ` ((4.32),
+  (4.33)) are at most `C (ℓ + 1) 531441^ℓ |q|₁² |U| 3^{-n/2}`
   (`sum_planarMu_subcubes_sub_le_of_planarReachLe`,
   `planarNu_sub_sum_subcubes_le_of_planarReachLe`).
 -/
@@ -257,7 +257,7 @@ theorem edgeSideSum_le_of_planarReachLe {U : TriadicCube 2} {ℓ : ℕ} (h : Pla
   rw [three_pow_pow_eq, show ((3 ^ 6 : ℕ) : ℝ) = 729 by norm_num] at a1 a2
   linarith
 
-/-- **The error in the subadditivity of `μ` on the event** ((4.30) with a deterministic error). -/
+/-- **The error in the subadditivity of `μ` on the event** ((4.32) with a deterministic error). -/
 theorem sum_planarMu_subcubes_sub_le_of_planarReachLe {U : TriadicCube 2} {ℓ n : ℕ}
     (h : PlanarReachLe ω U ℓ) (hℓn : ℓ ≤ n) (hn : n ≤ U.scale) (q : Fin 2 → ℝ) :
     ∑ x ∈ U.toIntegerCube.vertices,
@@ -346,7 +346,7 @@ theorem sum_planarMu_subcubes_sub_le_of_planarReachLe {U : TriadicCube 2} {ℓ n
     _ = _ := by ring
 
 set_option maxHeartbeats 400000 in
-/-- **The error in the subadditivity of `ν` on the event** ((4.31) with a deterministic error). -/
+/-- **The error in the subadditivity of `ν` on the event** ((4.33) with a deterministic error). -/
 theorem planarNu_sub_sum_subcubes_le_of_planarReachLe {U : TriadicCube 2} {ℓ n : ℕ}
     (h : PlanarReachLe ω U ℓ) (hℓn : ℓ ≤ n) (hn : n ≤ U.scale) (ξ : Fin 2 → ℝ) :
     planarNu ω U ξ * U.volume - ∑ x ∈ U.toIntegerCube.vertices,
@@ -508,7 +508,7 @@ theorem rho_error_arith {S a b q2 A7 B AB vol s : ℝ} (ha : a ≤ S ^ 2 * b)
     _ = _ := by ring
 
 set_option maxHeartbeats 400000 in
-/-- **Subadditivity of `ρ` on the event** (display (5.55) of Armstrong and Dario, `e.rhosubadd`,
+/-- **Subadditivity of `ρ` on the event** (display (5.56) of Armstrong and Dario, `e.rhosubadd`,
 with deterministic errors): `ρ(U)` is at most the average of `ρ` over the subcubes of scale `n`
 plus `C (ℓ + 1) 531441^ℓ 3^{-n/2}`. -/
 theorem planarRho_le_avg_of_planarReachLe (p : unitInterval) {S : ℝ}

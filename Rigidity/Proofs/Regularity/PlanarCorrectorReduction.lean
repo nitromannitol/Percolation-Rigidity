@@ -13,7 +13,8 @@ input (`supercriticalBondCorrectorInputTwo_of_orderOne`) from
 * `ArmstrongDarioOrderZeroTwo` (Theorem 2 (iii) for `k = 0`; the Liouville theorem of order zero,
   through `Rigidity.Proofs.Section5.sublinearLiouvilleStep_two`);
 * `PlanarCorrectedPlaneExistenceTwo`: every slope has a corrected plane (Theorem 2 (ii) for
-  `k = 1`, with the sublinearity in the uniform norm of `IsCorrectedPlane`);
+  `k = 1`, with the sublinearity in the uniform norm of `IsCorrectedPlane`, which comes from
+  Remark 1.1 and (1.22) of the source);
 * `PlanarOrderOneDimensionTwo`: `dim 𝒜_1 ≤ 3` (Theorem 2 (i) for `k = 1`);
 
 and the cap density of the balls of the infinite cluster (proved,
@@ -29,7 +30,7 @@ namespace Rigidity.Proofs.Regularity
 open MeasureTheory LatticeProb LatticeProb.Percolation Rigidity.External Rigidity.Proofs.S2
 
 /-- Every slope has a corrected plane on the planar infinite cluster (Armstrong–Dario, Theorem 2
-(ii) for `k = 1`, with sublinearity in the uniform norm). -/
+(ii) for `k = 1`, with the sublinearity in the uniform norm of Remark 1.1 and (1.22)). -/
 def PlanarCorrectedPlaneExistenceTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ q : Fin 2 → ℝ,

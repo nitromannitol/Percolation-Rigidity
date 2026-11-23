@@ -8,7 +8,7 @@ form of the inputs of the proof of Theorem 1 of Armstrong and Dario in dimension
 
 * `planarMinimalScales_partition_holds`: for every `t ≥ 1` a minimal scale `𝓜_t ≤ O_s(C)` of the
   planar partition with `|□_m|⁻¹ ∑_{x ∈ □_m} size(□_𝒫(x))^t ≤ C` and
-  `size(□_𝒫(x)) ≤ 3^{2m/(2+t)}` on `□_m` whenever `𝓜_t ≤ 3ᵐ` (both bounds of (2.12));
+  `size(□_𝒫(x)) ≤ 3^{2m/(2+t)}` on `□_m` whenever `𝓜_t ≤ 3ᵐ` (both bounds of (2.13));
 * `planarMesoscopicConvergence_holds`: Proposition 5.13 on the triadic subcubes of `□_m` of scale
   `⌈m/8⌉`.
 -/
@@ -19,7 +19,7 @@ open MeasureTheory LatticeProb.Percolation Rigidity.Percolation Rigidity.Externa
   Rigidity.Proofs.Section5
 open scoped BigOperators Classical ENNReal Matrix
 
-/-- **Both bounds of (2.12) for the planar partition** (Armstrong and Dario, Proposition 2.4,
+/-- **Both bounds of (2.13) for the planar partition** (Armstrong and Dario, Proposition 2.4,
 dimension two, `p > p_c(2)`). -/
 theorem planarMinimalScales_partition_holds {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :

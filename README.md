@@ -1406,25 +1406,25 @@ the dimension-two chain take as hypotheses
 | --- | --- |
 | [`Rigidity.Proofs.Cluster.exists_planar_minimalScale`](Rigidity/Proofs/Cluster/PlanarMinimalScales.lean) | AD Proposition 2.4 for a family of cubes with the local measurability (2.1) and the failure bound (2.2): for every `τ` and `α > 0` a minimal scale `M ≤ O_r(θ)` such that, whenever `M ≤ 3^m`, the `τ`-th moment of the sizes on `□_m` is at most `K \|□_m\|` and every size is at most `3^{α m}`. |
 | [`Rigidity.Proofs.Cluster.planarMinimalScales_holds`](Rigidity/Proofs/Cluster/PlanarMinimalScales.lean) | the statement `PlanarMinimalScales p` ([`PlanarScaleStatements.lean`](Rigidity/Proofs/Cluster/PlanarScaleStatements.lean)): the partition `𝓡` of Definition 3.7 (maximal stopping cubes of the local family `planarRHGood`), with, for all `t, α > 0`, a minimal scale `M ≤ O_r(θ)` above which on `□_m` the `t`-th moments of the sizes of the cells of `𝓡`, of the planar partition cubes and of `planarReach` are at most `K \|□_m\|` and these sizes are at most `3^{α m}`. |
-| [`planarMinimalScales_partition_holds`](Rigidity/Proofs/Cluster/PlanarScaleForms.lean), [`planarMesoscopicConvergence_holds`](Rigidity/Proofs/Cluster/PlanarScaleForms.lean) | the two statements `Rigidity.Dirichlet.PlanarMinimalScales` and `Rigidity.Dirichlet.PlanarMesoscopicConvergence`, in the form of the inputs of the proof of Theorem 1 in dimension two: both bounds of (2.12) for the planar partition (`t ≥ 1`), and Proposition 5.13 on the triadic subcubes of `□_m` of scale `⌈m/8⌉`. |
-| [`exists_measure_not_planarReachLe_le`](Rigidity/Proofs/Cluster/PlanarReachEvent.lean), [`planarRho_le_avg_of_planarReachLe`](Rigidity/Proofs/Cluster/PlanarReachErrors.lean), [`planarComparisonError_le_of_planarReachLe`](Rigidity/Proofs/Cluster/PlanarReachErrors.lean), [`sum_subcubesAt_eq_sum_sum`](Rigidity/Proofs/Cluster/PlanarSubcubeIndex.lean) | the event that the reach is at most `3^ℓ` on a cube and the deterministic bounds on it: `-μ`, the error of the comparison of Corollary 4.6, the subadditivity errors and the subadditivity (5.55) of `ρ`; the subcubes of `□_{n+3+j}` are the cubes `⟨n, a + 27 b⟩`. |
+| [`planarMinimalScales_partition_holds`](Rigidity/Proofs/Cluster/PlanarScaleForms.lean), [`planarMesoscopicConvergence_holds`](Rigidity/Proofs/Cluster/PlanarScaleForms.lean) | the two statements `Rigidity.Dirichlet.PlanarMinimalScales` and `Rigidity.Dirichlet.PlanarMesoscopicConvergence`, in the form of the inputs of the proof of Theorem 1 in dimension two: both bounds of (2.13) for the planar partition (`t ≥ 1`), and Proposition 5.13 on the triadic subcubes of `□_m` of scale `⌈m/8⌉`. |
+| [`exists_measure_not_planarReachLe_le`](Rigidity/Proofs/Cluster/PlanarReachEvent.lean), [`planarRho_le_avg_of_planarReachLe`](Rigidity/Proofs/Cluster/PlanarReachErrors.lean), [`planarComparisonError_le_of_planarReachLe`](Rigidity/Proofs/Cluster/PlanarReachErrors.lean), [`sum_subcubesAt_eq_sum_sum`](Rigidity/Proofs/Cluster/PlanarSubcubeIndex.lean) | the event that the reach is at most `3^ℓ` on a cube and the deterministic bounds on it: `-μ`, the error of the comparison of Corollary 4.6, the subadditivity errors and the subadditivity (5.56) of `ρ`; the subcubes of `□_{n+3+j}` are the cubes `⟨n, a + 27 b⟩`. |
 | [`exists_planarRho_tail`](Rigidity/Proofs/Cluster/PlanarSIUpgrade.lean) | AD Lemma 5.11, Steps 1 to 3: the stretched exponential tail of `ρ(□_{n+3+j})` at an explicit threshold, together with the event that the reach is at most `3^ℓ`. |
 | [`exists_planarSubaddGood_tail`](Rigidity/Proofs/Cluster/PlanarSubaddTail.lean), [`exists_planarSubaddGood_tail_cube`](Rigidity/Proofs/Cluster/PlanarBoundN.lean) | AD Proposition 5.2 as a tail bound: `\|μ(V, q) + (1/2) q · ā⁻¹ q\| ≤ K \|q\|² 3^{−β scale V}` and `\|ν(V, ξ) − (1/2) ξ · ā ξ\| ≤ K \|ξ\|² 3^{−β scale V}` on the partition event with `V` resolved, off an event of probability at most `K' exp(−c 3^{m s})`, for `□_m` and then for every triadic cube and every translate. |
 | [`planar_subadd_os`](Rigidity/Proofs/Cluster/PlanarSubaddOsMain.lean) | AD Proposition 5.2, displays (5.2) and (5.3), `d = 2`: there are `r, α, C > 0` such that, for every triadic cube `V`, the random error `X(V)` of `μ(V, ·) + (1/2) q · ā⁻¹ q` and `ν(V, ·) − (1/2) ξ · ā ξ` (with `μ = ν = 0` off the event that the partition exists and resolves `V`) is measurable with `X(V) ≤ O_r(C 3^{−α scale V})`, `\|μ-error(q)\| ≤ X \|q\|²` and `\|ν-error(ξ)\| ≤ X \|ξ\|²`. |
 | [`planar_SIupgrade_os`](Rigidity/Proofs/Cluster/PlanarSIUpgradeOs.lean) | AD Lemma 5.11, `d = 2`: `sup_q \|q\|⁻² \|ω(V, q)\| ≤ O_r(C 3^{−α scale V})`, with a measurable majorant, for every triadic cube `V`. |
-| [`planar_muupbound_os`](Rigidity/Proofs/Cluster/PlanarSIUpgradeOs.lean) | AD (4.15), `d = 2`, with the rate `size^{−α}` in place of `size^{−1}`: `−μ(V, q) ≤ (K + Z(V)) \|q\|²` with `Z(V) ≤ O_r(C 3^{−α scale V})`. |
+| [`planar_muupbound_os`](Rigidity/Proofs/Cluster/PlanarSIUpgradeOs.lean) | AD (4.17), `d = 2`, with the rate `size^{−α}` in place of `size^{−1}`: `−μ(V, q) ≤ (K + Z(V)) \|q\|²` with `Z(V) ≤ O_r(C 3^{−α scale V})`. |
 | [`planarBoundN_holds`](Rigidity/Proofs/Cluster/PlanarBoundN.lean), [`exists_planarBoundN_general`](Rigidity/Proofs/Cluster/PlanarBoundN.lean) | AD Proposition 5.13, `d = 2` (the statement `PlanarBoundN p`): a random scale `N ≤ O_r(θ)` such that, whenever `N ≤ 3^m` and `n = ⌈m/4⌉`, on the triadic cubes `V` of scale `n` in `□_m`, and on `□_n` in the configuration translated by `−z` for every `z ∈ □_m`, the partition event holds, the cube is resolved, and `\|μ + (1/2) q · ā⁻¹ q\| ≤ C \|q\|² 3^{−mα}`, `\|ν − (1/2) ξ · ā ξ\| ≤ C \|ξ\|² 3^{−mα}`; the second theorem allows any `n(m)` with `n(m) ≤ m ≤ L n(m)`. |
 | [`osBound_indicator`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.add`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.mul`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`isOsBond_of_osBound`](Rigidity/Proofs/Cluster/OsTailCalculus.lean) | the calculus of the stretched exponential bounds used above, in the tail form: indicators, sums, products (AD (1.9)) and the passage to `IsOsBond`. |
 
-The thirty-five reports of the declarations of this section and of the `O_s` calculus are in
+The twenty-three reports of the declarations of this section and of the `O_s` calculus are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Departures from Armstrong and Dario:
 
 - **Lemma 5.11, Step 1.** The bad event is that the reach exceeds `3^ℓ` somewhere on `□_m`, of probability
   at most `9^m · 2 exp(−3^ℓ/θ)`, with the constant `C₁ = C 81^ℓ` growing with `ℓ` and `3^ℓ ≈ 3^{nα/24}`. AD obtain a
-  fixed constant `C₁` through the minimal scales ((4.15)).
-- **Lemma 5.11, Step 3.** On that event the errors of the subadditivity (5.55) are bounded deterministically,
+  fixed constant `C₁` through the minimal scales ((4.17)).
+- **Lemma 5.11, Step 3.** On that event the errors of the subadditivity (5.56) are bounded deterministically,
   by `C (ℓ + 1) 531441^ℓ 3^{−n/2}`, in place of an `O_s(C 3^{−k/4})` bound.
 - **Proposition 5.2.** It is proved first as a tail bound and transported from `□_m` to every triadic cube and
   every translate; the `O_s` form follows from the bound `X ≤ 12 K 3^{−βm} + c (1 + M⁴) 1_{bad}`, with `M` the
@@ -1582,7 +1582,7 @@ partition cubes (`PlanarPartitionSizeScale`) are named hypotheses.
   `M ≤ O_s(θ)`). Neither is proved here.
 * **R2 in dimension two** (`SupercriticalBondCorrectorInputTwo`) from `ArmstrongDarioOrderZeroTwo`,
   `PlanarCorrectedPlaneExistenceTwo` (every slope has a corrected plane on the planar infinite cluster, AD
-  Theorem 2(ii) at `k = 1`) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
+  Theorem 2(ii) at `k = 1`, with the sublinearity in the uniform norm of AD Remark 1.1 and (1.22)) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
   The last two are named hypotheses.
 
 | Lean declaration | Statement |
@@ -1657,10 +1657,10 @@ Departures from Dario and from Dario and Gu:
 - **Normalization.** Dario and Gu normalize the time integral of `p̄` by its mean over the unit ball, which
   produces the constant `K₁`; here it is normalized by `p̄(t, e)` with `|e| = 1`, which gives the homogenized Green
   function `ḡ` without a constant.
-- **Green function as a time integral.** The identity `g(x, y) = ∫_0^∞ (p(t, x, y) − p(t, y, y)) dt` (DG21.tex:333
+- **Green function as a time integral.** The identity `g(x, y) = ∫_0^∞ (p(t, x, y) − p(t, y, y)) dt` (DG21.tex:336-338
   and display (5.4)), which the source states without proof, is proved here for planar clusters.
 
-Misprints in the sources whose meaning is clear: Dario18.tex:218 and DG21.tex:1094 print `log^{1/2}|x − y|`, which
+Misprints in the sources whose meaning is clear: Dario18.tex:216 and DG21.tex:1094 print `log^{1/2}|x − y|`, which
 vanishes at `|x − y| = 1`, and the Lean statement uses `log^{1/2}(2 + |x − y|)`; AD18.tex:837-848 (the sign of the
 exponent of the tail).
 

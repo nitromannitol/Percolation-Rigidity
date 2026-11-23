@@ -11,7 +11,7 @@ two statements on the planar partition, taken as hypotheses:
   `𝒞_∞ ∩ B_R` satisfies the estimates (7.7), (7.8) and the bound of Step 2 of the proof of Lemma 7.1
   on the squares `□_j`, `3^j ≥ 𝒳`, `L 3^{j + 3} ≤ R` (`PlanarSquareEstimates`);
 * `PlanarPartitionSizeScale p`: above a minimal scale `𝓜 ≤ O_s(θ)`, the partition cubes of the
-  vertices of `□_m` have scale at most `m - 2` (the second bound of (2.12) of the source,
+  vertices of `□_m` have scale at most `m - 2` (the second bound of (2.13) of the source,
   Proposition 2.4, which gives `size(□_𝒫(x)) ≤ 3^{2m/3}` for `t = 1`).
 
 The density of the infinite cluster in triadic cubes (Dario–Gu, Proposition A.1, proved) gives a

@@ -76,7 +76,7 @@ theorem planar_SIupgrade_os {p : unitInterval} (hpc : criticalProbability 2 < (p
           gcongr
       _ = (1 + 2 * S ^ 2) * planarSubaddErr p V ω * (q 0 ^ 2 + q 1 ^ 2) := by ring
 
-/-- **The upper bound (4.15) of `-μ`, in the form `O_s`** (Armstrong and Dario, `e.muupboundwhip`,
+/-- **The upper bound (4.17) of `-μ`, in the form `O_s`** (Armstrong and Dario, `e.muupboundwhip`,
 dimension two, with the rate `size^{-α}` of Proposition 5.2 in place of `size^{-1}`):
 `-μ(V, q) ≤ (K + Z(V)) |q|²` with `Z(V) ≤ O_r(C 3^{-α scale V})`, `μ` set to `0` off the event. -/
 theorem planar_muupbound_os {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) :

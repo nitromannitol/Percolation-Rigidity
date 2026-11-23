@@ -10,7 +10,7 @@ three events
 
 * the reach of the planar partition exceeds `3^ℓ` somewhere on `U` (probability at most
   `9^{n+3+j} · 2 exp(-3^ℓ/θ)`), which gives the bound `ρ(V) ≤ C₁(ℓ)` of Step 1 and the
-  deterministic errors of the subadditivity (5.55) (`planarRho_le_avg_of_planarReachLe`);
+  deterministic errors of the subadditivity (5.56) (`planarRho_le_avg_of_planarReachLe`);
 * some subcube is not in the good event of the stationary local versions (probability at most
   `9^{3+j} · 2 C exp(-c 3ⁿ)`), so that `ρ(V) = ρ_stat(V) ∧ C₁` on every subcube;
 * the Chernoff event of Step 2 with the threshold `t = 2 (e - 1) (C + 1) (1 + C₁) 3^{-nα}`
