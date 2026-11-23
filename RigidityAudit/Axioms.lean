@@ -311,6 +311,24 @@ import Rigidity.Proofs.Cluster.GeneralRHProb
 import Rigidity.Proofs.Cluster.GeneralReachDomination
 import Rigidity.Proofs.Corrector.DarioStationaryPartition
 import Rigidity.Proofs.Corrector.PeriodicHeatDecay
+import Rigidity.Proofs.Regularity.PlanarCorrectorL2
+import Rigidity.Proofs.Regularity.PlanarScaleMaxima
+import Rigidity.Proofs.Regularity.PlanarCorrectorSupNorm
+import Rigidity.Proofs.Regularity.PlanarCorrectedPlaneExistence
+import Rigidity.Proofs.Regularity.PlanarCorrectorConstruction
+import Rigidity.Proofs.Regularity.PlanarCorrectorFromApproximation
+import Rigidity.Proofs.Regularity.PlanarNuEnergy
+import Rigidity.Proofs.Regularity.PlanarAffineApproximationNu
+import Rigidity.Proofs.Regularity.PlanarNuFlatnessAS
+import Rigidity.Proofs.Regularity.PlanarAffineApproximationHolds
+import Rigidity.Proofs.Regularity.OrderOneLift
+import Rigidity.Proofs.Regularity.PlanarOrderOneDimension
+import Rigidity.Proofs.Regularity.PlanarCorrectorHolds
+import Rigidity.Proofs.Corrector.DarioStationaryCoarsening
+import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoMoments
+import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoStepTwo
+import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoMean
+import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoProof
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -980,3 +998,46 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.abs_tsum_openHeat_mul_le
 #print axioms Rigidity.Corrector.abs_tsum_openHeat_mul_periodic_le_exp
 #print axioms Rigidity.Percolation.dario_errorstatpart
+
+-- The corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two (Armstrong and Dario, (1.18), Lemma 7.3), with no hypothesis
+#print axioms Rigidity.Proofs.Regularity.exists_planar_all_centres_constant_approximation
+#print axioms Rigidity.Proofs.Regularity.ae_eventually_scale_le_three
+#print axioms Rigidity.Proofs.Regularity.abs_corrector_le_at_scale
+#print axioms Rigidity.Proofs.Regularity.componentSlopeAsymptotics_of_scales
+#print axioms Rigidity.Proofs.Regularity.planarCorrectedPlaneExistenceTwo_of_sublinearL2
+#print axioms Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_of_sublinearL2
+#print axioms Rigidity.Proofs.Regularity.exists_harmonic_of_approximations
+#print axioms Rigidity.Proofs.Regularity.planarCorrectorSublinearL2Two_of_affineApproximation
+#print axioms Rigidity.Proofs.Regularity.planarCorrectedPlaneExistenceTwo_of_affineApproximation
+#print axioms Rigidity.Proofs.Regularity.planarCorrectedPlaneExistenceTwo_of_affineApproximationAe
+#print axioms Rigidity.Proofs.Regularity.clusterForm_planarNuSolution_le
+#print axioms Rigidity.Proofs.Regularity.sum_sq_extend_sub_coarsen_le
+#print axioms Rigidity.Proofs.Regularity.sum_sq_coarsen_combo_le
+#print axioms Rigidity.Proofs.Regularity.affineApproximation_at_scale
+#print axioms Rigidity.Proofs.Regularity.radicand_le
+#print axioms Rigidity.Proofs.Regularity.ae_eventually_planarNuFlatness_le
+#print axioms Rigidity.Proofs.Regularity.planarAffineApproximationAeTwo_of_nuFlatness
+#print axioms Rigidity.Proofs.Regularity.planarCorrectedPlaneExistenceTwo_of_nuFlatness
+#print axioms Rigidity.Proofs.Regularity.planarAffineApproximationAeTwo_of_minimalScales
+#print axioms Rigidity.Proofs.Regularity.planarCorrectedPlaneExistenceTwo_of_minimalScales
+#print axioms Rigidity.Proofs.Regularity.eq_clusterLiftMap_of_orderOne
+#print axioms Rigidity.Proofs.Regularity.planarOrderOneDimensionTwo_of_mesoscopic
+#print axioms Rigidity.Proofs.Regularity.planarOrderOneDimensionTwo_of_minimalScales
+#print axioms Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_of_mesoscopic
+#print axioms Rigidity.Proofs.Regularity.mesoscopicDegreeTwoPlanarInput_iff
+#print axioms Rigidity.Proofs.Regularity.mesoscopicDegreeTwoPlanarInput_holds
+#print axioms Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_holds
+#print axioms Rigidity.Proofs.Regularity.planarCorrectedPlaneExistenceTwo_holds
+#print axioms Rigidity.Proofs.Regularity.planarOrderOneDimensionTwo_holds
+#print axioms Rigidity.Proofs.Regularity.supercriticalBondGreenColumnExistenceTwo_holds
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector
+#print axioms Rigidity.Proofs.Regularity.darioOptimalCorrectorTwo_of_oscillation
+
+-- Lemma 3.2 of Dario in dimension two from the quantitative sublinearity (1.22), Steps 1 and 2, and Theorem 1 of Dario from it
+#print axioms Rigidity.Corrector.measurable_statAnchor
+#print axioms Rigidity.Corrector.statGrad_translation
+#print axioms Rigidity.Corrector.exists_lintegral_abs_statDiscrepancy_le
+#print axioms Rigidity.Corrector.exists_lintegral_abs_statSegment_le
+#print axioms Rigidity.Corrector.sum_statMean_period_eq_zero
+#print axioms Rigidity.Corrector.darioLemmaThreeTwo_of_osc
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_osc

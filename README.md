@@ -307,9 +307,14 @@ derives it in every dimension from the planar order-zero estimate `ArmstrongDari
 [Green columns for d ≥ 3](#green-columns-for-d--3).
 
 In dimension two the planar inputs are reduced further. `ArmstrongDarioOrderZeroTwo` follows from the harmonic
-approximation `PlanarHarmonicApproximationTwo` of AD Lemma 7.1, and `SupercriticalBondCorrectorInputTwo` follows from
-`ArmstrongDarioOrderZeroTwo` with the existence of corrected planes and the bound `dim 𝒜₁ ≤ 3` (see
-[Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71)). The planar Green-column input follows from `SupercriticalBondCorrectorInputTwo`, the quantitative
+approximation `PlanarHarmonicApproximationTwo` of AD Lemma 7.1 and is proved. `SupercriticalBondCorrectorInputTwo`
+(R2) follows from `ArmstrongDarioOrderZeroTwo` with the existence of corrected planes and the bound `dim 𝒜₁ ≤ 3`
+(see [Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71)), and these
+are proved too, so R2 is proved in dimension two for `𝔭_c(2) < 𝔭 < 1` with no hypothesis
+(`supercriticalBondCorrectorInputTwo_holds`; see
+[Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)).
+The planar Green-column input (R6) follows from it with no further hypothesis
+(`supercriticalBondGreenColumnExistenceTwo_holds`), the quantitative
 corrector estimate from it with Theorem 1 of Dario, and the quantitative Green estimate with Theorem 1 of Dario and Gu
 (see [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two)).
 
@@ -318,8 +323,8 @@ and the corrector inputs
 ([`armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo`](Rigidity/Proofs/Regularity/OrderOneOrigin.lean)); see
 [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate).
 In dimension two, (7.18) at `k = 2` is proved from the estimates on squares of the proof of AD Lemma 7.1, and
-`ArmstrongDarioOrderOneOriginTwo` from them with Theorem 1 of Dario, the existence of corrected planes and the bound
-`dim 𝒜₁ ≤ 3`; see
+`ArmstrongDarioOrderOneOriginTwo` (R4) from them with Theorem 1 of Dario alone (the existence of corrected planes and
+the bound `dim 𝒜₁ ≤ 3` are proved); see
 [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two).
 
 | Lean name | Statement | Source | Results that use it |
@@ -1594,9 +1599,11 @@ minimal scales of Proposition 2.4
 the statements `PlanarMinimalScalesTwo p` and `PlanarHomogenizationErrorTwo p p'` of the files on Lemma 7.1 are the
 statements `Rigidity.Proofs.Cluster.PlanarMinimalScales p` and `Rigidity.Dirichlet.PlanarHomogenizationError p p'`
 (`planarMinimalScalesTwo_holds`, `planarHomogenizationErrorTwo_holds`).
-Theorem 2(iii) at `k = 1` at the origin in dimension two follows from this and from three named hypotheses,
-`DarioOptimalCorrectorTwo` (Theorem 1 of Dario), `PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`
-(`armstrongDarioOrderOneOriginTwo_of_dario`).
+Theorem 2(iii) at `k = 1` at the origin in dimension two follows from this and from the named hypothesis
+`DarioOptimalCorrectorTwo` (Theorem 1 of Dario) alone, since `PlanarCorrectedPlaneExistenceTwo` and
+`PlanarOrderOneDimensionTwo` are proved (`armstrongDarioOrderOneOriginTwo_of_dario` and
+`armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector`; see
+[Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1687,8 +1694,11 @@ scales of the partition cubes (`PlanarPartitionSizeScale`) follows from the mini
   `M ≤ O_s(θ)`). Both are proved for `𝔭_c(2) < p < 1` (see the sections on Lemma 7.1 and on Lemma 7.3 at `k = 2`).
 * **R2 in dimension two** (`SupercriticalBondCorrectorInputTwo`) from `ArmstrongDarioOrderZeroTwo`,
   `PlanarCorrectedPlaneExistenceTwo` (every slope has a corrected plane on the planar infinite cluster, AD
-  Theorem 2(ii) at `k = 1`, with the sublinearity in the uniform norm of AD Remark 1.1 and (1.22)) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
-  The last two are named hypotheses.
+  Theorem 2(ii) at `k = 1`, with the sublinearity in the uniform norm of the remark after (1.19), AD18.tex:529-562,
+  whose conclusion is (1.22)) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
+  The last two are proved for `𝔭_c(2) < 𝔭 < 1`, so `supercriticalBondCorrectorInputTwo_holds` is R2 in dimension two
+  with no hypothesis (see
+  [Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1723,7 +1733,10 @@ estimates on squares of the proof of Lemma 7.1 (`PlanarSquareEstimatesTwo`). Wit
 `Rigidity.External.ArmstrongDarioOrderOneOriginTwo` (AD Theorem 2(iii) at `k = 1`, at the origin, in the plane)
 is proved from `PlanarSquareEstimatesTwo`, Theorem 1 of Dario in dimension two (`DarioOptimalCorrectorTwo`),
 `PlanarCorrectedPlaneExistenceTwo` and `PlanarOrderOneDimensionTwo`; the estimates on squares are proved
-in [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1), so that only the last three are hypotheses (`armstrongDarioOrderOneOriginTwo_of_dario`). The other inputs are proved: the minimal
+in [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1), and the last two in
+[Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two),
+so that only `DarioOptimalCorrectorTwo` is a hypothesis (`armstrongDarioOrderOneOriginTwo_of_dario`,
+`armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector`). The other inputs are proved: the minimal
 scales of AD Proposition 2.4 (`Rigidity.Proofs.Cluster.planarMinimalScales_holds`), which also give the
 hypothesis `PlanarPartitionSizeScale` of Lemma 7.1, and the density of the infinite cluster in cubes.
 
@@ -1774,6 +1787,75 @@ largest partition cube in `B_R`, of side at most `c R^{α′/2}` above the minim
 (`harmonicApproximation_error_le`); the loss `R^{α′/2}` is absorbed by the factor `(4T)^{−α′}` of the
 harmonic-approximation error, which leaves `δ = α′/2` in (7.18).
 
+## Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two
+
+For `𝔭_c(2) < 𝔭 < 1` the qualitative corrector input `SupercriticalBondCorrectorInputTwo` (R2) is proved with no further
+hypothesis, in [`Rigidity/Proofs/Regularity/`](Rigidity/Proofs/Regularity/), by the route of Armstrong, Kuusi and
+Mourrat (arXiv:1602.00512, called AKM2 here, numbered as in that paper), Proposition 3.1, Steps 3 and 4, which AD18.tex:5658
+cites for Theorem 2 (i)–(iii) at `k = 1`.
+
+* **The corrected planes** (`PlanarCorrectedPlaneExistenceTwo`, AD Theorem 2 (ii) at `k = 1`, with the sublinearity in the
+  uniform norm of the remark after (1.19), AD18.tex:529-562). From the approximation of affine functions on the balls
+  `B_{3^m}` of the cluster by harmonic functions `u_m` with `‖u_m − q·x‖ ≤ K |q|₁ 3^{m(1−δ)}`
+  (`PlanarAffineApproximationAeTwo`), the corrector of the slope `q` is the diagonal limit of the `u_m`, by the telescoping
+  bound and the Lipschitz estimate at the origin of the order-zero regularity (`exists_harmonic_of_approximations`, Step 3 of
+  AKM2 Proposition 3.1). This gives (1.18), `|χ_q|` in `L̲²(𝒞_∞ ∩ B_r)` at most `C |q| r^{1−δ}` above a scale, with the scale
+  almost surely finite (`PlanarCorrectorSublinearL2AeTwo`), and then the bound in the uniform norm
+  (`abs_corrector_le_at_scale`, `componentSlopeAsymptotics_of_scales`).
+* **The approximation of affine functions** (`planarAffineApproximationAeTwo_of_minimalScales`) by the maximizers of `ν`:
+  `u_m = q₀ v(·, □_{j+3}, e₀) + q₁ v(·, □_{j+3}, e₁) − c` on `B_{3^{j+1}}`, with the bound on the energy of `ν`
+  (`clusterForm_planarNuSolution_le`, Lemma 3.2 with reach scales at most the scale `D`), the coarsening errors
+  (`sum_sq_coarsen_combo_le`) and the flatness (5.33) of Lemma 5.8 (AD18.tex:3413) in expectation, with the geometric decay
+  of `τ_n` from Lemmas 5.5, 5.8 and 5.10; all three are proved in the sections on those lemmas above.
+* **`dim 𝒜₁ ≤ 3`** (`planarOrderOneDimensionTwo_of_mesoscopic`, AD Theorem 2 (i) at `k = 1`), from (7.18) at `k = 2` of
+  Lemma 7.3 (AD18.tex:5490-5497), the density of the cluster in cubes and the existence of the corrected planes: for one
+  configuration, every `u ∈ 𝒜₁` is `a + Σᵢ ξᵢ gᵢ` for the corrected planes `gᵢ` of slopes `eᵢ`
+  (`eq_clusterLiftMap_of_orderOne`, Step 4 of AKM2 Proposition 3.1), so `𝒜₁` lies in the range of a linear map from
+  `ℝ × ℝ²`.
+* **The inputs are discharged in dimension two** (`Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean`). The statement
+  `MesoscopicDegreeTwoPlanarInput` used for the dimension is `ArmstrongDarioMesoscopicDegreeTwoPlanar` (by `Iff.rfl`,
+  `mesoscopicDegreeTwoPlanarInput_iff`), and (7.18) at `k = 2` follows from the estimates on squares
+  (`mesoscopicDegreeTwoPlanarInput_holds`, from `planarSquareEstimatesTwo_holds`); the minimal scales are
+  `planarMinimalScalesTwo_holds` and the order-zero regularity `armstrongDarioOrderZeroTwo_holds`. Hence
+  `planarCorrectedPlaneExistenceTwo_holds`, `planarOrderOneDimensionTwo_holds`, R2 `supercriticalBondCorrectorInputTwo_holds`,
+  R6 `supercriticalBondGreenColumnExistenceTwo_holds` (by `supercriticalBondGreenColumnExistenceTwo_of_correctorInput`), and
+  R4 `armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector` from `DarioOptimalCorrectorTwo` alone. There is no circularity: (7.18)
+  at `k = 2` uses the estimates on squares, not the corrector estimate.
+  `darioOptimalCorrectorTwo_of_oscillation` is Theorem 1 of Dario with R2 and R3 discharged.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`exists_planar_all_centres_constant_approximation`](Rigidity/Proofs/Regularity/PlanarCorrectorL2.lean), [`ae_eventually_scale_le_three`](Rigidity/Proofs/Regularity/PlanarScaleMaxima.lean) | the order-zero approximation by constants at every centre of the ball, and the almost sure bound of the minimal scales over the triadic boxes at all large scales. |
+| [`abs_corrector_le_at_scale`](Rigidity/Proofs/Regularity/PlanarCorrectorSupNorm.lean), [`componentSlopeAsymptotics_of_scales`](Rigidity/Proofs/Regularity/PlanarCorrectorSupNorm.lean), [`planarCorrectedPlaneExistenceTwo_of_sublinearL2`](Rigidity/Proofs/Regularity/PlanarCorrectedPlaneExistence.lean), [`supercriticalBondCorrectorInputTwo_of_sublinearL2`](Rigidity/Proofs/Regularity/PlanarCorrectedPlaneExistence.lean) | the corrector bounded uniformly on a box by powers of the minimal scale, from (1.18) and the Lipschitz estimate; the sublinearity in the uniform norm; the corrected planes and R2 from (1.18) with an almost surely finite scale. |
+| [`exists_harmonic_of_approximations`](Rigidity/Proofs/Regularity/PlanarCorrectorConstruction.lean), [`planarCorrectorSublinearL2Two_of_affineApproximation`](Rigidity/Proofs/Regularity/PlanarCorrectorFromApproximation.lean), [`planarCorrectedPlaneExistenceTwo_of_affineApproximation`](Rigidity/Proofs/Regularity/PlanarCorrectorFromApproximation.lean), [`planarCorrectedPlaneExistenceTwo_of_affineApproximationAe`](Rigidity/Proofs/Regularity/PlanarCorrectorFromApproximation.lean) | Step 3 of AKM2 Proposition 3.1: the harmonic function on the cluster from approximations on growing balls, (1.18), and the corrected planes. |
+| [`clusterForm_planarNuSolution_le`](Rigidity/Proofs/Regularity/PlanarNuEnergy.lean), [`sum_sq_extend_sub_coarsen_le`](Rigidity/Proofs/Regularity/PlanarNuEnergy.lean), [`sum_sq_coarsen_combo_le`](Rigidity/Proofs/Regularity/PlanarNuEnergy.lean), [`affineApproximation_at_scale`](Rigidity/Proofs/Regularity/PlanarAffineApproximationNu.lean), [`radicand_le`](Rigidity/Proofs/Regularity/PlanarAffineApproximationNu.lean) | the energy of the maximizers of `ν` and of their combinations, their coarsening errors, and the approximation of affine functions at one scale. |
+| [`ae_eventually_planarNuFlatness_le`](Rigidity/Proofs/Regularity/PlanarNuFlatnessAS.lean), [`planarAffineApproximationAeTwo_of_nuFlatness`](Rigidity/Proofs/Regularity/PlanarAffineApproximationNu.lean), [`planarCorrectedPlaneExistenceTwo_of_nuFlatness`](Rigidity/Proofs/Regularity/PlanarAffineApproximationNu.lean), [`planarAffineApproximationAeTwo_of_minimalScales`](Rigidity/Proofs/Regularity/PlanarAffineApproximationHolds.lean), [`planarCorrectedPlaneExistenceTwo_of_minimalScales`](Rigidity/Proofs/Regularity/PlanarAffineApproximationHolds.lean) | the Markov inequality and the Borel–Cantelli lemma for the flatness (5.33) in expectation, giving an almost sure bound at all large scales; the approximation of affine functions with an almost surely finite scale; the corrected planes from the minimal scales and the order-zero regularity. |
+| [`eq_clusterLiftMap_of_orderOne`](Rigidity/Proofs/Regularity/OrderOneLift.lean), [`planarOrderOneDimensionTwo_of_mesoscopic`](Rigidity/Proofs/Regularity/PlanarOrderOneDimension.lean), [`planarOrderOneDimensionTwo_of_minimalScales`](Rigidity/Proofs/Regularity/PlanarOrderOneDimension.lean), [`supercriticalBondCorrectorInputTwo_of_mesoscopic`](Rigidity/Proofs/Regularity/PlanarOrderOneDimension.lean) | Step 4: every element of `𝒜₁` is a constant plus a combination of corrected planes; `dim 𝒜₁ ≤ 3`; R2 from (7.18) at `k = 2`, the minimal scales and the order-zero regularity. |
+| [`mesoscopicDegreeTwoPlanarInput_iff`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean), [`mesoscopicDegreeTwoPlanarInput_holds`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean), [`planarCorrectedPlaneExistenceTwo_holds`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean), [`planarOrderOneDimensionTwo_holds`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean), [`supercriticalBondCorrectorInputTwo_holds`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean), [`supercriticalBondGreenColumnExistenceTwo_holds`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean), [`armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean), [`darioOptimalCorrectorTwo_of_oscillation`](Rigidity/Proofs/Regularity/PlanarCorrectorHolds.lean) | (7.18) at `k = 2`, the corrected planes, `dim 𝒜₁ ≤ 3`, R2 and R6 in dimension two with no hypothesis beyond `𝔭_c(2) < 𝔭 < 1`; R4 from `DarioOptimalCorrectorTwo` alone; Theorem 1 of Dario from the multiscale Poincaré inequality, the concentration inequality, (1.22) and Lemma 3.3. |
+
+The thirty-two reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Armstrong and Dario and from Armstrong, Kuusi and Mourrat:
+
+- **The scale of (1.18) is almost surely finite, not `O_s`.** The flatness (5.33) is proved in expectation only. The Markov
+  inequality gives `P[flat_n > 9ⁿ μ^{n/2}] ≤ C μ^{n/2}`, a scale with a polynomial tail, and the Borel–Cantelli lemma over
+  the scales (with `τ_n ≤ K l^n`) gives a scale that is almost surely finite. This is enough for the qualitative statements
+  (corrected planes, sublinearity in the uniform norm, `dim 𝒜₁ ≤ 3`) but not for the quantitative statements (1.18) and (1.22)
+  with `O_s` scales: the form (1.22) (`CorrectorOscSublinearTwo`) stays a hypothesis of
+  [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two). An `O_s` majorant for (5.33) would need Lemma 5.5
+  with the subadditivity defect in place of `τ_k`.
+- **Step 4 of AKM2 Proposition 3.1 without orthogonality.** AKM2 uses the orthogonality of the `ā`-harmonic monomials to
+  lift `𝒜₁`. Here the endpoint iteration of the order-one regularity gives, for each radius `R`, one lifted affine function
+  `ℓ_R` with error `C (t/R)² ‖u‖_R = o(1)` for `u ∈ 𝒜₁`; the sizes of `ℓ_R` are bounded, and a limit point `ℓ` gives
+  `u = Lℓ`. Only the qualitative statement that each `eᵢ` has a corrected plane is used, so the scale is almost surely finite.
+- **Step 3 of AKM2 Proposition 3.1.** The Lipschitz estimate is used in the form of the order-zero regularity (`k = 0`) at the
+  centre, Borel–Cantelli over the triadic boxes replaces the stochastic integrability, and the sublinearity in the uniform
+  norm uses a staircase interpolation on `x + [0, t]²`.
+- **The lattice route.** The harmonic functions in the approximation are on the balls of the cluster, and the approximation
+  uses the maximizers of `ν` on `□_{j+3}` (AD Lemma 5.8 (5.33) and Lemma 5.10 in place of the energy of the continuum
+  corrector), with reach at most `3^{(j+3)/4}` from the minimal scales with `α = 1/4`.
+
 ## The corrector estimate, the Green column and the Green function estimate in dimension two
 
 Three planar inputs are reduced to named statements of Dario and of Dario and Gu, in
@@ -1781,7 +1863,8 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
 
 * **R6 in dimension two** (`SupercriticalBondGreenColumnExistenceTwo`) from `SupercriticalBondCorrectorInputTwo`
   alone: the existence of the planar Green columns is proved, and the uniqueness follows from the uniqueness of the
-  zero-slope corrected plane (`supercriticalBondGreenColumnExistenceTwo_of_correctorInput`).
+  zero-slope corrected plane (`supercriticalBondGreenColumnExistenceTwo_of_correctorInput`). With R2 proved,
+  `supercriticalBondGreenColumnExistenceTwo_holds` is R6 in dimension two with no hypothesis beyond `𝔭_c(2) < 𝔭 < 1`.
 * **R5 in dimension two** (`CorrectorQuantitativeInputTwo`, Dario and Gu, Proposition 2.12) from
   `DarioOptimalCorrectorTwo`, Theorem 1 of Dario in dimension two, and `SupercriticalBondCorrectorInputTwo`
   (`correctorQuantitativeInputTwo_of_dario`). `DarioOptimalCorrectorTwo` states: for every `p ∈ (𝔭_c(2), 1)`
@@ -1808,8 +1891,7 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
 
 The twenty-seven reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). With the previous section, the three planar inputs
-are consequences of `PlanarCorrectedPlaneExistenceTwo`, `PlanarOrderOneDimensionTwo`, `DarioGuHeatKernelTwo`,
-and the inputs `MultiscalePoincareTwo`, `ConcentrationTwo`, `DarioLemmaThreeTwo` and `DarioLemmaThreeThree` of [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two) (the order-zero regularity
+are consequences of `DarioGuHeatKernelTwo` and the inputs `MultiscalePoincareTwo`, `ConcentrationTwo`, `DarioLemmaThreeTwo` and `DarioLemmaThreeThree` of [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two) (the order-zero regularity
 `PlanarHarmonicApproximationTwo` is proved, in
 [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1)).
 `DarioGuHeatKernelTwo` is proved from named inputs in [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two).
@@ -1839,9 +1921,10 @@ and with it the quantitative corrector input `CorrectorQuantitativeInputTwo` of 
 following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/)
 ([`darioOptimalCorrectorTwo_of_inputs`, `correctorQuantitativeInputTwo_of_inputs`](Rigidity/Proofs/Corrector/PlanarDarioCorrectorHolds.lean)):
 
-* `SupercriticalBondCorrectorInputTwo` (R2), which follows from `PlanarCorrectedPlaneExistenceTwo` and
-  `PlanarOrderOneDimensionTwo`
-  ([Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71));
+* `SupercriticalBondCorrectorInputTwo` (R2), which is proved for `𝔭_c(2) < 𝔭 < 1`
+  (`supercriticalBondCorrectorInputTwo_holds`, in
+  [Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)),
+  and is no longer a hypothesis of `darioOptimalCorrectorTwo_of_oscillation`;
 * `MultiscalePoincareTwo A₀` with some `A₀ > 0`: the multiscale Poincaré inequality of Dario, Proposition 2.19,
   display (2.26), in cube form at `R = 3^m`, with the constant `A₀ q^{3/2}` for `q ≥ 2`, and with the absolute
   convergence of the convolutions `Φ_{r²} * ∇u` required, as the printed statement uses them (the statement is
@@ -1902,7 +1985,19 @@ deterministically and is stationary under the translations by `3^k ℤ²`
 every triadic cube `□` of scale `k` follows from the localization of the planar partition. Step 3 of the proof of
 Lemma 3.2 is proved as well (`abs_tsum_openHeat_mul_periodic_le_exp`, `Rigidity/Proofs/Corrector/PeriodicHeatDecay.lean`):
 for a `3^k`-periodic function `f` of sum zero over a period and `9^k ≤ r`, `|Φ_{r²} * f(x)| ≤ e^{−16 r} Σ_{period} |f|`, by the
-discrete Fourier transform. The other steps of Lemma 3.2 are not formalized.
+discrete Fourier transform. Steps 1 and 2 of the proof of Lemma 3.2 are proved from the quantitative sublinearity (1.22) of
+Armstrong and Dario in its `O_s` form (`CorrectorOscSublinearTwo`, a hypothesis): the expected discrepancy between the coarsened
+correctors of the planar and of the stationary partitions is at most `K (1 + C 9^k)⁴ e^{−c 3^k/2}`
+(`exists_lintegral_abs_statDiscrepancy_le`, Step 1), the expected increment of the stationary coarsened corrector along a
+segment of length `N` is at most `C N^{1−δ} + C` (`exists_lintegral_abs_statSegment_le`), and the mean of its gradient is periodic
+under `3^k ℤ²` with sum zero over a period (`sum_statMean_period_eq_zero`, Step 2). With them `darioLemmaThreeTwo_of_osc`
+derives `DarioLemmaThreeTwo` for `r ≥ 1`, with `k = log₉ ⌊r⌋`, from (1.22) and the order-zero regularity, and
+`darioOptimalCorrectorTwo_of_osc` is Theorem 1 of Dario from the multiscale Poincaré inequality, the concentration
+inequality, (1.22) and `DarioLemmaThreeThree`. The statement (1.22) is not proved: the scale in the corrected planes of the previous
+section is only almost surely finite
+([Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)).
+The seven reports for these declarations are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The proof of
+Lemma 3.3, with Lemma 3.5, is not formalized.
 
 Departures from Dario:
 
@@ -2041,7 +2136,7 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 560 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 599 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2092,9 +2187,13 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
   [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two),
   the thirteen theorems of
   [Section 3 and the isotropy of the homogenized matrix in every dimension](#section-3-and-the-isotropy-of-the-homogenized-matrix-in-every-dimension),
-  and the twenty-seven theorems of
-  [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
-  Each of the 560 reports lists only axioms among `propext`, `Classical.choice` and
+  the twenty-seven theorems of
+  [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two),
+  the thirty-two theorems of
+  [Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two),
+  and the seven theorems on Lemma 3.2 of Dario from (1.22) in
+  [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two).
+  Each of the 599 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2125,10 +2224,10 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1366 Lean files with 267,233 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1391 Lean files with 273,182 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (982 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (1,043 lines) are counted separately.
 
 ## Building
 
