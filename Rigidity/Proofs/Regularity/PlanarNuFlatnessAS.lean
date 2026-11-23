@@ -128,4 +128,69 @@ theorem flatness_bracket_le {p : unitInterval} (htau : PlanarTauGeometricTwo p) 
             μ₁ ^ n + (T₀ * μ₁ ^ n + K' * (n + 1) * μ₁ ^ n) + (1 + T₀) * (n : ℝ) * μ₁ ^ n := by ring
         linarith
 
+/-- **The flatness of the maximizers of `ν` almost surely at all large scales**, from (5.33) in
+expectation and the geometric decay of `τ`, by the Chebyshev inequality and Borel–Cantelli. -/
+theorem ae_eventually_planarNuFlatness_le {p : unitInterval}
+    (hflat : PlanarNuFlatnessMajorantTwo p) (htau : PlanarTauGeometricTwo p) :
+    ∃ μ : ℝ, 0 < μ ∧ μ < 1 ∧ ∀ ξ : Fin 2 → ℝ, ∀ᵐ ω ∂(latticeBondLaw 2 p), ∀ᶠ n in atTop,
+      planarFlatnessError ⟨n + 1, 0⟩ (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ ξ)) ξ ≤
+        (ξ 0 ^ 2 + ξ 1 ^ 2 + 1) * 9 ^ n * μ ^ n := by
+  obtain ⟨C, hC, hΦ⟩ := hflat
+  obtain ⟨B, μ₁, hB, hμ₁0, hμ₁1, hbr⟩ := flatness_bracket_le htau
+  set μ : ℝ := Real.sqrt μ₁ with hμ
+  have hμ0 : 0 < μ := Real.sqrt_pos.2 hμ₁0
+  have hμ1 : μ < 1 := by rw [hμ, Real.sqrt_lt' one_pos]; simpa using hμ₁1
+  have hμsq : μ ^ 2 = μ₁ := Real.sq_sqrt hμ₁0.le
+  refine ⟨μ, hμ0, hμ1, fun ξ => ?_⟩
+  choose Φ hΦm hΦ0 hΦae hΦint using fun n => hΦ n ξ
+  set Q : ℝ := ξ 0 ^ 2 + ξ 1 ^ 2 with hQ
+  have hQ0 : 0 ≤ Q := by positivity
+  set t : ℕ → ℝ := fun n => (Q + 1) * 9 ^ n * μ ^ n with ht
+  have ht0 : ∀ n, 0 < t n := fun n => by rw [ht]; positivity
+  set E : ℕ → Set (Configuration 2) := fun n => {ω | ENNReal.ofReal (t n) ≤ ENNReal.ofReal (Φ n ω)}
+    with hE
+  have hEle : ∀ n, (latticeBondLaw 2 p) (E n) ≤ ENNReal.ofReal (C * B * ((n + 1) * μ ^ n)) := by
+    intro n
+    have hm := meas_ge_le_lintegral_div (μ := latticeBondLaw 2 p) (hΦm n).ennreal_ofReal
+      (ENNReal.ofReal_pos.2 (ht0 n)).ne' ENNReal.ofReal_ne_top
+    refine hm.trans ?_
+    rw [ENNReal.div_le_iff (ENNReal.ofReal_pos.2 (ht0 n)).ne' ENNReal.ofReal_ne_top,
+      ← ENNReal.ofReal_mul (by positivity)]
+    refine (hΦint n).trans (ENNReal.ofReal_le_ofReal ?_)
+    have hbn := hbr n
+    have e : C * B * ((n + 1) * μ ^ n) * t n = C * (Q + 1) * 9 ^ n * (B * (n + 1) * μ₁ ^ n) := by
+      rw [ht, ← hμsq]; ring
+    rw [e]
+    have hC9 : 0 ≤ C * Q * 9 ^ n := by positivity
+    calc C * Q * 9 ^ n * ((3 : ℝ) ^ (-(n : ℝ) / 10) +
+          ((3 : ℝ) ^ n)⁻¹ * ∑ k ∈ Finset.range (n + 1), (3 : ℝ) ^ k * planarTau p k)
+        ≤ C * Q * 9 ^ n * (B * (n + 1) * μ₁ ^ n) := mul_le_mul_of_nonneg_left hbn hC9
+      _ ≤ C * (Q + 1) * 9 ^ n * (B * (n + 1) * μ₁ ^ n) := by
+          have : 0 ≤ B * (n + 1) * μ₁ ^ n := by positivity
+          have : C * Q * 9 ^ n ≤ C * (Q + 1) * 9 ^ n := by
+            have := mul_le_mul_of_nonneg_left (by linarith : Q ≤ Q + 1) hC
+            exact mul_le_mul_of_nonneg_right this (by positivity)
+          gcongr
+  have hsumm : Summable fun n : ℕ => C * B * ((n + 1) * μ ^ n) := by
+    have h1 : Summable fun n : ℕ => (n : ℝ) ^ 1 * μ ^ n :=
+      summable_pow_mul_geometric_of_norm_lt_one 1 (by rw [Real.norm_eq_abs, abs_of_pos hμ0]; exact hμ1)
+    have h2 : Summable fun n : ℕ => μ ^ n := summable_geometric_of_lt_one hμ0.le hμ1
+    have h3 : Summable fun n : ℕ => (n + 1 : ℝ) * μ ^ n := by
+      have := h1.add h2
+      refine this.congr fun n => ?_
+      simp only [pow_one]; ring
+    exact h3.mul_left (C * B)
+  have hsum : ∑' n, (latticeBondLaw 2 p) (E n) ≠ ∞ := by
+    refine ne_top_of_le_ne_top ?_ (ENNReal.tsum_le_tsum hEle)
+    rw [← ENNReal.ofReal_tsum_of_nonneg (fun n => by positivity) hsumm]
+    exact ENNReal.ofReal_ne_top
+  have hall := ae_all_iff.2 hΦae
+  filter_upwards [ae_eventually_notMem hsum, hall] with ω hω hωΦ
+  filter_upwards [hω] with n hn
+  have hlt : Φ n ω < t n := by
+    by_contra hge
+    push Not at hge
+    exact hn (ENNReal.ofReal_le_ofReal hge)
+  exact (hωΦ n).trans hlt.le
+
 end Rigidity.Proofs.Regularity
