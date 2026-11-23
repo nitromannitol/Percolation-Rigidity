@@ -285,4 +285,139 @@ theorem sum_sq_coarse_sub_mean_le (hP : PlanarPartitionEvent ω) (C : OpenCompon
     _ = 128 / 81 * (4 * planarCoarseConst) ^ 2 * P * Ssum := by
         rw [pow_succ]; field_simp; ring
 
+/-- `(x + y + z)² ≤ 3 (x² + y² + z²)`. -/
+theorem sq_add_add_le (x y z : ℝ) : (x + y + z) ^ 2 ≤ 3 * (x ^ 2 + y ^ 2 + z ^ 2) := by
+  nlinarith [sq_nonneg (x - y), sq_nonneg (y - z), sq_nonneg (x - z)]
+
+/-- **Step 2 on one square from its two parts.** If `[u]_𝒫 - m` is bounded on `□_j`, `u - [u]_𝒫`
+on `C_*(□_j)`, and `C_*(□_j)` carries at least `κ 9^j` vertices, then
+`‖[u]_𝒫 - a‖_{L̲²(□_j)} ≤ 27 (2 K₁ + 6 (K₁ + K₂ + 1) / κ)^{1/2} ‖u - a‖_{L̲²(C_*(□_{j+3}))}`. -/
+theorem squareL2_coarse_sub_le (C : OpenComponent ω) (u : C → ℝ) {j : ℕ} (a m : ℝ)
+    {K₁ K₂ κ : ℝ} (hK₁ : 0 ≤ K₁) (hK₂ : 0 ≤ K₂) (hκ : 0 < κ)
+    (hPo : ∑ x ∈ triadicCubeFinset 2 j 0, (planarCoarse C u x - m) ^ 2 ≤
+      K₁ * ∑ x ∈ clusterVertices ω ⟨j + 3, 0⟩, (Rigidity.Section3.extend C u x - a) ^ 2)
+    (hL : ∑ x ∈ clusterVertices ω ⟨j, 0⟩,
+        (Rigidity.Section3.extend C u x - planarCoarse C u x) ^ 2 ≤
+      K₂ * ∑ x ∈ clusterVertices ω ⟨j + 3, 0⟩, (Rigidity.Section3.extend C u x - a) ^ 2)
+    (hST : clusterVertices ω ⟨j, 0⟩ ⊆ clusterVertices ω ⟨j + 3, 0⟩)
+    (hcard : κ * 9 ^ j ≤ (clusterVertices ω ⟨j, 0⟩).card) :
+    squareL2 j (fun y => planarCoarse C u y - a) ≤
+      27 * Real.sqrt (2 * K₁ + 6 * (K₁ + K₂ + 1) / κ) *
+        clusterSquareL2 ω (j + 3) (fun x => Rigidity.Section3.extend C u x - a) := by
+  set f := Rigidity.Section3.extend C u with hfdef
+  set g := planarCoarse C u with hgdef
+  set T := ∑ x ∈ clusterVertices ω ⟨j + 3, 0⟩, (f x - a) ^ 2 with hTdef
+  have hT0 : 0 ≤ T := Finset.sum_nonneg fun _ _ => sq_nonneg _
+  have hN : (0 : ℝ) < 9 ^ j := by positivity
+  have hSB : clusterVertices ω ⟨j, 0⟩ ⊆ triadicCubeFinset 2 j 0 :=
+    fun x hx => mem_square_of_mem_clusterVertices hx
+  -- the mean against `a`
+  have hpt : ∀ x ∈ clusterVertices ω ⟨j, 0⟩,
+      (m - a) ^ 2 ≤ 3 * ((g x - m) ^ 2 + (f x - g x) ^ 2 + (f x - a) ^ 2) := by
+    intro x _
+    have h := sq_add_add_le (m - g x) (g x - f x) (f x - a)
+    have e : m - g x + (g x - f x) + (f x - a) = m - a := by ring
+    rw [e] at h
+    calc (m - a) ^ 2 ≤ _ := h
+      _ = 3 * ((g x - m) ^ 2 + (f x - g x) ^ 2 + (f x - a) ^ 2) := by ring
+  have hS : ((clusterVertices ω ⟨j, 0⟩).card : ℝ) * (m - a) ^ 2 ≤ 3 * (K₁ + K₂ + 1) * T := by
+    have h1 : ∑ _x ∈ clusterVertices ω ⟨j, 0⟩, (m - a) ^ 2 ≤
+        ∑ x ∈ clusterVertices ω ⟨j, 0⟩, 3 * ((g x - m) ^ 2 + (f x - g x) ^ 2 + (f x - a) ^ 2) :=
+      Finset.sum_le_sum hpt
+    rw [Finset.sum_const, nsmul_eq_mul, ← Finset.mul_sum, Finset.sum_add_distrib,
+      Finset.sum_add_distrib] at h1
+    have h2 : ∑ x ∈ clusterVertices ω ⟨j, 0⟩, (g x - m) ^ 2 ≤
+        ∑ x ∈ triadicCubeFinset 2 j 0, (g x - m) ^ 2 :=
+      Finset.sum_le_sum_of_subset_of_nonneg hSB fun _ _ _ => sq_nonneg _
+    have h3 : ∑ x ∈ clusterVertices ω ⟨j, 0⟩, (f x - a) ^ 2 ≤ T :=
+      Finset.sum_le_sum_of_subset_of_nonneg hST fun _ _ _ => sq_nonneg _
+    linarith
+  have hm : 9 ^ j * (m - a) ^ 2 ≤ 3 * (K₁ + K₂ + 1) / κ * T := by
+    rw [div_mul_eq_mul_div, le_div_iff₀ hκ]
+    calc 9 ^ j * (m - a) ^ 2 * κ = κ * 9 ^ j * (m - a) ^ 2 := by ring
+      _ ≤ ((clusterVertices ω ⟨j, 0⟩).card : ℝ) * (m - a) ^ 2 :=
+          mul_le_mul_of_nonneg_right hcard (sq_nonneg _)
+      _ ≤ _ := hS
+  -- the square
+  have hB : ∑ x ∈ triadicCubeFinset 2 j 0, (g x - a) ^ 2 ≤
+      (2 * K₁ + 6 * (K₁ + K₂ + 1) / κ) * T := by
+    have h1 : ∀ x ∈ triadicCubeFinset 2 j 0, (g x - a) ^ 2 ≤ 2 * (g x - m) ^ 2 + 2 * (m - a) ^ 2 :=
+      fun x _ => by nlinarith [sq_nonneg (g x - m - (m - a))]
+    have h2 := Finset.sum_le_sum h1
+    rw [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_const, nsmul_eq_mul,
+      card_square_eq] at h2
+    have e : 6 * (K₁ + K₂ + 1) / κ * T = 2 * (3 * (K₁ + K₂ + 1) / κ * T) := by ring
+    nlinarith
+  unfold squareL2 clusterSquareL2
+  rw [three_pow_two_mul, show 2 * (j + 3) = 2 * j + 6 by ring, pow_add, three_pow_two_mul]
+  have hK0 : 0 ≤ 2 * K₁ + 6 * (K₁ + K₂ + 1) / κ := by positivity
+  have hrhs : 27 * Real.sqrt (2 * K₁ + 6 * (K₁ + K₂ + 1) / κ) * Real.sqrt (T / (9 ^ j * 3 ^ 6)) =
+      Real.sqrt ((2 * K₁ + 6 * (K₁ + K₂ + 1) / κ) * T / 9 ^ j) := by
+    rw [← Real.sqrt_sq (by norm_num : (0 : ℝ) ≤ 27), ← Real.sqrt_mul (by norm_num),
+      ← Real.sqrt_mul (by positivity)]
+    congr 1
+    field_simp
+    norm_num
+    ring
+  rw [hrhs]
+  exact Real.sqrt_le_sqrt (div_le_div_of_nonneg_right hB hN.le)
+
+/-- The sums of squares from the comparison (7.4) in the normalized form. -/
+theorem sum_sq_le_of_clusterSquareL2_le {j : ℕ} {g f : Vertex 2 → ℝ} {K : ℝ}
+    (h : clusterSquareL2 ω j g ≤ K / 3 ^ j * clusterSquareL2 ω (j + 3) f) :
+    ∑ x ∈ clusterVertices ω ⟨j, 0⟩, g x ^ 2 ≤
+      K ^ 2 * ∑ x ∈ clusterVertices ω ⟨j + 3, 0⟩, f x ^ 2 := by
+  unfold clusterSquareL2 at h
+  set A := ∑ x ∈ clusterVertices ω ⟨j, 0⟩, g x ^ 2 with hA
+  set B := ∑ x ∈ clusterVertices ω ⟨j + 3, 0⟩, f x ^ 2 with hB
+  have hA0 : 0 ≤ A := Finset.sum_nonneg fun _ _ => sq_nonneg _
+  have hB0 : 0 ≤ B := Finset.sum_nonneg fun _ _ => sq_nonneg _
+  have h3 : (0 : ℝ) < 3 ^ j := by positivity
+  have hsq := pow_le_pow_left₀ (Real.sqrt_nonneg _) h 2
+  rw [Real.sq_sqrt (by positivity), mul_pow, Real.sq_sqrt (by positivity), div_pow,
+    ← pow_mul] at hsq
+  have h9 : (1 : ℝ) ≤ 3 ^ (2 * (j + 3)) := one_le_pow₀ (by norm_num)
+  have hpos : (0 : ℝ) < 3 ^ (j * 2) := by positivity
+  have e : (3 : ℝ) ^ (j * 2) = 3 ^ (2 * j) := by rw [mul_comm]
+  rw [e] at hsq hpos
+  have h1 : A ≤ K ^ 2 * (B / 3 ^ (2 * (j + 3))) := by
+    have h2 := mul_le_mul_of_nonneg_right hsq hpos.le
+    have e2 : K ^ 2 / 3 ^ (2 * j) * (B / 3 ^ (2 * (j + 3))) * 3 ^ (2 * j) =
+        K ^ 2 * (B / 3 ^ (2 * (j + 3))) := by
+      field_simp
+    rwa [div_mul_cancel₀ _ hpos.ne', e2] at h2
+  calc A ≤ K ^ 2 * (B / 3 ^ (2 * (j + 3))) := h1
+    _ ≤ K ^ 2 * B := mul_le_mul_of_nonneg_left (div_le_self hB0 h9) (sq_nonneg _)
+
+/-- **The cluster of `□_{i+1}` carries a fixed proportion of the square**, from the density of
+the infinite cluster in `□_i` and the inclusion of `𝒞 ∩ □_i` in `C_*(□_{i+1})`. -/
+theorem card_clusterVertices_succ_ge (C : OpenComponent ω) {ℓ κ : ℝ}
+    (hcube : ClusterCubeDensity C 0 1 ℓ κ) {i : ℕ} (hi : ℓ ≤ 3 ^ i)
+    (hsucc : ∀ x ∈ triadicCubeFinset 2 i 0, x ∈ C.supp → x ∈ clusterVertices ω ⟨i + 1, 0⟩) :
+    κ / 9 * 9 ^ (i + 1) ≤ (clusterVertices ω ⟨i + 1, 0⟩).card := by
+  have hin : ∀ y ∈ triadicCube 2 i 0,
+      dist (latticeEuclideanEmbedding y) (latticeEuclideanEmbedding (0 : Vertex 2)) <
+        1 * 3 ^ i := by
+    intro y hy
+    rw [one_mul]
+    rw [← coe_triadicCubeFinset] at hy
+    exact dist_lt_of_mem_square hy
+  have h := hcube i 0 hi hin
+  have hle : (clusterCubePoints C 0 (1 * 3 ^ i) i 0).card ≤
+      (clusterVertices ω ⟨i + 1, 0⟩).card := by
+    refine Finset.card_le_card_of_injOn Subtype.val ?_ ?_
+    · intro x hx
+      have hx' : x ∈ clusterCubePoints C 0 (1 * 3 ^ i) i 0 := hx
+      simp only [clusterCubePoints, mem_filter] at hx'
+      refine hsucc x.val ?_ x.2
+      rw [mem_square_iff]
+      intro k
+      simpa using hx'.2 k
+    · intro x _ y _ hxy
+      exact Subtype.val_injective hxy
+  calc κ / 9 * 9 ^ (i + 1) = κ * 3 ^ (2 * i) := by
+        rw [pow_succ, pow_mul]; norm_num; ring
+    _ ≤ _ := h
+    _ ≤ _ := by exact_mod_cast hle
+
 end Rigidity.Proofs.Regularity
