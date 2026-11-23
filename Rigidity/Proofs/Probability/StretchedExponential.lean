@@ -330,6 +330,140 @@ theorem tsum_ofReal_seriesBound_le {K β D : ℝ} (hK : 0 < K) (hβ : 0 < β) (h
           ← ENNReal.ofReal_add (by positivity) (by positivity)]
         exact ENNReal.ofReal_le_ofReal (by nlinarith)
 
+theorem continuous_seriesBound (K β α D : ℝ) (n₀ n : ℕ) :
+    Continuous (seriesBound K β α D n₀ n) := by
+  unfold seriesBound
+  split_ifs <;> fun_prop
+
+/-- **Raising the exponent to `1/γ`**: with `α' = α max(1, γ)^{1/γ}`,
+`E[exp((αV)^γ)] ≤ E[exp((α'V)^γ)]^{1/γ}`; for `γ > 1` by Jensen's inequality, for `γ ≤ 1`
+because the expectation is at least `1`. -/
+theorem lintegral_exp_le_rpow {V : Ω → ℝ} (hV : AEMeasurable V μ) (hV0 : ∀ ω, 0 ≤ V ω)
+    {α γ : ℝ} (hα : 0 < α) (hγ : 0 < γ) :
+    ∫⁻ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ∂μ ≤
+      (∫⁻ ω, ENNReal.ofReal (Real.exp ((α * max 1 γ ^ (1 / γ) * V ω) ^ γ)) ∂μ) ^ (1 / γ) := by
+  have hΦ1 : 1 ≤ ∫⁻ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ∂μ := by
+    calc (1 : ℝ≥0∞) = ∫⁻ _, 1 ∂μ := by simp
+      _ ≤ _ := lintegral_mono fun ω => by
+          rw [← ENNReal.ofReal_one]
+          exact ENNReal.ofReal_le_ofReal
+            (Real.one_le_exp (Real.rpow_nonneg (mul_nonneg hα.le (hV0 ω)) _))
+  rcases le_or_gt γ 1 with h | h
+  · rw [max_eq_left h, Real.one_rpow, mul_one]
+    calc ∫⁻ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ∂μ
+        = (∫⁻ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ∂μ) ^ (1 : ℝ) := by simp
+      _ ≤ _ := ENNReal.rpow_le_rpow_of_exponent_le hΦ1 (by rw [le_div_iff₀ hγ]; linarith)
+  · rw [max_eq_right h.le]
+    have hmeas : AEMeasurable (fun ω => ENNReal.ofReal (Real.exp ((α * V ω) ^ γ))) μ := by
+      have : AEMeasurable (fun ω => α * V ω) μ := hV.const_mul α
+      exact (Real.continuous_exp.measurable.comp_aemeasurable
+        (this.pow_const γ)).ennreal_ofReal
+    have hJ := lintegral_rpow_le_lintegral_rpow_of_one_le hmeas h.le
+    have e : ∀ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ^ γ =
+        ENNReal.ofReal (Real.exp ((α * γ ^ (1 / γ) * V ω) ^ γ)) := by
+      intro ω
+      rw [ENNReal.ofReal_rpow_of_nonneg (Real.exp_pos _).le hγ.le, ← Real.exp_mul]
+      congr 2
+      have hαV : 0 ≤ α * V ω := mul_nonneg hα.le (hV0 ω)
+      rw [show α * γ ^ (1 / γ) * V ω = γ ^ (1 / γ) * (α * V ω) by ring,
+        Real.mul_rpow (Real.rpow_nonneg hγ.le _) hαV, one_div,
+        Real.rpow_inv_rpow hγ.le hγ.ne']
+      ring
+    simp_rw [e] at hJ
+    calc ∫⁻ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ∂μ
+        = ((∫⁻ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ∂μ) ^ γ) ^ (1 / γ) := by
+          rw [one_div, ENNReal.rpow_rpow_inv hγ.ne']
+      _ ≤ _ := ENNReal.rpow_le_rpow hJ (by positivity)
+
 end Main
+
+section Assembly
+
+variable {Ω : Type*} [MeasurableSpace Ω]
+
+/-- **The stretched exponential bound** (Armstrong and Lin, Proposition 2.2, from the moment
+inequality): if `E[|Z|^q] ≤ 2 (K q)^{q/2} E[V^{q/2}]` for every `q ≥ 2`, then for `β ∈ (0, 2)`,
+`E[exp(|Z|^β)] ≤ C E[exp((C V)^{β/(2-β)})]^{(2-β)/β}` with `C` depending on `K` and `β` only. -/
+theorem lintegral_exp_rpow_le_of_moments {K β : ℝ} (hK : 0 < K) (hβ0 : 0 < β) (hβ2 : β < 2) :
+    ∃ C : ℝ, 0 < C ∧ ∀ (μ : Measure Ω) [IsProbabilityMeasure μ] (Z V : Ω → ℝ),
+      AEMeasurable Z μ → AEMeasurable V μ → (∀ ω, 0 ≤ V ω) →
+      (∀ q : ℝ, 2 ≤ q → ∫⁻ ω, ENNReal.ofReal (|Z ω| ^ q) ∂μ ≤
+        ENNReal.ofReal (2 * (K * q) ^ (q / 2)) * ∫⁻ ω, ENNReal.ofReal (V ω ^ (q / 2)) ∂μ) →
+      ∫⁻ ω, ENNReal.ofReal (Real.exp (|Z ω| ^ β)) ∂μ ≤
+        ENNReal.ofReal C *
+          (∫⁻ ω, ENNReal.ofReal (Real.exp ((C * V ω) ^ (β / (2 - β)))) ∂μ) ^ ((2 - β) / β) := by
+  have h2β : 0 < 2 - β := by linarith
+  set γ := β / (2 - β) with hγ_def
+  have hγ : 0 < γ := div_pos hβ0 h2β
+  set α := 2 * Real.exp 1 * K * β with hα_def
+  have hα : 0 < α := by positivity
+  set n₀ : ℕ := ⌈2 / β⌉₊ with hn₀
+  set k : ℕ := ⌈1 / γ⌉₊ with hk_def
+  set D : ℝ := 1 + 4 * K / α * (1 + k !) with hD_def
+  have hD : 0 ≤ D := by positivity
+  set M : ℝ := 4 + n₀ * D + 2 with hM_def
+  set α' : ℝ := α * max 1 γ ^ (1 / γ) with hα'_def
+  set C : ℝ := max (max M α') 1 with hC_def
+  have hC1 : 1 ≤ C := le_max_right _ _
+  have hMC : M ≤ C := le_trans (le_max_left _ _) (le_max_left _ _)
+  have hα'C : α' ≤ C := le_trans (le_max_right _ _) (le_max_left _ _)
+  refine ⟨C, by linarith, ?_⟩
+  intro μ _ Z V hZ hV hV0 hmom
+  have hu0 : ∀ ω, 0 ≤ (α * V ω) ^ γ := fun ω => Real.rpow_nonneg (mul_nonneg hα.le (hV0 ω)) _
+  have huM : AEMeasurable (fun ω => (α * V ω) ^ γ) μ := (hV.const_mul α).pow_const γ
+  have hZm : ∀ n : ℕ, AEMeasurable (fun ω => ENNReal.ofReal ((|Z ω| ^ β) ^ n / n !)) μ := by
+    intro n
+    have : AEMeasurable (fun ω => |Z ω|) μ := continuous_abs.measurable.comp_aemeasurable hZ
+    exact (((this.pow_const β).pow_const n).div_const _).ennreal_ofReal
+  have hA : ∫⁻ ω, ENNReal.ofReal (Real.exp (|Z ω| ^ β)) ∂μ =
+      ∑' n : ℕ, ∫⁻ ω, ENNReal.ofReal ((|Z ω| ^ β) ^ n / n !) ∂μ := by
+    rw [← lintegral_tsum hZm]
+    exact lintegral_congr fun ω => ofReal_exp_eq_tsum (Real.rpow_nonneg (abs_nonneg _) _)
+  have hB : ∀ n : ℕ, ∫⁻ ω, ENNReal.ofReal ((|Z ω| ^ β) ^ n / n !) ∂μ ≤
+      ∫⁻ ω, ENNReal.ofReal (seriesBound K β α D n₀ n ((α * V ω) ^ γ)) ∂μ := by
+    intro n
+    unfold seriesBound
+    by_cases hn : n₀ ≤ n
+    · simp only [if_pos hn]
+      have h2n : 2 ≤ β * n := by
+        have h1 : 2 / β ≤ n₀ := Nat.le_ceil _
+        have h2 : (n₀ : ℝ) ≤ n := by exact_mod_cast hn
+        have := le_trans h1 h2
+        rw [div_le_iff₀ hβ0] at this
+        linarith
+      exact lintegral_term_le_of_two_le hV0 hK hβ0 hβ2 hα hmom h2n
+    · simp only [if_neg hn]
+      have hn' : β * n ≤ 2 := by
+        have h1 : (n : ℝ) < 2 / β := (Nat.lt_ceil).1 (by omega)
+        rw [lt_div_iff₀ hβ0] at h1
+        linarith
+      exact lintegral_term_le_of_lt_two hV0 hK hβ0 hβ2 hα hmom (Nat.le_ceil _) hn'
+  have hsbm : ∀ n : ℕ, AEMeasurable
+      (fun ω => ENNReal.ofReal (seriesBound K β α D n₀ n ((α * V ω) ^ γ))) μ := fun n =>
+    ((continuous_seriesBound K β α D n₀ n).measurable.comp_aemeasurable huM).ennreal_ofReal
+  have hF := lintegral_exp_le_rpow (μ := μ) hV hV0 hα hγ
+  have hG : ∫⁻ ω, ENNReal.ofReal (Real.exp ((α' * V ω) ^ γ)) ∂μ ≤
+      ∫⁻ ω, ENNReal.ofReal (Real.exp ((C * V ω) ^ γ)) ∂μ := by
+    refine lintegral_mono fun ω => ENNReal.ofReal_le_ofReal ?_
+    have hα'0 : 0 ≤ α' := by positivity
+    exact Real.exp_le_exp.2 (Real.rpow_le_rpow (mul_nonneg hα'0 (hV0 ω))
+      (mul_le_mul_of_nonneg_right hα'C (hV0 ω)) hγ.le)
+  have hexp : (2 - β) / β = 1 / γ := by rw [hγ_def, one_div_div]
+  rw [hexp, hA]
+  calc ∑' n : ℕ, ∫⁻ ω, ENNReal.ofReal ((|Z ω| ^ β) ^ n / n !) ∂μ
+      ≤ ∑' n : ℕ, ∫⁻ ω, ENNReal.ofReal (seriesBound K β α D n₀ n ((α * V ω) ^ γ)) ∂μ :=
+        ENNReal.tsum_le_tsum hB
+    _ = ∫⁻ ω, ∑' n : ℕ, ENNReal.ofReal (seriesBound K β α D n₀ n ((α * V ω) ^ γ)) ∂μ :=
+        (lintegral_tsum hsbm).symm
+    _ ≤ ∫⁻ ω, ENNReal.ofReal (M * Real.exp ((α * V ω) ^ γ)) ∂μ :=
+        lintegral_mono fun ω => tsum_ofReal_seriesBound_le hK hβ0 hD n₀ (hu0 ω)
+    _ = ENNReal.ofReal M * ∫⁻ ω, ENNReal.ofReal (Real.exp ((α * V ω) ^ γ)) ∂μ :=
+        lintegral_ofReal_const_mul (by positivity) _
+    _ ≤ ENNReal.ofReal C * (∫⁻ ω, ENNReal.ofReal (Real.exp ((α' * V ω) ^ γ)) ∂μ) ^ (1 / γ) :=
+        mul_le_mul' (ENNReal.ofReal_le_ofReal hMC) hF
+    _ ≤ ENNReal.ofReal C * (∫⁻ ω, ENNReal.ofReal (Real.exp ((C * V ω) ^ γ)) ∂μ) ^ (1 / γ) := by
+        gcongr
+
+end Assembly
 
 end Rigidity.Probability
