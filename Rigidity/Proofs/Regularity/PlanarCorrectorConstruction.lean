@@ -266,4 +266,134 @@ theorem difference_bounds (C : OpenComponent ω) (ℓ : C → ℝ) (v : ℕ → 
   · calc |c| ≤ (ρ + C₀) * W := hcabs
       _ = _ := by rw [hWdef]; ring
 
+theorem componentLaplacian_sub_const (C : OpenComponent ω) (f : C → ℝ) (a : ℝ) (x : C) :
+    componentLaplacian C (fun y => f y - a) x = componentLaplacian C f x := by
+  unfold componentLaplacian
+  refine Finset.sum_congr rfl fun y _ => ?_
+  ring
+
+theorem tendsto_componentBallL2 (C : OpenComponent ω) (z : Vertex 2) (r : ℝ) {g : ℕ → C → ℝ}
+    {g₀ : C → ℝ} (h : ∀ x, Tendsto (fun k => g k x) atTop (𝓝 (g₀ x))) :
+    Tendsto (fun k => componentBallL2 C z r (g k)) atTop (𝓝 (componentBallL2 C z r g₀)) := by
+  unfold componentBallL2
+  refine (Tendsto.div_const (tendsto_finsetSum _ fun x _ => (h x).pow 2) _).sqrt
+
+/-- **The construction of Step 3**: a harmonic function on the cluster with the bounds of the
+approximations on every ball `B_{3^j}`, `j > m₀`. -/
+theorem exists_harmonic_of_approximations (C : OpenComponent ω) (ℓ : C → ℝ) {m₀ : ℕ}
+    {A ε ρ X₀ C₀ : ℝ} (hA : 0 ≤ A) (hε : 0 < ε) (hε1 : ε < 1) (h3ε : 1 < 3 * ε) (hρ : 0 ≤ ρ)
+    (hC₀ : 0 ≤ C₀) (hX₀ : X₀ ≤ 3 ^ m₀)
+    (hv : ∀ m, m₀ ≤ m → ∃ v : C → ℝ, HarmonicOnBall C v (3 ^ m) ∧
+      componentBallL2 C 0 (3 ^ m) (fun x => v x - ℓ x) ≤ A * 3 ^ m * ε ^ m)
+    (hLip : ∀ R : ℝ, 2 * X₀ ≤ R → ∀ w : C → ℝ, HarmonicOnBall C w R →
+      ∃ c : ℝ, ∀ r : ℝ, X₀ ≤ r → r ≤ R / 2 →
+        componentBallL2 C 0 r (w - fun _ => c) ≤ C₀ * (r / R) * componentBallL2 C 0 R w)
+    (hpos : ∀ m, m₀ ≤ m → 0 < (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card)
+    (hratio : ∀ m, m₀ ≤ m → ((componentEuclideanBall C 0 ((3 : ℝ) ^ (m + 1))).card : ℝ) ≤
+      ρ ^ 2 * (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card) :
+    ∃ u : C → ℝ, (∀ x, componentLaplacian C u x = 0) ∧ ∀ j, m₀ + 1 ≤ j →
+      componentBallL2 C 0 (3 ^ j) (fun x => u x - ℓ x) ≤
+        (A + (1 + ρ + C₀) * A * (3 * ρ * ε + 1) + C₀ * A * (3 * ρ * ε + 1) / (1 - ε) +
+          (ρ + C₀) * A * (3 * ρ * ε + 1) / (3 * ε - 1)) * 3 ^ j * ε ^ j := by
+  choose! v hvH hvL using hv
+  have hcex : ∀ m, m₀ + 1 ≤ m → ∃ c : ℝ, ∀ r : ℝ, X₀ ≤ r → r ≤ 3 ^ m / 2 →
+      componentBallL2 C 0 r ((fun x => v (m + 1) x - v m x) - fun _ => c) ≤
+        C₀ * (r / 3 ^ m) * componentBallL2 C 0 (3 ^ m) (fun x => v (m + 1) x - v m x) := by
+    intro m hm
+    have h2X : 2 * X₀ ≤ 3 ^ m := by
+      have h1 : (3 : ℝ) ^ (m₀ + 1) ≤ 3 ^ m := pow_le_pow_right₀ (by norm_num) hm
+      have h0 : (0 : ℝ) ≤ 3 ^ m₀ := by positivity
+      rw [pow_succ] at h1
+      linarith
+    exact hLip (3 ^ m) h2X _ (((hvH (m + 1) (by omega)).mono
+      (pow_le_pow_right₀ (by norm_num) (Nat.le_succ m))).sub (hvH m (by omega)))
+  choose! c hc using hcex
+  have hdb := fun m (hm : m₀ + 1 ≤ m) =>
+    difference_bounds C ℓ v hA hε hρ hC₀ hm hX₀ hvL hpos hratio (hc m hm)
+  set A' := A + (1 + ρ + C₀) * A * (3 * ρ * ε + 1) + C₀ * A * (3 * ρ * ε + 1) / (1 - ε) +
+    (ρ + C₀) * A * (3 * ρ * ε + 1) / (3 * ε - 1) with hA'
+  set V : ℕ → C → ℝ := fun n x => v n x - ∑ m ∈ Finset.Ico (m₀ + 1) n, c m with hV
+  have htel : ∀ j, m₀ + 1 ≤ j → ∀ n, j ≤ n →
+      componentBallL2 C 0 (3 ^ j) (fun x => V n x - ℓ x) ≤ A' * 3 ^ j * ε ^ j := by
+    intro j hj n hjn
+    have := telescoping_bound C ℓ v c (m₀ := m₀) (A := A)
+      (C₁ := C₀ * A * (3 * ρ * ε + 1)) (C₂ := (1 + ρ + C₀) * A * (3 * ρ * ε + 1))
+      (C₃ := (ρ + C₀) * A * (3 * ρ * ε + 1)) hε hε1 h3ε (by positivity) (by positivity) hvL
+      (fun m hm => (hdb m hm).1) (fun m hm => (hdb m hm).2.1) (fun m hm => (hdb m hm).2.2) hj hjn
+    exact this
+  -- the radius of a vertex
+  have hrad : ∀ x : C, ∃ j : ℕ, m₀ + 1 ≤ j ∧
+      dist (latticeEuclideanEmbedding x.val) (latticeEuclideanEmbedding (0 : Vertex 2)) + 1 <
+        3 ^ j := by
+    intro x
+    obtain ⟨j, hj⟩ := pow_unbounded_of_one_lt
+      (dist (latticeEuclideanEmbedding x.val) (latticeEuclideanEmbedding (0 : Vertex 2)) + 1)
+      (by norm_num : (1 : ℝ) < 3)
+    refine ⟨max j (m₀ + 1), le_max_right _ _, hj.trans_le ?_⟩
+    exact pow_le_pow_right₀ (by norm_num) (le_max_left _ _)
+  choose J hJ0 hJ using hrad
+  -- the bounds at every vertex
+  set b : C → ℝ := fun x =>
+    ((componentEuclideanBall C 0 ((3 : ℝ) ^ J x)).card : ℝ) * (A' * 3 ^ J x * ε ^ J x) +
+      ∑ n ∈ Finset.range (J x), |V n x - ℓ x| with hb
+  have hVb : ∀ n x, |V n x - ℓ x| ≤ b x := by
+    intro n x
+    rcases lt_or_ge n (J x) with h | h
+    · have h1 : |V n x - ℓ x| ≤ ∑ k ∈ Finset.range (J x), |V k x - ℓ x| :=
+        Finset.single_le_sum (f := fun k => |V k x - ℓ x|) (fun _ _ => abs_nonneg _)
+          (Finset.mem_range.2 h)
+      have h2 : 0 ≤ ((componentEuclideanBall C 0 ((3 : ℝ) ^ J x)).card : ℝ) *
+          (A' * 3 ^ J x * ε ^ J x) := by
+        have := (componentBallL2_nonneg C 0 _ _).trans (htel (J x) (hJ0 x) (J x) le_rfl)
+        positivity
+      rw [hb]; linarith
+    · have hxb : x ∈ componentEuclideanBall C 0 ((3 : ℝ) ^ J x) := by
+        rw [mem_componentEuclideanBall]; linarith [hJ x]
+      have h1 := Rigidity.Proofs.S2.abs_le_card_mul_componentBallL2 C 0 _ (fun y => V n y - ℓ y) hxb
+      have h2 := htel (J x) (hJ0 x) n h
+      have h3 : |V n x - ℓ x| ≤ ((componentEuclideanBall C 0 ((3 : ℝ) ^ J x)).card : ℝ) *
+          (A' * 3 ^ J x * ε ^ J x) :=
+        h1.trans (mul_le_mul_of_nonneg_left h2 (Nat.cast_nonneg _))
+      have h4 : 0 ≤ ∑ k ∈ Finset.range (J x), |V k x - ℓ x| :=
+        Finset.sum_nonneg fun _ _ => abs_nonneg _
+      rw [hb]; linarith
+  -- compactness
+  set K : Set (C → ℝ) := Set.pi Set.univ fun x => Set.Icc (ℓ x - b x) (ℓ x + b x) with hK
+  have hKc : IsCompact K := isCompact_univ_pi fun x => isCompact_Icc
+  have hVK : ∀ n, V n ∈ K := by
+    intro n x _
+    have := abs_le.1 (hVb n x)
+    exact ⟨by linarith, by linarith⟩
+  obtain ⟨u, -, φ, hφ, hlim⟩ := hKc.isSeqCompact hVK
+  have hpt : ∀ x, Tendsto (fun k => V (φ k) x) atTop (𝓝 (u x)) := fun x =>
+    tendsto_pi_nhds.1 hlim x
+  refine ⟨u, fun x => ?_, fun j hj => ?_⟩
+  · -- harmonicity
+    have hlap : Tendsto (fun k => componentLaplacian C (V (φ k)) x) atTop
+        (𝓝 (componentLaplacian C u x)) := by
+      unfold componentLaplacian
+      exact tendsto_finsetSum _ fun y _ => (hpt y).sub (hpt x)
+    have hzero : ∀ᶠ k in atTop, componentLaplacian C (V (φ k)) x = 0 := by
+      refine Filter.eventually_atTop.2 ⟨J x, fun k hk => ?_⟩
+      have hk' : J x ≤ φ k := hk.trans (hφ.id_le k)
+      have hm₀ : m₀ ≤ φ k := by have := hJ0 x; omega
+      have e : componentLaplacian C (V (φ k)) x = componentLaplacian C (v (φ k)) x :=
+        componentLaplacian_sub_const C (v (φ k)) _ x
+      rw [e]
+      have h3 : (3 : ℝ) ^ J x ≤ 3 ^ φ k := pow_le_pow_right₀ (by norm_num) hk'
+      refine hvH (φ k) hm₀ x ?_ fun y hxy => ?_
+      · rw [mem_componentEuclideanBall]; linarith [hJ x]
+      · rw [mem_componentEuclideanBall]
+        have hadj : (openGraph ω).Adj x.val y.val := hxy
+        have hd1 := dist_le_one_of_lattice_adj (openGraph_le ω hadj)
+        have := dist_triangle (latticeEuclideanEmbedding y.val) (latticeEuclideanEmbedding x.val)
+          (latticeEuclideanEmbedding (0 : Vertex 2))
+        linarith [hJ x]
+    exact tendsto_nhds_unique hlap (tendsto_const_nhds.congr' (hzero.mono fun k hk => hk.symm))
+  · -- the bound
+    have hL := tendsto_componentBallL2 C 0 (3 ^ j) (g := fun k x => V (φ k) x - ℓ x)
+      (g₀ := fun x => u x - ℓ x) fun x => (hpt x).sub tendsto_const_nhds
+    refine le_of_tendsto hL (Filter.eventually_atTop.2 ⟨j, fun k hk => ?_⟩)
+    exact htel j hj (φ k) (hk.trans (hφ.id_le k))
+
 end Rigidity.Proofs.Regularity
