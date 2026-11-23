@@ -555,7 +555,7 @@ further = {
          'Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_holds',
          'Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_holds',
          'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_dario'],
-    'Theorem 1 of Dario in dimension two and the quantitative corrector input of Dario and Gu from the multiscale Poincare inequality and Proposition 3.1':
+    'Theorem 1 of Dario in dimension two and the quantitative corrector input of Dario and Gu from the multiscale Poincare inequality, the concentration inequality and Lemmas 3.2 and 3.3':
         ['Rigidity.Corrector.IsOsBond.integral_rpow_le',
          'Rigidity.Corrector.isOsBond_of_moment_le',
          'Rigidity.Corrector.LinftyIterationData.mom_sub_le',
@@ -582,6 +582,10 @@ further = {
          'Rigidity.Corrector.heatGradient_coarseField_isOsBond',
          'Rigidity.Corrector.darioOptimalCorrectorTwo_of_prop31',
          'Rigidity.Green.tsum_ofReal_vsrwHeat',
+         'Rigidity.Corrector.ae_summable_heat_coarseField',
+         'Rigidity.Corrector.lintegral_abs_sub_integral_rpow_le',
+         'Rigidity.Corrector.darioPropThreeOneTwo_of_lemmas',
+         'Rigidity.Corrector.darioOptimalCorrectorTwo_of_lemmas',
          'Rigidity.Corrector.darioOptimalCorrectorTwo_of_inputs',
          'Rigidity.Corrector.correctorQuantitativeInputTwo_of_inputs'],
     'Theorem 1 of Dario and Gu in dimension two from Lemma 4.1, Proposition 4.3 and Proposition A.7, Lemma 4.2 and the iteration step':

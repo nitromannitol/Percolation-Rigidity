@@ -300,6 +300,7 @@ import Rigidity.Proofs.Green.DarioGuTheoremOneReduced
 import Rigidity.Proofs.Green.DarioGuTwoScaleInitial
 import Rigidity.Proofs.Green.DarioGuWeightedL2
 import Rigidity.Proofs.Green.OpenHeatSemigroup
+import Rigidity.Proofs.Corrector.DarioPropThreeOne
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -934,6 +935,10 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_prop31
 #print axioms Rigidity.Green.tsum_ofReal_vsrwHeat
 #print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_inputs
+#print axioms Rigidity.Corrector.ae_summable_heat_coarseField
+#print axioms Rigidity.Corrector.lintegral_abs_sub_integral_rpow_le
+#print axioms Rigidity.Corrector.darioPropThreeOneTwo_of_lemmas
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_lemmas
 #print axioms Rigidity.Corrector.correctorQuantitativeInputTwo_of_inputs
 
 -- Theorem 1 of Dario and Gu in dimension two from Lemma 4.1, Proposition 4.3 and Proposition A.7
