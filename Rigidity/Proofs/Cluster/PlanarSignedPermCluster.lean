@@ -17,8 +17,8 @@ those of their images (`hmesh`). On the partition event, for a resolved triadic 
 Since the bond law is invariant under `φ` and `φ(□_m) = □_m`, the expectations of `ν(□_m, ·)` on
 the partition event, hence their limits, are invariant: `ν̄(φ(ξ)) = ν̄(ξ)`. With the reflection
 `x ↦ (-x₀, x₁)` and the transposition `x ↦ (x₁, x₀)` this gives
-`ā = σ I` (`planarAhom_eq_smul_one`), the remark of Armstrong and Dario before (5.20) that `ā` is a
-multiple of the identity by the symmetries of the model.
+`ā = σ I` (`exists_planarAhom_eq_smul_one`), the remark of Armstrong and Dario after (5.22) that
+`ā` is a multiple of the identity by the symmetries of the model.
 -/
 
 open MeasureTheory Filter LatticeProb.Percolation Rigidity.Proofs.S3 Rigidity.Proofs.Section5

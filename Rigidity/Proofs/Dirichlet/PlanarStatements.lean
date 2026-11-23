@@ -12,12 +12,12 @@ homogenization on percolation clusters*, Comm. Pure Appl. Math. 71 (2018), Theor
 inputs on the cluster from which it is derived in Section 6 of the source.
 
 * `PlanarMinimalScales p`: the minimal scales of the planar partition (Proposition 2.4 of the
-  source, the two bounds of (2.12)): for every `t ≥ 1` a random scale `𝓜_t ≤ O_s(C)` such that
+  source, the two bounds of (2.13)): for every `t ≥ 1` a random scale `𝓜_t ≤ O_s(C)` such that
   `3^m ≥ 𝓜_t` implies `|□_m|⁻¹ Σ_{x ∈ □_m} size(□_𝒫(x))^t ≤ C` and
   `size(□_𝒫(x)) ≤ 3^{2m/(2+t)}` for every `x ∈ □_m`.
 * `PlanarMesoscopicConvergence p`: the convergence of `μ` and `ν` on the mesoscopic cubes of the
   proofs of Lemmas 6.2 and 6.3 above a random scale `𝒩 ≤ O_s(C)` (Definition 5.12, Proposition 5.13
-  and (6.10)–(6.11) of the source), on the cubes `z + □_k`, `z ∈ 3^k ℤ²`, `k = ⌈m/8⌉`, contained in
+  and (6.4)–(6.5) of the source), on the cubes `z + □_k`, `z ∈ 3^k ℤ²`, `k = ⌈m/8⌉`, contained in
   `□_m`. These cubes are triadic.
 * `PlanarHomogenizationError p p'`: Theorem 1 for the exponent `p' > 2`, with the discrete
   homogenized solution: `ā = σ I` and, for `3^m ≥ 𝒳` and every `u` harmonic on `C_*(□_m)` off the
@@ -44,7 +44,7 @@ noncomputable def planarGradNorm (ω : Configuration 2) (m : ℕ) (p' : ℝ) (u 
       gradNormIn (openGraph ω) (clusterVertices ω ⟨m, 0⟩) u x ^ p') / 9 ^ m) ^ (1 / p')
 
 /-- **Minimal scales of the planar partition** (Armstrong and Dario, Proposition 2.4, both bounds
-of (2.12), for the planar partition): for every `t ≥ 1` there is a random scale `𝓜_t ≤ O_s(C)`
+of (2.13), for the planar partition): for every `t ≥ 1` there is a random scale `𝓜_t ≤ O_s(C)`
 such that `3^m ≥ 𝓜_t` implies `|□_m|⁻¹ Σ_{x ∈ □_m} size(□_𝒫(x))^t ≤ C` and
 `size(□_𝒫(x)) ≤ 3^{2m/(2+t)}` for `x ∈ □_m`. -/
 def PlanarMinimalScales (p : unitInterval) : Prop :=
@@ -57,7 +57,7 @@ def PlanarMinimalScales (p : unitInterval) : Prop :=
             (3 : ℝ) ^ (planarPartCube ω x).scale ≤ (3 : ℝ) ^ (2 * (m : ℝ) / (2 + t))
 
 /-- **Convergence of `μ` and `ν` on the mesoscopic cubes** (Armstrong and Dario, Definition 5.12,
-Proposition 5.13 and (6.10)–(6.11), on the triadic cubes `z + □_k`, `z ∈ 3^k ℤ²`, `k = ⌈m/8⌉`,
+Proposition 5.13 and (6.4)–(6.5), on the triadic cubes `z + □_k`, `z ∈ 3^k ℤ²`, `k = ⌈m/8⌉`,
 contained in `□_m`): there is a random scale `𝒩 ≤ O_s(C)` such that for `3^m ≥ 𝒩`, every such
 cube `T` and all `q, ξ`,
 `|μ(T, q) + (1/2) q · ā⁻¹ q| ≤ C |q|² 3^{-mα}` and `|ν(T, ξ) − (1/2) ξ · ā ξ| ≤ C |ξ|² 3^{-mα}`. -/

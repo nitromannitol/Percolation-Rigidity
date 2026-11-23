@@ -4,7 +4,7 @@ import Rigidity.Proofs.Dirichlet.PlanarInterpolation
 /-!
 # Bounds on the datum and on the homogenized solution
 
-Under moment bounds `|□_m|⁻¹ Σ_{x ∈ □_m} size(□_𝒫(x))^t ≤ C_M` (the first bound of (2.12) of
+Under moment bounds `|□_m|⁻¹ Σ_{x ∈ □_m} size(□_𝒫(x))^t ≤ C_M` (the first bound of (2.13) of
 Armstrong and Dario above the minimal scale), the planar Lemma 6.4 (iii) and the bounds of the
 moments of the reach scales give, for `1 ≤ s < p'`,
 `|□_m|⁻¹ Σ_{edges in □_m} |∇w̃|^s ≤ C(s, p', C_M) M^s`, `M = planarGradNorm`

@@ -9,8 +9,8 @@ reflection `ξ ↦ (-ξ₀, ξ₁)` and the transposition `ξ ↦ (ξ₁, ξ₀)
 (`planarNuLimit_signedPermSlope` with `planarMesh_reflect_iff` and `planarMesh_swap_iff`). The
 first gives `ν̄(1, 1) = ν̄(-1, 1)`, hence, `ν̄` being quadratic, `ν̄(1, 1) = ν̄(1, 0) + ν̄(0, 1)`, so
 the off-diagonal entries of `ā` vanish; the second gives `ν̄(1, 0) = ν̄(0, 1)`, so the diagonal
-entries agree. Hence `ā = σ I` with `σ = 2 ν̄(1, 0) > 0`. Armstrong and Dario note this before
-(5.20) (from the invariance of the model under the permutations and reflections of the coordinate
+entries agree. Hence `ā = σ I` with `σ = 2 ν̄(1, 0) > 0`. Armstrong and Dario note this after
+(5.22) (from the invariance of the model under the permutations and reflections of the coordinate
 axes) but do not use it; the lattice proof of Section 6 here needs a diagonal `ā`, and the
 regularity theory uses the harmonic functions of the plane.
 -/
@@ -46,7 +46,7 @@ theorem planarNuLimit_swap (p : unitInterval) :
   exact h
 
 /-- **The homogenized matrix is a multiple of the identity** (Armstrong and Dario, the remark
-before (5.20), in dimension two): `ā = σ I` with `σ > 0`. -/
+after (5.22), in dimension two): `ā = σ I` with `σ > 0`. -/
 theorem exists_planarAhom_eq_smul_one {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) :
     ∃ σ : ℝ, 0 < σ ∧ planarAhom p = σ • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by

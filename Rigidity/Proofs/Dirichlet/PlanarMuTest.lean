@@ -10,7 +10,7 @@ and is joined to it, hence lies in `C_*(T)`), so it is a competitor in the defin
 (Armstrong and Dario, Definition 4.1). Its Dirichlet form is at most the energy density of the
 cluster conductance of `U` summed over `T`, and its coarse pairing is the pairing of `q` with the
 increments of the coarsened function `u(z̄(□_𝒫(·)))` over the edges inside `T`. This is the test of
-Step 1 of the proof of Lemma 6.2 of the source (display (6.20)).
+Step 1 of the proof of Lemma 6.2 of the source (display (6.9)).
 -/
 
 open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation
@@ -101,7 +101,7 @@ theorem coarsePairing_restrict (hP : PlanarPartitionEvent ω) {T : TriadicCube 2
     rw [hA _ h, hA _ hx]
   · rw [mul_zero]
 
-/-- **The `μ` test on a subcube** (Armstrong and Dario, display (6.20)). -/
+/-- **The `μ` test on a subcube** (Armstrong and Dario, display (6.9)). -/
 theorem planarMu_le_test (hP : PlanarPartitionEvent ω) {T U : TriadicCube 2}
     (hTU : T.vertices ⊆ U.vertices) (hT : PlanarResolved ω T) {u : Vertex 2 → ℝ}
     (hu : (fun x : ↥(clusterVertices ω U) => u x) ∈ clusterHarmonic ω U) (q : Fin 2 → ℝ) :
