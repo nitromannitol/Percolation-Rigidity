@@ -349,4 +349,91 @@ theorem exists_cubeAhomInvFinite_bounds [NeZero d] (hd : 2 ≤ d) {p : unitInter
     have := mul_le_mul_of_nonneg_left h2 hC₀
     nlinarith
 
+/-- The polarization of a quadratic function:
+`g(x + y) - g(x) - g(y) = ∑_{i,j} xᵢ yⱼ (g(eᵢ + eⱼ) - g(eᵢ) - g(eⱼ))`. -/
+theorem IsSlopeQuadratic.add_sub_sub_eq {g : (Fin d → ℝ) → ℝ} (hg : IsSlopeQuadratic g)
+    (x y : Fin d → ℝ) :
+    g (x + y) - g x - g y = ∑ i, ∑ j, x i * y j * slopePolar g i j := by
+  have hsym : ∑ i, ∑ j, y i * x j * slopePolar g i j = ∑ i, ∑ j, x i * y j * slopePolar g i j := by
+    rw [Finset.sum_comm]
+    exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by
+      rw [slopePolar_comm]
+      ring
+  have hexp : ∑ i, ∑ j, (x + y) i * (x + y) j * slopePolar g i j =
+      ∑ i, ∑ j, x i * x j * slopePolar g i j + ∑ i, ∑ j, y i * y j * slopePolar g i j +
+        ∑ i, ∑ j, x i * y j * slopePolar g i j + ∑ i, ∑ j, y i * x j * slopePolar g i j := by
+    have hterm : ∀ i j, (x + y) i * (x + y) j * slopePolar g i j =
+        x i * x j * slopePolar g i j + y i * y j * slopePolar g i j +
+          x i * y j * slopePolar g i j + y i * x j * slopePolar g i j := fun i j => by
+      simp only [Pi.add_apply]
+      ring
+    simp only [hterm, Finset.sum_add_distrib]
+  rw [hg (x + y), hg x, hg y, hexp, hsym]
+  ring
+
+/-- On a resolved cube, the coarse pairing of the minimizer of `μ(U, q)` against `q'` is the
+polarization of `-μ(U, ·)`: `|U|⁻¹ ⟨q', ∇[u(·, U, q)]_𝒫⟩ = -(μ(U, q + q') - μ(U, q) - μ(U, q'))`. -/
+theorem cubeCoarsePairing_cubeMuMinimizer_div (hd : 0 < d) {ω : Configuration d}
+    (hP : PartitionEvent ω) {U : TriadicCube d} (hU : PartitionResolved ω U) (q q' : Fin d → ℝ) :
+    cubeCoarsePairing ω U q' (cubeMuMinimizer ω U q) / U.latticeVolume =
+      -(cubeMu ω U (q + q') - cubeMu ω U q - cubeMu ω U q') := by
+  obtain ⟨hu, hvu⟩ := cubeMuMinimizer_spec hd hP hU q
+  obtain ⟨hv, hvv⟩ := cubeMuMinimizer_spec hd hP hU q'
+  set u := cubeMuMinimizer ω U q
+  set v := cubeMuMinimizer ω U q'
+  have hvol := U.latticeVolume_pos
+  have h1 : cubeMu ω U q = -(cubeForm ω U u u / 2) / U.latticeVolume :=
+    cubeMu_eq_of_forall_cubeForm_eq hd hP hU hu hvu
+  have h2 : cubeMu ω U q' = -(cubeForm ω U v v / 2) / U.latticeVolume :=
+    cubeMu_eq_of_forall_cubeForm_eq hd hP hU hv hvv
+  have h3 : cubeMu ω U (q + q') = -(cubeForm ω U (u + v) (u + v) / 2) / U.latticeVolume := by
+    refine cubeMu_eq_of_forall_cubeForm_eq hd hP hU (Submodule.add_mem _ hu hv) fun w hw => ?_
+    rw [map_add, hvu w hw, hvv w hw]
+    have h := cubeCoarsePairing_smul_add_smul (ω := ω) (U := U) q q' 1 1 w
+    simp only [one_smul, one_mul] at h
+    rw [h]
+  have h4 : cubeCoarsePairing ω U q' u = cubeForm ω U u v := (hvv u hu).symm
+  rw [h1, h2, h3, h4]
+  simp only [map_add, LinearMap.add_apply]
+  rw [cubeForm_symm v u]
+  field_simp
+  ring
+
+/-- **Display (5.23)** (every dimension `d ≥ 2`): `q' · ā_{□_n}⁻¹ q` is the expected spatial
+average `E[|□_n|⁻¹ ⟨q', ∇[u(·, □_n, q)]_𝒫⟩]` of the coarsened gradient of the minimizer of
+`μ(□_n, q)` (on the event that the partition exists and resolves `□_n`). -/
+theorem integral_cubeCoarsePairing_cubeMuMinimizer [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (n : ℕ) (q q' : Fin d → ℝ) :
+    ∫ ω, (if PartitionEvent ω ∧ PartitionResolved ω (⟨n, 0⟩ : TriadicCube d) then
+        cubeCoarsePairing ω ⟨n, 0⟩ q' (cubeMuMinimizer ω ⟨n, 0⟩ q) /
+          (⟨n, 0⟩ : TriadicCube d).latticeVolume else 0) ∂(latticeBondLaw d p) =
+      ∑ i, q' i * (cubeAhomInvFinite p n *ᵥ q) i := by
+  have hd0 : 0 < d := by omega
+  set f : (Fin d → ℝ) → Configuration d → ℝ := fun η ω =>
+    if PartitionEvent ω ∧ PartitionResolved ω (⟨n, 0⟩ : TriadicCube d) then
+      -cubeMu ω ⟨n, 0⟩ η else 0 with hf
+  have hint : ∀ η, Integrable (f η) (latticeBondLaw d p) := fun η =>
+    integrable_neg_cubeMu_indicator hd hpc _ η
+  have hpt : ∀ ω, (if PartitionEvent ω ∧ PartitionResolved ω (⟨n, 0⟩ : TriadicCube d) then
+      cubeCoarsePairing ω ⟨n, 0⟩ q' (cubeMuMinimizer ω ⟨n, 0⟩ q) /
+        (⟨n, 0⟩ : TriadicCube d).latticeVolume else 0) = f (q + q') ω - f q ω - f q' ω := by
+    intro ω
+    simp only [hf]
+    split_ifs with h
+    · rw [cubeCoarsePairing_cubeMuMinimizer_div hd0 h.1 h.2]
+      ring
+    · ring
+  have h12 : Integrable (fun ω => f (q + q') ω - f q ω) (latticeBondLaw d p) :=
+    (hint _).sub (hint _)
+  rw [integral_congr_ae (ae_of_all _ hpt), integral_sub h12 (hint _),
+    integral_sub (hint _) (hint _)]
+  have hM : ∀ η, ∫ ω, f η ω ∂(latticeBondLaw d p) = cubeMuMean p n η := fun η =>
+    (cubeMuMean_eq_integral hd0 p n η).symm
+  rw [hM, hM, hM, (isSlopeQuadratic_cubeMuMean hd hpc n).add_sub_sub_eq]
+  simp only [Matrix.mulVec, dotProduct, Finset.mul_sum, cubeAhomInvFinite]
+  rw [Finset.sum_comm]
+  exact Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by
+    rw [slopePolar_comm]
+    ring
+
 end Rigidity.Percolation
