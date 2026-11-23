@@ -366,4 +366,101 @@ theorem planarCorrectedPlaneExistenceTwo_of_affineApproximation
   planarCorrectedPlaneExistenceTwo_of_sublinearL2
     (planarCorrectorSublinearL2Two_of_affineApproximation hA hR3) hR3 hM5
 
+/-- The approximation of affine functions on growing balls with an almost surely finite scale. -/
+def PlanarAffineApproximationAeTwo : Prop :=
+  ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+    ∃ δ K : ℝ, 0 < δ ∧ 0 ≤ K ∧
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ q : Fin 2 → ℝ,
+        ∃ m₀ : ℕ, ∀ m : ℕ, m₀ ≤ m → ∃ v : uniqueInfiniteComponent h → ℝ,
+          HarmonicOnBall (uniqueInfiniteComponent h) v (3 ^ m) ∧
+          componentBallL2 (uniqueInfiniteComponent h) 0 (3 ^ m)
+              (fun x => v x - componentSlope (uniqueInfiniteComponent h) q x) ≤
+            K * (|q 0| + |q 1|) * ((3 : ℝ) ^ m) ^ (1 - δ)
+
+/-- **(1.18) with an almost surely finite scale** from the approximation of affine functions with an
+almost surely finite scale and the order-zero regularity, by Step 3 of AKM2, Proposition 3.1. -/
+theorem planarCorrectorSublinearL2AeTwo_of_affineApproximationAe
+    (hA : PlanarAffineApproximationAeTwo) (hR3 : ArmstrongDarioOrderZeroTwo) :
+    PlanarCorrectorSublinearL2AeTwo := by
+  intro p hpc hp1
+  obtain ⟨δA, KA, hδA, hKA, haeA⟩ := hA p hpc hp1
+  obtain ⟨δ, hδdef⟩ : ∃ δ : ℝ, δ = min δA (1 / 2) := ⟨_, rfl⟩
+  have hδ0 : 0 < δ := by rw [hδdef]; exact lt_min hδA (by norm_num)
+  have hδ2 : δ ≤ 1 / 2 := by rw [hδdef]; exact min_le_right _ _
+  have hδδ : δ ≤ δA := by rw [hδdef]; exact min_le_left _ _
+  obtain ⟨s₃, θ₃, C₀, hs₃, hθ₃, hC₀, X₃, -, -, -, -, hae₃⟩ :=
+    exists_planar_origin_constant_approximation hR3 p hpc hp1
+  have hθp : 0 < theta 2 p := Rigidity.Percolation.theta_pos_of_criticalProbability_lt 2 p hpc
+  obtain ⟨s₄, θ₄, -, -, hcube⟩ := exists_clusterCubeDensity_of_concentration (d := 2) le_rfl p
+    (cluster_density_concentration 2 le_rfl p hpc hp1) 54
+  obtain ⟨M₄, -, hM₄0, -, hM₄ae⟩ := hcube 0
+  set κ : ℝ := theta 2 p / 2 with hκdef
+  have hκ : 0 < κ := by positivity
+  have hκ1 : κ ≤ 1 := by
+    have := theta_le_one 2 p
+    rw [hκdef]; linarith
+  set ρ : ℝ := Real.sqrt (6561 / κ) with hρdef
+  have hρ1 : 1 ≤ ρ := by
+    rw [hρdef, Real.le_sqrt (by norm_num) (by positivity), one_pow, le_div_iff₀ hκ]; linarith
+  set Γ : ℝ := 1 + (1 + ρ + C₀) * (3 * ρ * (3 : ℝ) ^ (-δ) + 1) +
+    C₀ * (3 * ρ * (3 : ℝ) ^ (-δ) + 1) / (1 - (3 : ℝ) ^ (-δ)) +
+    (ρ + C₀) * (3 * ρ * (3 : ℝ) ^ (-δ) + 1) / (3 * (3 : ℝ) ^ (-δ) - 1) with hΓ
+  have hε1 : (3 : ℝ) ^ (-δ) < 1 := Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith)
+  have h3ε : 1 < 3 * (3 : ℝ) ^ (-δ) := by
+    have e : 3 * (3 : ℝ) ^ (-δ) = (3 : ℝ) ^ (1 - δ) := by
+      rw [Real.rpow_sub (by norm_num), Real.rpow_one, Real.rpow_neg (by norm_num), div_eq_mul_inv]
+    rw [e]; exact Real.one_lt_rpow (by norm_num) (by linarith)
+  have hΓ0 : 0 ≤ Γ := by
+    have : 0 < 1 - (3 : ℝ) ^ (-δ) := by linarith
+    have : 0 < 3 * (3 : ℝ) ^ (-δ) - 1 := by linarith
+    positivity
+  refine ⟨δ, 3 * ρ * (KA * Γ), hδ0, by positivity, ?_⟩
+  filter_upwards [haeA, hae₃, hM₄ae] with ω hωA hω₃ hω₄
+  intro h q
+  obtain ⟨-, hω₃'⟩ := hω₃
+  have hLip := hω₃' h
+  obtain ⟨mA, hmA⟩ := hωA h q
+  obtain ⟨mR, hmR⟩ := eventually_le_three_pow (max (X₃ ω) (max (81 * M₄ ω) 81))
+  set m₀ := max mA mR with hm₀
+  have hR := hmR m₀ (le_max_right _ _)
+  have hX3 : X₃ ω ≤ 3 ^ m₀ := (le_max_left _ _).trans hR
+  have hM4 : 81 * M₄ ω ≤ 3 ^ m₀ := ((le_max_left _ _).trans (le_max_right _ _)).trans hR
+  have h81 : (81 : ℝ) ≤ 3 ^ m₀ := ((le_max_right _ _).trans (le_max_right _ _)).trans hR
+  have hm₀4 : 4 ≤ m₀ := by
+    have : (3 : ℝ) ^ 4 ≤ 3 ^ m₀ := by norm_num; exact h81
+    exact (pow_le_pow_iff_right₀ (by norm_num : (1 : ℝ) < 3)).1 this
+  have hle : ∀ m, m₀ ≤ m → (3 : ℝ) ^ m₀ ≤ 3 ^ m := fun m hm => pow_le_pow_right₀ (by norm_num) hm
+  have hballs : ∀ m, m₀ ≤ m → 0 < (componentEuclideanBall (uniqueInfiniteComponent h) 0
+      ((3 : ℝ) ^ m)).card ∧
+      ((componentEuclideanBall (uniqueInfiniteComponent h) 0 ((3 : ℝ) ^ (m + 1))).card : ℝ) ≤
+        ρ ^ 2 * (componentEuclideanBall (uniqueInfiniteComponent h) 0 ((3 : ℝ) ^ m)).card := by
+    intro m hm
+    refine card_ball_bounds _ hκ (hω₄ h) (by omega) ?_
+    have h1 : 81 * M₄ ω ≤ 3 ^ m := hM4.trans (hle m hm)
+    have e : (3 : ℝ) ^ m = 9 * 3 ^ (m - 2) := by
+      rw [show (9 : ℝ) = 3 ^ 2 by norm_num, ← pow_add]; congr 1; omega
+    have h0 := hM₄0 ω
+    have : (0 : ℝ) ≤ 3 ^ (m - 2) := by positivity
+    rw [e] at h1; linarith
+  obtain ⟨u, hu, hb⟩ := exists_corrector_of_scales (uniqueInfiniteComponent h) q (m₀ := m₀)
+    (K := KA) (δ := δ) (X₀ := X₃ ω) (C₀ := C₀) (ρ := ρ) hKA hδ0 hδ2 hρ1 hC₀.le hX3
+    (fun m hm => by
+      obtain ⟨v, hvh, hvb⟩ := hmA m ((le_max_left _ _).trans hm)
+      refine ⟨v, hvh, hvb.trans ?_⟩
+      have h3m : (1 : ℝ) ≤ 3 ^ m := one_le_pow₀ (by norm_num)
+      exact mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le h3m (by linarith))
+        (by positivity))
+    hLip (fun m hm => (hballs m hm).1) (fun m hm => (hballs m hm).2)
+  exact ⟨u, hu, 3 ^ (m₀ + 1), fun r hr => (hb r hr).trans (le_of_eq (by rw [hΓ]))⟩
+
+/-- **Every slope has a corrected plane on the planar cluster**, from the approximation of affine
+functions with an almost surely finite scale, the order-zero regularity and Proposition 2.4. -/
+theorem planarCorrectedPlaneExistenceTwo_of_affineApproximationAe
+    (hA : PlanarAffineApproximationAeTwo) (hR3 : ArmstrongDarioOrderZeroTwo)
+    (hM5 : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      PlanarMinimalScalesTwo p) :
+    PlanarCorrectedPlaneExistenceTwo :=
+  planarCorrectedPlaneExistenceTwo_of_sublinearL2Ae
+    (planarCorrectorSublinearL2AeTwo_of_affineApproximationAe hA hR3) hR3 hM5
+
 end Rigidity.Proofs.Regularity
