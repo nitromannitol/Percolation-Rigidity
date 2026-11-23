@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Green.PlanarGreenDeterministic
+import Rigidity.Proofs.Green.PlanarGreenQuantitative
 import LatticeProb.Graph.CarneVaropoulos
 
 /-!
@@ -18,7 +18,9 @@ Averaging over the Poisson number of steps, the heat kernel of the planar open g
 `p(t, x, y) ≤ 3 e^{-|x - y|/18}` for `0 < t ≤ |x - y|` (`openHeat_le_exp_of_le_norm`): the steps
 `n < N = ⌈8 |x - y|⌉` contribute at most `2 e^{-dist²/(2N)}`, and the steps `n ≥ N` at most
 `2^{-N} E[2^{Pois(4t)}] = 2^{-N} e^{4t}`. This is the bound that the proof of Dario–Gu, Theorem 2,
-takes from their Proposition 2.11 (Davies 1993).
+takes from their Proposition 2.11 (Davies 1993), so that Theorem 2 in dimension two follows from
+Theorem 1 and the Liouville theorem at order zero alone
+(`supercriticalBondGreenQuantitativeTwo_of_darioGu`).
 -/
 
 open scoped Classical
@@ -422,5 +424,37 @@ theorem openHeat_le_exp_of_le_norm (ω : Configuration 2) {x y : Vertex 2} {t : 
     have hl2 := Real.log_two_gt_d9
     nlinarith
   linarith
+
+
+/-- The small-time bound of the planar heat kernel holds (with constant `18`). -/
+theorem heatSmallTimeTwo : HeatSmallTimeTwo := by
+  refine ⟨18, by norm_num, fun ω K _ x _ y _ t ht htx => ?_⟩
+  refine (openHeat_le_exp_of_le_norm ω ht htx).trans ?_
+  have := Real.exp_pos (-(‖edz x y‖ / 18))
+  linarith
+
+/-- **Dario–Gu, Theorem 2** in dimension two, from Theorem 1 (`DarioGuHeatKernelTwo`) and the
+Liouville theorem at order zero. -/
+theorem supercriticalBondGreenQuantitativeTwo_of_darioGu (hP : DarioGuHeatKernelTwo)
+    (hL : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      Rigidity.Steps.Section5.SublinearLiouville p) :
+    Rigidity.External.SupercriticalBondGreenQuantitativeTwo :=
+  supercriticalBondGreenQuantitativeTwo_of_smallTime hP heatSmallTimeTwo hL
+
+/-- Theorem 2 of Dario–Gu in dimension two from Theorem 1 and the planar qualitative corrector
+input. -/
+theorem supercriticalBondGreenQuantitativeTwo_of_darioGu_of_correctorInput
+    (hP : DarioGuHeatKernelTwo) (hC : Rigidity.External.SupercriticalBondCorrectorInputTwo) :
+    Rigidity.External.SupercriticalBondGreenQuantitativeTwo :=
+  supercriticalBondGreenQuantitativeTwo_of_darioGu hP fun p hpc hp1 =>
+    sublinearLiouville_two_of_correctorInput hC p hpc hp1
+
+/-- Theorem 2 of Dario–Gu in dimension two from Theorem 1 and the planar order-zero regularity
+input. -/
+theorem supercriticalBondGreenQuantitativeTwo_of_darioGu_of_orderZero
+    (hP : DarioGuHeatKernelTwo) (hAD : Rigidity.External.ArmstrongDarioOrderZeroTwo) :
+    Rigidity.External.SupercriticalBondGreenQuantitativeTwo :=
+  supercriticalBondGreenQuantitativeTwo_of_darioGu hP fun p hpc hp1 =>
+    Rigidity.Proofs.Section5.sublinearLiouville_two p hpc hp1 hAD
 
 end Rigidity.Green

@@ -308,17 +308,29 @@ theorem openHeat_le_of_le_norm
     gcongr
     exact le_mul_of_one_le_right (by positivity) (by linarith)
 
+/-- The small-time bound `p(t, x, y) ≤ C e^{-|x - y|/C}` for `0 < t ≤ |x - y|` on infinite
+components, the only consequence of the Carne–Varopoulos bound used in Dario–Gu, §5. -/
+def HeatSmallTimeTwo : Prop :=
+  ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration 2) (K : OpenComponent ω), K.supp.Infinite →
+    ∀ x ∈ K.supp, ∀ y ∈ K.supp, ∀ t : ℝ, 0 < t → t ≤ ‖edz x y‖ →
+      openHeat ω t x y ≤ C * Real.exp (-(‖edz x y‖ / C))
+
+/-- The Carne–Varopoulos bound gives the small-time bound. -/
+theorem heatSmallTimeTwo_of_carneVaropoulos (hCV : CarneVaropoulosTwo) : HeatSmallTimeTwo := by
+  obtain ⟨C₂, hC₂, hcv⟩ := hCV
+  exact ⟨C₂, hC₂, fun ω K hK x hx y hy t ht htx =>
+    openHeat_le_of_le_norm hC₂ hcv hK hx hy ht htx⟩
+
 /-- **Dario–Gu, Theorem 2** in dimension two (the planar quantitative Green function input), from
-Theorem 1 (`DarioGuHeatKernelTwo`), the Carne–Varopoulos bound (`CarneVaropoulosTwo`) and the
-Liouville theorem at order zero. -/
-theorem supercriticalBondGreenQuantitativeTwo_of_heatKernel (hP : DarioGuHeatKernelTwo)
-    (hCV : CarneVaropoulosTwo)
+Theorem 1 (`DarioGuHeatKernelTwo`), the small-time bound and the Liouville theorem at order zero. -/
+theorem supercriticalBondGreenQuantitativeTwo_of_smallTime (hP : DarioGuHeatKernelTwo)
+    (hS : HeatSmallTimeTwo)
     (hL : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
       Rigidity.Steps.Section5.SublinearLiouville p) :
     Rigidity.External.SupercriticalBondGreenQuantitativeTwo := by
   intro p hpc hp1
   obtain ⟨σ, hσ, hT⟩ := hP p hpc hp1
-  obtain ⟨C₂, hC₂, hcv⟩ := hCV
+  obtain ⟨C₂, hC₂, hcv⟩ := hS
   have hθ : 0 < theta 2 p := Rigidity.Percolation.theta_pos_of_criticalProbability_lt 2 p hpc
   set θ := theta 2 p with hθdef
   have hκ : 0 < σ * θ / 2 := by positivity
@@ -360,8 +372,8 @@ theorem supercriticalBondGreenQuantitativeTwo_of_heatKernel (hP : DarioGuHeatKer
           have := hω h hy x hx t ((le_max_right _ _).trans ht) ((le_max_left _ _).trans ht) hxt
           rwa [hexp] at this
         cv := fun x hx t ht htx =>
-          openHeat_le_of_le_norm hC₂ hcv (uniqueInfiniteComponent_infinite h) hx hy
-            ht htx }
+          hcv ω (uniqueInfiniteComponent h) (uniqueInfiniteComponent_infinite h) x hx y hy t ht
+            htx }
   constructor
   · have hKb : ∀ᵐ ω ∂latticeBondLaw 2 p,
         |greenConstant σ θ y ω| ≤ (1 + θ⁻¹) * max (T ω) 1 + JB := by
@@ -442,6 +454,15 @@ theorem supercriticalBondGreenQuantitativeTwo_of_heatKernel (hP : DarioGuHeatKer
               div_le_div_of_nonneg_left hK₀.le hpos hpow
           _ ≤ Cf / ‖z.val‖ ^ (1 - δ) := by gcongr; exact le_max_left _ _
 
+
+/-- **Dario–Gu, Theorem 2** in dimension two from Theorem 1, the Carne–Varopoulos bound
+(`CarneVaropoulosTwo`) and the Liouville theorem at order zero. -/
+theorem supercriticalBondGreenQuantitativeTwo_of_heatKernel (hP : DarioGuHeatKernelTwo)
+    (hCV : CarneVaropoulosTwo)
+    (hL : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      Rigidity.Steps.Section5.SublinearLiouville p) :
+    Rigidity.External.SupercriticalBondGreenQuantitativeTwo :=
+  supercriticalBondGreenQuantitativeTwo_of_smallTime hP (heatSmallTimeTwo_of_carneVaropoulos hCV) hL
 
 /-- Theorem 2 of Dario–Gu in dimension two from Theorem 1, the Carne–Varopoulos bound and the
 planar qualitative corrector input. -/
