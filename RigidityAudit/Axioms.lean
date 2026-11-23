@@ -321,6 +321,16 @@ import Rigidity.Proofs.Cluster.GeneralMuStationary
 import Rigidity.Proofs.Cluster.GeneralMuSubadditiveError
 import Rigidity.Proofs.Cluster.GeneralMuSubadditiveMoments
 import Rigidity.Proofs.Corrector.DarioStationaryPartition
+import Rigidity.Proofs.Corrector.ConcentrationTwoHolds
+import Rigidity.Proofs.Corrector.DarioCorrectorConcentration
+import Rigidity.Proofs.Probability.BregmanConvex
+import Rigidity.Proofs.Probability.BernoulliCube
+import Rigidity.Proofs.Probability.CubeMoments
+import Rigidity.Proofs.Probability.CubeMomentBound
+import Rigidity.Proofs.Probability.StretchedExponential
+import Rigidity.Proofs.Probability.BernoulliProduct
+import Rigidity.Proofs.Probability.BernoulliCylinder
+import Rigidity.Proofs.Probability.BernoulliMoments
 import Rigidity.Proofs.Poincare.LatticeHeatKernel
 import Rigidity.Proofs.Poincare.HeatKernelBounds
 import Rigidity.Proofs.Poincare.BoxMaximal
@@ -1206,7 +1216,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.le_of_finite_piece
 #print axioms Rigidity.Corrector.ae_exists_correctedPlane_eq_add_const
 
--- The multiscale Poincare inequality (2.26) on the square lattice and Theorem 1 of Dario from the concentration inequality and Lemma 3.3
+-- The multiscale Poincare inequality (2.26) on the square lattice and Theorem 1 of Dario and its consequences from Lemma 3.3 alone
 #print axioms Rigidity.Poincare.multiscalePoincareTwo_holds
 #print axioms Rigidity.Poincare.exists_multiscalePoincare_box
 #print axioms Rigidity.Poincare.exists_steinSigned
@@ -1215,8 +1225,22 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Poincare.exists_ofReal_sq_heatGrad_le
 #print axioms Rigidity.Poincare.ofReal_abs_integral_le
 #print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration
-#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree
-#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_flipSum
-#print axioms Rigidity.Poincare.correctorQuantitativeInputTwo_of_concentration_flipSum
-#print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_concentration_flipSum
-#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_concentration_flipSum
+#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_threeThree
+#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_flipSum
+#print axioms Rigidity.Poincare.correctorQuantitativeInputTwo_of_threeThree
+#print axioms Rigidity.Poincare.correctorQuantitativeInputTwo_of_flipSum
+#print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_threeThree
+#print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_flipSum
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_threeThree
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_flipSum
+
+-- The concentration inequality (Proposition 2.17 of Dario; Armstrong and Lin, Proposition 2.2)
+#print axioms Rigidity.Corrector.concentrationTwo_holds
+#print axioms Rigidity.Probability.lintegral_abs_sub_rpow_le_vertSum
+#print axioms Rigidity.Probability.lintegral_exp_rpow_le_of_moments
+#print axioms Rigidity.Probability.cubeExp_abs_sub_rpow_le
+#print axioms Rigidity.Probability.rpowEntropy_le_sum_coordEntropy
+#print axioms Rigidity.Probability.bregmanRpow_convex
+#print axioms Rigidity.Probability.condExp_allExcept_ae_eq
+#print axioms Rigidity.Probability.vertical_condExp_ae_eq
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_poincare_osc

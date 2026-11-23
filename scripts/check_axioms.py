@@ -762,7 +762,7 @@ further = {
          'Rigidity.Corrector.isCorrectedPlane_of_harmonic',
          'Rigidity.Corrector.le_of_finite_piece',
          'Rigidity.Corrector.ae_exists_correctedPlane_eq_add_const'],
-    'the multiscale Poincare inequality (2.26) of Dario on the square lattice and Theorem 1 of Dario from the concentration inequality and Lemma 3.3':
+    'the multiscale Poincare inequality (2.26) of Dario on the square lattice':
         ['Rigidity.Poincare.multiscalePoincareTwo_holds',
          'Rigidity.Poincare.exists_multiscalePoincare_box',
          'Rigidity.Poincare.exists_steinSigned',
@@ -770,12 +770,26 @@ further = {
          'Rigidity.Poincare.tsum_mul_eq_add_integral',
          'Rigidity.Poincare.exists_ofReal_sq_heatGrad_le',
          'Rigidity.Poincare.ofReal_abs_integral_le',
-         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration',
-         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree',
-         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_flipSum',
-         'Rigidity.Poincare.correctorQuantitativeInputTwo_of_concentration_flipSum',
-         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_concentration_flipSum',
-         'Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_concentration_flipSum'],
+         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration'],
+    'Theorem 1 of Dario, Proposition 2.12 of Dario and Gu, Theorem 2 (iii) at k = 1 and Theorem 1 of Dario and Gu in dimension two from Lemma 3.3 alone':
+        ['Rigidity.Poincare.darioOptimalCorrectorTwo_of_threeThree',
+         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_flipSum',
+         'Rigidity.Poincare.correctorQuantitativeInputTwo_of_threeThree',
+         'Rigidity.Poincare.correctorQuantitativeInputTwo_of_flipSum',
+         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_threeThree',
+         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_flipSum',
+         'Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_threeThree',
+         'Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_flipSum'],
+    'the concentration inequality of Dario, Proposition 2.17, in dimension two':
+        ['Rigidity.Corrector.concentrationTwo_holds',
+         'Rigidity.Probability.lintegral_abs_sub_rpow_le_vertSum',
+         'Rigidity.Probability.lintegral_exp_rpow_le_of_moments',
+         'Rigidity.Probability.cubeExp_abs_sub_rpow_le',
+         'Rigidity.Probability.rpowEntropy_le_sum_coordEntropy',
+         'Rigidity.Probability.bregmanRpow_convex',
+         'Rigidity.Probability.condExp_allExcept_ae_eq',
+         'Rigidity.Probability.vertical_condExp_ae_eq',
+         'Rigidity.Corrector.darioOptimalCorrectorTwo_of_poincare_osc'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

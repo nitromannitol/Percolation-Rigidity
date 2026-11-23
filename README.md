@@ -2008,9 +2008,10 @@ following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Correc
   Lemma 7.12 and Proposition 9.9 of Gilbarg and Trudinger, and states the version on the lattice by "standard
   arguments". The named input `MultiscalePoincareTwo` remains the hypothesis of the older theorems of this section;
   the bridge theorems of the next paragraph discharge it;
-* `ConcentrationTwo`: the concentration inequality of Dario, Proposition 2.17 (Proposition 2.2 of Armstrong, Kuusi
-  and Mourrat, *Optimal quantitative estimates*, the exponential Efron–Stein inequality), as printed, for integrable
-  variables with finite resampling variance almost surely (cited);
+* `ConcentrationTwo`: the concentration inequality of Dario, Proposition 2.17, as printed, for integrable variables with
+  finite resampling variance almost surely. It is proved (`Rigidity.Corrector.concentrationTwo_holds`, see
+  [The concentration inequality of Proposition 2.17](#the-concentration-inequality-of-proposition-217)); it remains
+  a hypothesis of the older theorems of this section;
 * `DarioLemmaThreeTwo` and `DarioLemmaThreeThree`: Lemmas 3.2 and 3.3 of Dario for the coarsened correctors at every
   point, `|E[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)]| ≤ C/r` and `𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C/r²)` for `r ≥ 1`
   (Dario takes `x = 0` by stationarity, which does not hold for the partition `𝒫` itself, so these are the lemmas for the
@@ -2020,10 +2021,10 @@ following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Correc
   [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two)),
   so Theorem 1 of Dario and `CorrectorQuantitativeInputTwo` follow from the multiscale Poincaré inequality, the
   concentration inequality and Lemma 3.3 (`darioOptimalCorrectorTwo_of_lemmaThreeThree`,
-  `correctorQuantitativeInputTwo_of_lemmaThreeThree`). With the multiscale Poincaré inequality proved, Theorem 1 of
-  Dario in `d = 2` follows from `ConcentrationTwo` and `DarioLemmaThreeThree` alone
-  (`Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree`), and from `ConcentrationTwo` and
-  `DarioFlipSumBound` alone (`darioOptimalCorrectorTwo_of_concentration_flipSum`); see
+  `correctorQuantitativeInputTwo_of_lemmaThreeThree`). With the multiscale Poincaré inequality and the concentration
+  inequality proved, Theorem 1 of Dario in `d = 2` follows from `DarioLemmaThreeThree` alone
+  (`Rigidity.Poincare.darioOptimalCorrectorTwo_of_threeThree`) and from `DarioFlipSumBound` alone
+  (`darioOptimalCorrectorTwo_of_flipSum`); see
   [Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1).
 
 The order-zero regularity input (R3), which Dario uses in Proposition 2.14, is proved in dimension two
@@ -2117,6 +2118,37 @@ Departures from Dario:
   partition of the repository, and the bounds of the partition sizes are those of the planar partition.
 - **The logarithm.** Theorem 1 is stated with `log^{1/2}(2 + |x − y|)`, as in the section on the corrector estimate.
 
+## The concentration inequality of Proposition 2.17
+
+Proposition 2.17 of Dario, `ConcentrationTwo`, is proved in `d = 2` (`Rigidity.Corrector.concentrationTwo_holds`,
+[`ConcentrationTwoHolds.lean`](Rigidity/Proofs/Corrector/ConcentrationTwoHolds.lean)): for `p ∈ (0, 1)`, `β ∈ (0, 2)` and an integrable `X` of the bond
+configuration with `𝕍[X] < ∞` almost surely, `𝔼[exp(|X − 𝔼X|^β)] ≤ C 𝔼[exp((C 𝕍[X])^{β/(2−β)})]^{(2−β)/β}` with `C = C(p, β)`. The proof is
+in [`Rigidity/Proofs/Probability/`](Rigidity/Proofs/Probability/) (eight files) and the two files `ConcentrationTwoHolds` and `DarioCorrectorConcentration` of `Rigidity/Proofs/Corrector/`.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Probability.lintegral_abs_sub_rpow_le_vertSum`](Rigidity/Proofs/Probability/BernoulliMoments.lean), [`cubeExp_abs_sub_rpow_le`](Rigidity/Proofs/Probability/CubeMomentBound.lean) | the moment inequality `𝔼\|X − 𝔼X\|^q ≤ 2 (3q/c)^{q/2} 𝔼[𝕍[X]^{q/2}]` for `q ≥ 2` and `c = min(p, 1 − p)`: on the finite cube, then for the infinitely many bonds by conditioning on finitely many of them. |
+| [`rpowEntropy_le_sum_coordEntropy`](Rigidity/Proofs/Probability/BernoulliCube.lean), [`bregmanRpow_convex`](Rigidity/Proofs/Probability/BregmanConvex.lean) | the tensorization of the `φ`-entropy for `φ(x) = x^r`, `1 ≤ r ≤ 2`, and the joint convexity of the Bregman divergence of `x^r` on the closed quadrant. |
+| [`condExp_allExcept_ae_eq`](Rigidity/Proofs/Probability/BernoulliProduct.lean), [`vertical_condExp_ae_eq`](Rigidity/Proofs/Probability/BernoulliProduct.lean) | the conditional expectation given all bonds but one is the two-point average, and the vertical derivative of `𝔼[X \| ℱ_S]` is the conditional expectation of the vertical derivative. |
+| [`lintegral_exp_rpow_le_of_moments`](Rigidity/Proofs/Probability/StretchedExponential.lean) | the stretched exponential bound from the moment inequality, by expansion of `exp(\|Z\|^β)` in powers. |
+
+The nine reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures:
+
+- **The source.** Dario cites the proposition to Armstrong and Lin (*Optimal quantitative estimates in stochastic homogenization for
+  elliptic equations in nondivergence form*, ARMA 225 (2017), Proposition 2.2, with the proof of its Appendix A); it is not a result of Armstrong, Kuusi and Mourrat.
+- **The moment inequality.** Armstrong and Lin cite the moment inequality of Boucheron, Bousquet, Lugosi and Massart with the variance proxy
+  defined through conditional expectations; Boucheron, Bousquet, Lugosi and Massart (Ann. Probab. 33 (2005), Theorem 2)
+  prove it with the resampled quantity `V⁺`. For Bernoulli bonds `(X − X'_e)² ≥ min(p, 1 − p)² (X(ω^{e,1}) − X(ω^{e,0}))²`, and their argument
+  (tensorization of `φ`-entropies, the two-point bound, induction on the moments) is carried out with the flip differences directly, with the factor
+  `min(p, 1 − p)`; the constant `C` depends on `p` and `β`, where Dario has `C(d, β)`.
+- **The combining step.** Armstrong and Lin sketch the passage from the moments to the exponential ("Combining ... yields"), which leaves
+  `exp(𝔼[V]^{β/2})` to be absorbed. It is written out: the terms of the series with `βn < 2` are bounded through the second moment (`|Z|^{βn} ≤ 1 + Z²`),
+  the others by Young's inequality termwise, and the exponent `(2 − β)/β < 1` for `β > 1` by Jensen's inequality, in place of Hölder's inequality across the series.
+- **Degenerate laws and infinitely many bonds.** For `p ∈ {0, 1}` the law is a point mass and the inequality holds with `C = 1`. The Efron–Stein
+  and moment inequalities on infinitely many bonds are obtained from the finite cube through `𝔼[X | ℱ_S]`, the Lévy upward theorem and Fatou's lemma.
+
 ## The multiscale Poincaré inequality (2.26) on the square lattice
 
 The multiscale Poincaré inequality of Dario, Proposition 2.19, display (2.26), in the cube form of `MultiscalePoincareTwo A₀`
@@ -2167,23 +2199,26 @@ estimate with a divergence source (Proposition 3.6) and Lemma 3.7, are not forma
 | [`ae_exists_correctedPlane_eq_add_const`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean), [`isCorrectedPlane_of_harmonic`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean), [`le_of_finite_piece`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean) | Cases 1 and 2 of Step 2: almost surely, when the endpoints of the bond are not both in the infinite cluster with the bond closed, the corrected planes with the bond open and closed differ by a constant on that cluster (maximum principle on the finite piece cut off by the bond, and uniqueness of corrected planes). |
 | [`edgeDiv_edgeGrad_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean), [`ae_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean), [`mem_supp_iff_of_mem_supp_setBond_false`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean) | the comparison of the configurations with one bond opened and closed: the Laplacians differ by the dipole of the bond times the increment across it, almost sure properties hold for both, and in Case 3 the two infinite clusters have the same vertices. |
 
-The following theorems compose the results above with the proved multiscale Poincaré inequality, the qualitative corrector input, the
-order-zero regularity and (1.22), in
+The following theorems compose the results above with the proved multiscale Poincaré inequality, concentration inequality,
+qualitative corrector input, order-zero regularity and (1.22) (`correctorOscSublinearTwo_holds`), in
 [`Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean).
 
 | Lean declaration | Statement |
 | --- | --- |
-| [`Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | Theorem 1 of Dario in `d = 2` (`DarioOptimalCorrectorTwo`) from `ConcentrationTwo` and `DarioLemmaThreeThree` only. |
-| [`darioOptimalCorrectorTwo_of_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | the same from `ConcentrationTwo` and `DarioFlipSumBound` only, by `darioLemmaThreeThree_of_flipSum`. |
-| [`correctorQuantitativeInputTwo_of_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`armstrongDarioOrderOneOriginTwo_of_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`darioGuHeatKernelTwo_of_reduced_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | `CorrectorQuantitativeInputTwo` (R5), `ArmstrongDarioOrderOneOriginTwo` (R4) and `DarioGuHeatKernelTwo` (Dario and Gu, Theorem 1, with the further named inputs `hSec`, `BarlowGaussianUpperBoundTwo`, `CarneVaropoulosTwo` of `darioGuHeatKernelTwo_of_reduced_dario`) from `ConcentrationTwo` and `DarioFlipSumBound`. |
+| [`Rigidity.Poincare.darioOptimalCorrectorTwo_of_threeThree`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`darioOptimalCorrectorTwo_of_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | Theorem 1 of Dario in `d = 2` (`DarioOptimalCorrectorTwo`) from `DarioLemmaThreeThree` alone, and from `DarioFlipSumBound` alone, by `darioLemmaThreeThree_of_flipSum`. |
+| [`correctorQuantitativeInputTwo_of_threeThree`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`correctorQuantitativeInputTwo_of_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | `CorrectorQuantitativeInputTwo` (R5) from `DarioLemmaThreeThree` alone, and from `DarioFlipSumBound` alone. |
+| [`armstrongDarioOrderOneOriginTwo_of_threeThree`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`armstrongDarioOrderOneOriginTwo_of_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | `ArmstrongDarioOrderOneOriginTwo` (R4) from `DarioLemmaThreeThree` alone, and from `DarioFlipSumBound` alone. |
+| [`darioGuHeatKernelTwo_of_reduced_threeThree`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`darioGuHeatKernelTwo_of_reduced_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | `DarioGuHeatKernelTwo` (Dario and Gu, Theorem 1) from `DarioLemmaThreeThree`, respectively `DarioFlipSumBound`, and the named inputs of `darioGuHeatKernelTwo_of_reduced_dario` that do not concern Dario's Theorem 1: `hSec` (for each `p`, a `σ > 0` with `DarioGuApproxLemmaTwo`, `DarioGuTwoScaleErrorTwo` and `DarioGuDensityGaussianTwo`), `BarlowGaussianUpperBoundTwo` and `CarneVaropoulosTwo`. |
 
-The thirty-five reports for the first table of this section and the five reports for the bridges are in
+The thirty-five reports for the first table of this section and the eight reports for the bridges are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
-So in `d = 2` the inputs R4 and R5 and Theorem 1 of Dario rest on two named statements, the concentration inequality
-`ConcentrationTwo` (Proposition 2.17, cited) and `DarioFlipSumBound` (the estimate (3.13)). The module
-[`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1 from `ConcentrationTwo`,
-`CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`; with (1.22) proved (`correctorOscSublinearTwo_holds`) it is the first bridge above.
+Exactly the following named inputs remain for these results. Theorem 1 of Dario, R5 and R4: `DarioFlipSumBound` (or `DarioLemmaThreeThree`),
+and nothing else. Dario and Gu, Theorem 1: `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
+`CarneVaropoulosTwo`. The module [`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1
+from `ConcentrationTwo`, `CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`, and
+[`DarioCorrectorConcentration`](Rigidity/Proofs/Corrector/DarioCorrectorConcentration.lean) from the multiscale Poincaré inequality,
+`CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`; the bridges above discharge the remaining hypotheses.
 Lemma 3.2 and (1.22) were proved before these files and are not restated by them.
 
 Departures from Dario:

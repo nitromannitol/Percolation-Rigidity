@@ -445,8 +445,13 @@ fidelity:
     Propositions 2.11 and 2.12 proved as an orthogonal projection onto the closed span of the gradients
     of point masses, with (2.14) at C = 1, (2.15) and (2.17), the identity (3.22), the representation
     (3.26) with the paths in the ninefold square of the smaller cube, and Cases 1 to 3 of Step 2, so that
-    Theorem 1 of Dario in dimension two follows from the concentration inequality and the flip form of
-    (3.13) alone, and
+    Theorem 1 of Dario in dimension two, the corrector input of Dario and Gu and Theorem 2 (iii) at k = 1
+    at the origin follow from the flip form of (3.13) alone, and for the concentration inequality of
+    Dario, Proposition 2.17 (the source is Armstrong and Lin, ARMA 225 (2017), Proposition 2.2, and not
+    Armstrong, Kuusi and Mourrat; the moment inequality is proved in the form of Boucheron, Bousquet,
+    Lugosi and Massart by tensorization of the phi-entropy for the Bernoulli bonds, with the flip
+    differences and the factor min(p, 1-p), so that the constant depends on p and beta; the combining step
+    of Armstrong and Lin, which they only sketch, is written out), and
     for the localization, stationarity and limit of the subadditive quantity mu in every dimension
     d >= 2 and for Definition 3.9 (Armstrong and Dario, Propositions 4.9 and 4.10, (4.32), (4.39),
     (4.40), (4.48) and (3.17): the local versions of mu are built from the partition capped at the
