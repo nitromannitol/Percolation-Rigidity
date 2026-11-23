@@ -13,7 +13,8 @@ increments of the coarsened function `u(z̄(□_𝒫(·)))` over the edges insid
 Step 1 of the proof of Lemma 6.2 of the source (display (6.20)).
 -/
 
-open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation Rigidity.Proofs.Section5
+open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation
+open Rigidity.Proofs.Section5
 open scoped Classical
 
 namespace Rigidity.Dirichlet

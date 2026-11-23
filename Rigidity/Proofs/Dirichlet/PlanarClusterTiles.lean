@@ -14,7 +14,8 @@ boundary layer of `T` of width `5 · 3^k + 1` when all partition cubes have scal
 |∂_𝒫(y + □_n)|` in Step 1 of the proof of Armstrong and Dario, Lemma 6.3.
 -/
 
-open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation Rigidity.Proofs.Section5
+open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation
+open Rigidity.Proofs.Section5
 open scoped Classical
 
 namespace Rigidity.Dirichlet

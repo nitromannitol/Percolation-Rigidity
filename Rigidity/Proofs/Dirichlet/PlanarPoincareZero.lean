@@ -19,7 +19,8 @@ functions vanishing on the boundary, as used in the proofs of Lemma 6.3 and Prop
 the size of the partition cubes entering through their maximum.
 -/
 
-open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation Rigidity.Proofs.Section5
+open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation
+open Rigidity.Proofs.Section5
 open scoped Classical
 
 namespace Rigidity.Dirichlet

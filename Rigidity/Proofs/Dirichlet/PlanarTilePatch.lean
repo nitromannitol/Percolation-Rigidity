@@ -21,7 +21,8 @@ elsewhere, as in the proof of Lemma 6.3 of the source. Then
   `2 |T| ν(T, p_i) + 2 |p_i|² |(C_*(□_m) ∩ T) \ C_*(T)|` (`innerEdgeEnergy_tilePatch_le`).
 -/
 
-open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation Rigidity.Proofs.Section5
+open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation
+open Rigidity.Proofs.Section5
 open scoped Classical
 
 namespace Rigidity.Dirichlet

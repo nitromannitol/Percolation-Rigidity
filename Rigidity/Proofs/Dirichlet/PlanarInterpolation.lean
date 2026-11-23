@@ -20,7 +20,8 @@ largest scale of a partition cube whose window contains `z`, and the window of t
 of `x` has at most `81 · 9^{s(x)}` vertices (`sum_three_pow_reachScale_rpow_le`).
 -/
 
-open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation Rigidity.Proofs.Section5
+open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation
+open Rigidity.Proofs.Section5
 open scoped Classical
 
 namespace Rigidity.Dirichlet

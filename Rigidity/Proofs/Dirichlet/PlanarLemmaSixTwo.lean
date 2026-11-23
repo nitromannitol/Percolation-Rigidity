@@ -21,7 +21,8 @@ Armstrong and Dario, Lemma 6.2, with the energy of the edges inside `□_m`, the
 homogenized problem and the triadic mesoscopic cubes.
 -/
 
-open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation Rigidity.Proofs.Section5
+open Finset LatticeProb LatticeHC LatticeProb.Percolation Rigidity.Percolation
+open Rigidity.Proofs.Section5
 open scoped Classical
 
 namespace Rigidity.Dirichlet
