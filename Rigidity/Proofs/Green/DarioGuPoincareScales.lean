@@ -77,4 +77,91 @@ theorem card_indexBox_one (c : Vertex 2) : (indexBox c 1).card = 9 := by
   have := card_indexBox c (R := 1)
   simpa using this
 
+open scoped ENNReal in
+/-- **A good scale.** If the reach is dominated by `ss` and `Σ_{□_m(e)} ss⁴ ≤ C 9^m` on the nine
+cubes of scale `m` around `y`, with `6561 C < 9^m`, then the partition cubes of the vertices of the
+triple have scale at most `m - 3` and `Σ_{triple} (ρ² + 3ρ)² ≤ 144 C 9^m`: the hypotheses of
+`sum_sq_sub_finAvg_clusterBall_le`. -/
+theorem goodScale_consequences {ω : Configuration 2} (hP : PlanarPartitionEvent ω) {y : Vertex 2}
+    {m : ℕ} {Cf : ℝ} (ss : Vertex 2 → ℝ) (hreach : ∀ z, planarReach ω z ≤ ENNReal.ofReal (ss z))
+    (hgood : ∀ e ∈ indexBox (idx m y) 1,
+      ∑ z ∈ (⟨m, e⟩ : TriadicCube 2).toIntegerCube.vertices, ss z ^ 4 ≤ Cf * 9 ^ m)
+    (hm : 6561 * Cf < 9 ^ m) :
+    (∀ z ∈ enl 1 m y, (planarPartCube ω z).scale + 3 ≤ m) ∧
+      ∑ z ∈ enl 1 m y, (planarReach ω z ^ 2 + 3 * planarReach ω z) ^ 2 ≤
+        ENNReal.ofReal (144 * Cf * 9 ^ m) := by
+  -- `3^{scale} ≤ ss`
+  have h3 : ∀ z, (3 : ℝ) ^ (planarPartCube ω z).scale ≤ ss z := by
+    intro z
+    have h := (Rigidity.Proofs.Regularity.three_pow_planarPartCube_scale_le_planarReach hP z).trans
+      (hreach z)
+    rw [show (3 : ℝ≥0∞) ^ (planarPartCube ω z).scale =
+      ENNReal.ofReal ((3 : ℝ) ^ (planarPartCube ω z).scale) by
+        rw [ENNReal.ofReal_pow (by norm_num)]; norm_num] at h
+    exact (ENNReal.ofReal_le_ofReal_iff' |>.1 h).resolve_right (by
+      intro h'; have := (pow_pos (by norm_num : (0 : ℝ) < 3) (planarPartCube ω z).scale); linarith)
+  have hss1 : ∀ z, 1 ≤ ss z := fun z => (one_le_pow₀ (by norm_num)).trans (h3 z)
+  have hss0 : ∀ z, 0 ≤ ss z := fun z => zero_le_one.trans (hss1 z)
+  -- `ss⁴ ≤ C 9^m` on the triple
+  have hpt : ∀ z ∈ enl 1 m y, ss z ^ 4 ≤ Cf * 9 ^ m := by
+    intro z hz
+    refine le_trans ?_ (hgood (idx m z) (mem_indexBox.2 fun i => idx_sub_le_of_mem_enl hz i))
+    exact Finset.single_le_sum (f := fun z => ss z ^ 4) (fun z _ => by positivity)
+      (mem_triadicCube_idx_self m z)
+  refine ⟨fun z hz => ?_, ?_⟩
+  · by_contra hlt
+    push Not at hlt
+    have hk : m ≤ (planarPartCube ω z).scale + 2 := by omega
+    set k := (planarPartCube ω z).scale
+    have h4 : (3 : ℝ) ^ (4 * k) ≤ Cf * 9 ^ m := by
+      calc (3 : ℝ) ^ (4 * k) = ((3 : ℝ) ^ k) ^ 4 := by rw [← pow_mul, mul_comm]
+        _ ≤ ss z ^ 4 := pow_le_pow_left₀ (by positivity) (h3 z) 4
+        _ ≤ _ := hpt z hz
+    have h9 : (9 : ℝ) ^ m * 9 ^ m ≤ 6561 * 3 ^ (4 * k) := by
+      have e1 : (9 : ℝ) ^ m * 9 ^ m = 3 ^ (4 * m) := by
+        rw [← pow_add, show (9 : ℝ) = 3 ^ 2 by norm_num, ← pow_mul]; ring_nf
+      have e2 : (6561 : ℝ) * 3 ^ (4 * k) = 3 ^ (4 * k + 8) := by
+        rw [pow_add]; norm_num; ring
+      rw [e1, e2]
+      exact pow_le_pow_right₀ (by norm_num) (by omega)
+    have h9m : (0 : ℝ) < 9 ^ m := by positivity
+    nlinarith
+  · have hterm : ∀ z ∈ enl 1 m y, (planarReach ω z ^ 2 + 3 * planarReach ω z) ^ 2 ≤
+        ENNReal.ofReal (16 * ss z ^ 4) := by
+      intro z _
+      have h1 : (planarReach ω z ^ 2 + 3 * planarReach ω z) ^ 2 ≤
+          (ENNReal.ofReal (ss z) ^ 2 + 3 * ENNReal.ofReal (ss z)) ^ 2 := by
+        gcongr
+        · exact hreach z
+        · exact hreach z
+      have he : (ENNReal.ofReal (ss z) ^ 2 + 3 * ENNReal.ofReal (ss z)) ^ 2 =
+          ENNReal.ofReal ((ss z ^ 2 + 3 * ss z) ^ 2) := by
+        rw [ENNReal.ofReal_pow (by have := hss0 z; positivity), ENNReal.ofReal_add
+          (by have := hss0 z; positivity) (by have := hss0 z; positivity),
+          ENNReal.ofReal_pow (hss0 z), ENNReal.ofReal_mul (by norm_num)]
+        norm_num
+      have hle : (ss z ^ 2 + 3 * ss z) ^ 2 ≤ 16 * ss z ^ 4 := by
+        have := hss1 z
+        nlinarith [sq_nonneg (ss z), sq_nonneg (ss z - 1)]
+      exact h1.trans (he.le.trans (ENNReal.ofReal_le_ofReal hle))
+    calc ∑ z ∈ enl 1 m y, (planarReach ω z ^ 2 + 3 * planarReach ω z) ^ 2
+        ≤ ∑ z ∈ enl 1 m y, ENNReal.ofReal (16 * ss z ^ 4) := Finset.sum_le_sum hterm
+      _ = ENNReal.ofReal (∑ z ∈ enl 1 m y, 16 * ss z ^ 4) :=
+          (ENNReal.ofReal_sum_of_nonneg fun z _ => by have := hss0 z; positivity).symm
+      _ ≤ ENNReal.ofReal (144 * Cf * 9 ^ m) := by
+          apply ENNReal.ofReal_le_ofReal
+          have h1 := sum_enl_le_sum_cubes m y (f := fun z => 16 * ss z ^ 4)
+            (fun z => by have := hss0 z; positivity)
+          refine h1.trans ?_
+          calc ∑ e ∈ indexBox (idx m y) 1, ∑ z ∈ (⟨m, e⟩ : TriadicCube 2).toIntegerCube.vertices,
+                16 * ss z ^ 4
+              ≤ ∑ _e ∈ indexBox (idx m y) 1, 16 * (Cf * 9 ^ m) := by
+                refine Finset.sum_le_sum fun e he => ?_
+                rw [← Finset.mul_sum]
+                exact mul_le_mul_of_nonneg_left (hgood e he) (by norm_num)
+            _ = 144 * Cf * 9 ^ m := by
+                rw [Finset.sum_const, card_indexBox_one, nsmul_eq_mul]
+                push_cast
+                ring
+
 end Rigidity.Green
