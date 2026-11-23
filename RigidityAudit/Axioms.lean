@@ -301,6 +301,16 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleInitial
 import Rigidity.Proofs.Green.DarioGuWeightedL2
 import Rigidity.Proofs.Green.OpenHeatSemigroup
 import Rigidity.Proofs.Corrector.DarioPropThreeOne
+import Rigidity.Proofs.Cluster.GeneralAhomIsotropic
+import Rigidity.Proofs.Cluster.GeneralRHEvent
+import Rigidity.Proofs.Cluster.GeneralRHExit
+import Rigidity.Proofs.Cluster.GeneralRHLocal
+import Rigidity.Proofs.Cluster.GeneralRHMeyers
+import Rigidity.Proofs.Cluster.GeneralRHPartition
+import Rigidity.Proofs.Cluster.GeneralRHProb
+import Rigidity.Proofs.Cluster.GeneralReachDomination
+import Rigidity.Proofs.Corrector.DarioStationaryPartition
+import Rigidity.Proofs.Corrector.PeriodicHeatDecay
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -952,3 +962,21 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Green.hasSum_vsrwHeat_mul
 #print axioms Rigidity.Green.sum_dgPhi_mul_dgPhi_le
 #print axioms Rigidity.Green.hasTail_latticeSup
+
+-- Section 3 and the isotropy of the homogenized matrix in every dimension (Armstrong and Dario), and (3.3) and Step 3 of Lemma 3.2 of Dario
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.measurableSet_not_mem_rhGood_local
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.meyers_rh_uniform
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.mem_partitionBoxCluster_of_exit
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.rhCube_of_scales
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.exists_measure_sum_reach_enl_gt_le
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.rhFailureBound_holds
+#print axioms Rigidity.Proofs.Cluster.GeneralDim.rhPartition_holds
+#print axioms Rigidity.Percolation.reachable_partitionAnchor_of_exit
+#print axioms Rigidity.Percolation.partitionReach_le_stoppingSize_coarseGood
+#print axioms Rigidity.Percolation.exists_measure_not_mem_coarseGood_le
+#print axioms Rigidity.Percolation.cubeNu_signedPerm
+#print axioms Rigidity.Percolation.cubeNuLimit_signedPermSlope
+#print axioms Rigidity.Percolation.exists_cubeAhom_eq_smul_one
+#print axioms Rigidity.Corrector.abs_tsum_openHeat_mul_le
+#print axioms Rigidity.Corrector.abs_tsum_openHeat_mul_periodic_le_exp
+#print axioms Rigidity.Percolation.dario_errorstatpart

@@ -599,6 +599,24 @@ further = {
          'Rigidity.Green.hasSum_vsrwHeat_mul',
          'Rigidity.Green.sum_dgPhi_mul_dgPhi_le',
          'Rigidity.Green.hasTail_latticeSup'],
+    'the partition of Definition 3.7, the Meyers estimate above it and the isotropy of the homogenized matrix of Armstrong and Dario in every dimension':
+        ['Rigidity.Proofs.Cluster.GeneralDim.measurableSet_not_mem_rhGood_local',
+         'Rigidity.Proofs.Cluster.GeneralDim.meyers_rh_uniform',
+         'Rigidity.Proofs.Cluster.GeneralDim.mem_partitionBoxCluster_of_exit',
+         'Rigidity.Proofs.Cluster.GeneralDim.rhCube_of_scales',
+         'Rigidity.Proofs.Cluster.GeneralDim.exists_measure_sum_reach_enl_gt_le',
+         'Rigidity.Proofs.Cluster.GeneralDim.rhFailureBound_holds',
+         'Rigidity.Proofs.Cluster.GeneralDim.rhPartition_holds',
+         'Rigidity.Percolation.reachable_partitionAnchor_of_exit',
+         'Rigidity.Percolation.partitionReach_le_stoppingSize_coarseGood',
+         'Rigidity.Percolation.exists_measure_not_mem_coarseGood_le',
+         'Rigidity.Percolation.cubeNu_signedPerm',
+         'Rigidity.Percolation.cubeNuLimit_signedPermSlope',
+         'Rigidity.Percolation.exists_cubeAhom_eq_smul_one'],
+    'the estimate (3.3) for the stationary partitions and the heat decay of periodic functions of Dario (Lemma 3.2, Step 3)':
+        ['Rigidity.Corrector.abs_tsum_openHeat_mul_le',
+         'Rigidity.Corrector.abs_tsum_openHeat_mul_periodic_le_exp',
+         'Rigidity.Percolation.dario_errorstatpart'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
