@@ -292,7 +292,7 @@ theorem IsSlopeQuadratic.le_of_nonneg {g : (Fin d → ℝ) → ℝ} (hg : IsSlop
   exact Finset.single_le_sum (fun j _ => sq_nonneg (q j)) (Finset.mem_univ i)
 
 /-- `|x|² ≤ |x|₁²`. -/
-theorem sum_sq_le_sq_sum_abs (x : Fin d → ℝ) : ∑ i, x i ^ 2 ≤ (∑ i, |x i|) ^ 2 := by
+theorem sum_sq_le_sq_sum_abs_vec (x : Fin d → ℝ) : ∑ i, x i ^ 2 ≤ (∑ i, |x i|) ^ 2 := by
   have e : (∑ i, |x i|) ^ 2 = ∑ i, |x i| * ∑ j, |x j| := by rw [sq, Finset.sum_mul]
   rw [e]
   refine Finset.sum_le_sum fun i _ => ?_
@@ -393,7 +393,7 @@ theorem abs_slopeQuadratic_sub_half_le (hd : 0 < d) {g h : (Fin d → ℝ) → �
     have e2 : t * ∑ i, r i * slopeGrad g q i - t * ∑ i, r i * p i = t * N := by
       rw [← mul_sub, hrr]
     nlinarith
-  have hNqQ : Nq ≤ Q ^ 2 := sum_sq_le_sq_sum_abs q
+  have hNqQ : Nq ≤ Q ^ 2 := sum_sq_le_sq_sum_abs_vec q
   have hRN : R ^ 2 ≤ d * N := sq_sum_abs_le_card_mul r
   have hmain : R ^ 2 ≤ 4 * d * Λ * (ρ + Y * S) * Q ^ 2 + 2 * d * Y * S * Q * R := by
     have k1 : t / 2 * N ≤ ρ * Q ^ 2 + Y * S * Q * (Q + t * R) := by
