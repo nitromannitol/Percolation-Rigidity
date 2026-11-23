@@ -174,7 +174,8 @@ theorem tsum_exp_mul_le_boxMax {F : (Fin 2 → ℤ) → ℝ} (hF : ∀ z, 0 ≤ 
         ENNReal.tsum_comm
     _ ≤ ∑' j : ℕ, ENNReal.ofReal (e j * (2 * (ρ * 2 ^ j : ℕ) + 1) ^ 2 * boxMax F x) :=
         ENNReal.tsum_le_tsum hbox
-    _ ≤ ∑' j : ℕ, ENNReal.ofReal (9 * (ρ : ℝ) ^ 2 * (384 * Real.exp 1) * boxMax F x * (1 / 2) ^ j) :=
+    _ ≤ ∑' j : ℕ,
+          ENNReal.ofReal (9 * (ρ : ℝ) ^ 2 * (384 * Real.exp 1) * boxMax F x * (1 / 2) ^ j) :=
         ENNReal.tsum_le_tsum fun j => ENNReal.ofReal_le_ofReal (by
           have := mul_le_mul_of_nonneg_right (hgeom j) hM0
           linarith)

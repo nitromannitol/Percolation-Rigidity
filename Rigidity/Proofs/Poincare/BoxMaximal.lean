@@ -280,8 +280,9 @@ theorem tsum_boxMax_rpow_le (hF : ∀ z, 0 ≤ F z) (hFs : Summable F) {p : ℝ}
         congr 1
         refine tsum_congr fun z => ?_
         simp only [hS]
-        rw [lintegral_const_mul _ (hmeas z), lintegral_indicator measurableSet_Iio, Measure.restrict_restrict measurableSet_Iio,
-          Set.Iio_inter_Ioi, lintegral_Ioo_rpow_sub_two hp (by linarith [hF z]),
+        rw [lintegral_const_mul _ (hmeas z), lintegral_indicator measurableSet_Iio,
+          Measure.restrict_restrict measurableSet_Iio, Set.Iio_inter_Ioi,
+          lintegral_Ioo_rpow_sub_two hp (by linarith [hF z]),
           ← ENNReal.ofReal_mul (by linarith [hF z])]
         congr 1
         rw [Real.mul_rpow (by norm_num) (hF z)]
