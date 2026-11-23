@@ -16,7 +16,8 @@ ones, polynomial in `3^ℓ`:
   `10⁹ (ℓ + 1) 729^ℓ 3^{-U.scale/2}` (`planarComparisonError_le_of_planarReachLe`);
 * the errors in the subadditivity of `μ` and `ν` over the subcubes of scale `n ≥ ℓ` ((4.32),
   (4.33)) are at most `C (ℓ + 1) 531441^ℓ |q|₁² |U| 3^{-n/2}`
-  (`sum_planarMu_subcubes_sub_le_of_planarReachLe`, `planarNu_sub_sum_subcubes_le_of_planarReachLe`).
+  (`sum_planarMu_subcubes_sub_le_of_planarReachLe`,
+  `planarNu_sub_sum_subcubes_le_of_planarReachLe`).
 -/
 
 namespace Rigidity.Proofs.Cluster
@@ -314,7 +315,8 @@ theorem sum_planarMu_subcubes_sub_le_of_planarReachLe {U : TriadicCube 2} {ℓ n
       rw [hs2, show (9 : ℝ) ^ n = 3 ^ (2 * n) by rw [pow_mul]; norm_num, ← pow_add]
       exact pow_le_pow_right₀ (by norm_num) (by omega)
     have e : 729000000 * s * (E.card * ((9 : ℝ) ^ n * (1 / (3 : ℝ) ^ (6 * (n + 1)) *
-        (3 * 531441 ^ ℓ)))) * s = 2187000000 * B * E.card * ((9 ^ n * s ^ 2) / 3 ^ (6 * (n + 1))) := by
+        (3 * 531441 ^ ℓ)))) * s =
+        2187000000 * B * E.card * ((9 ^ n * s ^ 2) / 3 ^ (6 * (n + 1))) := by
       rw [hB]; ring
     rw [e]
     have : (9 : ℝ) ^ n * s ^ 2 / 3 ^ (6 * (n + 1)) ≤ 1 := by

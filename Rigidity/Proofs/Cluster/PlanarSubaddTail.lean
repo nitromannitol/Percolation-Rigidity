@@ -320,7 +320,8 @@ theorem three_rpow_natCast_mul (k : ℕ) (s : ℝ) : ((3 : ℝ) ^ k) ^ s = (3 : 
 /-- The scales of the proof of the tails of Proposition 5.2: with `n ≈ m/2`, `x = nα/24`,
 `ℓ = ⌊x⌋` and `w = 3^x`. -/
 theorem tail_params {α : ℝ} (hα0 : 0 < α) (hα : α ≤ 1 / 4) {m n ℓ : ℕ} {w X : ℝ}
-    (hn3 : (m : ℝ) ≤ 2 * n + 1) (hℓ : ℓ = ⌊(n : ℝ) * α / 24⌋₊) (hw : w = (3 : ℝ) ^ ((n : ℝ) * α / 24))
+    (hn3 : (m : ℝ) ≤ 2 * n + 1) (hℓ : ℓ = ⌊(n : ℝ) * α / 24⌋₊)
+    (hw : w = (3 : ℝ) ^ ((n : ℝ) * α / 24))
     (hX : X = ((3 : ℝ) ^ m) ^ (α / 48)) :
     1 ≤ w ∧ (3 : ℝ) ^ ℓ ≤ w ∧ w ≤ 3 * (3 : ℝ) ^ ℓ ∧ (3 : ℝ) ^ (-(n : ℝ) * α) * w ^ 24 ≤ 1 ∧
       w ^ 48 ≤ Real.sqrt ((3 : ℝ) ^ n) ∧ ℓ ≤ n ∧
@@ -466,7 +467,8 @@ theorem exists_planarSubaddGood_tail {p : unitInterval} (hpc : criticalProbabili
   obtain ⟨K₁, hK₁, h₁⟩ := exists_nine_pow_mul_exp_rpow_le ha₁0 hs0
   obtain ⟨K₂, hK₂, h₂⟩ := exists_nine_pow_mul_exp_rpow_le hc hs0
   obtain ⟨c', hc'⟩ : ∃ c', c' = min (1 / (9 * θ) / 2) (min (c / 2) (1 / 729)) := ⟨_, rfl⟩
-  have hc'0 : 0 < c' := by rw [hc']; exact lt_min (by positivity) (lt_min (by positivity) (by norm_num))
+  have hc'0 : 0 < c' := by
+    rw [hc']; exact lt_min (by positivity) (lt_min (by positivity) (by norm_num))
   have hc'1 : c' ≤ 1 / (9 * θ) / 2 := by rw [hc']; exact min_le_left _ _
   have hc'2 : c' ≤ c / 2 := by rw [hc']; exact (min_le_right _ _).trans (min_le_left _ _)
   have hc'3 : c' ≤ 1 / 729 := by rw [hc']; exact (min_le_right _ _).trans (min_le_right _ _)
