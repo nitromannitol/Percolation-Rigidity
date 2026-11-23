@@ -95,7 +95,7 @@ theorem cubeAffine_eq_add (N : ℕ) (g : Vertex 2 → ℝ) (y x : Vertex 2) :
     cubeAffine N g y x = cubeAffine N g y y + ∑ j, cubeSlope N g y j * ((x j - y j : ℤ) : ℝ) := by
   simp only [cubeAffine, sub_self, Int.cast_zero, mul_zero, Finset.sum_const_zero, add_zero]
 
-theorem cubeAffine_add_unit_sub (N : ℕ) (g : Vertex 2 → ℝ) (y x : Vertex 2) (j : Fin 2) :
+theorem cubeAffine_add_unit_sub_two (N : ℕ) (g : Vertex 2 → ℝ) (y x : Vertex 2) (j : Fin 2) :
     cubeAffine N g y (x + unit j) - cubeAffine N g y x = cubeSlope N g y j := by
   rw [cubeAffine_eq_add N g y (x + unit j), cubeAffine_eq_add N g y x]
   have h : ∀ i : Fin 2, ((((x + unit j) i - y i : ℤ) : ℝ)) =
@@ -239,7 +239,7 @@ theorem innerEdgeEnergy_tilePatch_le (hP : PlanarPartitionEvent ω) {m k : ℕ} 
               hxC (mem_clusterVertices_of_adj hP hres hy ((hmemT _).1 hx) hadj.symm)
             rw [show v (x + unit j) = _ from tilePatch_eq_of_not_mem ω uh h1 hyC,
               show v x = _ from tilePatch_eq_of_not_mem ω uh hx hxC,
-              cubeAffine_add_unit_sub, hcl, one_mul]
+              cubeAffine_add_unit_sub_two, hcl, one_mul]
         · positivity
       · rw [if_neg hxX]
         refine Finset.sum_nonpos fun j _ => ?_
@@ -380,7 +380,7 @@ theorem sum_sq_tilePatch_sub_le {K₀ : ℝ} (hK₀0 : 0 ≤ K₀)
             (ext z - (nuMax ω T p).2 - ∑ j, p j * ((z₀ + ((3 ^ k : ℕ) : ℤ) • i) j : ℝ) +
               ℓ (z₀ + ((3 ^ k : ℕ) : ℤ) • i) - ℓ z) =
             (ext (z + unit j) - ext z) - p j := by
-          have := cubeAffine_add_unit_sub (3 ^ k) uh (z₀ + ((3 ^ k : ℕ) : ℤ) • i) z j
+          have := cubeAffine_add_unit_sub_two (3 ^ k) uh (z₀ + ((3 ^ k : ℕ) : ℤ) • i) z j
           linarith
         rw [e]
         nlinarith [sq_nonneg (ext (z + unit j) - ext z + p j)]
