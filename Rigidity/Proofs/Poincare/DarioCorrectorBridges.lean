@@ -20,7 +20,7 @@ inputs of `darioGuHeatKernelTwo_of_reduced_dario`, Theorem 1 of Dario and Gu.
 
 namespace Rigidity.Poincare
 
-open Rigidity.Corrector Rigidity.External
+open LatticeProb.Percolation Rigidity.Corrector Rigidity.External Rigidity.Green
 
 /-- **Dario, Theorem 1, in dimension two**, from Lemma 3.3. -/
 theorem darioOptimalCorrectorTwo_of_threeThree (h33 : DarioLemmaThreeThree) :
