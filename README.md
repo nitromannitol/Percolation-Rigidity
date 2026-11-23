@@ -2184,8 +2184,7 @@ are proved, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/) (thirt
 direction, component, radius `r ≥ 1` and point, the sum over bonds `e` of the squared flip differences
 `(X(ω^{e,1}) − X(ω^{e,0}))²` of `X = Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)` is at most `O_s(C/r²)`. Lemma 3.5 (the partition of the
 resampled configuration agrees with 𝒫 away from a ball around the resampled bond) is not proved for the planar
-partition of the repository. Step 1 of the proof of Lemma 3.3 is proved from Lemma 3.5, and the sum of Step 2 is reduced to a named
-statement, in [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition).
+partition of the repository. Step 1 of the proof of Lemma 3.3 is proved from Lemma 3.5, and the sum of Step 2 is the hypothesis `hTwo` (H2) of `darioFlipSumBound_of_resample`, in [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2277,7 +2276,7 @@ then `size(□_{𝒫(ω')}(z)) ≤ C size(□_{𝒫(ω)}(x))`; otherwise `□_{�
 | [`Rigidity.Corrector.ae_flipSumOne_le`](Rigidity/Proofs/Corrector/DarioStepOneSum.lean), [`flipSumOne_isOsBond_of_moments`](Rigidity/Proofs/Corrector/DarioStepOneSum.lean) | the sums (3.18) `W(y) = Σ_e 1{y ∈ B_e} F_e` (`stepOneW`), `flipSumOne` almost surely at most the square sum against `W`, and (H1) from the moments of `W`. |
 | [`Rigidity.Corrector.lintegral_tsum_rpow_le_of_decay`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`tsum_exp_neg_norm_bondBase_le`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`measure_le_mul_stoppingSize_le`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`lintegral_indicator_rpow_le`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean), [`lintegral_randomBallSum_rpow_le_of_growth`](Rigidity/Proofs/Corrector/DarioStepOneGrowth.lean) | the moment tools of Step 1: Jensen's inequality over a countable family with exponentially decaying moments, the sum of the weights over the bonds, the tail of a multiple of the partition size, Cauchy-Schwarz on an event, and moments of sums over balls of random radius in growth form. |
 | [`Rigidity.Corrector.stepOne_lipschitz_data`](Rigidity/Proofs/Corrector/DarioStepOneW.lean), [`stepOneFactor_eq_self`](Rigidity/Proofs/Corrector/DarioStepOneW.lean), [`measurable_stepOneFactorSelf`](Rigidity/Proofs/Corrector/DarioStepOneW.lean), [`stepOneFactorSelf_le`](Rigidity/Proofs/Corrector/DarioStepOneW.lean) | the Lipschitz bounds `Λ` of the corrector with `E[(1 + Λ)^q] ≤ (B q^κ)^q`, the local factor of Step 1 as a function of the configuration itself, and its bound on the partition event by the indicator of an event of exponentially small probability times the cube of a sum of `1 + Λ` over a ball. |
-| [`Rigidity.Corrector.stepOneW_moments`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | `E[W(y)^q] ≤ (A q^k)^q` uniformly in `y`, for `k = 3(κ + 2) + 2`, from `ResamplePartitionBound` and the order-zero regularity `armstrongDarioOrderZeroTwo_holds`. |
+| [`Rigidity.Corrector.stepOneW_moments`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | `E[W(y)^q] ≤ (A q^k)^q` uniformly in `y`, for `k = 3(κ + 2) + 2`, for any `C₀` and `C`, with the hypothesis `ArmstrongDarioOrderZeroTwo`; it does not use `ResamplePartitionBound`. |
 | [`Rigidity.Corrector.flipSumOne_isOsBond_of_resample`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | (H1): `flipSumOne` is almost surely finite and `O_s(C/r²)`, from `ResamplePartitionBound` alone. |
 | [`Rigidity.Corrector.darioFlipSumBound_of_resample`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | `DarioFlipSumBound` from `DarioResamplePartitionTwo` and the Step 2 sum (H2). |
 
@@ -2295,8 +2294,9 @@ Departures from Dario:
 - **Cauchy-Schwarz over the box.** In Step 1 the square of the sum over the box of radius `C₀ s₀` is bounded by Cauchy-Schwarz, by the number
   of points of the box times the sum of the squares; the ball `B(x, r)` is the box in the supremum norm.
 - **Lemma 3.5 with the anchors.** The anchors of the planar partition depend on the bonds of the square of side nine times the side of the cube, so
-  `DarioResamplePartitionTwo` states the second clause for the cube and for its anchor. If a large partition cube has the bond in its ninefold
-  square far from `x` in units of `size(□_{𝒫(ω)}(x))`, the radius `C₀ size(□_{𝒫(ω)}(x))` may be too small for the clause on the anchor.
+  `DarioResamplePartitionTwo` states the second clause for the cube and for its anchor. For a meshed partition cube of side at least 1000 the anchor
+  depends only on the bonds inside the cube, so `DarioResamplePartitionTwo` is equivalent to Lemma 3.5 as Dario prints it, for this partition. It remains
+  an unproved hypothesis.
 
 ## Theorem 1 of Dario and Gu in dimension two
 
