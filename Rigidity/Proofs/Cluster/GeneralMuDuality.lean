@@ -337,4 +337,17 @@ theorem cubeMuLimit_ge_of_cubeAhom_eq_smul_one [NeZero d] (hd : 2 ≤ d) {p : un
   rw [e]
   linarith
 
+/-- **Two-sided bounds for the limit of `-μ`** (the bounds of (5.1) for `μ`, in every dimension
+`d ≥ 2`): `c |q|² ≤ lim E[-μ(□_m, q)] ≤ C |q|₁²`. -/
+theorem exists_cubeMuLimit_two_sided [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) :
+    ∃ c C : ℝ, 0 < c ∧ 0 ≤ C ∧ ∀ q : Fin d → ℝ,
+      c * ∑ i, q i ^ 2 ≤ cubeMuLimit p q ∧ cubeMuLimit p q ≤ C * (∑ i, |q i|) ^ 2 := by
+  obtain ⟨σ, hσ, hA⟩ := exists_cubeAhom_eq_smul_one hd hpc
+  obtain ⟨C, hC, hup⟩ := exists_cubeMuLimit_bounds hd hpc
+  refine ⟨1 / (2 * σ), C, by positivity, hC, fun q => ⟨?_, (hup q).2⟩⟩
+  have h := cubeMuLimit_ge_of_cubeAhom_eq_smul_one hd hpc hσ hA q
+  calc 1 / (2 * σ) * ∑ i, q i ^ 2 = (∑ i, q i ^ 2) / (2 * σ) := by ring
+    _ ≤ _ := h
+
 end Rigidity.Percolation
