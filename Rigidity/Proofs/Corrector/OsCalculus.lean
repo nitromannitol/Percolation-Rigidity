@@ -1,4 +1,5 @@
 import Rigidity.Proofs.S2.ClusterDensityFromDarioGu
+import Rigidity.Proofs.S2.ClusterDensityBounds
 import Rigidity.Percolation.TriadicExceptionalSupremum
 
 /-!
@@ -17,6 +18,10 @@ of the supremum of the triadic lengths `3^n` of the events `{X_n ≥ 1}`. By the
 lemma (`Rigidity.Percolation.ae_exceptionalScale_ne_top`) this supremum is almost surely finite, so
 that almost surely `3^n ≤ M` whenever `X_n ≥ 1`. The source proof prints `3^{-nβ}` for `3^{nβ}` in
 the tail of `X_n` (Armstrong–Dario, proof of Lemma 2.2).
+
+**Dario, Lemma B.2** (`lemmafromperc.0`): if `X_n ≤ K + O_s(K 3^{-nβ})`, the random scale
+`sup {3^n : X_n ≥ K + 1}` is `O_{βs}(C)`; as printed, this is Lemma 1.5 applied to
+`max(X_n - K, 0)`.
 -/
 
 namespace Rigidity.Corrector
@@ -113,5 +118,44 @@ theorem isOsBond_triadicScale {K s β : ℝ} (hK : 1 ≤ K) (hs : 0 < s) (hβ : 
   congr 2
   rw [one_div_div, Real.div_rpow h3.le hK0.le, ← Real.rpow_mul (by positivity)]
   ring
+
+
+/-- `X ≤ O_s(θ)` if and only if its positive part is. -/
+theorem isOsBond_max_zero_iff {X : Configuration d → ℝ} {s θ : ℝ} (hθ : 0 < θ) :
+    IsOsBond d p (fun ω => max (X ω) 0) s θ ↔ IsOsBond d p X s θ := by
+  have heq : ∀ ω, max (max (X ω) 0 / θ) 0 = max (X ω / θ) 0 := by
+    intro ω
+    rcases le_total (X ω) 0 with h | h
+    · rw [max_eq_right h, zero_div, max_self, max_eq_right (div_nonpos_of_nonpos_of_nonneg h hθ.le)]
+    · rw [max_eq_left h]
+  unfold IsOsBond
+  simp only [heq]
+
+/-- **Dario, Lemma B.2** (`lemmafromperc.0` of *Optimal corrector estimates on percolation
+clusters*). For `K ≥ 1` and `s, β > 0` there is `C(s, β, K)` such that, if `X_n ≤ K + Y_n` with
+`Y_n ≤ O_s(K 3^{-nβ})`, the random scale `sup {3^n : X_n ≥ K + 1}`, that is the triadic scale of
+`max(X_n - K, 0)`, satisfies `≤ O_{βs}(C)`, and almost surely `3^n` is at most this scale whenever
+`X_n ≥ K + 1`. -/
+theorem isOsBond_triadicScale_shift {K s β : ℝ} (hK : 1 ≤ K) (hs : 0 < s) (hβ : 0 < β) :
+    ∃ C : ℝ, 0 < C ∧ ∀ X Y : ℕ → Configuration d → ℝ, (∀ n, Measurable (X n)) →
+      (∀ n ω, X n ω ≤ K + Y n ω) → (∀ n : ℕ, IsOsBond d p (Y n) s (K / ((3 : ℝ) ^ n) ^ β)) →
+      IsOsBond d p (triadicScale fun n ω => max (X n ω - K) 0) (β * s) C ∧
+        ∀ᵐ ω ∂latticeBondLaw d p, ∀ n, K + 1 ≤ X n ω →
+          (3 : ℝ) ^ n ≤ triadicScale (fun n ω => max (X n ω - K) 0) ω := by
+  obtain ⟨C, hC, h⟩ := isOsBond_triadicScale (d := d) (p := p) hK hs hβ
+  refine ⟨C, hC, fun X Y hX hXY hO => ?_⟩
+  have hK0 : 0 < K := lt_of_lt_of_le one_pos hK
+  have hO' : ∀ n : ℕ, IsOsBond d p (fun ω => max (X n ω - K) 0) s (K / ((3 : ℝ) ^ n) ^ β) := by
+    intro n
+    have hθ : 0 < K / ((3 : ℝ) ^ n) ^ β := by positivity
+    have hY := (isOsBond_max_zero_iff (X := Y n) (p := p) (s := s) hθ).2 (hO n)
+    refine IsOsBond.mono_variable hs hθ (((hX n).sub_const K).max measurable_const)
+      (fun ω => ?_) hY
+    exact max_le_max (by linarith [hXY n ω]) le_rfl
+  obtain ⟨h1, h2⟩ := h (fun n ω => max (X n ω - K) 0)
+    (fun n => ((hX n).sub_const K).max measurable_const) hO'
+  refine ⟨h1, ?_⟩
+  filter_upwards [h2] with ω hω n hn
+  exact hω n (le_max_of_le_left (by linarith))
 
 end Rigidity.Corrector
