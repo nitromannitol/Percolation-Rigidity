@@ -18,7 +18,10 @@ residue class modulo `L` is the average of the characters against it.
   with eigenvalue `μ` satisfies `Σ_y p_t(x, y) u(y) = e^{D t (μ - 1)} u(x)`;
 * `sum_range_exp_mul_eq`: `Σ_{a < L} e^{2πi a m / L} = L` if `L ∣ m` and `0` otherwise;
 * `abs_tsum_openHeat_mul_le`: `|Σ_y Φ(t, x, y) g(y mod L)| ≤ e^{-16 t/L²} Σ_w |g(w)|` for every
-  `g : (ℤ/L)² → ℝ` of sum zero.
+  `g : (ℤ/L)² → ℝ` of sum zero;
+* `abs_tsum_openHeat_mul_periodic_le`, `abs_tsum_openHeat_mul_periodic_le_exp`: the same for
+  `L`-periodic functions of sum zero over `{0, …, L-1}²`, and the form used by Dario, with
+  `L = 3^k`, `t = r²` and `9^k ≤ r`: `|Φ_{r²} * f(x)| ≤ e^{-16 r} Σ_{period} |f|`.
 -/
 
 open scoped Classical
@@ -485,5 +488,48 @@ theorem abs_tsum_openHeat_mul_le {L : ℕ} [NeZero L] (g : ZMod L × ZMod L → 
     _ = Real.exp (-(16 * t / (L : ℝ) ^ 2)) * ∑ w, |g w| := by
         rw [Finset.sum_const, Finset.sum_const, card_range, nsmul_eq_mul, nsmul_eq_mul,
           ← mul_assoc (L : ℝ) (L : ℝ), ← pow_two, ← mul_assoc, inv_mul_cancel₀ hL2.ne', one_mul]
+
+/-- The representative `(w₁.val, w₂.val) ∈ {0, …, L-1}²` of a residue class modulo `L`. -/
+def residueRep {L : ℕ} (w : ZMod L × ZMod L) : Vertex 2 := ![(w.1.val : ℤ), (w.2.val : ℤ)]
+
+/-- **Dario, Lemma 3.2, Step 3, for periodic functions**: if `f` is `L`-periodic in both
+directions with sum zero over `{0, …, L-1}²`, then `|Φ_t * f(x)| ≤ e^{-16t/L²} Σ_{period} |f|`. -/
+theorem abs_tsum_openHeat_mul_periodic_le {L : ℕ} [NeZero L] {f : Vertex 2 → ℝ}
+    (hper : ∀ y z : Vertex 2, (∀ i, (L : ℤ) ∣ y i - z i) → f y = f z)
+    (h0 : ∑ w : ZMod L × ZMod L, f (residueRep w) = 0) {t : ℝ} (ht : 0 ≤ t) (x : Vertex 2) :
+    |∑' y, openHeat (allOpen 2) t x y * f y| ≤
+      Real.exp (-(16 * t / (L : ℝ) ^ 2)) * ∑ w : ZMod L × ZMod L, |f (residueRep w)| := by
+  have key : ∀ a : ℤ, (L : ℤ) ∣ a - (((a : ZMod L)).val : ℤ) := fun a => by
+    rw [ZMod.val_intCast]
+    exact ⟨a / L, by have := Int.mul_ediv_add_emod a L; linarith⟩
+  have hf : ∀ y, f y = f (residueRep ((y 0 : ZMod L), (y 1 : ZMod L))) := by
+    intro y
+    refine hper _ _ fun i => ?_
+    fin_cases i
+    · exact key (y 0)
+    · exact key (y 1)
+  have e : (fun y => openHeat (allOpen 2) t x y * f y) =
+      fun y => openHeat (allOpen 2) t x y * f (residueRep ((y 0 : ZMod L), (y 1 : ZMod L))) :=
+    funext fun y => by rw [← hf y]
+  rw [e]
+  exact abs_tsum_openHeat_mul_le (fun w => f (residueRep w)) h0 ht x
+
+/-- **Dario, Lemma 3.2, Step 3, as used**: for `f` which is `3^k`-periodic with sum zero over a
+period and `9^k ≤ r`, `|Φ_{r²} * f(x)| ≤ e^{-16 r} Σ_{period} |f|`. -/
+theorem abs_tsum_openHeat_mul_periodic_le_exp {k : ℕ} {f : Vertex 2 → ℝ}
+    (hper : ∀ y z : Vertex 2, (∀ i, ((3 ^ k : ℕ) : ℤ) ∣ y i - z i) → f y = f z)
+    (h0 : ∑ w : ZMod (3 ^ k) × ZMod (3 ^ k), f (residueRep w) = 0) {r : ℝ} (hr : 0 < r)
+    (hkr : (9 : ℝ) ^ k ≤ r) (x : Vertex 2) :
+    |∑' y, openHeat (allOpen 2) (r ^ 2) x y * f y| ≤
+      Real.exp (-(16 * r)) * ∑ w : ZMod (3 ^ k) × ZMod (3 ^ k), |f (residueRep w)| := by
+  have h := abs_tsum_openHeat_mul_periodic_le hper h0 (sq_nonneg r) x
+  refine h.trans (mul_le_mul_of_nonneg_right (Real.exp_le_exp.2 ?_)
+    (Finset.sum_nonneg fun w _ => abs_nonneg _))
+  have hL : (((3 ^ k : ℕ) : ℝ)) ^ 2 = (9 : ℝ) ^ k := by
+    push_cast
+    rw [← pow_mul, mul_comm, pow_mul]
+    norm_num
+  rw [hL, neg_le_neg_iff, le_div_iff₀ (by positivity)]
+  nlinarith
 
 end Rigidity.Corrector
