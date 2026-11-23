@@ -16,6 +16,11 @@ open Finset LatticeProb.Percolation
 
 namespace Rigidity.Green
 
+theorem abs_tsum_le_tsum_abs {ι : Type*} {f : ι → ℝ} (h : Summable fun i => |f i|) :
+    |∑' i, f i| ≤ ∑' i, |f i| := by
+  have := norm_tsum_le_tsum_norm (f := f) (by simpa only [Real.norm_eq_abs] using h)
+  simpa only [Real.norm_eq_abs] using this
+
 theorem exp_sq (a : ℝ) : Real.exp a ^ 2 = Real.exp (2 * a) := by
   rw [sq, ← Real.exp_add]
   ring_nf
