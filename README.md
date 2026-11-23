@@ -2250,8 +2250,8 @@ and
 | [`Rigidity.Proofs.Cluster.GeneralDim.meyersPartition_holds`](Rigidity/Proofs/Cluster/GeneralMeyersPartition.lean) | AD Definition 3.9, every `d ≥ 2` and `p > 𝔭_c(d)`: the partition `𝓠_a` with minimal scales whose tails `P[cells near □_k too large, or Σ size^t > K \|□_k\|] ≤ C exp(−c 3^{kr})` are stretched exponential, for every `t > 0`. |
 
 The forty-three reports for the declarations of this section, which include the supporting declarations named in the
-source files, are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Lemma 4.11 and its estimate (4.44) are not proved: Armstrong and
-Dario use them only for (5.31) in the proof of Lemma 5.7, and the planar proof of that lemma replaces it by the local
+source files, are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Lemma 4.11 and the estimate (4.44) of Proposition 4.10 are not proved: Armstrong and
+Dario use them only for (5.31) in the proof of Lemma 5.7, and the planar proof of that lemma replaces them by the local
 version of the planar section [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
 
 Departures from Armstrong and Dario:

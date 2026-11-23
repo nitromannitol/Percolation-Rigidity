@@ -444,9 +444,10 @@ fidelity:
     stationarity (4.40) is exact for the stationary local versions and holds for E[-mu] up to the
     localization error; independence is proved for pairs of cubes; (4.32) holds in expectation
     with the error counted over the exceptional edges and Young parameter 3^(-n/4), giving the rate
-    3^(-n/4) in (4.48); Lemma 4.11 and (4.44) are not proved, since they are used only for (5.31) in
+    3^(-n/4) in (4.48); Lemma 4.11 and (4.44) of Proposition 4.10 are not proved, since they are used only for (5.31) in
     Lemma 5.7, which the planar sections prove by a local version; the family of Definition 3.9 asks
-    for the Meyers estimate on each cell and its ancestors, for every set of the triple closed under
+    for the Meyers estimate on each child of its cubes (the partition then gives it on each cell
+    and its ancestors), for every set of the triple closed under
     the open edges and every harmonic function on it, in place of the estimate with the maximal
     cluster of 3 times the cube), and
     for the Dirichlet problem and
