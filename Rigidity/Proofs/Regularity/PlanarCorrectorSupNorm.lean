@@ -4,7 +4,7 @@ import Rigidity.Proofs.Regularity.PlanarCorrectorScale
 # The uniform sublinearity of the planar correctors
 
 Armstrong and Dario (arXiv:1609.09431v2), Remark after (1.19): the bound (1.18) in `L̲²` upgrades
-to the uniform norm, (1.22). At the triadic scale `N = 9 · 3^m`, with the minimal scales of the
+to the uniform norm, the bound of (1.22) above an almost surely finite scale. At the triadic scale `N = 9 · 3^m`, with the minimal scales of the
 Lipschitz estimate at the vertices of `{|z_i| ≤ 3N}` and the sides of the partition cubes of
 `{|z_i| ≤ 2N}` at most `y` and `3y`, and `‖χ‖_{L̲²(𝒞_∞ ∩ B_{6N})} ≤ K |q| N y^{-28}`,
 `abs_corrector_le_at_scale` gives `|χ(x)| ≤ c₃ y⁷ |q| + c₄ |q| N y^{-7}` for `x ∈ 𝒞_∞`,

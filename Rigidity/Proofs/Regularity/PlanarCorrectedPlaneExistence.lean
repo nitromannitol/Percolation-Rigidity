@@ -14,7 +14,8 @@ slope has a corrected plane, sublinear in the uniform norm) from (1.18)
   the maximum of its minimal scales over the boxes (`ae_eventually_scale_le_three`) bounds the
   increments of the corrector;
 * the uniform bound at each triadic scale (`abs_corrector_le_at_scale`), from the comparison with
-  the coarsening and the interpolation inequality, gives (1.22);
+  the coarsening and the interpolation inequality, gives the bound of (1.22) above an almost surely
+  finite scale;
 * `componentSlopeAsymptotics_of_scales` turns it into the slope asymptotics.
 -/
 

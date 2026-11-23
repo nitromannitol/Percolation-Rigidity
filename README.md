@@ -1694,7 +1694,7 @@ scales of the partition cubes (`PlanarPartitionSizeScale`) follows from the mini
   `M ≤ O_s(θ)`). Both are proved for `𝔭_c(2) < p < 1` (see the sections on Lemma 7.1 and on Lemma 7.3 at `k = 2`).
 * **R2 in dimension two** (`SupercriticalBondCorrectorInputTwo`) from `ArmstrongDarioOrderZeroTwo`,
   `PlanarCorrectedPlaneExistenceTwo` (every slope has a corrected plane on the planar infinite cluster, AD
-  Theorem 2(ii) at `k = 1`, with the sublinearity in the uniform norm of the remark after (1.19), AD18.tex:529-562,
+  Theorem 2(ii) at `k = 1`, with the sublinearity in the uniform norm of the remark after (1.19), AD18.tex:527-562,
   whose conclusion is (1.22)) and `PlanarOrderOneDimensionTwo` (`dim 𝒜₁ ≤ 3`, AD Theorem 2(i) at `k = 1`).
   The last two are proved for `𝔭_c(2) < 𝔭 < 1`, so `supercriticalBondCorrectorInputTwo_holds` is R2 in dimension two
   with no hypothesis (see
@@ -1795,7 +1795,7 @@ Mourrat (arXiv:1602.00512, called AKM2 here, numbered as in that paper), Proposi
 cites for Theorem 2 (i)–(iii) at `k = 1`.
 
 * **The corrected planes** (`PlanarCorrectedPlaneExistenceTwo`, AD Theorem 2 (ii) at `k = 1`, with the sublinearity in the
-  uniform norm of the remark after (1.19), AD18.tex:529-562). From the approximation of affine functions on the balls
+  uniform norm of the remark after (1.19), AD18.tex:527-562). From the approximation of affine functions on the balls
   `B_{3^m}` of the cluster by harmonic functions `u_m` with `‖u_m − q·x‖ ≤ K |q|₁ 3^{m(1−δ)}`
   (`PlanarAffineApproximationAeTwo`), the corrector of the slope `q` is the diagonal limit of the `u_m`, by the telescoping
   bound and the Lipschitz estimate at the origin of the order-zero regularity (`exists_harmonic_of_approximations`, Step 3 of
@@ -1804,9 +1804,10 @@ cites for Theorem 2 (i)–(iii) at `k = 1`.
   (`abs_corrector_le_at_scale`, `componentSlopeAsymptotics_of_scales`).
 * **The approximation of affine functions** (`planarAffineApproximationAeTwo_of_minimalScales`) by the maximizers of `ν`:
   `u_m = q₀ v(·, □_{j+3}, e₀) + q₁ v(·, □_{j+3}, e₁) − c` on `B_{3^{j+1}}`, with the bound on the energy of `ν`
-  (`clusterForm_planarNuSolution_le`, Lemma 3.2 with reach scales at most the scale `D`), the coarsening errors
-  (`sum_sq_coarsen_combo_le`) and the flatness (5.33) of Lemma 5.8 (AD18.tex:3413) in expectation, with the geometric decay
-  of `τ_n` from Lemmas 5.5, 5.8 and 5.10; all three are proved in the sections on those lemmas above.
+  (`clusterForm_planarNuSolution_le`, `ν ≤ (9/4)|ξ|₁²`), the coarsening errors by Lemma 3.2 with reach scales at most the
+  scale `D` (`sum_sq_extend_sub_coarsen_le`), the flatness of the combination (`sum_sq_coarsen_combo_le`), and (5.33)
+  (AD18.tex:3413), proved from Lemmas 5.5 and 5.8, in expectation, with the geometric decay of `τ_n` from Lemma 5.10; all are
+  proved in the sections on those lemmas above.
 * **`dim 𝒜₁ ≤ 3`** (`planarOrderOneDimensionTwo_of_mesoscopic`, AD Theorem 2 (i) at `k = 1`), from (7.18) at `k = 2` of
   Lemma 7.3 (AD18.tex:5490-5497), the density of the cluster in cubes and the existence of the corrected planes: for one
   configuration, every `u ∈ 𝒜₁` is `a + Σᵢ ξᵢ gᵢ` for the corrected planes `gᵢ` of slopes `eᵢ`
@@ -1839,7 +1840,8 @@ The thirty-two reports for the declarations of this section are in
 Departures from Armstrong and Dario and from Armstrong, Kuusi and Mourrat:
 
 - **The scale of (1.18) is almost surely finite, not `O_s`.** The flatness (5.33) is proved in expectation only. The Markov
-  inequality gives `P[flat_n > 9ⁿ μ^{n/2}] ≤ C μ^{n/2}`, a scale with a polynomial tail, and the Borel–Cantelli lemma over
+  inequality gives `P[Φ_n ≥ (|ξ|² + 1) 9ⁿ μⁿ] ≤ C B (n + 1) μⁿ` with `μ = μ₁^{1/2}`
+  (`ae_eventually_planarNuFlatness_le`), a scale with a polynomial tail, and the Borel–Cantelli lemma over
   the scales (with `τ_n ≤ K l^n`) gives a scale that is almost surely finite. This is enough for the qualitative statements
   (corrected planes, sublinearity in the uniform norm, `dim 𝒜₁ ≤ 3`) but not for the quantitative statements (1.18) and (1.22)
   with `O_s` scales: the form (1.22) (`CorrectorOscSublinearTwo`) stays a hypothesis of
@@ -1849,7 +1851,7 @@ Departures from Armstrong and Dario and from Armstrong, Kuusi and Mourrat:
   lift `𝒜₁`. Here the endpoint iteration of the order-one regularity gives, for each radius `R`, one lifted affine function
   `ℓ_R` with error `C (t/R)² ‖u‖_R = o(1)` for `u ∈ 𝒜₁`; the sizes of `ℓ_R` are bounded, and a limit point `ℓ` gives
   `u = Lℓ`. Only the qualitative statement that each `eᵢ` has a corrected plane is used, so the scale is almost surely finite.
-- **Step 3 of AKM2 Proposition 3.1.** The Lipschitz estimate is used in the form of the order-zero regularity (`k = 0`) at the
+- **Step 3 of AKM2 Proposition 3.1 and the remark after (1.19).** The Lipschitz estimate is used in the form of the order-zero regularity (`k = 0`) at the
   centre, Borel–Cantelli over the triadic boxes replaces the stochastic integrability, and the sublinearity in the uniform
   norm uses a staircase interpolation on `x + [0, t]²`.
 - **The lattice route.** The harmonic functions in the approximation are on the balls of the cluster, and the approximation
@@ -1975,9 +1977,10 @@ The proof is that of Sections 4 and 5 of Dario with the following steps proved:
 The thirty-five reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
-Lemmas 3.2 and 3.3 of Dario rest on steps that Dario only sketches, which are not formalized and are part of the
-named inputs `DarioLemmaThreeTwo` and `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, and the Green
-gradient bounds of Propositions 2.11 and 2.12, which are proved by "standard arguments". The estimate (3.3) for the
+Lemma 3.3 of Dario rests on steps that Dario only sketches, which are not formalized and are part of the
+named input `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, and the Green
+gradient bounds of Propositions 2.11 and 2.12, which are proved by "standard arguments". Lemma 3.2 does not use them: it
+follows from (1.22) (`DarioLemmaThreeTwo` may be replaced by `CorrectorOscSublinearTwo`). The estimate (3.3) for the
 stationary partitions, which Dario proves "similarly to Proposition 2.1 (iv) of Armstrong and Dario", is proved
 (`dario_errorstatpart`): the stationary partition is the planar partition capped at the scale `k`, which exists
 deterministically and is stationary under the translations by `3^k ℤ²`
@@ -2000,6 +2003,15 @@ The seven reports for these declarations are in [`RigidityAudit/Axioms.lean`](Ri
 Lemma 3.3, with Lemma 3.5, is not formalized.
 
 Departures from Dario:
+
+- **Lemma 3.2: the anchor order.** The stationary anchor `z̄_stat` is the first point of `𝒞_∞` in the anchor order of the
+  partition (distance in `ℓ∞` to the centre, then lexicographic order), where Dario takes the point of `𝒞_∞`
+  nearest to `□` with lexicographic ties (Dario18.tex:976-982).
+- **Lemma 3.2, Step 2 along lines.** The increments are telescoped along lines in each coordinate direction
+  (`exists_lintegral_abs_statSegment_le`, `sum_statMean_line_eq_zero`) in place of the Stokes formula on `□_{nk}`.
+- **Lemma 3.2, Step 1 at every vertex.** The discrepancy is bounded vertex by vertex through the anchor discrepancy, with
+  second moments and the inequality of the arithmetic and geometric means, in place of the sets `U`, the `O_s` bound
+  and the Cauchy–Schwarz inequality.
 
 - **Moments in place of the `O_s` calculus.** The averaging of `O_s` variables, (1.12) and (1.14), is replaced by
   moment bounds: Jensen's inequality in `r` for the measure `min(r, 1/r) dr`, Tonelli's theorem and lattice sums of
@@ -2224,7 +2236,7 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1391 Lean files with 273,182 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1391 Lean files with 273,183 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
 `RigidityAudit/Axioms.lean` (1,043 lines) are counted separately.
