@@ -16,9 +16,10 @@ of `v` hold almost surely on the planar infinite cluster:
 * `ae_sublinearOn_of_isGradOf`: almost surely every potential of an `ℓ²` field grows sublinearly on
   the infinite cluster (finite energy, `localEnergy_le_of_isGradOf`, and
   `ae_abs_sub_coarseAnchor_le_of_finiteEnergy`);
-* `ae_edgeGrad_eq_smul_greenProj` (Dario, (3.22)): almost surely, for every open edge `a` and every
-  `v` with `∇·∇v = c(δ_x - δ_y)` on the infinite cluster and sublinear growth there,
-  `∇v = c ∇∇G(e, ·)` on the open edges of the cluster, with `∇∇G(e, ·) = greenProj ω (1_a)`.
+* `ae_edgeGrad_eq_smul_greenProj_of_div`, `ae_edgeGrad_eq_smul_greenProj` (Dario, (3.22)): almost
+  surely, for every source `ξ` with `∇·ξ = δ_x - δ_y` (for an open edge `a`, `ξ = 1_a`) and every
+  `v` with `∇·∇v = c(δ_x - δ_y)` on the infinite cluster and sublinear growth there, `∇v = c Pξ`
+  on the open edges of the cluster, with `∇∇G(e, ·) = greenProj ω (1_a)`.
 -/
 
 namespace Rigidity.Corrector
@@ -81,9 +82,31 @@ theorem ae_sublinearOn_of_isGradOf {p : unitInterval} (hpc : criticalProbability
     _ ≤ ε / 4 * (e + 1) + ε / 4 * e := by gcongr
     _ ≤ ε * e := by nlinarith
 
-/-- **Dario, (3.22)**, almost surely: for every open edge `a` and every `v` with
-`∇·∇v = c(δ_x - δ_y)` on the infinite cluster and sublinear growth there, `∇v = c ∇∇G(e, ·)` on
-the open edges of the cluster, with `∇∇G(e, ·) = greenProj ω (1_a)`. -/
+/-- **Dario, (3.22)**, almost surely, for any source field `ξ` with `∇·ξ = δ_x - δ_y`: for every
+`v` with `∇·∇v = c(δ_x - δ_y)` on the infinite cluster and sublinear growth there, `∇v = c Pξ` on
+the open edges of the cluster. -/
+theorem ae_edgeGrad_eq_smul_greenProj_of_div {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ (ξ : EdgeField)
+      (x y : Vertex 2), (∀ z, edgeDiv ω ξ z = (if z = x then 1 else 0) - (if z = y then 1 else 0)) →
+      ∀ (v : Vertex 2 → ℝ) (c : ℝ),
+        (∀ z ∈ (uniqueInfiniteComponent h).supp, edgeDiv ω (edgeGrad ω v) z =
+          c * ((if z = x then 1 else 0) - (if z = y then 1 else 0))) →
+        SublinearOn (uniqueInfiniteComponent h).supp v →
+        ∀ b : LatticeEdge, EdgeOpen ω b → b.1 ∈ (uniqueInfiniteComponent h).supp →
+          edgeGrad ω v b = c * greenProj ω ξ b := by
+  filter_upwards [Rigidity.Green.sublinearLiouville_two_of_correctorInput
+      Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_holds p hpc hp1,
+    ae_sublinearOn_of_isGradOf hpc] with ω hL hW
+  intro h ξ x y hξ v c hv hvs b hb hb1
+  have hb2 : edgeHead b ∈ (uniqueInfiniteComponent h).supp :=
+    (uniqueInfiniteComponent h).mem_supp_of_adj_mem_supp hb1 hb
+  exact edgeGrad_eq_smul_greenProj_of_div ω hξ
+    (fun f hf hfs => exists_eq_const_of_sublinearLiouville hL h f hf hfs) hv hvs
+    (fun W hWg => hW h _ W hWg) hb hb1 hb2
+
+/-- **Dario, (3.22)**, almost surely, for an open edge `a`: `∇v = c ∇∇G(e, ·)` with
+`∇∇G(e, ·) = greenProj ω (1_a)`. -/
 theorem ae_edgeGrad_eq_smul_greenProj {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
     (hp1 : (p : ℝ) < 1) :
     ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ a : LatticeEdge,
@@ -93,14 +116,8 @@ theorem ae_edgeGrad_eq_smul_greenProj {p : unitInterval} (hpc : criticalProbabil
         SublinearOn (uniqueInfiniteComponent h).supp v →
         ∀ b : LatticeEdge, EdgeOpen ω b → b.1 ∈ (uniqueInfiniteComponent h).supp →
           edgeGrad ω v b = c * greenProj ω (lp.single 2 a 1) b := by
-  filter_upwards [Rigidity.Green.sublinearLiouville_two_of_correctorInput
-      Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_holds p hpc hp1,
-    ae_sublinearOn_of_isGradOf hpc] with ω hL hW
-  intro h a ha v c hv hvs b hb hb1
-  have hb2 : edgeHead b ∈ (uniqueInfiniteComponent h).supp :=
-    (uniqueInfiniteComponent h).mem_supp_of_adj_mem_supp hb1 hb
-  exact edgeGrad_eq_smul_greenProj_of_liouville ω ha
-    (fun f hf hfs => exists_eq_const_of_sublinearLiouville hL h f hf hfs) hv hvs
-    (fun W hWg => hW h _ W hWg) hb hb1 hb2
+  filter_upwards [ae_edgeGrad_eq_smul_greenProj_of_div hpc hp1] with ω hω
+  intro h a ha
+  exact hω h _ a.1 (edgeHead a) (edgeDiv_single ω ha)
 
 end Rigidity.Corrector

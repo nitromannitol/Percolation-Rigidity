@@ -252,26 +252,28 @@ theorem SublinearOn.sub_smul {C : Set (Vertex 2)} {f g : Vertex 2 → ℝ} (hf :
         gcongr
     _ = ε * Rigidity.Section5.eucl z := by ring
 
-/-- **Dario, (3.22)**, deterministic form: if `∇·∇v = c(δ_x - δ_y)` on a set `C` of vertices on
-which the harmonic functions of sublinear growth are constant, and `v` and the potentials of
-`P1_a` grow sublinearly on `C`, then `∇v = c P1_a` on the open edges of `C`. -/
-theorem edgeGrad_eq_smul_greenProj_of_liouville {a : LatticeEdge} (ha : EdgeOpen ω a)
+/-- **Dario, (3.22)**, deterministic form, for any source field `ξ` with `∇·ξ = δ_x - δ_y`: if
+`∇·∇v = c(δ_x - δ_y)` on a set `C` of vertices on which the harmonic functions of sublinear growth
+are constant, and `v` and the potentials of `Pξ` grow sublinearly on `C`, then `∇v = c Pξ` on the
+open edges of `C`. (For `e` open, `ξ = 1_e`; for `e` closed, `ξ` is the field of a path from `x`
+to `y`.) -/
+theorem edgeGrad_eq_smul_greenProj_of_div {ξ : EdgeField} {x y : Vertex 2}
+    (hξ : ∀ z, edgeDiv ω ξ z = (if z = x then 1 else 0) - (if z = y then 1 else 0))
     {C : Set (Vertex 2)}
     (hliou : ∀ h : Vertex 2 → ℝ, (∀ z ∈ C, edgeDiv ω (edgeGrad ω h) z = 0) →
       SublinearOn C h → ∃ k : ℝ, ∀ z ∈ C, h z = k)
     {v : Vertex 2 → ℝ} {c : ℝ}
     (hv : ∀ z ∈ C, edgeDiv ω (edgeGrad ω v) z =
-      c * ((if z = a.1 then 1 else 0) - (if z = edgeHead a then 1 else 0)))
+      c * ((if z = x then 1 else 0) - (if z = y then 1 else 0)))
     (hvsub : SublinearOn C v)
-    (hWsub : ∀ W, IsGradOf ω (greenProj ω (lp.single 2 a 1)) W → SublinearOn C W)
+    (hWsub : ∀ W, IsGradOf ω (greenProj ω ξ) W → SublinearOn C W)
     {b : LatticeEdge} (hb : EdgeOpen ω b) (hb1 : b.1 ∈ C) (hb2 : edgeHead b ∈ C) :
-    edgeGrad ω v b = c * greenProj ω (lp.single 2 a 1) b := by
-  obtain ⟨W, hW⟩ := exists_isGradOf_greenProj ω (lp.single 2 a 1)
+    edgeGrad ω v b = c * greenProj ω ξ b := by
+  obtain ⟨W, hW⟩ := exists_isGradOf_greenProj ω ξ
   have hdivW : ∀ z, edgeDiv ω (edgeGrad ω W) z =
-      (if z = a.1 then 1 else 0) - (if z = edgeHead a then 1 else 0) := by
+      (if z = x then 1 else 0) - (if z = y then 1 else 0) := by
     intro z
-    rw [edgeDiv_congr ω (η' := greenProj ω (lp.single 2 a 1)) (fun b hb => ?_) z,
-      edgeDiv_greenProj, edgeDiv_single ω ha]
+    rw [edgeDiv_congr ω (η' := greenProj ω ξ) (fun b hb => ?_) z, edgeDiv_greenProj, hξ]
     rw [hW b hb]
     simp [edgeGrad, hb]
   have hharm : ∀ z ∈ C, edgeDiv ω (edgeGrad ω (fun y => v y - c * W y)) z = 0 := by
@@ -284,5 +286,19 @@ theorem edgeGrad_eq_smul_greenProj_of_liouville {a : LatticeEdge} (ha : EdgeOpen
   simp only [edgeGrad, if_pos hb]
   rw [hW b hb]
   linarith
+
+/-- **Dario, (3.22)**, deterministic form for an open edge `a` (`ξ = 1_a`). -/
+theorem edgeGrad_eq_smul_greenProj_of_liouville {a : LatticeEdge} (ha : EdgeOpen ω a)
+    {C : Set (Vertex 2)}
+    (hliou : ∀ h : Vertex 2 → ℝ, (∀ z ∈ C, edgeDiv ω (edgeGrad ω h) z = 0) →
+      SublinearOn C h → ∃ k : ℝ, ∀ z ∈ C, h z = k)
+    {v : Vertex 2 → ℝ} {c : ℝ}
+    (hv : ∀ z ∈ C, edgeDiv ω (edgeGrad ω v) z =
+      c * ((if z = a.1 then 1 else 0) - (if z = edgeHead a then 1 else 0)))
+    (hvsub : SublinearOn C v)
+    (hWsub : ∀ W, IsGradOf ω (greenProj ω (lp.single 2 a 1)) W → SublinearOn C W)
+    {b : LatticeEdge} (hb : EdgeOpen ω b) (hb1 : b.1 ∈ C) (hb2 : edgeHead b ∈ C) :
+    edgeGrad ω v b = c * greenProj ω (lp.single 2 a 1) b :=
+  edgeGrad_eq_smul_greenProj_of_div ω (edgeDiv_single ω ha) hliou hv hvsub hWsub hb hb1 hb2
 
 end Rigidity.Corrector
