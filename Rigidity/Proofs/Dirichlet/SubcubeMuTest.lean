@@ -260,4 +260,196 @@ theorem abs_cubeEdgeSlope_sub_sum_tiles_le {N K M : ℕ} (hK : 0 < K) (hMK : (M 
           √(1 / (K : ℝ)) * √F := add_le_add (add_le_add t1 t2) t3
     _ = _ := by ring
 
+theorem add_mem_cornerCube_of_mem_zero {N : ℕ} (x : Vertex d) {o : Vertex d}
+    (ho : o ∈ (cornerCube 0 N).vertices) : x + o ∈ (cornerCube x N).vertices := by
+  rw [IntegerCube.mem_vertices] at ho ⊢
+  intro t
+  have h := ho t
+  simp only [cornerCube, Pi.zero_apply, zero_add, Pi.add_apply] at h ⊢
+  constructor <;> linarith [h.1, h.2]
+
+/-- The square of the slope on a cube is at most the average of the squares of the increments. -/
+theorem sq_cubeSlope_le (N : ℕ) (w : Vertex d → ℝ) (x : Vertex d) (k : Fin d) :
+    cubeSlope N w x k ^ 2 ≤
+      (∑ y ∈ (cornerCube x N).vertices, (w (y + unit k) - w y) ^ 2) / (N : ℝ) ^ d := by
+  rcases Nat.eq_zero_or_pos N with hN | hN
+  · subst hN
+    rcases Nat.eq_zero_or_pos d with hd | hd
+    · subst hd
+      simp only [cubeSlope, cubeAverage, pow_zero, div_one]
+      have hcard : (cornerCube x 0).vertices.card = 1 := by
+        rw [card_vertices]; simp [cornerCube]
+      obtain ⟨y, hy⟩ := Finset.card_eq_one.mp hcard
+      rw [hy, Finset.sum_singleton, Finset.sum_singleton]
+    · simp only [cubeSlope, cubeAverage, Nat.cast_zero, zero_pow hd.ne', div_zero]
+      norm_num
+  have hVN : (0 : ℝ) < (N : ℝ) ^ d := by positivity
+  have hcard : ((cornerCube x N).vertices.card : ℝ) = (N : ℝ) ^ d := by
+    rw [card_vertices]; simp [cornerCube]
+  have hcs := sq_sum_le_card_mul_sum_sq (s := (cornerCube x N).vertices)
+    (f := fun y => w (y + unit k) - w y)
+  rw [hcard] at hcs
+  simp only [cubeSlope, cubeAverage, div_pow]
+  rw [div_le_div_iff₀ (by positivity) hVN]
+  calc (∑ y ∈ (cornerCube x N).vertices, (w (y + unit k) - w y)) ^ 2 * (N : ℝ) ^ d
+      ≤ ((N : ℝ) ^ d * ∑ y ∈ (cornerCube x N).vertices, (w (y + unit k) - w y) ^ 2) *
+          (N : ℝ) ^ d := mul_le_mul_of_nonneg_right hcs hVN.le
+    _ = _ := by ring
+
+/-- **The errors of the subcube tests summed over the translates.** If
+`|Σ_k (a_k p_k)²/a_k/2 + μ_{x,i}| ≤ ε Σ_k (a_k p_k)²` on the subcubes, with `p` the slope of `w`
+on `x + □`, then the sum over `x ∈ A` of the error bound of `exists_mu_test_of_subcubes`, with the
+defect bounded by `abs_cubeEdgeSlope_sub_sum_tiles_le`, is at most
+`(ε Λ² + Λ β/2 + Λ γ) Σ_{y ∈ D} Σ_k 1{y + e_k ∈ D} (∇_k w(y))²`, where
+`β = 1 − (MK)^d/N^d` and `γ = N^{-1/2} + β^{1/2} + K^{-1/2}`. -/
+theorem sum_subcube_errors_le (a : Fin d → ℝ) {Λ : ℝ} (hΛ0 : 0 ≤ Λ) (ha : ∀ k, 0 < a k)
+    (haΛ : ∀ k, a k ≤ Λ) {N K M : ℕ} (hK : 0 < K) (hMK : (M + 1) * K ≤ N) (w : Vertex d → ℝ)
+    (A D : Finset (Vertex d))
+    (hAD : ∀ x ∈ A, ∀ y ∈ (cornerCube x N).vertices, y ∈ D ∧ ∀ k : Fin d, y + unit k ∈ D)
+    (z : Vertex d → Vertex d) (hz : ∀ x ∈ A, ∀ t, x t ≤ z x t ∧ z x t < x t + K)
+    (μT : Vertex d → Vertex d → ℝ) {ε : ℝ} (hε0 : 0 ≤ ε)
+    (hε : ∀ x ∈ A, ∀ i ∈ (cornerCube 0 M).vertices,
+      |(∑ k, (a k * cubeSlope N w x k) ^ 2 / a k) / 2 + μT x i| ≤
+        ε * ∑ k, (a k * cubeSlope N w x k) ^ 2) :
+    ∑ x ∈ A, ((∑ i ∈ (cornerCube 0 M).vertices, (K : ℝ) ^ d *
+          |(∑ k, (a k * cubeSlope N w x k) ^ 2 / a k) / 2 + μT x i|) / (N : ℝ) ^ d +
+        |1 - ((cornerCube (0 : Vertex d) M).vertices.card : ℝ) * (K : ℝ) ^ d / (N : ℝ) ^ d| *
+          |(∑ k, (a k * cubeSlope N w x k) ^ 2 / a k) / 2| +
+        |∑ k, a k * cubeSlope N w x k * (cubeEdgeSlope N w x k -
+          (∑ i ∈ (cornerCube 0 M).vertices,
+            (K : ℝ) ^ d * cubeEdgeSlope K w (z x + (K : ℤ) • i) k) / (N : ℝ) ^ d)|) ≤
+      (ε * Λ ^ 2 + Λ * (1 - ((M * K : ℕ) : ℝ) ^ d / (N : ℝ) ^ d) / 2 +
+          Λ * (√(1 / (N : ℝ)) + √(1 - ((M * K : ℕ) : ℝ) ^ d / (N : ℝ) ^ d) + √(1 / (K : ℝ)))) *
+        ∑ y ∈ D, ∑ k : Fin d, (if y + unit k ∈ D then (w (y + unit k) - w y) ^ 2 else 0) := by
+  classical
+  have hN : 0 < N := lt_of_lt_of_le (by positivity) hMK
+  have hVN : (0 : ℝ) < (N : ℝ) ^ d := by positivity
+  have hVK : (0 : ℝ) < (K : ℝ) ^ d := by positivity
+  set β := 1 - ((M * K : ℕ) : ℝ) ^ d / (N : ℝ) ^ d with hβ
+  set γ := √(1 / (N : ℝ)) + √β + √(1 / (K : ℝ)) with hγ
+  have hcardM : ((cornerCube (0 : Vertex d) M).vertices.card : ℝ) * (K : ℝ) ^ d =
+      ((M * K : ℕ) : ℝ) ^ d := by
+    rw [card_vertices]
+    simp [cornerCube]
+    ring
+  have hMKN : ((M * K : ℕ) : ℝ) ^ d ≤ (N : ℝ) ^ d := by
+    have : M * K ≤ N := le_trans (Nat.mul_le_mul_right K (Nat.le_succ M)) hMK
+    exact pow_le_pow_left₀ (Nat.cast_nonneg _) (by exact_mod_cast this) d
+  have hβ0 : 0 ≤ β := by
+    rw [hβ, sub_nonneg, div_le_one hVN]
+    exact hMKN
+  have hγ0 : 0 ≤ γ := by positivity
+  set F : Vertex d → Fin d → ℝ := fun x k =>
+    (∑ y ∈ (cornerCube x N).vertices, (w (y + unit k) - w y) ^ 2) / (N : ℝ) ^ d with hF
+  have hF0 : ∀ x k, 0 ≤ F x k := fun x k =>
+    div_nonneg (Finset.sum_nonneg fun _ _ => sq_nonneg _) hVN.le
+  set c := ε * Λ ^ 2 + Λ * β / 2 + Λ * γ with hc
+  -- the bound at one translate
+  have hone : ∀ x ∈ A, ((∑ i ∈ (cornerCube 0 M).vertices, (K : ℝ) ^ d *
+          |(∑ k, (a k * cubeSlope N w x k) ^ 2 / a k) / 2 + μT x i|) / (N : ℝ) ^ d +
+        |1 - ((cornerCube (0 : Vertex d) M).vertices.card : ℝ) * (K : ℝ) ^ d / (N : ℝ) ^ d| *
+          |(∑ k, (a k * cubeSlope N w x k) ^ 2 / a k) / 2| +
+        |∑ k, a k * cubeSlope N w x k * (cubeEdgeSlope N w x k -
+          (∑ i ∈ (cornerCube 0 M).vertices,
+            (K : ℝ) ^ d * cubeEdgeSlope K w (z x + (K : ℤ) • i) k) / (N : ℝ) ^ d)|) ≤
+        c * ∑ k, F x k := by
+    intro x hx
+    set p : Fin d → ℝ := fun k => cubeSlope N w x k with hp
+    have hp2 : ∀ k, p k ^ 2 ≤ F x k := fun k => sq_cubeSlope_le N w x k
+    have hpabs : ∀ k, |p k| ≤ √(F x k) := fun k => Real.abs_le_sqrt (hp2 k)
+    have hap2 : ∀ k, (a k * p k) ^ 2 ≤ Λ ^ 2 * F x k := fun k => by
+      have h1 : a k ^ 2 ≤ Λ ^ 2 := pow_le_pow_left₀ (ha k).le (haΛ k) 2
+      calc (a k * p k) ^ 2 = a k ^ 2 * p k ^ 2 := by ring
+        _ ≤ Λ ^ 2 * F x k := mul_le_mul h1 (hp2 k) (sq_nonneg _) (sq_nonneg _)
+    have hQ : ∑ k, (a k * p k) ^ 2 / a k = ∑ k, a k * p k ^ 2 :=
+      Finset.sum_congr rfl fun k _ => by
+        have := (ha k).ne'
+        field_simp
+    have hQ0 : 0 ≤ ∑ k, a k * p k ^ 2 :=
+      Finset.sum_nonneg fun k _ => mul_nonneg (ha k).le (sq_nonneg _)
+    have hQle : ∑ k, a k * p k ^ 2 ≤ Λ * ∑ k, F x k := by
+      rw [Finset.mul_sum]
+      exact Finset.sum_le_sum fun k _ => mul_le_mul (haΛ k) (hp2 k) (sq_nonneg _) hΛ0
+    -- the errors on the subcubes
+    have t1 : (∑ i ∈ (cornerCube 0 M).vertices, (K : ℝ) ^ d *
+          |(∑ k, (a k * p k) ^ 2 / a k) / 2 + μT x i|) / (N : ℝ) ^ d ≤
+        ε * Λ ^ 2 * ∑ k, F x k := by
+      have h1 : ∑ i ∈ (cornerCube 0 M).vertices, (K : ℝ) ^ d *
+          |(∑ k, (a k * p k) ^ 2 / a k) / 2 + μT x i| ≤
+          ∑ _i ∈ (cornerCube (0 : Vertex d) M).vertices, (K : ℝ) ^ d *
+            (ε * ∑ k, (a k * p k) ^ 2) :=
+        Finset.sum_le_sum fun i hi => mul_le_mul_of_nonneg_left (hε x hx i hi) hVK.le
+      rw [Finset.sum_const, nsmul_eq_mul, ← mul_assoc, hcardM] at h1
+      have h2 : ε * ∑ k, (a k * p k) ^ 2 ≤ ε * (Λ ^ 2 * ∑ k, F x k) := by
+        refine mul_le_mul_of_nonneg_left ?_ hε0
+        rw [Finset.mul_sum]
+        exact Finset.sum_le_sum fun k _ => hap2 k
+      have h3 : 0 ≤ ε * ∑ k, (a k * p k) ^ 2 :=
+        mul_nonneg hε0 (Finset.sum_nonneg fun _ _ => sq_nonneg _)
+      rw [div_le_iff₀ hVN]
+      calc _ ≤ ((M * K : ℕ) : ℝ) ^ d * (ε * ∑ k, (a k * p k) ^ 2) := h1
+        _ ≤ (N : ℝ) ^ d * (ε * ∑ k, (a k * p k) ^ 2) := mul_le_mul_of_nonneg_right hMKN h3
+        _ ≤ (N : ℝ) ^ d * (ε * (Λ ^ 2 * ∑ k, F x k)) := mul_le_mul_of_nonneg_left h2 hVN.le
+        _ = ε * Λ ^ 2 * (∑ k, F x k) * (N : ℝ) ^ d := by ring
+    -- the part outside the block
+    have t2 : |1 - ((cornerCube (0 : Vertex d) M).vertices.card : ℝ) * (K : ℝ) ^ d /
+          (N : ℝ) ^ d| * |(∑ k, (a k * p k) ^ 2 / a k) / 2| ≤ Λ * β / 2 * ∑ k, F x k := by
+      rw [hcardM, ← hβ, abs_of_nonneg hβ0, hQ, abs_of_nonneg (div_nonneg hQ0 (by norm_num))]
+      calc β * ((∑ k, a k * p k ^ 2) / 2) ≤ β * ((Λ * ∑ k, F x k) / 2) :=
+            mul_le_mul_of_nonneg_left (div_le_div_of_nonneg_right hQle (by norm_num)) hβ0
+        _ = Λ * β / 2 * ∑ k, F x k := by ring
+    -- the defect of the edge slopes
+    have t3 : |∑ k, a k * p k * (cubeEdgeSlope N w x k -
+          (∑ i ∈ (cornerCube 0 M).vertices,
+            (K : ℝ) ^ d * cubeEdgeSlope K w (z x + (K : ℤ) • i) k) / (N : ℝ) ^ d)| ≤
+        Λ * γ * ∑ k, F x k := by
+      refine (Finset.abs_sum_le_sum_abs _ _).trans ?_
+      rw [Finset.mul_sum]
+      refine Finset.sum_le_sum fun k _ => ?_
+      have hD := abs_cubeEdgeSlope_sub_sum_tiles_le hK hMK w (hz x hx) k
+      rw [abs_mul, abs_mul, abs_of_pos (ha k)]
+      have hsF : √(F x k) * √(F x k) = F x k := Real.mul_self_sqrt (hF0 x k)
+      calc a k * |p k| * |cubeEdgeSlope N w x k -
+            (∑ i ∈ (cornerCube 0 M).vertices,
+              (K : ℝ) ^ d * cubeEdgeSlope K w (z x + (K : ℤ) • i) k) / (N : ℝ) ^ d|
+          ≤ Λ * √(F x k) * (γ * √(F x k)) :=
+            mul_le_mul (mul_le_mul (haΛ k) (hpabs k) (abs_nonneg _) hΛ0) hD (abs_nonneg _)
+              (by positivity)
+        _ = Λ * γ * (√(F x k) * √(F x k)) := by ring
+        _ = Λ * γ * F x k := by rw [hsF]
+    have e : c * ∑ k, F x k = ε * Λ ^ 2 * ∑ k, F x k + Λ * β / 2 * ∑ k, F x k +
+        Λ * γ * ∑ k, F x k := by
+      rw [hc]; ring
+    rw [e]
+    exact add_le_add (add_le_add t1 t2) t3
+  -- summing over the translates
+  set Fd : Vertex d → ℝ := fun y =>
+    ∑ k : Fin d, (if y + unit k ∈ D then (w (y + unit k) - w y) ^ 2 else 0) with hFd
+  have hFd0 : ∀ y, 0 ≤ Fd y := fun y => Finset.sum_nonneg fun _ _ => by
+    split_ifs <;> positivity
+  have hFx : ∀ x ∈ A, ∑ k, F x k = (∑ y ∈ (cornerCube x N).vertices, Fd y) / (N : ℝ) ^ d := by
+    intro x hx
+    rw [hF, hFd]
+    show ∑ k, (∑ y ∈ (cornerCube x N).vertices, (w (y + unit k) - w y) ^ 2) / (N : ℝ) ^ d =
+      (∑ y ∈ (cornerCube x N).vertices,
+        ∑ k : Fin d, (if y + unit k ∈ D then (w (y + unit k) - w y) ^ 2 else 0)) / (N : ℝ) ^ d
+    rw [← Finset.sum_div, Finset.sum_comm]
+    congr 1
+    refine Finset.sum_congr rfl fun y hy => Finset.sum_congr rfl fun k _ => ?_
+    rw [if_pos ((hAD x hx y hy).2 k)]
+  have htr := sum_translates_le A D N Fd hFd0 fun x hx o ho =>
+    (hAD x hx (x + o) (add_mem_cornerCube_of_mem_zero x ho)).1
+  have hc0 : 0 ≤ c := by
+    rw [hc]
+    exact add_nonneg (add_nonneg (mul_nonneg hε0 (sq_nonneg _))
+      (div_nonneg (mul_nonneg hΛ0 hβ0) (by norm_num))) (mul_nonneg hΛ0 hγ0)
+  calc _ ≤ ∑ x ∈ A, c * ∑ k, F x k := Finset.sum_le_sum hone
+    _ = c * ((∑ x ∈ A, ∑ y ∈ (cornerCube x N).vertices, Fd y) / (N : ℝ) ^ d) := by
+        rw [← Finset.mul_sum, Finset.sum_div]
+        congr 1
+        exact Finset.sum_congr rfl fun x hx => hFx x hx
+    _ ≤ c * ((N : ℝ) ^ d * (∑ y ∈ D, Fd y) / (N : ℝ) ^ d) :=
+        mul_le_mul_of_nonneg_left (div_le_div_of_nonneg_right htr hVN.le) hc0
+    _ = c * ∑ y ∈ D, Fd y := by rw [mul_div_cancel_left₀ _ hVN.ne']
+
 end Rigidity.Dirichlet
