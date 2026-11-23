@@ -16,7 +16,7 @@ linearly on the cluster:
   `s ∈ [a, b]`;
 * `abs_twoScale_le`: `|P(x) + Σ_k D_k P(x) χ_k(x)| ≤ M (1 + 2A) nbrEnv λ_c (x)` if
   `|P| ≤ M (1 + |· - y|)² exp(-|· - y|²/c)` and `|χ_k(x)| ≤ A (1 + |x - y|)`;
-* `abs_dgTwoScale_le`, `abs_dgTwoScale_deriv_le`: the bounds for `h` and `∂_s h`.
+  the bounds of `h` and `∂_s h` follow (`abs_dgTwoScale_le`, `abs_dgTwoScale_deriv_le`).
 -/
 
 open LatticeProb LatticeProb.Percolation
