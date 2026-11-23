@@ -1,0 +1,288 @@
+import Rigidity.Proofs.Corrector.DarioFiniteEnergySublinear
+import Rigidity.Proofs.Section5.SublinearLiouville
+
+/-!
+# Dario's identity (3.22): the change of the corrector is a multiple of `∇∇G(e, ·)`
+
+Case 3 of Step 2 of Dario's proof of Lemma 3.3: the endpoints `x, y` of the bond `e` are in the
+infinite cluster, which does not change when `e` is resampled. By (3.21) the difference `v` of the
+two correctors solves `-∇·a∇v = c(δ_x - δ_y)` on the cluster, with
+`c = (a - a^e)(e)(p·(x - y) + χ_p^e(x) - χ_p^e(y))`, and Dario asserts (3.22),
+`∇v = c ∇∇G(e, ·)`: the function `v - c ∇G(e, ·)` is `a`-harmonic and "one can show" that it has
+sublinear growth, so it is constant.
+
+Here, for a configuration in which the oriented edge `a` is open, `∇∇G(e, ·)` is
+`greenProj ω (1_a)` (Propositions 2.11-2.12, `DarioClusterGreen`), and
+
+* `laplacian_openGraph_eq_edgeDiv`: the Laplacian of the open graph is `∇·∇`;
+* `edgeDiv_single`: `∇·1_a = δ_x - δ_y`;
+* `edgeGrad_eq_smul_greenProj_of_liouville`: if `∇·∇v = c(δ_x - δ_y)` on a set `C` of vertices on
+  which the harmonic functions of sublinear growth are constant, and `v` and the potentials of
+  `greenProj ω (1_a)` grow sublinearly on `C`, then `∇v = c greenProj ω (1_a)` on the open edges
+  of `C` ((3.22));
+* `localEnergy_le_of_isGradOf`: a potential of `η ∈ ℓ²` has energy at most `2‖η‖²` on every finite
+  set, so the potentials of `greenProj ω (1_a)` have energy at most `2`, and grow sublinearly
+  almost surely (`ae_abs_sub_coarseAnchor_le_of_finiteEnergy`).
+-/
+
+namespace Rigidity.Corrector
+
+open Filter Topology LatticeProb.Percolation Rigidity.Percolation
+open scoped InnerProductSpace Classical ENNReal
+
+variable (ω : Configuration 2)
+
+theorem add_unit_ne_sub_unit (x : Vertex 2) (i j : Fin 2) :
+    x + LatticeProb.unit i ≠ x - LatticeProb.unit j := by
+  intro e
+  have h := congrArg (fun y : Vertex 2 => ∑ k, y k) e
+  simp only [Pi.add_apply, Pi.sub_apply, Finset.sum_add_distrib, Finset.sum_sub_distrib,
+    LatticeProb.unit, Finset.sum_pi_single', Finset.mem_univ, if_true] at h
+  omega
+
+theorem sub_unit_ne_sub_unit {x : Vertex 2} {i j : Fin 2} (h : i ≠ j) :
+    x - LatticeProb.unit i ≠ x - LatticeProb.unit j := by
+  intro e
+  have := congrFun e i
+  simp [LatticeProb.unit, h] at this
+
+/-- **The Laplacian of the open graph is the divergence of the gradient**:
+`Σ_{y ∼ x open} (U(y) - U(x)) = ∇·∇U(x)`. -/
+theorem laplacian_openGraph_eq_edgeDiv (U : Vertex 2 → ℝ) (x : Vertex 2) :
+    LatticeProb.Graph.laplacian (openGraph ω) U x = edgeDiv ω (edgeGrad ω U) x := by
+  set T : Finset (Vertex 2) := {x + LatticeProb.unit 0, x - LatticeProb.unit 0,
+    x + LatticeProb.unit 1, x - LatticeProb.unit 1} with hT
+  have hN : (openGraph ω).neighborFinset x = T.filter fun y => (openGraph ω).Adj x y := by
+    ext y
+    simp only [SimpleGraph.mem_neighborFinset, Finset.mem_filter, iff_and_self]
+    intro h
+    obtain ⟨i, hi | hi⟩ := LatticeProb.Graph.Zd.adj_iff.1 (openGraph_le ω h)
+    · fin_cases i <;> simp [hT, hi]
+    · fin_cases i <;> simp [hT, hi]
+  unfold LatticeProb.Graph.laplacian
+  rw [hN, Finset.sum_filter]
+  rw [hT, Finset.sum_insert, Finset.sum_insert, Finset.sum_insert, Finset.sum_singleton]
+  · unfold edgeDiv edgeGrad EdgeOpen edgeHead
+    rw [Fin.sum_univ_two]
+    simp only [sub_add_cancel, (openGraph ω).adj_comm (x - LatticeProb.unit 0) x,
+      (openGraph ω).adj_comm (x - LatticeProb.unit 1) x]
+    split_ifs <;> ring
+  all_goals
+    simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
+    repeat' constructor
+  all_goals
+    intro h
+    have h0 := congrFun h 0
+    have h1 := congrFun h 1
+    simp [LatticeProb.unit] at h0 h1 <;> omega
+
+theorem edgeDiv_congr {η η' : LatticeEdge → ℝ} (h : ∀ b, EdgeOpen ω b → η b = η' b)
+    (z : Vertex 2) : edgeDiv ω η z = edgeDiv ω η' z := by
+  unfold edgeDiv
+  refine Finset.sum_congr rfl fun i _ => ?_
+  split_ifs with h1 h2 h2
+  · rw [h _ h1, h _ h2]
+  · rw [h _ h1]
+  · rw [h _ h2]
+  · rfl
+
+theorem edgeDiv_edgeGrad_sub_smul (u w : Vertex 2 → ℝ) (c : ℝ) (z : Vertex 2) :
+    edgeDiv ω (edgeGrad ω (fun y => u y - c * w y)) z =
+      edgeDiv ω (edgeGrad ω u) z - c * edgeDiv ω (edgeGrad ω w) z := by
+  unfold edgeDiv edgeGrad
+  rw [Finset.mul_sum, ← Finset.sum_sub_distrib]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  split_ifs <;> ring
+
+/-- **`∇·1_a = δ_x - δ_y`** for an open edge `a` from `x` to `y`. -/
+theorem edgeDiv_single {a : LatticeEdge} (ha : EdgeOpen ω a) (z : Vertex 2) :
+    edgeDiv ω (lp.single 2 a (1 : ℝ) : EdgeField) z =
+      (if z = a.1 then 1 else 0) - (if z = edgeHead a then 1 else 0) := by
+  obtain ⟨x, j⟩ := a
+  unfold edgeDiv
+  rw [Finset.sum_sub_distrib]
+  congr 1
+  · rw [Finset.sum_eq_single j]
+    · by_cases hz : z = x
+      · subst hz
+        rw [if_pos ha, lp.single_apply, Pi.single_eq_same, if_pos rfl]
+      · rw [if_neg hz]
+        split_ifs
+        · rw [lp.single_apply, Pi.single_eq_of_ne]
+          intro e
+          exact hz (Prod.mk.inj e).1
+        · rfl
+    · intro i _ hij
+      split_ifs
+      · rw [lp.single_apply, Pi.single_eq_of_ne]
+        intro e
+        exact hij (Prod.mk.inj e).2
+      · rfl
+    · intro h
+      exact absurd (Finset.mem_univ j) h
+  · rw [Finset.sum_eq_single j]
+    · by_cases hz : z = edgeHead (x, j)
+      · have hzx : z - LatticeProb.unit j = x := by
+          rw [hz]
+          simp [edgeHead]
+        rw [hzx, if_pos ha, lp.single_apply, Pi.single_eq_same, if_pos hz]
+      · rw [if_neg hz]
+        split_ifs
+        · rw [lp.single_apply, Pi.single_eq_of_ne]
+          intro e
+          apply hz
+          rw [edgeHead, ← (Prod.mk.inj e).1]
+          simp
+        · rfl
+    · intro i _ hij
+      split_ifs
+      · rw [lp.single_apply, Pi.single_eq_of_ne]
+        intro e
+        exact hij (Prod.mk.inj e).2
+      · rfl
+    · intro h
+      exact absurd (Finset.mem_univ j) h
+
+/-- Finite partial sums of the squares of an `ℓ²` field are at most its squared norm. -/
+theorem sum_sq_le_norm_sq (η : EdgeField) (s : Finset LatticeEdge) :
+    ∑ a ∈ s, η a ^ 2 ≤ ‖η‖ ^ 2 := by
+  have h := lp.sum_rpow_le_norm_rpow (p := 2) (by norm_num) η s
+  simp only [ENNReal.toReal_ofNat, Real.rpow_two, Real.norm_eq_abs, sq_abs] at h
+  exact h
+
+theorem sum_adj_sq_le (U : Vertex 2 → ℝ) (F : Finset (Vertex 2)) (x : Vertex 2) :
+    (∑ y ∈ F, if (openGraph ω).Adj x y then (U x - U y) ^ 2 else 0) ≤
+      ∑ i : Fin 2, ((if EdgeOpen ω (x, i) then (U (edgeHead (x, i)) - U x) ^ 2 else 0) +
+        (if EdgeOpen ω (x - LatticeProb.unit i, i) then
+          (U (edgeHead (x - LatticeProb.unit i, i)) - U (x - LatticeProb.unit i)) ^ 2 else 0)) := by
+  set T : Finset (Vertex 2) := {x + LatticeProb.unit 0, x - LatticeProb.unit 0,
+    x + LatticeProb.unit 1, x - LatticeProb.unit 1} with hT
+  have hsub : F.filter (fun y => (openGraph ω).Adj x y) ⊆
+      T.filter fun y => (openGraph ω).Adj x y := by
+    intro y hy
+    obtain ⟨-, h⟩ := Finset.mem_filter.1 hy
+    refine Finset.mem_filter.2 ⟨?_, h⟩
+    obtain ⟨i, hi | hi⟩ := LatticeProb.Graph.Zd.adj_iff.1 (openGraph_le ω h)
+    · fin_cases i <;> simp [hT, hi]
+    · fin_cases i <;> simp [hT, hi]
+  rw [← Finset.sum_filter]
+  refine (Finset.sum_le_sum_of_subset_of_nonneg hsub (fun _ _ _ => sq_nonneg _)).trans ?_
+  rw [Finset.sum_filter, hT, Finset.sum_insert, Finset.sum_insert, Finset.sum_insert,
+    Finset.sum_singleton]
+  · unfold EdgeOpen edgeHead
+    rw [Fin.sum_univ_two]
+    simp only [sub_add_cancel, (openGraph ω).adj_comm (x - LatticeProb.unit 0) x,
+      (openGraph ω).adj_comm (x - LatticeProb.unit 1) x]
+    apply le_of_eq
+    split_ifs <;> ring
+  all_goals
+    simp only [Finset.mem_insert, Finset.mem_singleton, not_or]
+    repeat' constructor
+  all_goals
+    intro h
+    have h0 := congrFun h 0
+    have h1 := congrFun h 1
+    simp [LatticeProb.unit] at h0 h1 <;> omega
+
+/-- **A potential of an `ℓ²` field has finite energy**: `E_F(W) ≤ 2‖η‖²` on every finite set. -/
+theorem localEnergy_le_of_isGradOf {η : EdgeField} {W : Vertex 2 → ℝ} (h : IsGradOf ω η W)
+    (F : Finset (Vertex 2)) : localEnergy ω F W ≤ 2 * ‖η‖ ^ 2 := by
+  unfold localEnergy
+  have hx : ∀ x ∈ F, (∑ y ∈ F, if (openGraph ω).Adj x y then (W x - W y) ^ 2 else 0) ≤
+      ∑ i : Fin 2, (η (x, i) ^ 2 + η (x - LatticeProb.unit i, i) ^ 2) := by
+    intro x _
+    refine (sum_adj_sq_le ω W F x).trans (Finset.sum_le_sum fun i _ => ?_)
+    refine add_le_add ?_ ?_
+    · split_ifs with ho
+      · rw [h _ ho]
+      · positivity
+    · split_ifs with ho
+      · rw [h _ ho]
+      · positivity
+  refine (Finset.sum_le_sum hx).trans ?_
+  set g : LatticeEdge → LatticeEdge := fun q => (q.1 - LatticeProb.unit q.2, q.2) with hg
+  have hginj : Set.InjOn g ↑(F ×ˢ (Finset.univ : Finset (Fin 2))) := by
+    intro q₁ _ q₂ _ hq
+    simp only [hg, Prod.mk.injEq] at hq
+    obtain ⟨h1, h2⟩ := hq
+    rw [h2] at h1
+    exact Prod.ext (sub_left_injective h1) h2
+  have e1 : ∑ x ∈ F, ∑ i : Fin 2, η (x, i) ^ 2 =
+      ∑ q ∈ F ×ˢ (Finset.univ : Finset (Fin 2)), η q ^ 2 :=
+    (Finset.sum_product F Finset.univ (fun q => η q ^ 2)).symm
+  have e2 : ∑ x ∈ F, ∑ i : Fin 2, η (x - LatticeProb.unit i, i) ^ 2 =
+      ∑ q ∈ (F ×ˢ (Finset.univ : Finset (Fin 2))).image g, η q ^ 2 := by
+    rw [Finset.sum_image hginj]
+    exact (Finset.sum_product F Finset.univ (fun q => η (g q) ^ 2)).symm
+  calc ∑ x ∈ F, ∑ i : Fin 2, (η (x, i) ^ 2 + η (x - LatticeProb.unit i, i) ^ 2)
+      = ∑ x ∈ F, ∑ i : Fin 2, η (x, i) ^ 2 +
+          ∑ x ∈ F, ∑ i : Fin 2, η (x - LatticeProb.unit i, i) ^ 2 := by
+        rw [← Finset.sum_add_distrib]
+        exact Finset.sum_congr rfl fun x _ => Finset.sum_add_distrib
+    _ ≤ ‖η‖ ^ 2 + ‖η‖ ^ 2 := by
+        rw [e1, e2]
+        exact add_le_add (sum_sq_le_norm_sq η _) (sum_sq_le_norm_sq η _)
+    _ = 2 * ‖η‖ ^ 2 := by ring
+
+/-- Sublinear growth on a set of vertices, `|f(z)| ≤ ε |z|` for `|z|` large, as in main's
+Liouville theorem `SublinearLiouville`. -/
+def SublinearOn (C : Set (Vertex 2)) (f : Vertex 2 → ℝ) : Prop :=
+  ∀ ε : ℝ, 0 < ε → ∃ R : ℝ, ∀ z ∈ C, R ≤ Rigidity.Section5.eucl z →
+    |f z| ≤ ε * Rigidity.Section5.eucl z
+
+theorem SublinearOn.sub_smul {C : Set (Vertex 2)} {f g : Vertex 2 → ℝ} (hf : SublinearOn C f)
+    (hg : SublinearOn C g) (c : ℝ) : SublinearOn C (fun z => f z - c * g z) := by
+  intro ε hε
+  obtain ⟨R₁, h₁⟩ := hf (ε / 2) (by positivity)
+  obtain ⟨R₂, h₂⟩ := hg (ε / (2 * (|c| + 1))) (by positivity)
+  refine ⟨max R₁ R₂, fun z hz hR => ?_⟩
+  have hR1 := h₁ z hz ((le_max_left _ _).trans hR)
+  have hR2 := h₂ z hz ((le_max_right _ _).trans hR)
+  have he : 0 ≤ Rigidity.Section5.eucl z := norm_nonneg _
+  have hc : |c| * (ε / (2 * (|c| + 1))) ≤ ε / 2 := by
+    rw [mul_div_assoc', div_le_div_iff₀ (by positivity) (by norm_num)]
+    nlinarith [abs_nonneg c]
+  calc |f z - c * g z| ≤ |f z| + |c| * |g z| := by
+        rw [← abs_mul]; exact abs_sub _ _
+    _ ≤ ε / 2 * Rigidity.Section5.eucl z +
+        |c| * (ε / (2 * (|c| + 1)) * Rigidity.Section5.eucl z) := by
+        gcongr
+    _ ≤ ε / 2 * Rigidity.Section5.eucl z + ε / 2 * Rigidity.Section5.eucl z := by
+        rw [← mul_assoc]
+        gcongr
+    _ = ε * Rigidity.Section5.eucl z := by ring
+
+/-- **Dario, (3.22)**, deterministic form: if `∇·∇v = c(δ_x - δ_y)` on a set `C` of vertices on
+which the harmonic functions of sublinear growth are constant, and `v` and the potentials of
+`P1_a` grow sublinearly on `C`, then `∇v = c P1_a` on the open edges of `C`. -/
+theorem edgeGrad_eq_smul_greenProj_of_liouville {a : LatticeEdge} (ha : EdgeOpen ω a)
+    {C : Set (Vertex 2)}
+    (hliou : ∀ h : Vertex 2 → ℝ, (∀ z ∈ C, edgeDiv ω (edgeGrad ω h) z = 0) →
+      SublinearOn C h → ∃ k : ℝ, ∀ z ∈ C, h z = k)
+    {v : Vertex 2 → ℝ} {c : ℝ}
+    (hv : ∀ z ∈ C, edgeDiv ω (edgeGrad ω v) z =
+      c * ((if z = a.1 then 1 else 0) - (if z = edgeHead a then 1 else 0)))
+    (hvsub : SublinearOn C v)
+    (hWsub : ∀ W, IsGradOf ω (greenProj ω (lp.single 2 a 1)) W → SublinearOn C W)
+    {b : LatticeEdge} (hb : EdgeOpen ω b) (hb1 : b.1 ∈ C) (hb2 : edgeHead b ∈ C) :
+    edgeGrad ω v b = c * greenProj ω (lp.single 2 a 1) b := by
+  obtain ⟨W, hW⟩ := exists_isGradOf_greenProj ω (lp.single 2 a 1)
+  have hdivW : ∀ z, edgeDiv ω (edgeGrad ω W) z =
+      (if z = a.1 then 1 else 0) - (if z = edgeHead a then 1 else 0) := by
+    intro z
+    rw [edgeDiv_congr ω (η' := greenProj ω (lp.single 2 a 1)) (fun b hb => ?_) z,
+      edgeDiv_greenProj, edgeDiv_single ω ha]
+    rw [hW b hb]
+    simp [edgeGrad, hb]
+  have hharm : ∀ z ∈ C, edgeDiv ω (edgeGrad ω (fun y => v y - c * W y)) z = 0 := by
+    intro z hz
+    rw [edgeDiv_edgeGrad_sub_smul, hv z hz, hdivW z]
+    ring
+  obtain ⟨k, hk⟩ := hliou _ hharm (hvsub.sub_smul (hWsub W hW) c)
+  have h1 := hk _ hb1
+  have h2 := hk _ hb2
+  simp only [edgeGrad, if_pos hb]
+  rw [hW b hb]
+  linarith
+
+end Rigidity.Corrector
