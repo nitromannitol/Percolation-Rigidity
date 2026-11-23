@@ -271,46 +271,51 @@ theorem approx_real_A {C₀ CP CG Kv Cs τ s t e E φ O V Φ : ℝ} (n : ℕ) (h
         gcongr
     _ = _ := by ring
 
-/-- The arithmetic of the other scales (`4R² > s`) in the proof of Lemma 4.1. -/
-theorem approx_real_B1 {KB Kc Kv τ s t e Φ₈ Φ x : ℝ} (n : ℕ) (hKB : 0 ≤ KB) (hKc : 0 ≤ Kc)
-    (hKv : 0 ≤ Kv) (he : 0 ≤ e) (hΦ₈ : 0 ≤ Φ₈) (hx : x ≤ 2 * KB * Kc * Kv * (4 ^ n * e) * Φ₈)
-    (hone : 1 ≤ 2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s))
+/-- The arithmetic of the other scales (`4 (A R)² > s`) in the proof of Lemma 4.1. -/
+theorem approx_real_B1 {A KB Kc Kv τ s t e Φ₈ Φ x : ℝ} (n : ℕ) (hA : 0 ≤ A) (hKB : 0 ≤ KB)
+    (hKc : 0 ≤ Kc) (hKv : 0 ≤ Kv) (he : 0 ≤ e) (hΦ₈ : 0 ≤ Φ₈)
+    (hx : x ≤ 2 * KB * Kc * Kv * (4 ^ n * e) * Φ₈)
+    (hone : 1 ≤ A * (2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s)))
     (hsq : Real.sqrt τ / Real.sqrt s ≤ 2 * (Real.sqrt τ / Real.sqrt t)) (hΦ : Φ₈ ≤ Φ) :
-    x ≤ 8 * KB * Kc * Kv * (64 ^ n * e) * (Real.sqrt τ / Real.sqrt t) * Φ := by
+    x ≤ 8 * A * KB * Kc * Kv * (64 ^ n * e) * (Real.sqrt τ / Real.sqrt t) * Φ := by
   have hK : 0 ≤ 2 * KB * Kc * Kv * (4 ^ n * e) := by positivity
   have hsτs : 0 ≤ Real.sqrt τ / Real.sqrt s := div_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  have h1 : x ≤ 2 * KB * Kc * Kv * (4 ^ n * e) * Φ₈ * (2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s)) :=
+  have h1 : x ≤ 2 * KB * Kc * Kv * (4 ^ n * e) * Φ₈ *
+      (A * (2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s))) :=
     hx.trans (le_mul_of_one_le_right (by positivity) hone)
   have h8 : (4 : ℝ) ^ n * 2 ^ n ≤ 64 ^ n := by
     rw [← mul_pow]
     exact pow_le_pow_left₀ (by norm_num) (by norm_num) n
   have hΦ0 : 0 ≤ Φ := hΦ₈.trans hΦ
   refine h1.trans ?_
-  calc 2 * KB * Kc * Kv * (4 ^ n * e) * Φ₈ * (2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s))
-      ≤ 2 * KB * Kc * Kv * (4 ^ n * e) * Φ * (2 ^ (n + 1) * (2 * (Real.sqrt τ / Real.sqrt t))) :=
+  calc 2 * KB * Kc * Kv * (4 ^ n * e) * Φ₈ * (A * (2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s)))
+      ≤ 2 * KB * Kc * Kv * (4 ^ n * e) * Φ *
+          (A * (2 ^ (n + 1) * (2 * (Real.sqrt τ / Real.sqrt t)))) :=
         mul_le_mul (mul_le_mul_of_nonneg_left hΦ hK)
-          (mul_le_mul_of_nonneg_left hsq (by positivity)) (by positivity) (mul_nonneg hK hΦ0)
-    _ = 8 * KB * Kc * Kv * ((4 : ℝ) ^ n * 2 ^ n * e) * (Real.sqrt τ / Real.sqrt t) * Φ := by
+          (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hsq (by positivity)) hA)
+          (by positivity) (mul_nonneg hK hΦ0)
+    _ = 8 * A * KB * Kc * Kv * ((4 : ℝ) ^ n * 2 ^ n * e) * (Real.sqrt τ / Real.sqrt t) * Φ := by
         rw [pow_succ]; ring
-    _ ≤ 8 * KB * Kc * Kv * (64 ^ n * e) * (Real.sqrt τ / Real.sqrt t) * Φ := by
+    _ ≤ 8 * A * KB * Kc * Kv * (64 ^ n * e) * (Real.sqrt τ / Real.sqrt t) * Φ := by
         have : 0 ≤ (Real.sqrt τ / Real.sqrt t) * Φ := by
           have := Real.sqrt_nonneg τ
           have := Real.sqrt_nonneg t
-          have : 0 ≤ Φ := hΦ₈.trans hΦ
           positivity
         have h8e : (4 : ℝ) ^ n * 2 ^ n * e ≤ 64 ^ n * e := mul_le_mul_of_nonneg_right h8 he
-        nlinarith [mul_le_mul_of_nonneg_left h8e (by positivity : (0 : ℝ) ≤ 8 * KB * Kc * Kv)]
+        nlinarith [mul_le_mul_of_nonneg_left h8e (by positivity : (0 : ℝ) ≤ 8 * A * KB * Kc * Kv)]
 
-/-- `O ≤ 25 C_P C_G 8^n τ^{3/2} s^{-3/2} e^{-|x - y|²/(C_G s)}` at the scales of Theorem 3. -/
+/-- `O ≤ 25 C_P C_G 8^n τ^{3/2} s^{-3/2} e^{-|x - y|²/(C_G s)}` at the scales of Theorem 3, from
+the weak Poincaré inequality on `B_R(y)`, `R = 2^n √τ`, and the gradient bound on `B_{C_P R}(y)`. -/
 theorem approx_O_le {ω : Configuration 2} {K' : OpenComponent ω} {x y : Vertex 2} {s τ CP CG : ℝ}
     (hCP : 0 < CP) (hCG : 0 < CG) (hτ1 : 1 ≤ τ) (hs : 0 < s) (n : ℕ)
     (hP : Real.sqrt ((∑ z ∈ clusterBall K' y (2 ^ n * Real.sqrt τ),
         (openHeat ω s x z - finAvg (clusterBall K' y (2 ^ n * Real.sqrt τ))
           (fun z => openHeat ω s x z)) ^ 2) / (clusterBall K' y (2 ^ n * Real.sqrt τ)).card) ≤
-      CP * (2 ^ n * Real.sqrt τ) * Real.sqrt (gradEnergy ω (clusterBall K' y (2 ^ n * Real.sqrt τ))
-        (fun z => openHeat ω s x z) / (clusterBall K' y (2 ^ n * Real.sqrt τ)).card))
-    (hG : Real.sqrt (gradEnergy ω (clusterBall K' y (2 ^ n * Real.sqrt τ))
-        (fun z => openHeat ω s x z) / (clusterBall K' y (2 ^ n * Real.sqrt τ)).card) ≤
+      CP * (2 ^ n * Real.sqrt τ) * Real.sqrt (gradEnergy ω
+        (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ))) (fun z => openHeat ω s x z) /
+          (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ))).card))
+    (hG : Real.sqrt (gradEnergy ω (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ)))
+        (fun z => openHeat ω s x z) / (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ))).card) ≤
       CG * s ^ (-(3 / 2 : ℝ)) * Real.exp (-(latticeDist x y ^ 2 / (CG * s)))) :
     ∑ z ∈ clusterBall K' y (2 ^ n * Real.sqrt τ), |openHeat ω s x z -
         finAvg (clusterBall K' y (2 ^ n * Real.sqrt τ)) (fun z => openHeat ω s x z)| ≤

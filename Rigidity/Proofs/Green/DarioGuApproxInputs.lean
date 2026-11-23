@@ -17,8 +17,10 @@ kernel (Theorem 3, through Remark 1.3). This file fixes the discrete objects and
 
 Named statements (printed statements, not formalized here):
 
-* `ClusterPoincareTwo`: Proposition 2.7 for `p = 2` (first part), in dimension two (cited by the
-  source: Barlow 2004, Theorem 2.18; Armstrong–Dario 2018, Proposition 3.4).
+* `ClusterPoincareTwo`: Proposition 2.7 for `p = 2` (first part), in dimension two, in the weak
+  form with the gradient on a dilated ball (cited by the source: Barlow 2004, Theorem 2.18;
+  Armstrong–Dario 2018, Proposition 3.4); the printed form, with the gradient on the same ball,
+  fails at large radii (see the docstring).
 * `DarioGuGradientBoundTwo`: Theorem 3 in the form of Remark 1.3, in dimension two (proved in §3 of
   the source from Theorem 5 and Proposition 3.9). The gradient is taken over the edges inside the
   ball; the printed statement, with all the edges at the vertices of the ball, implies it.
@@ -90,24 +92,33 @@ theorem gradEnergy_nonneg (ω : Configuration 2) (U : Finset (Vertex 2)) (u : Ve
 
 /-! ### The named statements -/
 
-/-- **Dario–Gu, Proposition 2.7** (Poincaré inequality on `𝒞_∞`), `p = 2`, first part, in
-dimension two. Printed statement (lines 979-993 of the source): *There exist a constant
-`C < ∞` and an exponent `s > 0` such that, for any `y ∈ ℤ^d`, there exists a non-negative random
-variable `M_Poinc(y) ≤ O_s(C)` such that for each radius `R ≥ M_Poinc(y)` and each function
+/-- **Dario–Gu, Proposition 2.7** (Poincaré inequality on `𝒞_∞`), `p = 2`, in dimension two, in
+the weak form with the gradient on the dilated ball `𝒞_∞ ∩ B_{CR}(y)`.
+
+Printed statement (lines 979-993 of the source): *There exist a constant `C < ∞` and an exponent
+`s > 0` such that, for any `y ∈ ℤ^d`, there exists a non-negative random variable
+`M_Poinc(y) ≤ O_s(C)` such that for each radius `R ≥ M_Poinc(y)` and each function
 `u : 𝒞_∞ ∩ B_R(y) → ℝ`, `‖u - (u)_{𝒞_∞ ∩ B_R(y)}‖_{L̲²(𝒞_∞ ∩ B_R(y))} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_R(y))}`.*
 Citing lines: "it can be found in [Ba, Theorem 2.18] for the L²-version" (983); "The proof relies on
-the Sobolev inequality as stated in [AD2, Proposition 3.4]" (1002). -/
+the Sobolev inequality as stated in [AD2, Proposition 3.4]" (1002).
+
+With the gradient over the open edges inside `𝒞_∞ ∩ B_R(y)` (`u` is defined on this set only),
+the printed inequality fails whenever `𝒞_∞ ∩ B_R(y)` is not connected by the open edges inside
+`B_R(y)` (a function equal to `1` on one piece and `0` elsewhere), which happens for every large
+`R` with probability tending to one (a vertex of `𝒞_∞` near the boundary whose only open edge leaves
+the ball). The statement here is the weak Poincaré inequality, with the gradient on the larger set
+`𝒞_∞ ∩ B_{CR}(y)`, `C ≥ 1`; it is the form used in the proof of Lemma 4.1. -/
 def ClusterPoincareTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
-    ∃ s C : ℝ, 0 < s ∧ 0 < C ∧ ∀ y : Vertex 2,
+    ∃ s C : ℝ, 0 < s ∧ 1 ≤ C ∧ ∀ y : Vertex 2,
       ∃ M : Configuration 2 → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond 2 p M s C ∧
         ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ R : ℝ, M ω ≤ R →
           ∀ u : Vertex 2 → ℝ,
             Real.sqrt ((∑ x ∈ clusterBall (uniqueInfiniteComponent h) y R,
                 (u x - finAvg (clusterBall (uniqueInfiniteComponent h) y R) u) ^ 2) /
                 (clusterBall (uniqueInfiniteComponent h) y R).card) ≤
-              C * R * Real.sqrt (gradEnergy ω (clusterBall (uniqueInfiniteComponent h) y R) u /
-                (clusterBall (uniqueInfiniteComponent h) y R).card)
+              C * R * Real.sqrt (gradEnergy ω (clusterBall (uniqueInfiniteComponent h) y (C * R)) u /
+                (clusterBall (uniqueInfiniteComponent h) y (C * R)).card)
 
 /-- **Dario–Gu, Theorem 3, Remark 1.3** (gradient bound on the heat kernel in the second
 variable), in dimension two. Printed statement (lines 516-521 of the source, with (1.20)):
@@ -131,13 +142,13 @@ def DarioGuGradientBoundTwo : Prop :=
 /-! ### The oscillation on a ball -/
 
 /-- From the Poincaré inequality and the gradient bound:
-`Σ_{x ∈ U} |u(x) - (u)_U| ≤ C_P R |U| G` when `‖u - (u)_U‖_{L̲²(U)} ≤ C_P R ‖∇u‖_{L̲²(U)}` and
-`‖∇u‖_{L̲²(U)} ≤ G`. -/
-theorem sum_abs_sub_finAvg_le {ω : Configuration 2} {U : Finset (Vertex 2)} {u : Vertex 2 → ℝ}
-    {CP R G : ℝ} (hCP : 0 ≤ CP) (hR : 0 ≤ R)
+`Σ_{x ∈ U} |u(x) - (u)_U| ≤ C_P R |U| G` when `‖u - (u)_U‖_{L̲²(U)} ≤ C_P R ‖∇u‖_{L̲²(U')}` and
+`‖∇u‖_{L̲²(U')} ≤ G`. -/
+theorem sum_abs_sub_finAvg_le {ω : Configuration 2} {U U' : Finset (Vertex 2)}
+    {u : Vertex 2 → ℝ} {CP R G : ℝ} (hCP : 0 ≤ CP) (hR : 0 ≤ R)
     (hP : Real.sqrt ((∑ x ∈ U, (u x - finAvg U u) ^ 2) / U.card) ≤
-      CP * R * Real.sqrt (gradEnergy ω U u / U.card))
-    (hG : Real.sqrt (gradEnergy ω U u / U.card) ≤ G) :
+      CP * R * Real.sqrt (gradEnergy ω U' u / U'.card))
+    (hG : Real.sqrt (gradEnergy ω U' u / U'.card) ≤ G) :
     ∑ x ∈ U, |u x - finAvg U u| ≤ CP * R * U.card * G := by
   rcases U.eq_empty_or_nonempty with rfl | hne
   · simp

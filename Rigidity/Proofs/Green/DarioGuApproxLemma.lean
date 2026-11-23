@@ -60,6 +60,7 @@ theorem darioGuApproxLemmaTwo_of_inputs (hG3 : DarioGuGradientBoundTwo)
   obtain ⟨CA, sA, hCA, hsA, hA⟩ := darioGuDensityGaussianTwo_holds hpc hp1 hσ α hα
   choose TA hTAm hTA0 hTAos hTAae using hA
   obtain ⟨sP, CP, hsP, hCP, hP⟩ := hPo p hpc hp1
+  have hCP0 : 0 < CP := by linarith
   choose MP hMPm hMP0 hMPos hMPae using hP
   obtain ⟨sG, CG, hsG, hCG, hG⟩ := hG3 p hpc hp1
   choose MG hMGm hMG0 hMGt hMGae using hG
@@ -130,7 +131,7 @@ theorem darioGuApproxLemmaTwo_of_inputs (hG3 : DarioGuGradientBoundTwo)
   have hos2 : IsOsBond 2 p (fun ω => MP y ω ^ 2) s' θ2 :=
     Rigidity.Proofs.S2.IsOsBond.mono_exponent hs'0
       ((min_le_left _ _).trans ((min_le_left _ _).trans (min_le_right _ _))) hm2
-      (IsOsBond.sq_of_nonneg hCP (hMP0 y) (hMPos y))
+      (IsOsBond.sq_of_nonneg (by linarith) (hMP0 y) (hMPos y))
   have hos3 : IsOsBond 2 p (fun ω => MD y ω ^ 2) s' θ3 :=
     Rigidity.Proofs.S2.IsOsBond.mono_exponent hs'0
       ((min_le_left _ _).trans ((min_le_right _ _).trans (min_le_left _ _))) hm3

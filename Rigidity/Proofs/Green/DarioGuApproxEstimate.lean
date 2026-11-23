@@ -8,7 +8,8 @@ import Rigidity.Proofs.Green.DarioGuApproxCore
 * `|θ^{-1} p̄(τ, z - y) - p(τ, z, y)| ≤ ε Φ_{C₀}(τ, z - y)` on `K` (Theorem 4 at time `τ` in the
   printed Lemma 4.1, the homogenization estimate (4.50) in the iteration of §4.3),
 * `|Σ_{z ∈ K} p̄(τ, z - y) - θ| ≤ C_A τ^{-1/2 + α}` (Proposition A.7),
-* the Poincaré inequality on the balls `K ∩ B_R(y)`, `R ≥ √τ` (Proposition 2.7),
+* the weak Poincaré inequality on the balls `K ∩ B_R(y)`, `R ≥ √τ`, with the gradient on
+  `K ∩ B_{C_P R}(y)` (Proposition 2.7),
 * the gradient bound on `p(s, x, ·)` on these balls (Theorem 3, Remark 1.3),
 * `|K ∩ B_{√τ}(y)| ≥ c τ`,
 * Theorem 4 at time `s` at the points `z` with `|z - y| ≤ s + 1`, and Proposition 2.15 at time `s`,
@@ -30,7 +31,7 @@ theorem rpow_half_div_eq {τ t : ℝ} (hτ : 0 ≤ τ) : (τ / t) ^ (1 / 2 : ℝ
 
 /-- **The deterministic estimate of Lemma 4.1.** -/
 theorem approx_estimate {σ θ C₀ CB Ccv CP CG cd CA α : ℝ} (hσ : 0 < σ) (hθ : 0 < θ)
-    (hC₀ : 0 < C₀) (hCB : 0 < CB) (hCcv : 0 < Ccv) (hCP : 0 < CP) (hCG : 0 < CG) (hcd : 0 < cd) :
+    (hC₀ : 0 < C₀) (hCB : 0 < CB) (hCcv : 0 < Ccv) (hCP : 1 ≤ CP) (hCG : 0 < CG) (hcd : 0 < cd) :
     ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration 2) (K' : OpenComponent ω) (x y : Vertex 2)
       (t τ ε : ℝ), 1 ≤ τ → 3 * τ ≤ t → 0 ≤ ε → x ∈ K'.supp → y ∈ K'.supp →
       (∀ z ∈ K'.supp, |θ⁻¹ * latticeGaussian σ τ z y - openHeat ω τ z y| ≤
@@ -39,7 +40,8 @@ theorem approx_estimate {σ θ C₀ CB Ccv CP CG cd CA α : ℝ} (hσ : 0 < σ) 
       (∀ R : ℝ, Real.sqrt τ ≤ R → ∀ u : Vertex 2 → ℝ,
         Real.sqrt ((∑ z ∈ clusterBall K' y R, (u z - finAvg (clusterBall K' y R) u) ^ 2) /
             (clusterBall K' y R).card) ≤
-          CP * R * Real.sqrt (gradEnergy ω (clusterBall K' y R) u / (clusterBall K' y R).card)) →
+          CP * R * Real.sqrt (gradEnergy ω (clusterBall K' y (CP * R)) u /
+            (clusterBall K' y (CP * R)).card)) →
       (∀ R : ℝ, Real.sqrt τ ≤ R → 4 * R ^ 2 ≤ t - τ → latticeDist x y ≤ t - τ →
         Real.sqrt (gradEnergy ω (clusterBall K' y R) (fun z => openHeat ω (t - τ) x z) /
             (clusterBall K' y R).card) ≤
