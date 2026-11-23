@@ -520,6 +520,24 @@ further = {
          'Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_of_squareEstimates_holds',
          'Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwoPlanar_of_squareEstimates',
          'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_squareEstimates'],
+    'Theorem 1 of Armstrong and Dario in dimension two (Lemmas 6.2, 6.3 and 6.4 (iii), Proposition 6.1 and the isotropy of the homogenized matrix)':
+        ['Rigidity.Percolation.exists_planarAhom_eq_smul_one',
+         'Rigidity.Percolation.planarNuLimit_signedPermSlope',
+         'Rigidity.Percolation.planarPartitionEvent_configurationMap_iff',
+         'Rigidity.Dirichlet.exists_mu_test_of_subcubes',
+         'Rigidity.Dirichlet.abs_cubeEdgeSlope_sub_sum_tiles_le',
+         'Rigidity.Dirichlet.sum_subcube_errors_le',
+         'Rigidity.Dirichlet.planar_lemmaSixTwo',
+         'Rigidity.Dirichlet.exists_planar_sum_sq_le_of_eq_zero',
+         'Rigidity.Dirichlet.planar_sum_abs_grad_boundaryInterpolation_rpow_div_le',
+         'Rigidity.Dirichlet.sum_three_pow_pairReachScale_rpow_le',
+         'Rigidity.Dirichlet.planarMu_le_test',
+         'Rigidity.Dirichlet.planar_lemmaSixThree',
+         'Rigidity.Dirichlet.planar_sum_sq_sub_uhom_le',
+         'Rigidity.Dirichlet.planar_error_chain',
+         'Rigidity.Dirichlet.chain_le',
+         'Rigidity.Dirichlet.planarHomogenizationError_of_inputs',
+         'Rigidity.Dirichlet.planarHomogenizationError_holds'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

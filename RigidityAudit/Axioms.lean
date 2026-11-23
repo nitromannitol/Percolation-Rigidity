@@ -231,6 +231,30 @@ import Rigidity.Proofs.Regularity.PlanarMesoscopicTwoMain
 import Rigidity.Proofs.Regularity.PlanarMesoscopicDegreeTwo
 import Rigidity.Proofs.Regularity.OrderOneOriginTwo
 import Rigidity.Proofs.Regularity.PlanarOrderOneOriginInputs
+import Rigidity.Proofs.Cluster.PlanarAhomIsotropic
+import Rigidity.Proofs.Cluster.PlanarReflectionMesh
+import Rigidity.Proofs.Cluster.PlanarSignedPermCluster
+import Rigidity.Proofs.Cluster.PlanarSignedPermMesh
+import Rigidity.Proofs.Cluster.TriadicSignedPerm
+import Rigidity.Proofs.Dirichlet.PlanarBlockGeometry
+import Rigidity.Proofs.Dirichlet.PlanarChainBound
+import Rigidity.Proofs.Dirichlet.PlanarClusterEdges
+import Rigidity.Proofs.Dirichlet.PlanarClusterTiles
+import Rigidity.Proofs.Dirichlet.PlanarDatumBounds
+import Rigidity.Proofs.Dirichlet.PlanarErrorChain
+import Rigidity.Proofs.Dirichlet.PlanarErrorTerms
+import Rigidity.Proofs.Dirichlet.PlanarInterpolation
+import Rigidity.Proofs.Dirichlet.PlanarLemmaSixThree
+import Rigidity.Proofs.Dirichlet.PlanarLemmaSixTwo
+import Rigidity.Proofs.Dirichlet.PlanarMuTest
+import Rigidity.Proofs.Dirichlet.PlanarPoincareZero
+import Rigidity.Proofs.Dirichlet.PlanarPropSixOne
+import Rigidity.Proofs.Dirichlet.PlanarStatements
+import Rigidity.Proofs.Dirichlet.PlanarTheoremOne
+import Rigidity.Proofs.Dirichlet.PlanarTheoremOneHolds
+import Rigidity.Proofs.Dirichlet.PlanarTilePatch
+import Rigidity.Proofs.Dirichlet.PlanarTileSums
+import Rigidity.Proofs.Dirichlet.SubcubeMuTest
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -799,3 +823,22 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_of_squareEstimates_holds
 #print axioms Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwoPlanar_of_squareEstimates
 #print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOriginTwo_of_squareEstimates
+
+-- Theorem 1 of Armstrong and Dario in dimension two (the homogenization error for the Dirichlet problem)
+#print axioms Rigidity.Percolation.exists_planarAhom_eq_smul_one
+#print axioms Rigidity.Percolation.planarNuLimit_signedPermSlope
+#print axioms Rigidity.Percolation.planarPartitionEvent_configurationMap_iff
+#print axioms Rigidity.Dirichlet.exists_mu_test_of_subcubes
+#print axioms Rigidity.Dirichlet.abs_cubeEdgeSlope_sub_sum_tiles_le
+#print axioms Rigidity.Dirichlet.sum_subcube_errors_le
+#print axioms Rigidity.Dirichlet.planar_lemmaSixTwo
+#print axioms Rigidity.Dirichlet.exists_planar_sum_sq_le_of_eq_zero
+#print axioms Rigidity.Dirichlet.planar_sum_abs_grad_boundaryInterpolation_rpow_div_le
+#print axioms Rigidity.Dirichlet.sum_three_pow_pairReachScale_rpow_le
+#print axioms Rigidity.Dirichlet.planarMu_le_test
+#print axioms Rigidity.Dirichlet.planar_lemmaSixThree
+#print axioms Rigidity.Dirichlet.planar_sum_sq_sub_uhom_le
+#print axioms Rigidity.Dirichlet.planar_error_chain
+#print axioms Rigidity.Dirichlet.chain_le
+#print axioms Rigidity.Dirichlet.planarHomogenizationError_of_inputs
+#print axioms Rigidity.Dirichlet.planarHomogenizationError_holds
