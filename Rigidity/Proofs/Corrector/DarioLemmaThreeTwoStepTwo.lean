@@ -185,7 +185,7 @@ theorem exists_lintegral_abs_statSegment_le (hR3 : ArmstrongDarioOrderZeroTwo)
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw 2 p, ω ∈ G) :
     ∃ δ : ℝ, 0 < δ ∧ δ ≤ 1 ∧ ∀ (i : Fin 2) (k : ℕ) (y : Vertex 2) (j : Fin 2), ∃ C₂ C₃ : ℝ,
-      ∀ N : ℕ, 1 ≤ N →
+      0 ≤ C₂ ∧ 0 ≤ C₃ ∧ ∀ N : ℕ, 1 ≤ N →
         ∫⁻ ω, ENNReal.ofReal |correctorDiff hG hGv (Pi.single i 1) ω
           (statAnchor k ω (y + (N : ℤ) • LatticeProb.unit j)) (statAnchor k ω y)|
             ∂latticeBondLaw 2 p ≤ ENNReal.ofReal (C₂ * (N : ℝ) ^ (1 - δ) + C₃) := by
@@ -207,7 +207,8 @@ theorem exists_lintegral_abs_statSegment_le (hR3 : ArmstrongDarioOrderZeroTwo)
   set CZ : ℝ := 2 * C * ((1 / s) ^ (1 / s) * Real.exp (-(1 / s))) with hCZ
   have hCZ0 : 0 ≤ CZ := by positivity
   refine ⟨CZ * (b + 4) ^ (1 - δ), Real.exp ((3 : ℝ) ^ k / c) *
-    (8 * Mε + 4 + 16 * B2 * (24 * c ^ 4 * Real.exp (1 / c))), fun N hN => ?_⟩
+    (8 * Mε + 4 + 16 * B2 * (24 * c ^ 4 * Real.exp (1 / c))), by positivity, by positivity,
+    fun N hN => ?_⟩
   have hN1 : (1 : ℝ) ≤ N := by exact_mod_cast hN
   set a' : Vertex 2 := y + (N : ℤ) • LatticeProb.unit j with ha'
   set R : ℝ := b + 3 * N + 1 with hR
