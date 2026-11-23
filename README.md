@@ -1658,7 +1658,7 @@ Departures from Dario and from Dario and Gu:
   produces the constant `K₁`; here it is normalized by `p̄(t, e)` with `|e| = 1`, which gives the homogenized Green
   function `ḡ` without a constant.
 - **Green function as a time integral.** The identity `g(x, y) = ∫_0^∞ (p(t, x, y) − p(t, y, y)) dt` (DG21.tex:333
-  and :2654), which the source states without proof, is proved here for planar clusters.
+  and display (5.4)), which the source states without proof, is proved here for planar clusters.
 
 Misprints in the sources whose meaning is clear: Dario18.tex:218 and DG21.tex:1094 print `log^{1/2}|x − y|`, which
 vanishes at `|x − y| = 1`, and the Lean statement uses `log^{1/2}(2 + |x − y|)`; AD18.tex:837-848 (the sign of the

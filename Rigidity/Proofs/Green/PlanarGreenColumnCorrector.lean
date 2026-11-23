@@ -6,7 +6,7 @@ import LatticeProb.Prob.Percolation.CorrectedPlaneGrowth
 # Planar Green columns from the uniqueness of corrected planes
 
 The first clause of the planar qualitative corrector input `SupercriticalBondCorrectorInputTwo`
-(Armstrong–Dario, Theorem 2(i); Dario–Gu, §2.2.1) asserts that, for every slope `q` and every
+(Armstrong–Dario, Theorem 2(i); Dario–Gu, §2.3.1) asserts that, for every slope `q` and every
 vertex `o` of the infinite cluster, there is exactly one corrected plane of slope `q` vanishing at
 `o`. At the slope `q = 0` this is the Liouville theorem at order zero: a harmonic function on the
 cluster with `|v(x)| ≤ ε |x|` far from the origin, for every `ε > 0`, is a corrected plane of slope

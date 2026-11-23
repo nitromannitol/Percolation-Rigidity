@@ -10,7 +10,7 @@ Dario–Gu, Proposition 2.12 (arXiv:1909.10439v4, p. 22) asserts that for every 
 `osc_{𝒞_∞ ∩ B_r(y)} χ_p ≤ C |p| r^α` for every `r ≥ M_corr,α(y)` and every `p`. The proof printed
 there combines the optimal corrector bound of Dario (Theorem 1 of *Optimal corrector estimates on
 percolation clusters*, Ann. Appl. Probab. 2021, arXiv:1805.00902)
-`|χ_p(x) - χ_p(y)| 1_{x, y ∈ 𝒞_∞} ≤ O_s(C |p| log^{1/2} |x - y|)` in dimension two with Lemma 1.5
+`|χ_p(x) - χ_p(y)| 1_{x, y ∈ 𝒞_∞} ≤ O_s(C |p| log^{1/2} |x - y|)` in dimension two with Lemma 1.6
 applied to the sequence `X_n = 3^{-αn} sup_{x ∈ B_{3^n}(y)} |χ_p(x) - χ_p(y)| 1_{x, y ∈ 𝒞_∞}`.
 
 This file states Dario's Theorem 1 in dimension two as the named hypothesis
@@ -21,10 +21,10 @@ from it and the planar qualitative corrector input `SupercriticalBondCorrectorIn
   from the centre: this bounds the oscillation also when `x ∉ 𝒞_∞`.
 * The supremum over the `O(3^{4n})` pairs is controlled by a union bound on the Chebyshev tails,
   in place of the sum of `2d/α`-th powers of the printed proof; the minimal scale is the triadic
-  scale of Lemma 1.5 of the bad events `{∃ pair: |χ(x) - χ(x')| ≥ 3^{αn}}`, at least `1`.
+  scale of Lemma 1.6 of the bad events `{∃ pair: |χ(x) - χ(x')| ≥ 3^{αn}}`, at least `1`.
 * The bound for every slope `q` and every corrected plane of slope `q` follows from the two
   coordinate slopes: by the uniqueness of corrected planes (first clause of the qualitative input)
-  the corrector is linear in the slope modulo constants (Dario–Gu, §2.2.1).
+  the corrector is linear in the slope modulo constants (Dario–Gu, §2.3.1).
 * Dario's display has `log^{1/2} |x - y|`, which vanishes at `|x - y| = 1`; the hypothesis uses
   `log^{1/2} (2 + |x - y|)`, comparable to it for `|x - y| ≥ 2`.
 -/

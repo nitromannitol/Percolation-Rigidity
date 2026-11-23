@@ -3,11 +3,11 @@ import Rigidity.Proofs.S2.ClusterDensityBounds
 import Rigidity.Percolation.TriadicExceptionalSupremum
 
 /-!
-# Triadic minimal scales (Dario–Gu, Lemma 1.5)
+# Triadic minimal scales (Dario–Gu, Lemma 1.6)
 
 For the bond law, `X ≤ O_s(θ)` (`IsOsBond`) means `E[exp((X/θ ∨ 0)^s)] ≤ 2` (Dario–Gu, §1.6.2).
 
-**Dario–Gu, Lemma 1.5** (Armstrong–Dario, Lemma 2.2): for `K ≥ 1` and `s, β > 0` there is
+**Dario–Gu, Lemma 1.6** (Armstrong–Dario, Lemma 2.3): for `K ≥ 1` and `s, β > 0` there is
 `C(s, β, K) < ∞` such that, if `X_n ≤ O_s(K 3^{-nβ})` for every `n`, the random scale
 `M = sup {3^n : X_n ≥ 1}` satisfies `M ≤ O_{βs}(C)`.
 
@@ -17,10 +17,10 @@ The proof follows the printed one: by Chebyshev's inequality (`measure_le_le_of_
 of the supremum of the triadic lengths `3^n` of the events `{X_n ≥ 1}`. By the Borel–Cantelli
 lemma (`Rigidity.Percolation.ae_exceptionalScale_ne_top`) this supremum is almost surely finite, so
 that almost surely `3^n ≤ M` whenever `X_n ≥ 1`. The source proof prints `3^{-nβ}` for `3^{nβ}` in
-the tail of `X_n` (Armstrong–Dario, proof of Lemma 2.2).
+the tail of `X_n` (Armstrong–Dario, proof of Lemma 2.3).
 
-**Dario, Lemma B.2** (`lemmafromperc.0`): if `X_n ≤ K + O_s(K 3^{-nβ})`, the random scale
-`sup {3^n : X_n ≥ K + 1}` is `O_{βs}(C)`; as printed, this is Lemma 1.5 applied to
+**Dario, Lemma C.3** (`lemmafromperc.0`): if `X_n ≤ K + O_s(K 3^{-nβ})`, the random scale
+`sup {3^n : X_n ≥ K + 1}` is `O_{βs}(C)`; as printed, this is Lemma 1.6 applied to
 `max(X_n - K, 0)`.
 -/
 
@@ -32,7 +32,7 @@ open scoped ENNReal
 
 variable {d : ℕ} {p : unitInterval}
 
-/-- The triadic random scale `sup {3^n : 1 ≤ X_n}` of Dario–Gu, Lemma 1.5, as a real number (`0`
+/-- The triadic random scale `sup {3^n : 1 ≤ X_n}` of Dario–Gu, Lemma 1.6, as a real number (`0`
 when the supremum is infinite). -/
 noncomputable def triadicScale (X : ℕ → Configuration d → ℝ) (ω : Configuration d) : ℝ :=
   (exceptionalScale (fun n => {ω' | 1 ≤ X n ω'}) ω).toReal
@@ -96,7 +96,7 @@ theorem isOsBond_triadicScale_of_tail {C : ℝ≥0∞} (hC : C ≠ ∞) {c γ : 
       (fun n => {ω' | 1 ≤ X n ω'}) C hC _ c hb hc hE] with ω hω n hn
     exact le_triadicScale hω hn
 
-/-- **Dario–Gu, Lemma 1.5** (Armstrong–Dario, Lemma 2.2). For `K ≥ 1` and `s, β > 0` there is
+/-- **Dario–Gu, Lemma 1.6** (Armstrong–Dario, Lemma 2.3). For `K ≥ 1` and `s, β > 0` there is
 `C(s, β, K) < ∞` such that, for random variables `X_n ≤ O_s(K 3^{-nβ})`, the random scale
 `M = sup {3^n : X_n ≥ 1}` satisfies `M ≤ O_{βs}(C)`; almost surely `3^n ≤ M` whenever `X_n ≥ 1`. -/
 theorem isOsBond_triadicScale {K s β : ℝ} (hK : 1 ≤ K) (hs : 0 < s) (hβ : 0 < β) :
@@ -131,7 +131,7 @@ theorem isOsBond_max_zero_iff {X : Configuration d → ℝ} {s θ : ℝ} (hθ : 
   unfold IsOsBond
   simp only [heq]
 
-/-- **Dario, Lemma B.2** (`lemmafromperc.0` of *Optimal corrector estimates on percolation
+/-- **Dario, Lemma C.3** (`lemmafromperc.0` of *Optimal corrector estimates on percolation
 clusters*). For `K ≥ 1` and `s, β > 0` there is `C(s, β, K)` such that, if `X_n ≤ K + Y_n` with
 `Y_n ≤ O_s(K 3^{-nβ})`, the random scale `sup {3^n : X_n ≥ K + 1}`, that is the triadic scale of
 `max(X_n - K, 0)`, satisfies `≤ O_{βs}(C)`, and almost surely `3^n` is at most this scale whenever

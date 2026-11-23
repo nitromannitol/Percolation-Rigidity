@@ -20,7 +20,7 @@ Two results of Dario–Gu (arXiv:1909.10439v4) on this kernel are stated as hypo
   `x ∈ 𝒞_∞` and every `t ≥ max(T_par,δ(y), |x - y|)`,
   `|p(t, x, y) - θ(p)^{-1} p̄(t, x - y)| ≤ C t^{-1 - (1/2 - δ)} exp(-|x - y|² / (C t))`,
   with `p̄(t, z) = (2π σ̄ t)^{-1} exp(-|z|²/(2 σ̄ t))`. The hypothesis also requires `t ≥ 1`.
-* `CarneVaropoulosTwo`: **Proposition 2.11** (Carne–Varopoulos bound; Davies 1993, Corollaries 11
+* `CarneVaropoulosTwo`: **Proposition 2.15** (Carne–Varopoulos bound; Davies 1993, Corollaries 11
   and 12, cited without proof) for unit conductances on an infinite component.
 -/
 
@@ -55,7 +55,7 @@ def DarioGuHeatKernelTwo : Prop :=
                 Real.exp (-(‖latticeEuclideanEmbedding x - latticeEuclideanEmbedding y‖ ^ 2 /
                   (C * t)))
 
-/-- **Dario–Gu, Proposition 2.11** (Carne–Varopoulos bound, Davies 1993, Corollaries 11 and 12)
+/-- **Dario–Gu, Proposition 2.15** (Carne–Varopoulos bound, Davies 1993, Corollaries 11 and 12)
 for unit conductances on an infinite open component of `ℤ²`. -/
 def CarneVaropoulosTwo : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration 2) (K : OpenComponent ω), K.supp.Infinite →

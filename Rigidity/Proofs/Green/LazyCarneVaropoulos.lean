@@ -18,7 +18,7 @@ Averaging over the Poisson number of steps, the heat kernel of the planar open g
 `p(t, x, y) ≤ 3 e^{-|x - y|/18}` for `0 < t ≤ |x - y|` (`openHeat_le_exp_of_le_norm`): the steps
 `n < N = ⌈8 |x - y|⌉` contribute at most `2 e^{-dist²/(2N)}`, and the steps `n ≥ N` at most
 `2^{-N} E[2^{Pois(4t)}] = 2^{-N} e^{4t}`. This is the bound that the proof of Dario–Gu, Theorem 2,
-takes from their Proposition 2.11 (Davies 1993), so that Theorem 2 in dimension two follows from
+takes from their Proposition 2.15 (Davies 1993), so that Theorem 2 in dimension two follows from
 Theorem 1 and the Liouville theorem at order zero alone
 (`supercriticalBondGreenQuantitativeTwo_of_darioGu`).
 -/

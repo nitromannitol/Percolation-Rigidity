@@ -15,7 +15,7 @@ Three computations used in the proof of Dario–Gu, Theorem 2, in dimension two 
 * `∫_0^∞ (p̄(t, z) - p̄(t, e)) dt = -log |z| / (π σ)` for `z ≠ 0` and `|e| = 1`, with
   `p̄(t, z) = (2πσt)^{-1} exp(-|z|²/(2σt))`, by the substitution `u = 1/t` and Frullani's integral.
   Dario–Gu normalize the time integral of `p̄` by its mean over the unit ball and record the
-  resulting constant `K_1` (Dario–Gu, (5.3), citing Dautray–Lions, Chapter 1.8); the normalization
+  resulting constant `K_1` (Dario–Gu, (5.6), citing Dautray–Lions, Chapter 1.8); the normalization
   by `p̄(t, e)` used here gives the homogenized Green function `ḡ` itself, without a constant.
 * `∫_0^∞ t^{-β} e^{-a/t} dt = a^{1-β} Γ(β - 1)` for `β > 1`, `a > 0` (substitution `u = 1/t`).
 -/

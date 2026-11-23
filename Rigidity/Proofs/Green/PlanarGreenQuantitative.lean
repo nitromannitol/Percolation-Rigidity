@@ -12,7 +12,7 @@ input `SupercriticalBondGreenQuantitativeTwo` (Dario–Gu, Theorem 2, (1.11)) fr
 * Theorem 1 of Dario–Gu in dimension two (`DarioGuHeatKernelTwo`),
 * the small-time bound `p(t, x, y) ≤ C e^{-|x - y|/C}` for `t ≤ |x - y|` (`HeatSmallTimeTwo`), which
   the source takes from the Carne–Varopoulos bound (`CarneVaropoulosTwo`, Dario–Gu,
-  Proposition 2.11) and which is proved in `Rigidity.Proofs.Green.LazyCarneVaropoulos`, and
+  Proposition 2.15) and which is proved in `Rigidity.Proofs.Green.LazyCarneVaropoulos`, and
 * the Liouville theorem at order zero (`SublinearLiouville p`, a consequence of the qualitative
   corrector input or of the order-zero regularity input), which identifies every Green column with
   the time integral of the heat kernel.
