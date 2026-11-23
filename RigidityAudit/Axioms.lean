@@ -189,6 +189,38 @@ import Rigidity.Proofs.Cluster.PlanarMinimalSet
 import Rigidity.Proofs.Cluster.PlanarOmegaSupRate
 import Rigidity.Proofs.Cluster.PlanarRhoLocal
 import Rigidity.Proofs.Cluster.PlanarSIStepTwo
+import Rigidity.Proofs.Cluster.OsTailCalculus
+import Rigidity.Proofs.Cluster.PlanarBoundN
+import Rigidity.Proofs.Cluster.PlanarMinimalScales
+import Rigidity.Proofs.Cluster.PlanarReachErrors
+import Rigidity.Proofs.Cluster.PlanarReachEvent
+import Rigidity.Proofs.Cluster.PlanarSIUpgrade
+import Rigidity.Proofs.Cluster.PlanarSIUpgradeOs
+import Rigidity.Proofs.Cluster.PlanarScaleForms
+import Rigidity.Proofs.Cluster.PlanarScaleStatements
+import Rigidity.Proofs.Cluster.PlanarSubaddOs
+import Rigidity.Proofs.Cluster.PlanarSubaddOsMain
+import Rigidity.Proofs.Cluster.PlanarSubaddTail
+import Rigidity.Proofs.Cluster.PlanarSubcubeIndex
+import Rigidity.Proofs.Corrector.OsCalculus
+import Rigidity.Proofs.Corrector.PlanarCorrectorQuantitative
+import Rigidity.Proofs.Green.FrullaniGaussian
+import Rigidity.Proofs.Green.HeatTimeIntegrals
+import Rigidity.Proofs.Green.LazyCarneVaropoulos
+import Rigidity.Proofs.Green.LazyHeatKernel
+import Rigidity.Proofs.Green.PlanarGreenColumnCorrector
+import Rigidity.Proofs.Green.PlanarGreenDeterministic
+import Rigidity.Proofs.Green.PlanarGreenQuantitative
+import Rigidity.Proofs.Green.PlanarHeatKernelInputs
+import Rigidity.Proofs.Regularity.PlanarClusterInclusions
+import Rigidity.Proofs.Regularity.PlanarClusterRestriction
+import Rigidity.Proofs.Regularity.PlanarCorrectorReduction
+import Rigidity.Proofs.Regularity.PlanarHarmonicApproximation
+import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationBalls
+import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationSquares
+import Rigidity.Proofs.Regularity.PlanarHarmonicApproximationTwo
+import Rigidity.Proofs.Regularity.PlanarOrderZero
+import Rigidity.Proofs.Regularity.PlanarOrderZeroInput
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -658,3 +690,79 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Cluster.planar_SIupgrade_step2
 #print axioms Rigidity.Proofs.Cluster.abs_quadratic_sub_half_le
 #print axioms Rigidity.Proofs.Cluster.planar_minimalset
+
+-- Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two (Armstrong and Dario)
+#print axioms Rigidity.Proofs.Cluster.planarMinimalScales_holds
+#print axioms Rigidity.Proofs.Cluster.exists_planar_minimalScale
+#print axioms Rigidity.Proofs.Cluster.exists_measure_not_planarReachLe_le
+#print axioms Rigidity.Proofs.Cluster.reachSum_le_of_planarReach_le
+#print axioms Rigidity.Proofs.Cluster.planarRho_le_avg_of_planarReachLe
+#print axioms Rigidity.Proofs.Cluster.planarComparisonError_le_of_planarReachLe
+#print axioms Rigidity.Proofs.Cluster.sum_subcubesAt_eq_sum_sum
+#print axioms Rigidity.Proofs.Cluster.exists_planarRho_tail
+#print axioms Rigidity.Proofs.Cluster.planarSubaddGood_of_event
+#print axioms Rigidity.Proofs.Cluster.exists_planarSubaddGood_tail
+#print axioms Rigidity.Proofs.Cluster.exists_planarSubaddGood_tail_cube
+#print axioms Rigidity.Proofs.Cluster.exists_planarBoundN_general
+#print axioms Rigidity.Proofs.Cluster.planarBoundN_holds
+#print axioms Rigidity.Proofs.Cluster.planarMinimalScales_partition_holds
+#print axioms Rigidity.Proofs.Cluster.planarMesoscopicConvergence_holds
+#print axioms Rigidity.Proofs.Cluster.planar_subadd_os
+#print axioms Rigidity.Proofs.Cluster.osBound_coarse_bound
+#print axioms Rigidity.Proofs.Cluster.OsBound.mul
+#print axioms Rigidity.Proofs.Cluster.OsBound.add
+#print axioms Rigidity.Proofs.Cluster.osBound_finset_sup'
+#print axioms Rigidity.Proofs.Cluster.osBound_indicator
+#print axioms Rigidity.Proofs.Cluster.isOsBond_of_osBound
+#print axioms Rigidity.Proofs.Cluster.planar_SIupgrade_os
+#print axioms Rigidity.Proofs.Cluster.planar_muupbound_os
+
+-- The corrector estimate, the Green column and the Green function estimate in dimension two (Dario, Dario and Gu)
+#print axioms Rigidity.Green.hasSublinearLiouville_of_existsUnique_correctedPlane
+#print axioms Rigidity.Green.sublinearLiouville_two_of_correctorInput
+#print axioms Rigidity.Green.supercriticalBondGreenColumnExistenceTwo_of_correctorInput
+#print axioms Rigidity.Corrector.isOsBond_triadicScale_of_tail
+#print axioms Rigidity.Corrector.isOsBond_triadicScale
+#print axioms Rigidity.Corrector.correctedPlane_sub_eq
+#print axioms Rigidity.Corrector.correctorQuantitativeInputTwo_of_dario
+#print axioms Rigidity.Green.hasDerivAt_vsrwHeat
+#print axioms Rigidity.Green.vsrwHeat_le_one
+#print axioms Rigidity.Green.measurable_openHeat
+#print axioms Rigidity.Green.frullani
+#print axioms Rigidity.Green.integral_gaussianHeat_sub
+#print axioms Rigidity.Green.integral_rpow_neg_mul_exp_neg_div
+#print axioms Rigidity.Green.HeatBounds.laplacian_timeGreen
+#print axioms Rigidity.Green.HeatBounds.abs_timeGreen_sub_le
+#print axioms Rigidity.Green.measurable_greenConstant
+#print axioms Rigidity.Green.supercriticalBondGreenQuantitativeTwo_of_heatKernel
+#print axioms Rigidity.Green.supercriticalBondGreenQuantitativeTwo_of_heatKernel_of_correctorInput
+#print axioms Rigidity.Green.supercriticalBondGreenQuantitativeTwo_of_heatKernel_of_orderZero
+#print axioms Rigidity.Green.lazyPow_le_carneVaropoulos
+#print axioms Rigidity.Green.openHeat_le_exp_of_le_norm
+#print axioms Rigidity.Green.heatSmallTimeTwo
+#print axioms Rigidity.Green.supercriticalBondGreenQuantitativeTwo_of_smallTime
+#print axioms Rigidity.Green.supercriticalBondGreenQuantitativeTwo_of_darioGu
+#print axioms Rigidity.Green.supercriticalBondGreenQuantitativeTwo_of_darioGu_of_correctorInput
+#print axioms Rigidity.Green.supercriticalBondGreenQuantitativeTwo_of_darioGu_of_orderZero
+#print axioms Rigidity.Corrector.isOsBond_triadicScale_shift
+
+-- Lemma 7.1, the order-zero regularity and the corrector input in dimension two (Armstrong and Dario)
+#print axioms Rigidity.Proofs.Regularity.componentBallL2_le_squareL2
+#print axioms Rigidity.Proofs.Regularity.squareL2_le_componentBallL2
+#print axioms Rigidity.Proofs.Regularity.ballDist_le_squareHarmonicDist
+#print axioms Rigidity.Proofs.Regularity.squareOsc_le_ballExcess
+#print axioms Rigidity.Proofs.Regularity.le_sum_squareIterCoeff
+#print axioms Rigidity.Proofs.Regularity.harmonicApproximation_of_squares
+#print axioms Rigidity.Proofs.Regularity.le_sum_prod_of_step
+#print axioms Rigidity.Proofs.Regularity.le_of_geometric_step
+#print axioms Rigidity.Proofs.Regularity.exists_planarOrderZeroDecay
+#print axioms Rigidity.Proofs.Regularity.card_ball_ge_of_clusterCubeDensity
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderZeroTwo_of_planarHarmonicApproximation
+#print axioms Rigidity.Proofs.Regularity.planarHarmonicApproximationAt_of_squareEstimates
+#print axioms Rigidity.Proofs.Regularity.mem_supp_of_mem_clusterVertices
+#print axioms Rigidity.Proofs.Regularity.mem_clusterVertices_succ
+#print axioms Rigidity.Proofs.Regularity.planarHarmonicApproximationTwo_of_squareEstimates
+#print axioms Rigidity.Proofs.Regularity.eq_zero_of_slopeAsymptotics_zero
+#print axioms Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_of_orderOne
+#print axioms Rigidity.Proofs.Regularity.clusterRestrictTo_mem_clusterHarmonic
+#print axioms Rigidity.Proofs.Regularity.clusterForm_clusterRestrictTo_le
