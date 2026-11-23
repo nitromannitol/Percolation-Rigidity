@@ -55,4 +55,158 @@ theorem abs_componentSlope_le {ω : Configuration 2} (C : OpenComponent ω) (q :
     _ ≤ |q 0| * R + |q 1| * R := by gcongr <;> linarith
     _ = (|q 0| + |q 1|) * R := by ring
 
+/-- **The corrector of one slope with the bound (1.18)** on one configuration, from the
+approximations on growing balls, the Lipschitz estimate at the origin and the comparability of the
+cluster in consecutive triadic balls. -/
+theorem exists_corrector_of_scales {ω : Configuration 2} (C : OpenComponent ω) (q : Fin 2 → ℝ)
+    {m₀ : ℕ} {K δ X₀ C₀ ρ : ℝ} (hK : 0 ≤ K) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2) (hρ : 1 ≤ ρ)
+    (hC₀ : 0 ≤ C₀) (hX₀ : X₀ ≤ 3 ^ m₀)
+    (hv : ∀ m, m₀ ≤ m → ∃ v : C → ℝ, HarmonicOnBall C v (3 ^ m) ∧
+      componentBallL2 C 0 (3 ^ m) (fun x => v x - componentSlope C q x) ≤
+        K * (|q 0| + |q 1|) * ((3 : ℝ) ^ m) ^ (1 - δ))
+    (hLip : ∀ R : ℝ, 2 * X₀ ≤ R → ∀ w : C → ℝ, HarmonicOnBall C w R →
+      ∃ c : ℝ, ∀ r : ℝ, X₀ ≤ r → r ≤ R / 2 →
+        componentBallL2 C 0 r (w - fun _ => c) ≤ C₀ * (r / R) * componentBallL2 C 0 R w)
+    (hpos : ∀ m, m₀ ≤ m → 0 < (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card)
+    (hratio : ∀ m, m₀ ≤ m → ((componentEuclideanBall C 0 ((3 : ℝ) ^ (m + 1))).card : ℝ) ≤
+      ρ ^ 2 * (componentEuclideanBall C 0 ((3 : ℝ) ^ m)).card) :
+    ∃ u : C → ℝ, u ∈ harmonicGrowthSpace C 1 ∧ ∀ r : ℝ, 3 ^ (m₀ + 1) ≤ r →
+      componentBallL2 C 0 r (fun x => u x - componentSlope C q x) ≤
+        3 * ρ * (K * (1 + (1 + ρ + C₀) * (3 * ρ * (3 : ℝ) ^ (-δ) + 1) +
+          C₀ * (3 * ρ * (3 : ℝ) ^ (-δ) + 1) / (1 - (3 : ℝ) ^ (-δ)) +
+          (ρ + C₀) * (3 * ρ * (3 : ℝ) ^ (-δ) + 1) / (3 * (3 : ℝ) ^ (-δ) - 1))) *
+          (|q 0| + |q 1|) * r ^ (1 - δ) := by
+  set ε : ℝ := (3 : ℝ) ^ (-δ) with hεdef
+  have hε : 0 < ε := by positivity
+  have hε1 : ε < 1 := Real.rpow_lt_one_of_one_lt_of_neg (by norm_num) (by linarith)
+  have h3ε : 1 < 3 * ε := by
+    have e : 3 * ε = (3 : ℝ) ^ (1 - δ) := by
+      rw [hεdef, Real.rpow_sub (by norm_num), Real.rpow_one, Real.rpow_neg (by norm_num),
+        div_eq_mul_inv]
+    rw [e]; exact Real.one_lt_rpow (by norm_num) (by linarith)
+  set Q := |q 0| + |q 1| with hQ
+  have hQ0 : 0 ≤ Q := by positivity
+  have hv' : ∀ m, m₀ ≤ m → ∃ v : C → ℝ, HarmonicOnBall C v (3 ^ m) ∧
+      componentBallL2 C 0 (3 ^ m) (fun x => v x - componentSlope C q x) ≤
+        K * Q * 3 ^ m * ε ^ m := by
+    intro m hm
+    obtain ⟨v, hvh, hvb⟩ := hv m hm
+    refine ⟨v, hvh, hvb.trans (le_of_eq ?_)⟩
+    rw [three_pow_rpow_eq, hεdef]; ring
+  obtain ⟨u, hharm, hb⟩ := exists_harmonic_of_approximations C (componentSlope C q)
+    (A := K * Q) (by positivity) hε hε1 h3ε (by linarith) hC₀ hX₀ hv' hLip hpos hratio
+  set Γ : ℝ := 1 + (1 + ρ + C₀) * (3 * ρ * ε + 1) + C₀ * (3 * ρ * ε + 1) / (1 - ε) +
+    (ρ + C₀) * (3 * ρ * ε + 1) / (3 * ε - 1) with hΓ
+  have hΓ0 : 0 ≤ Γ := by
+    have : 0 < 1 - ε := by linarith
+    have : 0 < 3 * ε - 1 := by linarith
+    positivity
+  have hA' : K * Q + (1 + ρ + C₀) * (K * Q) * (3 * ρ * ε + 1) +
+      C₀ * (K * Q) * (3 * ρ * ε + 1) / (1 - ε) +
+      (ρ + C₀) * (K * Q) * (3 * ρ * ε + 1) / (3 * ε - 1) = K * Γ * Q := by
+    rw [hΓ]; ring
+  -- the bound on every radius
+  have hbound : ∀ r : ℝ, 3 ^ (m₀ + 1) ≤ r →
+      componentBallL2 C 0 r (fun x => u x - componentSlope C q x) ≤
+        3 * ρ * (K * Γ) * Q * r ^ (1 - δ) := by
+    intro r hr
+    have hr0 : 0 < r := lt_of_lt_of_le (by positivity) hr
+    set n : ℕ := ⌊r⌋₊ with hn
+    have h3n : 3 ^ (m₀ + 1) ≤ n := by
+      rw [hn]; apply Nat.le_floor; push_cast; exact hr
+    set j : ℕ := Nat.log 3 n + 1 with hj
+    have hlow : 3 ^ (j - 1) ≤ n := by
+      have h1 : 1 ≤ 3 ^ (m₀ + 1) := Nat.one_le_pow _ _ (by norm_num)
+      rw [hj, Nat.add_sub_cancel]; exact Nat.pow_log_le_self 3 (by omega)
+    have hhigh : n < 3 ^ j := by rw [hj]; exact Nat.lt_pow_succ_log_self (by norm_num) n
+    have hjm : m₀ + 2 ≤ j := by
+      have := Nat.le_log_of_pow_le (by norm_num) h3n
+      omega
+    have hrj : r ≤ 3 ^ j := by
+      have h1 : r < n + 1 := Nat.lt_floor_add_one r
+      have h2 : ((n + 1 : ℕ) : ℝ) ≤ 3 ^ j := by exact_mod_cast hhigh
+      push_cast at h2; linarith
+    have hjr : (3 : ℝ) ^ (j - 1) ≤ r := by
+      have h1 : ((3 ^ (j - 1) : ℕ) : ℝ) ≤ n := by exact_mod_cast hlow
+      have h2 : (n : ℝ) ≤ r := Nat.floor_le hr0.le
+      push_cast at h1; linarith
+    have hsub : componentEuclideanBall C 0 ((3 : ℝ) ^ (j - 1)) ⊆ componentEuclideanBall C 0 r := by
+      intro x hx; rw [mem_componentEuclideanBall] at hx ⊢; linarith
+    have hposr : 0 < (componentEuclideanBall C 0 r).card :=
+      lt_of_lt_of_le (hpos (j - 1) (by omega)) (Finset.card_le_card hsub)
+    have h1 := componentBallL2_le_sqrt_card_div_mul C 0 hrj hposr
+      (fun x => u x - componentSlope C q x)
+    have hratio' : ((componentEuclideanBall C 0 ((3 : ℝ) ^ j)).card : ℝ) /
+        (componentEuclideanBall C 0 r).card ≤ ρ ^ 2 := by
+      have hn : (0 : ℝ) < (componentEuclideanBall C 0 r).card := by exact_mod_cast hposr
+      rw [div_le_iff₀ hn]
+      have hr1 := hratio (j - 1) (by omega)
+      rw [show j - 1 + 1 = j by omega] at hr1
+      have hc : ((componentEuclideanBall C 0 ((3 : ℝ) ^ (j - 1))).card : ℝ) ≤
+          (componentEuclideanBall C 0 r).card := by exact_mod_cast Finset.card_le_card hsub
+      nlinarith
+    have h2 := hb j (by omega)
+    rw [hA'] at h2
+    have h3 : (3 : ℝ) ^ j * ε ^ j ≤ 3 * r ^ (1 - δ) := by
+      have e : (3 : ℝ) ^ j * ε ^ j = ((3 : ℝ) ^ j) ^ (1 - δ) := by rw [three_pow_rpow_eq, hεdef]
+      rw [e]
+      have h3j : (3 : ℝ) ^ j ≤ 3 * r := by
+        have : (3 : ℝ) ^ j = 3 * 3 ^ (j - 1) := by
+          rw [← pow_succ', Nat.sub_add_cancel (by omega : 1 ≤ j)]
+        rw [this]; linarith
+      calc ((3 : ℝ) ^ j) ^ (1 - δ) ≤ (3 * r) ^ (1 - δ) :=
+            Real.rpow_le_rpow (by positivity) h3j (by linarith)
+        _ = (3 : ℝ) ^ (1 - δ) * r ^ (1 - δ) := Real.mul_rpow (by norm_num) hr0.le
+        _ ≤ 3 * r ^ (1 - δ) := by
+            have : (3 : ℝ) ^ (1 - δ) ≤ 3 := by
+              calc (3 : ℝ) ^ (1 - δ) ≤ (3 : ℝ) ^ (1 : ℝ) :=
+                    Real.rpow_le_rpow_of_exponent_le (by norm_num) (by linarith)
+                _ = 3 := Real.rpow_one 3
+            exact mul_le_mul_of_nonneg_right this (by positivity)
+    calc componentBallL2 C 0 r (fun x => u x - componentSlope C q x)
+        ≤ Real.sqrt (((componentEuclideanBall C 0 ((3 : ℝ) ^ j)).card : ℝ) /
+            (componentEuclideanBall C 0 r).card) *
+            componentBallL2 C 0 ((3 : ℝ) ^ j) (fun x => u x - componentSlope C q x) := h1
+      _ ≤ ρ * (K * Γ * Q * 3 ^ j * ε ^ j) := by
+          apply mul_le_mul _ h2 (componentBallL2_nonneg _ _ _ _) (by linarith)
+          rw [Real.sqrt_le_left (by linarith)]; exact hratio'
+      _ = ρ * (K * Γ) * Q * (3 ^ j * ε ^ j) := by ring
+      _ ≤ ρ * (K * Γ) * Q * (3 * r ^ (1 - δ)) :=
+          mul_le_mul_of_nonneg_left h3 (by positivity)
+      _ = 3 * ρ * (K * Γ) * Q * r ^ (1 - δ) := by ring
+  refine ⟨u, ⟨hharm, ?_⟩, fun r hr => (hbound r hr).trans (le_of_eq (by rw [hΓ, hεdef]))⟩
+  -- the linear growth
+  set B : ℝ := 3 * ρ * (K * Γ) * Q + Q with hBdef
+  have hev : ∀ᶠ R : ℝ in atTop, (R ^ (1 + 1))⁻¹ * componentBallL2 C 0 R u ≤ B / R := by
+    refine Filter.eventually_atTop.2 ⟨max (3 ^ (m₀ + 1)) 1, fun R hR => ?_⟩
+    have hR1 : 1 ≤ R := (le_max_right _ _).trans hR
+    have hR3 : 3 ^ (m₀ + 1) ≤ R := (le_max_left _ _).trans hR
+    have hR0 : 0 < R := by linarith
+    have hu : componentBallL2 C 0 R u ≤ B * R := by
+      have e : u = fun x => (u x - componentSlope C q x) + componentSlope C q x := by
+        funext x; ring
+      rw [e]
+      refine (Rigidity.Proofs.S2.componentBallL2_add_le C 0 R _ _).trans ?_
+      have h1 := hbound R hR3
+      have h2 : componentBallL2 C 0 R (componentSlope C q) ≤ Q * R :=
+        componentBallL2_le_of_abs_le C 0 R (by positivity) fun x hx => abs_componentSlope_le C q hx
+      have h3 : R ^ (1 - δ) ≤ R := by
+        calc R ^ (1 - δ) ≤ R ^ (1 : ℝ) := Real.rpow_le_rpow_of_exponent_le hR1 (by linarith)
+          _ = R := Real.rpow_one R
+      have h4 : 3 * ρ * (K * Γ) * Q * R ^ (1 - δ) ≤ 3 * ρ * (K * Γ) * Q * R :=
+        mul_le_mul_of_nonneg_left h3 (by positivity)
+      calc _ ≤ 3 * ρ * (K * Γ) * Q * R ^ (1 - δ) + Q * R := add_le_add h1 h2
+        _ ≤ 3 * ρ * (K * Γ) * Q * R + Q * R := by linarith
+        _ = B * R := by rw [hBdef]; ring
+    rw [show (R ^ (1 + 1))⁻¹ * componentBallL2 C 0 R u = componentBallL2 C 0 R u / R ^ 2 by
+      rw [div_eq_inv_mul]]
+    rw [div_le_div_iff₀ (by positivity) hR0]
+    nlinarith [componentBallL2_nonneg C 0 R u]
+  have hev0 : ∀ᶠ R : ℝ in atTop, 0 ≤ (R ^ (1 + 1))⁻¹ * componentBallL2 C 0 R u := by
+    refine Filter.eventually_atTop.2 ⟨0, fun R hR => ?_⟩
+    exact mul_nonneg (inv_nonneg.2 (by positivity)) (componentBallL2_nonneg _ _ _ _)
+  have hlim : Tendsto (fun R : ℝ => B / R) atTop (𝓝 0) :=
+    tendsto_const_nhds.div_atTop tendsto_id
+  exact tendsto_of_tendsto_of_tendsto_of_le_of_le' tendsto_const_nhds hlim hev0 hev
+
 end Rigidity.Proofs.Regularity
