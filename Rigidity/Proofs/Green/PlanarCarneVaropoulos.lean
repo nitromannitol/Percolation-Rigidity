@@ -27,7 +27,7 @@ open Finset LatticeProb.Percolation
 namespace Rigidity.Green
 
 /-- The Poisson weights against `θ^n` sum to `e^{Dt(θ - 1)}`. -/
-theorem hasSum_poissonWeight_mul_pow (D : ℕ) (t θ : ℝ) :
+theorem hasSum_poissonWeight_mul_real_pow (D : ℕ) (t θ : ℝ) :
     HasSum (fun n => poissonWeight D t n * θ ^ n) (Real.exp (D * t * (θ - 1))) := by
   have h := NormedSpace.expSeries_div_hasSum_exp (θ * ((D : ℝ) * t))
   rw [← Real.exp_eq_exp_ℝ] at h
@@ -53,7 +53,7 @@ theorem openHeat_le_of_lazyPow_le (ω : Configuration 2) {x y : Vertex 2} {t A B
   have hsum : HasSum (fun n => poissonWeight 4 t n * (A + B * θ ^ n))
       (A + B * Real.exp (4 * t * (θ - 1))) := by
     have := ((hasSum_poissonWeight (D := 4) t).mul_left A).add
-      ((hasSum_poissonWeight_mul_pow 4 t θ).mul_left B)
+      ((hasSum_poissonWeight_mul_real_pow 4 t θ).mul_left B)
     have hf : (fun n => poissonWeight 4 t n * (A + B * θ ^ n)) =
         fun n => A * poissonWeight 4 t n + B * (poissonWeight 4 t n * θ ^ n) := by
       funext n
