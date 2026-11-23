@@ -76,4 +76,38 @@ theorem planar_SIupgrade_os {p : unitInterval} (hpc : criticalProbability 2 < (p
           gcongr
       _ = (1 + 2 * S ^ 2) * planarSubaddErr p V ω * (q 0 ^ 2 + q 1 ^ 2) := by ring
 
+/-- **The upper bound (4.13) of `-μ`, in the form `O_s`** (Armstrong and Dario, `e.muupboundwhip`,
+dimension two, with the rate `size^{-α}` of Proposition 5.2 in place of `size^{-1}`):
+`-μ(V, q) ≤ (K + Z(V)) |q|²` with `Z(V) ≤ O_r(C 3^{-α scale V})`, `μ` set to `0` off the event. -/
+theorem planar_muupbound_os {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) :
+    ∃ r α C K : ℝ, 0 < r ∧ 0 < α ∧ 0 < C ∧ 0 ≤ K ∧ ∀ V : TriadicCube 2,
+      ∃ Z : Configuration 2 → ℝ, Measurable Z ∧ (∀ ω, 0 ≤ Z ω) ∧
+        IsOsBond 2 p Z r (C * (3 : ℝ) ^ (-(V.scale : ℝ) * α)) ∧
+        ∀ (ω : Configuration 2) (q : Fin 2 → ℝ),
+          (if PlanarPartitionEvent ω ∧ PlanarResolved ω V then -planarMu ω V q else 0) ≤
+            (K + Z ω) * (q 0 ^ 2 + q 1 ^ 2) := by
+  obtain ⟨r, α, C, hr, hα, hC, hV⟩ := planar_subadd_os hpc
+  obtain ⟨S, hS0, hS⟩ := exists_abs_mulVec_le (planarAhom p)⁻¹
+  refine ⟨r, α, C, S, hr, hα, hC, hS0, fun V => ?_⟩
+  obtain ⟨hm, h0, hos, hb⟩ := hV V
+  refine ⟨planarSubaddErr p V, hm, h0, hos, fun ω q => ?_⟩
+  have hμ := (hb ω q q).1
+  have hdot : 1 / 2 * ∑ i, q i * ((planarAhom p)⁻¹ *ᵥ q) i ≤ S * (q 0 ^ 2 + q 1 ^ 2) := by
+    have h1 := abs_dotProduct_le q ((planarAhom p)⁻¹ *ᵥ q)
+    have h2 := mul_le_mul_of_nonneg_left (hS q) (show 0 ≤ |q 0| + |q 1| by positivity)
+    have h3 := mul_le_mul_of_nonneg_left (l1_sq_le_two_mul q) hS0
+    have h4 := le_abs_self (∑ i, q i * ((planarAhom p)⁻¹ *ᵥ q) i)
+    nlinarith only [h1, h2, h3, h4]
+  have e : (if PlanarPartitionEvent ω ∧ PlanarResolved ω V then -planarMu ω V q else 0) =
+      -(if PlanarPartitionEvent ω ∧ PlanarResolved ω V then planarMu ω V q else 0) := by
+    split_ifs <;> simp
+  rw [e]
+  unfold planarMuErr at hμ
+  set I := if PlanarPartitionEvent ω ∧ PlanarResolved ω V then planarMu ω V q else 0 with hI
+  set d := 1 / 2 * ∑ i, q i * ((planarAhom p)⁻¹ *ᵥ q) i with hd
+  have h6 : -(I + d) ≤ planarSubaddErr p V ω * (q 0 ^ 2 + q 1 ^ 2) := (neg_le_abs _).trans hμ
+  calc -I ≤ planarSubaddErr p V ω * (q 0 ^ 2 + q 1 ^ 2) + d := by linarith
+    _ ≤ planarSubaddErr p V ω * (q 0 ^ 2 + q 1 ^ 2) + S * (q 0 ^ 2 + q 1 ^ 2) := by linarith
+    _ = (S + planarSubaddErr p V ω) * (q 0 ^ 2 + q 1 ^ 2) := by ring
+
 end Rigidity.Proofs.Cluster
