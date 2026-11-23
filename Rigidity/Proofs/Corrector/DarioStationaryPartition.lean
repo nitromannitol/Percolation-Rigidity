@@ -10,7 +10,7 @@ least `k`. For the planar good cubes this is the partition capped at scale `k`,
 `TriadicCube.cappedCube (planarGoodCubes ω) k`: every vertex lies in a unique maximal stopping
 cube of `TriadicCube.capped (planarGoodCubes ω) k = 𝒢_stat^k`
 (`TriadicCube.existsUnique_isMaximalStopping_capped`), of scale at most `k`, and the partition is
-`3^k ℤ²`-stationary, Dario's (3kstationarypartition)
+`3^k ℤ²`-stationary, Dario's (3.2)
 (`cappedCube_planarGoodCubes_translation`).
 
 * `dario_errorstatpart`: **(3.3)**, `P[∃ x ∈ □, □_𝒫(x) ≠ □_{𝒫_stat^k}(x)] ≤ C exp(-c 3^k)` for

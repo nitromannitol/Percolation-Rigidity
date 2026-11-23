@@ -879,7 +879,8 @@ Departures from Armstrong and Dario:
 - **Deterministic parts.** Lemma 3.6 and Proposition 3.8 are proved for every configuration, with
   the Sobolev inequality, the moment bounds and, for the Meyers estimate, the clusters of the
   triadic cubes as hypotheses; the probability bounds of Lemma 3.6 and Proposition 3.8 and the
-  partition `ℛ` of AD, Definition 3.7, are not proved here.
+  partition `ℛ` of AD, Definition 3.7, are not proved in this section; they are proved in
+  [Section 3 and the isotropy of the homogenized matrix in every dimension](#section-3-and-the-isotropy-of-the-homogenized-matrix-in-every-dimension).
 
 ## Localization of the subadditive quantities and the homogenized matrix for d = 2
 
@@ -1888,7 +1889,7 @@ The proof is that of Sections 4 and 5 of Dario with the following steps proved:
 | [`lintegral_boxOsc_le_of_poincare`](Rigidity/Proofs/Corrector/DarioPoincareMoments.lean), [`lintegral_rpow_heatSquare_le`](Rigidity/Proofs/Corrector/DarioPoincareMoments.lean), [`tsum_poincareWeight_le`](Rigidity/Proofs/Corrector/DarioPoincareMoments.lean), [`heatGradient_coarseField_isOsBond`](Rigidity/Proofs/Corrector/PlanarHeatSmoothing.lean), [`tsum_ofReal_vsrwHeat`](Rigidity/Proofs/Green/LazyHeatMass.lean) | Step 1 of Theorem 2 in moment form from (2.26), Proposition 3.1 and (2.22), the moment of the heat-kernel square function at a point, the lattice sum of the weights, the bound of the heat-kernel averages uniform in the radius, and the mass one of the heat kernel of the lazy walk. |
 | [`IsOsBond.integral_rpow_le`](Rigidity/Proofs/Corrector/DarioMoments.lean), [`isOsBond_of_moment_le`](Rigidity/Proofs/Corrector/DarioMoments.lean), [`isOsBond_sub_of_linftyIterationData`](Rigidity/Proofs/Corrector/DarioOptimalCorrector.lean), [`LinftyIterationData.mom_sub_le`](Rigidity/Proofs/Corrector/DarioLinftyIteration.lean) | the moments of an `O_s` variable (5.1), the converse of Step 5, Step 5 for the increments of the coarsened corrector, and the moment bound of Steps 1 to 4. |
 
-The thirty-two reports for the declarations of this section are in
+The thirty-five reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Lemmas 3.2 and 3.3 of Dario rest on steps that Dario only sketches, which are not formalized and are part of the
@@ -1984,8 +1985,9 @@ Points in the source that are not detailed, and an issue of normalization, with 
 
 For every `d ≥ 2` and `𝔭_c(d) < p < 1`, with no further hypothesis, the partition `𝓡` of Definition 3.7 of Armstrong and
 Dario, the Meyers estimate of Proposition 3.8 above it, and the isotropy of the homogenized matrix are proved, in
-[`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/) (namespace `Rigidity.Proofs.Cluster.GeneralDim` for the first
-five modules). The construction is that of the planar section
+[`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/) (namespace `Rigidity.Proofs.Cluster.GeneralDim` for
+`GeneralRHLocal`, `GeneralRHEvent`, `GeneralRHProb`, `GeneralRHPartition` and `GeneralRHMeyers`, and
+`Rigidity.Percolation` for `GeneralRHExit`, `GeneralReachDomination` and `GeneralAhomIsotropic`). The construction is that of the planar section
 [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two) in every dimension: Propositions 2.1 and 2.4 are
 applied to a local family of cubes, the cubes on whose children the reverse Hölder inequality holds, whose failure is
 bounded through the partition into good cubes.
@@ -2084,7 +2086,7 @@ place of the stretched exponentials of the tails of `𝓡`, as in the planar sec
   [Theorem 1 of Armstrong and Dario in dimension two](#theorem-1-of-armstrong-and-dario-in-dimension-two),
   the sixteen theorems of
   [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1),
-  the thirty-two theorems of
+  the thirty-five theorems of
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
   the ten theorems of
   [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two),
