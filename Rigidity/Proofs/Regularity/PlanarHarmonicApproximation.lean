@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Regularity.LatticeHarmonicExcess
+import Rigidity.Proofs.Regularity.LatticeHarmonicExcessTwo
 import Rigidity.Proofs.Regularity.OrderOneOrigin
 import Rigidity.Proofs.Regularity.OrderZeroLiouville
 import Rigidity.Proofs.Percolation.PlanarPartition
@@ -148,9 +148,6 @@ theorem dist_lt_of_mem_square {m : ℕ} {y : Vertex 2} (hy : y ∈ triadicCubeFi
   calc _ ≤ Real.sqrt 2 * (3 ^ m / 2) := hle
     _ < 2 * (3 ^ m / 2) := by gcongr
     _ = 3 ^ m := by ring
-
-theorem mem_latticeComponent_supp (y : Vertex 2) : y ∈ (latticeComponent 2).supp := by
-  rw [latticeComponent_supp]; trivial
 
 /-- Square sums over a lattice ball are sums over its points in `ℤ²`. -/
 theorem sum_latticeBall_eq (r : ℝ) (g : Vertex 2 → ℝ) :
