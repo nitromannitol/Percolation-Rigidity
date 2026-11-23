@@ -82,19 +82,20 @@ theorem coarseHeatField_apply_ne_zero {ω : Configuration 2} (hP : PlanarPartiti
   change ((openGraph ω).connectedComponentMk (planarCoarseAnchor ω z)).supp.Infinite at hinf
   rwa [SimpleGraph.ConnectedComponent.sound hreach] at hinf
 
-/-- **The pairing of (3.26) with (3.22)**: if `∇v = c P1_a` on the open edges of the infinite
-cluster and `∇v = 0` on the other open edges, then `Φ_{r²} * ∇_j[v]_𝒫(x) = c (Pγ)(a)`. -/
-theorem heatComp_coarse_eq_smul_greenProj {ω : Configuration 2} (hP : PlanarPartitionEvent ω)
-    {r : ℝ} {x : Vertex 2} {j : Fin 2}
+/-- **The pairing of (3.26) with (3.22)**, for a source `ξ`: if `∇v = c Pξ` on the open edges of
+the infinite cluster and `∇v = 0` on the other open edges, then
+`Φ_{r²} * ∇_j[v]_𝒫(x) = c ⟨ξ, Pγ⟩`. -/
+theorem heatComp_coarse_eq_smul_inner_greenProj {ω : Configuration 2}
+    (hP : PlanarPartitionEvent ω) {r : ℝ} {x : Vertex 2} {j : Fin 2}
     (hS : Summable fun z => latticeHeat (r ^ 2) x z * (stepRegion ω z j).card)
-    {v : Vertex 2 → ℝ} {c : ℝ} {a : LatticeEdge}
+    {v : Vertex 2 → ℝ} {c : ℝ} {ξ : EdgeField}
     (hv : ∀ b, EdgeOpen ω b → ((openGraph ω).connectedComponentMk b.1).supp.Infinite →
-      edgeGrad ω v b = c * greenProj ω (lp.single 2 a 1) b)
+      edgeGrad ω v b = c * greenProj ω ξ b)
     (hv0 : ∀ b, EdgeOpen ω b → ¬ ((openGraph ω).connectedComponentMk b.1).supp.Infinite →
       edgeGrad ω v b = 0) :
     heatComp (fun z => v (planarCoarseAnchor ω z)) r x j =
-      c * greenProj ω (coarseHeatField hP r x j) a := by
-  set g : EdgeField := greenProj ω (lp.single 2 a 1) with hg
+      c * ⟪ξ, greenProj ω (coarseHeatField hP r x j)⟫_ℝ := by
+  set g : EdgeField := greenProj ω ξ with hg
   have hle : ∀ b, |edgeGrad ω v b| ≤ |c| * |g b| := by
     intro b
     by_cases ho : EdgeOpen ω b
@@ -125,7 +126,21 @@ theorem heatComp_coarse_eq_smul_greenProj {ω : Configuration 2} (hP : PlanarPar
       congr 1
       change edgeGrad ω v b = (c • g) b
       rw [lp.coeFn_smul, Pi.smul_apply, smul_eq_mul, hv b ho hinf]
-  rw [heq, real_inner_smul_left, hg, inner_greenProj_comm, lp.inner_single_left,
+  rw [heq, real_inner_smul_left, hg, inner_greenProj_comm]
+
+/-- **The pairing of (3.26) with (3.22)**, for an open edge `a`:
+`Φ_{r²} * ∇_j[v]_𝒫(x) = c (Pγ)(a)`. -/
+theorem heatComp_coarse_eq_smul_greenProj {ω : Configuration 2} (hP : PlanarPartitionEvent ω)
+    {r : ℝ} {x : Vertex 2} {j : Fin 2}
+    (hS : Summable fun z => latticeHeat (r ^ 2) x z * (stepRegion ω z j).card)
+    {v : Vertex 2 → ℝ} {c : ℝ} {a : LatticeEdge}
+    (hv : ∀ b, EdgeOpen ω b → ((openGraph ω).connectedComponentMk b.1).supp.Infinite →
+      edgeGrad ω v b = c * greenProj ω (lp.single 2 a 1) b)
+    (hv0 : ∀ b, EdgeOpen ω b → ¬ ((openGraph ω).connectedComponentMk b.1).supp.Infinite →
+      edgeGrad ω v b = 0) :
+    heatComp (fun z => v (planarCoarseAnchor ω z)) r x j =
+      c * greenProj ω (coarseHeatField hP r x j) a := by
+  rw [heatComp_coarse_eq_smul_inner_greenProj hP hS hv hv0, lp.inner_single_left,
     Real.inner_apply, one_mul]
 
 theorem extendComp_of_not_mem {ω : Configuration 2} (C : OpenComponent ω) (u : C → ℝ)
