@@ -63,7 +63,8 @@ theorem mem_clusterVertices_inner (hP : PlanarPartitionEvent ω) (C : OpenCompon
   have hxU : x ∈ (⟨j + 3, 0⟩ : TriadicCube 2).vertices :=
     mem_triadicCube_zero_iff.2 (mem_square_iff_int.1 hxsq)
   have hxQ : x ∈ (planarPartCube ω x).vertices := (planarPartCube_spec hP x).1
-  have hs : (3 : ℤ) ^ (planarPartCube ω x).scale ≤ 3 ^ j := pow_le_pow_right₀ (by norm_num) (hsc x hxsq)
+  have hs : (3 : ℤ) ^ (planarPartCube ω x).scale ≤ 3 ^ j :=
+    pow_le_pow_right₀ (by norm_num) (hsc x hxsq)
   refine mem_clusterVertices_of_ninefold_subset hP C hinf hxU hxC fun y hy => ?_
   rw [TriadicCube.mem_ninefold] at hy
   rw [mem_triadicCube_zero_iff]
