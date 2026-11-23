@@ -8,10 +8,10 @@ import Rigidity.Proofs.Green.DarioGuApproxAnnuli
 
 `a_n O_n (1 + |U_n|/|U_0|) ≤ K 64^n e^{-2^n/(4C₀)} (τ/t)^{1/2} Φ_{C*}(t, x - y)`,
 
-* at the scales `4 (C_P 2^n √τ)² ≤ s` when `|x - y| ≤ s`: by the weak Poincaré inequality on
-  `B_{2^n √τ}(y)` and the gradient bound (Theorem 3, Remark 1.3) on `B_{C_P 2^n √τ}(y)`, as in (4.9),
+* at the scales `4 (L 2^n √τ)² ≤ s` when `|x - y| ≤ s`: by the weak Poincaré inequality on
+  `B_{2^n √τ}(y)` and the gradient bound (Theorem 3, Remark 1.3) on `B_{L 2^n √τ}(y)`, as in (4.9),
   (4.10) and (4.13) of the source;
-* at the scales `4 (C_P 2^n √τ)² > s` when `|x - y| ≤ s`: by (eq:PhiCTrick) and (4.15), as in
+* at the scales `4 (L 2^n √τ)² > s` when `|x - y| ≤ s`: by (eq:PhiCTrick) and (4.15), as in
   (4.14)-(4.16);
 * when `|x - y| > s`: by (eq:PhiCTrick), (4.15) and `Φ_C(t, r) ≤ C t^{-1/2} Φ_{2C}(t, r)` for
   `r ≥ 2t/3` (Remark 1.3 requires `t - τ ≥ |x - y|`; the source applies Theorem 3 at every `x`).
@@ -53,15 +53,16 @@ theorem approx_real_B2 {KB Kc Kv τ t e Φ₈ Φ₂ Φ x C₈ : ℝ} (n : ℕ) (
     _ ≤ _ := by gcongr
 
 /-- **The term of the `n`-th annulus** in the proof of Lemma 4.1. -/
-theorem approx_term_le {C₀ CP CG cd Kc C₈ : ℝ} (hC₀ : 0 < C₀) (hCP : 1 ≤ CP) (hCG : 0 < CG)
+theorem approx_term_le {C₀ CP CL CG cd Kc C₈ : ℝ} (hC₀ : 0 < C₀) (hCP : 0 < CP) (hCL : 1 ≤ CL)
+    (hCG : 0 < CG)
     (hcd : 0 < cd) (hKc : 0 < Kc) (hC₈ : 0 < C₈) :
     ∃ K C : ℝ, 0 < K ∧ 0 < C ∧ ∀ (ω : Configuration 2) (K' : OpenComponent ω) (x y : Vertex 2)
       (s t τ : ℝ), 1 ≤ τ → 2 * τ ≤ s → s ≤ t → 2 * t ≤ 3 * s →
       (∀ R : ℝ, Real.sqrt τ ≤ R → ∀ u : Vertex 2 → ℝ,
         Real.sqrt ((∑ z ∈ clusterBall K' y R, (u z - finAvg (clusterBall K' y R) u) ^ 2) /
             (clusterBall K' y R).card) ≤
-          CP * R * Real.sqrt (gradEnergy ω (clusterBall K' y (CP * R)) u /
-            (clusterBall K' y (CP * R)).card)) →
+          CP * R * Real.sqrt (gradEnergy ω (clusterBall K' y (CL * R)) u /
+            (clusterBall K' y (CL * R)).card)) →
       (∀ R : ℝ, Real.sqrt τ ≤ R → 4 * R ^ 2 ≤ s → latticeDist x y ≤ s →
         Real.sqrt (gradEnergy ω (clusterBall K' y R) (fun z => openHeat ω s x z) /
             (clusterBall K' y R).card) ≤
@@ -81,9 +82,8 @@ theorem approx_term_le {C₀ CP CG cd Kc C₈ : ℝ} (hC₀ : 0 < C₀) (hCP : 1
   set Cs := max CG (2 * C₈) with hCs
   have hCs0 : 0 < Cs := lt_max_of_lt_left hCG
   set KA := 25 * C₀ * Real.exp (1 / C₀) * CP * CG * Kv * 2 * (3 / (2 * Cs)) with hKA
-  have hCP0' : 0 < CP := by linarith
-  set K1 := 8 * CP * KB * Kc * Kv with hK1
-  have hCP0 : 0 < CP := by linarith
+  set K1 := 8 * CL * KB * Kc * Kv with hK1
+  have hCL0 : 0 < CL := by linarith
   set K2 := 2 * KB * Kc * Kv * (9 * C₈ / 4) with hK2
   have hKv0 : 0 < Kv := by positivity
   have hKB0 : 0 < KB := by positivity
@@ -126,14 +126,14 @@ theorem approx_term_le {C₀ CP CG cd Kc C₈ : ℝ} (hC₀ : 0 < C₀) (hCP : 1
     rw [hKv]
     nlinarith
   have hsq := sqrt_div_sqrt_le (τ := τ) hs0 ht0 h23
-  have hR1' : Real.sqrt τ ≤ CP * (2 ^ n * Real.sqrt τ) :=
-    hR1.trans (le_mul_of_one_le_left (by positivity) hCP)
-  by_cases hA : latticeDist x y ≤ s ∧ 4 * (CP * (2 ^ n * Real.sqrt τ)) ^ 2 ≤ s
+  have hR1' : Real.sqrt τ ≤ CL * (2 ^ n * Real.sqrt τ) :=
+    hR1.trans (le_mul_of_one_le_left (by positivity) hCL)
+  by_cases hA : latticeDist x y ≤ s ∧ 4 * (CL * (2 ^ n * Real.sqrt τ)) ^ 2 ≤ s
   · -- Poincaré and Theorem 3
-    have hO := approx_O_le hCP0' hCG hτ1 hs0 n (hP _ hR1 _) (hG _ hR1' hA.2 hA.1)
+    have hO := approx_O_le hCP hCG hτ1 hs0 n (hP _ hR1 _) (hG _ hR1' hA.2 hA.1)
     have hinv := inv_mul_exp_le_dgPhi (C := CG) (C' := Cs) (r := latticeDist x y) hCG
       (le_max_left _ _) hs0 hA.1 hst h23
-    have h := approx_real_A n hC₀ hCP0' hCG hKv0 hCs0 hτ0 hs0 ht0 he0.le (Real.exp_pos _).le hO0
+    have h := approx_real_A n hC₀ hCP hCG hKv0 hCs0 hτ0 hs0 ht0 he0.le (Real.exp_pos _).le hO0
       hV0 (dgPhi_annulusInner_le hC₀ hτ1 n) hO hratio hinv hsq
     refine h.trans ?_
     have : 0 ≤ (64 : ℝ) ^ n * Real.exp (-((2 : ℝ) ^ n / (4 * C₀))) *
@@ -171,26 +171,26 @@ theorem approx_term_le {C₀ CP CG cd Kc C₈ : ℝ} (hC₀ : 0 < C₀) (hCP : 1
     have hΦ₈ := dgPhi_nonneg hC₈.le ht0.le (latticeDist x y)
     by_cases hnear : latticeDist x y ≤ s
     · -- the scales `4R² > s`
-      have hRs : s < 4 * (CP * (2 ^ n * Real.sqrt τ)) ^ 2 := by
+      have hRs : s < 4 * (CL * (2 ^ n * Real.sqrt τ)) ^ 2 := by
         by_contra h
         exact hA ⟨hnear, not_lt.1 h⟩
-      have hone : 1 ≤ CP * (2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s)) := by
+      have hone : 1 ≤ CL * (2 ^ (n + 1) * (Real.sqrt τ / Real.sqrt s)) := by
         have hss0 : 0 < Real.sqrt s := Real.sqrt_pos.2 hs0
-        have h1 : Real.sqrt s < 2 * (CP * (2 ^ n * Real.sqrt τ)) := by
+        have h1 : Real.sqrt s < 2 * (CL * (2 ^ n * Real.sqrt τ)) := by
           have := Real.sqrt_lt_sqrt hs0.le hRs
-          rwa [show (4 : ℝ) * (CP * (2 ^ n * Real.sqrt τ)) ^ 2 =
-            (2 * (CP * (2 ^ n * Real.sqrt τ))) ^ 2 by ring, Real.sqrt_sq (by positivity)] at this
+          rwa [show (4 : ℝ) * (CL * (2 ^ n * Real.sqrt τ)) ^ 2 =
+            (2 * (CL * (2 ^ n * Real.sqrt τ))) ^ 2 by ring, Real.sqrt_sq (by positivity)] at this
         rw [mul_div_assoc', mul_div_assoc', le_div_iff₀ hss0, one_mul, pow_succ]
         linarith
       have hΦC : dgPhi C₈ t (latticeDist x y) ≤ dgPhi Cs t (latticeDist x y) :=
         dgPhi_mono hC₈ ((by linarith : C₈ ≤ 2 * C₈).trans (le_max_right _ _)) ht0 hd0
-      have h := approx_real_B1 n hCP0'.le hKB0.le hKc.le hKv0.le he0.le hΦ₈ hbase hone hsq hΦC
+      have h := approx_real_B1 n hCL0.le hKB0.le hKc.le hKv0.le he0.le hΦ₈ hbase hone hsq hΦC
       refine h.trans ?_
       have : 0 ≤ (64 : ℝ) ^ n * Real.exp (-((2 : ℝ) ^ n / (4 * C₀))) *
           (Real.sqrt τ / Real.sqrt t) * dgPhi Cs t (latticeDist x y) := by
         have := dgPhi_nonneg hCs0.le ht0.le (latticeDist x y)
         positivity
-      calc 8 * CP * KB * Kc * Kv * (64 ^ n * Real.exp (-((2 : ℝ) ^ n / (4 * C₀)))) *
+      calc 8 * CL * KB * Kc * Kv * (64 ^ n * Real.exp (-((2 : ℝ) ^ n / (4 * C₀)))) *
             (Real.sqrt τ / Real.sqrt t) * dgPhi Cs t (latticeDist x y)
           = K1 * ((64 : ℝ) ^ n * Real.exp (-((2 : ℝ) ^ n / (4 * C₀))) *
             (Real.sqrt τ / Real.sqrt t) * dgPhi Cs t (latticeDist x y)) := by rw [hK1]; ring

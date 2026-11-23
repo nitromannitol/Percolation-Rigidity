@@ -107,18 +107,18 @@ the printed inequality fails whenever `𝒞_∞ ∩ B_R(y)` is not connected by 
 `B_R(y)` (a function equal to `1` on one piece and `0` elsewhere), which happens for every large
 `R` with probability tending to one (a vertex of `𝒞_∞` near the boundary whose only open edge leaves
 the ball). The statement here is the weak Poincaré inequality, with the gradient on the larger set
-`𝒞_∞ ∩ B_{CR}(y)`, `C ≥ 1`; it is the form used in the proof of Lemma 4.1. -/
+`𝒞_∞ ∩ B_{LR}(y)`, `L ≥ 1`; it is the form used in the proof of Lemma 4.1. -/
 def ClusterPoincareTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
-    ∃ s C : ℝ, 0 < s ∧ 1 ≤ C ∧ ∀ y : Vertex 2,
+    ∃ s C L : ℝ, 0 < s ∧ 0 < C ∧ 1 ≤ L ∧ ∀ y : Vertex 2,
       ∃ M : Configuration 2 → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond 2 p M s C ∧
         ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ R : ℝ, M ω ≤ R →
           ∀ u : Vertex 2 → ℝ,
             Real.sqrt ((∑ x ∈ clusterBall (uniqueInfiniteComponent h) y R,
                 (u x - finAvg (clusterBall (uniqueInfiniteComponent h) y R) u) ^ 2) /
                 (clusterBall (uniqueInfiniteComponent h) y R).card) ≤
-              C * R * Real.sqrt (gradEnergy ω (clusterBall (uniqueInfiniteComponent h) y (C * R)) u /
-                (clusterBall (uniqueInfiniteComponent h) y (C * R)).card)
+              C * R * Real.sqrt (gradEnergy ω (clusterBall (uniqueInfiniteComponent h) y (L * R)) u /
+                (clusterBall (uniqueInfiniteComponent h) y (L * R)).card)
 
 /-- **Dario–Gu, Theorem 3, Remark 1.3** (gradient bound on the heat kernel in the second
 variable), in dimension two. Printed statement (lines 516-521 of the source, with (1.20)):

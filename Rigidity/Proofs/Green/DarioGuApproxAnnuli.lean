@@ -305,17 +305,18 @@ theorem approx_real_B1 {A KB Kc Kv τ s t e Φ₈ Φ x : ℝ} (n : ℕ) (hA : 0 
         nlinarith [mul_le_mul_of_nonneg_left h8e (by positivity : (0 : ℝ) ≤ 8 * A * KB * Kc * Kv)]
 
 /-- `O ≤ 25 C_P C_G 8^n τ^{3/2} s^{-3/2} e^{-|x - y|²/(C_G s)}` at the scales of Theorem 3, from
-the weak Poincaré inequality on `B_R(y)`, `R = 2^n √τ`, and the gradient bound on `B_{C_P R}(y)`. -/
-theorem approx_O_le {ω : Configuration 2} {K' : OpenComponent ω} {x y : Vertex 2} {s τ CP CG : ℝ}
+the weak Poincaré inequality on `B_R(y)`, `R = 2^n √τ`, and the gradient bound on `B_{L R}(y)`. -/
+theorem approx_O_le {ω : Configuration 2} {K' : OpenComponent ω} {x y : Vertex 2}
+    {s τ CP CL CG : ℝ}
     (hCP : 0 < CP) (hCG : 0 < CG) (hτ1 : 1 ≤ τ) (hs : 0 < s) (n : ℕ)
     (hP : Real.sqrt ((∑ z ∈ clusterBall K' y (2 ^ n * Real.sqrt τ),
         (openHeat ω s x z - finAvg (clusterBall K' y (2 ^ n * Real.sqrt τ))
           (fun z => openHeat ω s x z)) ^ 2) / (clusterBall K' y (2 ^ n * Real.sqrt τ)).card) ≤
       CP * (2 ^ n * Real.sqrt τ) * Real.sqrt (gradEnergy ω
-        (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ))) (fun z => openHeat ω s x z) /
-          (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ))).card))
-    (hG : Real.sqrt (gradEnergy ω (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ)))
-        (fun z => openHeat ω s x z) / (clusterBall K' y (CP * (2 ^ n * Real.sqrt τ))).card) ≤
+        (clusterBall K' y (CL * (2 ^ n * Real.sqrt τ))) (fun z => openHeat ω s x z) /
+          (clusterBall K' y (CL * (2 ^ n * Real.sqrt τ))).card))
+    (hG : Real.sqrt (gradEnergy ω (clusterBall K' y (CL * (2 ^ n * Real.sqrt τ)))
+        (fun z => openHeat ω s x z) / (clusterBall K' y (CL * (2 ^ n * Real.sqrt τ))).card) ≤
       CG * s ^ (-(3 / 2 : ℝ)) * Real.exp (-(latticeDist x y ^ 2 / (CG * s)))) :
     ∑ z ∈ clusterBall K' y (2 ^ n * Real.sqrt τ), |openHeat ω s x z -
         finAvg (clusterBall K' y (2 ^ n * Real.sqrt τ)) (fun z => openHeat ω s x z)| ≤
