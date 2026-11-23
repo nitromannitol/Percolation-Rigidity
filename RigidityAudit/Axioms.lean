@@ -329,6 +329,18 @@ import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoMoments
 import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoStepTwo
 import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoMean
 import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoProof
+import Rigidity.Proofs.Regularity.PlanarStretchedScales
+import Rigidity.Proofs.Regularity.PlanarRestrictBadOs
+import Rigidity.Proofs.Regularity.PlanarRestrictErrorOs
+import Rigidity.Proofs.Regularity.PlanarFlatnessPathwise
+import Rigidity.Proofs.Regularity.PlanarFlatnessDecay
+import Rigidity.Proofs.Regularity.PlanarFlatnessOs
+import Rigidity.Proofs.Regularity.PlanarAffineApproximationOs
+import Rigidity.Proofs.Regularity.PlanarLocalScalesOs
+import Rigidity.Proofs.Regularity.PlanarCorrectorSupOs
+import Rigidity.Proofs.Regularity.PlanarCorrectorOsc
+import Rigidity.Proofs.Regularity.PlanarCorrectorOscHolds
+import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoHolds
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1041,3 +1053,28 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.sum_statMean_period_eq_zero
 #print axioms Rigidity.Corrector.darioLemmaThreeTwo_of_osc
 #print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_osc
+
+-- (1.18) and (1.22) in dimension two with minimal scales of class O_s (Armstrong and Dario, Lemma 5.8, (5.33)), and Lemma 3.2 of Dario with no hypothesis
+#print axioms Rigidity.Proofs.Regularity.exists_isOsBond_of_events
+#print axioms Rigidity.Proofs.Regularity.exists_restrictBad_os
+#print axioms Rigidity.Proofs.Regularity.planarNuDefect_le_of_errors
+#print axioms Rigidity.Proofs.Regularity.exists_planarFlatness_le_of_reach
+#print axioms Rigidity.Proofs.Regularity.exists_flatnessBound_le
+#print axioms Rigidity.Proofs.Regularity.exists_measure_flatnessBad_le
+#print axioms Rigidity.Proofs.Regularity.exists_planarNuFlatness_os
+#print axioms Rigidity.Proofs.Regularity.planarAffineApproximationTwo_of_subaddOs
+#print axioms Rigidity.Proofs.Regularity.planarCorrectorSublinearL2Two_of_subaddOs
+#print axioms Rigidity.Proofs.Regularity.exists_isOsBond_scale_le_three
+#print axioms Rigidity.Proofs.Regularity.exists_corrector_sup_os
+#print axioms Rigidity.Proofs.Regularity.eq_add_of_isCorrectedPlane
+#print axioms Rigidity.Proofs.Regularity.planarCorrectorOscSublinearTwo_of_sublinearL2
+#print axioms Rigidity.Proofs.Regularity.planarCorrectorOscSublinearTwo_of_subaddOs
+#print axioms Rigidity.Proofs.Regularity.planarNuSubaddOsTwo_holds
+#print axioms Rigidity.Proofs.Regularity.planarCorrectorOscSublinearTwo_iff
+#print axioms Rigidity.Proofs.Regularity.planarAffineApproximationTwo_holds
+#print axioms Rigidity.Proofs.Regularity.planarCorrectorSublinearL2Two_holds
+#print axioms Rigidity.Proofs.Regularity.planarCorrectorOscSublinearTwo_holds
+#print axioms Rigidity.Corrector.correctorOscSublinearTwo_holds
+#print axioms Rigidity.Corrector.darioLemmaThreeTwo_holds
+#print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_lemmaThreeThree
+#print axioms Rigidity.Corrector.correctorQuantitativeInputTwo_of_lemmaThreeThree
