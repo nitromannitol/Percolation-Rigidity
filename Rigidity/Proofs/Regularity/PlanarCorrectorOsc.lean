@@ -81,4 +81,91 @@ theorem abs_le_on_ball {ω : Configuration 2} {C : OpenComponent ω} {f : C → 
   refine (hsup m hXm x hbox).trans (mul_le_mul_of_nonneg_left ?_ hB)
   exact Real.rpow_le_rpow (by positivity) hm1 (by linarith)
 
+theorem componentSlope_single {ω : Configuration 2} (C : OpenComponent ω) (i : Fin 2) (x : C) :
+    componentSlope C (Pi.single i 1) x = (x.val i : ℝ) := by
+  unfold componentSlope
+  exact sum_single_mul i _
+
+/-- **Uniqueness of the corrected planes up to constants**: a corrected plane of slope `q` is
+`c + q₀ u₀ + q₁ u₁` when the correctors of `u₀, u₁` are sublinear on the balls and the sublinear
+harmonic functions are constant. -/
+theorem eq_add_of_isCorrectedPlane {ω : Configuration 2} {C : OpenComponent ω} {u₀ u₁ : C → ℝ}
+    (hu₀ : u₀ ∈ harmonicGrowthSpace C 1) (hu₁ : u₁ ∈ harmonicGrowthSpace C 1) {X B η : ℝ}
+    (hB : 0 ≤ B) (hη : 0 < η) (hη1 : 7 * η ≤ 1)
+    (hb : ∀ i : Fin 2, ∀ R : ℝ, 1 ≤ R → ∀ x : C, ‖latticeEuclideanEmbedding x.val‖ < R →
+      |componentCorrector C (Pi.single i 1) (if i = 0 then u₀ else u₁) x| ≤
+        B * (max R (9 * max X 1)) ^ (1 - 7 * η))
+    (hL : ∀ v : C → ℝ, (∀ x, componentLaplacian C v x = 0) →
+      componentSlopeAsymptotics C 0 v → ∃ c : ℝ, ∀ x, v x = c)
+    {q : Fin 2 → ℝ} {ℓ : C → ℝ} (hℓ : IsCorrectedPlane C q ℓ) :
+    ∃ c : ℝ, ∀ x, ℓ x = c + q 0 * u₀ x + q 1 * u₁ x := by
+  set w : C → ℝ := ℓ - (q 0 • u₀ + q 1 • u₁) with hw
+  have hwH : w ∈ harmonicGrowthSpace C 1 :=
+    sub_mem hℓ.1 (add_mem (Submodule.smul_mem _ _ hu₀) (Submodule.smul_mem _ _ hu₁))
+  set qn : ℝ := |q 0| + |q 1| with hqn
+  have hsub : componentSlopeAsymptotics C 0 w := by
+    intro ε hε
+    obtain ⟨R₁, hR₁0, hR₁⟩ := hℓ.2 (ε / 2) (by positivity)
+    set R₂ : ℝ := (2 * B * qn / ε + 1) ^ (1 / (7 * η)) with hR₂
+    refine ⟨max (max R₁ (9 * max X 1)) (max R₂ 1), by positivity, fun R hR x hx => ?_⟩
+    have hR1 : 1 ≤ R := (le_max_right _ _).trans ((le_max_right _ _).trans hR)
+    have hR9 : 9 * max X 1 ≤ R := (le_max_right _ _).trans ((le_max_left _ _).trans hR)
+    have hxR := norm_lt_of_mem_componentEuclideanBall hx
+    have hT : max R (9 * max X 1) = R := max_eq_left hR9
+    have h0 := hb 0 R hR1 x hxR
+    have h1 := hb 1 R hR1 x hxR
+    simp only [if_true, hT, one_ne_zero, if_false] at h0 h1
+    have hℓx := hR₁ R ((le_max_left _ _).trans ((le_max_left _ _).trans hR)) x hx
+    have hsl0 : componentSlope C 0 x = 0 := by simp [componentSlope]
+    have hsl : componentSlope C q x = q 0 * (x.val 0 : ℝ) + q 1 * (x.val 1 : ℝ) := by
+      simp [componentSlope, Fin.sum_univ_two]
+    have hc0 : componentCorrector C (Pi.single 0 1) u₀ x = u₀ x - (x.val 0 : ℝ) := by
+      rw [componentCorrector, componentSlope_single]
+    have hc1 : componentCorrector C (Pi.single 1 1) u₁ x = u₁ x - (x.val 1 : ℝ) := by
+      rw [componentCorrector, componentSlope_single]
+    rw [hc0] at h0
+    rw [hc1] at h1
+    have hwx : w x - componentSlope C 0 x = (ℓ x - componentSlope C q x) -
+        q 0 * (u₀ x - (x.val 0 : ℝ)) - q 1 * (u₁ x - (x.val 1 : ℝ)) := by
+      rw [hsl0, hsl, hw]; simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul]; ring
+    -- the sublinear part
+    have hR7 : 2 * B * qn / ε < R ^ (7 * η) := by
+      have h1' : R₂ ≤ R := (le_max_left _ _).trans ((le_max_right _ _).trans hR)
+      have h2' : R₂ ^ (7 * η) ≤ R ^ (7 * η) :=
+        Real.rpow_le_rpow (by positivity) h1' (by positivity)
+      have h3' : R₂ ^ (7 * η) = 2 * B * qn / ε + 1 := by
+        rw [hR₂, ← Real.rpow_mul (by positivity), one_div_mul_cancel (by positivity),
+          Real.rpow_one]
+      linarith
+    have hRp : 0 < R ^ (7 * η) := by positivity
+    have hpow : R ^ (1 - 7 * η) = R / R ^ (7 * η) := by
+      rw [Real.rpow_sub (by positivity), Real.rpow_one]
+    have hBq : B * qn * R ^ (1 - 7 * η) ≤ ε / 2 * R := by
+      rw [hpow, mul_div_assoc', div_le_iff₀ hRp]
+      rw [div_lt_iff₀ hε] at hR7
+      nlinarith [hR7, (by positivity : (0 : ℝ) ≤ R)]
+    have hq0 : |q 0 * (u₀ x - (x.val 0 : ℝ))| ≤ |q 0| * (B * R ^ (1 - 7 * η)) := by
+      rw [abs_mul]; exact mul_le_mul_of_nonneg_left h0 (abs_nonneg _)
+    have hq1 : |q 1 * (u₁ x - (x.val 1 : ℝ))| ≤ |q 1| * (B * R ^ (1 - 7 * η)) := by
+      rw [abs_mul]; exact mul_le_mul_of_nonneg_left h1 (abs_nonneg _)
+    rw [hwx]
+    calc |(ℓ x - componentSlope C q x) - q 0 * (u₀ x - (x.val 0 : ℝ)) -
+          q 1 * (u₁ x - (x.val 1 : ℝ))|
+        ≤ |ℓ x - componentSlope C q x| + |q 0 * (u₀ x - (x.val 0 : ℝ))| +
+            |q 1 * (u₁ x - (x.val 1 : ℝ))| := by
+          have := abs_sub (ℓ x - componentSlope C q x - q 0 * (u₀ x - (x.val 0 : ℝ)))
+            (q 1 * (u₁ x - (x.val 1 : ℝ)))
+          have := abs_sub (ℓ x - componentSlope C q x) (q 0 * (u₀ x - (x.val 0 : ℝ)))
+          linarith
+      _ ≤ ε / 2 * R + (|q 0| * (B * R ^ (1 - 7 * η)) + |q 1| * (B * R ^ (1 - 7 * η))) := by
+          linarith
+      _ = ε / 2 * R + B * qn * R ^ (1 - 7 * η) := by rw [hqn]; ring
+      _ ≤ ε * R := by linarith
+  obtain ⟨c, hc⟩ := hL w hwH.1 hsub
+  refine ⟨c, fun x => ?_⟩
+  have := hc x
+  rw [hw] at this
+  simp only [Pi.sub_apply, Pi.add_apply, Pi.smul_apply, smul_eq_mul] at this
+  linarith
+
 end Rigidity.Proofs.Regularity
