@@ -67,4 +67,237 @@ theorem measure_subadd_gt_le {p : unitInterval} {Z : Configuration 2 → ℝ} {r
   rw [Real.mul_rpow (by positivity) (by positivity), ← Real.rpow_mul (by positivity)] at h2
   linarith
 
+/-- The exceptional event of the flatness estimate at the scale `n + 1`. -/
+def flatnessBad (Eb : TriadicCube 2 → ℕ → Set (Configuration 2))
+    (Z : TriadicCube 2 → Configuration 2 → ℝ) (α : ℝ) (m₂ n : ℕ) : Set (Configuration 2) :=
+  if n + 1 < m₂ then Set.univ else
+    (⋃ k ∈ Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1), Eb ⟨n + 1, 0⟩ k) ∪
+    (⋃ z ∈ (⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+      {ω | ((3 : ℝ) ^ (n + 1)) ^ (1 / 40 : ℝ) <
+        TriadicCube.stoppingSize (planarCoarseGood ω) z}) ∪
+    (⋃ k ∈ Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1),
+      ⋃ x ∈ (⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+        {ω | ((3 : ℝ) ^ (n + 1)) ^ (-(α / 2)) < Z (scaleCube k x) ω}) ∪
+    {ω | ((3 : ℝ) ^ (n + 1)) ^ (-(α / 2)) < Z ⟨n + 1, 0⟩ ω}
+
+theorem measurableSet_flatnessBad {Eb : TriadicCube 2 → ℕ → Set (Configuration 2)}
+    (hEb : ∀ U n, MeasurableSet (Eb U n)) {Z : TriadicCube 2 → Configuration 2 → ℝ}
+    (hZ : ∀ V, Measurable (Z V)) (α : ℝ) (m₂ n : ℕ) :
+    MeasurableSet (flatnessBad Eb Z α m₂ n) := by
+  unfold flatnessBad
+  split_ifs
+  · exact MeasurableSet.univ
+  · refine (((Finset.measurableSet_biUnion _ fun k _ => hEb _ k).union
+      (Finset.measurableSet_biUnion _ fun z _ => measurableSet_lt measurable_const
+        (TriadicCube.measurable_stoppingSize _ measurableSet_mem_planarCoarseGood z))).union
+      (Finset.measurableSet_biUnion _ fun k _ => Finset.measurableSet_biUnion _ fun x _ =>
+        measurableSet_lt measurable_const (hZ _))).union
+      (measurableSet_lt measurable_const (hZ _))
+
+/-- The real inequality collecting the four parts of the exceptional event. -/
+theorem flatness_sum_le {c₀ Cb E y : ℝ} (hc₀y : c₀ ≤ y) (hCb : 0 ≤ Cb)
+    (hE : 0 ≤ E) (hy1 : 1 ≤ y) :
+    c₀ * (Cb * E) + y ^ 2 * (2 * E) + c₀ * (y ^ 2 * (2 * E)) + 2 * E ≤
+      (Cb + 6) * (y ^ (3 : ℝ) * E) := by
+  have y3 : y ^ (3 : ℝ) = y * y ^ 2 := by
+    rw [show (3 : ℝ) = ((2 + 1 : ℕ) : ℝ) by norm_num, Real.rpow_natCast]; ring
+  rw [y3]
+  have hy2 : 1 ≤ y ^ 2 := one_le_pow₀ hy1
+  have hyy : 1 ≤ y * y ^ 2 := one_le_mul_of_one_le_of_one_le hy1 hy2
+  have b1 : c₀ ≤ y * y ^ 2 := hc₀y.trans (le_mul_of_one_le_right (by linarith) hy2)
+  have b2 : y ^ 2 ≤ y * y ^ 2 := le_mul_of_one_le_left (by positivity) hy1
+  have b3 : c₀ * y ^ 2 ≤ y * y ^ 2 := mul_le_mul_of_nonneg_right hc₀y (by positivity)
+  have e1 : c₀ * (Cb * E) ≤ Cb * (y * y ^ 2 * E) := by
+    have := mul_le_mul_of_nonneg_right b1 (mul_nonneg hCb hE)
+    linarith
+  have e2 : y ^ 2 * (2 * E) ≤ 2 * (y * y ^ 2 * E) := by
+    have := mul_le_mul_of_nonneg_right b2 (by positivity : (0 : ℝ) ≤ 2 * E)
+    linarith
+  have e3 : c₀ * (y ^ 2 * (2 * E)) ≤ 2 * (y * y ^ 2 * E) := by
+    have := mul_le_mul_of_nonneg_right b3 (by positivity : (0 : ℝ) ≤ 2 * E)
+    linarith
+  have e4 : 2 * E ≤ 2 * (y * y ^ 2 * E) := by
+    have := mul_le_mul_of_nonneg_right hyy (by positivity : (0 : ℝ) ≤ 2 * E)
+    linarith
+  linarith
+
+/-- The restrict part of the exceptional event. -/
+theorem measure_restrictPart_le {p : unitInterval}
+    {Eb : TriadicCube 2 → ℕ → Set (Configuration 2)} {Cb cb σb : ℝ} (hCb : 0 ≤ Cb)
+    (hcb : 0 < cb) (hσb : 0 < σb)
+    (hEb : ∀ (U : TriadicCube 2) (n : ℕ), 9 * U.scale ≤ 10 * n → n < U.scale →
+      latticeBondLaw 2 p (Eb U n) ≤ ENNReal.ofReal (Cb * Real.exp (-cb * ((3 : ℝ) ^ n) ^ σb)))
+    (m : ℕ) {a σ : ℝ} (ha : 0 ≤ a) (hac : a ≤ cb) (hσσ : σ ≤ 9 * σb / 10) :
+    latticeBondLaw 2 p (⋃ k ∈ Finset.Ico ((9 * m + 9) / 10) m, Eb ⟨m, 0⟩ k) ≤
+      ENNReal.ofReal ((Finset.Ico ((9 * m + 9) / 10) m).card *
+        (Cb * Real.exp (-a * ((3 : ℝ) ^ m) ^ σ))) := by
+  have hy1 : (1 : ℝ) ≤ (3 : ℝ) ^ m := one_le_pow₀ (by norm_num)
+  refine measure_biUnion_le_card_mul _ _ fun k hk => ?_
+  have hk9 : 9 * m ≤ 10 * k := by have := (Finset.mem_Ico.1 hk).1; omega
+  refine (hEb _ k hk9 (Finset.mem_Ico.1 hk).2).trans (ENNReal.ofReal_le_ofReal ?_)
+  refine mul_le_mul_of_nonneg_left ?_ hCb
+  have h1 : ((3 : ℝ) ^ m) ^ (9 / 10 : ℝ) ≤ (3 : ℝ) ^ k := by
+    have h := mul_rpow_le_three_pow (j := k) (m := m) (c := 9 / 10) (d := 0) (by
+      have h1' : (9 * m : ℝ) ≤ 10 * k := by exact_mod_cast hk9
+      linarith)
+    rwa [Real.rpow_zero, one_mul] at h
+  have h2 : ((3 : ℝ) ^ m) ^ (9 * σb / 10) ≤ ((3 : ℝ) ^ k) ^ σb := by
+    calc ((3 : ℝ) ^ m) ^ (9 * σb / 10) = (((3 : ℝ) ^ m) ^ (9 / 10 : ℝ)) ^ σb := by
+          rw [← Real.rpow_mul (by positivity)]; ring_nf
+      _ ≤ _ := Real.rpow_le_rpow (by positivity) h1 hσb.le
+  calc Real.exp (-cb * ((3 : ℝ) ^ k) ^ σb) ≤ Real.exp (-cb * ((3 : ℝ) ^ m) ^ (9 * σb / 10)) := by
+        apply Real.exp_le_exp.2; nlinarith
+    _ ≤ _ := exp_neg_rpow_anti hy1 ha hac hσσ
+
+/-- The reach part of the exceptional event. -/
+theorem measure_reachPart_le {p : unitInterval} {θc : ℝ} (hθc : 0 < θc)
+    (hmomc : ∀ x : Vertex 2,
+      Integrable (fun ω => Real.exp ((TriadicCube.stoppingSize (planarCoarseGood ω) x / θc) ^
+        (1 : ℝ))) (latticeBondLaw 2 p) ∧
+      (∫ ω, Real.exp ((TriadicCube.stoppingSize (planarCoarseGood ω) x / θc) ^ (1 : ℝ))
+        ∂latticeBondLaw 2 p) ≤ 2)
+    (m : ℕ) {a σ : ℝ} (ha : 0 ≤ a) (hac : a ≤ θc⁻¹) (hσσ : σ ≤ 1 / 40) :
+    latticeBondLaw 2 p (⋃ z ∈ (⟨m, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+      {ω | ((3 : ℝ) ^ m) ^ (1 / 40 : ℝ) < TriadicCube.stoppingSize (planarCoarseGood ω) z}) ≤
+      ENNReal.ofReal (((3 : ℝ) ^ m) ^ 2 * (2 * Real.exp (-a * ((3 : ℝ) ^ m) ^ σ))) := by
+  have hy1 : (1 : ℝ) ≤ (3 : ℝ) ^ m := one_le_pow₀ (by norm_num)
+  have hU : ((⟨m, 0⟩ : TriadicCube 2).toIntegerCube.vertices.card : ℝ) = ((3 : ℝ) ^ m) ^ 2 := by
+    rw [card_toIntegerCube_vertices_eq, ← pow_mul, show (9 : ℝ) = 3 ^ 2 by norm_num,
+      ← pow_mul, mul_comm]
+  rw [← hU]
+  refine measure_biUnion_le_card_mul _ _ fun z _ => ?_
+  refine (measure_lt_le_of_exp_rpow_moment (latticeBondLaw 2 p) hθc one_pos (hmomc z).1
+    (hmomc z).2 (by positivity)).trans (ENNReal.ofReal_le_ofReal ?_)
+  refine mul_le_mul_of_nonneg_left ?_ (by norm_num)
+  rw [Real.rpow_one, div_eq_inv_mul, ← neg_mul]
+  exact exp_neg_rpow_anti hy1 ha hac hσσ
+
+/-- The subadditivity part of the exceptional event at one cube. -/
+theorem measure_subaddPart_le {p : unitInterval} {Z : Configuration 2 → ℝ} {r α C : ℝ}
+    (hr : 0 < r) (hα : 0 < α) (hC : 0 < C) {k m : ℕ} (hmk : 9 * m ≤ 10 * k)
+    (hZ : IsOsBond 2 p Z r (C * (3 : ℝ) ^ (-(k : ℝ) * α))) {a σ : ℝ} (ha : 0 ≤ a)
+    (hac : a ≤ C⁻¹ ^ r) (hσσ : σ ≤ 2 * α / 5 * r) :
+    latticeBondLaw 2 p {ω | ((3 : ℝ) ^ m) ^ (-(α / 2)) < Z ω} ≤
+      ENNReal.ofReal (2 * Real.exp (-a * ((3 : ℝ) ^ m) ^ σ)) := by
+  have hy1 : (1 : ℝ) ≤ (3 : ℝ) ^ m := one_le_pow₀ (by norm_num)
+  refine (measure_subadd_gt_le hr hα hC hmk hZ).trans (ENNReal.ofReal_le_ofReal ?_)
+  exact mul_le_mul_of_nonneg_left (exp_neg_rpow_anti hy1 ha hac hσσ) (by norm_num)
+
+/-- **The probability of the exceptional event of the flatness estimate.** -/
+theorem exists_measure_flatnessBad_le {p : unitInterval}
+    {Eb : TriadicCube 2 → ℕ → Set (Configuration 2)} {Cb cb σb : ℝ} (hCb : 0 ≤ Cb)
+    (hcb : 0 < cb) (hσb : 0 < σb)
+    (hEb : ∀ (U : TriadicCube 2) (n : ℕ), 9 * U.scale ≤ 10 * n → n < U.scale →
+      latticeBondLaw 2 p (Eb U n) ≤ ENNReal.ofReal (Cb * Real.exp (-cb * ((3 : ℝ) ^ n) ^ σb)))
+    {θc : ℝ} (hθc : 0 < θc)
+    (hmomc : ∀ x : Vertex 2,
+      Integrable (fun ω => Real.exp ((TriadicCube.stoppingSize (planarCoarseGood ω) x / θc) ^
+        (1 : ℝ))) (latticeBondLaw 2 p) ∧
+      (∫ ω, Real.exp ((TriadicCube.stoppingSize (planarCoarseGood ω) x / θc) ^ (1 : ℝ))
+        ∂latticeBondLaw 2 p) ≤ 2)
+    {Z : TriadicCube 2 → Configuration 2 → ℝ} {r α C : ℝ} (hr : 0 < r) (hα : 0 < α)
+    (hC : 0 < C) (hZ : ∀ V, IsOsBond 2 p (Z V) r (C * (3 : ℝ) ^ (-(V.scale : ℝ) * α)))
+    (m₂ : ℕ) :
+    ∃ D : ℝ, 0 ≤ D ∧ ∃ c σ : ℝ, 0 < c ∧ 0 < σ ∧ ∀ n : ℕ,
+      latticeBondLaw 2 p (flatnessBad Eb Z α m₂ n) ≤
+        ENNReal.ofReal D * ENNReal.ofReal (Real.exp (-c * ((3 : ℝ) ^ n) ^ σ)) := by
+  obtain ⟨a, ha⟩ : ∃ a : ℝ, a = min cb (min θc⁻¹ (C⁻¹ ^ r)) := ⟨_, rfl⟩
+  obtain ⟨σ, hσ⟩ : ∃ σ : ℝ, σ = min (9 * σb / 10) (min (1 / 40) (2 * α / 5 * r)) := ⟨_, rfl⟩
+  have ha0 : 0 < a := by rw [ha]; exact lt_min hcb (lt_min (by positivity) (by positivity))
+  have hσ0 : 0 < σ := by rw [hσ]; exact lt_min (by positivity) (lt_min (by norm_num) (by positivity))
+  have ha1 : a ≤ cb := by rw [ha]; exact min_le_left _ _
+  have ha2 : a ≤ θc⁻¹ := by rw [ha]; exact (min_le_right _ _).trans (min_le_left _ _)
+  have ha3 : a ≤ C⁻¹ ^ r := by rw [ha]; exact (min_le_right _ _).trans (min_le_right _ _)
+  have hσ1 : σ ≤ 9 * σb / 10 := by rw [hσ]; exact min_le_left _ _
+  have hσ2 : σ ≤ 1 / 40 := by rw [hσ]; exact (min_le_right _ _).trans (min_le_left _ _)
+  have hσ3 : σ ≤ 2 * α / 5 * r := by rw [hσ]; exact (min_le_right _ _).trans (min_le_right _ _)
+  obtain ⟨K, hK, hKb⟩ := exists_rpow_mul_exp_le (a := (3 : ℝ)) ha0 hσ0
+  obtain ⟨D, hD⟩ : ∃ D : ℝ, D = max ((Cb + 6) * K) (Real.exp (a / 2 * ((3 : ℝ) ^ m₂) ^ σ)) :=
+    ⟨_, rfl⟩
+  have hD1 : (Cb + 6) * K ≤ D := by rw [hD]; exact le_max_left _ _
+  have hD2 : Real.exp (a / 2 * ((3 : ℝ) ^ m₂) ^ σ) ≤ D := by rw [hD]; exact le_max_right _ _
+  have hD0 : 0 ≤ D := (by positivity : (0 : ℝ) ≤ (Cb + 6) * K).trans hD1
+  refine ⟨D, hD0, a / 2, σ, by positivity, hσ0, fun n => ?_⟩
+  rw [← ENNReal.ofReal_mul hD0]
+  have hx1 : (1 : ℝ) ≤ (3 : ℝ) ^ n := one_le_pow₀ (by norm_num)
+  have hxy : (3 : ℝ) ^ n ≤ (3 : ℝ) ^ (n + 1) := pow_le_pow_right₀ (by norm_num) (by omega)
+  by_cases hsmall : n + 1 < m₂
+  · rw [flatnessBad, if_pos hsmall]
+    refine prob_le_one.trans (ENNReal.one_le_ofReal.2 ?_)
+    have h1 : ((3 : ℝ) ^ n) ^ σ ≤ ((3 : ℝ) ^ m₂) ^ σ :=
+      Real.rpow_le_rpow (by positivity) (pow_le_pow_right₀ (by norm_num) (by omega)) hσ0.le
+    have h2 : Real.exp (-(a / 2 * ((3 : ℝ) ^ m₂) ^ σ)) ≤ Real.exp (-(a / 2) * ((3 : ℝ) ^ n) ^ σ) := by
+      apply Real.exp_le_exp.2
+      have : 0 ≤ a / 2 := by positivity
+      nlinarith
+    calc (1 : ℝ) = Real.exp (a / 2 * ((3 : ℝ) ^ m₂) ^ σ) *
+          Real.exp (-(a / 2 * ((3 : ℝ) ^ m₂) ^ σ)) := by rw [← Real.exp_add]; simp
+      _ ≤ D * Real.exp (-(a / 2) * ((3 : ℝ) ^ n) ^ σ) :=
+          mul_le_mul hD2 h2 (by positivity) hD0
+  rw [flatnessBad, if_neg hsmall]
+  have hA := measure_restrictPart_le hCb hcb hσb hEb (n + 1) ha0.le ha1 hσ1
+  have hB := measure_reachPart_le hθc hmomc (n + 1) ha0.le ha2 hσ2
+  have hC' : latticeBondLaw 2 p (⋃ k ∈ Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1),
+      ⋃ x ∈ (⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+        {ω | ((3 : ℝ) ^ (n + 1)) ^ (-(α / 2)) < Z (scaleCube k x) ω}) ≤
+      ENNReal.ofReal ((Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1)).card *
+        (((3 : ℝ) ^ (n + 1)) ^ 2 * (2 * Real.exp (-a * ((3 : ℝ) ^ (n + 1)) ^ σ)))) := by
+    refine measure_biUnion_le_card_mul _ _ fun k hk => ?_
+    have hU : ((⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices.card : ℝ) =
+        ((3 : ℝ) ^ (n + 1)) ^ 2 := by
+      rw [card_toIntegerCube_vertices_eq, ← pow_mul, show (9 : ℝ) = 3 ^ 2 by norm_num,
+        ← pow_mul, mul_comm]
+    rw [← hU]
+    refine measure_biUnion_le_card_mul _ _ fun z _ => ?_
+    have hk9 : 9 * (n + 1) ≤ 10 * k := by have := (Finset.mem_Ico.1 hk).1; omega
+    have hZk := hZ (scaleCube k z)
+    rw [scale_scaleCube] at hZk
+    exact measure_subaddPart_le hr hα hC hk9 hZk ha0.le ha3 hσ3
+  have hD' := measure_subaddPart_le hr hα hC (k := n + 1) (m := n + 1) (by omega) (hZ ⟨n + 1, 0⟩)
+    ha0.le ha3 hσ3
+  set y : ℝ := (3 : ℝ) ^ (n + 1) with hy
+  set E : ℝ := Real.exp (-a * y ^ σ) with hE
+  set c₀ : ℝ := ((Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1)).card : ℝ) with hc₀
+  have hE0 : 0 ≤ E := (Real.exp_pos _).le
+  have hy1 : 1 ≤ y := one_le_pow₀ (by norm_num)
+  have hc₀0 : 0 ≤ c₀ := Nat.cast_nonneg _
+  have hc₀y : c₀ ≤ y := by
+    rw [hc₀, Nat.card_Ico]
+    have h2 : ((n + 1 : ℕ) : ℝ) ≤ y := by
+      rw [hy]; exact_mod_cast (Nat.lt_pow_self (by norm_num : 1 < 3)).le
+    exact (Nat.cast_le.2 (Nat.sub_le _ _)).trans h2
+  have n1 : 0 ≤ c₀ * (Cb * E) := mul_nonneg hc₀0 (mul_nonneg hCb hE0)
+  have n2 : 0 ≤ y ^ 2 * (2 * E) := mul_nonneg (by positivity) (by linarith)
+  have n3 : 0 ≤ c₀ * (y ^ 2 * (2 * E)) := mul_nonneg hc₀0 n2
+  have n4 : 0 ≤ 2 * E := by linarith
+  have htot : c₀ * (Cb * E) + y ^ 2 * (2 * E) + c₀ * (y ^ 2 * (2 * E)) + 2 * E ≤
+      D * Real.exp (-(a / 2) * ((3 : ℝ) ^ n) ^ σ) := by
+    have h1 := flatness_sum_le hc₀y hCb hE0 hy1
+    have h2 : y ^ (3 : ℝ) * E ≤ K * Real.exp (-(a / 2) * y ^ σ) := hKb y hy1
+    have h3 : Real.exp (-(a / 2) * y ^ σ) ≤ Real.exp (-(a / 2) * ((3 : ℝ) ^ n) ^ σ) := by
+      apply Real.exp_le_exp.2
+      have : ((3 : ℝ) ^ n) ^ σ ≤ y ^ σ := Real.rpow_le_rpow (by positivity) hxy hσ0.le
+      have : 0 ≤ a / 2 := by positivity
+      nlinarith
+    have h4 : 0 ≤ Cb + 6 := by linarith
+    calc _ ≤ (Cb + 6) * (y ^ (3 : ℝ) * E) := h1
+      _ ≤ (Cb + 6) * (K * Real.exp (-(a / 2) * ((3 : ℝ) ^ n) ^ σ)) :=
+          mul_le_mul_of_nonneg_left (h2.trans (mul_le_mul_of_nonneg_left h3 hK)) h4
+      _ = (Cb + 6) * K * Real.exp (-(a / 2) * ((3 : ℝ) ^ n) ^ σ) := by ring
+      _ ≤ D * Real.exp (-(a / 2) * ((3 : ℝ) ^ n) ^ σ) :=
+          mul_le_mul_of_nonneg_right hD1 (Real.exp_pos _).le
+  calc latticeBondLaw 2 p _ ≤ latticeBondLaw 2 p _ + latticeBondLaw 2 p _ := measure_union_le _ _
+    _ ≤ (latticeBondLaw 2 p _ + latticeBondLaw 2 p _) + latticeBondLaw 2 p _ :=
+        add_le_add (measure_union_le _ _) le_rfl
+    _ ≤ ((latticeBondLaw 2 p _ + latticeBondLaw 2 p _) + latticeBondLaw 2 p _) +
+          latticeBondLaw 2 p _ :=
+        add_le_add (add_le_add (measure_union_le _ _) le_rfl) le_rfl
+    _ ≤ ((ENNReal.ofReal (c₀ * (Cb * E)) + ENNReal.ofReal (y ^ 2 * (2 * E))) +
+          ENNReal.ofReal (c₀ * (y ^ 2 * (2 * E)))) + ENNReal.ofReal (2 * E) :=
+        add_le_add (add_le_add (add_le_add hA hB) hC') hD'
+    _ = ENNReal.ofReal (c₀ * (Cb * E) + y ^ 2 * (2 * E) + c₀ * (y ^ 2 * (2 * E)) + 2 * E) := by
+        rw [ENNReal.ofReal_add (add_nonneg (add_nonneg n1 n2) n3) n4,
+          ENNReal.ofReal_add (add_nonneg n1 n2) n3, ENNReal.ofReal_add n1 n2]
+    _ ≤ _ := ENNReal.ofReal_le_ofReal htot
+
 end Rigidity.Proofs.Regularity
