@@ -300,4 +300,144 @@ theorem exists_measure_flatnessBad_le {p : unitInterval}
           ENNReal.ofReal_add (add_nonneg n1 n2) n3, ENNReal.ofReal_add n1 n2]
     _ ≤ _ := ENNReal.ofReal_le_ofReal htot
 
+
+/-- The conditions off the exceptional event of the flatness estimate. -/
+theorem of_not_mem_flatnessBad {Eb : TriadicCube 2 → ℕ → Set (Configuration 2)}
+    {Z : TriadicCube 2 → Configuration 2 → ℝ} {α : ℝ} {m₂ n : ℕ} {ω : Configuration 2}
+    (h : ω ∉ flatnessBad Eb Z α m₂ n) :
+    m₂ ≤ n + 1 ∧ (∀ k ∈ Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1), ω ∉ Eb ⟨n + 1, 0⟩ k) ∧
+      (∀ z ∈ (⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+        TriadicCube.stoppingSize (planarCoarseGood ω) z ≤ ((3 : ℝ) ^ (n + 1)) ^ (1 / 40 : ℝ)) ∧
+      (∀ k ∈ Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1),
+        ∀ x ∈ (⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+          Z (scaleCube k x) ω ≤ ((3 : ℝ) ^ (n + 1)) ^ (-(α / 2))) ∧
+      Z ⟨n + 1, 0⟩ ω ≤ ((3 : ℝ) ^ (n + 1)) ^ (-(α / 2)) := by
+  have hm2 : ¬ (n + 1 < m₂) := fun h' => h (by rw [flatnessBad, if_pos h']; trivial)
+  rw [flatnessBad, if_neg hm2] at h
+  simp only [Set.mem_union, Set.mem_iUnion, Set.mem_setOf_eq, not_or, not_exists,
+    not_lt] at h
+  obtain ⟨⟨⟨h1, h2⟩, h3⟩, h4⟩ := h
+  exact ⟨not_lt.1 hm2, h1, h2, h3, h4⟩
+
+/-- `(3^m)^{1/40} ≤ 3^{⌊(9m+9)/10⌋}`. -/
+theorem rpow_forty_le_three_pow (m : ℕ) :
+    ((3 : ℝ) ^ m) ^ (1 / 40 : ℝ) ≤ 3 ^ ((9 * m + 9) / 10) := by
+  have h2 : m ≤ 40 * ((9 * m + 9) / 10) := by omega
+  have h2' : (m : ℝ) ≤ 40 * (((9 * m + 9) / 10 : ℕ) : ℝ) := by exact_mod_cast h2
+  have h := mul_rpow_le_three_pow (j := (9 * m + 9) / 10) (m := m) (c := 1 / 40) (d := 0)
+    (by linarith)
+  rwa [Real.rpow_zero, one_mul] at h
+
+/-- The subadditivity error of a resolved cube for a unit slope. -/
+theorem abs_planarNu_sub_le_of_resolved {p : unitInterval} {ω : Configuration 2}
+    (hP : PlanarPartitionEvent ω) {V : TriadicCube 2} (hV : PlanarResolved ω V) (i : Fin 2)
+    {Z : ℝ} {ε : ℝ} (hZ : Z ≤ ε)
+    (hb : |(if PlanarPartitionEvent ω ∧ PlanarResolved ω V then planarNu ω V (Pi.single i 1)
+      else 0) - 1 / 2 * ∑ j, (Pi.single i 1 : Fin 2 → ℝ) j *
+        (planarAhom p *ᵥ (Pi.single i 1 : Fin 2 → ℝ)) j| ≤
+      Z * ((Pi.single i 1 : Fin 2 → ℝ) 0 ^ 2 + (Pi.single i 1 : Fin 2 → ℝ) 1 ^ 2)) :
+    |planarNu ω V (Pi.single i 1) - 1 / 2 * ∑ j, (Pi.single i 1 : Fin 2 → ℝ) j *
+        (planarAhom p *ᵥ (Pi.single i 1 : Fin 2 → ℝ)) j| ≤ ε := by
+  rw [if_pos ⟨hP, hV⟩, sq_single_add, mul_one] at hb
+  exact hb.trans hZ
+
+/-- **Lemma 5.8, (5.33), with a minimal scale of class `O_s`**, from Proposition 5.2 for `ν` in
+the form `O_s`. -/
+theorem exists_planarNuFlatness_os {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
+    (hsub : PlanarNuSubaddOsTwo p) :
+    ∃ μ : ℝ, 0 < μ ∧ μ < 1 ∧ ∃ s θ : ℝ, 0 < s ∧ 0 < θ ∧
+      ∃ Y : Configuration 2 → ℝ, Measurable Y ∧ (∀ ω, 0 ≤ Y ω) ∧ IsOsBond 2 p Y s θ ∧
+      ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ n : ℕ, Y ω < 3 ^ n → ∀ i : Fin 2,
+        planarFlatnessError ⟨n + 1, 0⟩
+            (coarsen ω ⟨n + 1, 0⟩ (planarNuSolution ω ⟨n + 1, 0⟩ (Pi.single i 1)))
+            (Pi.single i 1) ≤ 2 * 9 ^ n * μ ^ n := by
+  obtain ⟨A₀, hRH⟩ := planarRHFailureBound_holds hpc
+  obtain ⟨ε', hε', t, -, hMU⟩ := planar_meyers_rh_uniform A₀
+  have hp1' : 1 < 1 + ε' / 2 := by linarith
+  have hpq := Real.HolderConjugate.conjExponent hp1'
+  obtain ⟨A₂, Aτ, K, hA₂, hAτ, hK, Eb, hEbm, ⟨Cb, cb, σb, hCb, hcb, hσb, hEb⟩, hincl⟩ :=
+    exists_restrictBad_os hpc hRH t ⌈3 * (1 + ε' / 2).conjExponent⌉₊
+  obtain ⟨CMey, hCMey, hMey⟩ := hMU K hK
+  have hΛ := restrictConst_nonneg (r := (1 + ε' / 2).conjExponent) (p := 1 + ε' / 2) (A₂ := A₂)
+    hAτ hCMey
+  obtain ⟨C₀, hC₀, c₀, hc₀, hq⟩ := exists_measure_not_mem_planarCoarseGood_le hpc
+  obtain ⟨hHc, ⟨θc, hθc, hmomc⟩, -⟩ := partition_estimates_general (d := 2) (by norm_num)
+    (latticeBondLaw 2 p) planarCoarseGood measurableSet_mem_planarCoarseGood hC₀ hc₀ one_pos hq
+  obtain ⟨C1, cR, s0R, hC1, hcR, hs0R, -, hfail⟩ := hRH
+  obtain ⟨hu, -, -⟩ := partition_estimates_general (d := 2) (by norm_num) (latticeBondLaw 2 p)
+    (planarRHGood A₀) (measurableSet_mem_planarRHGood A₀) hC1 hcR hs0R hfail
+  obtain ⟨rs, αs, Cs, hrs, hαs, hCs, hZ⟩ := hsub
+  choose Z hZm hZ0 hZos hZb using hZ
+  obtain ⟨CMf, hCMf, hflat⟩ := exists_planarFlatness_le_of_reach
+  obtain ⟨μ, hμ0, hμ1, m₁, hdec⟩ := exists_flatnessBound_le (CM := CMf)
+    (KE := (2 * ((2 : ℕ) : ℝ) * (3 / 2 * (2 * ((4 : ℕ) : ℝ) + 2) ^ 2) *
+      (2 * ((4 : ℕ) : ℝ) + 1) ^ 2 * (2 * √((2 : ℕ) : ℝ))) ^ 2)
+    (Λ := restrictConst Aτ (1 + ε' / 2).conjExponent CMey (1 + ε' / 2) A₂)
+    (CN := 1296 * 162001 ^ 2) (γ := αs / 2) hCMf (sq_nonneg _) hΛ (by norm_num) (by positivity)
+  obtain ⟨D, hD, c, σ, hc, hσ, hprob⟩ := exists_measure_flatnessBad_le hCb hcb hσb hEb hθc hmomc
+    hrs hαs hCs hZos (max m₁ 10)
+  obtain ⟨θ, hθ, Y, hYm, hY0, hYos, hYae⟩ := exists_isOsBond_of_events
+    (flatnessBad Eb Z αs (max m₁ 10)) (measurableSet_flatnessBad hEbm hZm αs (max m₁ 10))
+    ENNReal.ofReal_ne_top hσ hc hprob
+  refine ⟨μ, hμ0, hμ1, σ, θ, hσ, hθ, Y, hYm, hY0, hYos, ?_⟩
+  filter_upwards [hYae, ae_planarPartitionEvent hpc, hHc, hu, ae_planarReach_ne_top hpc, hincl]
+    with ω hY hP hH hu' hfin hincl' n hn i
+  obtain ⟨hm2, hnotEb, hss, hZk, hZU⟩ := of_not_mem_flatnessBad (hY n hn)
+  have hm10 : 10 ≤ n + 1 := (le_max_right _ _).trans hm2
+  have hm1 : m₁ ≤ n + 1 := (le_max_left _ _).trans hm2
+  have hy1 : (1 : ℝ) ≤ (3 : ℝ) ^ (n + 1) := one_le_pow₀ (by norm_num)
+  have hreach : ∀ z ∈ (⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+      planarReach ω z ≤ ENNReal.ofReal (((3 : ℝ) ^ (n + 1)) ^ (1 / 40 : ℝ)) := fun z hz =>
+    (planarReach_le_stoppingSize hH z).trans (ENNReal.ofReal_le_ofReal (hss z hz))
+  have hS1 : 1 ≤ ((3 : ℝ) ^ (n + 1)) ^ (1 / 40 : ℝ) := Real.one_le_rpow hy1 (by norm_num)
+  have hSm := rpow_forty_le_three_pow (n + 1)
+  have hs : (∀ x, ∀ z ∈ cube (stoppingScale (planarRHGood A₀ ω) x) x,
+        stoppingScale (planarRHGood A₀ ω) z = stoppingScale (planarRHGood A₀ ω) x) ∧
+      (∀ x y, supDist x y ≤ 1 →
+        stoppingScale (planarRHGood A₀ ω) y ≤ stoppingScale (planarRHGood A₀ ω) x + 1) ∧
+      ∀ (k : ℕ) (y : Vertex 2), stoppingScale (planarRHGood A₀ ω) y ≤ k →
+        (⟨k, idx k y⟩ : TriadicCube 2) ∈ planarRHGood A₀ ω :=
+    ⟨fun x z hz => stoppingScale_eq_of_mem_cube hu' hz,
+      fun x y hxy => stoppingScale_le_of_supDist hu' hxy,
+      fun k y hk => mem_of_stoppingScale_le hu' hk⟩
+  have hR : ∀ k ∈ Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1),
+      planarNuRestrictError ω ⟨n + 1, 0⟩ k (Pi.single i 1) ≤
+        restrictConst Aτ (1 + ε' / 2).conjExponent CMey (1 + ε' / 2) A₂ *
+          (planarNuDefect ω ⟨n + 1, 0⟩ k (Pi.single i 1) /
+            (⟨n + 1, 0⟩ : TriadicCube 2).volume) := by
+    intro k hk
+    have hk1 := (Finset.mem_Ico.1 hk).1
+    have hk2 := (Finset.mem_Ico.1 hk).2
+    have hk9 : 9 * (⟨n + 1, 0⟩ : TriadicCube 2).scale ≤ 10 * k := by
+      change 9 * (n + 1) ≤ 10 * k; omega
+    exact planarNuRestrictError_le_of_not_mem_restrictBad_rh (A₀ := A₀)
+      (s := fun ω => stoppingScale (planarRHGood A₀ ω)) (t := t) (K := K)
+      (τ := ⌈3 * (1 + ε' / 2).conjExponent⌉₊) (Aτ := Aτ) (A₂ := A₂) (U := ⟨n + 1, 0⟩) (n := k)
+      hpq (Nat.le_ceil _) hCMey hAτ hA₂ hMey hP hs hfin hk9 hk2
+      (fun hbad => hnotEb k hk (hincl' _ _ hbad)) (Pi.single i 1)
+  have hsubk : ∀ k ∈ Finset.Ico ((9 * (n + 1) + 9) / 10) (n + 1),
+      ∀ x ∈ (⟨n + 1, 0⟩ : TriadicCube 2).toIntegerCube.vertices,
+        |planarNu ω (scaleCube k x) (Pi.single i 1) - 1 / 2 * ∑ j, (Pi.single i 1 : Fin 2 → ℝ) j *
+          (planarAhom p *ᵥ (Pi.single i 1 : Fin 2 → ℝ)) j| ≤
+          ((3 : ℝ) ^ (n + 1)) ^ (-(αs / 2)) := by
+    intro k hk x hx
+    have hkm : k ≤ n + 1 := (Finset.mem_Ico.1 hk).2.le
+    have hres : PlanarResolved ω (scaleCube k x) := by
+      refine planarResolved_of_reach hP
+        (scaleCube_subset hkm (((⟨n + 1, 0⟩ : TriadicCube 2).mem_toIntegerCube_vertices x).1 hx))
+        hreach ?_
+      rw [scale_scaleCube]
+      exact hSm.trans (pow_le_pow_right₀ (by norm_num) (Finset.mem_Ico.1 hk).1)
+    exact abs_planarNu_sub_le_of_resolved hP hres i (hZk k hk x hx) (hZb _ ω _)
+  have hUe : |planarNu ω ⟨n + 1, 0⟩ (Pi.single i 1) - 1 / 2 * ∑ j, (Pi.single i 1 : Fin 2 → ℝ) j *
+      (planarAhom p *ᵥ (Pi.single i 1 : Fin 2 → ℝ)) j| ≤ ((3 : ℝ) ^ (n + 1)) ^ (-(αs / 2)) := by
+    have hres : PlanarResolved ω ⟨n + 1, 0⟩ := planarResolved_of_reach hP (subset_refl _) hreach
+      (hSm.trans (pow_le_pow_right₀ (by norm_num)
+        (by change (9 * (n + 1) + 9) / 10 ≤ n + 1; omega)))
+    exact abs_planarNu_sub_le_of_resolved hP hres i hZU (hZb _ ω _)
+  have h := hflat ω hP (n + 1) i (by omega) hS1 hSm hreach hΛ hR hsubk hUe
+  have h2 := hdec (n + 1) hm1
+  simp only [Nat.add_sub_cancel] at h2
+  exact h.trans h2
+
 end Rigidity.Proofs.Regularity
