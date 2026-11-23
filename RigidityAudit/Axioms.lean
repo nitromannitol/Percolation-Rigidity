@@ -711,7 +711,6 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Cluster.osBound_coarse_bound
 #print axioms Rigidity.Proofs.Cluster.OsBound.mul
 #print axioms Rigidity.Proofs.Cluster.OsBound.add
-#print axioms Rigidity.Proofs.Cluster.osBound_finset_sup'
 #print axioms Rigidity.Proofs.Cluster.osBound_indicator
 #print axioms Rigidity.Proofs.Cluster.isOsBond_of_osBound
 #print axioms Rigidity.Proofs.Cluster.planar_SIupgrade_os

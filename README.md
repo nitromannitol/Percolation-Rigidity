@@ -1414,7 +1414,7 @@ the dimension-two chain take as hypotheses
 | [`planar_SIupgrade_os`](Rigidity/Proofs/Cluster/PlanarSIUpgradeOs.lean) | AD Lemma 5.11, `d = 2`: `sup_q \|q\|⁻² \|ω(V, q)\| ≤ O_r(C 3^{−α scale V})`, with a measurable majorant, for every triadic cube `V`. |
 | [`planar_muupbound_os`](Rigidity/Proofs/Cluster/PlanarSIUpgradeOs.lean) | AD (4.15), `d = 2`, with the rate `size^{−α}` in place of `size^{−1}`: `−μ(V, q) ≤ (K + Z(V)) \|q\|²` with `Z(V) ≤ O_r(C 3^{−α scale V})`. |
 | [`planarBoundN_holds`](Rigidity/Proofs/Cluster/PlanarBoundN.lean), [`exists_planarBoundN_general`](Rigidity/Proofs/Cluster/PlanarBoundN.lean) | AD Proposition 5.13, `d = 2` (the statement `PlanarBoundN p`): a random scale `N ≤ O_r(θ)` such that, whenever `N ≤ 3^m` and `n = ⌈m/4⌉`, on the triadic cubes `V` of scale `n` in `□_m`, and on `□_n` in the configuration translated by `−z` for every `z ∈ □_m`, the partition event holds, the cube is resolved, and `\|μ + (1/2) q · ā⁻¹ q\| ≤ C \|q\|² 3^{−mα}`, `\|ν − (1/2) ξ · ā ξ\| ≤ C \|ξ\|² 3^{−mα}`; the second theorem allows any `n(m)` with `n(m) ≤ m ≤ L n(m)`. |
-| [`osBound_indicator`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.add`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.mul`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`osBound_finset_sup'`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`isOsBond_of_osBound`](Rigidity/Proofs/Cluster/OsTailCalculus.lean) | the calculus of the stretched exponential bounds used above, in the tail form: indicators, sums, products (AD (1.9)), maxima of finitely many variables, and the passage to `IsOsBond`. |
+| [`osBound_indicator`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.add`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`OsBound.mul`](Rigidity/Proofs/Cluster/OsTailCalculus.lean), [`isOsBond_of_osBound`](Rigidity/Proofs/Cluster/OsTailCalculus.lean) | the calculus of the stretched exponential bounds used above, in the tail form: indicators, sums, products (AD (1.9)) and the passage to `IsOsBond`. |
 
 The thirty-five reports of the declarations of this section and of the `O_s` calculus are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
@@ -1669,7 +1669,7 @@ exponent of the tail).
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 449 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 448 axiom
   reports: the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -1704,13 +1704,13 @@ exponent of the tail).
   [The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two](#the-rate-of-proposition-52-and-lemmas-53-510-and-511-step-2-in-dimension-two),
   the nine theorems and one definition of
   [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate),
-  the twenty-four theorems of
+  the twenty-three theorems of
   [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two),
   the nineteen theorems of
   [Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71),
   and the twenty-seven theorems of
   [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two).
-  Each of the 449 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 448 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -1744,7 +1744,7 @@ exponent of the tail).
 `Rigidity/` and `Rigidity.lean`: 1268 Lean files with 241,172 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (768 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (767 lines) are counted separately.
 
 ## Building
 
