@@ -389,10 +389,18 @@ fidelity:
     calculus, the Lipschitz bound with max(X, 2)^2 and the log factor log(2 + |x - y|)) and the heat
     kernel estimate of Dario and Gu
     (DarioGuHeatKernelTwo, for t >= 1, proved by the induction of Section 4.3 from Lemma 4.1,
-    Proposition 4.3 and Proposition A.7 of Dario and Gu as named inputs, with Barlow's Gaussian bound and
-    the Carne-Varopoulos bound cited; Lemma 4.2 and the two-scale initial error are proved, the source
-    leaving the latter to the reader, and Proposition A.7 is used off the lattice by rounding)
-    (the Carne-Varopoulos bound
+    Proposition 4.3 and Proposition A.7 of Dario and Gu, with Barlow's Gaussian bound cited; Lemma 4.2
+    and the two-scale initial error are proved, the source leaving the latter to the reader, and
+    Proposition A.7 is used off the lattice by rounding; Proposition A.7 holds for t >= 1 and is proved
+    from the concentration of the density of Proposition A.1 by a telescoping over the averages on
+    triadic cubes, with no appeal to the cited concentration inequality of Proposition A.3; the
+    Carne-Varopoulos bound of Proposition 2.15 is proved for the lazy walk, with finite speed and a
+    Poisson tail at large distances in place of Davies' argument; the weak form of Proposition 2.7 is
+    proved, with the gradient on the larger ball, from the Sobolev inequality of Proposition 3.4 of
+    Armstrong and Dario; Lemma 4.1 is proved from Theorem 3 in the form of Remark 1.3, the weak
+    Poincare inequality, Barlow's bound and Propositions 2.15 and A.7, so that Theorem 1 in dimension
+    two follows from Proposition 4.3, Theorem 3 (Remark 1.3), Barlow's bound and Lemma 3.3 of Dario,
+    or its flip form) (the Carne-Varopoulos bound
     for small times is proved for the lazy walk; the pairs of points in a ball are treated by a
     union bound and the time integral of the Gaussian kernel is normalized by its value at a unit
     vector), for
@@ -467,6 +475,13 @@ fidelity:
     and its ancestors), for every set of the triple closed under
     the open edges and every harmonic function on it, in place of the estimate with the maximal
     cluster of 3 times the cube), and
+    for Lemmas 5.3 and 5.4, the formulas (5.21) to (5.24) and the first part of Step 1 of Lemma 5.10
+    of Armstrong and Dario in every dimension d >= 2 (the quadratic forms are handled through the
+    polarization identity; Lemma 5.3 is deterministic on resolved cubes, with a gradient step in
+    place of the minimizer q0 and the random factor sqrt(Lambda + 1); the homogeneous error
+    |q|_1 |xi|_1 Y(U) of (4.29) comes with Young's parameter chosen per slope; Lemma 5.4 for nu is at
+    the slopes abar^-1 q; for mu it is on the clusters C_*(V) with the rate 3^(-n/4) and the term
+    exp(-c 3^n) from the approximate stationarity of E[-mu]), and
     for the Dirichlet problem and
     the excess-decay iteration (Armstrong and Dario,
     §§6-7: a discrete homogenized Dirichlet problem on the lattice cube in place of the continuum one,

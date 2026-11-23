@@ -2215,7 +2215,9 @@ The thirty-five reports for the first table of this section and the eight report
 
 Exactly the following named inputs remain for these results. Theorem 1 of Dario, R5 and R4: `DarioFlipSumBound` (or `DarioLemmaThreeThree`),
 and nothing else. Dario and Gu, Theorem 1: `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
-`CarneVaropoulosTwo`. The module [`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1
+`CarneVaropoulosTwo`; the last has since been proved, and the inputs of Theorem 1 of Dario and Gu are given in
+[Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality).
+The module [`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1
 from `ConcentrationTwo`, `CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`, and
 [`DarioCorrectorConcentration`](Rigidity/Proofs/Corrector/DarioCorrectorConcentration.lean) from the multiscale Poincaré inequality,
 `CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`; the bridges above discharge the remaining hypotheses.
@@ -2243,12 +2245,12 @@ from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
 
 * Lemma 4.1 (`DarioGuApproxLemmaTwo p σ`, in the form of the iteration step used at (4.45)), Proposition 4.3
   (`DarioGuTwoScaleErrorTwo p σ`) and Proposition A.7 (`DarioGuDensityGaussianTwo p σ`, the Gaussian mass of the
-  infinite cluster), which Dario and Gu prove from Sections 3 and 4.1–4.2 and Appendix A and which are not formalized
-  here: Lemma 4.1 needs the gradient estimate of Theorem 3 and the Poincaré inequality of Proposition 2.7;
-  Proposition 4.3 needs the flux estimate of Proposition 2.13 and weak norms; Proposition A.7 rests on the concentration
-  inequality of Proposition A.3 (cited);
+  infinite cluster), which Dario and Gu prove from Sections 3 and 4.1–4.2 and Appendix A. Proposition A.7 and
+  Lemma 4.1 are proved
+  ([Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality));
+  Proposition 4.3 needs the flux estimate of Proposition 2.13 and weak norms and is not formalized;
 * the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu), and the
-  Carne–Varopoulos bound of Proposition 2.15 (`CarneVaropoulosTwo`, cited, Davies 1993);
+  Carne–Varopoulos bound of Proposition 2.15 (`CarneVaropoulosTwo`, proved, see the same section);
 * the qualitative corrector input `SupercriticalBondCorrectorInputTwo` (R2) and the quantitative corrector estimate
   of Proposition 2.12 (`CorrectorQuantitativeInputTwo`, R5), the latter by `correctorQuantitativeInputTwo_of_inputs` of
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two) or from `DarioOptimalCorrectorTwo`
@@ -2291,6 +2293,101 @@ Points in the source that are not detailed, and an issue of normalization, with 
   the normalization `t^{d/2}` differently from the Gaussian factor `exp(|x|²/(Ct))` used in (4.48); the Lean weight is
   `exp(dgExponent)`;
 - the decomposition (4.47) has `+w` where `w := h − v − q` gives `−w` (compare DG21.tex:1944-1948).
+
+## Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality
+
+Four inputs of the induction of Section 4.3 of Dario and Gu are proved in dimension two, in
+[`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/), for each `𝔭_c(2) < p < 1`:
+
+* **Proposition A.7** (`darioGuDensityGaussianTwo_holds`, `DarioGuDensityGaussianTwo p σ` for every `σ > 0`): the Gaussian
+  mass of the infinite cluster in the balls and annuli of the diffusive scale, holding for `t ≥ 1`. The proof starts from
+  the concentration of the density of Proposition A.1 (`cluster_density_concentration`): the Gaussian kernel is telescoped
+  over the averages on the triadic cubes of the scales `3^k ≤ √t` (`abs_sum_mul_le_multiscale`); the scales below `t^α`
+  are bounded trivially, the larger ones by a union bound over the cubes with Proposition A.1 and Markov's inequality
+  (`exists_minimalScale_of_summable`); the oscillation of the Gaussian kernel and its lattice sums are bounded directly,
+  and `∑_{ℤ²} p̄ = 1 + O(e^{−ct})` follows by the Poisson summation formula (`Real.tsum_exp_neg_mul_int_sq`).
+* **Proposition 2.15** (`carneVaropoulosTwo_holds`, `CarneVaropoulosTwo`, with `C = 200`): for `|x − y| ≤ t` the lazy
+  Carne bound (`lazyPow_le_carneVaropoulos`) for the steps `n` below `16t + 2^{−16t} e^{4t}`, for `t ≤ r ≤ 256t` the
+  bound `openHeat_le_exp_of_le_norm`, and for `r > 256t` the finite speed of propagation with the Poisson tail
+  `θ^{−r} e^{4t(θ−1)}`, `θ = r/(4t)`.
+* **Proposition 2.7, weak form, for `p = 2`** (`clusterPoincareTwo_holds`, `ClusterPoincareTwo`): for the ball `B_R(y)` of
+  the infinite cluster and `u` on the cluster,
+  `‖u − (u)‖_{L̲²(B_R)} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_{24R}(y))}`, with the gradient on the ball of radius `24R` and the constant
+  `C` and the dilation `24` separate. It is proved from the Sobolev inequality of Armstrong and Dario, Proposition 3.4,
+  on resolved triple cubes, the concentration of the stopping sizes of the partition into coarsely good cubes through a
+  minimal scale, and the lower bound on the volume of the cluster in balls from Proposition A.1.
+* **Lemma 4.1** (`darioGuApproxLemmaTwo_of_gradient`, `DarioGuApproxLemmaTwo p σ` for every `σ > 0`): from Theorem 3 in the
+  form of Remark 1.3 (`DarioGuGradientBoundTwo`, with the gradient on the edges inside the ball) and Theorem 4 (Barlow),
+  with Proposition 2.15, the weak Poincaré inequality and Proposition A.7 proved
+  (`darioGuApproxLemmaTwo_of_inputs` takes the weak Poincaré inequality and Proposition 2.15 as hypotheses).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.darioGuDensityGaussianTwo_holds`](Rigidity/Proofs/Green/DarioGuDensityGaussian.lean) | Proposition A.7 of Dario and Gu in `d = 2`, for `t ≥ 1`. |
+| [`Rigidity.Green.carneVaropoulosTwo_holds`](Rigidity/Proofs/Green/PlanarCarneVaropoulos.lean) | `CarneVaropoulosTwo`, Proposition 2.15 of Dario and Gu in `d = 2`. |
+| [`Rigidity.Green.clusterPoincareTwo_holds`](Rigidity/Proofs/Green/DarioGuPoincareHolds.lean) | `ClusterPoincareTwo`, Proposition 2.7 of Dario and Gu for `p = 2` in `d = 2` with the gradient on the larger ball. |
+| [`Rigidity.Green.darioGuApproxLemmaTwo_of_inputs`](Rigidity/Proofs/Green/DarioGuApproxLemma.lean), [`Rigidity.Green.darioGuApproxLemmaTwo_of_gradient`](Rigidity/Proofs/Green/DarioGuTheoremOnePoincare.lean) | Lemma 4.1 of Dario and Gu in `d = 2` from Theorem 3 (Remark 1.3), the Poincaré inequality, Theorem 4 and Proposition 2.15, and from Theorem 3 and Theorem 4 alone. |
+| [`Rigidity.Green.darioGuHeatKernelTwo_of_approx_twoScale`](Rigidity/Proofs/Green/DarioGuTheoremOneDensity.lean), [`darioGuHeatKernelTwo_of_twoScale_gradient`](Rigidity/Proofs/Green/DarioGuTheoremOneApprox.lean), [`darioGuHeatKernelTwo_of_twoScale_gradient_barlow`](Rigidity/Proofs/Green/DarioGuTheoremOneCarne.lean), [`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_poincare`](Rigidity/Proofs/Green/DarioGuTheoremOnePoincare.lean) and the variants `_dario` | Theorem 1 of Dario and Gu in `d = 2` with Proposition A.7 proved and Lemma 4.1 replaced by Theorem 3, then with the Poincaré inequality and Proposition 2.15 proved as well; the variants with `_dario` take `DarioOptimalCorrectorTwo` in place of `CorrectorQuantitativeInputTwo`. |
+| [`Rigidity.Poincare.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree`](Rigidity/Proofs/Poincare/DarioGuBridges.lean), [`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_flipSum`](Rigidity/Proofs/Poincare/DarioGuBridges.lean) | Theorem 1 of Dario and Gu in `d = 2` from `DarioLemmaThreeThree`, respectively `DarioFlipSumBound`, and the three inputs below. |
+
+The fifteen reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Exactly the following named inputs remain for Theorem 1 of Dario and Gu in `d = 2`
+(`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree`): Proposition 4.3, for each `𝔭_c(2) < p < 1` and some
+`σ > 0` (`DarioGuTwoScaleErrorTwo p σ`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`); Theorem 4 of
+Barlow (`BarlowGaussianUpperBoundTwo`, cited); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
+(`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_flipSum`). The qualitative corrector input is proved, and Proposition 2.15, Proposition A.7,
+Lemma 4.1 and the Poincaré inequality are no longer inputs.
+
+Departures from Dario and Gu:
+
+- **Proposition A.7** holds for `t ≥ 1` (the printed (A.12) is for every `t > 0`), the range of `DarioGuHeatKernelTwo`.
+  The route is the telescoping over triadic averages from Proposition A.1 described above, in place of the exponential
+  Efron–Stein inequality (Proposition A.3, cited) with (A.5), (A.6) and Lemma A.4; the exponent is `α s₀/2`, `s₀ = 2/15`, with
+  `α > 1/4` reduced to `1/4`, and the scale `T_dense = max(81, M^{1/α})`.
+- **Proposition 2.7** is proved in a weak form with the gradient on the larger ball,
+  `‖u − (u)‖_{L̲²(B_R)} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_{24R}(y))}`, in place of the gradient on the edges inside `B_R(y)`; the constant `C` and
+  the dilation `24` are separate. It is proved for `p = 2`, the case used.
+- **Proposition 2.15** is proved for the lazy walk with `C = 200`, by finite speed and a Poisson tail at large distances,
+  in place of the argument of Davies cited by Dario and Gu.
+- **Lemma 4.1** is proved from Theorem 3 in the form of Remark 1.3 (the gradient on the edges inside the ball), used at the
+  radius `24R` of the weak Poincaré inequality. The lower bound on the volume of the cluster in balls at the scale `√τ` comes
+  from Proposition A.1, and for `|x − y| > t − τ`, where Theorem 3 does not apply, `Φ_C(t, r) ≤ C t^{−1/2} Φ_{2C}(t, r)` is
+  used. The minimal time is `T = max(M_reg², M_P², M_dens², 2 max(T_dense, 1), T'_NA, 1)` in place of `max(M_reg², T_dense)`.
+
+## The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10
+
+For every `d ≥ 2` and `𝔭_c(d) < p < 1`, the following are proved in [`Rigidity/Proofs/Cluster/`](Rigidity/Proofs/Cluster/)
+(namespace `Rigidity.Percolation`; the files `GeneralSlopeQuadratic`, `GeneralMinimalSet`, `GeneralMuEnergyDefect`,
+`GeneralTauIncrements` and `GeneralFiniteVolumeMatrix`), with the quadratic forms in the slope handled by the polarization
+identity (`IsSlopeQuadratic`) and by the cube quantities `cubeMu`, `cubeNu` and `cubeAhom` of the previous sections.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`abs_slopeQuadratic_sub_half_le`](Rigidity/Proofs/Cluster/GeneralSlopeQuadratic.lean), [`IsSlopeQuadratic.le_of_nonneg`](Rigidity/Proofs/Cluster/GeneralSlopeQuadratic.lean), [`IsSlopeQuadratic.comp_mulVec`](Rigidity/Proofs/Cluster/GeneralSlopeQuadratic.lean) | the deterministic gradient step behind Lemma 5.3, and the closure of slope quadratic forms under sums and linear changes of the slope. |
+| [`sum_mul_le_neg_cubeMu_add_cubeNu_add_mul`](Rigidity/Proofs/Cluster/GeneralMinimalSet.lean) | the homogeneous form of Corollary 4.6, (4.29): `q · ξ ≤ −μ(U, q) + ν(U, ξ) + \|q\|₁ \|ξ\|₁ Y(U)`, with `Y(U) = cubeComparisonError`. |
+| [`cube_minimalset`](Rigidity/Proofs/Cluster/GeneralMinimalSet.lean) | AD Lemma 5.3, (5.6), on resolved cubes, in every dimension. |
+| [`exists_lintegral_cubeMuDefect_le`](Rigidity/Proofs/Cluster/GeneralMuEnergyDefect.lean), [`exists_lintegral_cubeMuDefect_le_tau`](Rigidity/Proofs/Cluster/GeneralTauIncrements.lean), [`exists_lintegral_cubeNuDefect_le_tau`](Rigidity/Proofs/Cluster/GeneralTauIncrements.lean) | AD Lemma 5.4, (5.10), for `μ` and for `ν`: `E[D_n(□_m)]/\|□_m\| ≤ C \|q\|² (∑_{k=n}^{m−1} τ_k + 3^{−n/4})`. |
+| [`exists_cubeMuIncrement_le`](Rigidity/Proofs/Cluster/GeneralTauIncrements.lean), [`exists_cubeNuIncrement_le`](Rigidity/Proofs/Cluster/GeneralTauIncrements.lean), [`summable_cubeTau`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean) | the increments (5.9) for `μ` and for `ν`, and the summability of `τ_k`. |
+| [`cubeAhomInvFinite`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`half_sum_mul_cubeAhomInvFinite_eq`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean) | the matrix `ā_n^{−1}` of (5.21) and its defining identity. |
+| [`exists_cubeAhomInvFinite_bounds`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean) | the bounds (5.22): for `n` at least some `N`, `c \|q\|² ≤ ½ q · ā_n^{−1} q ≤ C \|q\|²`. |
+| [`integral_cubeCoarsePairing_cubeMuMinimizer`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`cubeCoarsePairing_cubeMuMinimizer_div`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean) | (5.23): the expectation of the pairing of the coarse gradient at `q'` with the minimizer at `q`, divided by the volume, on the resolved cube of scale `n`, is `q' · ā_n^{−1} q`. |
+| [`exists_abs_cubeMuMean_sub_le`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`exists_abs_cubeAhomInvFinite_sub_le`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`exists_abs_cubeAhomInvLimit_sub_le`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`tendsto_cubeAhomInvFinite`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean) | (5.24): `\|E[−μ(□_n, q)] − E[−μ(□_m, q)]\| ≤ C \|q\|² (∑_{k=n}^{m−1} τ_k + 3^{−n/4})`, the same bound entrywise for `ā_n^{−1}` and `ā_m^{−1}`, and for `ā_n^{−1}` and its limit with `∑_{k ≥ n} τ_k`. |
+| [`exists_cubeAhomInvFinite_mul_cubeAhomFinite`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`cubeMuMean_cubeAhomFinite_sub_le`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`cubeOmegaD_succ_le`](Rigidity/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean) | `ā_n^{−1}` is invertible from some scale on, `x ↦ E[−μ(□_n, x)] − ξ · x` is minimal at `x = ā_n ξ`, and the first part of Step 1 of Lemma 5.10: `D_{n+1} ≤ D_n` minus the increments of `E[ν]` at the unit vectors and of `E[−μ]` at `ā_n e_i`. |
+
+The thirty-five reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+The second part of Step 1 of Lemma 5.10 and the rest of Lemma 5.10, Lemmas 5.5, 5.7, 5.8, 5.9 and 5.11 and Proposition 5.2
+are not yet proved in every dimension; in dimension two they are proved in the planar sections above.
+
+Departures from Armstrong and Dario:
+
+- **Lemma 5.3** is stated deterministically on resolved cubes, with a gradient step in place of the minimizer `q₀` (no
+  `k(□)`), and the random factor `√(Λ + 1)` on `ρ^{1/2}`, as in dimension two; the tails of `Y` and `Λ` are not part of the statement.
+- **(4.29)** is used with Young's parameter chosen for each slope, giving the error `|p|₁ |q|₁ Y(U)`.
+- **Lemma 5.4** for `ν` is stated at the slopes `ā^{−1} q` (Armstrong and Dario state it for every slope; the two are equivalent
+  since `ā = σ I` with `σ > 0`). For `μ` the energy is on the clusters `𝒞_*(V)`, as in dimension two, with the rate `3^{−n/4}` of
+  (4.32) in expectation and the term `exp(−c 3ⁿ)` from the approximate stationarity of `E[−μ]`.
 
 ## Section 3 and the isotropy of the homogenized matrix in every dimension
 

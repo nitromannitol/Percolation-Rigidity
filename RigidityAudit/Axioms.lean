@@ -396,6 +396,20 @@ import Rigidity.Proofs.Regularity.PlanarCorrectorSupOs
 import Rigidity.Proofs.Regularity.PlanarCorrectorOsc
 import Rigidity.Proofs.Regularity.PlanarCorrectorOscHolds
 import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoHolds
+import Rigidity.Proofs.Cluster.GeneralSlopeQuadratic
+import Rigidity.Proofs.Cluster.GeneralMinimalSet
+import Rigidity.Proofs.Cluster.GeneralMuEnergyDefect
+import Rigidity.Proofs.Cluster.GeneralTauIncrements
+import Rigidity.Proofs.Cluster.GeneralFiniteVolumeMatrix
+import Rigidity.Proofs.Green.PlanarCarneVaropoulos
+import Rigidity.Proofs.Green.DarioGuDensityGaussian
+import Rigidity.Proofs.Green.DarioGuPoincareHolds
+import Rigidity.Proofs.Green.DarioGuApproxLemma
+import Rigidity.Proofs.Green.DarioGuTheoremOneDensity
+import Rigidity.Proofs.Green.DarioGuTheoremOneApprox
+import Rigidity.Proofs.Green.DarioGuTheoremOneCarne
+import Rigidity.Proofs.Green.DarioGuTheoremOnePoincare
+import Rigidity.Proofs.Poincare.DarioGuBridges
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1244,3 +1258,57 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Probability.condExp_allExcept_ae_eq
 #print axioms Rigidity.Probability.vertical_condExp_ae_eq
 #print axioms Rigidity.Corrector.darioOptimalCorrectorTwo_of_poincare_osc
+
+-- Lemmas 5.3 and 5.4, (5.21)-(5.24) and Step 1(a) of Lemma 5.10 of Armstrong and Dario in every dimension
+#print axioms Rigidity.Percolation.abs_slopeQuadratic_sub_half_le
+#print axioms Rigidity.Percolation.isSlopeQuadratic_of_eq_dotProduct
+#print axioms Rigidity.Percolation.IsSlopeQuadratic.comp_mulVec
+#print axioms Rigidity.Percolation.cubeMu_eq_sum_polarization
+#print axioms Rigidity.Percolation.sum_mul_le_neg_cubeMu_add_cubeNu_add_mul
+#print axioms Rigidity.Percolation.neg_cubeMu_le_cubeMuBound_mul
+#print axioms Rigidity.Percolation.cubeOmega_le_cubeRho_mul
+#print axioms Rigidity.Percolation.neg_le_cubeOmega
+#print axioms Rigidity.Percolation.cube_minimalset
+#print axioms Rigidity.Percolation.exceptionalPairing_le
+#print axioms Rigidity.Percolation.cubeMuDefect_add_sum_sub_le
+#print axioms Rigidity.Percolation.exists_integral_subaddBound_le
+#print axioms Rigidity.Percolation.exists_integral_neg_cubeMu_le_of_scale_eq
+#print axioms Rigidity.Percolation.exists_lintegral_cubeMuDefect_le
+#print axioms Rigidity.Percolation.IsSlopeQuadratic.le_of_nonneg
+#print axioms Rigidity.Percolation.isSlopeQuadratic_integral
+#print axioms Rigidity.Percolation.isSlopeQuadratic_cubeMuMean
+#print axioms Rigidity.Percolation.exists_cubeMuIncrement_le
+#print axioms Rigidity.Percolation.exists_cubeNuIncrement_le
+#print axioms Rigidity.Percolation.exists_lintegral_cubeMuDefect_le_tau
+#print axioms Rigidity.Percolation.exists_lintegral_cubeNuDefect_le_tau
+#print axioms Rigidity.Percolation.half_sum_mul_cubeAhomInvFinite_eq
+#print axioms Rigidity.Percolation.exists_abs_cubeMuMean_sub_le
+#print axioms Rigidity.Percolation.exists_abs_cubeAhomInvFinite_sub_le
+#print axioms Rigidity.Percolation.summable_cubeTau
+#print axioms Rigidity.Percolation.tendsto_cubeAhomInvFinite
+#print axioms Rigidity.Percolation.exists_abs_cubeAhomInvLimit_sub_le
+#print axioms Rigidity.Percolation.isSlopeQuadratic_cubeMuLimit
+#print axioms Rigidity.Percolation.exists_cubeAhomInvFinite_bounds
+#print axioms Rigidity.Percolation.IsSlopeQuadratic.add_sub_sub_eq
+#print axioms Rigidity.Percolation.cubeCoarsePairing_cubeMuMinimizer_div
+#print axioms Rigidity.Percolation.integral_cubeCoarsePairing_cubeMuMinimizer
+#print axioms Rigidity.Percolation.exists_cubeAhomInvFinite_mul_cubeAhomFinite
+#print axioms Rigidity.Percolation.cubeMuMean_cubeAhomFinite_sub_le
+#print axioms Rigidity.Percolation.cubeOmegaD_succ_le
+
+-- Propositions A.7, 2.15 and 2.7 (weak form) of Dario and Gu, Lemma 4.1 from Theorem 3, and Theorem 1 in dimension two from Propositions 4.3, Theorem 3, Theorem 4 and Lemma 3.3
+#print axioms Rigidity.Green.darioGuDensityGaussianTwo_holds
+#print axioms Rigidity.Green.carneVaropoulosTwo_holds
+#print axioms Rigidity.Green.clusterPoincareTwo_holds
+#print axioms Rigidity.Green.darioGuApproxLemmaTwo_of_inputs
+#print axioms Rigidity.Green.darioGuApproxLemmaTwo_of_gradient
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_approx_twoScale
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_approx_twoScale_dario
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_twoScale_gradient
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_twoScale_gradient_dario
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_twoScale_gradient_barlow
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_dario
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_poincare
+#print axioms Rigidity.Green.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_poincare_dario
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_twoScale_gradient_barlow_flipSum
