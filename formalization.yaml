@@ -391,7 +391,8 @@ fidelity:
     (DarioGuHeatKernelTwo, for t >= 1, proved by the induction of Section 4.3 from Lemma 4.1,
     Proposition 4.3 and Proposition A.7 of Dario and Gu, with Barlow's Gaussian bound cited; Lemma 4.2
     and the two-scale initial error are proved, the source leaving the latter to the reader, and
-    Proposition A.7 is used off the lattice by rounding; Proposition A.7 holds for t >= 1 and is proved
+    Proposition A.7 is used off the lattice by rounding; only the second part (A.13) of Proposition A.7 is formalized, for t > T_dense(y) and as a sum
+    over the whole cluster, and it is proved
     from the concentration of the density of Proposition A.1 by a telescoping over the averages on
     triadic cubes, with no appeal to the cited concentration inequality of Proposition A.3; the
     Carne-Varopoulos bound of Proposition 2.15 is proved for the lazy walk, with finite speed and a
