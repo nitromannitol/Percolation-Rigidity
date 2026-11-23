@@ -2197,7 +2197,7 @@ estimate with a divergence source (Proposition 3.6) and Lemma 3.7, are not forma
 | [`ae_correctedPlane_sub_eq_smul_greenProj`](Rigidity/Proofs/Corrector/DarioCaseThreeCorrector.lean), [`ae_correctedPlane_sub_eq_smul_greenProj_closed`](Rigidity/Proofs/Corrector/DarioCaseThreeClosed.lean), [`edgeDiv_pathField`](Rigidity/Proofs/Corrector/DarioCaseThreeClosed.lean) | Case 3 of Step 2 (both endpoints in the infinite cluster with the bond closed): the corrected planes with the bond open and closed differ by a function with gradient the increment across the bond times `P` of the bond (open base configuration) or of the field of an open path (closed base configuration). |
 | [`heatComp_coarse_eq_smul_greenProj`](Rigidity/Proofs/Corrector/DarioCaseThreePairing.lean), [`ae_heatComp_coarse_sub_eq_smul_greenProj`](Rigidity/Proofs/Corrector/DarioCaseThreePairing.lean), [`ae_heatComp_coarse_sub_eq_walkSum_closed`](Rigidity/Proofs/Corrector/DarioCaseThreeClosed.lean), [`abs_sub_le_two_mul_edgeVariation`](Rigidity/Proofs/Corrector/DarioCaseThreePairing.lean) | (3.26) paired with (3.22) and (2.15): in Case 3 the heat average of the coarsened change of the corrected planes is the increment across the bond times the pairing of `P` with the anchor-path field (for the closed bond, the sum along the path); and the (3.24) form of the increment across a bond by the total variations on the partition squares at its endpoints. |
 | [`ae_exists_correctedPlane_eq_add_const`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean), [`isCorrectedPlane_of_harmonic`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean), [`le_of_finite_piece`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean) | Cases 1 and 2 of Step 2: almost surely, when the endpoints of the bond are not both in the infinite cluster with the bond closed, the corrected planes with the bond open and closed differ by a constant on that cluster (maximum principle on the finite piece cut off by the bond, and uniqueness of corrected planes). |
-| [`edgeDiv_edgeGrad_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean), [`ae_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean), [`mem_supp_iff_of_mem_supp_setBond_false`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean) | the comparison of the configurations with one bond opened and closed: the Laplacians differ by the dipole of the bond times the increment across it, almost sure properties hold for both, and in Case 3 the two infinite clusters have the same vertices. |
+| [`edgeDiv_edgeGrad_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean), [`ae_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean) | the comparison of the configurations with one bond opened and closed: the Laplacians differ by the dipole of the bond times the increment across it, almost sure properties hold for both, and in Case 3 the two infinite clusters have the same vertices. |
 
 The following theorems compose the results above with the proved multiscale Poincaré inequality, concentration inequality,
 qualitative corrector input, order-zero regularity and (1.22) (`correctorOscSublinearTwo_holds`), in
@@ -2493,10 +2493,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1448 Lean files with 286,858 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1458 Lean files with 289,389 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (1,222 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (1,246 lines) are counted separately.
 
 ## Building
 
