@@ -229,6 +229,107 @@ theorem lintegral_term_le_of_lt_two {Z V : Ω → ℝ} (hV0 : ∀ ω, 0 ≤ V ω
         rw [e3]
         nlinarith
 
+/-- The bound on the `n`-th term of the series: for `n ≥ n₀` (where `βn ≥ 2`) the termwise Young
+bound, below `n₀` the bound through the second moment. -/
+noncomputable def seriesBound (K β α D : ℝ) (n₀ n : ℕ) (u : ℝ) : ℝ :=
+  if n₀ ≤ n then 2 * (K * β * n / α) ^ n / n ! + 2 * u ^ n / n ! else D / n ! * Real.exp u
+
+/-- `(K β n / α)^n / n! ≤ (1/2)^n` for `α = 2 e K β`, from `n^n/n! ≤ e^n`. -/
+theorem pow_div_factorial_le_half_pow {K β : ℝ} (hK : 0 < K) (hβ : 0 < β) (n : ℕ) :
+    (K * β * n / (2 * Real.exp 1 * K * β)) ^ n / n ! ≤ (1 / 2) ^ n := by
+  have hfac : (0 : ℝ) < n ! := by exact_mod_cast Nat.factorial_pos n
+  have h1 : (n : ℝ) ^ n / n ! ≤ Real.exp 1 ^ n := by
+    rw [Real.exp_one_pow]
+    exact Real.pow_div_factorial_le_exp (x := (n : ℝ)) (Nat.cast_nonneg n) n
+  have e : (K * β * n / (2 * Real.exp 1 * K * β)) ^ n / n ! =
+      (1 / (2 * Real.exp 1)) ^ n * ((n : ℝ) ^ n / n !) := by
+    rw [mul_div_assoc', ← mul_pow]
+    congr 1
+    congr 1
+    field_simp
+  rw [e]
+  have h2 : (1 / (2 * Real.exp 1)) ^ n * Real.exp 1 ^ n = (1 / 2) ^ n := by
+    rw [← mul_pow]
+    congr 1
+    field_simp
+  rw [← h2]
+  exact mul_le_mul_of_nonneg_left h1 (by positivity)
+
+/-- The pointwise sum of the termwise bounds: `Σ_n seriesBound n u ≤ (4 + n₀ D + 2) e^u`. -/
+theorem tsum_ofReal_seriesBound_le {K β D : ℝ} (hK : 0 < K) (hβ : 0 < β) (hD : 0 ≤ D)
+    (n₀ : ℕ) {u : ℝ} (hu : 0 ≤ u) :
+    ∑' n, ENNReal.ofReal (seriesBound K β (2 * Real.exp 1 * K * β) D n₀ n u) ≤
+      ENNReal.ofReal ((4 + n₀ * D + 2) * Real.exp u) := by
+  have hE : 1 ≤ Real.exp u := Real.one_le_exp hu
+  set a : ℕ → ℝ≥0∞ := fun n => ENNReal.ofReal (2 * (1 / 2) ^ n)
+  set b : ℕ → ℝ≥0∞ := fun n => if n < n₀ then ENNReal.ofReal D else 0
+  set z : ℕ → ℝ≥0∞ := fun n => ENNReal.ofReal (u ^ n / n !)
+  have hle : ∀ n, ENNReal.ofReal (seriesBound K β (2 * Real.exp 1 * K * β) D n₀ n u) ≤
+      a n + b n * ENNReal.ofReal (Real.exp u) + 2 * z n := by
+    intro n
+    have hfac : (0 : ℝ) < n ! := by exact_mod_cast Nat.factorial_pos n
+    unfold seriesBound
+    split_ifs with h
+    · have hb : b n = 0 := by simp only [b]; rw [if_neg (by omega)]
+      rw [hb, zero_mul, add_zero]
+      have h1 := pow_div_factorial_le_half_pow hK hβ n
+      have h2 : 2 * (K * β * n / (2 * Real.exp 1 * K * β)) ^ n / n ! ≤ 2 * (1 / 2) ^ n := by
+        rw [mul_div_assoc]; linarith
+      calc ENNReal.ofReal (2 * (K * β * n / (2 * Real.exp 1 * K * β)) ^ n / n ! +
+            2 * u ^ n / n !)
+          ≤ ENNReal.ofReal (2 * (1 / 2) ^ n + 2 * (u ^ n / n !)) := by
+            apply ENNReal.ofReal_le_ofReal
+            rw [mul_div_assoc 2 (u ^ n)]
+            linarith
+        _ = a n + 2 * z n := by
+            rw [ENNReal.ofReal_add (by positivity) (by positivity),
+              ENNReal.ofReal_mul (by norm_num)]
+            simp [a, z]
+    · have hb : b n = ENNReal.ofReal D := by simp only [b]; rw [if_pos (by omega)]
+      rw [hb]
+      have h1 : D / n ! * Real.exp u ≤ D * Real.exp u := by
+        have h1n : (1 : ℝ) ≤ n ! := Nat.one_le_cast.mpr (Nat.factorial_pos n)
+        have : D / n ! ≤ D := div_le_self hD h1n
+        exact mul_le_mul_of_nonneg_right this (Real.exp_pos u).le
+      calc ENNReal.ofReal (D / n ! * Real.exp u) ≤ ENNReal.ofReal (D * Real.exp u) :=
+            ENNReal.ofReal_le_ofReal h1
+        _ = ENNReal.ofReal D * ENNReal.ofReal (Real.exp u) := ENNReal.ofReal_mul hD
+        _ ≤ a n + ENNReal.ofReal D * ENNReal.ofReal (Real.exp u) + 2 * z n := by
+            rw [add_comm (a n)]
+            exact le_add_right (le_add_right le_rfl)
+  have hsa : ∑' n, a n = ENNReal.ofReal 4 := by
+    simp only [a]
+    rw [← ENNReal.ofReal_tsum_of_nonneg (fun n => by positivity)
+      ((summable_geometric_two).mul_left 2), tsum_mul_left, tsum_geometric_two]
+    norm_num
+  have hsb : ∑' n, b n = (n₀ : ℝ≥0∞) * ENNReal.ofReal D := by
+    rw [tsum_eq_sum (s := Finset.range n₀) (fun n hn => by
+      simp only [Finset.mem_range, not_lt] at hn
+      simp only [b]
+      rw [if_neg (by omega)])]
+    rw [Finset.sum_congr rfl (fun n hn => by
+      simp only [Finset.mem_range] at hn
+      simp only [b]
+      rw [if_pos hn]), Finset.sum_const, Finset.card_range, nsmul_eq_mul]
+  have hsz : ∑' n, z n = ENNReal.ofReal (Real.exp u) := (ofReal_exp_eq_tsum hu).symm
+  calc ∑' n, ENNReal.ofReal (seriesBound K β (2 * Real.exp 1 * K * β) D n₀ n u)
+      ≤ ∑' n, (a n + b n * ENNReal.ofReal (Real.exp u) + 2 * z n) := ENNReal.tsum_le_tsum hle
+    _ = ENNReal.ofReal 4 + (n₀ : ℝ≥0∞) * ENNReal.ofReal D * ENNReal.ofReal (Real.exp u) +
+          2 * ENNReal.ofReal (Real.exp u) := by
+        rw [ENNReal.tsum_add, ENNReal.tsum_add, ENNReal.tsum_mul_right, ENNReal.tsum_mul_left,
+          hsa, hsb, hsz]
+    _ ≤ ENNReal.ofReal ((4 + n₀ * D + 2) * Real.exp u) := by
+        have h1 : (n₀ : ℝ≥0∞) * ENNReal.ofReal D * ENNReal.ofReal (Real.exp u) =
+            ENNReal.ofReal (n₀ * D * Real.exp u) := by
+          rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity),
+            ENNReal.ofReal_natCast]
+        have h2 : 2 * ENNReal.ofReal (Real.exp u) = ENNReal.ofReal (2 * Real.exp u) := by
+          rw [ENNReal.ofReal_mul (by norm_num)]
+          norm_num
+        rw [h1, h2, ← ENNReal.ofReal_add (by norm_num) (by positivity),
+          ← ENNReal.ofReal_add (by positivity) (by positivity)]
+        exact ENNReal.ofReal_le_ofReal (by nlinarith)
+
 end Main
 
 end Rigidity.Probability
