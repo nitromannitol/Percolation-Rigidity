@@ -435,6 +435,18 @@ fidelity:
     minimal scale of class O_s and not only in expectation, and the bound in the uniform norm of
     the remark after (1.19) by a union bound over the triadic boxes), and with them Lemma 3.2 of
     Dario with no hypothesis, and
+    for the multiscale Poincare inequality (2.26) of Dario on the square lattice in cube form (proved
+    by the duality argument of Proposition D.1 of Armstrong, Kuusi and Mourrat applied to the oscillation
+    of u on the cube, with the weight e^{|x|/2R} handled by the hyperbolic cosines of the coordinates and
+    the Hardy-Littlewood maximal bound by the Vitali covering lemma, in place of the Necas inequality and
+    the Calderon-Zygmund theory of Appendix A of Dario), and for Lemma 3.3 of Dario in dimension two
+    reduced to the estimate (3.13) in flip form (the configurations with one bond open and closed in
+    place of the doubled probability space; Lemma 3.5 is not proved for the planar partition), with
+    Propositions 2.11 and 2.12 proved as an orthogonal projection onto the closed span of the gradients
+    of point masses, with (2.14) at C = 1, (2.15) and (2.17), the identity (3.22), the representation
+    (3.26) with the paths in the ninefold square of the smaller cube, and Cases 1 to 3 of Step 2, so that
+    Theorem 1 of Dario in dimension two follows from the concentration inequality and the flip form of
+    (3.13) alone, and
     for the localization, stationarity and limit of the subadditive quantity mu in every dimension
     d >= 2 and for Definition 3.9 (Armstrong and Dario, Propositions 4.9 and 4.10, (4.32), (4.39),
     (4.40), (4.48) and (3.17): the local versions of mu are built from the partition capped at the

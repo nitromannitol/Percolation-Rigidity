@@ -2001,9 +2001,13 @@ following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Correc
 * `MultiscalePoincareTwo A₀` with some `A₀ > 0`: the multiscale Poincaré inequality of Dario, Proposition 2.19,
   display (2.26), in cube form at `R = 3^m`, with the constant `A₀ q^{3/2}` for `q ≥ 2`, and with the absolute
   convergence of the convolutions `Φ_{r²} * ∇u` required, as the printed statement uses them (the statement is
-  proved almost surely for the coarsened corrector, `ae_summable_heat_coarseField`). It is cited: Dario proves
-  (2.26) in the continuum, from Proposition D.1 of Armstrong, Kuusi and Mourrat with Remark D.6 and Lemma 7.12 and
-  Proposition 9.9 of Gilbarg and Trudinger, and states the version on the lattice by "standard arguments";
+  proved almost surely for the coarsened corrector, `ae_summable_heat_coarseField`). It is proved on `ℤ²`
+  (`Rigidity.Poincare.multiscalePoincareTwo_holds`, see
+  [The multiscale Poincaré inequality (2.26) on the square lattice](#the-multiscale-poincaré-inequality-226-on-the-square-lattice));
+  Dario proves (2.26) in the continuum, from Proposition D.1 of Armstrong, Kuusi and Mourrat with Remark D.6 and
+  Lemma 7.12 and Proposition 9.9 of Gilbarg and Trudinger, and states the version on the lattice by "standard
+  arguments". The named input `MultiscalePoincareTwo` remains the hypothesis of the older theorems of this section;
+  the bridge theorems of the next paragraph discharge it;
 * `ConcentrationTwo`: the concentration inequality of Dario, Proposition 2.17 (Proposition 2.2 of Armstrong, Kuusi
   and Mourrat, *Optimal quantitative estimates*, the exponential Efron–Stein inequality), as printed, for integrable
   variables with finite resampling variance almost surely (cited);
@@ -2016,7 +2020,11 @@ following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Correc
   [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two)),
   so Theorem 1 of Dario and `CorrectorQuantitativeInputTwo` follow from the multiscale Poincaré inequality, the
   concentration inequality and Lemma 3.3 (`darioOptimalCorrectorTwo_of_lemmaThreeThree`,
-  `correctorQuantitativeInputTwo_of_lemmaThreeThree`).
+  `correctorQuantitativeInputTwo_of_lemmaThreeThree`). With the multiscale Poincaré inequality proved, Theorem 1 of
+  Dario in `d = 2` follows from `ConcentrationTwo` and `DarioLemmaThreeThree` alone
+  (`Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree`), and from `ConcentrationTwo` and
+  `DarioFlipSumBound` alone (`darioOptimalCorrectorTwo_of_concentration_flipSum`); see
+  [Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1).
 
 The order-zero regularity input (R3), which Dario uses in Proposition 2.14, is proved in dimension two
 (`armstrongDarioOrderZeroTwo_holds`, see
@@ -2053,9 +2061,11 @@ The proof is that of Sections 4 and 5 of Dario with the following steps proved:
 The thirty-five reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
-Lemma 3.3 of Dario rests on steps that Dario only sketches, which are not formalized and are part of the
-named input `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, and the Green
-gradient bounds of Propositions 2.11 and 2.12, which are proved by "standard arguments". Lemma 3.2 does not use them: it
+Lemma 3.3 of Dario rests on steps that Dario only sketches and that are part of the
+named input `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, which is not proved for the planar
+partition of the repository, and the Green gradient bounds of Propositions 2.11 and 2.12, which Dario proves by
+"standard arguments" and which are proved here (see
+[Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1)). Lemma 3.2 does not use them: it
 follows from (1.22) (`CorrectorOscSublinearTwo`), which is proved. The estimate (3.3) for the
 stationary partitions, which Dario proves "similarly to Proposition 2.1 (iv) of Armstrong and Dario", is proved
 (`dario_errorstatpart`): the stationary partition is the planar partition capped at the scale `k`, which exists
@@ -2076,8 +2086,9 @@ inequality, (1.22) and `DarioLemmaThreeThree`. The statement (1.22) is proved in
 (`correctorOscSublinearTwo_holds`, see
 [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two)),
 so `darioLemmaThreeTwo_holds` is Lemma 3.2 with no hypothesis.
-The seven reports for these declarations are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The proof of
-Lemma 3.3, with Lemma 3.5, is not formalized.
+The seven reports for these declarations are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Lemma 3.3 is
+reduced to the named input `DarioFlipSumBound`, the estimate (3.13) in flip form; its proof, which needs Lemma 3.5 for
+the planar partition, is not formalized.
 
 Departures from Dario:
 
@@ -2105,6 +2116,87 @@ Departures from Dario:
 - **The translated partitions.** The partition `𝒫_y = y + 𝒫(τ_{−y} a)` is built from the anchors of the planar
   partition of the repository, and the bounds of the partition sizes are those of the planar partition.
 - **The logarithm.** Theorem 1 is stated with `log^{1/2}(2 + |x − y|)`, as in the section on the corrector estimate.
+
+## The multiscale Poincaré inequality (2.26) on the square lattice
+
+The multiscale Poincaré inequality of Dario, Proposition 2.19, display (2.26), in the cube form of `MultiscalePoincareTwo A₀`
+(`‖u − (u)_□‖` in `L^q` of the cube of side `R = 3^m` bounded by `A₀ q^{3/2}` times the weighted `ℓ^q` sum of the
+square function `(∫₀^{2R} r |Φ_{r²} * ∇u(x)|² dr)^{1/2}`), is proved on `ℤ²` in
+[`Rigidity/Proofs/Poincare/`](Rigidity/Proofs/Poincare/) (nineteen files, `LatticeHeatKernel` to `MultiscalePoincareHolds`). The eight reports for the declarations of this section and of `DarioCorrectorPoincare` are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Poincare.multiscalePoincareTwo_holds`](Rigidity/Proofs/Poincare/MultiscalePoincareHolds.lean) | `∃ A₀, 0 < A₀ ∧ MultiscalePoincareTwo A₀`, the statement as `MultiscalePoincareTwo` has it, with the constant of order `q` (so at most `A₀ q^{3/2}`). |
+| [`Rigidity.Poincare.exists_multiscalePoincare_box`](Rigidity/Proofs/Poincare/MultiscalePoincareHolds.lean), [`exists_steinSigned`](Rigidity/Proofs/Poincare/SteinSigned.lean), [`exists_steinWeighted`](Rigidity/Proofs/Poincare/SteinFinal.lean), [`tsum_mul_eq_add_integral`](Rigidity/Proofs/Poincare/HeatDuality.lean) | the box form, the weighted Littlewood–Paley bound for signed and for nonnegative data (Stein's argument), and the duality identity between the pairing of a function with a divergence and the heat averages of its gradient. |
+| [`tsum_boxMax_rpow_le`](Rigidity/Proofs/Poincare/BoxMaximal.lean), [`exists_heat_le_boxMax`](Rigidity/Proofs/Poincare/HeatMaximal.lean), [`openHeat_allOpen_eq_lineKernel`](Rigidity/Proofs/Poincare/LatticeHeatKernel.lean), [`exists_openHeat_mul_exp_le`](Rigidity/Proofs/Poincare/HeatKernelBounds.lean) | the strong type `(p, p)` bound of the centred box maximal function (Vitali covering, layer cake), the domination of the tilted heat semigroup by it, the heat kernel of the lattice as a product of one-dimensional continuous-time kernels, and the bound of its exponentially tilted version. |
+
+Departure from Dario: Dario proves (2.26) in the continuum in Appendix A, from the estimate of Proposition D.1 of Armstrong,
+Kuusi and Mourrat (with Remark D.6) on the dual norm `W^{−1,q}` through the Nečas inequality (Bogovskii operator,
+Newtonian potential and the Calderón–Zygmund estimate) and a rescaling. The lattice statement is proved
+directly by the duality argument of Proposition D.1: the `L^q` oscillation of `u` on the cube is paired with an extremal
+test function of mean zero, the pairing is written through the heat flow of the test function and one summation by
+parts, the bilinear term is bounded by Hölder's inequality with weights, and the weighted square function of the dual
+data by Stein's argument and the maximal function. The weight `e^{|x|/2R}` is handled by the product of the
+hyperbolic cosines of the coordinates, an eigenfunction of the heat semigroup. The Nečas inequality and the
+Calderón–Zygmund theory are not used.
+
+## Lemma 3.3 in flip form and the bridges to Theorem 1
+
+Lemma 3.3 of Dario (`𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C/r²)`) in `d = 2` is reduced to the named input
+`DarioFlipSumBound` (the estimate (3.13) in flip form), and the Green function estimates and Cases 1 to 3 of Step 2 of its proof
+are proved, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/) (thirteen files `DarioBondResampling`,
+`DarioLemmaThreeThreeFlip`, `DarioClusterGreen`, `DarioCoarseHeatField`, `DarioFiniteEnergyGrowth`,
+`DarioFiniteEnergySublinear`, `DarioCaseThree*`, `DarioFlipCluster`, `DarioCaseOneTwo`). `DarioFlipSumBound` is the statement that, for every
+direction, component, radius `r ≥ 1` and point, the sum over bonds `e` of the squared flip differences
+`(X(ω^{e,1}) − X(ω^{e,0}))²` of `X = Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)` is at most `O_s(C/r²)`. Lemma 3.5 (the partition of the
+resampled configuration agrees with 𝒫 away from a ball around the resampled bond) is not proved for the planar
+partition of the repository, and the printed sums of Step 1 and Step 2 over the random weights `c_e²`, which use the Meyers
+estimate with a divergence source (Proposition 3.6) and Lemma 3.7, are not formalized.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Corrector.darioLemmaThreeThree_of_flipSum`](Rigidity/Proofs/Corrector/DarioLemmaThreeThreeFlip.lean), [`ae_resampleVar_le_tsum_bondFlipDiff`](Rigidity/Proofs/Corrector/DarioBondResampling.lean), [`condExp_bondsExcept_ae_eq`](Rigidity/Proofs/Corrector/DarioBondResampling.lean), [`IsOsBond.comp_setBond`](Rigidity/Proofs/Corrector/DarioBondResampling.lean) | Lemma 3.3 from `DarioFlipSumBound`: for the Bernoulli law the conditional expectation given all other bonds is the two-point average, so the resampling variance is at most the sum of the squared flip differences, and `O_s` bounds are kept when one bond is forced (the form of (3.12)). |
+| [`greenProj`](Rigidity/Proofs/Corrector/DarioClusterGreen.lean), [`edgeDiv_greenProj`](Rigidity/Proofs/Corrector/DarioClusterGreen.lean), [`eq_greenProj_of_edgeDiv_eq`](Rigidity/Proofs/Corrector/DarioClusterGreen.lean), [`exists_isGradOf_greenProj`](Rigidity/Proofs/Corrector/DarioClusterGreen.lean) | Propositions 2.11 and 2.12 for bond percolation in `d = 2`: the gradient of the finite-energy solution of the divergence-form equation is the orthogonal projection `P` onto the closed span of the gradients of point masses in `ℓ²(edges)`; it solves the equation, is the only solution in that span, and has a potential. |
+| [`norm_greenProj_le`](Rigidity/Proofs/Corrector/DarioClusterGreen.lean), [`inner_greenProj_comm`](Rigidity/Proofs/Corrector/DarioClusterGreen.lean), [`greenProj_apply_eq_tsum`](Rigidity/Proofs/Corrector/DarioClusterGreen.lean) | (2.14) with `C = 1`, the symmetry (2.15) and the representation formula (2.17). |
+| [`heatComp_coarse_eq_inner`](Rigidity/Proofs/Corrector/DarioCoarseHeatField.lean), [`abs_coarseHeatField_apply_le`](Rigidity/Proofs/Corrector/DarioCoarseHeatField.lean) | (3.26) and (3.27) for the planar partition: the heat average of a coarsened gradient is the pairing of the gradient with the field of the paths between the anchors of neighbouring partition cubes, and this field is bounded by the heat kernel at the points whose ninefold square contains the edge. |
+| [`abs_sub_coarseAnchor_zero_le`](Rigidity/Proofs/Corrector/DarioFiniteEnergyGrowth.lean), [`ae_abs_sub_coarseAnchor_le_of_finiteEnergy`](Rigidity/Proofs/Corrector/DarioFiniteEnergySublinear.lean) | growth of a function of finite energy on the infinite cluster: at most `400 s^{3/2} (R+1)^{1/2} E^{1/2}` when the partition cubes of the square of half-side `R` have side at most `s`, and almost surely sublinear, from the minimal scales of the planar partition. |
+| [`edgeGrad_eq_smul_greenProj_of_div`](Rigidity/Proofs/Corrector/DarioCaseThree.lean), [`ae_edgeGrad_eq_smul_greenProj_of_div`](Rigidity/Proofs/Corrector/DarioCaseThreeAe.lean), [`ae_edgeGrad_eq_smul_greenProj`](Rigidity/Proofs/Corrector/DarioCaseThreeAe.lean), [`ae_sublinearOn_of_isGradOf`](Rigidity/Proofs/Corrector/DarioCaseThreeAe.lean) | (3.22): almost surely a sublinear function whose Laplacian on the cluster is `c` times the dipole of a source with divergence `δ_x − δ_y` has gradient `c P` of the source, by the planar Liouville theorem. |
+| [`ae_correctedPlane_sub_eq_smul_greenProj`](Rigidity/Proofs/Corrector/DarioCaseThreeCorrector.lean), [`ae_correctedPlane_sub_eq_smul_greenProj_closed`](Rigidity/Proofs/Corrector/DarioCaseThreeClosed.lean), [`edgeDiv_pathField`](Rigidity/Proofs/Corrector/DarioCaseThreeClosed.lean) | Case 3 of Step 2 (both endpoints in the infinite cluster with the bond closed): the corrected planes with the bond open and closed differ by a function with gradient the increment across the bond times `P` of the bond (open base configuration) or of the field of an open path (closed base configuration). |
+| [`heatComp_coarse_eq_smul_greenProj`](Rigidity/Proofs/Corrector/DarioCaseThreePairing.lean), [`ae_heatComp_coarse_sub_eq_smul_greenProj`](Rigidity/Proofs/Corrector/DarioCaseThreePairing.lean), [`ae_heatComp_coarse_sub_eq_walkSum_closed`](Rigidity/Proofs/Corrector/DarioCaseThreeClosed.lean), [`abs_sub_le_two_mul_edgeVariation`](Rigidity/Proofs/Corrector/DarioCaseThreePairing.lean) | (3.26) paired with (3.22) and (2.15): in Case 3 the heat average of the coarsened change of the corrected planes is the increment across the bond times the pairing of `P` with the anchor-path field (for the closed bond, the sum along the path); and the (3.24) form of the increment across a bond by the total variations on the partition squares at its endpoints. |
+| [`ae_exists_correctedPlane_eq_add_const`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean), [`isCorrectedPlane_of_harmonic`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean), [`le_of_finite_piece`](Rigidity/Proofs/Corrector/DarioCaseOneTwo.lean) | Cases 1 and 2 of Step 2: almost surely, when the endpoints of the bond are not both in the infinite cluster with the bond closed, the corrected planes with the bond open and closed differ by a constant on that cluster (maximum principle on the finite piece cut off by the bond, and uniqueness of corrected planes). |
+| [`edgeDiv_edgeGrad_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean), [`ae_setBond`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean), [`mem_supp_iff_of_mem_supp_setBond_false`](Rigidity/Proofs/Corrector/DarioFlipCluster.lean) | the comparison of the configurations with one bond opened and closed: the Laplacians differ by the dipole of the bond times the increment across it, almost sure properties hold for both, and in Case 3 the two infinite clusters have the same vertices. |
+
+The following theorems compose the results above with the proved multiscale Poincaré inequality, the qualitative corrector input, the
+order-zero regularity and (1.22), in
+[`Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | Theorem 1 of Dario in `d = 2` (`DarioOptimalCorrectorTwo`) from `ConcentrationTwo` and `DarioLemmaThreeThree` only. |
+| [`darioOptimalCorrectorTwo_of_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | the same from `ConcentrationTwo` and `DarioFlipSumBound` only, by `darioLemmaThreeThree_of_flipSum`. |
+| [`correctorQuantitativeInputTwo_of_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`armstrongDarioOrderOneOriginTwo_of_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean), [`darioGuHeatKernelTwo_of_reduced_concentration_flipSum`](Rigidity/Proofs/Poincare/DarioCorrectorBridges.lean) | `CorrectorQuantitativeInputTwo` (R5), `ArmstrongDarioOrderOneOriginTwo` (R4) and `DarioGuHeatKernelTwo` (Dario and Gu, Theorem 1, with the further named inputs `hSec`, `BarlowGaussianUpperBoundTwo`, `CarneVaropoulosTwo` of `darioGuHeatKernelTwo_of_reduced_dario`) from `ConcentrationTwo` and `DarioFlipSumBound`. |
+
+The thirty-five reports for the first table of this section and the five reports for the bridges are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+So in `d = 2` the inputs R4 and R5 and Theorem 1 of Dario rest on two named statements, the concentration inequality
+`ConcentrationTwo` (Proposition 2.17, cited) and `DarioFlipSumBound` (the estimate (3.13)). The module
+[`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1 from `ConcentrationTwo`,
+`CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`; with (1.22) proved (`correctorOscSublinearTwo_holds`) it is the first bridge above.
+Lemma 3.2 and (1.22) were proved before these files and are not restated by them.
+
+Departures from Dario:
+
+- **Flips in place of a doubled probability space.** For the Bernoulli law the variable `a_e` takes the values 0 and 1, so the conditional
+  expectation given the other bonds is a two-point average, and the resampled configuration of (3.11)–(3.13) is replaced by the
+  configurations `ω^{e,1}` and `ω^{e,0}` with the bond `e` open and closed: `𝕍[X] ≤ Σ_e (D_e X)²` with `D_e X = X(ω^{e,1}) − X(ω^{e,0})`.
+- **Propositions 2.11 and 2.12 as an orthogonal projection.** The gradient of the Green function is the orthogonal projection onto the closed span of the gradients of
+  point masses, which gives (2.14) with `C = 1`, (2.15) and (2.17) at once; potentials are built by sums along walks from the roots of the components.
+- **The paths of (3.26).** The paths `γ_r` joining the anchors of neighbouring partition cubes are taken in the ninefold square of the smaller cube
+  (`reachIn_planarAnchor_of_near`), in place of `□_𝒫(z) ∪ □_𝒫(z')`.
+- **(3.22) in flip form.** It is proved for the corrected planes of `ω^{e,1}` and `ω^{e,0}`, the sublinear growth of the potential of the gradient of the Green function
+  from the partition chains and the minimal scales with exponent `1/16`, and the increment (3.24) through the partition of `ω^{e,0}` without Lemma 3.5.
 
 ## Theorem 1 of Dario and Gu in dimension two
 
@@ -2366,10 +2458,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1414 Lean files with 279,071 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1448 Lean files with 286,858 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (1,136 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (1,222 lines) are counted separately.
 
 ## Building
 

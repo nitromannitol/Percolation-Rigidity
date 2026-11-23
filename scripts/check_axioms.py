@@ -762,6 +762,20 @@ further = {
          'Rigidity.Corrector.isCorrectedPlane_of_harmonic',
          'Rigidity.Corrector.le_of_finite_piece',
          'Rigidity.Corrector.ae_exists_correctedPlane_eq_add_const'],
+    'the multiscale Poincare inequality (2.26) of Dario on the square lattice and Theorem 1 of Dario from the concentration inequality and Lemma 3.3':
+        ['Rigidity.Poincare.multiscalePoincareTwo_holds',
+         'Rigidity.Poincare.exists_multiscalePoincare_box',
+         'Rigidity.Poincare.exists_steinSigned',
+         'Rigidity.Poincare.tsum_boxMax_rpow_le',
+         'Rigidity.Poincare.tsum_mul_eq_add_integral',
+         'Rigidity.Poincare.exists_ofReal_sq_heatGrad_le',
+         'Rigidity.Poincare.ofReal_abs_integral_le',
+         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration',
+         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree',
+         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_flipSum',
+         'Rigidity.Poincare.correctorQuantitativeInputTwo_of_concentration_flipSum',
+         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_concentration_flipSum',
+         'Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_concentration_flipSum'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

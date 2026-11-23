@@ -321,6 +321,27 @@ import Rigidity.Proofs.Cluster.GeneralMuStationary
 import Rigidity.Proofs.Cluster.GeneralMuSubadditiveError
 import Rigidity.Proofs.Cluster.GeneralMuSubadditiveMoments
 import Rigidity.Proofs.Corrector.DarioStationaryPartition
+import Rigidity.Proofs.Poincare.LatticeHeatKernel
+import Rigidity.Proofs.Poincare.HeatKernelBounds
+import Rigidity.Proofs.Poincare.BoxMaximal
+import Rigidity.Proofs.Poincare.HeatMaximal
+import Rigidity.Proofs.Poincare.SteinScalar
+import Rigidity.Proofs.Poincare.LatticeHeatFlow
+import Rigidity.Proofs.Poincare.SteinSquareFunction
+import Rigidity.Proofs.Poincare.SteinWeighted
+import Rigidity.Proofs.Poincare.SteinBound
+import Rigidity.Proofs.Poincare.SteinFinal
+import Rigidity.Proofs.Poincare.SteinSigned
+import Rigidity.Proofs.Poincare.HeatGradient
+import Rigidity.Proofs.Poincare.HeatDuality
+import Rigidity.Proofs.Poincare.BoxField
+import Rigidity.Proofs.Poincare.DualityBilinear
+import Rigidity.Proofs.Poincare.DualityLowFreq
+import Rigidity.Proofs.Poincare.DualTestFunction
+import Rigidity.Proofs.Poincare.DualityTerms
+import Rigidity.Proofs.Poincare.MultiscalePoincareHolds
+import Rigidity.Proofs.Poincare.DarioCorrectorPoincare
+import Rigidity.Proofs.Poincare.DarioCorrectorBridges
 import Rigidity.Proofs.Corrector.DarioBondResampling
 import Rigidity.Proofs.Corrector.DarioCaseOneTwo
 import Rigidity.Proofs.Corrector.DarioCaseThree
@@ -1184,3 +1205,18 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.isCorrectedPlane_of_harmonic
 #print axioms Rigidity.Corrector.le_of_finite_piece
 #print axioms Rigidity.Corrector.ae_exists_correctedPlane_eq_add_const
+
+-- The multiscale Poincare inequality (2.26) on the square lattice and Theorem 1 of Dario from the concentration inequality and Lemma 3.3
+#print axioms Rigidity.Poincare.multiscalePoincareTwo_holds
+#print axioms Rigidity.Poincare.exists_multiscalePoincare_box
+#print axioms Rigidity.Poincare.exists_steinSigned
+#print axioms Rigidity.Poincare.tsum_boxMax_rpow_le
+#print axioms Rigidity.Poincare.tsum_mul_eq_add_integral
+#print axioms Rigidity.Poincare.exists_ofReal_sq_heatGrad_le
+#print axioms Rigidity.Poincare.ofReal_abs_integral_le
+#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration
+#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_lemmaThreeThree
+#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_concentration_flipSum
+#print axioms Rigidity.Poincare.correctorQuantitativeInputTwo_of_concentration_flipSum
+#print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_concentration_flipSum
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_concentration_flipSum
