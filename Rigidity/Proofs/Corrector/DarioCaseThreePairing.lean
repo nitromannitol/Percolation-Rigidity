@@ -14,7 +14,9 @@ by (3.26), (3.22) and Proposition 2.12 with the symmetry (2.15). Here `w_γ(x) -
   `∇v = 0` on the other open edges, then `Φ_{r²} * ∇_j[v]_𝒫(x) = c (Pγ)(a)`;
 * `ae_heatComp_coarse_sub_eq_smul_greenProj`: with (3.22) for the corrected planes
   (`ae_correctedPlane_sub_eq_smul_greenProj`), the Case 3 identity
-  `Φ_{r²} * ∇_j[ℓ₁ - ℓ₀]_𝒫(x) = (ℓ₀(x) - ℓ₀(y)) (Pγ)(a)` for `ω^{e,1}`.
+  `Φ_{r²} * ∇_j[ℓ₁ - ℓ₀]_𝒫(x) = (ℓ₀(x) - ℓ₀(y)) (Pγ)(a)` for `ω^{e,1}`;
+* `abs_sub_le_two_mul_edgeVariation`: the factor `ℓ₀(x) - ℓ₀(y)` is bounded by total variations
+  over the partition squares at `x` and `y` (the form of (3.24) used here).
 -/
 
 namespace Rigidity.Corrector
@@ -173,5 +175,25 @@ theorem ae_heatComp_coarse_sub_eq_smul_greenProj {p : unitInterval}
       extendComp_of_not_mem _ _ (fun h => hb1 ((hC _).2 h)),
       extendComp_of_not_mem _ _ (fun h => hb2 ((hC _).2 h))]
     ring
+
+/-- **The increment across a bond, by coarsening** (the form of Dario's (3.24) used here): for
+neighbours `x, y` of the infinite cluster, `|w(x) - w(y)|` is at most twice the total variations of
+`w` over the squares of side `9s` around their partition cubes. With `ω = ω^{e,0}` and
+`w = ℓ₀` this bounds the factor `ℓ₀(x) - ℓ₀(y)` of Case 3 by the partition of `ω^{e,0}` alone,
+without Lemma 3.5. -/
+theorem abs_sub_le_two_mul_edgeVariation {ω : Configuration 2} (hP : PlanarPartitionEvent ω)
+    {x y : Vertex 2} (hnear : ∀ i, |x i - y i| ≤ 1)
+    (hx : ((openGraph ω).connectedComponentMk x).supp.Infinite)
+    (hy : ((openGraph ω).connectedComponentMk y).supp.Infinite) (w : Vertex 2 → ℝ) :
+    |w x - w y| ≤
+      2 * (edgeVariationIn ω (cubeRegion ω x) w + edgeVariationIn ω (cubeRegion ω y) w) := by
+  have h1 := abs_sub_coarseAnchor_le hP hx w
+  have h2 := abs_coarseAnchor_sub_le_add hP hnear w
+  have h3 := abs_sub_coarseAnchor_le hP hy w
+  have t1 := abs_sub_le (w x) (w (planarCoarseAnchor ω x)) (w y)
+  have t2 := abs_sub_le (w (planarCoarseAnchor ω x)) (w (planarCoarseAnchor ω y)) (w y)
+  have e3 := abs_sub_comm (w (planarCoarseAnchor ω y)) (w y)
+  unfold cubeRegion at h2 ⊢
+  linarith
 
 end Rigidity.Corrector
