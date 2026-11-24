@@ -27,7 +27,7 @@ def DarioGuTranslatedFluxTwo (p : unitInterval) (σ : ℝ) : Prop :=
       ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
         y ∈ (uniqueInfiniteComponent h).supp → ∀ χ : Fin 2 → Vertex 2 → ℝ,
           IsDGCorrector (uniqueInfiniteComponent h) y χ → ∀ r : ℝ, M ω ≤ r → ∀ k i : Fin 2,
-            WeakNormLe ω (clusterBall (uniqueInfiniteComponent h) y r)
+            WeakNormLe ω (dgClusterBall (uniqueInfiniteComponent h) y r)
               (translatedFlux ω σ χ k i) (C * r ^ α)
 
 /-- A lattice neighbour of a point of a component along an open edge lies in the component. -/
@@ -81,9 +81,9 @@ theorem darioGuTranslatedFluxTwo_of_inputs (hR5 : CorrectorQuantitativeInputTwo)
   have hrα : 1 ≤ r ^ α := Real.one_le_rpow hr1 hα.le
   have h2r : (2 * r) ^ α = 2 ^ α * r ^ α := Real.mul_rpow (by norm_num) (by linarith)
   have hL0 : 0 ≤ 1 + C₂ * (2 * r) ^ α := by positivity
-  have hA : ∀ x ∈ clusterBall K y r, |edgeFlux ω χ k i x| ≤ 1 + C₂ * (2 * r) ^ α := by
+  have hA : ∀ x ∈ dgClusterBall K y r, |edgeFlux ω χ k i x| ≤ 1 + C₂ * (2 * r) ^ α := by
     intro x hx
-    rw [mem_clusterBall] at hx
+    rw [mem_dgClusterBall] at hx
     by_cases hadj : (openGraph ω).Adj x (x + Pi.single i 1)
     · have hxe : x + Pi.single i 1 ∈ K.supp := mem_supp_of_openAdj hx.1 hadj
       have hd : latticeDist (x + Pi.single i 1) y < 2 * r := by

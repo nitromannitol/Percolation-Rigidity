@@ -63,13 +63,13 @@ theorem sum_dyDecay_le {σ : ℝ} (hσ : 0 < σ) (M : ℕ) :
   linarith
 
 /-- `|𝒞 ∩ B_ρ(y)| ≤ 25 ρ²` for `ρ ≥ 1`. -/
-theorem card_clusterBall_le {ω : Configuration 2} (K : OpenComponent ω) (y : Vertex 2) {ρ : ℝ}
-    (hρ : 1 ≤ ρ) : ((clusterBall K y ρ).card : ℝ) ≤ 25 * ρ ^ 2 := by
-  have h1 : (clusterBall K y ρ).card ≤ (componentEuclideanBall K y ρ).card := by
-    unfold clusterBall
+theorem card_dgClusterBall_le {ω : Configuration 2} (K : OpenComponent ω) (y : Vertex 2) {ρ : ℝ}
+    (hρ : 1 ≤ ρ) : ((dgClusterBall K y ρ).card : ℝ) ≤ 25 * ρ ^ 2 := by
+  have h1 : (dgClusterBall K y ρ).card ≤ (componentEuclideanBall K y ρ).card := by
+    unfold dgClusterBall
     exact Finset.card_image_le
   have h2 := Rigidity.Proofs.S2.card_componentEuclideanBall_le K y hρ
-  calc ((clusterBall K y ρ).card : ℝ) ≤ (componentEuclideanBall K y ρ).card := by
+  calc ((dgClusterBall K y ρ).card : ℝ) ≤ (componentEuclideanBall K y ρ).card := by
         exact_mod_cast h1
     _ ≤ 5 ^ 2 * ρ ^ 2 := h2
     _ = 25 * ρ ^ 2 := by norm_num
@@ -94,7 +94,7 @@ theorem neg_tsum_flux_le {σ C : ℝ} (hσ : 0 < σ) (hC : 128 * σ ≤ C) : ∃
       (k i : Fin 2) (Cf α r R : ℝ) (u : Vertex 2 → ℝ),
       0 ≤ Cf → 0 < α → α ≤ 1 → 1 ≤ r → 0 ≤ R → Summable (fun x => u x ^ 2) →
       (∀ x, x ∉ K.supp → u x = 0) →
-      (∀ m : ℕ, WeakNormLe ω (clusterBall K y (2 ^ (m + 2) * Real.sqrt r))
+      (∀ m : ℕ, WeakNormLe ω (dgClusterBall K y (2 ^ (m + 2) * Real.sqrt r))
         (centeredFlux ω σ χ k i) (Cf * (2 ^ (m + 2) * Real.sqrt r) ^ α)) →
       Summable (fun x => |centeredFlux ω σ χ k i x *
         ((fwdDiff i (fwdDiff k fun z => latticeGaussian σ r z y) x * dgWeightTrunc C r R y x) *
@@ -134,7 +134,7 @@ theorem neg_tsum_flux_le {σ C : ℝ} (hσ : 0 < σ) (hC : 128 * σ ≤ C) : ∃
   -- every piece is finitely supported
   have hpiece : ∀ m, Summable fun x => centeredFlux ω σ χ k i x * (dyPiece r y m x * W x) := by
     intro m
-    refine summable_of_ne_finset_zero (s := clusterBall K y (ρ m)) fun x hx => ?_
+    refine summable_of_ne_finset_zero (s := dgClusterBall K y (ρ m)) fun x hx => ?_
     rw [hpieceEq]
     by_contra h0
     have h1 : dyCoeff σ C r R y i k m x * u x ≠ 0 := fun h => h0 (by rw [h, mul_zero])
@@ -145,7 +145,7 @@ theorem neg_tsum_flux_le {σ C : ℝ} (hσ : 0 < σ) (hC : 128 * σ ≤ C) : ∃
     rw [tsum_congr (hpieceEq m)]
     obtain ⟨ha, hb⟩ := hcoef r R y i k m hr hR
     exact neg_tsum_le_of_weakNormLe_coeff (hW m) (by have := hρ1 m; positivity)
-      (card_clusterBall_le K y (hρ1 m)) hu ha hb (dyCoeff_support K hr huK)
+      (card_dgClusterBall_le K y (hρ1 m)) hu ha hb (dyCoeff_support K hr huK)
   -- the sum over the scales
   have hcle : ∀ m, c m ≤ Cf * r ^ (α / 2) * T * ((4 : ℝ) ^ (m + 2) * dyDecay σ m) := by
     intro m

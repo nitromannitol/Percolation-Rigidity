@@ -29,7 +29,7 @@ theorem mem_supp_of_reachable {ω : Configuration 2} {K : OpenComponent ω} {x z
   rw [← hx]
   exact (SimpleGraph.ConnectedComponent.sound h).symm
 
-theorem openHeat_eq_zero_of_mem_of_notMem {ω : Configuration 2} {K : OpenComponent ω}
+theorem openHeat_eq_zero_of_mem_supp_of_notMem_supp {ω : Configuration 2} {K : OpenComponent ω}
     {x z : Vertex 2} (hx : x ∈ K.supp) (hz : z ∉ K.supp) (s : ℝ) : openHeat ω s x z = 0 :=
   openHeat_eq_zero_of_not_reachable ω (fun h => hz (mem_supp_of_reachable hx h)) s
 
@@ -146,7 +146,7 @@ theorem clusterW_eq_dgW {ω : Configuration 2} {K : OpenComponent ω} {σ θ τ 
     by_cases hz : z ∈ K.supp
     · unfold clusterInit
       rw [if_pos hz]
-    · rw [openHeat_eq_zero_of_mem_of_notMem hx hz, zero_mul, zero_mul]
+    · rw [openHeat_eq_zero_of_mem_supp_of_notMem_supp hx hz, zero_mul, zero_mul]
   have hv : Summable fun z => openHeat ω (s - τ) x z *
       (dgTwoScale σ θ χ τ z y - θ⁻¹ * latticeGaussian σ τ z y) := by
     refine ((summable_openHeat_mul ω hs hf x).sub

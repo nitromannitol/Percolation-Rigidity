@@ -52,7 +52,7 @@ def WeakNormLe (ω : Configuration 2) (V : Finset (Vertex 2)) (g : Vertex 2 → 
     (V.card : ℝ)⁻¹ * ∑ x ∈ V, g x * v x ≤ B * clusterH1Norm ω V v
 
 /-- `𝒞 ∩ B_r(y)` for a component `𝒞`, as a finite set of lattice points. -/
-noncomputable def clusterBall {ω : Configuration 2} (K : OpenComponent ω) (y : Vertex 2)
+noncomputable def dgClusterBall {ω : Configuration 2} (K : OpenComponent ω) (y : Vertex 2)
     (r : ℝ) : Finset (Vertex 2) :=
   (componentEuclideanBall K y r).image Subtype.val
 
@@ -87,12 +87,12 @@ def DarioGuFluxWeakNormTwo (p : unitInterval) (σ : ℝ) : Prop :=
       ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω,
         y ∈ (uniqueInfiniteComponent h).supp → ∀ χ : Fin 2 → Vertex 2 → ℝ,
           IsDGCorrector (uniqueInfiniteComponent h) y χ → ∀ r : ℝ, M ω ≤ r → ∀ k i : Fin 2,
-            WeakNormLe ω (clusterBall (uniqueInfiniteComponent h) y r)
+            WeakNormLe ω (dgClusterBall (uniqueInfiniteComponent h) y r)
               (centeredFlux ω σ χ k i) (C * r ^ α)
 
-theorem mem_clusterBall {ω : Configuration 2} (K : OpenComponent ω) (y x : Vertex 2) (r : ℝ) :
-    x ∈ clusterBall K y r ↔ x ∈ K.supp ∧ latticeDist x y < r := by
-  rw [clusterBall, mem_image_componentEuclideanBall, latticeDist, dist_eq_norm]
+theorem mem_dgClusterBall {ω : Configuration 2} (K : OpenComponent ω) (y x : Vertex 2) (r : ℝ) :
+    x ∈ dgClusterBall K y r ↔ x ∈ K.supp ∧ latticeDist x y < r := by
+  rw [dgClusterBall, mem_image_componentEuclideanBall, latticeDist, dist_eq_norm]
 
 /-- The weak norm is monotone in the bound. -/
 theorem WeakNormLe.mono {ω : Configuration 2} {V : Finset (Vertex 2)} {g : Vertex 2 → ℝ}

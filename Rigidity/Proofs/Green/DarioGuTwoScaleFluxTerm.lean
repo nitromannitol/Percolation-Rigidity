@@ -208,7 +208,7 @@ theorem darioGuTwoScaleFluxTermTwo_of_inputs (hR5 : CorrectorQuantitativeInputTw
     rw [e1] at this
     exact le_of_add_le_of_nonneg_left this (abs_nonneg _)
   -- the weak norm bounds on the dyadic balls (Proposition 2.13)
-  have hWk : ∀ k i : Fin 2, ∀ m : ℕ, WeakNormLe ω (clusterBall K y (2 ^ (m + 2) * Real.sqrt r))
+  have hWk : ∀ k i : Fin 2, ∀ m : ℕ, WeakNormLe ω (dgClusterBall K y (2 ^ (m + 2) * Real.sqrt r))
       (centeredFlux ω σ χ k i) (Cf * (2 ^ (m + 2) * Real.sqrt r) ^ α') := by
     intro k i m
     refine hωf h hy χ hχ _ ?_ k i

@@ -209,8 +209,8 @@ theorem latticeDist_le_of_adj {ω : Configuration 2} {x z : Vertex 2} (h : (open
 theorem dyCoeff_support {ω : Configuration 2} (K : OpenComponent ω) {σ C r R : ℝ} (hr : 1 ≤ r)
     {y : Vertex 2} {i k : Fin 2} {m : ℕ} {u : Vertex 2 → ℝ} (hu : ∀ x, x ∉ K.supp → u x = 0)
     (x : Vertex 2) (hx : dyCoeff σ C r R y i k m x * u x ≠ 0) :
-    x ∈ clusterBall K y (2 ^ (m + 2) * Real.sqrt r) ∧
-      x ∈ openInterior ω (clusterBall K y (2 ^ (m + 2) * Real.sqrt r)) := by
+    x ∈ dgClusterBall K y (2 ^ (m + 2) * Real.sqrt r) ∧
+      x ∈ openInterior ω (dgClusterBall K y (2 ^ (m + 2) * Real.sqrt r)) := by
   have hr0 : 0 < r := by linarith
   have hxK : x ∈ K.supp := by
     by_contra h
@@ -225,9 +225,9 @@ theorem dyCoeff_support {ω : Configuration 2} (K : OpenComponent ω) {σ C r R 
     exact hp (dyPiece_eq_zero_of_le hr0 (not_lt.1 h))
   have h1 := one_le_two_pow_mul_sqrt hr (m + 1)
   have h2 : 2 ^ (m + 2) * Real.sqrt r = 2 * (2 ^ (m + 1) * Real.sqrt r) := by ring
-  have hmem : x ∈ clusterBall K y (2 ^ (m + 2) * Real.sqrt r) :=
-    (mem_clusterBall K y x _).2 ⟨hxK, by linarith⟩
-  refine ⟨hmem, hmem, fun z hz => (mem_clusterBall K y z _).2
+  have hmem : x ∈ dgClusterBall K y (2 ^ (m + 2) * Real.sqrt r) :=
+    (mem_dgClusterBall K y x _).2 ⟨hxK, by linarith⟩
+  refine ⟨hmem, hmem, fun z hz => (mem_dgClusterBall K y z _).2
     ⟨K.mem_supp_of_adj_mem_supp hxK hz, ?_⟩⟩
   have := latticeDist_le_of_adj hz y
   linarith
