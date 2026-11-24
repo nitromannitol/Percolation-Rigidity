@@ -928,6 +928,15 @@ further = {
          'Rigidity.Corrector.openLaplacian_sub_eq_zero',
          'Rigidity.Corrector.sum_clusterEnergy_localSolution_le',
          'Rigidity.Corrector.meyers_source'],
+    'The Step 2 sum of Lemma 3.3 of Dario bounded by a weighted energy (d = 2)':
+        ['Rigidity.Corrector.ae_flipTermTwo_eq_walkSum',
+         'Rigidity.Corrector.ae_flipTermTwo_eq_zero',
+         'Rigidity.Corrector.ae_flipTermTwo_eq_open',
+         'Rigidity.Corrector.ae_dipoleCoeff_eq',
+         'Rigidity.Corrector.ae_flipTermTwo_sq_le_closed',
+         'Rigidity.Corrector.ae_flipTermTwo_sq_le_open',
+         'Rigidity.Corrector.ae_flipTermTwo_sq_le_weight',
+         'Rigidity.Corrector.ae_flipSumTwo_le'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

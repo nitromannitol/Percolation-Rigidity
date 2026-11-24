@@ -418,6 +418,7 @@ import Rigidity.Proofs.Poincare.DarioGuFluxBridges
 import Rigidity.Proofs.Corrector.DarioResamplePartitionHolds
 import Rigidity.Proofs.Poincare.DarioStepTwoBridges
 import Rigidity.Proofs.Corrector.DarioMeyersSource
+import Rigidity.Proofs.Corrector.DarioStepTwoSum
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1414,3 +1415,13 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.openLaplacian_sub_eq_zero
 #print axioms Rigidity.Corrector.sum_clusterEnergy_localSolution_le
 #print axioms Rigidity.Corrector.meyers_source
+
+-- The Step 2 sum of Lemma 3.3 of Dario bounded by a weighted energy (d = 2)
+#print axioms Rigidity.Corrector.ae_flipTermTwo_eq_walkSum
+#print axioms Rigidity.Corrector.ae_flipTermTwo_eq_zero
+#print axioms Rigidity.Corrector.ae_flipTermTwo_eq_open
+#print axioms Rigidity.Corrector.ae_dipoleCoeff_eq
+#print axioms Rigidity.Corrector.ae_flipTermTwo_sq_le_closed
+#print axioms Rigidity.Corrector.ae_flipTermTwo_sq_le_open
+#print axioms Rigidity.Corrector.ae_flipTermTwo_sq_le_weight
+#print axioms Rigidity.Corrector.ae_flipSumTwo_le
