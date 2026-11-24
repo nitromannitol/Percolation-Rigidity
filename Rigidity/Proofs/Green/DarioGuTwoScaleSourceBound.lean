@@ -10,7 +10,7 @@ The source term of the equation of `w` on the cluster splits as
 does not leave the cluster). Step 4 bounds `f` and `F` (`tsum_sq_clusterF_le`,
 `tsum_sq_clusterFlux_le`), with the growth of the corrector given by Proposition 2.12 (R5).
 
-`DarioGuTwoScaleFluxTermTwo` is the estimate of Step 3 of the source (lines 2333-2405), (4.30)
+`DarioGuTwoScaleFluxTermTwo` is the estimate of Step 3 of the source (lines 2333-2405), (4.32)
 after Young's inequality: `-θ^{-1} Σ_x ψ_R² v ξ ≤ E(ψ_R v)/4 + (8r)^{-1} Σ_x (ψ_R v)² + Q r^{α - 3}`.
 `darioGuTwoScaleSourceBoundTwo_of_fluxTerm` proves `DarioGuTwoScaleSourceBoundTwo` (Steps 3-4)
 from it and R5, through `tsum_source_le_of_split`, and
@@ -28,7 +28,7 @@ noncomputable def clusterXi {ω : Configuration 2} (K : OpenComponent ω) (σ : 
   if x ∈ K.supp then ∑ k : Fin 2, ∑ i : Fin 2, centeredFlux ω σ χ k i x *
     fwdDiff i (fwdDiff k fun z => latticeGaussian σ r z y) x else 0
 
-/-- **Step 3 of the proof of Proposition 4.3 of Dario–Gu** ((4.30) with Young's inequality), in
+/-- **Step 3 of the proof of Proposition 4.3 of Dario–Gu** ((4.32) with Young's inequality), in
 dimension two, for the weights `ψ_R` with `C ≥ C₀`. -/
 def DarioGuTwoScaleFluxTermTwo (p : unitInterval) (σ : ℝ) : Prop :=
   ∀ α : ℝ, 0 < α → ∃ C₀ : ℝ, 0 < C₀ ∧ ∀ C : ℝ, C₀ ≤ C → ∃ Q s : ℝ, 0 < Q ∧ 0 < s ∧

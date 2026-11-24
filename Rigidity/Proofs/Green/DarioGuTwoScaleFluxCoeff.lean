@@ -4,8 +4,8 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleMomentSum
 /-!
 # The coefficients of Step 3 of Proposition 4.3 of Dario–Gu
 
-In Step 3 of the proof of Proposition 4.3 of Dario–Gu (the quantities `Ξ₁`, `Ξ₂` of (4.31) and
-the estimate after (4.32), lines 2340-2346 and 2399-2412 of the source) the flux is tested against
+In Step 3 of the proof of Proposition 4.3 of Dario–Gu (the quantities `Ξ₁`, `Ξ₂` of (4.34) and
+the estimate after (4.35), lines 2340-2346 and 2399-2412 of the source) the flux is tested against
 `D_i D_k p̄ ψ² w = (D_i D_k p̄ ψ)(ψ w)`. The coefficient `D_i D_k p̄ ψ` is bounded with the
 Gaussian decay once `C ≥ 128σ`:
 

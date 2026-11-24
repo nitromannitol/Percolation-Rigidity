@@ -7,7 +7,7 @@ import Rigidity.Proofs.Regularity.LatticeHarmonic
 Step 2 of the proof of Proposition 4.3 of Dario–Gu (lines 2276-2331 of the source) tests the
 equation of `w` against `ψ² w` and integrates by parts on the cluster. This file proves:
 
-* `tsum_openLaplacian_mul`: the discrete integration by parts (1.35)-(1.37) on `ℤ²` for square
+* `tsum_openLaplacian_mul`: the discrete integration by parts (1.35) on `ℤ²` for square
   summable functions, `Σ_x (Δ u)(x) φ(x) = -Σ_x Σ_i a_i(x) D_i u(x) D_i φ(x)`, where
   `a_i(x) = 1` if the edge `{x, x + e_i}` is open and `0` otherwise (`openCond`);
 * `edge_energy_ge`: on one edge, `(q² b - p² a)(b - a) ≥ (q b - p a)² - (q - p)² (a² + b²)/2`, the

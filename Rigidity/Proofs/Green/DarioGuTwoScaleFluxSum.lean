@@ -4,7 +4,7 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleFluxScale
 /-!
 # The sum over the dyadic scales in Step 3 of Proposition 4.3 of Dario–Gu
 
-In Step 3 of the proof of Proposition 4.3 of Dario–Gu (the computation (4.32), lines 2371-2376 of
+In Step 3 of the proof of Proposition 4.3 of Dario–Gu (the computation (4.37), lines 2371-2376 of
 the source) the test function is split with the partition of unity `1 = Σ_m (η_m - η_{m-1})` and
 each piece is estimated separately. `neg_tsum_le_of_pieces` justifies the exchange of the sum
 over the scales with the sum over the lattice: if `Σ_x G W` converges absolutely and every piece

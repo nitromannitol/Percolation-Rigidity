@@ -3,7 +3,7 @@ import Rigidity.Proofs.Green.DarioGuGaussianLatticeDiff
 /-!
 # Third differences of the planar Gaussian on the lattice
 
-Step 3 of the proof of Proposition 4.3 of Dario–Gu (the quantity `Ξ₂` of (4.31), lines 2340-2346
+Step 3 of the proof of Proposition 4.3 of Dario–Gu (the quantity `Ξ₂` of (4.34), lines 2340-2346
 of the source) uses the bound `|D³ p̄(t, x)| ≤ C t^{-5/2} exp(-|x|²/(Ct))`. On the lattice:
 
 * `exists_thirdDiff_eq`: `D²g(n + 1) - D²g(n) = g'''(ξ)` with `ξ ∈ (n, n + 3)`;

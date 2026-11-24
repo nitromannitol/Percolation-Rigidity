@@ -14,7 +14,7 @@ homogenized coefficient of Armstrong–Dario (Definition 5.1); this file states 
 hypothesis, with unit conductances on the open edges (`a ∈ {0, 1}`).
 
 * `openInterior ω V` is `int_a(V)` and `C_0^a(V)` is the set of functions vanishing on
-  `V \ int_a(V)` (§1.6.3, (1.28));
+  `V \ int_a(V)` (§1.6.3, (1.25));
 * `openGradNorm ω V v x` is `|∇v|(x) = Σ_{z ∼ x} |v(z) - v(x)|` over the open edges of `V`;
 * `clusterH1Norm ω V v` is `‖v‖_{H̲¹(V)} = |V|^{-1/2} ‖v‖_{L̲²(V)} + ‖∇v‖_{L̲²(V)}` ((1.32), `d = 2`);
 * `WeakNormLe ω V g B` is `‖g‖_{H̲^{-1}(V)} ≤ B` ((1.33), `p = 2`): for every `v ∈ C_0^a(V)`,
@@ -33,7 +33,7 @@ namespace Rigidity.Green
 def openInterior (ω : Configuration 2) (V : Finset (Vertex 2)) : Set (Vertex 2) :=
   {x | x ∈ V ∧ ∀ z, (openGraph ω).Adj x z → z ∈ V}
 
-/-- `|∇v|(x) = Σ_{z ∼ x} |v(z) - v(x)|` over the open edges `{x, z}` with `z ∈ V` ((1.29)). -/
+/-- `|∇v|(x) = Σ_{z ∼ x} |v(z) - v(x)|` over the open edges `{x, z}` with `z ∈ V` (the definition after (1.28)). -/
 noncomputable def openGradNorm (ω : Configuration 2) (V : Finset (Vertex 2)) (v : Vertex 2 → ℝ)
     (x : Vertex 2) : ℝ :=
   ∑ z ∈ LatticeProb.nbrFinset x, if (openGraph ω).Adj x z ∧ z ∈ V then |v z - v x| else 0

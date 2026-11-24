@@ -3,15 +3,15 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleFluxPieces
 /-!
 # The multiscale estimate of Step 3 of Proposition 4.3 of Dario–Gu
 
-This file proves the estimate (4.30) of Step 3 of the proof of Proposition 4.3 of Dario–Gu (lines
+This file proves the estimate (4.33) of Step 3 of the proof of Proposition 4.3 of Dario–Gu (lines
 2333-2412 of the source) for one component `(k, i)` of the flux: if the weak norm of the
 centered flux `g̃_{k,i}` on `𝒞 ∩ B_ρ(y)` is at most `C_f ρ^α` for the radii `ρ = 2^{m+2} √r`
 (Proposition 2.13), then
 
 `-Σ_x g̃_{k,i} (D_i D_k p̄ ψ) u ≤ L C_f r^{α/2} (r^{-2} ‖u‖₂ + r^{-3/2} E(u)^{1/2})`
 
-(`neg_tsum_flux_le`), which is the bound `C Ξ₁ ‖∇(wψ)‖ + C Ξ₂ ‖wψ‖` of (4.30) with the estimates
-(4.33) of `Ξ₁`, `Ξ₂`. The scales are summed with `sum_dyDecay_le`.
+(`neg_tsum_flux_le`), which is the bound `C Ξ₁ ‖∇(wψ)‖ + C Ξ₂ ‖wψ‖` of (4.33) with the estimates
+(4.35) of `Ξ₁`, `Ξ₂`. The scales are summed with `sum_dyDecay_le`.
 -/
 
 open scoped Classical
@@ -88,7 +88,7 @@ theorem rpow_two_pow_mul_sqrt_le {r α : ℝ} (hr : 0 ≤ r) (hα1 : α ≤ 1) (
   rw [h2]
   exact mul_le_mul_of_nonneg_right h1 (Real.rpow_nonneg hr _)
 
-/-- **Step 3 for one component of the flux** ((4.30) with (4.33)). -/
+/-- **Step 3 for one component of the flux** ((4.33) with (4.35)). -/
 theorem neg_tsum_flux_le {σ C : ℝ} (hσ : 0 < σ) (hC : 128 * σ ≤ C) : ∃ L : ℝ, 0 < L ∧
     ∀ (ω : Configuration 2) (K : OpenComponent ω) (y : Vertex 2) (χ : Fin 2 → Vertex 2 → ℝ)
       (k i : Fin 2) (Cf α r R : ℝ) (u : Vertex 2 → ℝ),

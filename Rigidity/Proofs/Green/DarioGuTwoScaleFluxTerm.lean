@@ -5,7 +5,7 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleSourceBound
 # Step 3 of Proposition 4.3 of Dario–Gu, and Proposition 4.3 from its inputs
 
 `darioGuTwoScaleFluxTermTwo_of_inputs` proves the estimate of Step 3 of the proof of Proposition
-4.3 of Dario–Gu (`DarioGuTwoScaleFluxTermTwo`, (4.30) after Young's inequality) from
+4.3 of Dario–Gu (`DarioGuTwoScaleFluxTermTwo`, (4.32) after Young's inequality) from
 Proposition 2.13 (`DarioGuFluxWeakNormTwo`, the weak norm of the centered flux) and Proposition
 2.12 (R5, which gives the growth of the corrector and with it the absolute convergence of the
 sums). For `r ≥ M(y) = max(M_flux², M_corr², 1)` every dyadic radius `2^{m+2} √r` is at least

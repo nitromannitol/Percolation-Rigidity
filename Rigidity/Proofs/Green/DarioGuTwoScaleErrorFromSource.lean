@@ -4,7 +4,7 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 # Proposition 4.3 of Dario–Gu from the estimate of the source term
 
 `DarioGuTwoScaleSourceBoundTwo` is the estimate of Steps 3-4 of the proof of Proposition 4.3 of
-Dario–Gu (lines 2333-2446 of the source), (4.30) and (4.38) combined with Young's inequality: for
+Dario–Gu (lines 2333-2446 of the source), (4.32) and (4.39) combined with Young's inequality: for
 `r ≥ M(y)`, every truncated weight `ψ_R = dgWeightTrunc C r R y` (`ψ_0 = 1`) and every square
 summable `v` vanishing off the cluster,
 `Σ_x ψ_R² v G(r) ≤ E(ψ_R v) + (2r)^{-1} Σ_x (ψ_R v)² + Q r^{α - 3}`, where
@@ -20,7 +20,7 @@ open MeasureTheory LatticeProb LatticeProb.Percolation Rigidity.External
 
 namespace Rigidity.Green
 
-/-- **Steps 3-4 of the proof of Proposition 4.3 of Dario–Gu** (the estimates (4.30) and (4.38)
+/-- **Steps 3-4 of the proof of Proposition 4.3 of Dario–Gu** (the estimates (4.32) and (4.39)
 combined with Young's inequality), in dimension two, for the weights `ψ_R` with `C ≥ C₀`. -/
 def DarioGuTwoScaleSourceBoundTwo (p : unitInterval) (σ : ℝ) : Prop :=
   ∀ α : ℝ, 0 < α → ∃ C₀ : ℝ, 0 < C₀ ∧ ∀ C : ℝ, C₀ ≤ C → ∃ Q s : ℝ, 0 < Q ∧ 0 < s ∧

@@ -13,7 +13,7 @@ the source (the inequality after (4.28)):
 (`tsum_source_le_of_split`) once `Σ_x (ψ f)² ≤ Q_f s^{α - 4}` (Step 4 for `f`),
 `Σ_x Σ_i (F_i(x) ψ(x + e_i))² ≤ Q_F s^{α - 3}` and `Σ_x Σ_i (F_i(x) D_i ψ(x))² ≤ Q_F s^{α - 4}`
 (Step 4 for `F`), and `-θ^{-1} Σ_x ψ² v ξ ≤ E(ψ v)/4 + (8s)^{-1} Σ_x (ψ v)² + Q_ξ s^{α - 3}`
-(Step 3, (4.30) after Young's inequality). Here `F` lives on the open edges.
+(Step 3, (4.32) after Young's inequality). Here `F` lives on the open edges.
 -/
 
 open LatticeProb LatticeProb.Percolation
