@@ -88,6 +88,14 @@ theorem sum_gradNormIn_coarse_sq_le_cubeForm (hd : 0 < d) (hP : PartitionEvent �
   exact mul_le_mul_of_nonneg_right
     (pow_le_pow_left₀ (by positivity) (hW z hz) _) (clusterGradSq_nonneg _ _ _ _)
 
+/-- The cardinality of the vertex set of a triadic cube. -/
+theorem card_toIntegerCube_vertices_pow (V : TriadicCube d) :
+    (V.toIntegerCube.vertices.card : ℝ) = ((3 : ℝ) ^ V.scale) ^ d := by
+  rw [IntegerCube.card_vertices_eq]
+  change ((((3 ^ V.scale : ℕ) ^ d : ℕ)) : ℝ) = _
+  push_cast
+  ring
+
 /-- **The coarsened gradient on a subcube through the Meyers estimate** (Armstrong and Dario,
 proof of Lemma 5.5, Steps 2 and 3, deterministic part, every dimension `d ≥ 1`). Let `V` be a
 resolved triadic cube of scale `n` whose vertices have partition cubes of scale less than `j < n`,

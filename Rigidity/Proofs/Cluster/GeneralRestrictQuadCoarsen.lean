@@ -98,7 +98,9 @@ theorem restrictOffBadConst_nonneg {A CM p : ℝ} (hA : 0 ≤ A) (hCM : 0 ≤ CM
 
 /-- **Lemma 5.5 of Armstrong and Dario for `μ`** (display (5.12), first term, every dimension
 `d ≥ 2`, `p > p_c(d)`): for `2d ≤ n < m ≤ 2n`,
-`E[cubeMuRestrictError(□_m, n, q)] ≤ C |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`. -/
+`E[cubeMuRestrictError(□_m, n, q)] ≤ C |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`.
+Armstrong and Dario print `∑_{k=n}^{m+1}`; the sum over `[n, m)` is the stronger form given by the
+proof, since `τ_k ≥ 0`. -/
 theorem exists_lintegral_cubeMuRestrictError_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     (hpc : criticalProbability d < (p : ℝ)) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ (n m : ℕ) (q : Fin d → ℝ), 2 * d ≤ n → n < m → m ≤ 2 * n →
@@ -185,7 +187,9 @@ theorem exists_lintegral_cubeMuRestrictError_le [NeZero d] (hd : 2 ≤ d) {p : u
 
 /-- **Lemma 5.5 of Armstrong and Dario for `ν`** (display (5.12), second term, every dimension
 `d ≥ 2`, `p > p_c(d)`, at the slopes `ā⁻¹ q`): for `2d ≤ n < m ≤ 2n`,
-`E[cubeNuRestrictError(□_m, n, ā⁻¹ q)] ≤ C |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`. -/
+`E[cubeNuRestrictError(□_m, n, ā⁻¹ q)] ≤ C |q|² (∑_{k=n}^{m-1} τ_k + 3^{-n/4})`.
+Armstrong and Dario print `∑_{k=n}^{m+1}`; the sum over `[n, m)` is the stronger form given by the
+proof, since `τ_k ≥ 0`. -/
 theorem exists_lintegral_cubeNuRestrictError_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     (hpc : criticalProbability d < (p : ℝ)) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ (n m : ℕ) (q : Fin d → ℝ), 2 * d ≤ n → n < m → m ≤ 2 * n →

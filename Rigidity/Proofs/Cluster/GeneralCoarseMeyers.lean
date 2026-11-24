@@ -30,6 +30,14 @@ namespace Rigidity.Percolation
 
 variable {d : ℕ} {ω : Configuration d}
 
+/-- The constant `2d · 21^d (1 + 3^d) 3^d 2√d` of Lemma 3.3 for the partition into good cubes. -/
+noncomputable def partitionCoarseGradConst (d : ℕ) : ℝ :=
+  2 * (d : ℝ) * ((21 ^ d : ℕ) : ℝ) * ((1 + 3 ^ d : ℕ) : ℝ) * 3 ^ (1 * d) * (2 * √(d : ℝ))
+
+theorem partitionCoarseGradConst_nonneg (d : ℕ) : 0 ≤ partitionCoarseGradConst d := by
+  unfold partitionCoarseGradConst
+  positivity
+
 /-- **Lemma 3.3 with `s = 2` for a function on a larger cluster.** On a resolved integer cube
 `B` whose cluster lies in `U₀`,
 `∑_{x ∈ B} |∇[w]_𝒫|²(x) ≤ K² ∑_{z ∈ 𝒞(B)} (3^{scale □_𝒫(z)})^{2d-1} |∇w 1_{𝐚≠0}|²_{U₀}(z)`. -/
