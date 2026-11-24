@@ -3,6 +3,7 @@ import Rigidity.Proofs.Regularity.PlanarOrderOneOriginInputs
 import PercolationClusterHomogenization.Proofs.Dirichlet.PlanarTheoremOneHolds
 import PercolationClusterHomogenization.Proofs.Cluster.PlanarMinimalScales
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarHarmonicApproximationHolds
+import Rigidity.Proofs.S3.Reflection
 
 /-!
 # Lemma 7.1 and the order-zero regularity in dimension two, with no hypothesis

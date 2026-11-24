@@ -1,6 +1,10 @@
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarOrderZeroInput
 import Rigidity.Proofs.Section5.PlanarLiteratureAdapters
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarCorrectorReduction
+import Rigidity.Proofs.S2.PlanarVarianceMoments
+import Rigidity.Proofs.S2.WeightedResamplingTonelli
+import Rigidity.Proofs.Section5.Peierls
+import Rigidity.Proofs.Section5.PlanarCrossingEvents
 
 /-!
 # The planar qualitative corrector input from the regularity of order one

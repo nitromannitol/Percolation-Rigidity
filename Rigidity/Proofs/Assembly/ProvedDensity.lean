@@ -1,6 +1,8 @@
 import Rigidity.Proofs.Assembly.ProvedInputs
 import Rigidity.Proofs.Percolation.WellConnected
 import PercolationClusterHomogenization.Proofs.Density.ClusterDensityConcentration
+import Rigidity.Proofs.S2.PlanarVarianceMoments
+import Rigidity.Proofs.S2.WeightedResamplingTonelli
 
 /-!
 # Main theorems with the density concentration proved

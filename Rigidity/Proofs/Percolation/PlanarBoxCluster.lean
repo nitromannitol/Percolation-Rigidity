@@ -1,5 +1,7 @@
 import Rigidity.Proofs.Percolation.PlanarBoxCrossing
 import PercolationClusterHomogenization.Proofs.Percolation.PlanarBoxGeometry
+import Rigidity.Proofs.S3.ChemicalDistance
+import Rigidity.Proofs.Section5.LoopFromCrossings
 
 /-!
 # Unique crossing clusters in planar cubes

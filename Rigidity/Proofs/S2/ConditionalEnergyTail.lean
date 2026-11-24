@@ -1,5 +1,6 @@
 import PercolationClusterHomogenization.Proofs.Density.ConditionalEnergyMoments
 import Mathlib.MeasureTheory.Function.LpSeminorm.ChebyshevMarkov
+import Rigidity.Proofs.S2.NormalizedEnergyOsMoment
 
 /-!
 # Tail estimates for conditional planar resampling energy

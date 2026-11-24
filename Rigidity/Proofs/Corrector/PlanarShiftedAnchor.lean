@@ -4,6 +4,7 @@ import PercolationClusterHomogenization.Proofs.Percolation.PlanarMuMeasurable
 import PercolationClusterHomogenization.Percolation.TriadicStableAncestors
 import LatticeProb.Prob.Percolation.LatticeBondTranslationLaw
 import LatticeProb.Prob.Percolation.OpenComponentTranslation
+import Rigidity.Proofs.Section5.PlanarCrossingEvents
 
 /-!
 # Anchors of the translated planar partitions

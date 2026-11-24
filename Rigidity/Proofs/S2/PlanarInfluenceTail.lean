@@ -2,6 +2,9 @@ import PercolationClusterHomogenization.Proofs.Density.FiniteClusterMoment
 import PercolationClusterHomogenization.Proofs.Density.ClusterDensityResampleLaw
 import PercolationClusterHomogenization.Proofs.Density.FiniteClusterGeometry
 import PercolationClusterHomogenization.Proofs.Density.PlanarInfluenceTail
+import Rigidity.Proofs.S2.ClusterDensityFromDarioGu
+import Rigidity.Proofs.Section5.ConnectingSet
+import Rigidity.Proofs.Section5.ManyPaths
 
 /-!
 # Tails of planar single-bond density influences

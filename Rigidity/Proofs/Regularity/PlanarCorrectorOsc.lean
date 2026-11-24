@@ -1,6 +1,7 @@
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarCorrectorSupOs
 import Rigidity.Proofs.Section5.PlanarLiteratureAdapters
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarCorrectorOsc
+import Rigidity.Proofs.Regularity.PlanarCorrectedPlaneExistence
 
 /-!
 # (1.22) in dimension two: the oscillation of the correctors on the balls

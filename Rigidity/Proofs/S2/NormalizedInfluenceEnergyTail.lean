@@ -1,5 +1,6 @@
 import PercolationClusterHomogenization.Proofs.Density.NormalizedInfluenceEnergyMoments
 import Mathlib.MeasureTheory.Function.LpSeminorm.ChebyshevMarkov
+import Rigidity.Proofs.S2.InfluenceMomentRootSummation
 
 /-!
 # Tail estimates for normalized planar resampling energy

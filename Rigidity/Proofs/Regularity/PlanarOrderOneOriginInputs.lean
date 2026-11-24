@@ -4,6 +4,7 @@ import Rigidity.Proofs.Regularity.PlanarCorrectorReduction
 import Rigidity.Proofs.Corrector.PlanarCorrectorQuantitative
 import PercolationClusterHomogenization.Proofs.Cluster.PlanarMinimalScales
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarOrderOneOriginInputs
+import Rigidity.Proofs.S3.Divergence
 
 /-!
 # Theorem 2 (iii) at `k = 1` in the plane from the estimates on squares

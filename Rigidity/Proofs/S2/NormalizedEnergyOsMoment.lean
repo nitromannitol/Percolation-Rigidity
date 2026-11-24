@@ -1,5 +1,6 @@
 import PercolationClusterHomogenization.Proofs.Density.RescaleExponentialMoment
 import PercolationClusterHomogenization.Proofs.Density.NormalizedEnergyOsMoment
+import Rigidity.Proofs.S2.NormalizedEnergyStochasticBound
 
 /-!
 # Planar density resampling energy with a unit exponential moment

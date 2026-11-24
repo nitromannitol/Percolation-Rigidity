@@ -1,5 +1,6 @@
 import PercolationClusterHomogenization.Proofs.Partition.Paths
 import PercolationClusterHomogenization.Proofs.Partition.AlmostSure
+import Rigidity.Proofs.Section5.PlanarCrossingEvents
 
 /-!
 # Uniqueness of the infinite cluster from the partition

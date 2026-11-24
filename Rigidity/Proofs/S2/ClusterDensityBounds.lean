@@ -1,5 +1,6 @@
 import PercolationClusterHomogenization.Proofs.Density.ClusterDensityMean
 import PercolationClusterHomogenization.Proofs.Density.ClusterDensityBounds
+import Rigidity.Proofs.S2.ClusterDensityFromDarioGu
 
 /-!
 # Boundedness of cluster-density fluctuations

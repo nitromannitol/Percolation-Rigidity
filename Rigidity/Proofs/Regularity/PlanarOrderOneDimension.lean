@@ -1,6 +1,7 @@
 import PercolationClusterHomogenization.Proofs.Regularity.OrderOneLift
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarAffineApproximationHolds
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarOrderOneDimension
+import Rigidity.Proofs.Regularity.PlanarCorrectedPlaneExistence
 
 /-!
 # The dimension of `𝒜_1` on the planar cluster

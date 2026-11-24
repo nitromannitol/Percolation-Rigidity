@@ -1,5 +1,7 @@
 import Rigidity.Proofs.Green.DarioGuDensityGaussianBound
 import PercolationClusterHomogenization.Proofs.Density.PlanarDensityConcentration
+import Rigidity.Proofs.S2.PlanarVarianceMoments
+import Rigidity.Proofs.S2.WeightedResamplingTonelli
 
 /-!
 # Proposition A.7 of Dario–Gu in dimension two

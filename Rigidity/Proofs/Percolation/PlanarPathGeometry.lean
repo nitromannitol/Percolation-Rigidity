@@ -1,5 +1,6 @@
 import PercolationClusterHomogenization.Proofs.Percolation.PlanarBoxGeometry
 import Rigidity.Proofs.Percolation.PlanarPathCardinality
+import Rigidity.Proofs.Section5.LoopFromCrossings
 
 /-!
 # Long planar paths and coordinate displacement

@@ -1,4 +1,6 @@
 import PercolationClusterHomogenization.Proofs.Percolation.PlanarBoxGeometry
+import Rigidity.Proofs.S3.ChemicalDistance
+import Rigidity.Proofs.Section5.LoopFromCrossings
 
 /-!
 # Open crossing barriers

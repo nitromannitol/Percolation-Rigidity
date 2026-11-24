@@ -1,4 +1,5 @@
 import PercolationClusterHomogenization.Proofs.Density.BernoulliRealEncoding
+import Rigidity.Proofs.S2.PlanarInfluenceTail
 
 /-!
 # Efron–Stein variance bound for Bernoulli bonds

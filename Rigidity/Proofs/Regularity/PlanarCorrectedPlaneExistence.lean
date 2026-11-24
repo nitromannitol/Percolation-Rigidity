@@ -1,5 +1,7 @@
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarCorrectorSupNorm
 import PercolationClusterHomogenization.Proofs.Regularity.PlanarCorrectedPlaneExistence
+import Rigidity.Proofs.Regularity.PlanarCorrectorReduction
+import Rigidity.Proofs.S3.Divergence
 
 /-!
 # The corrected planes of the planar cluster from the quantitative sublinearity in `L²`
