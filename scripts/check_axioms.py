@@ -986,6 +986,13 @@ further = {
          'Rigidity.Corrector.measureReal_sum_cube_gt_le',
          'Rigidity.Corrector.measurable_stepTwoWeight',
          'Rigidity.Corrector.measurableSet_mem_stepTwoGood'],
+    'The partition of the good cubes of the summation of estimate (2) (d = 2)':
+        ['Rigidity.Corrector.measure_not_domGood_le',
+         'Rigidity.Corrector.weightGood_of_domGood',
+         'Rigidity.Corrector.measure_not_weightGood_le_of_bounds',
+         'Rigidity.Corrector.exists_measure_not_weightGood_le',
+         'Rigidity.Corrector.exists_measure_not_mem_stepTwoGood_le',
+         'Rigidity.Corrector.exists_stepTwoGood_partition'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
