@@ -1,4 +1,4 @@
-import Rigidity.Percolation.TriadicExceptionalSupremum
+import PercolationClusterHomogenization.Percolation.TriadicExceptionalSupremum
 import LatticeProb.Prob.FiniteTailMax
 
 /-!

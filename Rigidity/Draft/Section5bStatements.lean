@@ -2,6 +2,7 @@ import Rigidity.Draft.Section5Statements
 import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.Analysis.Convex.Segment
 import Mathlib.Topology.Connected.Basic
+import PercolationClusterHomogenization.Proofs.Planar.WindingNumber
 
 /-! Statements of the numbered results of Section 5.3.1-5.3.2 (unbounded level sets and
 large biconnected components of the potential, d = 2).
@@ -30,9 +31,6 @@ def IsDecayingPotential (C : OpenComponent ω) (f : Vertex 2 → ℤ) (u : C →
 
 /-- The level set `L_a = {x ∈ 𝒞_∞ : u(x) = a}`. -/
 def levelSet {C : OpenComponent ω} (u : C → ℝ) (a : ℝ) : Set C := {x | u x = a}
-
-/-- The cube `Q_r = {x : |x|_∞ ≤ r}`. -/
-def cube (r : ℕ) : Set (Vertex 2) := {x | ∀ i, |x i| ≤ (r : ℤ)}
 
 /-- `x` and `y` are joined by a path of `𝒞_∞` inside `S`. -/
 def JoinedIn (C : OpenComponent ω) (S : Set C) (x y : C) : Prop :=
@@ -72,14 +70,6 @@ def InfiniteDisjointPathsStmt (p : unitInterval) (f : Vertex 2 → ℤ) : Prop :
     ∀ u, IsDecayingPotential (uniqueInfiniteComponent h) f u → (Function.support u).Infinite →
     ∀ S, IsComponentOf _ (levelSet u 0) S →
       ¬ HasDisjointInfinitePaths _ S ((Function.support f).ncard + 3)
-
-/-- The point `x` of `ℤ²` as a complex number. -/
-def toComplex (x : Vertex 2) : ℂ := ⟨x 0, x 1⟩
-
-/-- The winding number around the origin of the closed lattice path `γ 0, γ 1, …, γ n, γ 0`
-avoiding the origin: the sum of the angle increments `arg (γ(i+1) / γ(i)) ∈ (-π, π]` over `2π`. -/
-noncomputable def windingNumber {n : ℕ} (γ : Fin (n + 1) → Vertex 2) : ℝ :=
-  (∑ i : Fin (n + 1), Complex.arg (toComplex (γ (i + 1)) / toComplex (γ i))) / (2 * Real.pi)
 
 /-- Lemma 5.14: almost surely there is a scale `M` such that for every `R ≥ M` the cluster
 contains a loop in `Q_{2R} \ Q_R` with nonzero winding number around the origin. -/

@@ -2,7 +2,7 @@ import Rigidity.Proofs.Section5.LSSDomination
 import Rigidity.Proofs.Section5.RenormField
 import Rigidity.Proofs.Section5.VeryGoodProbability
 import Rigidity.Proofs.Percolation.PlanarWellConnected
-import Rigidity.Proofs.Percolation.KestenCrossing
+import PercolationClusterHomogenization.Proofs.Percolation.KestenCrossing
 
 /-!
 # Domination of the planar renormalized field

@@ -1,5 +1,5 @@
 import Rigidity.Proofs.Assembly.PlanarDensity
-import Rigidity.Proofs.S2.PlanarDensityConcentration
+import PercolationClusterHomogenization.Proofs.Density.PlanarDensityConcentration
 
 /-!
 # Fast decay with planar density concentration

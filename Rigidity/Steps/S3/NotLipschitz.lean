@@ -1,5 +1,5 @@
 import Rigidity.Draft.Section3Statements
-import Rigidity.External.WellConnected
+import PercolationClusterHomogenization.External.WellConnected
 import Rigidity.Support.MixedGreenResult
 import LatticeProb.External.SupercriticalBondUniquenessInput
 import Rigidity.Steps.S3.NotLipschitzInner

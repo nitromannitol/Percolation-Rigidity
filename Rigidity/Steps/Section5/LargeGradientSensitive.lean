@@ -1,5 +1,5 @@
 import Rigidity.Steps.Section5.FiniteBranches
-import Rigidity.External.CorrectorQuantitative
+import PercolationClusterHomogenization.External.CorrectorQuantitative
 
 /-! # Lemma 5.27: a sensitive edge near every good point
 

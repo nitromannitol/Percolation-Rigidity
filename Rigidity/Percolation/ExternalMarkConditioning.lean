@@ -1,4 +1,4 @@
-import Rigidity.Percolation.BondMarkIndependence
+import PercolationClusterHomogenization.Percolation.BondMarkIndependence
 
 /-!
 # Conditioning on disjoint bond-mark histories

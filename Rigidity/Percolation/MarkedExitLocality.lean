@@ -1,5 +1,5 @@
 import Rigidity.Percolation.MarkedExitSymmetry
-import Rigidity.Percolation.ConditionalFaceSeedInside
+import PercolationClusterHomogenization.Percolation.ConditionalFaceSeedInside
 
 /-!
 # Locality of marked exterior exits

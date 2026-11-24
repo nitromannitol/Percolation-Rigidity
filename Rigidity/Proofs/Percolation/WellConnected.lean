@@ -1,4 +1,4 @@
-import Rigidity.Percolation.Pisztora.WellConnected
+import PercolationClusterHomogenization.Percolation.Pisztora.WellConnected
 import Rigidity.Proofs.Percolation.PlanarWellConnected
 
 /-!

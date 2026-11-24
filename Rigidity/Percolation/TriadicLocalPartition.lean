@@ -1,5 +1,5 @@
-import Rigidity.Percolation.TriadicWellConnectedDecay
-import Rigidity.Percolation.TriadicWellConnectedEstimates
+import PercolationClusterHomogenization.Percolation.TriadicWellConnectedDecay
+import PercolationClusterHomogenization.Percolation.TriadicWellConnectedEstimates
 
 /-!
 # Partition estimates from local tests

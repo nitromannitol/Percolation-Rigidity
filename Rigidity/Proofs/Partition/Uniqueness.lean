@@ -1,5 +1,5 @@
-import Rigidity.Proofs.Partition.Paths
-import Rigidity.Proofs.Partition.AlmostSure
+import PercolationClusterHomogenization.Proofs.Partition.Paths
+import PercolationClusterHomogenization.Proofs.Partition.AlmostSure
 
 /-!
 # Uniqueness of the infinite cluster from the partition

@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Assembly.ProvedInputs
 import Rigidity.Proofs.Percolation.WellConnected
-import Rigidity.Proofs.S2.ClusterDensityConcentration
+import PercolationClusterHomogenization.Proofs.Density.ClusterDensityConcentration
 
 /-!
 # Main theorems with the density concentration proved

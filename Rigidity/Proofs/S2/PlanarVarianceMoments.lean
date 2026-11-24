@@ -1,4 +1,4 @@
-import Rigidity.Proofs.S2.ConditionalInfluenceMoments
+import PercolationClusterHomogenization.Proofs.Density.ConditionalInfluenceMoments
 
 /-!
 # Moment bounds for planar conditional variance

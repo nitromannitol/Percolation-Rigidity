@@ -1,5 +1,5 @@
-import Rigidity.External.WellConnected
-import Rigidity.Proofs.Percolation.KestenCrossing
+import PercolationClusterHomogenization.External.WellConnected
+import PercolationClusterHomogenization.Proofs.Percolation.KestenCrossing
 
 /-!
 # Crossings of planar cubes

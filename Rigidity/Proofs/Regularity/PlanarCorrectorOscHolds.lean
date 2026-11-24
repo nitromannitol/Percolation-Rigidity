@@ -1,6 +1,7 @@
 import Rigidity.Proofs.Regularity.PlanarCorrectorOsc
 import Rigidity.Proofs.Regularity.PlanarCorrectorHolds
-import Rigidity.Proofs.Cluster.PlanarSubaddOsMain
+import PercolationClusterHomogenization.Proofs.Cluster.PlanarSubaddOsMain
+import PercolationClusterHomogenization.Proofs.Regularity.PlanarCorrectorOscHolds
 
 /-!
 # (1.18) and (1.22) in dimension two with no hypothesis
@@ -24,14 +25,6 @@ statement `Rigidity.Corrector.CorrectorOscSublinearTwo` of the proof of Lemma 3.
 namespace Rigidity.Proofs.Regularity
 
 open LatticeProb.Percolation Rigidity.External
-
-/-- **Armstrong–Dario, Proposition 5.2 for `ν` in the form `O_s`, in dimension two**, for
-`p > p_c(2)`: the part on `ν` of `planar_subadd_os`, with `Z_V` the error `planarSubaddErr p V`. -/
-theorem planarNuSubaddOsTwo_holds {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) :
-    PlanarNuSubaddOsTwo p := by
-  obtain ⟨r, α, C, hr, hα, hC, h⟩ := Rigidity.Proofs.Cluster.planar_subadd_os hpc
-  exact ⟨r, α, C, hr, hα, hC, fun V => ⟨Rigidity.Proofs.Cluster.planarSubaddErr p V, (h V).1,
-    (h V).2.1, (h V).2.2.1, fun ω ξ => ((h V).2.2.2 ω 0 ξ).2⟩⟩
 
 /-- The statement (1.22) in the oscillation form is the statement `CorrectorOscSublinearTwo` used
 in the proof of Lemma 3.2 of Dario. -/

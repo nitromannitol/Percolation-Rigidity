@@ -1,6 +1,6 @@
 import Rigidity.Proofs.S2.ClusterDensityFromDarioGu
 import Rigidity.Proofs.S2.ClusterDensityBounds
-import Rigidity.Percolation.TriadicExceptionalSupremum
+import PercolationClusterHomogenization.Percolation.TriadicExceptionalSupremum
 
 /-!
 # Triadic minimal scales (Dario–Gu, Lemma 1.6)

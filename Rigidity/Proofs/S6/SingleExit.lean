@@ -1,5 +1,5 @@
 import Rigidity.Steps.S6.SlowMixing
-import Rigidity.External.WellConnected
+import PercolationClusterHomogenization.External.WellConnected
 import LatticeProb.Prob.Percolation.FiniteCylinder
 import LatticeProb.Prob.Percolation.LatticeBondProbability
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics

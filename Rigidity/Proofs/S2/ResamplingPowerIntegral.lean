@@ -1,5 +1,5 @@
 import Rigidity.Proofs.S2.ResamplingSymmetry
-import Rigidity.Proofs.S2.PowerResamplingBound
+import PercolationClusterHomogenization.Proofs.Density.PowerResamplingBound
 
 /-!
 # Resampling differences of powers

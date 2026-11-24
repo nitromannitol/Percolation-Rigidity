@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Green.DarioGuApproxInputs
-import Rigidity.Proofs.Cluster.MeyersPlanarBox
+import PercolationClusterHomogenization.Proofs.Cluster.MeyersPlanarBox
 import Rigidity.Proofs.Corrector.PlanarShiftedAnchor
-import Rigidity.Proofs.Regularity.PlanarCoarseBound
+import PercolationClusterHomogenization.Proofs.Regularity.PlanarCoarseBound
 
 /-!
 # The weak Poincaré inequality on balls of the planar infinite cluster

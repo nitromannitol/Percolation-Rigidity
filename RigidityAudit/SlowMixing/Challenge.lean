@@ -214,7 +214,7 @@ def SupercriticalBondUniqueness : Prop :=
     criticalProbability d < (p : ℝ) → (p : ℝ) < 1 →
       latticeBondLaw d p (uniqueInfiniteComponentEvent d) = 1)
 
-/-! ## Cited result: well-connected cubes (`Rigidity/External/WellConnected.lean`) -/
+/-! ## Cited result: well-connected cubes (`PercolationClusterHomogenization/External/WellConnected.lean`) -/
 
 section WellConnected
 

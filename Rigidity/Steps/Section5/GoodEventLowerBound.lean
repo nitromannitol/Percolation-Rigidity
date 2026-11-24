@@ -1,6 +1,6 @@
 import Rigidity.Draft.Section5cStatements
 import Rigidity.Draft.Section3Statements
-import Rigidity.External.CorrectorQuantitative
+import PercolationClusterHomogenization.External.CorrectorQuantitative
 import LatticeProb.External.SupercriticalBondCorrectorInput
 import LatticeProb.External.SupercriticalBondUniquenessInput
 import LatticeProb.Prob.Percolation.LatticeBondTranslationLaw

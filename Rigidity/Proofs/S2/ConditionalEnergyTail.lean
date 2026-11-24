@@ -1,4 +1,4 @@
-import Rigidity.Proofs.S2.ConditionalEnergyMoments
+import PercolationClusterHomogenization.Proofs.Density.ConditionalEnergyMoments
 import Mathlib.MeasureTheory.Function.LpSeminorm.ChebyshevMarkov
 
 /-!

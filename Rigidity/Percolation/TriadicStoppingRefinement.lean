@@ -1,4 +1,4 @@
-import Rigidity.Percolation.TriadicStopping
+import PercolationClusterHomogenization.Percolation.TriadicStopping
 
 /-!
 # Refinement of stopping partitions

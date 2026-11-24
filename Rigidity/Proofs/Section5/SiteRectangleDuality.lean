@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Section5.SparseOpenPaths
 import Rigidity.Proofs.Section5.MengerRays
-import Rigidity.Vendor.FormalMathPercolation.Literature.PlanarDuality
+import PercolationClusterHomogenization.Vendor.FormalMathPercolation.Literature.PlanarDuality
 
 /-!
 # Face boundaries and planar site paths

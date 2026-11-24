@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Green.Cheeger
 import Rigidity.Proofs.Green.ClusterFaberKrahn
-import Rigidity.External.WellConnected
-import Rigidity.External.PlanarInputs
+import PercolationClusterHomogenization.External.WellConnected
+import PercolationClusterHomogenization.External.PlanarInputs
 
 /-!
 # Green columns of the infinite cluster from isoperimetry in large cubes

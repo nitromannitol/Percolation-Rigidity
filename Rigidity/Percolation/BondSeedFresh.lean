@@ -1,4 +1,4 @@
-import Rigidity.Percolation.BondSeedExploration
+import PercolationClusterHomogenization.Percolation.BondSeedExploration
 
 /-!
 # Fresh bond seeds

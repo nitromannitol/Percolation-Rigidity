@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Percolation.PlanarBoxGeometry
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarBoxGeometry
 import Rigidity.Proofs.Percolation.PlanarPathCardinality
 
 /-!

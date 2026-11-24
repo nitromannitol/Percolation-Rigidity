@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Green.DarioGuTwoScaleInitial
 import Rigidity.Proofs.Green.DarioGuPhiConvolution
 import Rigidity.Proofs.Green.DarioGuLevels
-import Rigidity.Proofs.Cluster.OsTailCalculus
+import PercolationClusterHomogenization.Proofs.Cluster.OsTailCalculus
 
 /-!
 # Lemma 4.2 of Dario–Gu in dimension two

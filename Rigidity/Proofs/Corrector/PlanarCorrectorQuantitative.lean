@@ -1,5 +1,5 @@
 import Rigidity.Proofs.Corrector.OsCalculus
-import Rigidity.External.PlanarInputs
+import PercolationClusterHomogenization.External.PlanarInputs
 import LatticeProb.Prob.Percolation.CorrectedPlaneAlgebra
 
 /-!

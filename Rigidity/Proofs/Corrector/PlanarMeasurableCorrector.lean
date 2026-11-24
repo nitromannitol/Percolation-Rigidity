@@ -1,4 +1,4 @@
-import Rigidity.External.PlanarInputs
+import PercolationClusterHomogenization.External.PlanarInputs
 import Rigidity.Proofs.Partition.Uniqueness
 import LatticeProb.Prob.Percolation.MeasurableRootedPlane
 import LatticeProb.Prob.Percolation.CorrectedPlaneTranslation

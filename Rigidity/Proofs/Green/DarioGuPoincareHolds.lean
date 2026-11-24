@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Green.DarioGuPoincareScales
 import Rigidity.Proofs.Green.DarioGuApproxLemma
-import Rigidity.Proofs.Cluster.PlanarReachConcentrationHolds
-import Rigidity.Proofs.S2.ClusterDensityConcentration
+import PercolationClusterHomogenization.Proofs.Cluster.PlanarReachConcentrationHolds
+import PercolationClusterHomogenization.Proofs.Density.ClusterDensityConcentration
 
 /-!
 # The weak Poincaré inequality on balls of the planar infinite cluster

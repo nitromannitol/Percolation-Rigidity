@@ -393,7 +393,7 @@ def IsGreenColumn (d : ℕ) (_hd : 2 ≤ d) {ω : Configuration d}
 
 end Green
 
-/-! ## Well-connected cubes (`Rigidity/External/WellConnected.lean`) -/
+/-! ## Well-connected cubes (`PercolationClusterHomogenization/External/WellConnected.lean`) -/
 
 section WellConnected
 

@@ -1,4 +1,4 @@
-import Rigidity.External.ArmstrongDarioRegularity
+import PercolationClusterHomogenization.External.ArmstrongDarioRegularity
 import Rigidity.Proofs.S2.ScaleInputsFaithful
 import LatticeProb.Prob.Percolation.LatticeOrderZeroTranslation
 import LatticeProb.Prob.Percolation.CorrectedPlaneTranslation

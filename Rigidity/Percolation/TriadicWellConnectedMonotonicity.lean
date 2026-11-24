@@ -1,4 +1,4 @@
-import Rigidity.Percolation.TriadicWellConnectedEvent
+import PercolationClusterHomogenization.Percolation.TriadicWellConnectedEvent
 
 /-!
 # Monotonicity of well-connectedness tests

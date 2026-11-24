@@ -1,5 +1,5 @@
 import Rigidity.Proofs.Green.CoarseIsoperimetry
-import Rigidity.Vendor.LHCH.Support.Analysis.LatticeSobolev
+import PercolationClusterHomogenization.Vendor.LHCH.Support.Analysis.LatticeSobolev
 
 /-!
 # The isoperimetric inequality of `ℤ^d`

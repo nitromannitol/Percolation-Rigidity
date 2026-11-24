@@ -1,4 +1,4 @@
-import Rigidity.Proofs.S2.ResamplingExchangeable
+import PercolationClusterHomogenization.Proofs.Density.ResamplingExchangeable
 import LatticeProb.Prob.EfronSteinCountable
 
 /-!

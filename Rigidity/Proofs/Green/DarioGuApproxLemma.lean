@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Green.DarioGuApproxEstimate
 import Rigidity.Proofs.Green.DarioGuDensityGaussian
-import Rigidity.Proofs.S2.ClusterDensityConcentration
+import PercolationClusterHomogenization.Proofs.Density.ClusterDensityConcentration
 
 /-!
 # Lemma 4.1 of Dario–Gu in dimension two

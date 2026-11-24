@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Corrector.DarioBondResampling
 import Rigidity.Proofs.Corrector.PlanarShiftedAnchor
-import Rigidity.Proofs.Percolation.PlanarLocality
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarLocality
 
 /-!
 # Lemma 3.5 of Dario for the planar partition (hypothesis) and the locality of the anchors

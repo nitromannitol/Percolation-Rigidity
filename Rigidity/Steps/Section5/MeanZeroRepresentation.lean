@@ -1,5 +1,5 @@
 import Rigidity.Steps.Section5.Common
-import Rigidity.External.WellConnected
+import PercolationClusterHomogenization.External.WellConnected
 
 /-! # Lemma 5.6: the mean-zero potential as a sum of Green gradients
 

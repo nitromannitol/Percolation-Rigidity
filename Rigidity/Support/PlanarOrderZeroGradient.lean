@@ -4,7 +4,7 @@
    LatticeProb.Prob.Percolation.LatticeOrderZeroGradient.
    Changes: specialized to d = 2, from the planar input `ArmstrongDarioOrderZeroTwo` in place of
    `ArmstrongDarioOrderZero`; the theorems carry the suffix `_two`. -/
-import Rigidity.External.PlanarInputs
+import PercolationClusterHomogenization.External.PlanarInputs
 import LatticeProb.Prob.Percolation.LatticeOrderZeroGradient
 
 /-!

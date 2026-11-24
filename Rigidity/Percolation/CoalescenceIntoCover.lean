@@ -1,4 +1,4 @@
-import Rigidity.Percolation.PathSegmentGeometry
+import PercolationClusterHomogenization.Percolation.PathSegmentGeometry
 
 /-!
 # Coalescence inside a larger region

@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Assembly.Main
 import Rigidity.Proofs.Assembly.Smoothing
-import Rigidity.Proofs.Percolation.BondUniqueness
-import Rigidity.Proofs.Percolation.KestenCrossing
+import PercolationClusterHomogenization.Proofs.Percolation.BondUniqueness
+import PercolationClusterHomogenization.Proofs.Percolation.KestenCrossing
 import Rigidity.Proofs.Topology.JordanCurveSphere
 
 /-!

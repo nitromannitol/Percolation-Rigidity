@@ -1,4 +1,4 @@
-import Rigidity.Proofs.S2.BernoulliRealEncoding
+import PercolationClusterHomogenization.Proofs.Density.BernoulliRealEncoding
 
 /-!
 # Efron–Stein variance bound for Bernoulli bonds

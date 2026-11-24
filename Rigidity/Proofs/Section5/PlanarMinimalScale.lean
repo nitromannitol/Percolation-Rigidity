@@ -1,5 +1,5 @@
 import Rigidity.Steps.Section5.LargeGradientSensitive
-import Rigidity.External.PlanarInputs
+import PercolationClusterHomogenization.External.PlanarInputs
 
 /-!
 # A planar minimal scale for corrected planes

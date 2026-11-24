@@ -1,4 +1,5 @@
-import Rigidity.External.WellConnected
+import PercolationClusterHomogenization.External.WellConnected
+import PercolationClusterHomogenization.Proofs.Lattice.ChemicalDistance
 
 /-!
 # A chemical-distance bound on the infinite cluster from well-connected cubes
@@ -27,12 +28,6 @@ open MeasureTheory Filter LatticeProb LatticeProb.Percolation Rigidity.External
 
 variable {d : ℕ}
 
-/-- A lattice step changes each coordinate by at most one. -/
-theorem abs_coord_sub_le_one_of_adj {x y : Vertex d} (h : (nearestNeighborGraph d).Adj x y)
-    (k : Fin d) : |y k - x k| ≤ 1 := by
-  obtain ⟨i, hi | hi⟩ := Graph.Zd.adj_iff.mp h <;> subst hi <;>
-    by_cases hk : k = i <;> simp [unit, hk]
-
 /-- After `i` steps of a lattice walk, each coordinate has moved by at most `i`. -/
 theorem abs_getVert_sub_le {G : SimpleGraph (Vertex d)} (hG : G ≤ nearestNeighborGraph d)
     {a b : Vertex d} (p : G.Walk a b) (i : ℕ) (k : Fin d) :
@@ -50,37 +45,6 @@ theorem abs_getVert_sub_le {G : SimpleGraph (Vertex d)} (hG : G ≤ nearestNeigh
     · rw [p.getVert_of_length_le (by omega)]
       rw [p.getVert_of_length_le (by omega)] at ih
       exact ih.trans (by push_cast; omega)
-
-/-- The open graph inside `B` is a subgraph of the open graph. -/
-theorem openIn_le (ω : Configuration d) (B : Set (Vertex d)) : openIn ω B ≤ openGraph ω :=
-  fun _ _ h => h.1
-
-/-- A walk of open edges inside `B` that starts in `B` stays in `B`. -/
-theorem mem_of_mem_support_openIn {ω : Configuration d} {B : Set (Vertex d)} {a b : Vertex d}
-    (p : (openIn ω B).Walk a b) (ha : a ∈ B) : ∀ v ∈ p.support, v ∈ B := by
-  induction p with
-  | nil => simpa using ha
-  | cons h q ih =>
-    intro v hv
-    rcases (SimpleGraph.Walk.mem_support_iff _).mp hv with rfl | hv
-    · exact ha
-    · exact ih h.2.2 v hv
-
-/-- The cube `z + Q_r` as a finset. -/
-noncomputable def cubeFinset (z : Vertex d) (r : ℕ) : Finset (Vertex d) :=
-  Fintype.piFinset fun i => Finset.Icc (z i - r) (z i + r)
-
-theorem mem_cubeFinset {z y : Vertex d} {r : ℕ} : y ∈ cubeFinset z r ↔ y ∈ cubeAt z r := by
-  simp only [cubeFinset, Fintype.mem_piFinset, Finset.mem_Icc, cubeAt, Set.mem_setOf_eq, abs_le]
-  exact forall_congr' fun i => by constructor <;> rintro ⟨h1, h2⟩ <;> constructor <;> omega
-
-theorem card_cubeFinset (z : Vertex d) (r : ℕ) : (cubeFinset z r).card = (2 * r + 1) ^ d := by
-  rw [cubeFinset, Fintype.card_piFinset,
-    Finset.prod_congr rfl (g := fun _ => 2 * r + 1) (fun i _ => by rw [Int.card_Icc]; omega)]
-  simp
-
-theorem finite_cubeAt (z : Vertex d) (r : ℕ) : (cubeAt z r).Finite :=
-  (cubeFinset z r).finite_toSet.subset fun _ hy => mem_cubeFinset.mpr hy
 
 /-- Two points joined by open edges inside `z + Q_r` are joined by an open path of fewer than
 `(2r + 1)^d` steps. -/
@@ -328,19 +292,6 @@ theorem chainBound_le [NeZero d] {N : ℕ} (hN : 1 ≤ N) :
         nlinarith
     _ = (2 * d + 1) * 4 ^ d * (N * a ^ d) := by rw [mul_pow]; ring
     _ ≤ (2 * d + 1) * 4 ^ d * (N * (N : ℝ) ^ (1 / 2 : ℝ)) := by gcongr
-
-/-- A stretched exponential is summable over the integers. -/
-theorem summable_exp_neg_mul_rpow {c s : ℝ} (hc : 0 < c) (hs : 0 < s) :
-    Summable fun N : ℕ => Real.exp (-(c * (N : ℝ) ^ s)) := by
-  have hlim : Tendsto (fun N : ℕ => (N : ℝ) ^ s) atTop atTop :=
-    (tendsto_rpow_atTop hs).comp tendsto_natCast_atTop_atTop
-  have h := ((isLittleO_exp_neg_mul_rpow_atTop hc (-2 / s)).comp_tendsto hlim).isBigO
-  refine summable_of_isBigO_nat (Real.summable_nat_rpow.mpr (show (-2 : ℝ) < -1 by norm_num))
-    (h.congr (fun N => by simp only [Function.comp, neg_mul]) (fun N => ?_))
-  simp only [Function.comp]
-  rw [← Real.rpow_mul (Nat.cast_nonneg N)]
-  congr 1
-  field_simp
 
 /-- Borel–Cantelli: almost surely the cube `c + Q_N` is well-connected for all large `N`. -/
 theorem ae_eventually_isWellConnected [NeZero d] (hd : 2 ≤ d) {p : unitInterval}

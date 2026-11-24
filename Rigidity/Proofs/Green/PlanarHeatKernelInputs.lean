@@ -1,5 +1,5 @@
 import Rigidity.Proofs.Green.LazyHeatKernel
-import Rigidity.External.PlanarInputs
+import PercolationClusterHomogenization.External.PlanarInputs
 import LatticeProb.Prob.Percolation.RootedHarmonicMeasurable
 import LatticeProb.Prob.Percolation.LatticeBondInfiniteEvent
 

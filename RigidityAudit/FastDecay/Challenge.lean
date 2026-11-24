@@ -601,7 +601,7 @@ def SupercriticalBondGreenQuantitative : Prop :=
 
 end
 
-/-! ## Cited results on the cluster (`Rigidity/External/CorrectorQuantitative.lean`,
+/-! ## Cited results on the cluster (`PercolationClusterHomogenization/External/CorrectorQuantitative.lean`,
 `ArmstrongDarioRegularity.lean`, `ClusterDensity.lean`) -/
 
 section
@@ -691,7 +691,7 @@ def ClusterDensityConcentrationInput : Prop :=
 
 end
 
-/-! ## Well-connected cubes (`Rigidity/External/WellConnected.lean`) -/
+/-! ## Well-connected cubes (`PercolationClusterHomogenization/External/WellConnected.lean`) -/
 
 section
 
@@ -749,7 +749,7 @@ def WellConnectedInput : Prop :=
 
 end
 
-/-! ## Crossings of rectangles and the Jordan curve theorem (`Rigidity/External/KestenCrossing.lean`,
+/-! ## Crossings of rectangles and the Jordan curve theorem (`PercolationClusterHomogenization/External/KestenCrossing.lean`,
 `JordanCurve.lean`) -/
 
 section

@@ -1,5 +1,5 @@
 import Rigidity.Proofs.Green.DarioGuLevels
-import Rigidity.Proofs.Percolation.SupercriticalUniqueness
+import PercolationClusterHomogenization.Proofs.Percolation.SupercriticalUniqueness
 
 /-!
 # The iteration step of §4.3 of Dario–Gu: `H_k` implies `H_{k'}`

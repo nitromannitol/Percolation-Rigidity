@@ -1,5 +1,5 @@
 import Rigidity.Percolation.BondSeedHistory
-import Rigidity.Percolation.SlabAttachment
+import PercolationClusterHomogenization.Percolation.SlabAttachment
 
 /-!
 # Adaptive finite-batch revelation

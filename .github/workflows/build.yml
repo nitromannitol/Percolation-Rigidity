@@ -22,9 +22,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Mathlib's oleans come from its public cache. Lake builds the Lattice-Probability modules this
-  # library imports, at the commit pinned in `lake-manifest.json`, together with the library; both
-  # build directories are cached.
+  # Mathlib's oleans come from its public cache. Lake builds the Lattice-Probability and
+  # Percolation-Cluster-Homogenization modules this library imports, at the commits pinned in
+  # `lake-manifest.json`, together with the library; the three build directories are cached.
   build:
     name: Build and axiom audit
     runs-on: ubuntu-24.04
@@ -69,6 +69,7 @@ jobs:
           path: |
             .lake/build
             .lake/packages/lattice-probability/.lake/build
+            .lake/packages/percolation-cluster-homogenization/.lake/build
           key: lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
             lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
@@ -121,4 +122,5 @@ jobs:
           path: |
             .lake/build
             .lake/packages/lattice-probability/.lake/build
+            .lake/packages/percolation-cluster-homogenization/.lake/build
           key: lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}

@@ -1,8 +1,8 @@
 import Rigidity.Proofs.Corrector.DarioStationaryPartition
 import Rigidity.Proofs.Corrector.DarioCoarsenedFields
-import Rigidity.Proofs.Percolation.PlanarMuMeasurable
-import Rigidity.Proofs.Partition.Translation
-import Rigidity.Proofs.Percolation.PlanarAnchorTranslation
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarMuMeasurable
+import PercolationClusterHomogenization.Proofs.Partition.Translation
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarAnchorTranslation
 
 /-!
 # The coarsened corrector of Dario's stationary partition

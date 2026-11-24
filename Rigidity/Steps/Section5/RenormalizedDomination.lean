@@ -1,6 +1,6 @@
 import Rigidity.Draft.Section5cStatements
-import Rigidity.External.KestenCrossing
-import Rigidity.External.WellConnected
+import PercolationClusterHomogenization.External.KestenCrossing
+import PercolationClusterHomogenization.External.WellConnected
 import LatticeProb.Prob.Percolation.LSSThinInstantiation
 
 /-!

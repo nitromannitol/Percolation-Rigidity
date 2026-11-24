@@ -1,6 +1,6 @@
 import Rigidity.Proofs.S6.LargestClusterExists
 import Rigidity.Proofs.Percolation.PlanarWellConnected
-import Rigidity.Proofs.Percolation.BondUniqueness
+import PercolationClusterHomogenization.Proofs.Percolation.BondUniqueness
 
 /-!
 # Planar box clusters and the infinite cluster

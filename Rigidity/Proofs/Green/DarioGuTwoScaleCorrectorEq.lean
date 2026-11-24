@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Green.DarioGuTwoScaleStepOne
 import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
-import Rigidity.Proofs.Regularity.PlanarCoarseComparison
+import PercolationClusterHomogenization.Proofs.Regularity.PlanarCoarseComparison
 
 /-!
 # The corrector equation in divergence form

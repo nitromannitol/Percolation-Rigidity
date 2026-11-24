@@ -1,5 +1,5 @@
 import Rigidity.Proofs.Green.PlanarHeatKernelInputs
-import Rigidity.Proofs.Regularity.LatticeHarmonic
+import PercolationClusterHomogenization.Proofs.Regularity.LatticeHarmonic
 
 /-!
 # The energy identity of Step 2 of the proof of Proposition 4.3 of Dario–Gu

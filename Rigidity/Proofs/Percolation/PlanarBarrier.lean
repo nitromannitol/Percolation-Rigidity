@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Percolation.PlanarBoxGeometry
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarBoxGeometry
 
 /-!
 # Open crossing barriers

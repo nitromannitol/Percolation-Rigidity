@@ -1,5 +1,5 @@
 import Rigidity.Proofs.S2.ConditionalEnergyStochasticBound
-import Rigidity.Proofs.S2.ConditionalProductIntegral
+import PercolationClusterHomogenization.Proofs.Density.ConditionalProductIntegral
 
 /-!
 # Integrated planar resampling energy

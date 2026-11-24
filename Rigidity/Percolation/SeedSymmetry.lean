@@ -1,4 +1,4 @@
-import Rigidity.Percolation.VertexCutSymmetry
+import PercolationClusterHomogenization.Percolation.VertexCutSymmetry
 
 /-!
 # Symmetries of fully open seeds

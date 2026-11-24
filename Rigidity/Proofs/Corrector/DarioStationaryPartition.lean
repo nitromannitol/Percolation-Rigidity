@@ -1,5 +1,5 @@
-import Rigidity.Proofs.Percolation.PlanarNuStationarity
-import Rigidity.Proofs.Percolation.PlanarTranslation
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarNuStationarity
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarTranslation
 
 /-!
 # Dario's stationary partitions and the estimate (3.3)

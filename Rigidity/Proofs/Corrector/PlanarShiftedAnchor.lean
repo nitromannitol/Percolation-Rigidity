@@ -1,7 +1,7 @@
-import Rigidity.Proofs.Percolation.PlanarPartition
-import Rigidity.Proofs.Percolation.PlanarWindows
-import Rigidity.Proofs.Percolation.PlanarMuMeasurable
-import Rigidity.Percolation.TriadicStableAncestors
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarPartition
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarWindows
+import PercolationClusterHomogenization.Proofs.Percolation.PlanarMuMeasurable
+import PercolationClusterHomogenization.Percolation.TriadicStableAncestors
 import LatticeProb.Prob.Percolation.LatticeBondTranslationLaw
 import LatticeProb.Prob.Percolation.OpenComponentTranslation
 

@@ -1,6 +1,6 @@
 import Rigidity.Proofs.S2.ConditionalResamplingJensen
 import Rigidity.Proofs.S2.ConditionalInfluenceExponential
-import Rigidity.Proofs.S2.BernoulliRealEncoding
+import PercolationClusterHomogenization.Proofs.Density.BernoulliRealEncoding
 import Rigidity.Proofs.S2.ClusterDensityBounds
 
 /-!

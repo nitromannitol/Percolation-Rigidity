@@ -1,5 +1,5 @@
 import Rigidity.Draft.Section4Statements
-import Rigidity.External.WellConnected
+import PercolationClusterHomogenization.External.WellConnected
 import LatticeProb.Prob.Percolation.LatticeHarmonicGrowth
 
 /-!

@@ -1,5 +1,5 @@
-import Rigidity.Percolation.SelectedPathSegment
-import Rigidity.Percolation.CrossingPathCoalescence
+import PercolationClusterHomogenization.Percolation.SelectedPathSegment
+import PercolationClusterHomogenization.Percolation.CrossingPathCoalescence
 
 /-!
 # Simple paths with large diameter

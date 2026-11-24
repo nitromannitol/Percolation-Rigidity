@@ -59,6 +59,7 @@ jobs:
           path: |
             .lake/build
             .lake/packages/lattice-probability/.lake/build
+            .lake/packages/percolation-cluster-homogenization/.lake/build
           key: lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
             lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-

@@ -1,6 +1,6 @@
 import Rigidity.Proofs.Green.PlanarGreenDeterministic
 import Rigidity.Proofs.Partition.Uniqueness
-import Rigidity.Proofs.Percolation.SupercriticalUniqueness
+import PercolationClusterHomogenization.Proofs.Percolation.SupercriticalUniqueness
 import Rigidity.Proofs.Green.PlanarGreenColumnCorrector
 
 /-!

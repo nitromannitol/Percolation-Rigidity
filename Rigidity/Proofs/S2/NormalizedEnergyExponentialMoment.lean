@@ -1,4 +1,4 @@
-import Rigidity.Proofs.S2.StochasticBoundExponentialMoment
+import PercolationClusterHomogenization.Proofs.Density.StochasticBoundExponentialMoment
 
 /-!
 # Exponential moment of planar density resampling energy

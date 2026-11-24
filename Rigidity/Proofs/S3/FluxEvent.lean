@@ -1,6 +1,6 @@
 import Rigidity.Steps.S3.NotLipschitz
 import Rigidity.Proofs.S3.Reflection
-import Rigidity.External.CorrectorQuantitative
+import PercolationClusterHomogenization.External.CorrectorQuantitative
 import LatticeProb.Prob.Percolation.MeasurableCorrectorGradients
 import LatticeProb.Prob.Birkhoff
 import LatticeProb.Prob.Percolation.LatticeBondErgodicity

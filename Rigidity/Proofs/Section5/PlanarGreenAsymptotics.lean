@@ -1,4 +1,4 @@
-import Rigidity.External.PlanarInputs
+import PercolationClusterHomogenization.External.PlanarInputs
 import Rigidity.Proofs.Section5.GreenSymmetry
 import Rigidity.Proofs.Section5.LogGrowth
 

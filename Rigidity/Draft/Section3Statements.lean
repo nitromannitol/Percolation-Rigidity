@@ -2,6 +2,7 @@ import LatticeProb.Prob.Percolation.LatticeClusterLipschitz
 import LatticeProb.Prob.Percolation.CorrectedPlaneCharacterization
 import LatticeProb.Prob.Percolation.GreenColumn
 import LatticeProb.Prob.Percolation.LatticeUniqueCluster
+import PercolationClusterHomogenization.Proofs.Lattice.ConfigurationExtension
 
 /-! Statements of the numbered results of Section 3 (Lipschitz harmonic functions). The cited
 literature inputs that each proof uses are added as explicit hypotheses of the final theorems;
@@ -34,11 +35,6 @@ noncomputable def originGradientNorm {ω : Configuration d} (C : OpenComponent �
     if hi : (openGraph ω).Adj 0 (LatticeProb.unit i) then
       |u ⟨0, ho⟩ - u ⟨LatticeProb.unit i, C.mem_supp_of_adj_mem_supp ho hi⟩|
     else 0
-
-/-- A function on a component, extended by zero to every vertex of the lattice. -/
-noncomputable def extend {ω : Configuration d} (C : OpenComponent ω) (u : C → ℝ) :
-    Vertex d → ℝ :=
-  fun z => if h : z ∈ C.supp then u ⟨z, h⟩ else 0
 
 /-- The configuration in which the bonds of `B` are closed. -/
 def closeBonds (B : Finset (Bond d)) (ω : Configuration d) : Configuration d :=

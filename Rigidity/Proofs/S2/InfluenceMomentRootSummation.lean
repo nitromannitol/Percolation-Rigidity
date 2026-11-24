@@ -1,6 +1,6 @@
-import Rigidity.Proofs.S2.InfluenceSpatialMoment
-import Rigidity.Proofs.S2.TriadicCubeGeometry
-import Rigidity.Proofs.Percolation.BondShellMomentRoots
+import PercolationClusterHomogenization.Proofs.Density.InfluenceSpatialMoment
+import PercolationClusterHomogenization.Proofs.Density.TriadicCubeGeometry
+import PercolationClusterHomogenization.Proofs.Percolation.BondShellMomentRoots
 
 /-!
 # Summability of density influence moment roots

@@ -1,4 +1,5 @@
-import Rigidity.Proofs.S2.ClusterDensityMean
+import PercolationClusterHomogenization.Proofs.Density.ClusterDensityMean
+import PercolationClusterHomogenization.Proofs.Density.ClusterDensityBounds
 
 /-!
 # Boundedness of cluster-density fluctuations
@@ -30,27 +31,6 @@ theorem IsOsBond.mono_variable {X Y : Configuration d → ℝ} {s θ : ℝ}
     rw [Real.norm_of_nonneg (Real.exp_pos _).le]
     exact hpoint ω
   exact ⟨hXi, (integral_mono hXi hY.1 hpoint).trans hY.2⟩
-
-/-- The normalized cluster-density fluctuation has absolute value at most one. -/
-theorem abs_centered_clusterDensity_le_one (p : unitInterval) (m : ℕ) (k : Vertex d)
-    (ω : Configuration d) :
-    |(infiniteClusterCount (triadicCube d m k) ω : ℝ) /
-      ((triadicCube d m k).ncard : ℝ) - theta d p| ≤ 1 := by
-  classical
-  have hden : 0 < ((triadicCube d m k).ncard : ℝ) := by
-    rw [ncard_triadicCube]
-    positivity
-  have hcard : infiniteClusterCount (triadicCube d m k) ω ≤ (triadicCube d m k).ncard := by
-    rw [infiniteClusterCount_triadicCube, ncard_triadicCube, ← card_triadicCubeFinset m k]
-    exact Finset.card_filter_le _ _
-  have hcount : (infiniteClusterCount (triadicCube d m k) ω : ℝ) ≤
-      ((triadicCube d m k).ncard : ℝ) := by exact_mod_cast hcard
-  have hlo : 0 ≤ (infiniteClusterCount (triadicCube d m k) ω : ℝ) /
-      ((triadicCube d m k).ncard : ℝ) := by positivity
-  have hhi : (infiniteClusterCount (triadicCube d m k) ω : ℝ) /
-      ((triadicCube d m k).ncard : ℝ) ≤ 1 := (div_le_one hden).2 hcount
-  rw [abs_le]
-  constructor <;> linarith [theta_nonneg d p, theta_le_one d p]
 
 /-- Every fixed finite range of planar triadic scales satisfies the density estimate with one
 constant. -/

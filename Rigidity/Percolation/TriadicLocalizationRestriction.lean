@@ -1,4 +1,4 @@
-import Rigidity.Percolation.TriadicLocalizationCentered
+import PercolationClusterHomogenization.Percolation.TriadicLocalizationCentered
 
 /-!
 # Restriction of localized stopping partitions

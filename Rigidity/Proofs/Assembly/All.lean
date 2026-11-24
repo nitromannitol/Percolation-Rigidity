@@ -102,7 +102,7 @@ import Rigidity.Proofs.Section5.GreenFamily
 import Rigidity.Proofs.Section5.GreenSymmetry
 import Rigidity.Proofs.Section5.GreenTaylor
 import Rigidity.Proofs.Section5.InfiniteBranches
-import Rigidity.Proofs.Section5.InfiniteClusterMeasurable
+import PercolationClusterHomogenization.Proofs.Planar.InfiniteClusterMeasurable
 import Rigidity.Proofs.Section5.JordanLoop
 import Rigidity.Proofs.Section5.KestenChannelCut
 import Rigidity.Proofs.Section5.LSSDomination

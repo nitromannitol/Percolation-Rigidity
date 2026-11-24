@@ -1,4 +1,4 @@
-import Rigidity.Proofs.S2.NormalizedInfluenceEnergyMoments
+import PercolationClusterHomogenization.Proofs.Density.NormalizedInfluenceEnergyMoments
 import Mathlib.MeasureTheory.Function.LpSeminorm.ChebyshevMarkov
 
 /-!

@@ -122,21 +122,24 @@ sources:
     note: "Ann. Probab. 32 (2004). Its route from the isoperimetric inequality of the cluster to the decay of the heat kernel is followed, with a polynomial loss R^(-1/(100d)) in the isoperimetric constant and the decay exponent d/2 - 1/100 in place of d/2, for the Green columns in d >= 3 (README, Green columns for d >= 3)."
 
 related_formalizations:
+  - id: "https://github.com/nitromannitol/Percolation-Cluster-Homogenization"
+    relationship: "builds-on"
+    note: "The formalization of Armstrong and Dario, Elliptic regularity and quantitative homogenization on percolation clusters (Comm. Pure Appl. Math. 71 (2018)), with the percolation results it uses (the partition into good cubes, the concentration of the density of the infinite cluster, slab connectivity and well-connected cubes for d >= 3, planar crossings); a pinned git dependency. Its declarations keep their names in the namespaces Rigidity.*; the literature statements WellConnectedInput, KestenRectangleCrossing, ClusterDensityConcentrationInput, CorrectorQuantitativeInput, ArmstrongDarioOrderOneOrigin and the planar inputs are in its External/ directory."
   - id: "https://github.com/nitromannitol/Lattice-Probability"
     relationship: "builds-on"
-    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and Rigidity/Proofs/Percolation/Kesten/, and four planar modules specialized to d = 2 (Rigidity/Support/PlanarOrderZeroGradient.lean, Rigidity/Support/PlanarGreenQuantitativeField.lean, Rigidity/Proofs/S3/PlanarCorrectorValid.lean, Rigidity/Proofs/S3/PlanarGreenColumn.lean, from its revision 7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069), and the step inequality heat_step_of_faberKrahnOn of Rigidity/Proofs/Green/LocalNash.lean, from LatticeProb/Graph/OnDiagonal.lean at the same revision, are adapted from it (see README, Copied code)."
+    note: "Lattice percolation, harmonic functions on graphs, and five of the literature inputs; a pinned git dependency. The modules of Rigidity/Proofs/Topology/PlanarJordan/ and PercolationClusterHomogenization/Proofs/Percolation/Kesten/ (in Percolation-Cluster-Homogenization), and four planar modules specialized to d = 2 (Rigidity/Support/PlanarOrderZeroGradient.lean, Rigidity/Support/PlanarGreenQuantitativeField.lean, Rigidity/Proofs/S3/PlanarCorrectorValid.lean, Rigidity/Proofs/S3/PlanarGreenColumn.lean, from its revision 7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069), and the step inequality heat_step_of_faberKrahnOn of Rigidity/Proofs/Green/LocalNash.lean, from LatticeProb/Graph/OnDiagonal.lean at the same revision, are adapted from it (see README, Copied code)."
   - id: "https://github.com/nitromannitol/Lattice-High-Contrast-Homogenization"
     relationship: "adapts"
-    note: "A private repository. The 48 modules under Rigidity/Vendor/LHCH/ are copied from LatticeHC/ at commit f47a932a9f7a07e1692bfe4aae564d02e8ca0944 (Apache-2.0), with its LICENSE; its lattice l1 Sobolev inequality gives the isoperimetric inequality of Z^d (Rigidity.Green.latticeIsoperimetry)."
+    note: "A private repository. The 48 modules under PercolationClusterHomogenization/Vendor/LHCH/ of Percolation-Cluster-Homogenization are copied from LatticeHC/ at commit f47a932a9f7a07e1692bfe4aae564d02e8ca0944 (Apache-2.0), with its LICENSE; its lattice l1 Sobolev inequality gives the isoperimetric inequality of Z^d (Rigidity.Green.latticeIsoperimetry)."
   - id: "https://github.com/anthropics/formal-math"
     relationship: "adapts"
-    note: "The 53 modules under Rigidity/Vendor/FormalMathPercolation/ are copied from its percolation/ project at commit 795efb86f191735c5481675763537cfb4ff37e55 (Apache-2.0), with its LICENSE and NOTICE."
+    note: "The 53 modules under PercolationClusterHomogenization/Vendor/FormalMathPercolation/ of Percolation-Cluster-Homogenization are copied from its percolation/ project at commit 795efb86f191735c5481675763537cfb4ff37e55 (Apache-2.0), with its LICENSE and NOTICE."
   - id: "https://github.com/openai/math"
     relationship: "adapts"
-    note: "The 44 modules under Rigidity/Vendor/CriticalPercolation/ are copied from lean/OAI/Probability/CriticalPercolation/ at commit 4eaee87548250b2682affda7d05d947c05554bae (Apache-2.0), with its LICENSE."
+    note: "The 44 modules under PercolationClusterHomogenization/Vendor/CriticalPercolation/ of Percolation-Cluster-Homogenization are copied from lean/OAI/Probability/CriticalPercolation/ at commit 4eaee87548250b2682affda7d05d947c05554bae (Apache-2.0), with its LICENSE."
   - id: "https://github.com/leobon12/lean-formalizations"
     relationship: "adapts"
-    note: "The 8 modules under Rigidity/Vendor/BonannoPerc/ are copied from LQGMetric/Perc/ at commit 31e748330ee154d5f41537c4b01f71b8a5510c2d, with attribution; the upstream repository states no licence and none is claimed. The modules of Rigidity/Proofs/Topology/PlanarJordan/ are also based on it."
+    note: "The 8 modules under PercolationClusterHomogenization/Vendor/BonannoPerc/ of Percolation-Cluster-Homogenization are copied from LQGMetric/Perc/ at commit 31e748330ee154d5f41537c4b01f71b8a5510c2d, with attribution; the upstream repository states no licence and none is claimed. The modules of Rigidity/Proofs/Topology/PlanarJordan/ are also based on it."
 
 status:
   scope: >-
@@ -157,8 +160,8 @@ status:
     - "Quot.sound"
   literature_inputs: 12
   literature_inputs_note: >-
-    Twelve results of the literature are stated as propositions, seven in Rigidity/External/ and five
-    in the directory LatticeProb/External/ of Lattice-Probability, each with its source in its
+    Twelve results of the literature are stated as propositions, seven in the External/ directories of this repository and of
+    Percolation-Cluster-Homogenization and five in the directory LatticeProb/External/ of Lattice-Probability, each with its source in its
     docstring. They enter as explicit hypotheses of the theorems that use them, not as axioms;
     README.md lists them with the results that use them. Six of them are proved in Lean
     (Rigidity.Percolation.supercritical_bond_uniqueness, Rigidity.Smoothing.micciancio_regev_smoothing,

@@ -1,5 +1,5 @@
 import Rigidity.Draft.Section2Statements
-import Rigidity.External.CorrectorQuantitative
+import PercolationClusterHomogenization.External.CorrectorQuantitative
 import LatticeProb.External.GreenQuantitative
 import LatticeProb.Prob.Percolation.LatticeClusterL2
 

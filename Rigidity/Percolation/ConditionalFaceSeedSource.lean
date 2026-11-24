@@ -1,4 +1,4 @@
-import Rigidity.Percolation.ConditionalFaceSeedInside
+import PercolationClusterHomogenization.Percolation.ConditionalFaceSeedInside
 
 /-!
 # Conditional connections to seeds in an outward pad

@@ -1,4 +1,5 @@
-import Rigidity.Proofs.S2.RescaleExponentialMoment
+import PercolationClusterHomogenization.Proofs.Density.RescaleExponentialMoment
+import PercolationClusterHomogenization.Proofs.Density.NormalizedEnergyOsMoment
 
 /-!
 # Planar density resampling energy with a unit exponential moment
@@ -10,15 +11,6 @@ at inverse-volume scale.
 namespace Rigidity.Proofs.S2
 
 open MeasureTheory LatticeProb.Percolation Rigidity.External
-
-/-- The total squared influence of the normalized triadic cluster density. -/
-noncomputable def planarDensityResamplingEnergy (m : ℕ) (k : Vertex 2)
-    (q : Configuration 2 × Configuration 2) : ℝ :=
-  ∑' e : Bond 2,
-    |(infiniteClusterCount (triadicCube 2 m k) q.1 : ℝ) /
-          ((triadicCube 2 m k).ncard : ℝ) -
-        (infiniteClusterCount (triadicCube 2 m k) (resampleBond q.1 q.2 e) : ℝ) /
-          ((triadicCube 2 m k).ncard : ℝ)| ^ 2
 
 /-- The planar density resampling energy satisfies an exponential `O₁/₁₂` estimate. -/
 theorem planar_density_resampling_energy_expOs (p : unitInterval)
