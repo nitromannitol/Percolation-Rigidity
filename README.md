@@ -2639,7 +2639,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 842 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 857 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2708,7 +2708,7 @@ Departures from Armstrong and Dario:
   [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 842 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 857 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2739,9 +2739,9 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 638 Lean files with 125,618 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 641 Lean files with 126,294 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (15 files, 5,052
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,394 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,416 lines) are counted separately.
 
 ## Building
 
