@@ -422,6 +422,7 @@ import Rigidity.Proofs.Corrector.DarioStepTwoSum
 import Rigidity.Proofs.Corrector.DarioStepTwoReduce
 import Rigidity.Proofs.Corrector.DarioLocalGradientMoments
 import Rigidity.Proofs.Corrector.DarioStepTwoFiniteWeight
+import Rigidity.Proofs.Corrector.DarioStepTwoWeightMeas
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1467,3 +1468,17 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.finiteWeight_le
 #print axioms Rigidity.Corrector.finiteWeight_eq_of_localBonds
 #print axioms Rigidity.Corrector.stepTwoWeight_le_finiteWeight
+
+-- The finite-range weight: good events, uniform moments and concentration over a cube (d = 2)
+#print axioms Rigidity.Corrector.measure_not_farGood_le
+#print axioms Rigidity.Corrector.measure_not_sideGood_le
+#print axioms Rigidity.Corrector.measure_not_gradGood_le
+#print axioms Rigidity.Corrector.growthMoments_weightMajorant_uniform
+#print axioms Rigidity.Corrector.growthMoments_siteLambda
+#print axioms Rigidity.Corrector.finiteWeight_le_weightMajorant
+#print axioms Rigidity.Corrector.exists_lintegral_finiteWeight_rpow_le
+#print axioms Rigidity.Corrector.indepFun_sum_of_local
+#print axioms Rigidity.Corrector.sum_vertices_add_smul_eq
+#print axioms Rigidity.Corrector.measureReal_sum_cube_gt_le
+#print axioms Rigidity.Corrector.measurable_stepTwoWeight
+#print axioms Rigidity.Corrector.measurableSet_mem_stepTwoGood

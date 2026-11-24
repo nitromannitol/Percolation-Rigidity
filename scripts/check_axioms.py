@@ -973,6 +973,19 @@ further = {
          'Rigidity.Corrector.finiteWeight_le',
          'Rigidity.Corrector.finiteWeight_eq_of_localBonds',
          'Rigidity.Corrector.stepTwoWeight_le_finiteWeight'],
+    'The finite-range weight: good events, uniform moments and concentration over a cube (d = 2)':
+        ['Rigidity.Corrector.measure_not_farGood_le',
+         'Rigidity.Corrector.measure_not_sideGood_le',
+         'Rigidity.Corrector.measure_not_gradGood_le',
+         'Rigidity.Corrector.growthMoments_weightMajorant_uniform',
+         'Rigidity.Corrector.growthMoments_siteLambda',
+         'Rigidity.Corrector.finiteWeight_le_weightMajorant',
+         'Rigidity.Corrector.exists_lintegral_finiteWeight_rpow_le',
+         'Rigidity.Corrector.indepFun_sum_of_local',
+         'Rigidity.Corrector.sum_vertices_add_smul_eq',
+         'Rigidity.Corrector.measureReal_sum_cube_gt_le',
+         'Rigidity.Corrector.measurable_stepTwoWeight',
+         'Rigidity.Corrector.measurableSet_mem_stepTwoGood'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
