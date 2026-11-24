@@ -456,15 +456,18 @@ fidelity:
     the Hardy-Littlewood maximal bound by the Vitali covering lemma, in place of the Necas inequality and
     the Calderon-Zygmund theory of Appendix A of Dario), and for Lemma 3.3 of Dario in dimension two
     reduced to the estimate (3.13) in flip form (the configurations with one bond open and closed in
-    place of the doubled probability space; Lemma 3.5 is not proved for the planar partition and is a hypothesis in
-    the adapted form DarioResamplePartitionTwo; Step 1 is proved from it with moments in place of the weights zeta_r and
+    place of the doubled probability space; Lemma 3.5 is proved for the planar partition of meshed cubes in the
+    adapted form DarioResamplePartitionTwo, with the constants 4747 and 14244, from the resampling results of
+    Percolation-Cluster-Homogenization (darioResamplePartitionTwo_holds); Step 1 is proved from it with moments in
+    place of the weights zeta_r and
     Cauchy-Schwarz over the box, the split (3.15) and Cases 1 and 2 of Step 2 are proved, and (3.13) follows from Lemma 3.5
     and the Step 2 sum, which needs Proposition 3.6, Lemma 3.7 and Definition 3.8), with
     Propositions 2.11 and 2.12 proved as an orthogonal projection onto the closed span of the gradients
     of point masses, with (2.14) at C = 1, (2.15) and (2.17), the identity (3.22), the representation
     (3.26) with the paths in the ninefold square of the smaller cube, and Cases 1 to 3 of Step 2, so that
     Theorem 1 of Dario in dimension two, the corrector input of Dario and Gu and Theorem 2 (iii) at k = 1
-    at the origin follow from the flip form of (3.13) alone, and for the concentration inequality of
+    at the origin follow from the flip form of (3.13), and so from the Step 2 sum alone, and for the
+    concentration inequality of
     Dario, Proposition 2.17 (the source is Armstrong and Lin, ARMA 225 (2017), Proposition 2.2, and not
     Armstrong, Kuusi and Mourrat; the moment inequality is proved in the form of Boucheron, Bousquet,
     Lugosi and Massart by tensorization of the phi-entropy for the Bernoulli bonds, with the flip
