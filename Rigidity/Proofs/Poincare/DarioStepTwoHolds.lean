@@ -25,7 +25,7 @@ repository.
 namespace Rigidity.Poincare
 
 open MeasureTheory Filter LatticeProb.Percolation Rigidity.Percolation Rigidity.Proofs.Cluster
-  Rigidity.Corrector Rigidity.External
+  Rigidity.Corrector Rigidity.External Rigidity.Green
 open scoped Classical ENNReal
 
 section Grad
@@ -183,5 +183,25 @@ theorem correctorQuantitativeInputTwo_holds : CorrectorQuantitativeInputTwo :=
 /-- **Armstrong and Dario, Theorem 2 (iii) at `k = 1`, at the origin, in dimension two.** -/
 theorem armstrongDarioOrderOneOriginTwo_holds : ArmstrongDarioOrderOneOriginTwo :=
   armstrongDarioOrderOneOriginTwo_of_stepTwo darioStepTwoSumBound_holds
+
+
+/-- **Dario and Gu, Theorem 1, in dimension two**, from the inputs `hSec` of Sections 2 and 4 of
+Dario and Gu and the Gaussian upper bound of Barlow; the Step 2 sum and the Carne–Varopoulos bound
+are proved. -/
+theorem darioGuHeatKernelTwo_of_sections_barlow
+    (hSec : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      ∃ σ : ℝ, 0 < σ ∧ DarioGuApproxLemmaTwo p σ ∧ DarioGuTwoScaleErrorTwo p σ ∧
+        DarioGuDensityGaussianTwo p σ)
+    (hBar : BarlowGaussianUpperBoundTwo) : DarioGuHeatKernelTwo :=
+  darioGuHeatKernelTwo_of_reduced_stepTwo hSec hBar Rigidity.Green.carneVaropoulosTwo_holds
+    darioStepTwoSumBound_holds
+
+/-- **Dario and Gu, Theorem 1, in dimension two**, from Proposition 2.13, Theorem 3 and the
+Gaussian upper bound of Barlow; the Step 2 sum is proved. -/
+theorem darioGuHeatKernelTwo_of_flux_gradient_barlow
+    (hflux : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      ∃ σ : ℝ, 0 < σ ∧ DarioGuFluxWeakNormTwo p σ)
+    (hG3 : DarioGuGradientBoundTwo) (hBar : BarlowGaussianUpperBoundTwo) : DarioGuHeatKernelTwo :=
+  darioGuHeatKernelTwo_of_flux_gradient_barlow_stepTwo hflux hG3 hBar darioStepTwoSumBound_holds
 
 end Rigidity.Poincare

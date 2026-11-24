@@ -1504,3 +1504,5 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_holds
 #print axioms Rigidity.Poincare.correctorQuantitativeInputTwo_holds
 #print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_holds
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_sections_barlow
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow

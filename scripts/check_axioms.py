@@ -1003,7 +1003,9 @@ further = {
          'Rigidity.Poincare.darioStepTwoSumBound_holds',
          'Rigidity.Poincare.darioOptimalCorrectorTwo_holds',
          'Rigidity.Poincare.correctorQuantitativeInputTwo_holds',
-         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_holds'],
+         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_holds',
+         'Rigidity.Poincare.darioGuHeatKernelTwo_of_sections_barlow',
+         'Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
