@@ -6,7 +6,7 @@ import Rigidity.Proofs.Corrector.DarioStepOneLocal
 
 For a bond `e` of an oriented edge `a = (x, i)`, write `ω¹ = ω^{e,1}`, `ω⁰ = ω^{e,0}` and let
 `g` be the potential of `∇∇G(e, ·) = greenProj ω¹ (1_a)` on the infinite cluster of `ω¹`, `0`
-elsewhere (`dipolePot`); its gradient is at most `1` on every edge (`abs_edgeGrad_dipolePot_le`,
+elsewhere (`clusterPot`); its gradient is at most `1` on every edge (`abs_edgeGrad_clusterPot_le`,
 `abs_greenProj_single_le`). In Case 3 of Step 2 of the proof of Lemma 3.3 of Dario, `ℓ₁ - ℓ₀` and
 `(ℓ₀(x) - ℓ₀(y)) g` differ by a constant on the cluster ((3.22) and `eq_of_walk_of_edge`), so that
 almost surely (`ae_flipTermTwo_eq_open`)
@@ -26,10 +26,9 @@ namespace Rigidity.Corrector
 open MeasureTheory Filter LatticeProb.Percolation Rigidity.Percolation Rigidity.External
 open scoped Classical ENNReal InnerProductSpace
 
-/-- The potential of `greenProj ω (1_a)` on the infinite components of `ω`, `0` elsewhere. -/
-noncomputable def dipolePot (ω : Configuration 2) (a : LatticeEdge) (z : Vertex 2) : ℝ :=
-  if ω ∈ infiniteComponentEvent z then
-    (exists_isGradOf_greenProj ω (lp.single 2 a 1)).choose z else 0
+/-- The potential of `greenProj ω ξ` on the infinite components of `ω`, `0` elsewhere. -/
+noncomputable def clusterPot (ω : Configuration 2) (ξ : EdgeField) (z : Vertex 2) : ℝ :=
+  if ω ∈ infiniteComponentEvent z then (exists_isGradOf_greenProj ω ξ).choose z else 0
 
 theorem infiniteComponentEvent_iff_of_adj {ω : Configuration 2} {u v : Vertex 2}
     (h : (openGraph ω).Adj u v) :
@@ -38,16 +37,16 @@ theorem infiniteComponentEvent_iff_of_adj {ω : Configuration 2} {u v : Vertex 2
     ((openGraph ω).connectedComponentMk v).supp.Infinite
   rw [SimpleGraph.ConnectedComponent.sound h.reachable]
 
-theorem edgeGrad_dipolePot {ω : Configuration 2} (a : LatticeEdge) {b : LatticeEdge}
+theorem edgeGrad_clusterPot {ω : Configuration 2} (ξ : EdgeField) {b : LatticeEdge}
     (hb : EdgeOpen ω b) :
-    edgeGrad ω (dipolePot ω a) b =
-      if ω ∈ infiniteComponentEvent b.1 then greenProj ω (lp.single 2 a 1) b else 0 := by
+    edgeGrad ω (clusterPot ω ξ) b =
+      if ω ∈ infiniteComponentEvent b.1 then greenProj ω ξ b else 0 := by
   have hiff := infiniteComponentEvent_iff_of_adj (ω := ω) hb
-  unfold edgeGrad dipolePot
+  unfold edgeGrad clusterPot
   rw [if_pos hb]
   by_cases h : ω ∈ infiniteComponentEvent b.1
   · rw [if_pos (hiff.1 h), if_pos h, if_pos h]
-    exact ((exists_isGradOf_greenProj ω (lp.single 2 a 1)).choose_spec b hb).symm
+    exact ((exists_isGradOf_greenProj ω ξ).choose_spec b hb).symm
   · rw [if_neg (fun h' => h (hiff.2 h')), if_neg h, if_neg h, sub_zero]
 
 /-- `|∇∇G(e, b)| ≤ 1`: the projection does not increase the norm of `1_a`. -/
@@ -60,10 +59,10 @@ theorem abs_greenProj_single_le (ω : Configuration 2) (a b : LatticeEdge) :
   rw [Real.norm_eq_abs] at h1
   linarith
 
-theorem abs_edgeGrad_dipolePot_le (ω : Configuration 2) (a b : LatticeEdge) :
-    |edgeGrad ω (dipolePot ω a) b| ≤ |greenProj ω (lp.single 2 a 1) b| := by
+theorem abs_edgeGrad_clusterPot_le (ω : Configuration 2) (ξ : EdgeField) (b : LatticeEdge) :
+    |edgeGrad ω (clusterPot ω ξ) b| ≤ |greenProj ω ξ b| := by
   by_cases hb : EdgeOpen ω b
-  · rw [edgeGrad_dipolePot a hb]
+  · rw [edgeGrad_clusterPot ξ hb]
     split_ifs
     · exact le_rfl
     · rw [abs_zero]
@@ -135,7 +134,7 @@ theorem ae_flipTermTwo_eq_open {p : unitInterval} (hpc : criticalProbability 2 <
           (greenProj (setBond (edgeBond a) true ω) (coarseHeatField hP₁ r x j) a +
             ∑' y, latticeHeat (r ^ 2) x y *
               partitionChange (setBond (edgeBond a) true ω) (setBond (edgeBond a) false ω)
-                (dipolePot (setBond (edgeBond a) true ω) a) j y) := by
+                (clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) j y) := by
   have hp0 : 0 < (p : ℝ) := (criticalProbability_nonneg 2).trans_lt hpc
   filter_upwards [ae_setBond hp0 hp1 hGae, ae_correctedPlane_sub_eq_smul_greenProj hpc hp1,
     ae_summable_heat_stepRegion hpc hp1] with ω hG' hpl hS i j r hr x a hP₁ hP₀ hinf hreach
@@ -165,22 +164,22 @@ theorem ae_flipTermTwo_eq_open {p : unitInterval} (hpc : criticalProbability 2 <
   have hFedge : ∀ b : LatticeEdge, EdgeOpen (setBond (edgeBond a) true ω) b →
       b.1 ∈ (uniqueInfiniteComponent h₁).supp →
       (extendComp _ ℓ₁ (edgeHead b) - extendComp _ ℓ₀ (edgeHead b)) -
-          c' * dipolePot (setBond (edgeBond a) true ω) a (edgeHead b) =
+          c' * clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1) (edgeHead b) =
         (extendComp _ ℓ₁ b.1 - extendComp _ ℓ₀ b.1) -
-          c' * dipolePot (setBond (edgeBond a) true ω) a b.1 := by
+          c' * clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1) b.1 := by
     intro b hb hb1
     have key := hpl a h₁ h₀ hx hy (Pi.single i 1) ℓ₁ ℓ₀ hℓ₁ hℓ₀ b hb hb1
     rw [← hc'] at key
-    have hgb := edgeGrad_dipolePot (ω := setBond (edgeBond a) true ω) a hb
+    have hgb := edgeGrad_clusterPot (ω := setBond (edgeBond a) true ω) (lp.single 2 a 1) hb
     rw [if_pos ((mem_uniqueInfiniteComponent_iff h₁ b.1).1 hb1)] at hgb
     simp only [edgeGrad, if_pos hb] at hgb
     linear_combination key - c' * hgb
   have ha₁ : a.1 ∈ (uniqueInfiniteComponent h₁).supp := (hC _).2 hx
   have hconst : ∀ v ∈ (uniqueInfiniteComponent h₁).supp,
       (extendComp _ ℓ₁ v - extendComp _ ℓ₀ v) -
-          c' * dipolePot (setBond (edgeBond a) true ω) a v =
+          c' * clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1) v =
         (extendComp _ ℓ₁ a.1 - extendComp _ ℓ₀ a.1) -
-          c' * dipolePot (setBond (edgeBond a) true ω) a a.1 := by
+          c' * clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1) a.1 := by
     intro v hv
     have hreach' : (openGraph (setBond (edgeBond a) true ω)).Reachable a.1 v :=
       SimpleGraph.ConnectedComponent.exact
@@ -188,7 +187,7 @@ theorem ae_flipTermTwo_eq_open {p : unitInterval} (hpc : criticalProbability 2 <
           ((SimpleGraph.ConnectedComponent.mem_supp_iff _ _).1 hv).symm)
     exact (eq_of_walk_of_edge (S := (uniqueInfiniteComponent h₁).supp)
       (F := fun v => (extendComp _ ℓ₁ v - extendComp _ ℓ₀ v) -
-        c' * dipolePot (setBond (edgeBond a) true ω) a v)
+        c' * clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1) v)
       (fun z w hz hzw => (uniqueInfiniteComponent h₁).mem_supp_of_adj_mem_supp hz hzw)
       hFedge hreach'.some ha₁).symm
   have hdiff : ∀ z,
@@ -205,14 +204,14 @@ theorem ae_flipTermTwo_eq_open {p : unitInterval} (hpc : criticalProbability 2 <
     ring
   have hconstA : ∀ z, (extendComp _ ℓ₁ (guardAnchor (setBond (edgeBond a) false ω) z) -
         extendComp _ ℓ₀ (guardAnchor (setBond (edgeBond a) false ω) z)) -
-          c' * dipolePot (setBond (edgeBond a) true ω) a
+          c' * clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)
             (guardAnchor (setBond (edgeBond a) false ω) z) =
         (extendComp _ ℓ₁ a.1 - extendComp _ ℓ₀ a.1) -
-          c' * dipolePot (setBond (edgeBond a) true ω) a a.1 :=
+          c' * clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1) a.1 :=
     fun z => hconst _ (hmem₁ _ (hA z))
   -- `T₂(e) = c' Φ * ∇_j[g]_{𝒫⁰}(x)`
   have hT : flipTermTwo hG hGv i j r x (edgeBond a) ω =
-      c' * heatComp (fun z => dipolePot (setBond (edgeBond a) true ω) a
+      c' * heatComp (fun z => clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)
         (planarCoarseAnchor (setBond (edgeBond a) false ω) z)) r x j := by
     unfold flipTermTwo heatComp
     rw [← tsum_mul_left]
@@ -226,17 +225,18 @@ theorem ae_flipTermTwo_eq_open {p : unitInterval} (hpc : criticalProbability 2 <
     linear_combination latticeHeat (r ^ 2) x y * (e1 - e2 + e3 - e4)
   -- the change of partition for `g`
   have hle₁ : ∀ b, |edgeGrad (setBond (edgeBond a) true ω)
-      (dipolePot (setBond (edgeBond a) true ω) a) b| ≤
+      (clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) b| ≤
         |(1 : ℝ)| * |greenProj (setBond (edgeBond a) true ω) (lp.single 2 a 1) b| := fun b => by
     rw [abs_one, one_mul]
-    exact abs_edgeGrad_dipolePot_le _ a b
+    exact abs_edgeGrad_clusterPot_le _ (lp.single 2 a 1) b
   have hle₀ : ∀ b, |edgeGrad (setBond (edgeBond a) false ω)
-      (dipolePot (setBond (edgeBond a) true ω) a) b| ≤
+      (clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) b| ≤
         |(1 : ℝ)| * |greenProj (setBond (edgeBond a) true ω) (lp.single 2 a 1) b| := fun b => by
     by_cases hb : EdgeOpen (setBond (edgeBond a) false ω) b
     · have e : edgeGrad (setBond (edgeBond a) false ω)
-          (dipolePot (setBond (edgeBond a) true ω) a) b =
-          edgeGrad (setBond (edgeBond a) true ω) (dipolePot (setBond (edgeBond a) true ω) a) b := by
+          (clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) b =
+          edgeGrad (setBond (edgeBond a) true ω)
+            (clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) b := by
         unfold edgeGrad
         rw [if_pos hb, if_pos (edgeOpen_setBond_true_of_false hb)]
       rw [e]
@@ -247,28 +247,29 @@ theorem ae_flipTermTwo_eq_open {p : unitInterval} (hpc : criticalProbability 2 <
   have hs₀ := summable_heat_coarse_of_le hP₀ (hS (edgeBond a) false x j r hr) hle₀
   have hsc : Summable fun y => latticeHeat (r ^ 2) x y *
       partitionChange (setBond (edgeBond a) true ω) (setBond (edgeBond a) false ω)
-        (dipolePot (setBond (edgeBond a) true ω) a) j y := by
+        (clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) j y := by
     refine (hs₀.sub hs₁).congr fun y => ?_
     unfold partitionChange
     ring
-  have hpair : heatComp (fun z => dipolePot (setBond (edgeBond a) true ω) a
+  have hpair : heatComp (fun z => clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)
       (planarCoarseAnchor (setBond (edgeBond a) true ω) z)) r x j =
       greenProj (setBond (edgeBond a) true ω) (coarseHeatField hP₁ r x j) a := by
     have h := heatComp_coarse_eq_smul_greenProj hP₁ (hS (edgeBond a) true x j r hr)
-      (v := dipolePot (setBond (edgeBond a) true ω) a) (c := 1) (a := a)
+      (v := clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) (c := 1) (a := a)
       (fun b hb hinf => by
-        rw [edgeGrad_dipolePot a hb,
-          if_pos (show setBond (edgeBond a) true ω ∈ infiniteComponentEvent b.1 from hinf), one_mul])
+        rw [edgeGrad_clusterPot (lp.single 2 a 1) hb,
+          if_pos (show setBond (edgeBond a) true ω ∈ infiniteComponentEvent b.1 from hinf),
+          one_mul])
       (fun b hb hinf => by
-        rw [edgeGrad_dipolePot a hb,
+        rw [edgeGrad_clusterPot (lp.single 2 a 1) hb,
           if_neg (show setBond (edgeBond a) true ω ∉ infiniteComponentEvent b.1 from hinf)])
     rwa [one_mul] at h
-  have hsplit : heatComp (fun z => dipolePot (setBond (edgeBond a) true ω) a
+  have hsplit : heatComp (fun z => clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)
       (planarCoarseAnchor (setBond (edgeBond a) false ω) z)) r x j =
       greenProj (setBond (edgeBond a) true ω) (coarseHeatField hP₁ r x j) a +
         ∑' y, latticeHeat (r ^ 2) x y *
           partitionChange (setBond (edgeBond a) true ω) (setBond (edgeBond a) false ω)
-            (dipolePot (setBond (edgeBond a) true ω) a) j y := by
+            (clusterPot (setBond (edgeBond a) true ω) (lp.single 2 a 1)) j y := by
     rw [← hpair]
     unfold heatComp
     rw [← hs₁.tsum_add hsc]
