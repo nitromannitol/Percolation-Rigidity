@@ -80,6 +80,9 @@ jobs:
         run: |
           set -o pipefail
           lake build 2>&1 | tee production-build.log
+          # The axiom report also prints results of Percolation-Cluster-Homogenization that no module
+          # of this library imports; its root module imports all of them.
+          lake build PercolationClusterHomogenization 2>&1 | tee -a production-build.log
           if grep -iE '(^|[[:space:]])warning:|declaration uses .sorry|sorryAx' production-build.log; then
             echo "The production build must have zero warnings and no incomplete proofs."
             exit 1
