@@ -11,6 +11,10 @@ require «lattice-probability» from git
   "https://github.com/nitromannitol/Lattice-Probability.git" @
     "7512f4fbbc3e3d3ecf3e1af8a450ca7f4f082069"
 
+require «percolation-cluster-homogenization» from git
+  "https://github.com/nitromannitol/Percolation-Cluster-Homogenization.git" @
+    "25bbbfa590461a349b69d0a482f1d63f2fd0139c"
+
 /-- The formalization: every module under `Rigidity/`. A warning is an error. -/
 @[default_target]
 lean_lib Rigidity where

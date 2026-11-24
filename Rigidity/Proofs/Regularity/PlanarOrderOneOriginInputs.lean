@@ -14,7 +14,7 @@ The inputs of `armstrongDarioOrderOneOriginTwo_of_inputs` are discharged as foll
   (`planarCoarseHarmonicApproximationTwo_iff`): the coarsenings `coarseAtAnchor C u` and
   `planarCoarse C u` are the same function.
 * `PlanarPartCubeMoments p` holds for `p > p_c(2)` (`planarPartCubeMoments_holds`): it is part of
-  the minimal scales `PercolationClusterHomogenization.Proofs.Cluster.PlanarMinimalScales p` of Proposition 2.4
+  the minimal scales `Rigidity.Proofs.Cluster.PlanarMinimalScales p` of Proposition 2.4
   (`Rigidity.Proofs.Cluster.planarMinimalScales_holds`).
 * `PlanarPartitionSizeScale p`, the hypothesis on the partition cubes of
   `planarHarmonicApproximationTwo_of_squareEstimates`, follows from the same minimal scales with

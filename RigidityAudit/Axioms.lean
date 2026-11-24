@@ -558,7 +558,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Percolation.exists_minimalScale
 #print axioms Rigidity.Percolation.exists_minimalScale_general
 #print axioms Rigidity.Percolation.exists_measure_not_mem_goodCubes_le
-#print axioms PercolationClusterHomogenization.Percolation.TriadicCube.reachable_of_mem_goodCubes
+#print axioms Rigidity.Percolation.TriadicCube.reachable_of_mem_goodCubes
 #print axioms Rigidity.Percolation.reachable_partitionAnchor_of_walk
 #print axioms Rigidity.Percolation.partition_sum_abs_sub_coarseAnchor_rpow_le
 #print axioms Rigidity.Percolation.partition_sum_gradNormIn_coarseAnchor_rpow_le
@@ -607,7 +607,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Regularity.armstrongDario_orderZero_origin_planar
 
 -- The Sobolev inequality of the lattice and Proposition 3.4 of Armstrong and Dario in every dimension
-#print axioms PercolationClusterHomogenization.Percolation.IntegerCube.exists_latticeSobolevOn
+#print axioms Rigidity.Percolation.IntegerCube.exists_latticeSobolevOn
 #print axioms Rigidity.Percolation.exists_sum_rpow_le_of_eq_zero_on_boundary
 #print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_eq_zero
 #print axioms Rigidity.Percolation.exists_partition_sum_rpow_le_of_sum_coarsen_eq_zero
@@ -666,8 +666,8 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Cluster.planar_meyers
 #print axioms Rigidity.Proofs.Cluster.mem_partitionBoxCluster_of_mem_cube
 #print axioms Rigidity.Proofs.Cluster.partition_meyers
-#print axioms PercolationClusterHomogenization.Percolation.TriadicCube.reachIn_boxWindow_of_reachIn
-#print axioms PercolationClusterHomogenization.Percolation.TriadicCube.reachIn_planarAnchor_boxPairWindow
+#print axioms Rigidity.Percolation.TriadicCube.reachIn_boxWindow_of_reachIn
+#print axioms Rigidity.Percolation.TriadicCube.reachIn_planarAnchor_boxPairWindow
 #print axioms Rigidity.Percolation.reachIn_planarAnchor_of_boxResolved
 #print axioms Rigidity.Percolation.planarBoxCoarseData
 #print axioms Rigidity.Percolation.planarBox_sum_abs_sub_coarseAnchor_rpow_le
@@ -679,7 +679,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.Cluster.openLaplacian_clusterExtend_eq_zero
 #print axioms Rigidity.Proofs.Cluster.planar_meyers_clusterHarmonic
 #print axioms Rigidity.Percolation.reachable_partitionAnchor_of_reachable_box
-#print axioms PercolationClusterHomogenization.Percolation.IntegerCube.exists_walk
+#print axioms Rigidity.Percolation.IntegerCube.exists_walk
 #print axioms Rigidity.Percolation.partitionBoxCoarseData
 #print axioms Rigidity.Percolation.exists_partitionBox_sum_rpow_le_of_latticeSobolevOn
 #print axioms Rigidity.Percolation.exists_clusterSobolevTwo_box
@@ -1324,7 +1324,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 
 -- Lemma 3.3 of Dario in dimension two: the heat square sum, Lemma 3.5 for the planar partition, the split (3.15), Steps 1 and 2 and the reduction of (3.13) to Lemma 3.5 and the Step 2 sum
 #print axioms Rigidity.Corrector.exists_tsum_latticeHeat_sq_le
-#print axioms PercolationClusterHomogenization.Percolation.TriadicCube.planarAnchor_eq_of_agree_off
+#print axioms Rigidity.Percolation.TriadicCube.planarAnchor_eq_of_agree_off
 #print axioms Rigidity.Corrector.planarPartCube_eq_and_anchor_eq_of_resample
 #print axioms Rigidity.Corrector.resampleLocal_of_bound
 #print axioms Rigidity.Corrector.sq_tsum_partitionChange_le

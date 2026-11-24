@@ -8,7 +8,7 @@ import PercolationClusterHomogenization.Proofs.Regularity.PlanarHarmonicApproxim
 # Lemma 7.1 and the order-zero regularity in dimension two, with no hypothesis
 
 The inputs of `planarHarmonicApproximationTwo_of_inputs` are the minimal scales of the planar
-partition (`PlanarMinimalScalesTwo p`, the statement `PercolationClusterHomogenization.Proofs.Cluster.PlanarMinimalScales p`
+partition (`PlanarMinimalScalesTwo p`, the statement `Rigidity.Proofs.Cluster.PlanarMinimalScales p`
 of Proposition 2.4) and Theorem 1 in dimension two with the discrete homogenized solution
 (`PlanarHomogenizationErrorTwo p p'`, the statement
 `Rigidity.Dirichlet.PlanarHomogenizationError p p'`). Both are proved for `p > p_c(2)`
