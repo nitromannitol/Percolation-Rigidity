@@ -363,4 +363,16 @@ theorem darioGuTwoScaleErrorTwo_of_inputs (hR5 : CorrectorQuantitativeInputTwo)
   darioGuTwoScaleErrorTwo_of_fluxTerm hR5 hpc hp1 hσ
     (darioGuTwoScaleFluxTermTwo_of_inputs hR5 hpc hp1 hσ hflux)
 
+/-- **Proposition 4.3 of Dario–Gu** in the form used by Theorem 1 (`hP43` of
+`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree`): at every supercritical `p < 1`
+some `σ > 0` satisfies `DarioGuTwoScaleErrorTwo`, namely the `σ = σ̄²` of Proposition 2.13. -/
+theorem exists_darioGuTwoScaleErrorTwo_of_inputs (hR5 : CorrectorQuantitativeInputTwo)
+    (hflux : ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      ∃ σ : ℝ, 0 < σ ∧ DarioGuFluxWeakNormTwo p σ) :
+    ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
+      ∃ σ : ℝ, 0 < σ ∧ DarioGuTwoScaleErrorTwo p σ := by
+  intro p hpc hp1
+  obtain ⟨σ, hσ, hf⟩ := hflux p hpc hp1
+  exact ⟨σ, hσ, darioGuTwoScaleErrorTwo_of_inputs hR5 hpc hp1 hσ hf⟩
+
 end Rigidity.Green
