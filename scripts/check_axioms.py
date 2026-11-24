@@ -937,6 +937,17 @@ further = {
          'Rigidity.Corrector.ae_flipTermTwo_sq_le_open',
          'Rigidity.Corrector.ae_flipTermTwo_sq_le_weight',
          'Rigidity.Corrector.ae_flipSumTwo_le'],
+    'The summation of estimate (2) over a partition with comparable neighbours (d = 2)':
+        ['Rigidity.Corrector.IsCellScale.le_of_mem_enl',
+         'Rigidity.Corrector.IsCellScale.tsum_enl_le',
+         'Rigidity.Corrector.IsCellScale.tsum_eq_tsum_avg',
+         'Rigidity.Corrector.sum_weight_energy_le_of_meyersCube',
+         'Rigidity.Corrector.tsum_weight_energy_le',
+         'Rigidity.Corrector.openLaplacian_clusterPot',
+         'Rigidity.Corrector.tsum_clusterOpenEnergy_le',
+         'Rigidity.Corrector.tsum_mul_edgeSq_le',
+         'Rigidity.Corrector.isCellScale_partScale',
+         'Rigidity.Corrector.flipSumTwo_le_of_partition'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

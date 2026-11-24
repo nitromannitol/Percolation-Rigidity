@@ -419,6 +419,7 @@ import Rigidity.Proofs.Corrector.DarioResamplePartitionHolds
 import Rigidity.Proofs.Poincare.DarioStepTwoBridges
 import Rigidity.Proofs.Corrector.DarioMeyersSource
 import Rigidity.Proofs.Corrector.DarioStepTwoSum
+import Rigidity.Proofs.Corrector.DarioStepTwoReduce
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1425,3 +1426,15 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.ae_flipTermTwo_sq_le_open
 #print axioms Rigidity.Corrector.ae_flipTermTwo_sq_le_weight
 #print axioms Rigidity.Corrector.ae_flipSumTwo_le
+
+-- The summation of estimate (2) over a partition with comparable neighbours (d = 2)
+#print axioms Rigidity.Corrector.IsCellScale.le_of_mem_enl
+#print axioms Rigidity.Corrector.IsCellScale.tsum_enl_le
+#print axioms Rigidity.Corrector.IsCellScale.tsum_eq_tsum_avg
+#print axioms Rigidity.Corrector.sum_weight_energy_le_of_meyersCube
+#print axioms Rigidity.Corrector.tsum_weight_energy_le
+#print axioms Rigidity.Corrector.openLaplacian_clusterPot
+#print axioms Rigidity.Corrector.tsum_clusterOpenEnergy_le
+#print axioms Rigidity.Corrector.tsum_mul_edgeSq_le
+#print axioms Rigidity.Corrector.isCellScale_partScale
+#print axioms Rigidity.Corrector.flipSumTwo_le_of_partition
