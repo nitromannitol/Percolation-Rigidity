@@ -82,11 +82,36 @@ noncomputable def cubeMuRestrictError (ω : Configuration d) (U : TriadicCube d)
     (q : Fin d → ℝ) : ℝ :=
   cubeRestrictError ω U n (cubeMuMinimizer ω U q) fun V => cubeMuMinimizer ω V q
 
+/-- The maximizer `v(·, U, p)` of `ν(U, p)` on the partition event and for a resolved cube, and
+zero otherwise (as Armstrong and Dario set the solutions to zero for the cubes outside `𝒫_*`). -/
+noncomputable def cubeNuSolution (ω : Configuration d) (U : TriadicCube d) (p : Fin d → ℝ) :
+    CubeFun ω U :=
+  if PartitionEvent ω ∧ PartitionResolved ω U then cubeNuMaximizer ω U p else 0
+
+theorem cubeNuSolution_eq (hP : PartitionEvent ω) {U : TriadicCube d}
+    (hU : PartitionResolved ω U) (p : Fin d → ℝ) :
+    cubeNuSolution ω U p = cubeNuMaximizer ω U p := by
+  rw [cubeNuSolution, if_pos ⟨hP, hU⟩]
+
 /-- **The quantity of display (5.12) for `ν`** (Lemma 5.5 of Armstrong and Dario, second
 term). -/
 noncomputable def cubeNuRestrictError (ω : Configuration d) (U : TriadicCube d) (n : ℕ)
     (p : Fin d → ℝ) : ℝ :=
-  cubeRestrictError ω U n (cubeNuMaximizer ω U p) fun V => cubeNuMaximizer ω V p
+  cubeRestrictError ω U n (cubeNuSolution ω U p) fun V => cubeNuSolution ω V p
+
+/-- With `U` and its subcubes resolved, the quantity of display (5.12) for `ν` is that of the
+maximizers. -/
+theorem cubeNuRestrictError_eq (hP : PartitionEvent ω) {U : TriadicCube d} {n : ℕ}
+    (hU : PartitionResolved ω U) (hV : ∀ V ∈ U.subcubesAt n, PartitionResolved ω V)
+    (p : Fin d → ℝ) :
+    cubeNuRestrictError ω U n p =
+      cubeRestrictError ω U n (cubeNuMaximizer ω U p) fun V => cubeNuMaximizer ω V p := by
+  unfold cubeNuRestrictError cubeRestrictError
+  rw [cubeNuSolution_eq hP hU]
+  congr 1
+  exact Finset.sum_congr rfl fun V hVm => by
+    simp only
+    rw [cubeNuSolution_eq hP (hV V hVm)]
 
 /-- On a resolved cube `V`, the spatial sum over the edges of `V` of the gradient of the
 coarsening of a function on the cluster of `U`, minus the coarse pairing of a function on the
@@ -294,9 +319,13 @@ theorem cubeNuRestrictError_le_of_good (hd : 0 < d) (hP : PartitionEvent ω) {U 
     cubeNuRestrictError ω U n ξ ≤
       2 * d * (restrictQuadConst d n j 1 A CM (1 + ε / 2) W / ((3 : ℝ) ^ n) ^ d) *
         (cubeNuDefect ω U n ξ / U.latticeVolume) := by
+  have hU : PartitionResolved ω U := fun z hz => (hres z hz).le.trans (by omega)
+  have hVr : ∀ V ∈ U.subcubesAt n, PartitionResolved ω V := fun V hV z hz => by
+    rw [TriadicCube.scale_of_mem_subcubesAt hV]
+    exact (hres z (TriadicCube.subset_of_mem_subcubesAt hn hV hz)).le.trans hjn.le
   have h := cubeRestrictError_le_of_good hd hP hj1 hjn hn hres (cubeNuMaximizer ω U ξ)
     (fun V => cubeNuMaximizer ω V ξ) hpq hCM hA0 Wt hWt hW hA hM
-  rw [cubeNuRestrictError, cubeNuDefect, resolvedSubcubesAt_eq_of_lt hjn hn hres]
+  rw [cubeNuRestrictError_eq hP hU hVr, cubeNuDefect, resolvedSubcubesAt_eq_of_lt hjn hn hres]
   exact h
 
 end Rigidity.Percolation

@@ -73,7 +73,7 @@ theorem sum_gradNormIn_coarse_sq_le_cubeForm (hd : 0 < d) (hP : PartitionEvent �
     (hW : ∀ z ∈ crossingClusterVertices ω V, (3 : ℝ) ^ (partitionCube ω z).scale ≤ W) :
     ∑ x ∈ V.toIntegerCube.vertices, gradNormIn (nearestNeighborGraph d) V.toIntegerCube.vertices
         (fun x => cubeExtend ω V w (partitionAnchor ω x)) x ^ 2 ≤
-      partitionCoarseGradConst d ^ 2 * (W ^ (2 * d - 1) * cubeForm ω V w w) := by
+      coarseGradConstant d ^ 2 * (W ^ (2 * d - 1) * cubeForm ω V w w) := by
   have h := partition_sum_gradNormIn_coarseAnchor_rpow_le hd hP hV (cubeExtend ω V w) (s := 2)
     (by norm_num)
   simp only [Real.rpow_two] at h
@@ -87,14 +87,6 @@ theorem sum_gradNormIn_coarse_sq_le_cubeForm (hd : 0 < d) (hP : PartitionEvent �
   rw [he, gradNormIn_openGraph_eq, Real.sq_sqrt (clusterGradSq_nonneg _ _ _ _)]
   exact mul_le_mul_of_nonneg_right
     (pow_le_pow_left₀ (by positivity) (hW z hz) _) (clusterGradSq_nonneg _ _ _ _)
-
-/-- The cardinality of the vertex set of a triadic cube. -/
-theorem card_toIntegerCube_vertices_pow (V : TriadicCube d) :
-    (V.toIntegerCube.vertices.card : ℝ) = ((3 : ℝ) ^ V.scale) ^ d := by
-  rw [IntegerCube.card_vertices_eq]
-  change ((((3 ^ V.scale : ℕ) ^ d : ℕ)) : ℝ) = _
-  push_cast
-  ring
 
 /-- **The coarsened gradient on a subcube through the Meyers estimate** (Armstrong and Dario,
 proof of Lemma 5.5, Steps 2 and 3, deterministic part, every dimension `d ≥ 1`). Let `V` be a
@@ -122,7 +114,7 @@ theorem latticeEdgePairing_cubeExtend_sq_le_of_meyers (hd : 0 < d) (hP : Partiti
     latticeEdgePairing V.toIntegerCube.vertices g
         (fun x => cubeExtend ω V w (partitionAnchor ω x)) ^ 2 ≤
       4 * d * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ d *
-        (partitionCoarseGradConst d ^ 2 * (A * (CM ^ (1 / p) * ((N : ℝ) * cubeForm ω V w w)))) +
+        (coarseGradConstant d ^ 2 * (A * (CM ^ (1 / p) * ((N : ℝ) * cubeForm ω V w w)))) +
       16 * d ^ 2 * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ (d - 1) * 3 ^ j *
         ∑ x ∈ V.toIntegerCube.vertices,
           gradNormIn (nearestNeighborGraph d) V.toIntegerCube.vertices
@@ -141,19 +133,19 @@ theorem latticeEdgePairing_cubeExtend_sq_le_of_meyers (hd : 0 < d) (hP : Partiti
   rw [sum_clusterEnergy_eq_cubeForm V w] at hmey
   refine hsplit.trans (add_le_add ?_ ?_)
   · have hcard : (B.vertices.card : ℝ) ≤ ((3 : ℝ) ^ V.scale) ^ d := by
-      rw [← card_toIntegerCube_vertices_pow V]
+      rw [← TriadicCube.latticeVolume, ← V.card_toIntegerCube_vertices]
       exact_mod_cast Finset.card_le_card (innerCube_subset hj)
-    have hrest : 0 ≤ partitionCoarseGradConst d ^ 2 *
+    have hrest : 0 ≤ coarseGradConstant d ^ 2 *
         (A * (CM ^ (1 / p) * ((N : ℝ) * cubeForm ω V w w))) := by
       have hB0 := cubeForm_self_nonneg (ω := ω) (U := V) w
       positivity
     calc 4 * d * G ^ 2 * B.vertices.card *
           ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph d) B.vertices
             (fun x => cubeExtend ω V w (partitionAnchor ω x)) x ^ 2
-        ≤ 4 * d * G ^ 2 * B.vertices.card * (partitionCoarseGradConst d ^ 2 *
+        ≤ 4 * d * G ^ 2 * B.vertices.card * (coarseGradConstant d ^ 2 *
             (A * (CM ^ (1 / p) * ((N : ℝ) * cubeForm ω V w w)))) :=
           mul_le_mul_of_nonneg_left hmey (by positivity)
-      _ ≤ 4 * d * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ d * (partitionCoarseGradConst d ^ 2 *
+      _ ≤ 4 * d * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ d * (coarseGradConstant d ^ 2 *
             (A * (CM ^ (1 / p) * ((N : ℝ) * cubeForm ω V w w)))) :=
           mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hcard (by positivity)) hrest
   · have hlayer := card_sdiff_innerCube_le (V := V) hj
@@ -187,9 +179,9 @@ theorem latticeEdgePairing_cubeExtend_sq_le_cubeForm (hd : 0 < d) (hP : Partitio
     latticeEdgePairing V.toIntegerCube.vertices g
         (fun x => cubeExtend ω V w (partitionAnchor ω x)) ^ 2 ≤
       (4 * d * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ d *
-          (partitionCoarseGradConst d ^ 2 * (A * (CM ^ (1 / p) * (N : ℝ)))) +
+          (coarseGradConstant d ^ 2 * (A * (CM ^ (1 / p) * (N : ℝ)))) +
         16 * d ^ 2 * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ (d - 1) * 3 ^ j *
-          (partitionCoarseGradConst d ^ 2 * W ^ (2 * d - 1))) *
+          (coarseGradConstant d ^ 2 * W ^ (2 * d - 1))) *
         cubeForm ω V w w := by
   have h := latticeEdgePairing_cubeExtend_sq_le_of_meyers hd hP hVr hj hres w hg Wt hWt hpq hCM
     hA0 I hcov hV hN hA hM
@@ -220,9 +212,9 @@ theorem latticeEdgePairing_innerCubeCells_sq_le (hd : 0 < d) (hP : PartitionEven
     latticeEdgePairing V.toIntegerCube.vertices g
         (fun x => cubeExtend ω V w (partitionAnchor ω x)) ^ 2 ≤
       (4 * d * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ d *
-          (partitionCoarseGradConst d ^ 2 * (A * (CM ^ (1 / p) * ((3 ^ d : ℕ) : ℝ)))) +
+          (coarseGradConstant d ^ 2 * (A * (CM ^ (1 / p) * ((3 ^ d : ℕ) : ℝ)))) +
         16 * d ^ 2 * G ^ 2 * ((3 : ℝ) ^ V.scale) ^ (d - 1) * 3 ^ j *
-          (partitionCoarseGradConst d ^ 2 * W ^ (2 * d - 1))) *
+          (coarseGradConstant d ^ 2 * W ^ (2 * d - 1))) *
         cubeForm ω V w w :=
   latticeEdgePairing_cubeExtend_sq_le_cubeForm hd hP hVr hj hres w hg Wt hWt hW hpq hCM hA0
     (innerCubeCells V j) (fun _ hz => innerCubeCells_cover V j (mem_partitionBoxCluster.1 hz).1)

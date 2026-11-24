@@ -29,9 +29,9 @@ variable {d : ℕ} {ω : Configuration d}
 /-- The constant `Λ` of the deterministic part of Lemma 5.5. -/
 noncomputable def restrictQuadConst (d n j : ℕ) (G A CM p W : ℝ) : ℝ :=
   4 * d * G ^ 2 * ((3 : ℝ) ^ n) ^ d *
-      (partitionCoarseGradConst d ^ 2 * (A * (CM ^ (1 / p) * ((3 ^ d : ℕ) : ℝ)))) +
+      (coarseGradConstant d ^ 2 * (A * (CM ^ (1 / p) * ((3 ^ d : ℕ) : ℝ)))) +
     16 * d ^ 2 * G ^ 2 * ((3 : ℝ) ^ n) ^ (d - 1) * 3 ^ j *
-      (partitionCoarseGradConst d ^ 2 * W ^ (2 * d - 1))
+      (coarseGradConstant d ^ 2 * W ^ (2 * d - 1))
 
 /-- **The coarsened gradients of the differences of the minimizers, by the energy defect**
 (Armstrong and Dario, Lemma 5.5, deterministic part, every dimension `d ≥ 1`). -/

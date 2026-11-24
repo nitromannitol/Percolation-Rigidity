@@ -322,8 +322,8 @@ theorem exists_lintegral_cubeMuDefect_le_tau [NeZero d] (hd : 2 ≤ d) {p : unit
   set V := (⟨m, 0⟩ : TriadicCube d).latticeVolume with hV
   have hV0 : 0 < V := TriadicCube.latticeVolume_pos _
   have h := hdef ⟨m, 0⟩ ⟨n, 0⟩ q hnm
-  rw [integral_neg_cubeMu_indicator_eq_cubeMuMean hd0, integral_neg_cubeMu_indicator_eq_cubeMuMean hd0]
-    at h
+  rw [integral_neg_cubeMu_indicator_eq_cubeMuMean hd0,
+    integral_neg_cubeMu_indicator_eq_cubeMuMean hd0] at h
   refine h.trans (ENNReal.ofReal_le_ofReal (mul_le_mul_of_nonneg_left ?_ hV0.le))
   change cubeMuMean p n q - cubeMuMean p m q + C₁ * (∑ i, |q i|) ^ 2 *
       (1 / √(√((3 : ℝ) ^ n)) + Real.exp (-c₁ * (3 : ℝ) ^ n)) ≤ _

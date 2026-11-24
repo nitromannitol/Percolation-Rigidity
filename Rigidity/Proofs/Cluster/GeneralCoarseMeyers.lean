@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Cluster.PlanarCoarseMeyers
 import Rigidity.Proofs.Cluster.PartitionBoxSobolev
+import Rigidity.Proofs.Percolation.GeneralDim.CubeMuUpperBound
 
 /-!
 # Coarse gradients through the Meyers estimate, in every dimension
@@ -29,14 +30,6 @@ namespace Rigidity.Percolation
 
 variable {d : ℕ} {ω : Configuration d}
 
-/-- The constant `2d · 21^d (1 + 3^d) 3^d 2√d` of Lemma 3.3 for the partition into good cubes. -/
-noncomputable def partitionCoarseGradConst (d : ℕ) : ℝ :=
-  2 * (d : ℝ) * ((21 ^ d : ℕ) : ℝ) * ((1 + 3 ^ d : ℕ) : ℝ) * 3 ^ (1 * d) * (2 * √(d : ℝ))
-
-theorem partitionCoarseGradConst_nonneg (d : ℕ) : 0 ≤ partitionCoarseGradConst d := by
-  unfold partitionCoarseGradConst
-  positivity
-
 /-- **Lemma 3.3 with `s = 2` for a function on a larger cluster.** On a resolved integer cube
 `B` whose cluster lies in `U₀`,
 `∑_{x ∈ B} |∇[w]_𝒫|²(x) ≤ K² ∑_{z ∈ 𝒞(B)} (3^{scale □_𝒫(z)})^{2d-1} |∇w 1_{𝐚≠0}|²_{U₀}(z)`. -/
@@ -45,7 +38,7 @@ theorem partitionBox_sum_gradNormIn_sq_le_clusterGradSq (hd : 0 < d) (hP : Parti
     (hBU : partitionBoxCluster ω B ⊆ U₀) (w : Vertex d → ℝ) :
     ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph d) B.vertices
         (fun x => w (partitionAnchor ω x)) x ^ 2 ≤
-      partitionCoarseGradConst d ^ 2 *
+      coarseGradConstant d ^ 2 *
         ∑ z ∈ partitionBoxCluster ω B, ((3 : ℝ) ^ (partitionCube ω z).scale) ^ (2 * d - 1) *
           clusterGradSq ω U₀ w z := by
   have h := partitionBox_sum_gradNormIn_coarseAnchor_rpow_le hd hP hB w (s := 2) (by norm_num)
@@ -80,7 +73,7 @@ theorem partitionBox_coarse_energy_le_of_meyers (hd : 0 < d) (hP : PartitionEven
       CM * avg (enl 1 c.1 c.2) (clusterEnergy ω U₀ w) ^ p) :
     ∑ x ∈ B.vertices, gradNormIn (nearestNeighborGraph d) B.vertices
         (fun x => w (partitionAnchor ω x)) x ^ 2 ≤
-      partitionCoarseGradConst d ^ 2 *
+      coarseGradConstant d ^ 2 *
         (A * (CM ^ (1 / p) * ((N : ℝ) * ∑ x ∈ V, clusterEnergy ω U₀ w x))) := by
   set E : Vertex d → ℝ := clusterEnergy ω U₀ w with hEdef
   have hE0 : ∀ x, 0 ≤ E x := clusterEnergy_nonneg ω U₀ w
