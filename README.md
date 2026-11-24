@@ -2069,8 +2069,8 @@ The thirty-five reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Lemma 3.3 of Dario rests on steps that Dario only sketches and that are part of the
-named input `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, which is not proved for the planar
-partition of the repository, and the Green gradient bounds of Propositions 2.11 and 2.12, which Dario proves by
+named input `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, which is proved for the planar
+partition of the repository in the section on Steps 1 and 2 below, and the Green gradient bounds of Propositions 2.11 and 2.12, which Dario proves by
 "standard arguments" and which are proved here (see
 [Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1)). Lemma 3.2 does not use them: it
 follows from (1.22) (`CorrectorOscSublinearTwo`), which is proved. The estimate (3.3) for the
@@ -2189,8 +2189,8 @@ are proved, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/) (thirt
 `DarioFiniteEnergySublinear`, `DarioCaseThree*`, `DarioFlipCluster`, `DarioCaseOneTwo`). `DarioFlipSumBound` is the statement that, for every
 direction, component, radius `r ≥ 1` and point, the sum over bonds `e` of the squared flip differences
 `(X(ω^{e,1}) − X(ω^{e,0}))²` of `X = Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)` is at most `O_s(C/r²)`. Lemma 3.5 (the partition of the
-resampled configuration agrees with 𝒫 away from a ball around the resampled bond) is not proved for the planar
-partition of the repository. Step 1 of the proof of Lemma 3.3 is proved from Lemma 3.5, and the sum of Step 2 is the hypothesis `hTwo` (H2) of `darioFlipSumBound_of_resample`, in [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition).
+resampled configuration agrees with 𝒫 away from a ball around the resampled bond) is proved for the planar
+partition of the repository (`darioResamplePartitionTwo_holds`). Step 1 of the proof of Lemma 3.3 is proved from Lemma 3.5, and the sum of Step 2 is the hypothesis `hTwo` (H2) of `darioFlipSumBound_of_resample`, in [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2221,8 +2221,8 @@ The thirty-five reports for the first table of this section and the eight report
 
 Exactly the following named inputs remain for these results. Theorem 1 of Dario, R5 and R4: `DarioFlipSumBound` (or `DarioLemmaThreeThree`),
 and nothing else; by [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition),
-`DarioFlipSumBound` follows from Lemma 3.5 in the adapted form `DarioResamplePartitionTwo` and the Step 2 sum (H2), so that Theorem 1 of Dario, R4 and R5 in `d = 2`
-rest on these two statements; (H2) needs Proposition 3.6, Lemma 3.7 and Definition 3.8. Dario and Gu, Theorem 1: `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
+`DarioFlipSumBound` follows from Lemma 3.5 in the adapted form `DarioResamplePartitionTwo`, which is proved, and the Step 2 sum (H2), so that Theorem 1 of Dario, R4 and R5 in `d = 2`
+rest on (H2) alone (`DarioStepTwoSumBound`, `darioOptimalCorrectorTwo_of_stepTwo`); (H2) needs Proposition 3.6, Lemma 3.7 and Definition 3.8. Dario and Gu, Theorem 1: `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
 `CarneVaropoulosTwo`; the last has since been proved, and the inputs of Theorem 1 of Dario and Gu are given in
 [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality).
 The module [`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1
@@ -2251,14 +2251,15 @@ The estimate (3.13) in flip form, `DarioFlipSumBound`, is reduced to two stateme
 `DarioFlipTermTwoSummable`, `DarioStepOneLipschitz`, `DarioStepOneMoments`, `DarioStepOneBound`, `DarioStepOneSum`,
 `DarioStepOneGrowth`, `DarioStepOneW`, `DarioStepOneHolds`):
 
-* Lemma 3.5 for the planar partition, in the adapted form `DarioResamplePartitionTwo` below, which is a hypothesis and is not proved;
+* Lemma 3.5 for the planar partition, in the adapted form `DarioResamplePartitionTwo` below, which is proved
+  (`DarioResamplePartitionHolds`);
 * the Step 2 sum (H2): for the conull sets `G` of the measurable corrector, for some `s, C > 0`, all `i, j`, `r ≥ 1` and `x`, the sum
   `flipSumTwo` over the bonds `e` of the squares `T₂(e)²` of the change-of-corrector terms of (3.15) is almost surely finite and
   `≤ O_s(C/r²)`.
 
 `darioFlipSumBound_of_resample` is the implication from these two statements to `DarioFlipSumBound`. Hence Theorem 1 of Dario in
-`d = 2`, `CorrectorQuantitativeInputTwo` (R5) and `ArmstrongDarioOrderOneOriginTwo` (R4) rest on Lemma 3.5 in the adapted form and on
-the Step 2 sum (H2), and on nothing else of Lemma 3.3. The Step 2 sum (H2) needs Proposition 3.6 (the Meyers estimate with a divergence
+`d = 2`, `CorrectorQuantitativeInputTwo` (R5) and `ArmstrongDarioOrderOneOriginTwo` (R4) rest on the Step 2 sum (H2) alone
+([`DarioStepTwoBridges`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean)), and on nothing else of Lemma 3.3. The Step 2 sum (H2) needs Proposition 3.6 (the Meyers estimate with a divergence
 source, of which Dario gives only a sketch in Appendix B), Lemma 3.7 and Definition 3.8, which are not formalized. In Step 2, Cases 1 and 2
 are proved (the term vanishes) and Case 3 is the pairing of the table of
 [Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1).
@@ -2285,8 +2286,10 @@ then `size(□_{𝒫(ω')}(z)) ≤ C size(□_{𝒫(ω)}(x))`; otherwise `□_{�
 | [`Rigidity.Corrector.stepOneW_moments`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | `E[W(y)^q] ≤ (A q^k)^q` uniformly in `y`, for `k = 3(κ + 2) + 2`, for any `C₀` and `C`, with the hypothesis `ArmstrongDarioOrderZeroTwo`; it does not use `ResamplePartitionBound`. |
 | [`Rigidity.Corrector.flipSumOne_isOsBond_of_resample`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | (H1): `flipSumOne` is almost surely finite and `O_s(C/r²)`, from `ResamplePartitionBound` alone. |
 | [`Rigidity.Corrector.darioFlipSumBound_of_resample`](Rigidity/Proofs/Corrector/DarioStepOneHolds.lean) | `DarioFlipSumBound` from `DarioResamplePartitionTwo` and the Step 2 sum (H2). |
+| [`Rigidity.Corrector.resamplePartitionBound_holds`](Rigidity/Proofs/Corrector/DarioResamplePartitionHolds.lean), [`darioResamplePartitionTwo_holds`](Rigidity/Proofs/Corrector/DarioResamplePartitionHolds.lean) | Lemma 3.5 for the planar partition: `ResamplePartitionBound 4747 14244`, from the planar resampling results of Percolation-Cluster-Homogenization (`meshedFlipBound_of_flip`, `planarPartCube_eq_of_meshedFlipBound`, `side_planarPartCube_le_of_meshedFlipBound`, `TriadicCube.planarAnchor_eq_of_adj_iff_vertices`). |
+| [`Rigidity.Poincare.DarioStepTwoSumBound`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioFlipSumBound_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioOptimalCorrectorTwo_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`correctorQuantitativeInputTwo_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`armstrongDarioOrderOneOriginTwo_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioGuHeatKernelTwo_of_reduced_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioGuHeatKernelTwo_of_flux_gradient_barlow_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean) | the Step 2 sum (H2) as a named statement, and `DarioFlipSumBound`, Theorem 1 of Dario (`DarioOptimalCorrectorTwo`), R5, R4 and Theorem 1 of Dario and Gu (with its further inputs) from it. |
 
-The thirty-four reports for the declarations of this section are in
+The thirty-four reports for the declarations of this section, and eight reports for Lemma 3.5 and the bridges from (H2), are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Departures from Dario:
@@ -2301,8 +2304,13 @@ Departures from Dario:
   of points of the box times the sum of the squares; the ball `B(x, r)` is the box in the supremum norm.
 - **Lemma 3.5 with the anchors.** The anchors of the planar partition depend on the bonds of the square of side nine times the side of the cube, so
   `DarioResamplePartitionTwo` states the second clause for the cube and for its anchor. For a meshed partition cube of side at least 1000 the anchor
-  depends only on the bonds inside the cube, so `DarioResamplePartitionTwo` is equivalent to Lemma 3.5 as Dario prints it, for this partition. It remains
-  an unproved hypothesis.
+  depends only on the bonds inside the cube, so `DarioResamplePartitionTwo` is equivalent to Lemma 3.5 as Dario prints it, for this partition.
+- **The proof of Lemma 3.5.** Dario's proof uses large cubes crossable by clusters avoiding a cube, which the strip meshes of this partition do not
+  provide. Here, with `s` the side of the partition cube of an endpoint `x` of the bond, the square of side `s` around `x` is tested in the mesh of that
+  cube; by planar duality a change of a crossing of a strip of width at least `s + 2` would give a walk of faces through closed edges from the bond
+  leaving that square, which its outer strip crossings block. So the meshed cubes change only for cubes of side below `101 s` near `x`, the stopping
+  cubes only near `x`, and the partition cubes agree at distance at least `4747 s` and have side at most `14244 s` closer to `x`; the constants are
+  explicit.
 
 ## Theorem 1 of Dario and Gu in dimension two
 

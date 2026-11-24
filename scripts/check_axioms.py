@@ -911,6 +911,15 @@ further = {
          'Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree',
          'Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum',
          'Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_resample'],
+    'Lemma 3.5 of Dario for the planar partition, and Theorem 1 of Dario, Proposition 2.12 of Dario and Gu, Theorem 2 (iii) at k = 1 and Theorem 1 of Dario and Gu in dimension two from the Step 2 sum of Lemma 3.3':
+        ['Rigidity.Corrector.resamplePartitionBound_holds',
+         'Rigidity.Corrector.darioResamplePartitionTwo_holds',
+         'Rigidity.Poincare.darioFlipSumBound_of_stepTwo',
+         'Rigidity.Poincare.darioOptimalCorrectorTwo_of_stepTwo',
+         'Rigidity.Poincare.correctorQuantitativeInputTwo_of_stepTwo',
+         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_stepTwo',
+         'Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_stepTwo',
+         'Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_stepTwo'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

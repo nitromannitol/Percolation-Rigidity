@@ -415,6 +415,8 @@ import Rigidity.Proofs.Green.DarioGuTheoremOneCarne
 import Rigidity.Proofs.Green.DarioGuTheoremOnePoincare
 import Rigidity.Proofs.Poincare.DarioGuBridges
 import Rigidity.Proofs.Poincare.DarioGuFluxBridges
+import Rigidity.Proofs.Corrector.DarioResamplePartitionHolds
+import Rigidity.Proofs.Poincare.DarioStepTwoBridges
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1392,3 +1394,13 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_resample
+
+-- Lemma 3.5 of Dario for the planar partition, and Theorem 1 of Dario, Proposition 2.12 of Dario and Gu, Theorem 2 (iii) at k = 1 and Theorem 1 of Dario and Gu in dimension two from the Step 2 sum of Lemma 3.3
+#print axioms Rigidity.Corrector.resamplePartitionBound_holds
+#print axioms Rigidity.Corrector.darioResamplePartitionTwo_holds
+#print axioms Rigidity.Poincare.darioFlipSumBound_of_stepTwo
+#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_of_stepTwo
+#print axioms Rigidity.Poincare.correctorQuantitativeInputTwo_of_stepTwo
+#print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_stepTwo
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_stepTwo
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_stepTwo
