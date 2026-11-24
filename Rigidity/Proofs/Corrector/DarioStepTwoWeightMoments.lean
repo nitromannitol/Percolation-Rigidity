@@ -10,7 +10,8 @@ For nonnegative `Λ` with moments `E[(1 + Λ(z))^q] ≤ (B q^κ)^q` uniform in `
 `M(u) = Σ_a 1{|a - u| ≤ K₁ σ(a)} T(a)⁹`,   `T(v) = Σ_{|z - v| ≤ K₂ σ(v)} (1 + Λ(z))`
 
 (`weightMajorant`), with `σ(v)` the stopping size of the planar partition at `v`, has moments
-`E[M(u)^q] ≤ (A q^k)^q` uniform in `u` (`growthMoments_weightMajorant`): as for Step 1
+`E[M(u)^q] ≤ (A q^k)^q` uniform in `u` (`growthMoments_weightMajorant`), with `A, k` depending
+only on `B, κ, K₁, K₂` (`growthMoments_weightMajorant_uniform`): as for Step 1
 (`stepOneW_moments`), the ball sums `T` have such moments
 (`lintegral_randomBallSum_rpow_le_of_growth`),
 each summand is a ball sum on the event `|a - u| ≤ K₁ σ(a)` of probability
@@ -77,12 +78,14 @@ theorem ninefold_moment_eq {A₁ κ q : ℝ} (hA : 0 ≤ A₁) (hq : 0 < q) :
   push_cast
   ring
 
-/-- **The moments of the majorant of the weights.** -/
-theorem growthMoments_weightMajorant {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
-    {Λ : Vertex 2 → Configuration 2 → ℝ} (hΛm : ∀ z, Measurable (Λ z)) {B κ : ℝ} (hB : 0 < B)
-    (hκ : 0 < κ) (hmom : ∀ z, GrowthMoments p (fun ω => ENNReal.ofReal (1 + Λ z ω)) B κ) {K₁ K₂ : ℝ}
+/-- **The moments of the majorant of the weights**, with constants depending only on the growth
+constants `B, κ` of `1 + Λ` and on `K₁, K₂`. -/
+theorem growthMoments_weightMajorant_uniform {p : unitInterval}
+    (hpc : criticalProbability 2 < (p : ℝ)) {B κ : ℝ} (hB : 0 < B) (hκ : 0 < κ) {K₁ K₂ : ℝ}
     (hK₁ : 0 < K₁) (hK₂ : 0 < K₂) :
-    ∃ A k : ℝ, 0 < A ∧ 0 < k ∧ ∀ u, GrowthMoments p (weightMajorant Λ K₁ K₂ u) A k := by
+    ∃ A k : ℝ, 0 < A ∧ 0 < k ∧ ∀ Λ : Vertex 2 → Configuration 2 → ℝ, (∀ z, Measurable (Λ z)) →
+      (∀ z, GrowthMoments p (fun ω => ENNReal.ofReal (1 + Λ z ω)) B κ) →
+        ∀ u, GrowthMoments p (weightMajorant Λ K₁ K₂ u) A k := by
   obtain ⟨θ', hθ', hexp⟩ := (planar_meshed_partition_estimates hpc).2.1
   set A₁ : ℝ := 4 * (1 + 8 * (K₂ * θ')) ^ 2 * Real.sqrt 2 * (B * 2 ^ κ) with hA₁
   have hA₁0 : 0 < A₁ := by positivity
@@ -94,7 +97,7 @@ theorem growthMoments_weightMajorant {p : unitInterval} (hpc : criticalProbabili
   have hc1 : (1 : ℝ) ≤ Real.sqrt 2 := by rw [Real.one_le_sqrt]; norm_num
   refine ⟨X * Real.sqrt 2 * (A₁ * 18 ^ (κ + 2)) ^ 9, 9 * (κ + 2) + 2,
     mul_pos (mul_pos (by linarith) (by positivity)) (by positivity), by linarith,
-    fun u q hq => ?_⟩
+    fun Λ hΛm hmom u q hq => ?_⟩
   have hq0 : 0 < q := by linarith
   set Y₀ : ℝ := (A₁ * 18 ^ (κ + 2)) ^ 9 * q ^ (9 * (κ + 2)) with hY₀
   have hY₀0 : 0 ≤ Y₀ := by positivity
@@ -173,5 +176,14 @@ theorem growthMoments_weightMajorant {p : unitInterval} (hpc : criticalProbabili
         rw [hY₀, Real.rpow_add hq0, Real.rpow_two]
         congr 1
         ring
+
+/-- **The moments of the majorant of the weights.** -/
+theorem growthMoments_weightMajorant {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ))
+    {Λ : Vertex 2 → Configuration 2 → ℝ} (hΛm : ∀ z, Measurable (Λ z)) {B κ : ℝ} (hB : 0 < B)
+    (hκ : 0 < κ) (hmom : ∀ z, GrowthMoments p (fun ω => ENNReal.ofReal (1 + Λ z ω)) B κ) {K₁ K₂ : ℝ}
+    (hK₁ : 0 < K₁) (hK₂ : 0 < K₂) :
+    ∃ A k : ℝ, 0 < A ∧ 0 < k ∧ ∀ u, GrowthMoments p (weightMajorant Λ K₁ K₂ u) A k := by
+  obtain ⟨A, k, hA, hk, h⟩ := growthMoments_weightMajorant_uniform hpc hB hκ hK₁ hK₂
+  exact ⟨A, k, hA, hk, h Λ hΛm hmom⟩
 
 end Rigidity.Corrector
