@@ -993,6 +993,17 @@ further = {
          'Rigidity.Corrector.exists_measure_not_weightGood_le',
          'Rigidity.Corrector.exists_measure_not_mem_stepTwoGood_le',
          'Rigidity.Corrector.exists_stepTwoGood_partition'],
+    'The Step 2 sum of Lemma 3.3 of Dario and Theorem 1 of Dario (d = 2)':
+        ['Rigidity.Corrector.GrowthMoments.mul',
+         'Rigidity.Corrector.growthMoments_of_exp_moment',
+         'Rigidity.Corrector.pathWeight_le_ballSum',
+         'Rigidity.Corrector.planeGrad_le_of_lipschitz',
+         'Rigidity.Corrector.growthMoments_planarBallSum',
+         'Rigidity.Poincare.exists_stepTwo_weight_data',
+         'Rigidity.Poincare.darioStepTwoSumBound_holds',
+         'Rigidity.Poincare.darioOptimalCorrectorTwo_holds',
+         'Rigidity.Poincare.correctorQuantitativeInputTwo_holds',
+         'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_holds'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

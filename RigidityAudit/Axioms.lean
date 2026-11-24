@@ -424,6 +424,7 @@ import Rigidity.Proofs.Corrector.DarioLocalGradientMoments
 import Rigidity.Proofs.Corrector.DarioStepTwoFiniteWeight
 import Rigidity.Proofs.Corrector.DarioStepTwoWeightMeas
 import Rigidity.Proofs.Corrector.DarioStepTwoPartition
+import Rigidity.Proofs.Poincare.DarioStepTwoHolds
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1491,3 +1492,15 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.exists_measure_not_weightGood_le
 #print axioms Rigidity.Corrector.exists_measure_not_mem_stepTwoGood_le
 #print axioms Rigidity.Corrector.exists_stepTwoGood_partition
+
+-- The Step 2 sum of Lemma 3.3 of Dario and Theorem 1 of Dario (d = 2)
+#print axioms Rigidity.Corrector.GrowthMoments.mul
+#print axioms Rigidity.Corrector.growthMoments_of_exp_moment
+#print axioms Rigidity.Corrector.pathWeight_le_ballSum
+#print axioms Rigidity.Corrector.planeGrad_le_of_lipschitz
+#print axioms Rigidity.Corrector.growthMoments_planarBallSum
+#print axioms Rigidity.Poincare.exists_stepTwo_weight_data
+#print axioms Rigidity.Poincare.darioStepTwoSumBound_holds
+#print axioms Rigidity.Poincare.darioOptimalCorrectorTwo_holds
+#print axioms Rigidity.Poincare.correctorQuantitativeInputTwo_holds
+#print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_holds
