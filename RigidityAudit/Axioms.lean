@@ -414,6 +414,11 @@ import Rigidity.Proofs.Green.DarioGuTheoremOneApprox
 import Rigidity.Proofs.Green.DarioGuTheoremOneCarne
 import Rigidity.Proofs.Green.DarioGuTheoremOnePoincare
 import Rigidity.Proofs.Poincare.DarioGuBridges
+import Rigidity.Proofs.Poincare.DarioGuFluxBridges
+import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
+import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
+import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
+import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1352,3 +1357,38 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.stepOneW_moments
 #print axioms Rigidity.Corrector.flipSumOne_isOsBond_of_resample
 #print axioms Rigidity.Corrector.darioFlipSumBound_of_resample
+
+-- Proposition 4.3 of Dario and Gu in dimension two from the weak norm of the flux (Proposition 2.13) and the quantitative corrector estimate, and Theorem 1 of Dario and Gu from these
+#print axioms Rigidity.Green.weakNormLe_translatedFlux
+#print axioms Rigidity.Green.darioGuTranslatedFluxTwo_of_inputs
+#print axioms Rigidity.Green.dgWeight_bound
+#print axioms Rigidity.Green.dgWeightTrunc_edgeKappa_bound
+#print axioms Rigidity.Green.openLaplacian_twoScale
+#print axioms Rigidity.Green.openLaplacian_twoScale_of_corrector
+#print axioms Rigidity.Green.hasDerivAt_dgTwoScale_eq
+#print axioms Rigidity.Green.tsum_energy_deriv_le
+#print axioms Rigidity.Green.energy_first_pass
+#print axioms Rigidity.Green.energy_second_pass
+#print axioms Rigidity.Green.clusterW_first_pass
+#print axioms Rigidity.Green.clusterW_second_pass
+#print axioms Rigidity.Green.dgW_weightedL2Le_of_sourceBound
+#print axioms Rigidity.Green.darioGuTwoScaleErrorTwo_of_sourceBound
+#print axioms Rigidity.Green.abs_fwdDiff_fwdDiff_latticeGaussian_le
+#print axioms Rigidity.Green.abs_fwdDiff_latticeGaussianTimeDeriv_le
+#print axioms Rigidity.Green.abs_fwdDiff_fwdDiff_fwdDiff_latticeGaussian_le
+#print axioms Rigidity.Green.tsum_weightGauss_le
+#print axioms Rigidity.Green.tsum_sq_clusterF_le
+#print axioms Rigidity.Green.tsum_sq_clusterFlux_le
+#print axioms Rigidity.Green.tsum_source_le_of_split
+#print axioms Rigidity.Green.neg_sum_le_of_weakNormLe
+#print axioms Rigidity.Green.neg_tsum_le_of_weakNormLe_coeff
+#print axioms Rigidity.Green.neg_tsum_le_of_pieces
+#print axioms Rigidity.Green.neg_tsum_flux_le
+#print axioms Rigidity.Green.darioGuTwoScaleSourceBoundTwo_of_fluxTerm
+#print axioms Rigidity.Green.darioGuTwoScaleErrorTwo_of_fluxTerm
+#print axioms Rigidity.Green.darioGuTwoScaleFluxTermTwo_of_inputs
+#print axioms Rigidity.Green.darioGuTwoScaleErrorTwo_of_inputs
+#print axioms Rigidity.Green.exists_darioGuTwoScaleErrorTwo_of_inputs
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum
+#print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_resample

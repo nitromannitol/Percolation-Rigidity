@@ -401,7 +401,10 @@ fidelity:
     Armstrong and Dario; Lemma 4.1 is proved from Theorem 3 in the form of Remark 1.3, the weak
     Poincare inequality, Barlow's bound and Propositions 2.15 and A.7, so that Theorem 1 in dimension
     two follows from Proposition 4.3, Theorem 3 (Remark 1.3), Barlow's bound and Lemma 3.3 of Dario,
-    or its flip form) (the Carne-Varopoulos bound
+    or its flip form; Proposition 4.3 is proved from Proposition 2.13, the weak norm of the flux, a named input, and the
+    quantitative corrector estimate, with the centered flux in place of the translated flux, the weight (4.27) handled by the
+    edge identity and the steps that the source leaves to the reader written out, so that Theorem 1 follows from Proposition 2.13,
+    Theorem 3, Barlow's bound and Lemma 3.3 of Dario, its flip form, or Lemma 3.5 with the Step 2 sum) (the Carne-Varopoulos bound
     for small times is proved for the lazy walk; the pairs of points in a ball are treated by a
     union bound and the time integral of the Gaussian kernel is normalized by its value at a unit
     vector), for

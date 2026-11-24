@@ -2311,7 +2311,9 @@ from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
   infinite cluster), which Dario and Gu prove from Sections 3 and 4.1–4.2 and Appendix A. The second part (A.13) of
   Proposition A.7 is proved, and Lemma 4.1 is proved from Theorem 3 (Remark 1.3) and Theorem 4
   ([Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality));
-  Proposition 4.3 needs the flux estimate of Proposition 2.13 and weak norms and is not formalized;
+  Proposition 4.3 is proved from the flux estimate of Proposition 2.13 (`DarioGuFluxWeakNormTwo p σ`, a named input) and the
+  quantitative corrector estimate, in
+  [Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two);
 * the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu), and the
   Carne–Varopoulos bound of Proposition 2.15 (`CarneVaropoulosTwo`, proved, see the same section);
 * the qualitative corrector input `SupercriticalBondCorrectorInputTwo` (R2) and the quantitative corrector estimate
@@ -2399,7 +2401,8 @@ The fifteen reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Exactly the following named inputs remain for Theorem 1 of Dario and Gu in `d = 2`
-(`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree`): Proposition 4.3, for each `𝔭_c(2) < p < 1` and some
+(`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree`; with Proposition 4.3 proved, see
+[Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two) for the shorter list): Proposition 4.3, for each `𝔭_c(2) < p < 1` and some
 `σ > 0` (`DarioGuTwoScaleErrorTwo p σ`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`); Theorem 4 of
 Barlow (`BarlowGaussianUpperBoundTwo`, cited); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
 (`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_flipSum`). The qualitative corrector input is proved, and Proposition 2.15, Proposition A.7,
@@ -2420,6 +2423,61 @@ Departures from Dario and Gu:
   radius `24R` of the weak Poincaré inequality. The lower bound on the volume of the cluster in balls at the scale `√τ` comes
   from Proposition A.1, and for `|x − y| > t − τ`, where Theorem 3 does not apply, `Φ_C(t, r) ≤ C t^{−1/2} Φ_{2C}(t, r)` is
   used. The minimal time is `T = max(M_reg², M_P², M_dens², 2 max(T_dense, 1), T'_NA, 1)` in place of `max(M_reg², T_dense)`.
+
+## Proposition 4.3 of Dario and Gu in dimension two
+
+Proposition 4.3 of Dario and Gu (the two-scale error bound, `DarioGuTwoScaleErrorTwo p σ`) is proved in
+[`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) from two statements: the estimate of the flux in the weak norm, Proposition 2.13
+(`DarioGuFluxWeakNormTwo p σ`, a named input, the estimate (1.33) of `Rigidity.Green.WeakNormLe` for the centered flux on the balls
+of the infinite cluster), and the quantitative corrector estimate of Proposition 2.12 (`CorrectorQuantitativeInputTwo`, R5, which
+follows from Lemma 3.3 of Dario). The witness is `σ = σ̄²`, where `σ̄` is the constant that Proposition 2.13 defines through (B.5).
+The proof follows Steps 1 to 5 of the source (DG21.tex, proof of Proposition 4.3): the heat flow of the two-scale expansion and its
+equation (Steps 1 and 2), the weighted energy identity and its two Gronwall passes (Step 5, bound (4.40)), the source terms (Steps 3
+and 4), and the assembly on the cluster with the truncated weights.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.DarioGuFluxWeakNormTwo`](Rigidity/Proofs/Green/DarioGuFluxInput.lean), [`WeakNormLe`](Rigidity/Proofs/Green/DarioGuFluxInput.lean), [`centeredFlux`](Rigidity/Proofs/Green/DarioGuFluxInput.lean) | Proposition 2.13 as a named input: the weak norm of the centered flux of the corrector on the balls of the cluster at all scales above a random minimal scale. |
+| [`weakNormLe_translatedFlux`](Rigidity/Proofs/Green/DarioGuFluxTranslate.lean), [`darioGuTranslatedFluxTwo_of_inputs`](Rigidity/Proofs/Green/DarioGuFluxTranslateHolds.lean) | Remark B.3: the weak norm bound of the translated flux of the source from the bound for the centered flux. |
+| [`dgWeight_bound`](Rigidity/Proofs/Green/DarioGuTwoScaleWeight.lean), [`dgWeightTrunc_edgeKappa_bound`](Rigidity/Proofs/Green/DarioGuTwoScaleWeightTrunc.lean) | the weight `exp(dgExponent)` and its truncation: the discrete product rule and the pointwise bound replacing (4.27) and (4.41). |
+| [`openLaplacian_twoScale`](Rigidity/Proofs/Green/DarioGuTwoScaleStepOne.lean), [`openLaplacian_twoScale_of_corrector`](Rigidity/Proofs/Green/DarioGuTwoScaleCorrectorEq.lean), [`hasDerivAt_dgTwoScale_eq`](Rigidity/Proofs/Green/DarioGuTwoScaleHeatEq.lean) | Step 1, (4.26): the equation of the two-scale expansion with the flux of the corrector as source. |
+| [`tsum_energy_deriv_le`](Rigidity/Proofs/Green/DarioGuTwoScaleStepTwo.lean), [`energy_first_pass`](Rigidity/Proofs/Green/DarioGuTwoScaleStepFive.lean), [`energy_second_pass`](Rigidity/Proofs/Green/DarioGuTwoScaleStepFive.lean) | Step 2 (the weighted energy inequality) and Step 5: the bound (4.40) in two Gronwall passes. |
+| [`abs_fwdDiff_fwdDiff_latticeGaussian_le`](Rigidity/Proofs/Green/DarioGuGaussianLatticeDiff.lean), [`abs_fwdDiff_latticeGaussianTimeDeriv_le`](Rigidity/Proofs/Green/DarioGuGaussianLatticeDiff.lean), [`abs_fwdDiff_fwdDiff_fwdDiff_latticeGaussian_le`](Rigidity/Proofs/Green/DarioGuGaussianLatticeThird.lean) | the discrete derivatives of the lattice Gaussian: `\|D_iD_kP\| ≤ K r^{-2}Φ`, `\|D_k∂P\| ≤ K r^{-5/2}Φ` and the third differences. |
+| [`tsum_weightGauss_le`](Rigidity/Proofs/Green/DarioGuTwoScaleMomentSum.lean), [`tsum_sq_clusterF_le`](Rigidity/Proofs/Green/DarioGuTwoScaleStepFour.lean), [`tsum_sq_clusterFlux_le`](Rigidity/Proofs/Green/DarioGuTwoScaleStepFour.lean) | Step 4: the Gaussian moment sum and the bounds `Σ(ψ F)² ≤ Q r^{β-4}` of the terms without the flux, and `r^{β-3}`, `r^{β-4}` for the flux terms. |
+| [`neg_sum_le_of_weakNormLe`](Rigidity/Proofs/Green/DarioGuTwoScaleFluxDuality.lean), [`neg_tsum_le_of_weakNormLe_coeff`](Rigidity/Proofs/Green/DarioGuTwoScaleFluxScale.lean), [`neg_tsum_le_of_pieces`](Rigidity/Proofs/Green/DarioGuTwoScaleFluxSum.lean), [`neg_tsum_flux_le`](Rigidity/Proofs/Green/DarioGuTwoScaleFluxBound.lean) | Step 3, (4.30) and (4.33): duality of the weak norm, one dyadic scale with the product rule, the truncated sum over the scales with dominated convergence, and the bound for each component of the flux. |
+| [`tsum_source_le_of_split`](Rigidity/Proofs/Green/DarioGuTwoScaleSourceSplit.lean), [`darioGuTwoScaleSourceBoundTwo_of_fluxTerm`](Rigidity/Proofs/Green/DarioGuTwoScaleSourceBound.lean) | the bound of the source of the equation by the split into the flux term and the terms of Step 4. |
+| [`clusterW_first_pass`](Rigidity/Proofs/Green/DarioGuTwoScaleAssembly.lean), [`clusterW_second_pass`](Rigidity/Proofs/Green/DarioGuTwoScaleAssembly.lean), [`dgW_weightedL2Le_of_sourceBound`](Rigidity/Proofs/Green/DarioGuTwoScaleAssembly.lean), [`darioGuTwoScaleErrorTwo_of_sourceBound`](Rigidity/Proofs/Green/DarioGuTwoScaleErrorFromSource.lean), [`darioGuTwoScaleErrorTwo_of_fluxTerm`](Rigidity/Proofs/Green/DarioGuTwoScaleSourceBound.lean) | the assembly on the cluster: the weighted `L²` bound from the source bound, and `DarioGuTwoScaleErrorTwo` from it. |
+| [`darioGuTwoScaleFluxTermTwo_of_inputs`](Rigidity/Proofs/Green/DarioGuTwoScaleFluxTerm.lean), [`darioGuTwoScaleErrorTwo_of_inputs`](Rigidity/Proofs/Green/DarioGuTwoScaleFluxTerm.lean) | Step 3 and Proposition 4.3 from `CorrectorQuantitativeInputTwo` and `DarioGuFluxWeakNormTwo p σ`. |
+| [`exists_darioGuTwoScaleErrorTwo_of_inputs`](Rigidity/Proofs/Green/DarioGuTwoScaleFluxTerm.lean) | Proposition 4.3 in the form `hP43` of Theorem 1 of Dario and Gu: at every `𝔭_c(2) < p < 1` some `σ > 0` satisfies `DarioGuTwoScaleErrorTwo p σ`, from `CorrectorQuantitativeInputTwo` and `DarioGuFluxWeakNormTwo p σ` at some `σ > 0`. |
+| [`Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree`](Rigidity/Proofs/Poincare/DarioGuFluxBridges.lean), [`darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum`](Rigidity/Proofs/Poincare/DarioGuFluxBridges.lean), [`darioGuHeatKernelTwo_of_flux_gradient_barlow_resample`](Rigidity/Proofs/Poincare/DarioGuFluxBridges.lean) | Theorem 1 of Dario and Gu in `d = 2` from the inputs listed below. |
+
+The thirty-three reports for the declarations of this section are in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Exactly the following named inputs remain for Theorem 1 of Dario and Gu in `d = 2`
+(`darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree`): Proposition 2.13, for each `𝔭_c(2) < p < 1` and some `σ > 0`
+(`DarioGuFluxWeakNormTwo p σ`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`); Theorem 4 of Barlow
+(`BarlowGaussianUpperBoundTwo`, cited); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
+(`darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum`), or Lemma 3.5 for the planar partition (`DarioResamplePartitionTwo`)
+together with the Step 2 sum (H2) (`darioGuHeatKernelTwo_of_flux_gradient_barlow_resample`, by `darioFlipSumBound_of_resample`).
+Proposition 4.3 and the quantitative corrector estimate are no longer inputs.
+
+Departures from Dario and Gu:
+
+- **The centered flux in place of the translated flux.** Step 3 uses the centered flux of the corrector, paired with the forward
+  second differences `D_iD_kP` of the heat kernel, in place of the translated flux and the backward differences of the source;
+  Remark B.3 (the translated flux, `darioGuTranslatedFluxTwo_of_inputs`) is proved, so the bound for the translated flux follows from Proposition 2.13.
+- **The weight (4.27) by the edge identity.** The comparison (4.27) of the gradient of the weight at neighbouring points, with a constant
+  `C̃`, does not hold for the weight `exp(Ψ_C)` at distances `r ≫ t`. It is replaced by the discrete product rule
+  `(q²b − p²a)(b − a) = (qb − pa)² − (q − p)²ab` on the edges and the pointwise bound `ψ²(∂_t g/C + A/t) + K max_{|r'−r|≤1}(ψ(r') − ψ(r))² ≤ C₁/t`
+  for `t ≥ 1` and `C ≥ C₀(K)`, which gives (4.41). The weight is `exp(dgExponent C t r)`, the exponent of `Φ_C` alone, without the factor `t^{d/2}/C` of `Ψ_C`,
+  with which (4.41) fails because of the term `ψ²/t`.
+- **Steps written out.** The source leaves to the reader the details of (4.26), of the term `Ξ₂` of Step 3 (the bounds of `D³p̄ ψ` and `D²p̄ Dψ`)
+  and of the term without flux of Step 4 (DG21.tex:2274, :2411); they are written out (`StepOne`, `FluxCoeff`, `FluxPieces`, `StepFour`).
+- **Minimal times and the sum over scales.** The times satisfy `τ ≥ M` with `M ≥ max(M_flux², M_corr², 1)` and `t ≥ 3τ`, since Step 5 integrates over `[τ, t]`;
+  the scale sum of Step 3 is bounded by `Σ_m sup · ‖·‖` without Cauchy-Schwarz, with piecewise linear cutoffs on the balls of radius `2^{m+2}√r`, and the truncations
+  are removed by dominated convergence. The bound (4.40) is proved for its square root.
+- **The statement for one `σ`.** `DarioGuTwoScaleErrorTwo p σ` is proved for the `σ` of Proposition 2.13 (`σ = σ̄²`); Theorem 1 uses it for some `σ > 0`.
 
 ## The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10
 
@@ -2565,7 +2623,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 809 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 842 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2614,6 +2672,8 @@ Departures from Armstrong and Dario:
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
   the thirty-four theorems of
   [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition),
+  the thirty-three theorems of
+  [Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two),
   the ten theorems of
   [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two),
   the thirteen theorems of
@@ -2632,7 +2692,7 @@ Departures from Armstrong and Dario:
   [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 809 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 842 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2663,10 +2723,10 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 1510 Lean files with 301,548 lines, on top of mathlib and
+`Rigidity/` and `Rigidity.lean`: 1561 Lean files with 311,691 lines, on top of mathlib and
 Lattice-Probability, including the 153 copied modules under `Rigidity/Vendor/` (32,183 lines; see
 [Copied code](#copied-code)). The comparator pairs (15 files, 5,052 lines) and the axiom report
-`RigidityAudit/Axioms.lean` (1,354 lines) are counted separately.
+`RigidityAudit/Axioms.lean` (1,394 lines) are counted separately.
 
 ## Building
 
