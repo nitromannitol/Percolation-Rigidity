@@ -420,6 +420,7 @@ import Rigidity.Proofs.Poincare.DarioStepTwoBridges
 import Rigidity.Proofs.Corrector.DarioMeyersSource
 import Rigidity.Proofs.Corrector.DarioStepTwoSum
 import Rigidity.Proofs.Corrector.DarioStepTwoReduce
+import Rigidity.Proofs.Corrector.DarioLocalGradientMoments
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1438,3 +1439,16 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.tsum_mul_edgeSq_le
 #print axioms Rigidity.Corrector.isCellScale_partScale
 #print axioms Rigidity.Corrector.flipSumTwo_le_of_partition
+
+-- A local bound for the gradients of harmonic functions on the planar cluster
+#print axioms Rigidity.Corrector.localGrad_le
+#print axioms Rigidity.Corrector.abs_sub_le_localGrad
+#print axioms Rigidity.Corrector.localGrad_eq_of_adj_iff
+#print axioms Rigidity.Corrector.measurable_localGrad
+#print axioms Rigidity.Corrector.mem_localCluster_of_infinite
+#print axioms Rigidity.Corrector.abs_correctorDiff_le_localGrad
+#print axioms Rigidity.Corrector.planeGrad_le_localGrad
+#print axioms Rigidity.Corrector.measure_not_localGradGood_le
+#print axioms Rigidity.Corrector.localGrad_le_of_orderZero
+#print axioms Rigidity.Corrector.ae_localGrad_le
+#print axioms Rigidity.Corrector.growthMoments_localGrad

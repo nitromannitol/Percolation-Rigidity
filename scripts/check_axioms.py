@@ -948,6 +948,18 @@ further = {
          'Rigidity.Corrector.tsum_mul_edgeSq_le',
          'Rigidity.Corrector.isCellScale_partScale',
          'Rigidity.Corrector.flipSumTwo_le_of_partition'],
+    'A local bound for the gradients of harmonic functions on the planar cluster':
+        ['Rigidity.Corrector.localGrad_le',
+         'Rigidity.Corrector.abs_sub_le_localGrad',
+         'Rigidity.Corrector.localGrad_eq_of_adj_iff',
+         'Rigidity.Corrector.measurable_localGrad',
+         'Rigidity.Corrector.mem_localCluster_of_infinite',
+         'Rigidity.Corrector.abs_correctorDiff_le_localGrad',
+         'Rigidity.Corrector.planeGrad_le_localGrad',
+         'Rigidity.Corrector.measure_not_localGradGood_le',
+         'Rigidity.Corrector.localGrad_le_of_orderZero',
+         'Rigidity.Corrector.ae_localGrad_le',
+         'Rigidity.Corrector.growthMoments_localGrad'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
