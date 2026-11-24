@@ -417,6 +417,7 @@ import Rigidity.Proofs.Poincare.DarioGuBridges
 import Rigidity.Proofs.Poincare.DarioGuFluxBridges
 import Rigidity.Proofs.Corrector.DarioResamplePartitionHolds
 import Rigidity.Proofs.Poincare.DarioStepTwoBridges
+import Rigidity.Proofs.Corrector.DarioMeyersSource
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1404,3 +1405,12 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_stepTwo
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_stepTwo
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_stepTwo
+
+-- The Meyers estimate with a divergence source on a cube of the cluster, in place of Proposition 3.6 of Dario (d = 2)
+#print axioms Rigidity.Corrector.openGraph_restrictConfig_adj
+#print axioms Rigidity.Corrector.greenProj_apply_of_not_open
+#print axioms Rigidity.Corrector.norm_greenProj_le_restrictField
+#print axioms Rigidity.Corrector.openLaplacian_localSolution
+#print axioms Rigidity.Corrector.openLaplacian_sub_eq_zero
+#print axioms Rigidity.Corrector.sum_clusterEnergy_localSolution_le
+#print axioms Rigidity.Corrector.meyers_source

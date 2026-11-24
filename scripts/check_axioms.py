@@ -920,6 +920,14 @@ further = {
          'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_of_stepTwo',
          'Rigidity.Poincare.darioGuHeatKernelTwo_of_reduced_stepTwo',
          'Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow_stepTwo'],
+    'The Meyers estimate with a divergence source on a cube of the cluster, in place of Proposition 3.6 of Dario (d = 2)':
+        ['Rigidity.Corrector.openGraph_restrictConfig_adj',
+         'Rigidity.Corrector.greenProj_apply_of_not_open',
+         'Rigidity.Corrector.norm_greenProj_le_restrictField',
+         'Rigidity.Corrector.openLaplacian_localSolution',
+         'Rigidity.Corrector.openLaplacian_sub_eq_zero',
+         'Rigidity.Corrector.sum_clusterEnergy_localSolution_le',
+         'Rigidity.Corrector.meyers_source'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
