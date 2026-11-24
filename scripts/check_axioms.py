@@ -960,6 +960,19 @@ further = {
          'Rigidity.Corrector.localGrad_le_of_orderZero',
          'Rigidity.Corrector.ae_localGrad_le',
          'Rigidity.Corrector.growthMoments_localGrad'],
+    'The weight of the Step 2 sum: majorant, moments and finite-range approximation (d = 2)':
+        ['Rigidity.Corrector.growthMoments_weightMajorant',
+         'Rigidity.Corrector.stepTwoWeight_le_weightMajorant',
+         'Rigidity.Corrector.planarSide_eq_cappedSide',
+         'Rigidity.Corrector.cappedSide_eq_of_localBonds',
+         'Rigidity.Corrector.measure_exists_planarCappedDiscrepancy_le',
+         'Rigidity.Corrector.planeGrad_translation',
+         'Rigidity.Corrector.siteGrad_eq_of_localBonds',
+         'Rigidity.Corrector.planeGrad_le_siteGrad',
+         'Rigidity.Corrector.stepTwoFactor_le_of_bound',
+         'Rigidity.Corrector.finiteWeight_le',
+         'Rigidity.Corrector.finiteWeight_eq_of_localBonds',
+         'Rigidity.Corrector.stepTwoWeight_le_finiteWeight'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

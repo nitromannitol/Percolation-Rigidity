@@ -421,6 +421,7 @@ import Rigidity.Proofs.Corrector.DarioMeyersSource
 import Rigidity.Proofs.Corrector.DarioStepTwoSum
 import Rigidity.Proofs.Corrector.DarioStepTwoReduce
 import Rigidity.Proofs.Corrector.DarioLocalGradientMoments
+import Rigidity.Proofs.Corrector.DarioStepTwoFiniteWeight
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1452,3 +1453,17 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Corrector.localGrad_le_of_orderZero
 #print axioms Rigidity.Corrector.ae_localGrad_le
 #print axioms Rigidity.Corrector.growthMoments_localGrad
+
+-- The weight of the Step 2 sum: majorant, moments and finite-range approximation (d = 2)
+#print axioms Rigidity.Corrector.growthMoments_weightMajorant
+#print axioms Rigidity.Corrector.stepTwoWeight_le_weightMajorant
+#print axioms Rigidity.Corrector.planarSide_eq_cappedSide
+#print axioms Rigidity.Corrector.cappedSide_eq_of_localBonds
+#print axioms Rigidity.Corrector.measure_exists_planarCappedDiscrepancy_le
+#print axioms Rigidity.Corrector.planeGrad_translation
+#print axioms Rigidity.Corrector.siteGrad_eq_of_localBonds
+#print axioms Rigidity.Corrector.planeGrad_le_siteGrad
+#print axioms Rigidity.Corrector.stepTwoFactor_le_of_bound
+#print axioms Rigidity.Corrector.finiteWeight_le
+#print axioms Rigidity.Corrector.finiteWeight_eq_of_localBonds
+#print axioms Rigidity.Corrector.stepTwoWeight_le_finiteWeight
