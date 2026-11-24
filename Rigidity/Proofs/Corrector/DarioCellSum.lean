@@ -292,6 +292,166 @@ theorem sum_weight_energy_le_of_meyersCube
       mul_le_mul_of_nonneg_left hfin hK0
     _ = _ := by ring
 
+/-- **The weighted energy of one child of a cell**: for the cube `cube (n u - 1) u`, either the
+cell of `u` itself (`n u = 0`) or a child of it carrying the Meyers estimate. -/
+theorem sum_child_weight_energy_le {n : Vertex 2 → ℕ}
+    (hv : ∀ z, ω ∈ infiniteComponentEvent z → openLaplacian ω v z = edgeDiv ω γ z)
+    {ε CM : ℝ} (hε : 0 < ε) (hCM : 0 ≤ CM)
+    (hMey : ∀ x z, 1 ≤ n x → z ∈ cube (n x) x → GeneralDim.MeyersCube ε CM ω (n x - 1) z)
+    {W : Vertex 2 → ℝ} (hW0 : ∀ u, 0 ≤ W u) {M : ℝ} (hM : 0 ≤ M)
+    (hWM : ∀ x, ∑ u ∈ cube (n x) x, W u ^ Real.conjExponent (1 + ε / 2) ≤
+      M * (cube (n x) x).card) (u : Vertex 2) :
+    ∑ u' ∈ cube (n u - 1) u, W u' * clusterOpenEnergy ω v u' ≤
+      if n u = 0 then M ^ (1 / Real.conjExponent (1 + ε / 2)) * clusterOpenEnergy ω v u else
+        cellConst ε CM (9 * M) *
+          (∑ z ∈ enl 1 (n u - 1) u, clusterOpenEnergy ω v z +
+            ((cube (n u - 1) u).card : ℝ) ^ (1 - 1 / (1 + ε / 2)) *
+              ∑ z ∈ enl 1 (n u - 1) u, edgeSq γ z) := by
+  have hp1 : 1 < 1 + ε / 2 := by linarith
+  have hq0 : 0 < Real.conjExponent (1 + ε / 2) :=
+    (Real.HolderConjugate.conjExponent hp1).symm.pos
+  split_ifs with h0
+  · rw [h0, Nat.zero_sub, cube_zero, Finset.sum_singleton]
+    have hw := hWM u
+    rw [h0, cube_zero, Finset.sum_singleton, Finset.card_singleton, Nat.cast_one, mul_one] at hw
+    have hWle : W u ≤ M ^ (1 / Real.conjExponent (1 + ε / 2)) := by
+      have := Real.rpow_le_rpow (Real.rpow_nonneg (hW0 u) _) hw (by positivity :
+        (0 : ℝ) ≤ 1 / Real.conjExponent (1 + ε / 2))
+      rwa [← Real.rpow_mul (hW0 u), mul_one_div_cancel hq0.ne', Real.rpow_one] at this
+    exact mul_le_mul_of_nonneg_right hWle (clusterOpenEnergy_nonneg ω v u)
+  · have hk : n u = (n u - 1) + 1 := by omega
+    have hMu := hMey u u (by omega) (mem_cube_self _ u)
+    refine sum_weight_energy_le_of_meyersCube hv hε hCM hMu hW0 (by positivity) ?_
+    have hsub : cube (n u - 1) u ⊆ cube (n u) u := IsCellScale.cube_pred_subset u
+    have h1 : ∑ u' ∈ cube (n u - 1) u, W u' ^ Real.conjExponent (1 + ε / 2) ≤
+        ∑ u' ∈ cube (n u) u, W u' ^ Real.conjExponent (1 + ε / 2) :=
+      Finset.sum_le_sum_of_subset_of_nonneg hsub fun u' _ _ => Real.rpow_nonneg (hW0 u') _
+    have h2 : ((cube (n u) u).card : ℝ) = 9 * (cube (n u - 1) u).card := by
+      conv_lhs => rw [hk]
+      rw [card_cube_succ]
+      norm_num
+    calc _ ≤ _ := h1
+      _ ≤ M * (cube (n u) u).card := hWM u
+      _ = 9 * M * (cube (n u - 1) u).card := by rw [h2]; ring
+
+/-- **The weighted energy over the cells** (the summation of estimate (2) over the partition):
+`Σ_u W(u) E(u) ≤ K (Σ_z E(z) + Σ_z (9^{n(z)})^{1 - 1/p} Γ(z))`. -/
+theorem tsum_weight_energy_le {n : Vertex 2 → ℕ} (hn : IsCellScale n)
+    (hv : ∀ z, ω ∈ infiniteComponentEvent z → openLaplacian ω v z = edgeDiv ω γ z)
+    {ε CM : ℝ} (hε : 0 < ε) (hCM : 0 ≤ CM)
+    (hMey : ∀ x z, 1 ≤ n x → z ∈ cube (n x) x → GeneralDim.MeyersCube ε CM ω (n x - 1) z)
+    {W : Vertex 2 → ℝ} (hW0 : ∀ u, 0 ≤ W u) {M : ℝ} (hM : 0 ≤ M)
+    (hWM : ∀ x, ∑ u ∈ cube (n x) x, W u ^ Real.conjExponent (1 + ε / 2) ≤
+      M * (cube (n x) x).card) :
+    ∑' u, ENNReal.ofReal (W u * clusterOpenEnergy ω v u) ≤
+      ENNReal.ofReal (M ^ (1 / Real.conjExponent (1 + ε / 2)) + 48 * cellConst ε CM (9 * M)) *
+        (∑' z, ENNReal.ofReal (clusterOpenEnergy ω v z) +
+          ∑' z, ENNReal.ofReal (((9 : ℝ) ^ n z) ^ (1 - 1 / (1 + ε / 2)) * edgeSq γ z)) := by
+  set α : ℝ := 1 - 1 / (1 + ε / 2) with hα
+  have hα0 : 0 ≤ α := by
+    have : 1 / (1 + ε / 2) ≤ 1 := by rw [div_le_one (by linarith)]; linarith
+    linarith
+  set K := cellConst ε CM (9 * M) with hK
+  have hK0 : 0 ≤ K := by
+    rw [hK]; unfold cellConst; positivity
+  set m := M ^ (1 / Real.conjExponent (1 + ε / 2)) with hm
+  have hm0 : 0 ≤ m := Real.rpow_nonneg hM _
+  set E := clusterOpenEnergy ω v with hE
+  have hE0 : ∀ z, 0 ≤ E z := clusterOpenEnergy_nonneg ω v
+  have hWE0 : ∀ u, 0 ≤ W u * E u := fun u => mul_nonneg (hW0 u) (hE0 u)
+  set F : Vertex 2 → ℝ := fun z => ((9 : ℝ) ^ n z) ^ α * edgeSq γ z with hF
+  have hF0 : ∀ z, 0 ≤ F z := fun z => mul_nonneg (Real.rpow_nonneg (by positivity) _)
+    (edgeSq_nonneg γ z)
+  set c : Vertex 2 → Vertex 2 → ℝ≥0∞ := fun u z =>
+    if 1 ≤ n u ∧ z ∈ enl 1 (n u - 1) u then ((cube (n u - 1) u).card : ℝ≥0∞)⁻¹ else 0 with hc
+  rw [hn.tsum_eq_tsum_avg]
+  have hcard_pos : ∀ u, ((cube (n u - 1) u).card : ℝ≥0∞) ≠ 0 := fun u => by
+    have := card_cube_pos (d := 2) (n u - 1) u
+    exact_mod_cast (Nat.cast_pos.1 this).ne'
+  -- the bound of each average
+  have hu : ∀ u, ((cube (n u - 1) u).card : ℝ≥0∞)⁻¹ *
+      ∑ u' ∈ cube (n u - 1) u, ENNReal.ofReal (W u' * E u') ≤
+      ENNReal.ofReal m * (if n u = 0 then ENNReal.ofReal (E u) else 0) +
+        ENNReal.ofReal K * ((∑' z, c u z * ENNReal.ofReal (E z)) +
+          ∑' z, c u z * ENNReal.ofReal (F z)) := by
+    intro u
+    have hb := sum_child_weight_energy_le hv hε hCM hMey hW0 hM hWM u
+    rw [← ENNReal.ofReal_sum_of_nonneg fun u' _ => hWE0 u']
+    by_cases h0 : n u = 0
+    · rw [if_pos h0] at hb
+      have hc0 : ∀ z, c u z = 0 := fun z => by
+        simp only [hc]; rw [if_neg]; omega
+      simp only [hc0, zero_mul, tsum_zero, add_zero, mul_zero]
+      rw [if_pos h0]
+      have e : cube (n u - 1) u = {u} := by rw [h0, Nat.zero_sub, cube_zero]
+      rw [e, Finset.card_singleton, Nat.cast_one, inv_one, one_mul, ← ENNReal.ofReal_mul hm0,
+        Finset.sum_singleton]
+      rw [e, Finset.sum_singleton] at hb
+      exact ENNReal.ofReal_le_ofReal hb
+    · rw [if_neg h0] at hb
+      rw [if_neg h0, mul_zero, zero_add]
+      have hk : n u = (n u - 1) + 1 := by omega
+      -- the factor `|□|^α` is at most `(9^{n z})^α` on the enlargement
+      have hcz : ∀ z ∈ enl 1 (n u - 1) u,
+          ((cube (n u - 1) u).card : ℝ) ^ α * edgeSq γ z ≤ F z := by
+        intro z hz
+        have hkz := (hn.le_of_mem_enl hk hz).1
+        have hcard : ((cube (n u - 1) u).card : ℝ) = (9 : ℝ) ^ (n u - 1) := by
+          rw [card_cube, ← pow_mul, mul_comm, pow_mul]; norm_num
+        rw [hcard]
+        refine mul_le_mul_of_nonneg_right (Real.rpow_le_rpow (by positivity)
+          (pow_le_pow_right₀ (by norm_num) hkz) hα0) (edgeSq_nonneg γ z)
+      have hsplit : ENNReal.ofReal (K * (∑ z ∈ enl 1 (n u - 1) u, E z +
+          ((cube (n u - 1) u).card : ℝ) ^ α * ∑ z ∈ enl 1 (n u - 1) u, edgeSq γ z)) ≤
+          ENNReal.ofReal K * (∑ z ∈ enl 1 (n u - 1) u, ENNReal.ofReal (E z) +
+            ∑ z ∈ enl 1 (n u - 1) u, ENNReal.ofReal (F z)) := by
+        rw [ENNReal.ofReal_mul hK0, ← ENNReal.ofReal_sum_of_nonneg fun z _ => hE0 z,
+          ← ENNReal.ofReal_sum_of_nonneg fun z _ => hF0 z,
+          ← ENNReal.ofReal_add (Finset.sum_nonneg fun z _ => hE0 z)
+            (Finset.sum_nonneg fun z _ => hF0 z)]
+        gcongr
+        rw [Finset.mul_sum]
+        exact Finset.sum_le_sum hcz
+      have htsum : ∀ g : Vertex 2 → ℝ≥0∞, ∑' z, c u z * g z =
+          ((cube (n u - 1) u).card : ℝ≥0∞)⁻¹ * ∑ z ∈ enl 1 (n u - 1) u, g z := by
+        intro g
+        rw [Finset.mul_sum, tsum_eq_sum (s := enl 1 (n u - 1) u) fun z hz => by
+          simp only [hc]; rw [if_neg (fun h => hz h.2), zero_mul]]
+        refine Finset.sum_congr rfl fun z hz => ?_
+        simp only [hc]; rw [if_pos ⟨by omega, hz⟩]
+      rw [htsum, htsum, ← mul_add, ← mul_assoc, mul_comm (ENNReal.ofReal K), mul_assoc]
+      gcongr
+      exact (ENNReal.ofReal_le_ofReal hb).trans hsplit
+  refine (ENNReal.tsum_le_tsum hu).trans ?_
+  rw [ENNReal.tsum_add, ENNReal.tsum_mul_left, ENNReal.tsum_mul_left, ENNReal.tsum_add,
+    ENNReal.tsum_comm (f := fun u z => c u z * ENNReal.ofReal (E z)),
+    ENNReal.tsum_comm (f := fun u z => c u z * ENNReal.ofReal (F z))]
+  simp only [ENNReal.tsum_mul_right]
+  have hov : ∀ z, ∑' u, c u z ≤ 48 := fun z => hn.tsum_enl_le z
+  have h1 : ∑' u, (if n u = 0 then ENNReal.ofReal (E u) else 0) ≤ ∑' u, ENNReal.ofReal (E u) :=
+    ENNReal.tsum_le_tsum fun u => by split_ifs <;> simp
+  have h2 : ∀ g : Vertex 2 → ℝ≥0∞, ∑' z, (∑' u, c u z) * g z ≤ 48 * ∑' z, g z := by
+    intro g
+    rw [← ENNReal.tsum_mul_left]
+    exact ENNReal.tsum_le_tsum fun z => by gcongr; exact hov z
+  set X := ∑' z, ENNReal.ofReal (E z)
+  set Y := ∑' z, ENNReal.ofReal (F z)
+  have hsum : ENNReal.ofReal (m + 48 * K) = ENNReal.ofReal m + 48 * ENNReal.ofReal K := by
+    rw [ENNReal.ofReal_add hm0 (by positivity), ENNReal.ofReal_mul (by norm_num)]
+    norm_num
+  rw [hsum]
+  calc ENNReal.ofReal m * ∑' u, (if n u = 0 then ENNReal.ofReal (E u) else 0) +
+        ENNReal.ofReal K * (∑' z, (∑' u, c u z) * ENNReal.ofReal (E z) +
+          ∑' z, (∑' u, c u z) * ENNReal.ofReal (F z))
+      ≤ ENNReal.ofReal m * X + ENNReal.ofReal K * (48 * X + 48 * Y) := by
+        gcongr
+        · exact h2 _
+        · exact h2 _
+    _ ≤ ENNReal.ofReal m * X + ENNReal.ofReal m * Y + ENNReal.ofReal K * (48 * X + 48 * Y) := by
+        gcongr
+        exact le_self_add
+    _ = (ENNReal.ofReal m + 48 * ENNReal.ofReal K) * (X + Y) := by ring
+
 end Meyers
 
 end Rigidity.Corrector
