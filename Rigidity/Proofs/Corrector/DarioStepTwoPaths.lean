@@ -68,7 +68,8 @@ theorem ofReal_edgeSq_le {ω : Configuration 2} (hP : PlanarPartitionEvent ω) {
     (hS : Summable fun z => latticeHeat (r ^ 2) x z * (stepRegion ω z j).card) (z : Vertex 2) :
     ENNReal.ofReal (edgeSq (coarseHeatField hP r x j) z) ≤
       4 * regionWeight ω j z * ∑' y, (if z ∈ stepRegion ω y j then
-        ((stepRegion ω y j).card : ℝ≥0∞) else 0) * ENNReal.ofReal (latticeHeat (r ^ 2) x y ^ 2) := by
+        ((stepRegion ω y j).card : ℝ≥0∞) else 0) *
+          ENNReal.ofReal (latticeHeat (r ^ 2) x y ^ 2) := by
   set b : Vertex 2 → ℝ≥0∞ := fun y =>
     if z ∈ stepRegion ω y j then ((stepRegion ω y j).card : ℝ≥0∞) else 0 with hb
   set f : Vertex 2 → ℝ≥0∞ := fun y => ENNReal.ofReal (latticeHeat (r ^ 2) x y) with hf
