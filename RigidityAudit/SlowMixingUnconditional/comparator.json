@@ -1,0 +1,14 @@
+{
+  "challenge_module": "RigidityAudit.SlowMixingUnconditional.Challenge",
+  "solution_module": "RigidityAudit.SlowMixingUnconditional.Solution",
+  "theorem_names": [
+    "Rigidity.StatementAudit.SlowMixing.slow_mixing_unconditional"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}
