@@ -138,7 +138,7 @@ theorem IsFluxField.ae_eq (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : 
   obtain ⟨u, hu, -⟩ := (hC h).1 q ⟨o, ho⟩
   rw [hXω h u hu.1, hYω h u hu.1]
 
-theorem signedPermSlope_swap_single (k : Fin 2) :
+theorem signedPermSlope_swap_piSingle (k : Fin 2) :
     signedPermSlope (Equiv.swap 0 1) 1 (Pi.single k 1) = Pi.single (Equiv.swap 0 1 k) 1 := by
   funext i
   fin_cases k <;> fin_cases i <;> simp [signedPermSlope]
@@ -174,7 +174,7 @@ theorem isFluxField_swap {k i : Fin 2} {X : Configuration 2 → ℝ}
     IsFluxField p (Pi.single (Equiv.swap 0 1 k) 1) (unit (Equiv.swap 0 1 i)) 0
       (X ∘ (configurationMap (signedPermIso (Equiv.swap 0 1) 1)).symm) := by
   have h := isFluxField_comp_symm (Equiv.swap 0 1) 1 hX
-  rwa [signedPermSlope_swap_single, signedPermIso_swap_unit, signedPermIso_zero_two] at h
+  rwa [signedPermSlope_swap_piSingle, signedPermIso_swap_unit, signedPermIso_zero_two] at h
 
 theorem integrable_comp_symm (π : Equiv.Perm (Fin 2)) (s : Fin 2 → ℤˣ)
     {X : Configuration 2 → ℝ} (hX : Integrable X (latticeBondLaw 2 p)) :

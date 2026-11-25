@@ -4,7 +4,7 @@ import Rigidity.Proofs.Corrector.DarioCaseThreeClosed
 /-!
 # The flux of the corrected planes under the flip of one bond
 
-For a configuration `ω`, an open component `C` and a function `ℓ` on it, `clusterFlux C ℓ b` is the
+For a configuration `ω`, an open component `C` and a function `ℓ` on it, `planeFlux C ℓ b` is the
 flux `(ℓ(z + e_i) - ℓ(z)) 1{b ∈ E(C)}` of `ℓ` along the oriented edge `b = (z, i)`: the `i`-th
 component of `a(Dχ + p)` at `z` for the corrected plane `ℓ = p · x + χ`. This is the flux `g_p` of
 C. Gu (*An efficient algorithm for solving elliptic problems on percolation clusters*, (1.6),
@@ -13,13 +13,13 @@ Proposition 1.1 (Steps 2 to 4), in the flip form of the proof of Lemma 3.3 of Da
 repository: the configurations `ω^{e,1}` and `ω^{e,0}` with the bond `e` open and closed replace
 the resampled environment.
 
-* `ae_clusterFlux_setBond_eq` (Gu, Lemma 3.2, the pivot edge, and the case where the endpoints
+* `ae_planeFlux_setBond_eq` (Gu, Lemma 3.2, the pivot edge, and the case where the endpoints
   are outside the infinite cluster): if the endpoints of `e` are not both in the infinite cluster
   `𝒞⁰` of `ω^{e,0}`, the fluxes of the corrected planes of `ω^{e,1}` and `ω^{e,0}` agree on every
   edge. The corrected plane of `ω^{e,1}` is constant on the finite piece cut off by `e`
   (maximum principle, `le_of_finite_piece`), and equals the corrected plane of `ω^{e,0}` up to a
   constant on `𝒞⁰` (`ae_exists_correctedPlane_eq_add_const`).
-* `ae_clusterFlux_setBond_sub_open` and `ae_clusterFlux_setBond_sub_closed` (Gu, Steps 3 and 4,
+* `ae_planeFlux_setBond_sub_open` and `ae_planeFlux_setBond_sub_closed` (Gu, Steps 3 and 4,
   the terms `A_e` and `B_e`): if both endpoints are in `𝒞⁰`, the difference of the fluxes is the
   increment `c` across `e` times the gradient of the Green function of the dipole of `e` (for
   `ω^{e,1}`) or of the field of an open path joining the endpoints (for `ω^{e,0}`), minus `c` on
@@ -35,7 +35,7 @@ open MeasureTheory LatticeProb.Percolation Rigidity.Percolation Rigidity.Correct
 open scoped Classical
 
 /-- The flux of `ℓ` along the oriented edge `b`: `(ℓ(edgeHead b) - ℓ(b.1)) 1{b open, b.1 ∈ C}`. -/
-noncomputable def clusterFlux {ω : Configuration 2} (C : OpenComponent ω) (ℓ : C → ℝ)
+noncomputable def planeFlux {ω : Configuration 2} (C : OpenComponent ω) (ℓ : C → ℝ)
     (b : LatticeEdge) : ℝ :=
   if EdgeOpen ω b ∧ b.1 ∈ C.supp then extendComp C ℓ (edgeHead b) - extendComp C ℓ b.1 else 0
 
@@ -79,7 +79,7 @@ theorem reachable_setBond_true_cases {a : LatticeEdge} {ω : Configuration 2} {u
 /-- **Gu, Lemma 3.2, in flip form**: almost surely, if the endpoints of the bond `e` of `a` are not
 both in the infinite cluster of `ω^{e,0}`, the fluxes of the corrected planes of `ω^{e,1}` and
 `ω^{e,0}` of the same slope agree on every oriented edge. -/
-theorem ae_clusterFlux_setBond_eq {p : unitInterval}
+theorem ae_planeFlux_setBond_eq {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
     ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ a : LatticeEdge,
       ∀ (h₁ : HasUniqueInfiniteOpenComponent (setBond (edgeBond a) true ω))
@@ -90,7 +90,7 @@ theorem ae_clusterFlux_setBond_eq {p : unitInterval}
           (ℓ₀ : uniqueInfiniteComponent h₀ → ℝ),
           IsCorrectedPlane (uniqueInfiniteComponent h₁) q ℓ₁ →
           IsCorrectedPlane (uniqueInfiniteComponent h₀) q ℓ₀ →
-          ∀ b : LatticeEdge, clusterFlux _ ℓ₁ b = clusterFlux _ ℓ₀ b := by
+          ∀ b : LatticeEdge, planeFlux _ ℓ₁ b = planeFlux _ ℓ₀ b := by
   filter_upwards [ae_exists_correctedPlane_eq_add_const hpc hp1] with ω hω
   intro a h₁ h₀ hnot q ℓ₁ ℓ₀ hℓ₁ hℓ₀ b
   obtain ⟨k, hk⟩ := hω a h₁ h₀ hnot q ℓ₁ ℓ₀ hℓ₁ hℓ₀
@@ -173,7 +173,7 @@ theorem ae_clusterFlux_setBond_eq {p : unitInterval}
       (EdgeOpen (setBond (edgeBond a) true ω) b' ↔ EdgeOpen (setBond (edgeBond a) false ω) b') :=
     fun b' hb' => (edgeOpen_setBond_iff_of_ne hb' true ω).trans
       (edgeOpen_setBond_iff_of_ne hb' false ω).symm
-  unfold clusterFlux
+  unfold planeFlux
   by_cases hb1 : b.1 ∈ (uniqueInfiniteComponent h₁).supp
   · by_cases hb0 : b.1 ∈ (uniqueInfiniteComponent h₀).supp
     · by_cases hba : b = a
@@ -222,7 +222,7 @@ and 4, with Dario's (3.22)): almost surely, if both endpoints of the bond `e` of
 infinite cluster of `ω^{e,0}`, then for every oriented edge `b`
 `flux₁(b) - flux₀(b) = c 1{b ∈ E(𝒞¹)} (greenProj ω^{e,1} (1_a))(b) - c 1{b = a}` with
 `c = ℓ₀(a.1) - ℓ₀(edgeHead a)`. -/
-theorem ae_clusterFlux_setBond_sub_open {p : unitInterval}
+theorem ae_planeFlux_setBond_sub_open {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
     ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ a : LatticeEdge,
       ∀ (h₁ : HasUniqueInfiniteOpenComponent (setBond (edgeBond a) true ω))
@@ -233,7 +233,7 @@ theorem ae_clusterFlux_setBond_sub_open {p : unitInterval}
         (ℓ₀ : uniqueInfiniteComponent h₀ → ℝ),
         IsCorrectedPlane (uniqueInfiniteComponent h₁) q ℓ₁ →
         IsCorrectedPlane (uniqueInfiniteComponent h₀) q ℓ₀ →
-        ∀ b : LatticeEdge, clusterFlux _ ℓ₁ b - clusterFlux _ ℓ₀ b =
+        ∀ b : LatticeEdge, planeFlux _ ℓ₁ b - planeFlux _ ℓ₀ b =
           (if EdgeOpen (setBond (edgeBond a) true ω) b ∧
               b.1 ∈ (uniqueInfiniteComponent h₁).supp then
             (ℓ₀ ⟨a.1, hx⟩ - ℓ₀ ⟨edgeHead a, hy⟩) *
@@ -243,7 +243,7 @@ theorem ae_clusterFlux_setBond_sub_open {p : unitInterval}
   intro a h₁ h₀ hx hy q ℓ₁ ℓ₀ hℓ₁ hℓ₀ b
   have hC : ∀ z, z ∈ (uniqueInfiniteComponent h₁).supp ↔ z ∈ (uniqueInfiniteComponent h₀).supp :=
     mem_supp_iff_of_mem_supp_setBond_false h₁ h₀ hx hy
-  unfold clusterFlux
+  unfold planeFlux
   by_cases hba : b = a
   · subst hba
     have ho1 : EdgeOpen (setBond (edgeBond b) true ω) b := (edgeOpen_setBond_self b true ω).2 rfl
@@ -268,7 +268,7 @@ surely, if both endpoints of the bond `e` of `a` are in the infinite cluster of 
 every open path `pw` of `ω^{e,0}` joining them and every oriented edge `b`
 `flux₁(b) - flux₀(b) = c' 1{b ∈ E(𝒞⁰)} (greenProj ω^{e,0} (pathField pw))(b) - c' 1{b = a}` with
 `c' = ℓ₁(a.1) - ℓ₁(edgeHead a)`. -/
-theorem ae_clusterFlux_setBond_sub_closed {p : unitInterval}
+theorem ae_planeFlux_setBond_sub_closed {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
     ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ a : LatticeEdge,
       ∀ (h₁ : HasUniqueInfiniteOpenComponent (setBond (edgeBond a) true ω))
@@ -280,7 +280,7 @@ theorem ae_clusterFlux_setBond_sub_closed {p : unitInterval}
         IsCorrectedPlane (uniqueInfiniteComponent h₁) q ℓ₁ →
         IsCorrectedPlane (uniqueInfiniteComponent h₀) q ℓ₀ →
         ∀ (pw : (openGraph (setBond (edgeBond a) false ω)).Walk a.1 (edgeHead a))
-          (b : LatticeEdge), clusterFlux _ ℓ₁ b - clusterFlux _ ℓ₀ b =
+          (b : LatticeEdge), planeFlux _ ℓ₁ b - planeFlux _ ℓ₀ b =
           (if EdgeOpen (setBond (edgeBond a) false ω) b ∧
               b.1 ∈ (uniqueInfiniteComponent h₀).supp then
             (extendComp _ ℓ₁ a.1 - extendComp _ ℓ₁ (edgeHead a)) *
@@ -291,7 +291,7 @@ theorem ae_clusterFlux_setBond_sub_closed {p : unitInterval}
   intro a h₁ h₀ hx hy q ℓ₁ ℓ₀ hℓ₁ hℓ₀ pw b
   have hC : ∀ z, z ∈ (uniqueInfiniteComponent h₁).supp ↔ z ∈ (uniqueInfiniteComponent h₀).supp :=
     mem_supp_iff_of_mem_supp_setBond_false h₁ h₀ hx hy
-  unfold clusterFlux
+  unfold planeFlux
   by_cases hba : b = a
   · subst hba
     have ho1 : EdgeOpen (setBond (edgeBond b) true ω) b := (edgeOpen_setBond_self b true ω).2 rfl
