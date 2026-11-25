@@ -2857,8 +2857,8 @@ Departures from Dario and Gu:
   Laplacian `∂_t p(t, ·, x)` by `F = C t^{-2} e^{-D²/(C t)}`, by Taylor's formula with the step `t e^{-D²/(C t)}` and the bound on
   the second time derivative; the oscillation estimate at the radius `3r` with `R = 3√t` and the Caccioppoli inequality at the
   radius `r` then give `‖∇v‖_{L̲²(𝒞_∞ ∩ B_r(y))} ≤ C (U/R + R F) ≤ C t^{-3/2} e^{-D²/(C t)}`.
-- **The second time derivative.** The bound `‖Δ² P_{s/2}‖_{2→2} ≤ C s^{-2}` of the spectral theorem is replaced by the signs of the
-  first four derivatives of `r ↦ p_r(z, z)`, which give `∂_r² p_r(z, z) ≤ 8 r^{-2} p_{r/4}(z, z)`, and the Cauchy–Schwarz
+- **The second time derivative.** The bound `‖Δ² P_{s/2}‖_{2→2} ≤ C s^{-2}` of the spectral theorem is replaced by the signs of
+  `r ↦ p_r(z, z)` and of its first three derivatives, which give `∂_r² p_r(z, z) ≤ 8 r^{-2} p_{r/4}(z, z)`, and the Cauchy–Schwarz
   inequality in `p_s = P_{s/2} P_{s/2}`.
 - **Exit times.** The bound `sup_z E_z τ_ρ ≤ C ρ²`, obtained in probability by iterating `P_z(τ_ρ > Aρ²) ≤ 1/2`, is proved for
   the exit-time function through the monotonicity of `s ↦ Σ_{w ∈ A} p_s(z, w) e(w) + s`, and `|v − h| ≤ F e` (Dynkin's formula)
@@ -3088,9 +3088,9 @@ Departures from Barlow:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 734 Lean files with 149,434 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 743 Lean files with 151,433 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,633 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,652 lines) are counted separately.
 
 ## Building
 

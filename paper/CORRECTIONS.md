@@ -5,7 +5,8 @@ authors. The preserved source is paper/percolation-harmonic.tex (identical to th
 source). The corrected draft is produced from it by paper/make_corrected.py; each change carries a
 comment `% CORRECTION [Cn]` above the changed line that gives its reason in short, and the entries
 below give the reason for each correction (sub-tags without an entry refer to the main tag). There are
-60 tags, for 38 numbered corrections C1-C39 (there is no C27). Each correction
+60 tags, for 38 numbered corrections C1-C39 (there is no C27); the entry C40 concerns a cited source and changes
+no line of the draft. Each correction
 was tested in an independent model review, and the literature inputs C34 and C35 were checked
 against their sources; paper/open-gadget-correction.tex explains C9 and C10. The Lean statements
 follow the corrected draft. A correction applied at several places carries the tags Cn, Cnb, Cnc, ...
@@ -72,6 +73,7 @@ of Proposition 5.11 (C30); G8, the lower limit in Proposition 5.11 (C29).
 - [C35] Penrose-Pisztora 1996, Theorem 1, concerns continuum percolation, and their lattice results are for site percolation; the density estimate for bond percolation in every d >= 2 is Dario-Gu, Proposition A.1, with a union bound over the triadic cubes inside the balls.
 - [C38] as printed the lemma is false for a constant loop (one component) or a figure-eight (three components); the Jordan curve theorem is for simple loops, and the two components are disjoint. The Lean input Rigidity.External.JordanCurveTheoremSphere is stated for simple loops.
 - [C39] the domain lies in the plane R^2, as in the cited remark of Rudin; a subset of Z^2 is not a domain. No Lean proof uses this lemma. The special case applied at L2124 (the interior of a finite union of lattice squares, connected, with connected complement in S^2 and simple boundary points) is proved as Rigidity.Assembly.polyominoJordan: the boundary is a closed lattice polygon without repeated corner, homeomorphic to the circle. The general lemma is not formalized.
+- [C40] Dario-Gu 2021, cited for Theorems 2 and 3 there (L451, L493, L655), proves Theorem 3 through its Theorem 5. The following statements of that paper are not true as printed: Theorem 5, (3.11): with all conductances equal to one and f(t, x) = t the right side vanishes, while the two solutions differ at every large radius; the global Meyers estimate (3.19): it fails for the same data; the interior estimate (3.13) with radii r_1, r_2 of unrestricted aspect ratio: it fails for the time derivatives of the caloric function exp(x_1 + at) with r_2 fixed and r_1 large; the distance claim of Step 4.1 (lattice points in the interior of the convex hull of Z^d ∩ B_r at distance at least 1/sqrt(2) from its boundary): it fails at r^2 = 26 for the hull point (4, 2). None of them is used. In dimension two, Theorem 3 (Remark 1.3) is proved from Theorem 4 by elliptic regularity on the cluster (an oscillation estimate for the time slices of the heat kernel), as Rigidity.Green.darioGuGradientBoundTwo_holds, and Theorem 2 follows with Proposition 4.3 and its whole-cluster estimate (4.40) and Proposition 2.13, as Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux (README, Theorem 3 of Dario and Gu in dimension two from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4).
 
 ## Where the Lean proof departs from the printed argument
 
