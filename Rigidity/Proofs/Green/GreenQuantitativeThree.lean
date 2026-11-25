@@ -13,7 +13,7 @@ quantitative Green estimate of Dario and Gu (`SupercriticalBondGreenQuantitative
 * Theorem 1 of Dario and Gu in dimension `d` (`DarioGuHeatKernelD d`): the heat kernel `p(t, x, y)`
   of the variable speed random walk on the open graph is `θ^{-1} p̄(t, x - y)` up to
   `C t^{-d/2 - (1/2 - δ)} e^{-|x-y|²/(Ct)}` for `t ≥ max(1, T(y), |x - y|)`, and
-* the small-time bound `p(t, x, y) ≤ C e^{-|x-y|/C}` for `t ≤ |x - y|` (`HeatSmallTimeD d`), a
+* the small-time bound `p(t, x, y) ≤ C e^{-|x-y|/C}` for `t ≤ |x - y|` (`OpenHeatSmallTimeD d`), a
   consequence of the Carne–Varopoulos bound (Dario–Gu, Proposition 2.15),
 
 with the uniqueness of the Green columns for `d ≥ 3` (`greenColumnExistence_of_three_le`). The
@@ -233,7 +233,7 @@ def DarioGuHeatKernelD (d : ℕ) [NeZero d] : Prop :=
 
 /-- The small-time bound `p(t, x, y) ≤ C e^{-|x - y|/C}` for `0 < t ≤ |x - y|` on infinite
 components of `ℤ^d` (from the Carne–Varopoulos bound, Dario–Gu, Proposition 2.15). -/
-def HeatSmallTimeD (d : ℕ) : Prop :=
+def OpenHeatSmallTimeD (d : ℕ) : Prop :=
   ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration d) (K : OpenComponent ω), K.supp.Infinite →
     ∀ x ∈ K.supp, ∀ y ∈ K.supp, ∀ t : ℝ, 0 < t → t ≤ ‖edzD x y‖ →
       openHeatD ω t x y ≤ C * Real.exp (-(‖edzD x y‖ / C))
@@ -279,7 +279,7 @@ theorem tail_max_one {p : unitInterval} {T : Configuration d → ℝ} {C s : ℝ
 bound. -/
 theorem supercriticalBondGreenQuantitativeThree_of_heatKernel
     (hP : ∀ (d : ℕ) [NeZero d], 3 ≤ d → DarioGuHeatKernelD d)
-    (hS : ∀ (d : ℕ) [NeZero d], 3 ≤ d → HeatSmallTimeD d) :
+    (hS : ∀ (d : ℕ) [NeZero d], 3 ≤ d → OpenHeatSmallTimeD d) :
     SupercriticalBondGreenQuantitativeThree := by
   intro d _ hd2 hd3 p hpc hp1
   obtain ⟨σ, hσ, hT⟩ := hP d hd3 p hpc hp1

@@ -38,7 +38,7 @@ section Basic
 
 variable [NeZero d]
 
-theorem two_mul_dim_pos : 0 < 2 * d := by
+private theorem two_mul_dim_pos : 0 < 2 * d := by
   have := NeZero.pos d
   omega
 
