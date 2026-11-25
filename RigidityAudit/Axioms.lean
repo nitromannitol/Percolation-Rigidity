@@ -1559,6 +1559,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
 #print axioms Rigidity.Poincare.GeneralDim.exists_steinSigned
+
 -- Theorem 3 of Dario and Gu (Remark 1.3) from Proposition 3.9 and Theorem 4, and Proposition 2.9 and Lemma 2.10 (unnormalized), in dimension two
 #print axioms Rigidity.Green.darioGuGradientBoundTwo_of_lipschitz
 #print axioms Rigidity.Green.goodTimes_anchorDist
