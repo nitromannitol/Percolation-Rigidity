@@ -2856,7 +2856,7 @@ Section 2 of the source, which give this hypothesis, are not proved here. `fast_
 | [`exitGen_le_mul_of_subset`](Rigidity/Proofs/Barlow/ExitTime.lean), [`mul_exitProb_le`](Rigidity/Proofs/Barlow/ExitTime.lean) | The strong Markov property at the exit time of `B ⊆ A` and optional stopping for a supersolution, for the lazy jump chain of the walk, stated for the exit probabilities `P^x(σ_A ≤ n)` and the truncated generating functions `E^x[s^{σ_A}; σ_A ≤ n]`. |
 | [`exitProb_clBall_le`](Rigidity/Proofs/Barlow/ExitTail.lean), [`exitProb_clBall_le_exp`](Rigidity/Proofs/Barlow/ExitTail.lean) | Lemmas 3.5 and 3.6 and Proposition 3.7 for the jump chain: `(r − M̄) P^x(σ(x, r) ≤ n) ≤ E^x\|X_{2n} − x\|` if `E^z\|X_k − z\| ≤ M̄` for `n ≤ k ≤ 2n` at the points `z` with `\|z − x\| < r + 1`; and `P^x(σ(x, m(r + 1)) ≤ N) ≤ e^{8aN} (3/4)^m` if `P^z(σ(z, r) ≤ k) ≤ 1/2 + ak` for `k ≤ N` at the centres `z` within `D` of `x₀`, `0 < a ≤ 1/8` and `\|x − x₀\| + m(r + 1) ≤ D`. |
 | [`BarlowRegion.tsum_far_le`](Rigidity/Proofs/Barlow/GaussianTail.lean) | Proposition 3.7 for the continuous-time walk: `P^x(\|Y_t − x\| ≥ ρ) ≤ (4/3) e^{−c₆ ρ²/t} + e^{−t}` for `κ ≤ ρ ≤ R/9`, `ρ r₁ ≤ κ t`, `1 ≤ t ≤ R/36` and `\|x − x₀\| ≤ R/3`, under the hypotheses of Proposition 3.1 (`BarlowRegion`). |
-| [`BarlowRegion.openHeat_le_gauss`](Rigidity/Proofs/Barlow/GaussianBound.lean) | Theorem 3.8: `p_t(x, y) ≤ C_G t^{−1} e^{−c_G \|x − y\|²/t}` for `x, y` in the cluster within `R/3` of `x₀`, `T_G ≤ t ≤ R/36` and `\|x − y\| ≤ t`, where `T_G ≤ c_T N^{16}` (`barlowTG_le`). |
+| [`BarlowRegion.openHeat_le_gauss`](Rigidity/Proofs/Barlow/GaussianBound.lean) | Theorem 3.8, under `BarlowRegion` with `9 ≤ R` and `n_* ≤ 2R` and the Carne–Varopoulos bound `p_s(a, b) ≤ C e^{−\|a − b\|²/(Cs)}` for `\|a − b\| ≤ s`: `p_t(x, y) ≤ C_G t^{−1} e^{−c_G \|x − y\|²/t}` for `x, y` in the cluster within `R/3` of `x₀`, `T_G ≤ t ≤ R/36` and `\|x − y\| ≤ t`, where `T_G ≤ c_T N^{16}` (`barlowTG_le`). |
 | [`barlowGaussianUpperBoundTwo_of_veryGood`](Rigidity/Proofs/Barlow/GaussianHolds.lean) | Proposition 6.1 and the upper bound of Theorem 1: `ClusterVeryGoodBallsTwo → BarlowGaussianUpperBoundTwo`, with `T_y = max(S_y/36, k₀)`; for `\|x − y\| > t` the bound is the Carne–Varopoulos bound. |
 | [`Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood`](Rigidity/Proofs/Assembly/PlanarDarioGuVeryGood.lean), [`fast_decay_of_flux_gradient_veryGood`](Rigidity/Proofs/Assembly/PlanarDarioGuVeryGood.lean) | Theorem 1.3 from `hSec` (or from Proposition 2.13 and Theorem 3 of Dario and Gu) and `ClusterVeryGoodBallsTwo`. |
 
@@ -2881,8 +2881,9 @@ Departures from Barlow:
 - **Exit times on the jump chain with a Poisson clock.** Lemmas 3.5 and 3.6 and Proposition 3.7 are proved for the lazy
   jump chain: the strong Markov property at exit times is replaced by first-step recursions for the exit probabilities
   and the truncated generating functions, and optional stopping by backward induction; Lemma 3.6 enters through the
-  submultiplicativity of `E^x[s^σ]` along nested balls. The continuous-time walk enters at the end through the Poisson
-  clock, which adds the term `e^{−t}` to Proposition 3.7.
+  submultiplicativity of `E^x[s^σ]` along nested balls. The continuous-time walk enters through the Poisson clock: the
+  mean displacement of the jump chain is bounded by that of the walk, `E^z\|X_k − z\| ≤ M(z, k/4) + 6√k`
+  (`discMean_le_meanDist_add`), and the clock adds the term `e^{−t}` to Proposition 3.7.
 - **Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`.** In place of the decomposition (3.20)–(3.21) at the exit
   time of `B(x, |x − y|/2)`, `p_t(x, y) = Σ_z p_{t/2}(x, z) p_{t/2}(z, y)` is split according to `|z − x| ≥ |x − y|/2`
   or `|z − y| ≥ |x − y|/2`; the factor on the near side is bounded by Corollary 3.2 and the sum on the far side by
