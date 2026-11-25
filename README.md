@@ -2870,20 +2870,20 @@ The part `d ≥ 3` of the quantitative Green estimate `LatticeProb.External.Supe
 Gu, Theorem 2, (1.10)) is the statement `SupercriticalBondGreenQuantitativeThree`, and the whole input follows from it and its
 planar case (`supercriticalBondGreenQuantitative_of_two_of_three`). It is proved from Theorem 1 of Dario and Gu in dimension
 `d` (`DarioGuHeatKernelD d`, a named statement for the heat kernel `vsrwHeat (openGraph ω) (2d)` of the variable speed walk)
-and the small-time bound `p(t, x, y) ≤ C e^{-|x - y|/C}` for `t ≤ |x - y|` (`HeatSmallTimeD d`, a consequence of the
+and the small-time bound `p(t, x, y) ≤ C e^{-|x - y|/C}` for `t ≤ |x - y|` (`OpenHeatSmallTimeD d`, a consequence of the
 Carne–Varopoulos bound, Proposition 2.15), along §5 of the source: the Green column with pole `y` is the time integral
 `∫_0^∞ p(t, ·, y) dt` (it solves `−Δg = δ_y` and tends to zero; Green columns for `d ≥ 3` are unique), the homogenized Green
 function is `θ^{-1} ∫_0^∞ p̄(t, ·) dt = Γ(d/2 − 1) |z|^{2−d} / (2 π^{d/2} σ θ)`, and the time integral of the error of Theorem 1,
 split at `t = |x − y|`, is at most `C |x − y|^{1 − d + δ}`. With the planar case proved from Proposition 2.13 (previous
 section), the input in every dimension follows from Proposition 2.13 in dimension two and `DarioGuHeatKernelD d`,
-`HeatSmallTimeD d` for `d ≥ 3` (`supercriticalBondGreenQuantitative_of_flux_heatKernel`).
+`OpenHeatSmallTimeD d` for `d ≥ 3` (`supercriticalBondGreenQuantitative_of_flux_heatKernel`).
 
 | Lean declaration | Statement |
 | --- | --- |
 | [`Rigidity.Green.SupercriticalBondGreenQuantitativeThree`](Rigidity/Proofs/Green/GreenQuantitativeAllDim.lean), [`supercriticalBondGreenQuantitative_of_two_of_three`](Rigidity/Proofs/Green/GreenQuantitativeAllDim.lean) | The part `d ≥ 3` of the input, and the input from its planar part and its part `d ≥ 3`. |
 | [`gaussianHeatD`](Rigidity/Proofs/Green/GaussianTimeIntegral.lean), [`integral_gaussianHeatD`](Rigidity/Proofs/Green/GaussianTimeIntegral.lean), [`inv_mul_integral_gaussianHeatD_eq`](Rigidity/Proofs/Green/GaussianTimeIntegral.lean) | The Gaussian kernel of `ℝ^d`, its time integral, and `θ^{-1} ∫_0^∞ p̄(t, z) dt = continuumGreen d (σθ/2) z` for `d ≥ 3`. |
 | [`HeatBoundsD`](Rigidity/Proofs/Green/GreenTimeIntegralThree.lean), [`HeatBoundsD.laplacian_timeGreenD`](Rigidity/Proofs/Green/GreenTimeIntegralThree.lean), [`HeatBoundsD.abs_timeGreenD_sub_le`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`HeatBoundsD.isGreenColumn_timeGreenD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean) | At one configuration, under the bounds of Theorem 1 and the small-time bound: the time integral of the heat kernel solves `−Δg = δ_y`, is within `C \|x − y\|^{2−2β}` of the homogenized Green function, and is a Green column. |
-| [`DarioGuHeatKernelD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`HeatSmallTimeD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`supercriticalBondGreenQuantitativeThree_of_heatKernel`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitative_of_flux_heatKernel`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean) | Theorem 1 and the small-time bound in dimension `d` as named statements; Theorem 2 for `d ≥ 3` from them; the input in every dimension. |
+| [`DarioGuHeatKernelD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`OpenHeatSmallTimeD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`supercriticalBondGreenQuantitativeThree_of_heatKernel`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitative_of_flux_heatKernel`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean) | Theorem 1 and the small-time bound in dimension `d` as named statements; Theorem 2 for `d ≥ 3` from them; the input in every dimension. |
 | [`heatFlowG`](Rigidity/Proofs/Green/HeatFlowGraph.lean), [`hasSum_sq_heatFlowG_le`](Rigidity/Proofs/Green/HeatFlowGraph.lean), [`sq_heatFlowG_le_diag`](Rigidity/Proofs/Green/HeatFlowGraph.lean), [`sq_laplacian_heatFlowG_le`](Rigidity/Proofs/Green/HeatFlowGraph.lean) | The heat semigroup of a graph of bounded degree on `ℓ²`: a contraction, `(P_t f)(z)² ≤ p_{2t}(z, z) ‖f‖²` and `(ΔP_t f)(z)² ≤ 8 (2t)^{-2} p_{t/2}(z, z) ‖f‖²`. |
 
 The eleven reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
