@@ -4,7 +4,8 @@ import Mathlib
 # The centred box maximal function on `ℤ^d`
 
 The extension of `BoxMaximal.lean` from `ℤ²` to `ℤ^d`. For `F : ℤ^d → ℝ` nonnegative and summable,
-`boxMax F x = sup_{r ∈ ℕ} |Q_r(x)|⁻¹ Σ_{Q_r(x)} F` with `Q_r(x) = x + [-r, r]^d`. This is the lattice form of the maximal function of Armstrong, Kuusi and
+`boxMax F x = sup_{r ∈ ℕ} |Q_r(x)|⁻¹ Σ_{Q_r(x)} F` with `Q_r(x) = x + [-r, r]^d`. This is the
+lattice form of the maximal function of Armstrong, Kuusi and
 Mourrat, Lemma D.4 (used in their Proposition D.2 and, through it, in Dario's Appendix A):
 
 * `card_le_of_lt_boxMax`, `count_lt_boxMax_le`: the weak type `(1, 1)` bound
@@ -302,7 +303,8 @@ theorem tsum_boxMax_rpow_le (hF : ∀ z, 0 ≤ F z) (hFs : Summable F) {p : ℝ}
             ring_nf
           rw [this]
           field_simp
-    _ = ENNReal.ofReal (2 * 3 ^ d * 2 ^ (p - 1) * p / (p - 1)) * ∑' x, ENNReal.ofReal (F x ^ p) := by
+    _ = ENNReal.ofReal (2 * 3 ^ d * 2 ^ (p - 1) * p / (p - 1)) *
+          ∑' x, ENNReal.ofReal (F x ^ p) := by
         rw [← ENNReal.tsum_mul_left, ← ENNReal.tsum_mul_left]
         refine tsum_congr fun z => ?_
         rw [← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_mul (by positivity)]
