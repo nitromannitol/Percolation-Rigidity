@@ -441,6 +441,8 @@ import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
 import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
+import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
+import Rigidity.Proofs.Assembly.ProvedBarlow
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1605,3 +1607,27 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_of_goodBalls
 #print axioms Rigidity.WeakPoincare.planarVeryGoodBalls_holds
 #print axioms Rigidity.WeakPoincare.sum_sq_sub_finAvg_clusterBall_le
+
+-- The Gaussian upper bound of Barlow (Theorem 4 of Dario and Gu) from the very good balls of the cluster (d = 2)
+#print axioms Rigidity.Barlow.tsum_mul_openLaplacian
+#print axioms Rigidity.Barlow.hasDerivAt_openHeat_two_mul
+#print axioms Rigidity.Barlow.openHeat_diag_le_of_good
+#print axioms Rigidity.Barlow.openHeat_le_of_good
+#print axioms Rigidity.Barlow.neg_log_le_heatEntropy
+#print axioms Rigidity.Barlow.heatEntropy_le_log_meanDist
+#print axioms Rigidity.Barlow.meanDist_le_of_entropy
+#print axioms Rigidity.Barlow.exitGen_le_mul_of_subset
+#print axioms Rigidity.Barlow.mul_exitProb_le
+#print axioms Rigidity.Barlow.exitProb_clBall_le
+#print axioms Rigidity.Barlow.exitProb_clBall_le_exp
+#print axioms Rigidity.Barlow.BarlowRegion.tsum_far_le
+#print axioms Rigidity.Barlow.BarlowRegion.openHeat_le_gauss
+#print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood
+
+-- The Gaussian upper bound of Barlow with no hypothesis, and Theorem 1.3 without it (d = 2)
+#print axioms Rigidity.Barlow.clusterVeryGoodBallsTwo_holds
+#print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient
