@@ -15,11 +15,10 @@ is a Jordan curve (`jordan_of_polygon`, by the planar Jordan curve theorem
   centre lies inside would form a nonempty compact set, open and closed in the complement of `Ω`
   (at a point shared by two cells outside `S`, the centres of the two cells are joined in the
   complement of the boundary, `ctr_mem_of_cells`), which separates the complement in `S²`.
-* There is only one such polygon (`false_of_two_loops`): the outside of each polygon would lie in
-  the outside of the other, so the two outsides, hence the two polygons, would coincide.
-
-Hence `∂Ω` is the trace of one polygon (`frontier_eq_polyTrace`), and is homeomorphic to the
-circle.
+* If `Ω` lies inside a polygon and a second polygon lies in the closure of `Ω`, the outside of the
+  first lies in the outside of the second (`outside_subset`). Two disjoint polygons of boundary
+  sides would therefore have the same outside, hence the same trace; so the frontier of `Ω` is the
+  trace of one polygon (`Rigidity.Proofs.Topology.Polyomino.frontier_eq_polyTrace`).
 -/
 
 open Set Filter Topology Function Bornology LatticeProb
