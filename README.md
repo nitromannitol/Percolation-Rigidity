@@ -16,14 +16,22 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses. Eight of these twelve inputs, among them Proposition 2.3, the concentration of the
-density of the infinite cluster and the existence of the Green columns, are also proved in Lean, and
-Theorem 6.5 is proved with no literature hypothesis (see
-[Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
-literature: four of them (Proposition 2.3,
-Theorems 2.4 and 2.5, Lemma 2.14) enter as literature inputs, and the fifth (Lemma 2.13, a fact of
-plane topology) is used by no proof; the special case that the proof of Proposition 5.12 applies,
-to a finite union of lattice squares, is proved, and the general lemma is not formalized. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
+hypotheses (see [Assumed literature inputs](#assumed-literature-inputs)). Eight of these twelve
+inputs are also proved in Lean: the uniqueness of the infinite cluster, the smoothing bound of
+Micciancio and Regev, the crossing estimate of Kesten, the Jordan curve theorem on `S²`
+(Lemma 2.14), the well-connectedness of boxes (Proposition 2.3), the concentration of the density
+of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero) and the existence
+of the Green columns. The other four remain hypotheses: the qualitative and the quantitative
+corrector inputs (Theorem 2.5), the regularity of order one at the origin (Theorem 2.4 at order
+one) and the quantitative estimate of the Green function of Dario and Gu; the dimension-two forms
+of the first three are proved. Theorem 6.5 is proved with no literature hypothesis. The Gaussian
+upper bound of Barlow, which is not one of the twelve inputs but enters the dimension-two proof of
+Theorem 1.3 through Theorem 1 of Dario and Gu, is proved. The five numbered results that the paper
+does not prove are quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two
+inputs) and Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
+them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
+the interior of a finite union of lattice squares, is proved (`Rigidity.Assembly.polyominoJordan`),
+and the general lemma is not formalized. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
 printed, and Theorem 6.5 as printed with its restriction event made explicit (see
 [Standing assumptions and scope](#standing-assumptions-and-scope), item 4); the statements changed by
 the corrections are listed in
