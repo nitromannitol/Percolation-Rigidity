@@ -2845,7 +2845,7 @@ Departures from Dario and Gu:
 
 `Rigidity/` and `Rigidity.lean`: 701 Lean files with 139,247 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,576 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,577 lines) are counted separately.
 
 ## Building
 
