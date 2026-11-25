@@ -22,7 +22,8 @@ Theorem 6.5 is proved with no literature hypothesis (see
 [Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
 literature: four of them (Proposition 2.3,
 Theorems 2.4 and 2.5, Lemma 2.14) enter as literature inputs, and the fifth (Lemma 2.13, a fact of
-plane topology) is used by no proof. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
+plane topology) is used by no proof; the special case that the proof of Proposition 5.12 applies,
+to a finite union of lattice squares, is proved, and the general lemma is not formalized. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
 printed, and Theorem 6.5 as printed with its restriction event made explicit (see
 [Standing assumptions and scope](#standing-assumptions-and-scope), item 4); the statements changed by
 the corrections are listed in
@@ -106,7 +107,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
-| Lemma 2.13 | (none) | quoted, not used | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
+| Lemma 2.13 | (none) | quoted, not used; the special case used at L2124 (the interior of a finite union of lattice squares) proved: `Rigidity.Assembly.polyominoJordan` (statement `Rigidity.Section2.PolyominoJordanStmt`); the general lemma is not formalized | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
 | Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere`; proved: `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
 | Lemma 2.16 | `lemma:jordan-curves-theorem` | `Rigidity.Assembly.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
 | Lemma 3.1 | `lemma:reduction-to-slope-e1` | `Rigidity.Assembly.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
@@ -259,7 +260,12 @@ Proposition 3.2.
 7. **Axioms.** The library contains no `sorry`, `admit`, `native_decide` or new `axiom`. The Lean
    declaration of each proved numbered result depends on exactly `propext`, `Classical.choice` and
    `Quot.sound`.
-8. **Not formalized.** Lemma 2.13, which no proof uses; Theorems 2.4 and 2.5, which enter as
+8. **Not formalized.** Lemma 2.13 in general (Remark 14.20 of Rudin), which no proof uses; its
+   special case for the interior of a finite union of lattice squares, the form applied at L2124 in
+   the proof of Proposition 5.12, is proved as `Rigidity.Assembly.polyominoJordan` (the boundary is
+   a closed lattice polygon without repeated corner, homeomorphic to the circle), and the Lean proof
+   of Proposition 5.12 does not use it, since its loop runs around a spanning tree of the
+   connectors. Theorems 2.4 and 2.5, which enter as
    literature inputs (Theorem 2.4 at order zero, `ArmstrongDarioOrderZero`, is also proved); the remarks, problems and conjectures; the figures. The other two quoted
    results, Proposition 2.3 and Lemma 2.14, enter as literature inputs that are proved.
 
@@ -2898,9 +2904,9 @@ Departures from Dario and Gu:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 705 Lean files with 140,976 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 712 Lean files with 142,559 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,588 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,592 lines) are counted separately.
 
 ## Building
 

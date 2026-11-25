@@ -1,6 +1,7 @@
 import Rigidity
 import Rigidity.Proofs.Assembly.Main
 import Rigidity.Proofs.Assembly.Section2
+import Rigidity.Proofs.Assembly.Section2Polyomino
 import Rigidity.Proofs.Assembly.Section3
 import Rigidity.Proofs.Assembly.Section4
 import Rigidity.Proofs.Assembly.Section5
@@ -460,7 +461,9 @@ and Lemma 7.3 at `k = 2` with Theorem 2(iii) at `k = 1` in dimension two (§7);
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
 as an explicit hypothesis. Lemma 2.13 (Remark 14.20 of Rudin's *Real and Complex Analysis*) is
-cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
+cited in the paper and used by no Lean proof, so it has no Lean declaration; its special case for
+unions of lattice squares, the form applied at L2124, is reported as a further proved result
+(`Rigidity.Assembly.polyominoJordan`). -/
 
 -- Section 1
 #print axioms Rigidity.Assembly.Main.lipschitz                        -- Theorem 1.1
@@ -478,6 +481,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.mixed_green                                    -- Proposition 2.8
 #print axioms Rigidity.External.JordanCurveTheoremSphere              -- Lemma 2.14 (cited)
 #print axioms Rigidity.Assembly.jordanCurves                          -- Lemma 2.16
+#print axioms Rigidity.Assembly.polyominoJordan    -- Lemma 2.13 for unions of lattice squares (L2124)
 
 -- Section 3
 #print axioms Rigidity.Assembly.reductionToSlopeE1                    -- Lemma 3.1

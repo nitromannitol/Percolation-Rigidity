@@ -148,7 +148,9 @@ status:
     printed, and Theorem 6.5 as printed with its restriction event made explicit. The other five
     numbered results are quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 and
     Lemma 2.14 enter as literature inputs, of which Proposition 2.3 and Lemma 2.14 are also proved,
-    and Lemma 2.13 is used by no proof. README.md lists every numbered result with its Lean
+    and Lemma 2.13 is used by no proof; its special case for unions of lattice squares, the form
+    applied in the proof of Proposition 5.12, is proved (Rigidity.Assembly.polyominoJordan), and
+    the general lemma is not formalized. README.md lists every numbered result with its Lean
     declaration.
   sorry_count: 0
   sorry_count_scope: "Rigidity/ and Rigidity.lean"

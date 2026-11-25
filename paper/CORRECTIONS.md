@@ -71,7 +71,7 @@ of Proposition 5.11 (C30); G8, the lower limit in Proposition 5.11 (C29).
 - [C34] the proof of prop:homogenizationellipticgreen (eq. large scale-regularity) uses the local estimate of the cited theorem, part (iii) of Theorem 2 in arXiv:1609.09431v2, which the quotation omitted.
 - [C35] Penrose-Pisztora 1996, Theorem 1, concerns continuum percolation, and their lattice results are for site percolation; the density estimate for bond percolation in every d >= 2 is Dario-Gu, Proposition A.1, with a union bound over the triadic cubes inside the balls.
 - [C38] as printed the lemma is false for a constant loop (one component) or a figure-eight (three components); the Jordan curve theorem is for simple loops, and the two components are disjoint. The Lean input Rigidity.External.JordanCurveTheoremSphere is stated for simple loops.
-- [C39] the domain lies in the plane R^2, as in the cited remark of Rudin; a subset of Z^2 is not a domain. No Lean proof uses this lemma.
+- [C39] the domain lies in the plane R^2, as in the cited remark of Rudin; a subset of Z^2 is not a domain. No Lean proof uses this lemma. The special case applied at L2124 (the interior of a finite union of lattice squares, connected, with connected complement in S^2 and simple boundary points) is proved as Rigidity.Assembly.polyominoJordan: the boundary is a closed lattice polygon without repeated corner, homeomorphic to the circle. The general lemma is not formalized.
 
 ## Where the Lean proof departs from the printed argument
 
