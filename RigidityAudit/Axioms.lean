@@ -13,6 +13,7 @@ import Rigidity.Proofs.Assembly.PlanarInputs
 import Rigidity.Proofs.Assembly.Unconditional
 import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.ProvedOrderZero
+import Rigidity.Proofs.Assembly.ProvedGreenColumn
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
 import Rigidity.Proofs.Green.SupercriticalGreenBounds
@@ -557,6 +558,19 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Assembly.WithProvedOrderZero.largeGradientSensitive
 #print axioms Rigidity.Assembly.WithProvedOrderZero.goodEventLowerBoundDirectional
 #print axioms Rigidity.Assembly.WithProvedOrderZero.fastDecayWithProvedDensity
+
+-- The Green-column input in every dimension, and the main theorems with every proved input supplied
+#print axioms Rigidity.Green.supercriticalBondGreenColumnExistence_holds
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.lipschitz
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.fast_decay
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.notLipschitz
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.fastDecayDichotomy
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.fastDecayPotential
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.gradientTrichotomy
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.levelSetDensity
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBound
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.largeGradientSensitive
+#print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBoundDirectional
 
 -- Existence of planar Green columns, and Theorem 1.3 from five dimension-two literature inputs
 #print axioms Rigidity.Proofs.Section5.planar_greenColumn_exists

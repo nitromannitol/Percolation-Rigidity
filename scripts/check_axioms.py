@@ -107,6 +107,18 @@ further = {
          'Rigidity.Assembly.WithProvedOrderZero.largeGradientSensitive',
          'Rigidity.Assembly.WithProvedOrderZero.goodEventLowerBoundDirectional',
          'Rigidity.Assembly.WithProvedOrderZero.fastDecayWithProvedDensity'],
+    'The Green-column input in every dimension':
+        ['Rigidity.Green.supercriticalBondGreenColumnExistence_holds',
+         'Rigidity.Assembly.WithProvedGreenColumn.lipschitz',
+         'Rigidity.Assembly.WithProvedGreenColumn.fast_decay',
+         'Rigidity.Assembly.WithProvedGreenColumn.notLipschitz',
+         'Rigidity.Assembly.WithProvedGreenColumn.fastDecayDichotomy',
+         'Rigidity.Assembly.WithProvedGreenColumn.fastDecayPotential',
+         'Rigidity.Assembly.WithProvedGreenColumn.gradientTrichotomy',
+         'Rigidity.Assembly.WithProvedGreenColumn.levelSetDensity',
+         'Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBound',
+         'Rigidity.Assembly.WithProvedGreenColumn.largeGradientSensitive',
+         'Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBoundDirectional'],
     'Planar Green-column existence and Theorem 1.3 from five dimension-two inputs':
         ['Rigidity.Proofs.Section5.planar_greenColumn_exists',
          'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero',

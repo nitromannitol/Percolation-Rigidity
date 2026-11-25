@@ -16,10 +16,9 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses. Seven of these twelve inputs, among them Proposition 2.3 and the concentration of the
-density of the infinite cluster, are also proved in Lean, the Green-column input is proved for
-`d ≥ 3` and follows from the planar order-zero estimate, and Theorem 6.5 is proved with no
-literature hypothesis (see
+hypotheses. Eight of these twelve inputs, among them Proposition 2.3, the concentration of the
+density of the infinite cluster and the existence of the Green columns, are also proved in Lean, and
+Theorem 6.5 is proved with no literature hypothesis (see
 [Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
 literature: four of them (Proposition 2.3,
 Theorems 2.4 and 2.5, Lemma 2.14) enter as literature inputs, and the fifth (Lemma 2.13, a fact of
@@ -227,7 +226,7 @@ Proposition 3.2.
    Proposition 6.4; Propositions 4.1 and 6.4 are proved in every dimension `d ≥ 2`.
 2. **Literature inputs.** Twelve results of the literature enter as explicit hypotheses of the
    theorems that use them; none is an `axiom`. They are listed in
-   [Assumed literature inputs](#assumed-literature-inputs), with the seven of them that are proved.
+   [Assumed literature inputs](#assumed-literature-inputs), with the eight of them that are proved.
 3. **Measurability.** Some events quantify over the corrected planes of every configuration and are
    not shown to be measurable. For them, "with positive probability" means that the event contains a
    measurable event of positive probability (Proposition 3.2 and Lemmas 5.25 and 5.27), and an upper bound on
@@ -266,19 +265,22 @@ Proposition 3.2.
 
 ## Assumed literature inputs
 
-The table records the hypotheses of the original theorem statements. Seven of these propositions
+The table records the hypotheses of the original theorem statements. Eight of these propositions
 are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/BondUniqueness.lean),
 [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean),
 [`Rigidity.Percolation.kesten_rectangle_crossing`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/KestenCrossing.lean),
 [`Rigidity.Topology.jordan_curve_theorem_sphere`](Rigidity/Proofs/Topology/JordanCurveSphere.lean),
 [`Rigidity.Percolation.wellConnected_input`](Rigidity/Proofs/Percolation/WellConnected.lean)
-(Proposition 2.3; see the note below the table), and
+(Proposition 2.3; see the note below the table),
 [`Rigidity.Proofs.S2.cluster_density_concentration`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Density/ClusterDensityConcentration.lean)
 (`ClusterDensityConcentrationInput`, the density concentration of Dario and Gu; see
-[Density concentration in every dimension](#density-concentration-in-every-dimension)), and
+[Density concentration in every dimension](#density-concentration-in-every-dimension)),
 [`Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/GeneralOrderZeroHolds.lean)
 (`ArmstrongDarioOrderZero`, Theorem 2.4 at order zero in every dimension; see
-[Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension)).
+[Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension)), and
+[`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean)
+(`SupercriticalBondGreenColumnExistence`, the existence and uniqueness of the Green columns, in
+every dimension; see [Green columns for d ≥ 3](#green-columns-for-d--3)).
 [`Rigidity.Assembly.WithProvedInputs`](Rigidity/Proofs/Assembly/ProvedInputs.lean) gives versions of
 Theorems 1.1 and 1.2 without the uniqueness hypothesis, Theorem 1.3 without the uniqueness,
 crossing, or sphere Jordan hypotheses, and Theorem 6.5 without the uniqueness or smoothing
@@ -291,7 +293,12 @@ Proposition 2.6 without the density-concentration hypothesis, and Theorem 1.3 wi
 uniqueness, crossing, sphere Jordan, well-connectedness or density-concentration hypotheses.
 [`Rigidity.Assembly.WithProvedOrderZero`](Rigidity/Proofs/Assembly/ProvedOrderZero.lean) gives the
 theorems of `Rigidity.Assembly.Main` that take `ArmstrongDarioOrderZero`, and that version of
-Theorem 1.3, without it. The other inputs listed below remain hypotheses.
+Theorem 1.3, without it.
+[`Rigidity.Assembly.WithProvedGreenColumn`](Rigidity/Proofs/Assembly/ProvedGreenColumn.lean) gives
+the theorems of `Rigidity.Assembly.Main` that take `SupercriticalBondGreenColumnExistence` with
+every proved input supplied: Theorem 1.1 there takes only the two corrector inputs and the
+quantitative Green estimate, and Theorem 1.3 these and the regularity of order one. The other
+inputs listed below remain hypotheses.
 
 For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proofs/Assembly/PlanarInputs.lean)
 assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
@@ -314,7 +321,9 @@ regularity, and the quantitative Green estimate; see
 The Green-column input `SupercriticalBondGreenColumnExistence` is proved for `d ≥ 3`
 ([`Rigidity.Green.greenColumnExistence_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean)),
 and [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean)
-derives it in every dimension from the planar order-zero estimate `ArmstrongDarioOrderZeroTwo`; see
+derives it in every dimension from the planar order-zero estimate `ArmstrongDarioOrderZeroTwo`. The planar
+case is proved, so the input is proved in every dimension
+([`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean)); see
 [Green columns for d ≥ 3](#green-columns-for-d--3).
 
 In dimension two the planar inputs are reduced further. `ArmstrongDarioOrderZeroTwo` follows from the harmonic
@@ -683,7 +692,9 @@ For `d ≥ 3` and `𝔭_c(d) < p < 1`, almost surely every vertex `y` of the inf
 pole of exactly one Green column: a function `g` on the cluster with `−Δg = δ_y` that tends to zero
 at infinity. Dario and Gu state the existence and uniqueness of Green columns without proof (DG,
 p. 4 and p. 58). With the planar case of the previous section, the Green-column input
-`SupercriticalBondGreenColumnExistence` follows from the planar order-zero estimate alone. The same
+`SupercriticalBondGreenColumnExistence` follows from the planar order-zero estimate alone, and it
+is proved with no hypothesis, the planar case being proved
+(`supercriticalBondGreenColumnExistence_holds`). The same
 route bounds the heat kernel of the cluster for `d ≥ 2` and the decay of the Green columns for
 `d ≥ 3`, with a polynomial loss.
 
@@ -693,11 +704,13 @@ route bounds the heat kernel of the cluster for `d ≥ 2` and the decay of the G
 | [`Rigidity.Green.greenColumnExistence_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | for `d ≥ 3`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster there is exactly one Green column with pole `y`. |
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_two`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from its planar case `SupercriticalBondGreenColumnExistenceTwo`. |
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from `ArmstrongDarioOrderZeroTwo`. |
+| [`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean) | `SupercriticalBondGreenColumnExistence`, with no hypothesis. |
+| [`Rigidity.Assembly.WithProvedGreenColumn`](Rigidity/Proofs/Assembly/ProvedGreenColumn.lean): `lipschitz`, `fast_decay`, `notLipschitz`, `fastDecayDichotomy`, `fastDecayPotential`, `gradientTrichotomy`, `levelSetDensity`, `goodEventLowerBound`, `largeGradientSensitive`, `goodEventLowerBoundDirectional` | the theorems of `Rigidity.Assembly.Main` that take `SupercriticalBondGreenColumnExistence`, with it and the other proved inputs supplied; they take only those of `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin` and `SupercriticalBondGreenQuantitative` that their proofs use. |
 | [`Rigidity.Green.heat_le_of_two_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 2`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster, then for `0 ≤ t ≤ 1` there are `K` and `N` with `p_n(x, y) ≤ K n^{−(d/2 − 1/100)(1 − t)} exp(−t\|x − y\|²/(2n))` for all `n ≥ N` and all vertices `x` of the cluster. |
 | [`Rigidity.Green.greenColumn_le_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0` the Green column `g` with pole `y` satisfies `0 ≤ g(x) ≤ K \|x − y\|^{2 − d + 1/50 + δ}` for `\|x − y\| ≥ R`. |
 | [`Rigidity.Green.greenColumn_le_one_add_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0`, `0 ≤ g(x) ≤ K (1 + \|x − y\|)^{2 − d + 1/50 + δ}` at every vertex `x`. |
 
-The seven theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+The eighteen theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
 are in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/).
 
 1. **Isoperimetry of `ℤᵈ`** (`LatticeIsoperimetry.lean`). The lattice `ℓ¹` Sobolev inequality
@@ -2685,7 +2698,7 @@ Departures from Armstrong and Dario:
 - **No `sorry`.** The library has none. The four comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 857 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 956 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2699,7 +2712,8 @@ Departures from Armstrong and Dario:
   [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
-  the seven theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the two theorems of
+  the eighteen theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
+  declarations of [Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension), the two theorems of
   [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), the twenty-one theorems of
   [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster),
   the eleven theorems of
@@ -2756,7 +2770,7 @@ Departures from Armstrong and Dario:
   [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 932 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 956 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2783,13 +2797,13 @@ Departures from Armstrong and Dario:
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
   checked against its source in an independent model review; the sources are listed in
   [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
-  hypotheses; seven of them are proved, and the versions described there discharge them.
+  hypotheses; eight of them are proved, and the versions described there discharge them.
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 641 Lean files with 126,294 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 677 Lean files with 133,728 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (15 files, 5,052
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,416 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,545 lines) are counted separately.
 
 ## Building
 
@@ -2857,6 +2871,8 @@ Rigidity/
       Main.lean               the main theorems, from the regime and the literature inputs only
       Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
+      ProvedOrderZero.lean    the main theorems without the order-zero regularity
+      ProvedGreenColumn.lean  the main theorems with the Green columns and every proved input supplied
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
       PlanarDarioGu.lean      Theorem 1.3 from the Green estimate of Dario and Gu alone, in dimension two
     Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3

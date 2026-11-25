@@ -11,7 +11,7 @@ project:
     that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov chain on
     the largest cluster of a box of radius n mixes in time of order n^d log n (Theorem 6.5). All 43
     numbered results that the paper proves are proved in Lean, from twelve results of the literature
-    that enter as explicit hypotheses; six of these inputs are also proved in Lean, and Theorem 6.5
+    that enter as explicit hypotheses; eight of these inputs are also proved in Lean, and Theorem 6.5
     is proved with no literature hypothesis. The other five numbered results are quoted from the
     literature. Theorems 1.1, 1.2, 1.3 and 6.5 are independently checked by the comparator pairs
     under RigidityAudit/.
@@ -50,7 +50,7 @@ sources:
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
     relationship: "assumes"
-    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs. Proposition A.1, also stated as a literature input, is proved, and so is the existence and uniqueness of the Green's function for d >= 3 (next two entries)."
+    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs. Proposition A.1, also stated as a literature input, is proved, and so is the existence and uniqueness of the Green's function, in every dimension (next two entries)."
   - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
@@ -62,7 +62,7 @@ sources:
     type: "paper"
     location: "p. 4, around (1.8), and p. 58"
     relationship: "independently-proves"
-    note: "The existence and uniqueness of the Green's function of the infinite cluster (LatticeProb.External.SupercriticalBondGreenColumnExistence), stated there without proof, is proved for d >= 3 (Rigidity.Green.greenColumnExistence_of_three_le) by the route of Mathieu and Remy, isoperimetry, Faber-Krahn, Nash and on-diagonal decay, with an isoperimetric inequality of the cluster of polynomial loss R^(-1/(100d)) from one coarse graining by good subcubes, in place of the Gaussian bounds of Barlow; with the planar case, Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo derives the input from the planar order-zero estimate. The same route gives heat kernel bounds for d >= 2 and the decay |x-y|^(2-d+1/50+delta) of the Green columns for d >= 3, weaker by polynomial factors than those that DG derive from Barlow's Gaussian bounds (README, Green columns for d >= 3)."
+    note: "The existence and uniqueness of the Green's function of the infinite cluster (LatticeProb.External.SupercriticalBondGreenColumnExistence), stated there without proof, is proved for d >= 3 (Rigidity.Green.greenColumnExistence_of_three_le) by the route of Mathieu and Remy, isoperimetry, Faber-Krahn, Nash and on-diagonal decay, with an isoperimetric inequality of the cluster of polynomial loss R^(-1/(100d)) from one coarse graining by good subcubes, in place of the Gaussian bounds of Barlow; with the planar case, Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo derives the input from the planar order-zero estimate, and the planar case being proved, the input is proved in every dimension (Rigidity.Green.supercriticalBondGreenColumnExistence_holds). The same route gives heat kernel bounds for d >= 2 and the decay |x-y|^(2-d+1/50+delta) of the Green columns for d >= 3, weaker by polynomial factors than those that DG derive from Barlow's Gaussian bounds (README, Green columns for d >= 3)."
   - title: "Percolation"
     authors: ["Geoffrey Grimmett"]
     type: "book"
@@ -163,19 +163,22 @@ status:
     Twelve results of the literature are stated as propositions, seven in the External/ directories of this repository and of
     Percolation-Cluster-Homogenization and five in the directory LatticeProb/External/ of Lattice-Probability, each with its source in its
     docstring. They enter as explicit hypotheses of the theorems that use them, not as axioms;
-    README.md lists them with the results that use them. Six of them are proved in Lean
+    README.md lists them with the results that use them. Eight of them are proved in Lean
     (Rigidity.Percolation.supercritical_bond_uniqueness, Rigidity.Smoothing.micciancio_regev_smoothing,
     Rigidity.Percolation.kesten_rectangle_crossing, Rigidity.Topology.jordan_curve_theorem_sphere,
-    Rigidity.Percolation.wellConnected_input and Rigidity.Proofs.S2.cluster_density_concentration,
-    which proves Rigidity.External.ClusterDensityConcentrationInput). In dimension two the existence
+    Rigidity.Percolation.wellConnected_input, Rigidity.Proofs.S2.cluster_density_concentration,
+    which proves Rigidity.External.ClusterDensityConcentrationInput,
+    Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds, which proves
+    LatticeProb.External.ArmstrongDarioOrderZero, and
+    Rigidity.Green.supercriticalBondGreenColumnExistence_holds, which proves
+    LatticeProb.External.SupercriticalBondGreenColumnExistence). In dimension two the existence
     of Green columns, which Dario and Gu state without proof, is also proved
     (Rigidity.Proofs.Section5.planar_greenColumn_exists); with the planar order-zero estimate it gives
     the planar Green-column input, and
     Rigidity.Assembly.WithPlanarInputs.fast_decay_of_planar_estimates derives Theorem 1.3 from five
     planar inputs (the corrector, regularity and quantitative Green estimates in d = 2). For d >= 3
-    the Green-column input is proved (Rigidity.Green.greenColumnExistence_of_three_le), and
-    Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo derives it from the planar
-    order-zero estimate. The library
+    the Green-column input is proved directly (Rigidity.Green.greenColumnExistence_of_three_le), and
+    for d = 2 from the planar corrector input, which is proved. The library
     also declares Rigidity.External.AntalPisztoraChemicalDistance, which no numbered result uses.
   main_results:
     - declaration: "Rigidity.Assembly.Main.lipschitz"
