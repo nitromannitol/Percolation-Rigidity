@@ -12,6 +12,7 @@ import PercolationClusterHomogenization.Percolation.Pisztora.FiniteClusters
 import Rigidity.Proofs.Assembly.PlanarInputs
 import Rigidity.Proofs.Assembly.Unconditional
 import Rigidity.Proofs.Assembly.ProvedDensity
+import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
 import Rigidity.Proofs.Green.SupercriticalGreenBounds
@@ -541,6 +542,21 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Proofs.S2.cluster_density_concentration
 #print axioms Rigidity.Assembly.WithProvedDensity.green_gradient_homogenization
 #print axioms Rigidity.Assembly.WithProvedDensity.fast_decay
+
+-- The order-zero regularity of Armstrong and Dario in every dimension, and the main theorems without it
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds
+#print axioms Rigidity.Assembly.WithProvedOrderZero.lipschitz
+#print axioms Rigidity.Assembly.WithProvedOrderZero.fastDecay
+#print axioms Rigidity.Assembly.WithProvedOrderZero.notLipschitz
+#print axioms Rigidity.Assembly.WithProvedOrderZero.nonConstantOnGadget
+#print axioms Rigidity.Assembly.WithProvedOrderZero.fastDecayDichotomy
+#print axioms Rigidity.Assembly.WithProvedOrderZero.fastDecayPotential
+#print axioms Rigidity.Assembly.WithProvedOrderZero.gradientTrichotomy
+#print axioms Rigidity.Assembly.WithProvedOrderZero.levelSetDensity
+#print axioms Rigidity.Assembly.WithProvedOrderZero.goodEventLowerBound
+#print axioms Rigidity.Assembly.WithProvedOrderZero.largeGradientSensitive
+#print axioms Rigidity.Assembly.WithProvedOrderZero.goodEventLowerBoundDirectional
+#print axioms Rigidity.Assembly.WithProvedOrderZero.fastDecayWithProvedDensity
 
 -- Existence of planar Green columns, and Theorem 1.3 from five dimension-two literature inputs
 #print axioms Rigidity.Proofs.Section5.planar_greenColumn_exists

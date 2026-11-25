@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Assembly.Audit
 import Rigidity.Proofs.Assembly.Main
+import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.Section2
 import Rigidity.Proofs.Assembly.Section3
 import Rigidity.Proofs.Assembly.Section4

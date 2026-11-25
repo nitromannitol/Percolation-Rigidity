@@ -103,7 +103,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Theorem 1.3 | `theorem:fast-decay` | `Rigidity.Assembly.Main.fastDecay` | `d = 2`: integer Laplacian of finite support and decay faster than `\|x\|⁻¹` force finite support. |
 | Lemma 2.1 | `lemma:finite-energy` | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
 | Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput`; proved: `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
-| Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
+| Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin`; proved at order zero in every `d ≥ 2`: `Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
 | Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
@@ -261,12 +261,12 @@ Proposition 3.2.
    declaration of each proved numbered result depends on exactly `propext`, `Classical.choice` and
    `Quot.sound`.
 8. **Not formalized.** Lemma 2.13, which no proof uses; Theorems 2.4 and 2.5, which enter as
-   literature inputs; the remarks, problems and conjectures; the figures. The other two quoted
+   literature inputs (Theorem 2.4 at order zero, `ArmstrongDarioOrderZero`, is also proved); the remarks, problems and conjectures; the figures. The other two quoted
    results, Proposition 2.3 and Lemma 2.14, enter as literature inputs that are proved.
 
 ## Assumed literature inputs
 
-The table records the hypotheses of the original theorem statements. Six of these propositions
+The table records the hypotheses of the original theorem statements. Seven of these propositions
 are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/BondUniqueness.lean),
 [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean),
 [`Rigidity.Percolation.kesten_rectangle_crossing`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/KestenCrossing.lean),
@@ -275,7 +275,10 @@ are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](https://g
 (Proposition 2.3; see the note below the table), and
 [`Rigidity.Proofs.S2.cluster_density_concentration`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Density/ClusterDensityConcentration.lean)
 (`ClusterDensityConcentrationInput`, the density concentration of Dario and Gu; see
-[Density concentration in every dimension](#density-concentration-in-every-dimension)).
+[Density concentration in every dimension](#density-concentration-in-every-dimension)), and
+[`Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/GeneralOrderZeroHolds.lean)
+(`ArmstrongDarioOrderZero`, Theorem 2.4 at order zero in every dimension; see
+[Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension)).
 [`Rigidity.Assembly.WithProvedInputs`](Rigidity/Proofs/Assembly/ProvedInputs.lean) gives versions of
 Theorems 1.1 and 1.2 without the uniqueness hypothesis, Theorem 1.3 without the uniqueness,
 crossing, or sphere Jordan hypotheses, and Theorem 6.5 without the uniqueness or smoothing
@@ -285,8 +288,10 @@ of the versions of Theorems 1.1, 1.3 and 6.5, and
 Theorem 6.5 with no literature hypothesis.
 [`Rigidity.Assembly.WithProvedDensity`](Rigidity/Proofs/Assembly/ProvedDensity.lean) gives
 Proposition 2.6 without the density-concentration hypothesis, and Theorem 1.3 without the
-uniqueness, crossing, sphere Jordan, well-connectedness or density-concentration hypotheses. The
-other inputs listed below remain hypotheses.
+uniqueness, crossing, sphere Jordan, well-connectedness or density-concentration hypotheses.
+[`Rigidity.Assembly.WithProvedOrderZero`](Rigidity/Proofs/Assembly/ProvedOrderZero.lean) gives the
+theorems of `Rigidity.Assembly.Main` that take `ArmstrongDarioOrderZero`, and that version of
+Theorem 1.3, without it. The other inputs listed below remain hypotheses.
 
 For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proofs/Assembly/PlanarInputs.lean)
 assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
@@ -1647,6 +1652,25 @@ Departures from Armstrong and Dario: those of the section on order-zero regulari
 
 Misprint in the source whose meaning is clear: AD18.tex:5137-5146 (the squares of (7.2)), as noted in the section on
 order-zero regularity above.
+
+## Order-zero regularity in every dimension
+
+Lemma 7.1 of Armstrong and Dario for the partition into good cubes, and with it Theorem 2(iii) at
+`k = 0`, are proved in every dimension `d ≥ 2` in Percolation-Cluster-Homogenization, from Theorem 1
+of Armstrong and Dario in every dimension, by the route of the planar proof of
+[Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1)
+(see its correspondence, section "Lemma 7.1 and the order-zero regularity in every dimension from
+Theorem 1"). The input `LatticeProb.External.ArmstrongDarioOrderZero` is therefore proved, and the
+theorems below restate those of `Rigidity.Assembly.Main` and `Rigidity.Assembly.WithProvedDensity`
+that take it, without it.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/GeneralOrderZeroHolds.lean) | `ArmstrongDarioOrderZero` with no hypothesis: for `d ≥ 2` and `𝔭_c(d) < p < 1`, the infinite cluster is unique, `𝒜₀(𝒞_∞)` is one-dimensional, and harmonic functions in large balls at the origin are close to constants above a minimal scale with stretched exponential moments (AD, Theorem 2(iii) at `k = 0`). |
+| [`Rigidity.Assembly.WithProvedOrderZero`](Rigidity/Proofs/Assembly/ProvedOrderZero.lean): `lipschitz`, `fastDecay`, `notLipschitz`, `nonConstantOnGadget`, `fastDecayDichotomy`, `fastDecayPotential`, `gradientTrichotomy`, `levelSetDensity`, `goodEventLowerBound`, `largeGradientSensitive`, `goodEventLowerBoundDirectional` | the eleven theorems of `Rigidity.Assembly.Main` with the hypothesis `ArmstrongDarioOrderZero`, with the same statements and the other hypotheses. |
+| [`Rigidity.Assembly.WithProvedOrderZero.fastDecayWithProvedDensity`](Rigidity/Proofs/Assembly/ProvedOrderZero.lean) | Theorem 1.3, with the hypotheses `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin`, `SupercriticalBondGreenColumnExistence` and `SupercriticalBondGreenQuantitative`. |
+
+The thirteen declarations depend on exactly `propext`, `Classical.choice` and `Quot.sound`.
 
 ## Regularity of order one at the origin from the mesoscopic estimate
 
