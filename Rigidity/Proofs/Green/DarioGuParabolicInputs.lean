@@ -179,7 +179,10 @@ Lemma 3.7 (lines 1357-1361): `‖∂_t^l ∇^k (Υ ∇ū)‖_{L^∞} ≤ C (r')^
 The proof of Proposition 3.9 (line 1789) applies Theorem 5 with `f = u`; this is the form stated
 here, with `u(·, x)` continuously differentiable in time at every vertex (`f ∈ W_par`). For a
 general `f` the printed estimate cannot hold: for `f(t, x) = t` the right side vanishes while
-`u - ū` does not. -/
+`u - ū` does not. The boundary condition `f̃` on `cv(ℤ² ∩ B_r(y))` reads `f` at the anchors of the
+partition cubes meeting the ball, and its gradient is bounded through (2.7) (Armstrong–Dario,
+Lemma 3.3) by the gradient of `f` on these cubes; the right sides here are on `I_{5r/4} ×
+(𝒞_∞ ∩ B_{5r/4}(y))`, which contains them above the minimal scale. -/
 def DarioGuThmFiveTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∃ σ : ℝ, 0 < σ ∧ ∀ δ : ℝ, 0 < δ → ∀ η : EuclideanSpace ℝ (Fin 2) → ℝ, IsMollifier η →
@@ -194,11 +197,11 @@ def DarioGuThmFiveTwo : Prop :=
                   (mollifiedCoarsening ω (uniqueInfiniteComponent h) η u) ū →
                 r⁻¹ * parAvgL2 (uniqueInfiniteComponent h) y r
                     (fun t x => u t x - ū (t, latticeEuclideanEmbedding x)) ≤
-                  C * r ^ (-α) * parGradLp ω (uniqueInfiniteComponent h) y r (2 + δ) u ∧
+                  C * r ^ (-α) * parGradLp ω (uniqueInfiniteComponent h) y (5 * r / 4) (2 + δ) u ∧
                 ∀ z ∈ Set.Ioo (-r ^ 2 / 2) 0 ×ˢ
                     Metric.ball (latticeEuclideanEmbedding y) (3 * r / 4),
                   ‖fderiv ℝ (fun ξ => ū (z.1, ξ)) z.2‖ ≤
-                    C * parGradLp ω (uniqueInfiniteComponent h) y r (2 + δ) u
+                    C * parGradLp ω (uniqueInfiniteComponent h) y (5 * r / 4) (2 + δ) u
 
 /-- Existence of the solution `ū` of (3.9) (Dario–Gu, line 1294: "`ū` be the weak solution of the
 homogenized, continuous in space, parabolic equation"), for the boundary conditions `f̃` of the
