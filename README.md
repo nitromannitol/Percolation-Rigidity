@@ -16,14 +16,24 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses. Eight of these twelve inputs, among them Proposition 2.3, the concentration of the
-density of the infinite cluster and the existence of the Green columns, are also proved in Lean, and
-Theorem 6.5 is proved with no literature hypothesis (see
-[Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
-literature: four of them (Proposition 2.3,
-Theorems 2.4 and 2.5, Lemma 2.14) enter as literature inputs, and the fifth (Lemma 2.13, a fact of
-plane topology) is used by no proof. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
-printed, and Theorem 6.5 as printed with its restriction event made explicit (see
+hypotheses (see [Assumed literature inputs](#assumed-literature-inputs)). Eight of these twelve
+inputs are also proved in Lean: the uniqueness of the infinite cluster, the smoothing bound of
+Micciancio and Regev, the crossing estimate of Kesten, the Jordan curve theorem on `S²`
+(Lemma 2.14), the well-connectedness of boxes (Proposition 2.3), the concentration of the density
+of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero) and the existence
+of the Green columns. The other four remain hypotheses: the qualitative and the quantitative
+corrector inputs (Theorem 2.5), the regularity of order one at the origin (Theorem 2.4 at order
+one) and the quantitative estimate of the Green function of Dario and Gu; the dimension-two forms
+of the first three are proved. Theorem 6.5 is proved with no literature hypothesis. The Gaussian
+upper bound of Barlow, which is not one of the twelve inputs but enters the dimension-two proof of
+Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in dimension two
+(`barlowGaussianUpperBoundTwo_holds`). The five numbered results that the paper does not prove are
+quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
+Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
+them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
+the interior of a finite union of lattice squares, is proved (`Rigidity.Assembly.polyominoJordan`),
+and the general lemma is not formalized. Of the main results, Theorems 1.1, 1.2 and 1.3 are
+stated as printed, and Theorem 6.5 as printed with its restriction event made explicit (see
 [Standing assumptions and scope](#standing-assumptions-and-scope), item 4); the statements changed by
 the corrections are listed in
 [Corrections to the published version](#corrections-to-the-published-version).
@@ -106,7 +116,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
-| Lemma 2.13 | (none) | quoted, not used | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
+| Lemma 2.13 | (none) | quoted, not used; the special case used in the proof of Proposition 5.12 (line 2124 of the corrected draft; the interior of a finite union of lattice squares) proved: `Rigidity.Assembly.polyominoJordan` (statement `Rigidity.Section2.PolyominoJordanStmt`); the general lemma is not formalized | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
 | Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere`; proved: `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
 | Lemma 2.16 | `lemma:jordan-curves-theorem` | `Rigidity.Assembly.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
 | Lemma 3.1 | `lemma:reduction-to-slope-e1` | `Rigidity.Assembly.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
@@ -259,7 +269,12 @@ Proposition 3.2.
 7. **Axioms.** The library contains no `sorry`, `admit`, `native_decide` or new `axiom`. The Lean
    declaration of each proved numbered result depends on exactly `propext`, `Classical.choice` and
    `Quot.sound`.
-8. **Not formalized.** Lemma 2.13, which no proof uses; Theorems 2.4 and 2.5, which enter as
+8. **Not formalized.** Lemma 2.13 in general (Remark 14.20 of Rudin), which no proof uses; its
+   special case for the interior of a finite union of lattice squares, the form applied in
+   the proof of Proposition 5.12, is proved as `Rigidity.Assembly.polyominoJordan` (the boundary is
+   a closed lattice polygon without repeated corner, homeomorphic to the circle), and the Lean proof
+   of Proposition 5.12 does not use it, since its loop runs around a spanning tree of the
+   connectors. Theorems 2.4 and 2.5, which enter as
    literature inputs (Theorem 2.4 at order zero, `ArmstrongDarioOrderZero`, is also proved); the remarks, problems and conjectures; the figures. The other two quoted
    results, Proposition 2.3 and Lemma 2.14, enter as literature inputs that are proved.
 
@@ -2964,7 +2979,7 @@ Departures from Barlow:
 - **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1014 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1015 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -3042,9 +3057,10 @@ Departures from Barlow:
   [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two),
   the thirty-one theorems of
   [Proposition 2.13 of Dario and Gu in dimension two](#proposition-213-of-dario-and-gu-in-dimension-two),
+  the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1045 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1046 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3078,9 +3094,9 @@ Departures from Barlow:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 748 Lean files with 153,946 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 755 Lean files with 155,529 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,662 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,666 lines) are counted separately.
 
 ## Building
 

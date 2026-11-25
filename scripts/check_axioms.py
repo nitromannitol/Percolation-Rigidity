@@ -71,6 +71,8 @@ cited = {'Proposition 2.3', 'Theorem 2.4', 'Theorem 2.5', 'Lemma 2.13', 'Lemma 2
 # Further proved results: results that are not numbered results of the paper, proofs of literature
 # inputs, and forms of the main theorems with fewer hypotheses.
 further = {
+    'Lemma 2.13 for unions of lattice squares (the form used at L2124)':
+        ['Rigidity.Assembly.polyominoJordan'],
     'Slab connectivity (Grimmett and Marstrand, d >= 3)':
         ['Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt'],
     'Proposition 2.3 for d >= 3 and its reduction to d = 2':
