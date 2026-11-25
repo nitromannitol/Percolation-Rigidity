@@ -127,4 +127,62 @@ theorem heatFlowG_telescope (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {F : �
     exact heatFlowG_zero (F J) x
   rw [hTJ]
 
+/-- `P_a p_b(·, y) = p_{a+b}(·, y)`. -/
+theorem heatFlowG_vsrwHeat (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {a b : ℝ} (ha : 0 ≤ a)
+    (hb : 0 ≤ b) (y x : V) :
+    heatFlowG G D a (fun w => vsrwHeat G D b w y) x = vsrwHeat G D (a + b) x y :=
+  (hasSum_vsrwHeat_mul hD hdeg ha hb x y).tsum_eq
+
+theorem summable_sq_vsrwHeat_col (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {b : ℝ} (hb : 0 ≤ b)
+    (y : V) : Summable fun w => vsrwHeat G D b w y ^ 2 := by
+  have h := (hasSum_heatDeriv_sq hD hdeg 0 hb y).summable
+  exact h.congr fun w => by rw [heatDeriv_zero, vsrwHeat_symm hD hdeg b y w]
+
+/-- **From smooth initial data to a point source**: with `s_{j+1} = 3 s_j`, `t = s_J`,
+`E = p_{s_0}(·, y) - F_0` and `D_j = P_{2 s_j} F_j - F_{j+1}`,
+`‖p_t(·, y) - F_J‖ ≤ ‖P_{t - s_0} E‖ + Σ_{j < J} ‖P_{t - s_{j+1}} D_j‖`. -/
+theorem l2norm_vsrwHeat_sub_le (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {F : ℕ → V → ℝ}
+    (hF : ∀ j, Summable fun x => F j x ^ 2) {s : ℕ → ℝ} (hs0 : 0 ≤ s 0)
+    (hs : ∀ j, s (j + 1) = 3 * s j) (J : ℕ) (y : V) (hJ : s 0 ≤ s J) :
+    l2norm (fun x => vsrwHeat G D (s J) x y - F J x) ≤
+      l2norm (heatFlowG G D (s J - s 0) (fun w => vsrwHeat G D (s 0) w y - F 0 w)) +
+        ∑ j ∈ Finset.range J, l2norm (heatFlowG G D (s J - s (j + 1))
+          (fun w => heatFlowG G D (2 * s j) (F j) w - F (j + 1) w)) := by
+  have ht : 0 ≤ s J - s 0 := by linarith
+  have hsnn : ∀ j, 0 ≤ s j := by
+    intro j
+    induction j with
+    | zero => exact hs0
+    | succ j ih => rw [hs j]; linarith
+  have hmono : ∀ i j, i ≤ j → s i ≤ s j := by
+    intro i j hij
+    induction hij with
+    | refl => exact le_rfl
+    | @step m _ ih => exact ih.trans (by rw [hs m]; linarith [hsnn m])
+  have hcol := summable_sq_vsrwHeat_col hD hdeg hs0 y
+  have hE : Summable fun w => (vsrwHeat G D (s 0) w y - F 0 w) ^ 2 := summable_sq_sub hcol (hF 0)
+  have hpt : ∀ x, vsrwHeat G D (s J) x y - F J x =
+      heatFlowG G D (s J - s 0) (fun w => vsrwHeat G D (s 0) w y - F 0 w) x +
+        ∑ j ∈ Finset.range J, heatFlowG G D (s J - s (j + 1))
+          (fun w => heatFlowG G D (2 * s j) (F j) w - F (j + 1) w) x := by
+    intro x
+    rw [← heatFlowG_telescope hD hdeg hF hs0 hs J x,
+      heatFlowG_sub hD hdeg ht hcol (hF 0) x, heatFlowG_vsrwHeat hD hdeg ht hs0 y x,
+      show s J - s 0 + s 0 = s J by ring]
+    ring
+  have hterms : ∀ j ∈ Finset.range J, Summable fun x => heatFlowG G D (s J - s (j + 1))
+      (fun w => heatFlowG G D (2 * s j) (F j) w - F (j + 1) w) x ^ 2 := by
+    intro j hj
+    have hjJ : j + 1 ≤ J := Finset.mem_range.1 hj
+    exact summable_sq_heatFlowG hD hdeg (by linarith [hmono _ _ hjJ])
+      (summable_sq_sub (summable_sq_heatFlowG hD hdeg (by linarith [hsnn j]) (hF j)) (hF (j + 1)))
+  obtain ⟨hsum2, hsum⟩ := l2norm_sum_le (Finset.range J) hterms
+  obtain ⟨-, htot⟩ := l2norm_add_le (summable_sq_heatFlowG hD hdeg ht hE) hsum2
+  have heq : (fun x => vsrwHeat G D (s J) x y - F J x) = fun x =>
+      heatFlowG G D (s J - s 0) (fun w => vsrwHeat G D (s 0) w y - F 0 w) x +
+        ∑ j ∈ Finset.range J, heatFlowG G D (s J - s (j + 1))
+          (fun w => heatFlowG G D (2 * s j) (F j) w - F (j + 1) w) x := funext hpt
+  rw [heq]
+  exact htot.trans (add_le_add le_rfl hsum)
+
 end Rigidity.Green
