@@ -441,6 +441,8 @@ import Rigidity.Proofs.Green.DarioGuDirichletSteps
 import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
+import Rigidity.Proofs.Assembly.PlanarDarioGuDirect
+import Rigidity.Proofs.Assembly.ProvedGradient
 import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 import Rigidity.Proofs.Assembly.ProvedBarlow
@@ -1610,6 +1612,23 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.parabolic_caccioppoli_of_cutoff
 #print axioms Rigidity.Green.darioGuTimesliceTwo_holds
 #print axioms Rigidity.Green.timeslice_of_cutoff
+
+-- Theorem 3 of Dario and Gu (Remark 1.3) from Theorem 4 and with no hypothesis, and Theorems 1 and 2 from Proposition 2.13, in dimension two
+#print axioms Rigidity.Green.abs_heatDeriv_two_le
+#print axioms Rigidity.Green.exitFunction_le_two_mul
+#print axioms Rigidity.Green.abs_sub_le_mul_exitFunction
+#print axioms Rigidity.Green.exists_nL2_sub_le_of_laplacian
+#print axioms Rigidity.Green.pairEnergy_le_of_laplacian
+#print axioms Rigidity.Green.exists_orderZero_clusterBall
+#print axioms Rigidity.Green.sqrt_gradEnergy_openHeat_le
+#print axioms Rigidity.Green.darioGuGradientBoundTwo_of_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenQuantitativeTwo_of_flux_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow
+#print axioms Rigidity.Green.darioGuGradientBoundTwo_holds
+#print axioms Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux
+#print axioms Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux
 
 -- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
 #print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
