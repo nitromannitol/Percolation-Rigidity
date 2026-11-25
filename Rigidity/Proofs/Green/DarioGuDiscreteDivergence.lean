@@ -9,7 +9,8 @@ The term (3.25)-a of the decomposition in Step 3 of the proof of Theorem 5 of Da
 discrete version, "a difference between a discrete derivative and a continuous derivative; it can be
 estimated in terms of the third derivative of `ū`". Along the line `s ↦ x + s e_k`, with
 `φ(s) = Υ(x + s e_k)` and `ψ(s) = ū(x + s e_k)`, the discrete divergence of
-`timeDeriv_sub_openLaplacian_cutoffTwoScale` is `D_k(Υ D_k ū)(x) = φ(1)(ψ(2) - ψ(1)) - φ(0)(ψ(1) - ψ(0))`
+`timeDeriv_sub_openLaplacian_cutoffTwoScale` is
+`D_k(Υ D_k ū)(x) = φ(1)(ψ(2) - ψ(1)) - φ(0)(ψ(1) - ψ(0))`
 and the continuous one is `∂_k(Υ ∂_k ū)(x) = φ'(0) ψ'(0) + φ(0) ψ''(0)`. This file proves
 (`abs_discrete_div_sub_le`)
 
