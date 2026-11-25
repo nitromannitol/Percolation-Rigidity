@@ -2700,12 +2700,42 @@ Departures from Armstrong and Dario:
   `𝒞_max(3□)`. The printed family has `ME_ε(□_m) ≤ C` where `ME_ε(□) ≤ C` is meant. The minimal scales have the
   stretched exponential tails stated in the table.
 
+## Proposition 2.7 and Steps 1, 2, 3 and 5 of the proof of Theorem 5 of Dario and Gu in dimension two
+
+The second part of Proposition 2.7 of Dario and Gu (the Poincaré inequality for functions vanishing on the boundary of a ball of
+the infinite cluster, `p = 2`) is proved, and the following steps of the proof of Theorem 5 (the homogenization of the parabolic
+Dirichlet problem, DG21.tex:1280-1684) are proved in the forms stated in the table, for unit conductances on the open edges of
+the planar cluster. Theorem 5 itself is not formalized.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.clusterDirichletPoincareTwo_holds`](Rigidity/Proofs/Green/ClusterDirichletPoincare.lean), [`sum_sq_le_of_weakPoincare`](Rigidity/Proofs/Green/ClusterDirichletPoincare.lean) | `ClusterDirichletPoincareTwo`, Proposition 2.7, second part, `p = 2`, `d = 2`: `Σ_V u² ≤ (C R)² E_V(u)` on `V = 𝒞_∞ ∩ B_R(y)` for `R ≥ M(y) ≤ O_s(C)` and `u` vanishing on `∂_a V`; from the weak Poincaré inequality on `𝒞_∞ ∩ B_{KR}(y)` and Proposition A.1. |
+| [`sum_neg_openLaplacian_mul`](Rigidity/Proofs/Green/ClusterParabolicEnergy.lean), [`sum_mul_le_of_weakNormLe`](Rigidity/Proofs/Green/ClusterParabolicEnergy.lean), [`integral_sum_sq_le_of_energy`](Rigidity/Proofs/Green/ClusterParabolicEnergy.lean), [`integral_sum_sq_le_of_dirichletPoincare`](Rigidity/Proofs/Green/DarioGuDirichletSteps.lean) | Step 2: the integration by parts (1.29), the duality (1.33), and `∫ Σ_V v² ≤ 64 P² (P + \|V\|^{1/2})² ∫ B²` for `v` vanishing on `∂_a V` and at the initial time with `‖(∂_t − Δ) v‖_{H̲^{−1}(V)} ≤ B`, given `Σ_V v² ≤ P² Σ_V \|∇v\|²`. |
+| [`weakNormLe_sqrt_sum_sq`](Rigidity/Proofs/Green/ClusterWeakNorm.lean), [`WeakNormLe.mul_right`](Rigidity/Proofs/Green/ClusterWeakNorm.lean), [`weakNormLe_sum_antisymm`](Rigidity/Proofs/Green/ClusterWeakNorm.lean) | (3.27), (3.26) and the divergence form of the weak norm on a finite set of the cluster. |
+| [`openLaplacian_cutoffTwoScale`](Rigidity/Proofs/Green/ClusterTwoScaleDecomposition.lean), [`openLaplacian_cutoffTwoScale_of_corrector`](Rigidity/Proofs/Green/ClusterTwoScaleDecomposition.lean), [`timeDeriv_sub_openLaplacian_cutoffTwoScale`](Rigidity/Proofs/Green/ClusterTwoScaleDecomposition.lean) | Step 3, (3.23) to (3.25): the equation of the two-scale expansion `U + Σ_k F_k χ_k` at a point of the cluster, from the corrector equation. |
+| [`weakNormLe_div_field`](Rigidity/Proofs/Green/ClusterTwoScaleTerms.lean), [`weakNormLe_time_term`](Rigidity/Proofs/Green/ClusterTwoScaleTerms.lean), [`weakNormLe_flux_term`](Rigidity/Proofs/Green/ClusterTwoScaleTerms.lean), [`weakNormLe_twoScale_equation`](Rigidity/Proofs/Green/ClusterTwoScaleTerms.lean), [`abs_discrete_div_sub_le`](Rigidity/Proofs/Green/DarioGuDiscreteDivergence.lean), [`weakNormLe_term_a`](Rigidity/Proofs/Green/DarioGuDiscreteDivergence.lean) | Step 3, first lines of (3.28) to (3.32): the weak norms of the terms a, b, c1, d and e in terms of bounds on their coefficients, and the bound of the weak norm of `(∂_t − Δ) w` by their sum. |
+| [`sum_sq_twoScale_sub_le`](Rigidity/Proofs/Green/DarioGuDirichletSteps.lean), [`dgStepFive`](Rigidity/Proofs/Green/DarioGuDirichletSteps.lean) | Step 1 (the corrector term of the two-scale expansion) and Step 5 (the choice `β = 1/16`, `q = 48(4 + 2δ')/δ'`, `α = δ'/(128(2 + δ'))` gives `𝓔(r, β, q) ≤ C r^{−α}`). |
+
+The twenty reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Dario and Gu:
+
+- **The boundary in Proposition 2.7.** The function vanishes on `∂_a V`, the points of `V` with an open edge leaving `V`, a
+  subset of the boundary `∂(ℤ² ∩ B_R(y)) ∩ 𝒞_∞` of the source; the statement implies the printed one and is the form used for
+  the functions of `C_0^a(V)` in Step 2.
+- **Forward differences and the centered flux.** The decomposition pairs the centered flux `g̃` (not the translated flux `g̃*`)
+  with the forward differences `D_i F_k`, the divergence field carries the corrector at the base point of each edge and the
+  extra field `−a_i D_i F_i`, and the discrete divergence is `Σ_k D_k F_k`. The left side of (3.25) is printed with `∂_t − D^*·aD`;
+  the computation (3.23) is for `∂_t + D^*·aD`.
+- **Constants.** (3.26) and (3.27) carry `|V|^{1/2}` in place of `r`; the term a is bounded by the derivatives of `Υ` and of `ū`
+  along the lattice lines separately, in place of `‖∇²(Υ∇ū)‖_{L^∞}`.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 956 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 978 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2813,9 +2843,9 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 677 Lean files with 133,728 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 701 Lean files with 139,247 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,545 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,576 lines) are counted separately.
 
 ## Building
 

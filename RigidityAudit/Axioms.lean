@@ -434,6 +434,8 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
 import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
+import Rigidity.Proofs.Green.DarioGuDirichletSteps
+import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1551,3 +1553,24 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
+-- Proposition 2.7 (second part) of Dario and Gu in dimension two and Steps 1, 2, 3 and 5 of the proof of Theorem 5
+#print axioms Rigidity.Green.sum_neg_openLaplacian_mul
+#print axioms Rigidity.Green.sum_mul_le_of_weakNormLe
+#print axioms Rigidity.Green.integral_sum_sq_le_of_energy
+#print axioms Rigidity.Green.weakNormLe_sqrt_sum_sq
+#print axioms Rigidity.Green.WeakNormLe.mul_right
+#print axioms Rigidity.Green.weakNormLe_sum_antisymm
+#print axioms Rigidity.Green.openLaplacian_cutoffTwoScale
+#print axioms Rigidity.Green.openLaplacian_cutoffTwoScale_of_corrector
+#print axioms Rigidity.Green.timeDeriv_sub_openLaplacian_cutoffTwoScale
+#print axioms Rigidity.Green.weakNormLe_div_field
+#print axioms Rigidity.Green.weakNormLe_time_term
+#print axioms Rigidity.Green.weakNormLe_flux_term
+#print axioms Rigidity.Green.weakNormLe_twoScale_equation
+#print axioms Rigidity.Green.clusterDirichletPoincareTwo_holds
+#print axioms Rigidity.Green.sum_sq_le_of_weakPoincare
+#print axioms Rigidity.Green.sum_sq_twoScale_sub_le
+#print axioms Rigidity.Green.integral_sum_sq_le_of_dirichletPoincare
+#print axioms Rigidity.Green.dgStepFive
+#print axioms Rigidity.Green.abs_discrete_div_sub_le
+#print axioms Rigidity.Green.weakNormLe_term_a
