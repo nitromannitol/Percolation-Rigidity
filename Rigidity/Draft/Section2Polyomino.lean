@@ -13,10 +13,10 @@ only at L2124, to the interior `𝒮` of a finite union `A + [-1/2, 1/2]²` of c
 simple. `PolyominoJordanStmt` is this case: `∂𝒮` is a closed lattice polygon without repeated
 corner, hence homeomorphic to the circle `S¹`.
 
-* Simple connectivity is the definition of the draft (L700-702): `𝒮` and its complement in `S²`,
+* Simple connectivity is the definition of the draft (L701-703): `𝒮` and its complement in `S²`,
   through a homeomorphism `σ : ℝ² → S² \ {N}` (the inverse stereographic projection), are
   connected.
-* Simple boundary points follow the definition of the draft (L704-711, Rudin, Definition 14.16):
+* Simple boundary points follow the definition of the draft (L705-713, Rudin, Definition 14.16):
   to every sequence `xₙ ∈ 𝒮` with `xₙ → x` there correspond a continuous `γ : [0, 1) → 𝒮` with
   `γ(t) → x` as `t → 1` and times `0 < t₁ < t₂ < ⋯ < 1` with `γ(tₙ) = xₙ`.
 * The corners of the squares are the points `v + (1/2, 1/2)`, `v ∈ ℤ²`. -/
@@ -33,7 +33,7 @@ def latticeSquare (z : Vertex 2) : Set (EuclideanSpace ℝ (Fin 2)) :=
 noncomputable def squareCorner (v : Vertex 2) : EuclideanSpace ℝ (Fin 2) :=
   WithLp.toLp 2 fun k => (v k : ℝ) + 1 / 2
 
-/-- A simple boundary point `x` of a plane region `Ω` (corrected draft L704-711): to every
+/-- A simple boundary point `x` of a plane region `Ω` (corrected draft L705-713): to every
 sequence `u` in `Ω` converging to `x` there correspond a continuous map `γ : [0, 1) → Ω` with
 `γ(t) → x` as `t → 1⁻` and times `0 < t₀ < t₁ < ⋯ < 1` with `γ (t n) = u n`. -/
 def IsSimpleBoundaryPoint (Ω : Set (EuclideanSpace ℝ (Fin 2)))
