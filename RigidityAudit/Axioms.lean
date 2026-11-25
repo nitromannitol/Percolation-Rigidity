@@ -209,6 +209,7 @@ import Rigidity.Proofs.Corrector.OsCalculus
 import Rigidity.Proofs.Corrector.PlanarCorrectorQuantitative
 import Rigidity.Proofs.Corrector.CorrectorQuantitative
 import Rigidity.Proofs.Corrector.Concentration
+import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
 import Rigidity.Proofs.Green.HeatTimeIntegrals
 import Rigidity.Proofs.Green.LazyCarneVaropoulos
@@ -439,6 +440,7 @@ import Rigidity.Proofs.Green.DarioGuDirichletSteps
 import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
+import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1560,6 +1562,11 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
 
+-- The multiscale Poincare inequality (2.26) of Dario in every dimension
+#print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
+#print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
+#print axioms Rigidity.Poincare.GeneralDim.exists_steinSigned
+
 -- Proposition 2.7 (second part) of Dario and Gu in dimension two and Steps 1, 2, 3 and 5 of the proof of Theorem 5
 #print axioms Rigidity.Green.sum_neg_openLaplacian_mul
 #print axioms Rigidity.Green.sum_mul_le_of_weakNormLe
@@ -1590,3 +1597,11 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.parabolic_caccioppoli_of_cutoff
 #print axioms Rigidity.Green.darioGuTimesliceTwo_holds
 #print axioms Rigidity.Green.timeslice_of_cutoff
+
+-- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
+#print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterPoincare_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_of_goodBalls
+#print axioms Rigidity.WeakPoincare.planarVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.sum_sq_sub_finAvg_clusterBall_le
