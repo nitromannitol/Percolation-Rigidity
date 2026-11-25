@@ -79,8 +79,8 @@ theorem summable_uncurry_heat [NeZero d] (hu : HeatSummable u) (j : Fin d) {s t 
   exact this
 
 /-- `w ↦ Φ_{t-s}(y, w) A_j(s, w)` is summable. -/
-theorem summable_heat_mul_heatGrad [NeZero d] (hu : HeatSummable u) (j : Fin d) {s t : ℝ} (hs : 0 ≤ s)
-    (hst : s ≤ t) (y : Vertex d) :
+theorem summable_heat_mul_heatGrad [NeZero d] (hu : HeatSummable u) (j : Fin d) {s t : ℝ}
+    (hs : 0 ≤ s) (hst : s ≤ t) (y : Vertex d) :
     Summable fun w => zdHeat d (t - s) y w * heatGrad u j s w := by
   have h := (summable_uncurry_heat hu j hs hst y).prod
   refine h.congr fun w => ?_
