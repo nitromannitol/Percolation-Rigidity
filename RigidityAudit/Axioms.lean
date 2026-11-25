@@ -446,6 +446,7 @@ import Rigidity.Proofs.Assembly.ProvedGradient
 import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 import Rigidity.Proofs.Assembly.ProvedBarlow
+import Rigidity.Proofs.BarlowLattice.GaussianHolds
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1661,3 +1662,31 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
 #print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections
 #print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient
+
+-- The heat kernel on Z^d, the Carne-Varopoulos bound and the Gaussian upper bound of Barlow in every dimension
+#print axioms Rigidity.Green.bondHeat_symm
+#print axioms Rigidity.Green.hasSum_bondHeat
+#print axioms Rigidity.Green.hasSum_bondHeat_mul
+#print axioms Rigidity.Green.hasDerivAt_bondHeat
+#print axioms Rigidity.Green.measurable_bondHeat
+#print axioms Rigidity.Green.carneVaropoulos_holds
+#print axioms Rigidity.Green.carneVaropoulosTwo_of_carneVaropoulos
+#print axioms Rigidity.Green.heatSmallTimeD_holds
+#print axioms Rigidity.Green.dgPhiDim_eq_rpow
+#print axioms Rigidity.Green.barlowGaussianUpperBoundTwo_of_dim
+#print axioms Rigidity.BarlowLattice.tsum_mul_openLaplacian
+#print axioms Rigidity.BarlowLattice.hasDerivAt_bondHeat_two_mul
+#print axioms Rigidity.BarlowLattice.bondHeat_diag_le_of_good
+#print axioms Rigidity.BarlowLattice.bondHeat_le_of_good
+#print axioms Rigidity.BarlowLattice.neg_log_le_heatEntropy
+#print axioms Rigidity.BarlowLattice.heatEntropy_le_log_meanDist
+#print axioms Rigidity.BarlowLattice.meanDist_le_of_entropy
+#print axioms Rigidity.BarlowLattice.exitGen_le_mul_of_subset
+#print axioms Rigidity.BarlowLattice.mul_exitProb_le
+#print axioms Rigidity.BarlowLattice.exitProb_clBall_le
+#print axioms Rigidity.BarlowLattice.exitProb_clBall_le_exp
+#print axioms Rigidity.BarlowLattice.BarlowRegion.tsum_far_le
+#print axioms Rigidity.BarlowLattice.BarlowRegion.bondHeat_le_gauss
+#print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_of_veryGood
+#print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_holds
+#print axioms Rigidity.BarlowLattice.barlowGaussianUpperBoundTwo_of_lattice

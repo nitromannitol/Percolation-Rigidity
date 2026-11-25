@@ -385,4 +385,22 @@ theorem carneVaropoulos_holds : CarneVaropoulos d := by
         _ ≤ 100 * d ^ 2 * Real.exp (-(r / (100 * d ^ 2) * (1 + L))) :=
             le_mul_of_one_le_left hE.le (by nlinarith)
 
+/-- The small-time bound `p(t, x, y) ≤ C e^{-|x - y|/C}` for `0 < t ≤ |x - y|` on infinite
+components of `ℤ^d`: the `d`-dimensional form of `HeatSmallTimeTwo`. -/
+def HeatSmallTimeD (d : ℕ) : Prop :=
+  ∃ C : ℝ, 0 < C ∧ ∀ (ω : Configuration d) (K : OpenComponent ω), K.supp.Infinite →
+    ∀ x ∈ K.supp, ∀ y ∈ K.supp, ∀ t : ℝ, 0 < t → t ≤ WeakPoincare.latticeDist x y →
+      bondHeat ω t x y ≤ C * Real.exp (-(WeakPoincare.latticeDist x y / C))
+
+/-- The planar small-time bound is the case `d = 2`. -/
+theorem heatSmallTimeTwo_of_heatSmallTimeD (h : HeatSmallTimeD 2) : HeatSmallTimeTwo := h
+
+/-- The small-time bound on `ℤ^d`, with `C = 8d`. -/
+theorem heatSmallTimeD_holds : HeatSmallTimeD d := by
+  have hd1 := one_le_dim_real (d := d)
+  refine ⟨8 * d, by positivity, fun ω K _ x _ y _ t ht htx => ?_⟩
+  refine (bondHeat_le_exp_of_le_latticeDist ω ht htx).trans ?_
+  have he := Real.exp_pos (-(WeakPoincare.latticeDist x y / (8 * d)))
+  exact mul_le_mul_of_nonneg_right (by linarith) he.le
+
 end Rigidity.Green
