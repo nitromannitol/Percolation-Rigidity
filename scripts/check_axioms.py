@@ -1098,6 +1098,11 @@ further = {
          'Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood',
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood',
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood'],
+    'The Gaussian upper bound of Barlow with no hypothesis, and Theorem 1.3 without it (d = 2)':
+        ['Rigidity.Barlow.clusterVeryGoodBallsTwo_holds',
+         'Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds',
+         'Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections',
+         'Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

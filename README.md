@@ -370,9 +370,13 @@ the bound `dim 𝒜₁ ≤ 3` are proved); see
 Theorem 1 of Dario being proved, R4 holds (`armstrongDarioOrderOneOriginTwo_holds`). Of the five planar inputs of
 `fast_decay_of_planar_estimates` only the quantitative Green estimate remains, and Theorem 1.3 follows from it alone
 ([`fast_decay_of_greenQuantitative`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean)), from Theorem 1 of Dario and Gu
-alone (`fast_decay_of_darioGu`), or from the inputs of that theorem that are not proved: `hSec` and the Gaussian upper
-bound of Barlow (`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound
-(`fast_decay_of_flux_gradient_barlow`).
+alone (`fast_decay_of_darioGu`), or from the inputs of that theorem: `hSec` and the Gaussian upper bound of Barlow
+(`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound (`fast_decay_of_flux_gradient_barlow`).
+The Gaussian upper bound of Barlow is proved (`barlowGaussianUpperBoundTwo_holds`; see
+[The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two)), so
+Theorem 1.3 follows from `hSec` alone
+([`WithProvedBarlow.fast_decay_of_sections`](Rigidity/Proofs/Assembly/ProvedBarlow.lean)), or from Proposition 2.13 and
+Theorem 3 alone (`WithProvedBarlow.fast_decay_of_flux_gradient`).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -2404,7 +2408,8 @@ from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
   Proposition 4.3 is proved from the flux estimate of Proposition 2.13 (`DarioGuFluxWeakNormTwo p σ`, a named input) and the
   quantitative corrector estimate, in
   [Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two);
-* the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu), and the
+* the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu, proved in
+  [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two)), and the
   Carne–Varopoulos bound of Proposition 2.15 (`CarneVaropoulosTwo`, proved, see the same section);
 * the qualitative corrector input `SupercriticalBondCorrectorInputTwo` (R2) and the quantitative corrector estimate
   of Proposition 2.12 (`CorrectorQuantitativeInputTwo`, R5), the latter by `correctorQuantitativeInputTwo_of_inputs` of
@@ -2839,14 +2844,20 @@ The upper bound (0.4) of Theorem 1 of M. T. Barlow (*Random walks on supercritic
 `T_y ≤ O_s(C)` such that almost surely, if `y ∈ 𝒞_∞`, then `p_t(x, y) ≤ Φ_C(t, |x − y|)` for `t ≥ T_y` and `x ∈ 𝒞_∞`,
 where `p_t` is the heat kernel of the variable-speed walk with unit conductances on the open edges of the planar
 cluster. It is proved (`barlowGaussianUpperBoundTwo_of_veryGood`) along Sections 3 and 6 of the source, from the
-Carne–Varopoulos bound (`carneVaropoulosTwo_holds`, Lemma 1.1 there) and one hypothesis, `ClusterVeryGoodBallsTwo`, the
-very good balls of Barlow's Theorem 2.18(c) and Lemma 2.19 for Euclidean balls of the cluster: for every `θ ∈ (0, 1]`
+Carne–Varopoulos bound (`carneVaropoulosTwo_holds`, Lemma 1.1 there) and `ClusterVeryGoodBallsTwo`, the very good
+balls of Barlow's Theorem 2.18(c) and Lemma 2.19 for Euclidean balls of the cluster, with centres at any lattice point
+and no upper bound on `r`: for every `θ ∈ (0, 1]`
 there are a random scale `S_y ≤ O_s(C)` and constants `C_V, C_P > 0`, `L ≥ 1` such that, for `R ≥ S_y`, every ball
 `B(z, r) ∩ 𝒞_∞` with `|z − y| ≤ R` and `r ≥ R^θ` has at least `C_V r²` points and satisfies
 `Σ_{B(z, r) ∩ 𝒞_∞} (u − ū)² ≤ C_P r² E_{B(z, Lr) ∩ 𝒞_∞}(u)`. The proof uses `θ = 1/64`. The percolation estimates of
-Section 2 of the source, which give this hypothesis, are not proved here. `fast_decay_of_sections_veryGood` and
-`fast_decay_of_flux_gradient_veryGood` restate `fast_decay_of_sections_barlow` and `fast_decay_of_flux_gradient_barlow`
-(Theorem 1.3) with `ClusterVeryGoodBallsTwo` in place of `BarlowGaussianUpperBoundTwo`.
+Section 2 of the source that give `ClusterVeryGoodBallsTwo` are proved in
+[Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension):
+it is the case `d = 2` of `clusterVeryGoodBalls_holds`, in the planar form `planarVeryGoodBalls_holds`
+(`clusterVeryGoodBallsTwo_holds`). The Gaussian upper bound therefore holds with no hypothesis
+(`barlowGaussianUpperBoundTwo_holds`). `Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections` and
+`fast_decay_of_flux_gradient` restate `fast_decay_of_sections_barlow` and `fast_decay_of_flux_gradient_barlow`
+(Theorem 1.3) without `BarlowGaussianUpperBoundTwo`, and `fast_decay_of_sections_veryGood` and
+`fast_decay_of_flux_gradient_veryGood` restate them with `ClusterVeryGoodBallsTwo` in its place.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2857,10 +2868,12 @@ Section 2 of the source, which give this hypothesis, are not proved here. `fast_
 | [`exitProb_clBall_le`](Rigidity/Proofs/Barlow/ExitTail.lean), [`exitProb_clBall_le_exp`](Rigidity/Proofs/Barlow/ExitTail.lean) | Lemmas 3.5 and 3.6 and Proposition 3.7 for the jump chain: `(r − M̄) P^x(σ(x, r) ≤ n) ≤ E^x\|X_{2n} − x\|` if `E^z\|X_k − z\| ≤ M̄` for `n ≤ k ≤ 2n` at the points `z` with `\|z − x\| < r + 1`; and `P^x(σ(x, m(r + 1)) ≤ N) ≤ e^{8aN} (3/4)^m` if `P^z(σ(z, r) ≤ k) ≤ 1/2 + ak` for `k ≤ N` at the centres `z` within `D` of `x₀`, `0 < a ≤ 1/8` and `\|x − x₀\| + m(r + 1) ≤ D`. |
 | [`BarlowRegion.tsum_far_le`](Rigidity/Proofs/Barlow/GaussianTail.lean) | Proposition 3.7 for the continuous-time walk: `P^x(\|Y_t − x\| ≥ ρ) ≤ (4/3) e^{−c₆ ρ²/t} + e^{−t}` for `κ ≤ ρ ≤ R/9`, `ρ r₁ ≤ κ t`, `1 ≤ t ≤ R/36` and `\|x − x₀\| ≤ R/3`, under the hypotheses of Proposition 3.1 (`BarlowRegion`). |
 | [`BarlowRegion.openHeat_le_gauss`](Rigidity/Proofs/Barlow/GaussianBound.lean) | Theorem 3.8, under `BarlowRegion` with `9 ≤ R` and `n_* ≤ 2R` and the Carne–Varopoulos bound `p_s(a, b) ≤ C e^{−\|a − b\|²/(Cs)}` for `\|a − b\| ≤ s`: `p_t(x, y) ≤ C_G t^{−1} e^{−c_G \|x − y\|²/t}` for `x, y` in the cluster within `R/3` of `x₀`, `T_G ≤ t ≤ R/36` and `\|x − y\| ≤ t`, where `T_G ≤ c_T N^{16}` (`barlowTG_le`). |
-| [`barlowGaussianUpperBoundTwo_of_veryGood`](Rigidity/Proofs/Barlow/GaussianHolds.lean) | Proposition 6.1 and the upper bound of Theorem 1: `ClusterVeryGoodBallsTwo → BarlowGaussianUpperBoundTwo`, with `T_y = max(S_y/36, k₀)`; for `\|x − y\| > t` the bound is the Carne–Varopoulos bound. |
+| [`barlowGaussianUpperBoundTwo_of_veryGood`](Rigidity/Proofs/Barlow/GaussianHolds.lean) | The upper bound of Proposition 6.1 and of Theorem 1: `ClusterVeryGoodBallsTwo → BarlowGaussianUpperBoundTwo`, with `T_y = max(S_y/36, k₀)`; for `\|x − y\| > t` the bound is the Carne–Varopoulos bound. |
+| [`clusterVeryGoodBallsTwo_holds`](Rigidity/Proofs/Barlow/UpperBoundHolds.lean), [`barlowGaussianUpperBoundTwo_holds`](Rigidity/Proofs/Barlow/UpperBoundHolds.lean) | `ClusterVeryGoodBallsTwo`, from `planarVeryGoodBalls_holds`, and the upper bound of Theorem 1, `BarlowGaussianUpperBoundTwo`, with no hypothesis. |
 | [`Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood`](Rigidity/Proofs/Assembly/PlanarDarioGuVeryGood.lean), [`fast_decay_of_flux_gradient_veryGood`](Rigidity/Proofs/Assembly/PlanarDarioGuVeryGood.lean) | Theorem 1.3 from `hSec` (or from Proposition 2.13 and Theorem 3 of Dario and Gu) and `ClusterVeryGoodBallsTwo`. |
+| [`Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections`](Rigidity/Proofs/Assembly/ProvedBarlow.lean), [`fast_decay_of_flux_gradient`](Rigidity/Proofs/Assembly/ProvedBarlow.lean) | Theorem 1.3 from `hSec` alone, or from Proposition 2.13 and Theorem 3 of Dario and Gu alone. |
 
-The sixteen reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+The twenty reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Departures from Barlow:
 
@@ -2896,7 +2909,7 @@ Departures from Barlow:
 - **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1010 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1014 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2970,11 +2983,11 @@ Departures from Barlow:
   [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
   the six theorems of
   [Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension),
-  the sixteen theorems of
+  the twenty theorems of
   [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1010 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1014 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3008,9 +3021,9 @@ Departures from Barlow:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 725 Lean files with 147,781 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 727 Lean files with 147,851 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,622 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,629 lines) are counted separately.
 
 ## Building
 
@@ -3082,6 +3095,7 @@ Rigidity/
       ProvedGreenColumn.lean  the main theorems with the Green columns and every proved input supplied
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
       PlanarDarioGu.lean      Theorem 1.3 from the Green estimate of Dario and Gu alone, in dimension two
+      ProvedBarlow.lean       Theorem 1.3 in dimension two with the Gaussian upper bound of Barlow proved
     Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3
     Barlow/                   the Gaussian upper bound of Barlow (2004) on the planar cluster
     Corrector/, Poincare/     Dario (2018) and Dario and Gu (2021)

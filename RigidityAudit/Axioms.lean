@@ -441,6 +441,7 @@ import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
 import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
+import Rigidity.Proofs.Assembly.ProvedBarlow
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1620,3 +1621,9 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood
+
+-- The Gaussian upper bound of Barlow with no hypothesis, and Theorem 1.3 without it (d = 2)
+#print axioms Rigidity.Barlow.clusterVeryGoodBallsTwo_holds
+#print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient
