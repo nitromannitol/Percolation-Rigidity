@@ -151,7 +151,7 @@ theorem tsum_ofReal_exp_neg_sq_div_le {s : ℝ} (hs : 1 ≤ s) :
 
 /-! ### The increments of the one-dimensional kernel -/
 
-theorem rpow_neg_three_halves_eq {s : ℝ} (hs : 0 < s) :
+theorem rpow_neg_three_halves_eq_inv_sqrt_pow {s : ℝ} (hs : 0 < s) :
     s ^ (-(3 : ℝ) / 2) = (Real.sqrt s ^ 3)⁻¹ := by
   rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast, ← Real.rpow_mul hs.le, ← Real.rpow_neg hs.le]
   norm_num
@@ -218,7 +218,7 @@ theorem exists_tsum_ofReal_abs_lineKernel_sub_le :
     exact inv_anti₀ (by positivity) (by nlinarith)
   have hfin : 2 * lineGauss s 0 + 2 * (C₀ * s ^ (-(3 : ℝ) / 2) * (4 * (1 + 20 * σ))) ≤
       (1 + 168 * C₀) / σ := by
-    rw [rpow_neg_three_halves_eq hs0]
+    rw [rpow_neg_three_halves_eq_inv_sqrt_pow hs0]
     have h1 : (σ ^ 3)⁻¹ * (1 + 20 * σ) ≤ 21 / σ := by
       have hσ2 : 1 ≤ σ ^ 2 := one_le_pow₀ hσ1
       have h3 : σ ≤ σ ^ 3 := by
