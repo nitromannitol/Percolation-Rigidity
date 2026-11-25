@@ -1,6 +1,7 @@
 import Rigidity
 import Rigidity.Proofs.Assembly.Main
 import Rigidity.Proofs.Assembly.Section2
+import Rigidity.Proofs.Assembly.Section2Polyomino
 import Rigidity.Proofs.Assembly.Section3
 import Rigidity.Proofs.Assembly.Section4
 import Rigidity.Proofs.Assembly.Section5
@@ -440,6 +441,10 @@ import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
 import Rigidity.Proofs.Assembly.PlanarDarioGuDirect
+import Rigidity.Proofs.Assembly.ProvedGradient
+import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
+import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
+import Rigidity.Proofs.Assembly.ProvedBarlow
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -462,7 +467,9 @@ and Lemma 7.3 at `k = 2` with Theorem 2(iii) at `k = 1` in dimension two (§7);
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
 as an explicit hypothesis. Lemma 2.13 (Remark 14.20 of Rudin's *Real and Complex Analysis*) is
-cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
+cited in the paper and used by no Lean proof, so it has no Lean declaration; its special case for
+unions of lattice squares, the form applied at L2124, is reported as a further proved result
+(`Rigidity.Assembly.polyominoJordan`). -/
 
 -- Section 1
 #print axioms Rigidity.Assembly.Main.lipschitz                        -- Theorem 1.1
@@ -480,6 +487,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.mixed_green                                    -- Proposition 2.8
 #print axioms Rigidity.External.JordanCurveTheoremSphere              -- Lemma 2.14 (cited)
 #print axioms Rigidity.Assembly.jordanCurves                          -- Lemma 2.16
+#print axioms Rigidity.Assembly.polyominoJordan    -- Lemma 2.13 for unions of lattice squares (L2124)
 
 -- Section 3
 #print axioms Rigidity.Assembly.reductionToSlopeE1                    -- Lemma 3.1
@@ -1594,7 +1602,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Green.darioGuTimesliceTwo_holds
 #print axioms Rigidity.Green.timeslice_of_cutoff
 
--- Theorem 3 of Dario and Gu (Remark 1.3) from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4, in dimension two
+-- Theorem 3 of Dario and Gu (Remark 1.3) from Theorem 4 and with no hypothesis, and Theorems 1 and 2 from Proposition 2.13, in dimension two
 #print axioms Rigidity.Green.abs_heatDeriv_two_le
 #print axioms Rigidity.Green.exitFunction_le_two_mul
 #print axioms Rigidity.Green.abs_sub_le_mul_exitFunction
@@ -1606,3 +1614,39 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow
 #print axioms Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenQuantitativeTwo_of_flux_barlow
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow
+#print axioms Rigidity.Green.darioGuGradientBoundTwo_holds
+#print axioms Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux
+#print axioms Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux
+
+-- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
+#print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterPoincare_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_of_goodBalls
+#print axioms Rigidity.WeakPoincare.planarVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.sum_sq_sub_finAvg_clusterBall_le
+
+-- The Gaussian upper bound of Barlow (Theorem 4 of Dario and Gu) from the very good balls of the cluster (d = 2)
+#print axioms Rigidity.Barlow.tsum_mul_openLaplacian
+#print axioms Rigidity.Barlow.hasDerivAt_openHeat_two_mul
+#print axioms Rigidity.Barlow.openHeat_diag_le_of_good
+#print axioms Rigidity.Barlow.openHeat_le_of_good
+#print axioms Rigidity.Barlow.neg_log_le_heatEntropy
+#print axioms Rigidity.Barlow.heatEntropy_le_log_meanDist
+#print axioms Rigidity.Barlow.meanDist_le_of_entropy
+#print axioms Rigidity.Barlow.exitGen_le_mul_of_subset
+#print axioms Rigidity.Barlow.mul_exitProb_le
+#print axioms Rigidity.Barlow.exitProb_clBall_le
+#print axioms Rigidity.Barlow.exitProb_clBall_le_exp
+#print axioms Rigidity.Barlow.BarlowRegion.tsum_far_le
+#print axioms Rigidity.Barlow.BarlowRegion.openHeat_le_gauss
+#print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood
+
+-- The Gaussian upper bound of Barlow with no hypothesis, and Theorem 1.3 without it (d = 2)
+#print axioms Rigidity.Barlow.clusterVeryGoodBallsTwo_holds
+#print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient

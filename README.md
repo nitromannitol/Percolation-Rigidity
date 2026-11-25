@@ -16,14 +16,24 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses. Eight of these twelve inputs, among them Proposition 2.3, the concentration of the
-density of the infinite cluster and the existence of the Green columns, are also proved in Lean, and
-Theorem 6.5 is proved with no literature hypothesis (see
-[Assumed literature inputs](#assumed-literature-inputs)). The remaining five are quoted from the
-literature: four of them (Proposition 2.3,
-Theorems 2.4 and 2.5, Lemma 2.14) enter as literature inputs, and the fifth (Lemma 2.13, a fact of
-plane topology) is used by no proof. Of the main results, Theorems 1.1, 1.2 and 1.3 are stated as
-printed, and Theorem 6.5 as printed with its restriction event made explicit (see
+hypotheses (see [Assumed literature inputs](#assumed-literature-inputs)). Eight of these twelve
+inputs are also proved in Lean: the uniqueness of the infinite cluster, the smoothing bound of
+Micciancio and Regev, the crossing estimate of Kesten, the Jordan curve theorem on `S²`
+(Lemma 2.14), the well-connectedness of boxes (Proposition 2.3), the concentration of the density
+of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero) and the existence
+of the Green columns. The other four remain hypotheses: the qualitative and the quantitative
+corrector inputs (Theorem 2.5), the regularity of order one at the origin (Theorem 2.4 at order
+one) and the quantitative estimate of the Green function of Dario and Gu; the dimension-two forms
+of the first three are proved. Theorem 6.5 is proved with no literature hypothesis. The Gaussian
+upper bound of Barlow, which is not one of the twelve inputs but enters the dimension-two proof of
+Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in dimension two
+(`barlowGaussianUpperBoundTwo_holds`). The five numbered results that the paper does not prove are
+quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
+Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
+them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
+the interior of a finite union of lattice squares, is proved (`Rigidity.Assembly.polyominoJordan`),
+and the general lemma is not formalized. Of the main results, Theorems 1.1, 1.2 and 1.3 are
+stated as printed, and Theorem 6.5 as printed with its restriction event made explicit (see
 [Standing assumptions and scope](#standing-assumptions-and-scope), item 4); the statements changed by
 the corrections are listed in
 [Corrections to the published version](#corrections-to-the-published-version).
@@ -106,7 +116,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
-| Lemma 2.13 | (none) | quoted, not used | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
+| Lemma 2.13 | (none) | quoted, not used; the special case used in the proof of Proposition 5.12 (line 2124 of the corrected draft; the interior of a finite union of lattice squares) proved: `Rigidity.Assembly.polyominoJordan` (statement `Rigidity.Section2.PolyominoJordanStmt`); the general lemma is not formalized | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
 | Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere`; proved: `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
 | Lemma 2.16 | `lemma:jordan-curves-theorem` | `Rigidity.Assembly.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
 | Lemma 3.1 | `lemma:reduction-to-slope-e1` | `Rigidity.Assembly.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
@@ -259,7 +269,12 @@ Proposition 3.2.
 7. **Axioms.** The library contains no `sorry`, `admit`, `native_decide` or new `axiom`. The Lean
    declaration of each proved numbered result depends on exactly `propext`, `Classical.choice` and
    `Quot.sound`.
-8. **Not formalized.** Lemma 2.13, which no proof uses; Theorems 2.4 and 2.5, which enter as
+8. **Not formalized.** Lemma 2.13 in general (Remark 14.20 of Rudin), which no proof uses; its
+   special case for the interior of a finite union of lattice squares, the form applied in
+   the proof of Proposition 5.12, is proved as `Rigidity.Assembly.polyominoJordan` (the boundary is
+   a closed lattice polygon without repeated corner, homeomorphic to the circle), and the Lean proof
+   of Proposition 5.12 does not use it, since its loop runs around a spanning tree of the
+   connectors. Theorems 2.4 and 2.5, which enter as
    literature inputs (Theorem 2.4 at order zero, `ArmstrongDarioOrderZero`, is also proved); the remarks, problems and conjectures; the figures. The other two quoted
    results, Proposition 2.3 and Lemma 2.14, enter as literature inputs that are proved.
 
@@ -354,6 +369,10 @@ The multiscale Poincaré inequality (2.26) of Dario (Proposition 2.19) holds in 
 ([`Rigidity.Poincare.GeneralDim.multiscalePoincare_holds`](Rigidity/Proofs/Poincare/GeneralMultiscalePoincare.lean),
 the lattice argument of the planar proof on `ℤ^d`, with a vector field of prescribed divergence
 along the coordinate paths in place of the planar row-and-column field).
+The volume regularity and the weak Poincaré inequality on the Euclidean balls of the infinite cluster (Barlow 2004,
+Theorem 2.18 with Lemma 2.19, and Proposition 2.7 of Dario and Gu in its weak form) hold in every dimension `d ≥ 2`
+(`Rigidity.WeakPoincare.clusterGoodBalls_holds`, `clusterVeryGoodBalls_holds`, `clusterPoincare_holds`; see
+[Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension)).
 
 The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
 and the corrector inputs
@@ -366,9 +385,19 @@ the bound `dim 𝒜₁ ≤ 3` are proved); see
 Theorem 1 of Dario being proved, R4 holds (`armstrongDarioOrderOneOriginTwo_holds`). Of the five planar inputs of
 `fast_decay_of_planar_estimates` only the quantitative Green estimate remains, and Theorem 1.3 follows from it alone
 ([`fast_decay_of_greenQuantitative`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean)), from Theorem 1 of Dario and Gu
-alone (`fast_decay_of_darioGu`), or from the inputs of that theorem that are not proved: `hSec` and the Gaussian upper
-bound of Barlow (`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound
-(`fast_decay_of_flux_gradient_barlow`).
+alone (`fast_decay_of_darioGu`), or from the inputs of that theorem: `hSec` and the Gaussian upper bound of Barlow
+(`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound (`fast_decay_of_flux_gradient_barlow`).
+The Gaussian upper bound of Barlow is proved (`barlowGaussianUpperBoundTwo_holds`; see
+[The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two)), so
+Theorem 1.3 follows from `hSec` alone
+([`WithProvedBarlow.fast_decay_of_sections`](Rigidity/Proofs/Assembly/ProvedBarlow.lean)), or from Proposition 2.13 and
+Theorem 3 alone (`WithProvedBarlow.fast_decay_of_flux_gradient`). Theorem 3 is proved from the Gaussian upper bound of
+Barlow (`darioGuGradientBoundTwo_holds`; see
+[Theorem 3 of Dario and Gu in dimension two from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4](#theorem-3-of-dario-and-gu-in-dimension-two-from-theorem-4-and-theorems-1-and-2-from-proposition-213-and-theorem-4)),
+so Theorems 1 and 2 of Dario and Gu, the quantitative Green estimate in dimension two, and Theorem 1.3 follow from
+Proposition 2.13 alone
+([`WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux`](Rigidity/Proofs/Assembly/ProvedGradient.lean),
+`fast_decay_of_flux`).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -2400,7 +2429,8 @@ from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
   Proposition 4.3 is proved from the flux estimate of Proposition 2.13 (`DarioGuFluxWeakNormTwo p σ`, a named input) and the
   quantitative corrector estimate, in
   [Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two);
-* the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu), and the
+* the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu, proved in
+  [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two)), and the
   Carne–Varopoulos bound of Proposition 2.15 (`CarneVaropoulosTwo`, proved, see the same section);
 * the qualitative corrector input `SupercriticalBondCorrectorInputTwo` (R2) and the quantitative corrector estimate
   of Proposition 2.12 (`CorrectorQuantitativeInputTwo`, R5), the latter by `correctorQuantitativeInputTwo_of_inputs` of
@@ -2798,7 +2828,9 @@ Proposition 3.9 of the source is used, so the reduction to Proposition 3.9 of th
 [Theorem 3 of Dario and Gu in dimension two from Proposition 3.9](#theorem-3-of-dario-and-gu-in-dimension-two-from-proposition-39)
 is no longer needed. With it, Theorem 1 of Dario and Gu (`DarioGuHeatKernelTwo`), their Theorem 2 (the quantitative Green
 estimate `SupercriticalBondGreenQuantitativeTwo`, with the random additive constant of the plane) and Theorem 1.3 of the paper
-follow from Proposition 2.13 of Dario and Gu (`DarioGuFluxWeakNormTwo`) and Theorem 4.
+follow from Proposition 2.13 of Dario and Gu (`DarioGuFluxWeakNormTwo`) and Theorem 4. Theorem 4 being proved
+(`barlowGaussianUpperBoundTwo_holds`), Theorem 3 holds with no hypothesis (`darioGuGradientBoundTwo_holds`), and
+Theorems 1 and 2 and Theorem 1.3 follow from Proposition 2.13 alone.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2809,8 +2841,9 @@ follow from Proposition 2.13 of Dario and Gu (`DarioGuFluxWeakNormTwo`) and Theo
 | [`exists_orderZero_clusterBall`](Rigidity/Proofs/Green/OrderZeroClusterBall.lean), [`orderZero_nL2`](Rigidity/Proofs/Green/OrderZeroClusterBall.lean) | The order-zero estimate of Armstrong and Dario at every centre of the plane, on the balls `𝒞_∞ ∩ B_r(z)` and for functions on the lattice. |
 | [`sqrt_gradEnergy_openHeat_le`](Rigidity/Proofs/Green/DarioGuGradientDirect.lean), [`darioGuGradientBoundTwo_of_barlow`](Rigidity/Proofs/Green/DarioGuGradientDirect.lean) | The gradient bound at one time slice (deterministic form), and Theorem 3 (Remark 1.3) from Theorem 4. |
 | [`Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow`](Rigidity/Proofs/Assembly/PlanarDarioGuDirect.lean), [`supercriticalBondGreenQuantitativeTwo_of_flux_barlow`](Rigidity/Proofs/Assembly/PlanarDarioGuDirect.lean), [`fast_decay_of_flux_barlow`](Rigidity/Proofs/Assembly/PlanarDarioGuDirect.lean) | Theorems 1 and 2 of Dario and Gu and Theorem 1.3 of the paper in dimension two from `DarioGuFluxWeakNormTwo` and `BarlowGaussianUpperBoundTwo`. |
+| [`Rigidity.Green.darioGuGradientBoundTwo_holds`](Rigidity/Proofs/Green/DarioGuGradientHolds.lean), [`Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux`](Rigidity/Proofs/Assembly/ProvedGradient.lean), [`supercriticalBondGreenQuantitativeTwo_of_flux`](Rigidity/Proofs/Assembly/ProvedGradient.lean), [`fast_decay_of_flux`](Rigidity/Proofs/Assembly/ProvedGradient.lean) | Theorem 3 with no hypothesis, and Theorems 1 and 2 of Dario and Gu and Theorem 1.3 in dimension two from `DarioGuFluxWeakNormTwo` alone. |
 
-The eleven reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+The fifteen reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Departures from Dario and Gu:
 
@@ -2831,12 +2864,118 @@ Departures from Dario and Gu:
   the exit-time function through the monotonicity of `s ↦ Σ_{w ∈ A} p_s(z, w) e(w) + s`, and `|v − h| ≤ F e` (Dynkin's formula)
   through the minimum principle.
 
+## Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension
+
+The volume regularity and the weak Poincaré inequality on the Euclidean balls of the supercritical infinite cluster are proved
+in every dimension `d ≥ 2`, in particular in every `d ≥ 3`, where they are the percolation input of the Gaussian upper bound of
+Barlow, in the forms of M. T. Barlow (*Random walks on supercritical percolation clusters*, Ann. Probab. 32 (2004), Definition 1.7,
+Theorem 2.18 and Lemma 2.19) and of Dario and Gu (Proposition 2.7, weak form). The ball `𝒞_∞ ∩ B_r(z)` is good
+(`IsGoodBall ω K C_V C_P L z r`) when `C_V r^d ≤ |𝒞_∞ ∩ B_r(z)|` and, for every `u`,
+`Σ_{𝒞_∞ ∩ B_r(z)} (u − (u)_{𝒞_∞ ∩ B_r(z)})² ≤ C_P r² Σ_{x ∈ U} Σ_{z' ∈ U, z' ∼ x} (u(z') − u(x))²` with `U = 𝒞_∞ ∩ B_{Lr}(z)`
+and the sum over the open edges.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.WeakPoincare.clusterGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/GoodBallsHolds.lean) | `ClusterGoodBalls d`, `d ≥ 2`: Barlow's Theorem 2.18 (a), (b) with the random scale of Lemma 2.19 at a fixed centre: for `R ≥ M(y) ≤ O_s(C)` the ball `𝒞_∞ ∩ B_R(y)` is good with `C_V = C⁻¹`, `C_P = C` and a dilation `L` (the proof gives `L = 12d`), and `\|𝒞_∞ ∩ B_R(y)\| ≤ C R^d`. |
+| [`clusterVeryGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/VeryGood.lean), [`clusterVeryGoodBalls_of_goodBalls`](Rigidity/Proofs/WeakPoincare/VeryGood.lean) | `ClusterVeryGoodBalls d`: Barlow's Theorem 2.18 (c) with Lemma 2.19: for `θ > 0` and `A ≥ 1`, above a random scale `S(y) ≤ O_s(C')` every ball `𝒞_∞ ∩ B_r(z)` with `\|z − y\| ≤ A R` and `r ≥ R^θ` is good, with `C_V`, `C_P`, `L` not depending on `θ` and `A`. |
+| [`clusterPoincare_holds`](Rigidity/Proofs/WeakPoincare/VeryGood.lean) | `ClusterPoincare d`: Proposition 2.7 of Dario and Gu, weak form, `p = 2`: `‖u − (u)‖_{L̲²(𝒞_∞ ∩ B_R(y))} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_{LR}(y))}` for `R ≥ M(y) ≤ O_s(C)`. |
+| [`planarVeryGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/PlanarVeryGood.lean) | the case `d = 2` of `ClusterVeryGoodBalls`, `θ ∈ (0, 1]`, `A = 1`, with the planar balls, averages and distance of `Rigidity.Green` and the good ball written out. |
+| [`sum_sq_sub_finAvg_clusterBall_le`](Rigidity/Proofs/WeakPoincare/Ball.lean) | the deterministic part: on the partition event, if the partition cubes of the triple `3□` of the triadic cube of scale `m` around `y` have scale at most `m − 3` and `Σ_{3□} ρ^{d(d+2)} ≤ A` for a bound `ρ` of the reach of the partition, then `Σ_{𝒞_∞ ∩ B_R(y)} (u − (u))² ≤ K A^{2/d} Σ_{edges of 𝒞_∞ ∩ B_ρ'(y)} \|∇u\|²` for `2R ≤ 3^m` and `ρ' ≥ 2d 3^m`. |
+
+The proof is that of dimension two (`clusterPoincareTwo_holds`), with the partition into good cubes of Armstrong and Dario in
+every dimension (Percolation-Cluster-Homogenization): their Sobolev inequality (Proposition 3.4, `s = 2`) on the cluster of the
+triple of the triadic cube of scale `m` around `y`, turned into a Poincaré inequality by Hölder's inequality with the exponents
+`(d+2)/2` and `(d+2)/d`; the vertices of `𝒞_∞ ∩ B_R(y)` joined to the anchors of their partition cubes (their Lemma 2.8); the
+concentration of the stopping sizes of the partition into coarsely good cubes (their Proposition 2.4, with the power
+`d(d+2)`), which dominate the reach of the partition, through a minimal scale on the `3^d` cubes of scale `m` around `y`; and
+the lower bound on the volume of the cluster in balls (Proposition A.1 of Dario and Gu, in every dimension). The very good
+balls follow by Markov's inequality and a union bound over the centres in a box of radius `⌈A 3^{m+1}⌉`, with a second minimal
+scale.
+
+Departures from Barlow: the balls are Euclidean (Barlow uses the balls of the graph distance of `𝒞_∞`), the measure is the
+counting measure (Barlow's `μ_x` is the number of open edges at `x`) and the centre is any lattice point; the very good balls
+are stated for all radii `r ≥ R^θ` (Barlow: `N_B ≤ r ≤ R`, `N_B ≤ R^{1/(d+2)}`). The Euclidean balls are a different family
+from Barlow's balls of the graph distance, not a change of constants. The counting measure changes the constants only
+(`1 ≤ μ_x ≤ 2d` on `𝒞_∞`); the other changes are those of the statements used by Dario and Gu. Proposition 2.7 of Dario and
+Gu is stated in its weak form: the printed form, with the gradient on the same ball, fails in every dimension (see
+`ClusterPoincareTwo`).
+
+The six reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+## The Gaussian upper bound of Barlow in dimension two
+
+The upper bound (0.4) of Theorem 1 of M. T. Barlow (*Random walks on supercritical percolation clusters*, Ann. Probab.
+32 (2004)), with the tail (0.5) of the random time, in the form quoted by Dario and Gu as Theorem 4, is the input
+`BarlowGaussianUpperBoundTwo`: for `p_c(2) < p < 1` there are `s, C > 0` and, for each `y`, a measurable time
+`T_y ≤ O_s(C)` such that almost surely, if `y ∈ 𝒞_∞`, then `p_t(x, y) ≤ Φ_C(t, |x − y|)` for `t ≥ T_y` and `x ∈ 𝒞_∞`,
+where `p_t` is the heat kernel of the variable-speed walk with unit conductances on the open edges of the planar
+cluster. It is proved (`barlowGaussianUpperBoundTwo_of_veryGood`) along Sections 3 and 6 of the source, from the
+Carne–Varopoulos bound (`carneVaropoulosTwo_holds`, Lemma 1.1 there) and `ClusterVeryGoodBallsTwo`, the very good
+balls of Barlow's Theorem 2.18(c) and Lemma 2.19 for Euclidean balls of the cluster, with centres at any lattice point
+and no upper bound on `r`: for every `θ ∈ (0, 1]`
+there are a random scale `S_y ≤ O_s(C)` and constants `C_V, C_P > 0`, `L ≥ 1` such that, for `R ≥ S_y`, every ball
+`B(z, r) ∩ 𝒞_∞` with `|z − y| ≤ R` and `r ≥ R^θ` has at least `C_V r²` points and satisfies
+`Σ_{B(z, r) ∩ 𝒞_∞} (u − ū)² ≤ C_P r² E_{B(z, Lr) ∩ 𝒞_∞}(u)`. The proof uses `θ = 1/64`. The percolation estimates of
+Section 2 of the source that give `ClusterVeryGoodBallsTwo` are proved in
+[Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension):
+it is the case `d = 2` of `clusterVeryGoodBalls_holds`, in the planar form `planarVeryGoodBalls_holds`
+(`clusterVeryGoodBallsTwo_holds`). The Gaussian upper bound therefore holds with no hypothesis
+(`barlowGaussianUpperBoundTwo_holds`). `Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections` and
+`fast_decay_of_flux_gradient` restate `fast_decay_of_sections_barlow` and `fast_decay_of_flux_gradient_barlow`
+(Theorem 1.3) without `BarlowGaussianUpperBoundTwo`, and `fast_decay_of_sections_veryGood` and
+`fast_decay_of_flux_gradient_veryGood` restate them with `ClusterVeryGoodBallsTwo` in its place.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Barlow.tsum_mul_openLaplacian`](Rigidity/Proofs/Barlow/HeatEnergy.lean), [`hasDerivAt_openHeat_two_mul`](Rigidity/Proofs/Barlow/HeatEnergy.lean) | Lemma 1.6, the discrete Gauss–Green formula `Σ_x f Δf = −½ Σ_x Σ_{z ∼ x} (f(z) − f(x))²` for a summable bounded `f`, and the energy identity of the proof of Proposition 3.1, `d/dt p_{2t}(x, x) = −Σ_y Σ_{z ∼ y} (p_t(x, z) − p_t(x, y))²`. |
+| [`openHeat_diag_le_of_good`](Rigidity/Proofs/Barlow/OnDiagonal.lean), [`openHeat_le_of_good`](Rigidity/Proofs/Barlow/OnDiagonal.lean) | Proposition 3.1 and Corollary 3.2: if the balls `B(z, r)` with `\|z − x₀\| ≤ R` and `N ≤ r ≤ R/18` are good and `p_s(x, y) ≤ ε` for `x` in the cluster, `s ≤ R` and `\|y − x\| ≥ R/18` (`ε N² C_V² ≤ 25`, `4εR ≤ 1`), then `p_{2t}(x₁, x₁) ≤ C/t` for `\|x₁ − x₀\| ≤ 8R/9` and `2 C_P L² C_V N⁴ ≤ t ≤ R`, and `p_{2t}(x₁, y) ≤ C/t` for every `y` when `\|x₁ − x₀\| ≤ 7R/9` and `t ≤ R/2`. |
+| [`neg_log_le_heatEntropy`](Rigidity/Proofs/Barlow/MeanDisplacement.lean), [`heatEntropy_le_log_meanDist`](Rigidity/Proofs/Barlow/MeanDisplacement.lean), [`meanDist_le_of_entropy`](Rigidity/Proofs/Barlow/MeanDisplacement.lean) | Lemma 3.3 and the upper bound of Proposition 3.4, for `M(t) = E^x\|Y_t − x\|` and `Q(t) = −Σ_y p_t(x, y) log p_t(x, y)`: `Q(t) ≥ −log B` if `p_t(x, ·) ≤ B`; `Q(t) ≤ 25 + 2 log M(t)` if `M(t) ≥ 1/2`; and `M(t) ≤ 2(31 − c₁ + 2 log 4) √t` if `Q(s) ≥ c₁ + log s` on `[T₀, t]`, `1 ≤ T₀`, `T₀² ≤ t` and `M(t) ≥ 1/2`. |
+| [`exitGen_le_mul_of_subset`](Rigidity/Proofs/Barlow/ExitTime.lean), [`mul_exitProb_le`](Rigidity/Proofs/Barlow/ExitTime.lean) | The strong Markov property at the exit time of `B ⊆ A` and optional stopping for a supersolution, for the lazy jump chain of the walk, stated for the exit probabilities `P^x(σ_A ≤ n)` and the truncated generating functions `E^x[s^{σ_A}; σ_A ≤ n]`. |
+| [`exitProb_clBall_le`](Rigidity/Proofs/Barlow/ExitTail.lean), [`exitProb_clBall_le_exp`](Rigidity/Proofs/Barlow/ExitTail.lean) | Lemmas 3.5 and 3.6 and Proposition 3.7 for the jump chain: `(r − M̄) P^x(σ(x, r) ≤ n) ≤ E^x\|X_{2n} − x\|` if `E^z\|X_k − z\| ≤ M̄` for `n ≤ k ≤ 2n` at the points `z` with `\|z − x\| < r + 1`; and `P^x(σ(x, m(r + 1)) ≤ N) ≤ e^{8aN} (3/4)^m` if `P^z(σ(z, r) ≤ k) ≤ 1/2 + ak` for `k ≤ N` at the centres `z` within `D` of `x₀`, `0 < a ≤ 1/8` and `\|x − x₀\| + m(r + 1) ≤ D`. |
+| [`BarlowRegion.tsum_far_le`](Rigidity/Proofs/Barlow/GaussianTail.lean) | Proposition 3.7 for the continuous-time walk: `P^x(\|Y_t − x\| ≥ ρ) ≤ (4/3) e^{−c₆ ρ²/t} + e^{−t}` for `κ ≤ ρ ≤ R/9`, `ρ r₁ ≤ κ t`, `1 ≤ t ≤ R/36` and `\|x − x₀\| ≤ R/3`, under the hypotheses of Proposition 3.1 (`BarlowRegion`). |
+| [`BarlowRegion.openHeat_le_gauss`](Rigidity/Proofs/Barlow/GaussianBound.lean) | Theorem 3.8, under `BarlowRegion` with `9 ≤ R` and `n_* ≤ 2R` and the Carne–Varopoulos bound `p_s(a, b) ≤ C e^{−\|a − b\|²/(Cs)}` for `\|a − b\| ≤ s`: `p_t(x, y) ≤ C_G t^{−1} e^{−c_G \|x − y\|²/t}` for `x, y` in the cluster within `R/3` of `x₀`, `T_G ≤ t ≤ R/36` and `\|x − y\| ≤ t`, where `T_G ≤ c_T N^{16}` (`barlowTG_le`). |
+| [`barlowGaussianUpperBoundTwo_of_veryGood`](Rigidity/Proofs/Barlow/GaussianHolds.lean) | The upper bound of Proposition 6.1 and of Theorem 1: `ClusterVeryGoodBallsTwo → BarlowGaussianUpperBoundTwo`, with `T_y = max(S_y/36, k₀)`; for `\|x − y\| > t` the bound is the Carne–Varopoulos bound. |
+| [`clusterVeryGoodBallsTwo_holds`](Rigidity/Proofs/Barlow/UpperBoundHolds.lean), [`barlowGaussianUpperBoundTwo_holds`](Rigidity/Proofs/Barlow/UpperBoundHolds.lean) | `ClusterVeryGoodBallsTwo`, from `planarVeryGoodBalls_holds`, and the upper bound of Theorem 1, `BarlowGaussianUpperBoundTwo`, with no hypothesis. |
+| [`Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood`](Rigidity/Proofs/Assembly/PlanarDarioGuVeryGood.lean), [`fast_decay_of_flux_gradient_veryGood`](Rigidity/Proofs/Assembly/PlanarDarioGuVeryGood.lean) | Theorem 1.3 from `hSec` (or from Proposition 2.13 and Theorem 3 of Dario and Gu) and `ClusterVeryGoodBallsTwo`. |
+| [`Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections`](Rigidity/Proofs/Assembly/ProvedBarlow.lean), [`fast_decay_of_flux_gradient`](Rigidity/Proofs/Assembly/ProvedBarlow.lean) | Theorem 1.3 from `hSec` alone, or from Proposition 2.13 and Theorem 3 of Dario and Gu alone. |
+
+The twenty reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Barlow:
+
+- **Euclidean balls.** The balls are the sets `B(z, r) ∩ 𝒞_∞` of the Euclidean distance, not the balls of the chemical
+  distance, and the good balls of Definition 1.7 are defined with them, with the energy of the Poincaré inequality taken
+  on the ball of radius `Lr`. The Gaussian bound is stated with the Euclidean distance, as Dario and Gu quote it; the
+  step of the proof of Theorem 1 that replaces the chemical distance by `|x − y|₁` is not needed.
+- **The variable-speed walk.** The walk is the variable-speed walk of Dario and Gu, with rate one on each open edge, in
+  place of the constant-speed walk `Y` of the source, whose kernel `q_t` is taken with respect to the degree measure.
+  Its heat kernel is `p_t(x, y) = E[P^x(X_{N_{4t}} = y)]`, where `X` is the lazy jump chain that stays put with
+  probability `1 − deg(x)/4` and `N` is a Poisson clock of rate one.
+- **Proposition 3.1 and Corollary 3.2.** The bound (1.7) is not used: the comparison argument starts with the good balls
+  of radius `N`, and the bounds are proved for `t ≤ R` in place of `t ≤ c R²/log R`, which is enough since Proposition
+  6.1 applies them with `R = 36t`. The bound `p_s(x, y) ≤ ε` at distance `R/18` comes from the Carne–Varopoulos bound,
+  in place of Lemma 1.1(b).
+- **Proposition 3.4.** The integral argument is replaced by the monotonicity of `M(s) − 4√s − √s (Q(s) − c₁ − log s)` on
+  `[T₀, t]`; only the upper bound of `M(t)` is proved.
+- **Exit times on the jump chain with a Poisson clock.** Lemmas 3.5 and 3.6 and Proposition 3.7 are proved for the lazy
+  jump chain: the strong Markov property at exit times is replaced by first-step recursions for the exit probabilities
+  and the truncated generating functions, and optional stopping by backward induction; Lemma 3.6 enters through the
+  submultiplicativity of `E^x[s^σ]` along nested balls. The continuous-time walk enters through the Poisson clock: the
+  mean displacement of the jump chain is bounded by that of the walk, `E^z\|X_k − z\| ≤ M(z, k/4) + 6√k`
+  (`discMean_le_meanDist_add`), and the clock adds the term `e^{−t}` to Proposition 3.7.
+- **Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`.** In place of the decomposition (3.20)–(3.21) at the exit
+  time of `B(x, |x − y|/2)`, `p_t(x, y) = Σ_z p_{t/2}(x, z) p_{t/2}(z, y)` is split according to `|z − x| ≥ |x − y|/2`
+  or `|z − y| ≥ |x − y|/2`; the factor on the near side is bounded by Corollary 3.2 and the sum on the far side by
+  Proposition 3.7. At distances `|x − y| > κt/r₁` the Carne–Varopoulos bound is used directly.
+- **Proposition 6.1.** The ball is `B(y, R)` with `R = 36t` and `N = R^{1/64}`; the times of Section 3 are polynomial in
+  `N` (`T_G ≤ c_T N^{16}`), so the hypotheses of Section 3 hold for `t ≥ max(S_y/36, k₀)`.
+
 ## Guarantees
 
 - **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 985 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1015 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2908,9 +3047,14 @@ Departures from Dario and Gu:
   [Localization, stationarity and the limit of μ, and Definition 3.9, in every dimension](#localization-stationarity-and-the-limit-of-μ-and-definition-39-in-every-dimension),
   the fifteen theorems of
   [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
+  the six theorems of
+  [Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension),
+  the twenty theorems of
+  [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two),
+  the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 956 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1015 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2944,9 +3088,9 @@ Departures from Dario and Gu:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 715 Lean files with 143,926 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 734 Lean files with 149,434 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,608 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,633 lines) are counted separately.
 
 ## Building
 
@@ -3018,7 +3162,9 @@ Rigidity/
       ProvedGreenColumn.lean  the main theorems with the Green columns and every proved input supplied
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
       PlanarDarioGu.lean      Theorem 1.3 from the Green estimate of Dario and Gu alone, in dimension two
+      ProvedBarlow.lean       Theorem 1.3 in dimension two with the Gaussian upper bound of Barlow proved
     Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3
+    Barlow/                   the Gaussian upper bound of Barlow (2004) on the planar cluster
     Corrector/, Poincare/     Dario (2018) and Dario and Gu (2021)
     Regularity/               the corrector input and Theorem 2 (iii) at k = 1 in dimension two from
                               Theorem 1 of Dario, from the results of Percolation-Cluster-Homogenization

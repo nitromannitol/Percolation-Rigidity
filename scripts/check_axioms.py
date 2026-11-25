@@ -71,6 +71,8 @@ cited = {'Proposition 2.3', 'Theorem 2.4', 'Theorem 2.5', 'Lemma 2.13', 'Lemma 2
 # Further proved results: results that are not numbered results of the paper, proofs of literature
 # inputs, and forms of the main theorems with fewer hypotheses.
 further = {
+    'Lemma 2.13 for unions of lattice squares (the form used at L2124)':
+        ['Rigidity.Assembly.polyominoJordan'],
     'Slab connectivity (Grimmett and Marstrand, d >= 3)':
         ['Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt'],
     'Proposition 2.3 for d >= 3 and its reduction to d = 2':
@@ -1074,7 +1076,7 @@ further = {
          'Rigidity.Green.parabolic_caccioppoli_of_cutoff',
          'Rigidity.Green.darioGuTimesliceTwo_holds',
          'Rigidity.Green.timeslice_of_cutoff'],
-    'Theorem 3 of Dario and Gu from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4 (d = 2)':
+    'Theorem 3 of Dario and Gu from Theorem 4 and with no hypothesis, and Theorems 1 and 2 from Proposition 2.13 (d = 2)':
         ['Rigidity.Green.abs_heatDeriv_two_le',
          'Rigidity.Green.exitFunction_le_two_mul',
          'Rigidity.Green.abs_sub_le_mul_exitFunction',
@@ -1085,7 +1087,40 @@ further = {
          'Rigidity.Green.darioGuGradientBoundTwo_of_barlow',
          'Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow',
          'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenQuantitativeTwo_of_flux_barlow',
-         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow'],
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow',
+         'Rigidity.Green.darioGuGradientBoundTwo_holds',
+         'Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux',
+         'Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux',
+         'Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux'],
+    'Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension':
+        ['Rigidity.WeakPoincare.clusterGoodBalls_holds',
+         'Rigidity.WeakPoincare.clusterVeryGoodBalls_holds',
+         'Rigidity.WeakPoincare.clusterPoincare_holds',
+         'Rigidity.WeakPoincare.clusterVeryGoodBalls_of_goodBalls',
+         'Rigidity.WeakPoincare.planarVeryGoodBalls_holds',
+         'Rigidity.WeakPoincare.sum_sq_sub_finAvg_clusterBall_le'],
+    'The Gaussian upper bound of Barlow (Theorem 4 of Dario and Gu) from the very good balls of the cluster (d = 2)':
+        ['Rigidity.Barlow.tsum_mul_openLaplacian',
+         'Rigidity.Barlow.hasDerivAt_openHeat_two_mul',
+         'Rigidity.Barlow.openHeat_diag_le_of_good',
+         'Rigidity.Barlow.openHeat_le_of_good',
+         'Rigidity.Barlow.neg_log_le_heatEntropy',
+         'Rigidity.Barlow.heatEntropy_le_log_meanDist',
+         'Rigidity.Barlow.meanDist_le_of_entropy',
+         'Rigidity.Barlow.exitGen_le_mul_of_subset',
+         'Rigidity.Barlow.mul_exitProb_le',
+         'Rigidity.Barlow.exitProb_clBall_le',
+         'Rigidity.Barlow.exitProb_clBall_le_exp',
+         'Rigidity.Barlow.BarlowRegion.tsum_far_le',
+         'Rigidity.Barlow.BarlowRegion.openHeat_le_gauss',
+         'Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood'],
+    'The Gaussian upper bound of Barlow with no hypothesis, and Theorem 1.3 without it (d = 2)':
+        ['Rigidity.Barlow.clusterVeryGoodBallsTwo_holds',
+         'Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds',
+         'Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections',
+         'Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
