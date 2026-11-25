@@ -439,6 +439,7 @@ import Rigidity.Proofs.Green.DarioGuDirichletSteps
 import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
+import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
@@ -1593,6 +1594,14 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Green.parabolic_caccioppoli_of_cutoff
 #print axioms Rigidity.Green.darioGuTimesliceTwo_holds
 #print axioms Rigidity.Green.timeslice_of_cutoff
+
+-- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
+#print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterPoincare_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_of_goodBalls
+#print axioms Rigidity.WeakPoincare.planarVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.sum_sq_sub_finAvg_clusterBall_le
 
 -- The Gaussian upper bound of Barlow (Theorem 4 of Dario and Gu) from the very good balls of the cluster (d = 2)
 #print axioms Rigidity.Barlow.tsum_mul_openLaplacian
