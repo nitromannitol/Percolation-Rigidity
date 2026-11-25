@@ -121,6 +121,14 @@ further = {
          'Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBound',
          'Rigidity.Assembly.WithProvedGreenColumn.largeGradientSensitive',
          'Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBoundDirectional'],
+    'The regularity of order one in every dimension from the existence of the corrected planes':
+        ['Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwo_holds',
+         'Rigidity.Proofs.Regularity.correctorSublinearL2At_of_correctedPlanes',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_correctorSublinear',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput',
+         'Rigidity.Assembly.WithProvedOrderOne.fast_decay',
+         'Rigidity.Assembly.WithProvedOrderOne.fastDecayDichotomy',
+         'Rigidity.Assembly.WithProvedOrderOne.fastDecayPotential'],
     'Planar Green-column existence and Theorem 1.3 from five dimension-two inputs':
         ['Rigidity.Proofs.Section5.planar_greenColumn_exists',
          'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero',
