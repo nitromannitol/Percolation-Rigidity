@@ -401,6 +401,68 @@ theorem abs_clamp_sub_le (a b : ℝ) :
 noncomputable def caccCutoff (K : OpenComponent ω) (y : Vertex 2) (R : ℝ) (x : Vertex 2) : ℝ :=
   if x ∈ K.supp then max 0 (min 1 ((R - 2 - latticeDist x y) / (R / 2 - 2))) else 0
 
+theorem caccCutoff_nonneg (K : OpenComponent ω) (y : Vertex 2) (R : ℝ) (x : Vertex 2) :
+    0 ≤ caccCutoff K y R x := by
+  unfold caccCutoff
+  split_ifs <;> simp
+
+theorem caccCutoff_le_one (K : OpenComponent ω) (y : Vertex 2) (R : ℝ) (x : Vertex 2) :
+    caccCutoff K y R x ≤ 1 := by
+  unfold caccCutoff
+  split_ifs
+  · exact max_le zero_le_one (min_le_left _ _)
+  · exact zero_le_one
+
+theorem caccCutoff_interior (K : OpenComponent ω) (y : Vertex 2) {R : ℝ} (hden : 0 < R / 2 - 2)
+    (x : Vertex 2) (hx : caccCutoff K y R x ≠ 0) :
+    x ∈ clusterBall K y R ∧ ∀ z, (openGraph ω).Adj x z → z ∈ clusterBall K y R := by
+  unfold caccCutoff at hx
+  split_ifs at hx with hxK
+  · have hpos : 0 < (R - 2 - latticeDist x y) / (R / 2 - 2) := by
+      by_contra hle
+      push Not at hle
+      apply hx
+      exact max_eq_left ((min_le_right _ _).trans hle)
+    have hd : latticeDist x y < R - 2 := by
+      have := (div_pos_iff_of_pos_right hden).1 hpos
+      linarith
+    refine ⟨mem_clusterBall.2 ⟨hxK, by linarith⟩, fun z hz => mem_clusterBall.2
+      ⟨(mem_supp_iff_of_adj hz).1 hxK, ?_⟩⟩
+    have h1 := latticeDist_triangle z x y
+    have h2 := latticeDist_le_two_of_adj hz
+    linarith
+  · exact absurd rfl hx
+
+theorem caccCutoff_lip (K : OpenComponent ω) (y : Vertex 2) {R : ℝ} (hden : 0 < R / 2 - 2)
+    (x z : Vertex 2) (hxz : (openGraph ω).Adj x z) :
+    |caccCutoff K y R x - caccCutoff K y R z| ≤ 2 / (R / 2 - 2) := by
+  unfold caccCutoff
+  by_cases hxK : x ∈ K.supp
+  · have hzK : z ∈ K.supp := (mem_supp_iff_of_adj hxz).1 hxK
+    rw [if_pos hxK, if_pos hzK]
+    refine (abs_clamp_sub_le _ _).trans ?_
+    rw [← sub_div, abs_div, abs_of_pos hden, div_le_div_iff_of_pos_right hden]
+    have h1 := latticeDist_triangle x z y
+    have h2 := latticeDist_triangle z x y
+    have h3 := latticeDist_le_two_of_adj hxz
+    have h4 := latticeDist_comm x z
+    rw [abs_le]
+    constructor <;> linarith
+  · have hzK : z ∉ K.supp := fun h => hxK ((mem_supp_iff_of_adj hxz).2 h)
+    rw [if_neg hxK, if_neg hzK]
+    simp only [sub_self, abs_zero]
+    positivity
+
+theorem caccCutoff_eq_one (K : OpenComponent ω) (y : Vertex 2) {R : ℝ} (hden : 0 < R / 2 - 2)
+    (x : Vertex 2) (hx : x ∈ clusterBall K y (R / 2)) : caccCutoff K y R x = 1 := by
+  obtain ⟨hxK, hxd⟩ := mem_clusterBall.1 hx
+  unfold caccCutoff
+  rw [if_pos hxK]
+  have h1 : 1 ≤ (R - 2 - latticeDist x y) / (R / 2 - 2) := by
+    rw [le_div_iff₀ hden]
+    linarith
+  rw [min_eq_left h1, max_eq_right zero_le_one]
+
 theorem integrableOn_of_continuousOn {F : ℝ → ℝ} {a b : ℝ} (hF : ContinuousOn F (Set.Icc a b)) :
     IntegrableOn F (Set.Ioc a b) volume :=
   (hF.integrableOn_Icc).mono_set Set.Ioc_subset_Icc_self
@@ -502,58 +564,12 @@ theorem darioGuCaccioppoliTwo_holds : DarioGuCaccioppoliTwo := by
     set η := caccCutoff (ω := ω) K y R with hη
     set ℓ : ℝ := 2 / (R / 2 - 2) with hℓ
     have hden : 0 < R / 2 - 2 := by linarith
-    have hη0 : ∀ x, 0 ≤ η x := fun x => by
-      simp only [hη, caccCutoff]
-      split_ifs <;> simp
-    have hη1 : ∀ x, η x ≤ 1 := fun x => by
-      simp only [hη, caccCutoff]
-      split_ifs
-      · exact max_le zero_le_one (min_le_left _ _)
-      · exact zero_le_one
-    have hηint : ∀ x, η x ≠ 0 → x ∈ V ∧ ∀ z, (openGraph ω).Adj x z → z ∈ V := by
-      intro x hx
-      simp only [hη, caccCutoff] at hx
-      split_ifs at hx with hxK
-      · have hpos : 0 < (R - 2 - latticeDist x y) / (R / 2 - 2) := by
-          by_contra hle
-          push Not at hle
-          apply hx
-          exact max_eq_left ((min_le_right _ _).trans hle)
-        have hd : latticeDist x y < R - 2 := by
-          have := (div_pos_iff_of_pos_right hden).1 hpos
-          linarith
-        refine ⟨mem_clusterBall.2 ⟨hxK, by linarith⟩, fun z hz => mem_clusterBall.2
-          ⟨(mem_supp_iff_of_adj hz).1 hxK, ?_⟩⟩
-        have h1 := latticeDist_triangle z x y
-        have h2 := latticeDist_le_two_of_adj hz
-        linarith
-      · exact absurd rfl hx
-    have hηlip : ∀ x z, (openGraph ω).Adj x z → |η x - η z| ≤ ℓ := by
-      intro x z hxz
-      simp only [hη, caccCutoff]
-      by_cases hxK : x ∈ K.supp
-      · have hzK : z ∈ K.supp := (mem_supp_iff_of_adj hxz).1 hxK
-        rw [if_pos hxK, if_pos hzK]
-        refine (abs_clamp_sub_le _ _).trans ?_
-        rw [← sub_div, abs_div, abs_of_pos hden, div_le_div_iff_of_pos_right hden]
-        have h1 := latticeDist_triangle x z y
-        have h2 := latticeDist_triangle z x y
-        have h3 := latticeDist_le_two_of_adj hxz
-        have h4 := latticeDist_comm x z
-        rw [abs_le]
-        constructor <;> linarith
-      · have hzK : z ∉ K.supp := fun h => hxK ((mem_supp_iff_of_adj hxz).2 h)
-        rw [if_neg hxK, if_neg hzK]
-        simp only [sub_self, abs_zero]
-        positivity
-    have hηW : ∀ x ∈ W, η x = 1 := by
-      intro x hx
-      obtain ⟨hxK, hxd⟩ := mem_clusterBall.1 hx
-      simp only [hη, caccCutoff, if_pos hxK]
-      have h1 : 1 ≤ (R - 2 - latticeDist x y) / (R / 2 - 2) := by
-        rw [le_div_iff₀ hden]
-        linarith
-      rw [min_eq_left h1, max_eq_right zero_le_one]
+    have hη0 : ∀ x, 0 ≤ η x := caccCutoff_nonneg K y R
+    have hη1 : ∀ x, η x ≤ 1 := caccCutoff_le_one K y R
+    have hηint : ∀ x, η x ≠ 0 → x ∈ V ∧ ∀ z, (openGraph ω).Adj x z → z ∈ V :=
+      caccCutoff_interior K y hden
+    have hηlip : ∀ x z, (openGraph ω).Adj x z → |η x - η z| ≤ ℓ := caccCutoff_lip K y hden
+    have hηW : ∀ x ∈ W, η x = 1 := caccCutoff_eq_one K y hden
     -- the cutoff inequality
     have hab : -R ^ 2 < 0 := by nlinarith
     have hmain := parabolic_caccioppoli_of_cutoff (ω := ω) hab hu m hη0 hη1 hηint hηlip
