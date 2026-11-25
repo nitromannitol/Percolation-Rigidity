@@ -1074,6 +1074,13 @@ further = {
          'Rigidity.Green.parabolic_caccioppoli_of_cutoff',
          'Rigidity.Green.darioGuTimesliceTwo_holds',
          'Rigidity.Green.timeslice_of_cutoff'],
+    'Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension':
+        ['Rigidity.WeakPoincare.clusterGoodBalls_holds',
+         'Rigidity.WeakPoincare.clusterVeryGoodBalls_holds',
+         'Rigidity.WeakPoincare.clusterPoincare_holds',
+         'Rigidity.WeakPoincare.clusterVeryGoodBalls_of_goodBalls',
+         'Rigidity.WeakPoincare.planarVeryGoodBalls_holds',
+         'Rigidity.WeakPoincare.sum_sq_sub_finAvg_clusterBall_le'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

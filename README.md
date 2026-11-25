@@ -354,6 +354,10 @@ The multiscale Poincaré inequality (2.26) of Dario (Proposition 2.19) holds in 
 ([`Rigidity.Poincare.GeneralDim.multiscalePoincare_holds`](Rigidity/Proofs/Poincare/GeneralMultiscalePoincare.lean),
 the lattice argument of the planar proof on `ℤ^d`, with a vector field of prescribed divergence
 along the coordinate paths in place of the planar row-and-column field).
+The volume regularity and the weak Poincaré inequality on the Euclidean balls of the infinite cluster (Barlow 2004,
+Theorem 2.18 with Lemma 2.19, and Proposition 2.7 of Dario and Gu in its weak form) hold in every dimension `d ≥ 2`
+(`Rigidity.WeakPoincare.clusterGoodBalls_holds`, `clusterVeryGoodBalls_holds`, `clusterPoincare_holds`; see
+[Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension)).
 
 The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
 and the corrector inputs
@@ -2788,6 +2792,42 @@ Departures from Dario and Gu:
   the computation (3.23) is for `∂_t + D^*·aD`.
 - **Constants.** (3.26) and (3.27) carry `|V|^{1/2}` in place of `r`; the term a is bounded by the derivatives of `Υ` and of `ū`
   along the lattice lines separately, in place of `‖∇²(Υ∇ū)‖_{L^∞}`.
+
+## Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension
+
+The volume regularity and the weak Poincaré inequality on the Euclidean balls of the supercritical infinite cluster are proved
+in every dimension `d ≥ 2`, in particular in every `d ≥ 3`, where they are the percolation input of the Gaussian upper bound of
+Barlow, in the forms of M. T. Barlow (*Random walks on supercritical percolation clusters*, Ann. Probab. 32 (2004), Definition 1.7,
+Theorem 2.18 and Lemma 2.19) and of Dario and Gu (Proposition 2.7, weak form). The ball `𝒞_∞ ∩ B_r(z)` is good
+(`IsGoodBall ω K C_V C_P L z r`) when `C_V r^d ≤ |𝒞_∞ ∩ B_r(z)|` and, for every `u`,
+`Σ_{𝒞_∞ ∩ B_r(z)} (u − (u)_{𝒞_∞ ∩ B_r(z)})² ≤ C_P r² Σ_{x ∈ U} Σ_{z' ∈ U, z' ∼ x} (u(z') − u(x))²` with `U = 𝒞_∞ ∩ B_{Lr}(z)`
+and the sum over the open edges.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.WeakPoincare.clusterGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/GoodBallsHolds.lean) | `ClusterGoodBalls d`, `d ≥ 2`: Barlow's Theorem 2.18 (a), (b) with the random scale of Lemma 2.19 at a fixed centre: for `R ≥ M(y) ≤ O_s(C)` the ball `𝒞_∞ ∩ B_R(y)` is good with `C_V = C⁻¹`, `C_P = C`, `L = 12d`, and `\|𝒞_∞ ∩ B_R(y)\| ≤ C R^d`. |
+| [`clusterVeryGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/VeryGood.lean), [`clusterVeryGoodBalls_of_goodBalls`](Rigidity/Proofs/WeakPoincare/VeryGood.lean) | `ClusterVeryGoodBalls d`: Barlow's Theorem 2.18 (c) with Lemma 2.19: for `θ > 0` and `A ≥ 1`, above a random scale `S(y) ≤ O_s(C')` every ball `𝒞_∞ ∩ B_r(z)` with `\|z − y\| ≤ A R` and `r ≥ R^θ` is good, with `C_V`, `C_P`, `L` not depending on `θ` and `A`. |
+| [`clusterPoincare_holds`](Rigidity/Proofs/WeakPoincare/VeryGood.lean) | `ClusterPoincare d`: Proposition 2.7 of Dario and Gu, weak form, `p = 2`: `‖u − (u)‖_{L̲²(𝒞_∞ ∩ B_R(y))} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_{LR}(y))}` for `R ≥ M(y) ≤ O_s(C)`. |
+| [`planarVeryGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/PlanarVeryGood.lean) | the case `d = 2` of `ClusterVeryGoodBalls`, `θ ∈ (0, 1]`, `A = 1`, with the planar balls, averages and distance of `Rigidity.Green` and the good ball written out. |
+| [`sum_sq_sub_finAvg_clusterBall_le`](Rigidity/Proofs/WeakPoincare/Ball.lean) | the deterministic part: on the partition event, if the partition cubes of the triple `3□` of the triadic cube of scale `m` around `y` have scale at most `m − 3` and `Σ_{3□} ρ^{d(d+2)} ≤ A` for a bound `ρ` of the reach of the partition, then `Σ_{𝒞_∞ ∩ B_R(y)} (u − (u))² ≤ K A^{2/d} Σ_{edges of 𝒞_∞ ∩ B_ρ'(y)} \|∇u\|²` for `2R ≤ 3^m` and `ρ' ≥ 2d 3^m`. |
+
+The proof is that of dimension two (`clusterPoincareTwo_holds`), with the partition into good cubes of Armstrong and Dario in
+every dimension (Percolation-Cluster-Homogenization): their Sobolev inequality (Proposition 3.4, `s = 2`) on the cluster of the
+triple of the triadic cube of scale `m` around `y`, turned into a Poincaré inequality by Hölder's inequality with the exponents
+`(d+2)/2` and `(d+2)/d`; the vertices of `𝒞_∞ ∩ B_R(y)` joined to the anchors of their partition cubes (their Lemma 2.8); the
+concentration of the stopping sizes of the partition into coarsely good cubes (their Proposition 2.4, with the power
+`d(d+2)`), which dominate the reach of the partition, through a minimal scale on the `3^d` cubes of scale `m` around `y`; and
+the lower bound on the volume of the cluster in balls (Proposition A.1 of Dario and Gu, in every dimension). The very good
+balls follow by Markov's inequality and a union bound over the centres in a box of radius `⌈A 3^{m+1}⌉`, with a second minimal
+scale.
+
+Departures from Barlow: the balls are Euclidean (Barlow uses the balls of the graph distance of `𝒞_∞`), the measure is the
+counting measure (Barlow's `μ_x` is the number of open edges at `x`) and the centre is any lattice point; the very good balls
+are stated for all radii `r ≥ R^θ` (Barlow: `N_B ≤ r ≤ R`, `N_B ≤ R^{1/(d+2)}`). These change the constants only. Proposition
+2.7 of Dario and Gu is stated in its weak form: the printed form, with the gradient on the same ball, fails (see
+`ClusterPoincareTwo`).
+
+The six reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 ## Guarantees
 
