@@ -343,6 +343,11 @@ The multiscale Poincaré inequality, the concentration inequality and Lemma 3.3 
 Dario and the quantitative corrector estimate (R5) hold in dimension two (`darioOptimalCorrectorTwo_holds`,
 `correctorQuantitativeInputTwo_holds`; see
 [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition)).
+In every dimension, the quantitative corrector estimate `CorrectorQuantitativeInput` follows from
+Theorem 1 of Dario in dimension `d ≥ 3` (`DarioOptimalCorrectorThree`: `|χ_q(x) - χ_q(y)| ≤ O_s(C|q|)`)
+and the qualitative corrector input, by the printed proof of Proposition 2.12 of Dario and Gu
+([`Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario`](Rigidity/Proofs/Corrector/CorrectorQuantitative.lean);
+the dimension two case is `correctorQuantitativeInputTwo_holds`).
 
 The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
 and the corrector inputs
