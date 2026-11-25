@@ -12,7 +12,7 @@ kernel bound `Φ_τ(y, w) ≤ (C/(2R)^d) e^{-2|w - y|₁/(3R)}` for `τ ∈ [4R�
 
   `A_j(8R², y)² ≤ (K/R²) (Σ_w R^{-d} e^{-|w|/(2R)} Sq(w)^{q/2})^{2/q}`
 
-for `|y|₁ ≤ R` (`exists_ofReal_sq_heatGrad_le`), by Hölder's inequality with the exponents
+for `|y|₁ ≤ dR` (`exists_ofReal_sq_heatGrad_le`), by Hölder's inequality with the exponents
 `1 - 2/q` and `2/q`. The lattice sum `Σ_x e^{-|x - v|/κ} ≤ (2(1 + dκ))^d`
 (`tsum_exp_neg_norm_sub_le`) replaces the planar one.
 -/
@@ -191,15 +191,15 @@ theorem tsum_mul_le_holder {q : ℝ} (hq : 2 ≤ q) (a S : Vertex d → ENNReal)
   simp only [hpt]
   exact h
 
-/-- **The low-frequency bound**: for `|y|₁ ≤ R`,
+/-- **The low-frequency bound**: for `|y|₁ ≤ dR`,
 `A_j(8R², y)² ≤ (K/R²) (Σ_w R^{-d} e^{-|w|/(2R)} Sq(w)^{q/2})^{2/q}`. -/
 theorem exists_ofReal_sq_heatGrad_le [NeZero d] : ∃ K : ℝ, 0 < K ∧ ∀ u : Vertex d → ℝ,
     HeatSummable u → ∀ (j : Fin d) (R : ℝ), 3 ≤ R → ∀ q : ℝ, 2 ≤ q → ∀ y : Vertex d,
-      ∑ i, |((y i : ℤ) : ℝ)| ≤ R →
+      ∑ i, |((y i : ℤ) : ℝ)| ≤ d * R →
       ENNReal.ofReal (heatGrad u j (8 * R ^ 2) y ^ 2) ≤ ENNReal.ofReal (K / R ^ 2) *
         (∑' w, dwt R w * sqInt u (2 * R) w ^ (q / 2)) ^ (2 / q) := by
   obtain ⟨C, hC, hker⟩ := exists_zdHeat_le_exp (d := d)
-  set K' := C * Real.exp (2 / 3) / 2 ^ d with hK'
+  set K' := C * Real.exp (2 * d / 3) / 2 ^ d with hK'
   set KB := C * (1 + 2 * d) ^ d with hKB
   refine ⟨KB * max K' 1, by positivity, fun u hu j R hR q hq y hy => ?_⟩
   have hR0 : 0 < R := by linarith
@@ -312,11 +312,12 @@ theorem exists_ofReal_sq_heatGrad_le [NeZero d] : ∃ K : ℝ, 0 < K ∧ ∀ u :
       rw [Pi.sub_apply, Int.cast_sub]
       linarith
     have hexp : Real.exp (-(2 / (3 * R)) * ∑ i, |(((w - y) i : ℤ) : ℝ)|)
-        ≤ Real.exp (2 / 3) * Real.exp (-‖latticeEuclideanEmbedding w‖ / (2 * R)) := by
+        ≤ Real.exp (2 * d / 3) * Real.exp (-‖latticeEuclideanEmbedding w‖ / (2 * R)) := by
       rw [← Real.exp_add]
       refine Real.exp_le_exp.2 ?_
-      have hz : ‖latticeEuclideanEmbedding w‖ - R ≤ ∑ i, |(((w - y) i : ℤ) : ℝ)| := by linarith
-      have h2 : 2 / (3 * R) * (‖latticeEuclideanEmbedding w‖ - R) ≤
+      have hz : ‖latticeEuclideanEmbedding w‖ - d * R ≤ ∑ i, |(((w - y) i : ℤ) : ℝ)| := by
+        linarith
+      have h2 : 2 / (3 * R) * (‖latticeEuclideanEmbedding w‖ - d * R) ≤
           2 / (3 * R) * ∑ i, |(((w - y) i : ℤ) : ℝ)| :=
         mul_le_mul_of_nonneg_left hz (by positivity)
       have hnn : 0 ≤ ‖latticeEuclideanEmbedding w‖ := norm_nonneg _
@@ -327,16 +328,16 @@ theorem exists_ofReal_sq_heatGrad_le [NeZero d] : ∃ K : ℝ, 0 < K ∧ ∀ u :
             4 / 3 * ‖latticeEuclideanEmbedding w‖ := by field_simp; ring
         rw [e]
         nlinarith
-      have h4 : 2 / (3 * R) * (‖latticeEuclideanEmbedding w‖ - R) =
-          2 / (3 * R) * ‖latticeEuclideanEmbedding w‖ - 2 / 3 := by field_simp
+      have h4 : 2 / (3 * R) * (‖latticeEuclideanEmbedding w‖ - d * R) =
+          2 / (3 * R) * ‖latticeEuclideanEmbedding w‖ - 2 * d / 3 := by field_simp
       rw [neg_div, neg_mul]
       linarith
     simp only [hB, hK']
     calc C / (2 * R) ^ d * Real.exp (-(2 / (3 * R)) * ∑ i, |(((w - y) i : ℤ) : ℝ)|)
-        ≤ C / (2 * R) ^ d * (Real.exp (2 / 3) *
+        ≤ C / (2 * R) ^ d * (Real.exp (2 * d / 3) *
             Real.exp (-‖latticeEuclideanEmbedding w‖ / (2 * R))) :=
           mul_le_mul_of_nonneg_left hexp (by positivity)
-      _ = C * Real.exp (2 / 3) / 2 ^ d * (Real.exp (-‖latticeEuclideanEmbedding w‖ / (2 * R)) /
+      _ = C * Real.exp (2 * d / 3) / 2 ^ d * (Real.exp (-‖latticeEuclideanEmbedding w‖ / (2 * R)) /
             R ^ d) := by rw [mul_pow]; field_simp
   have hsum2 : ∑' w, ENNReal.ofReal (B w) * sqInt u (2 * R) w ^ (q / 2) ≤
       ENNReal.ofReal K' * RHS := by
