@@ -389,7 +389,7 @@ theorem mem_supp_iff_of_adj {K : OpenComponent ω} {x z : Vertex 2} (h : (openGr
     SimpleGraph.ConnectedComponent.eq.2 h.reachable
   rw [e]
 
-theorem abs_clamp_sub_le (a b : ℝ) :
+theorem abs_maxZeroMinOne_sub_le (a b : ℝ) :
     |max 0 (min 1 a) - max 0 (min 1 b)| ≤ |a - b| := by
   have h1 := neg_abs_le (a - b)
   have h2 := le_abs_self (a - b)
@@ -440,7 +440,7 @@ theorem caccCutoff_lip (K : OpenComponent ω) (y : Vertex 2) {R : ℝ} (hden : 0
   by_cases hxK : x ∈ K.supp
   · have hzK : z ∈ K.supp := (mem_supp_iff_of_adj hxz).1 hxK
     rw [if_pos hxK, if_pos hzK]
-    refine (abs_clamp_sub_le _ _).trans ?_
+    refine (abs_maxZeroMinOne_sub_le _ _).trans ?_
     rw [← sub_div, abs_div, abs_of_pos hden, div_le_div_iff_of_pos_right hden]
     have h1 := latticeDist_triangle x z y
     have h2 := latticeDist_triangle z x y
