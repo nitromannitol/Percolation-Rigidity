@@ -2705,7 +2705,10 @@ Departures from Armstrong and Dario:
 The second part of Proposition 2.7 of Dario and Gu (the Poincaré inequality for functions vanishing on the boundary of a ball of
 the infinite cluster, `p = 2`) is proved, and the following steps of the proof of Theorem 5 (the homogenization of the parabolic
 Dirichlet problem, DG21.tex:1280-1684) are proved in the forms stated in the table, for unit conductances on the open edges of
-the planar cluster. Theorem 5 itself is not formalized.
+the planar cluster. Theorem 5 itself is not formalized: as printed, the right side of (3.11) contains no time
+derivative of the boundary values `f`, and for `f(t, x) = t` (so `∇f = 0`) the solution `u` differs from `ū` at the
+points of `int_a V` with an open neighbour in `∂_a V`. The global Meyers estimate (3.19), used in Lemma 3.7 and Step 4,
+fails for the same data.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2723,6 +2726,8 @@ Departures from Dario and Gu:
 - **The boundary in Proposition 2.7.** The function vanishes on `∂_a V`, the points of `V` with an open edge leaving `V`, a
   subset of the boundary `∂(ℤ² ∩ B_R(y)) ∩ 𝒞_∞` of the source; the statement implies the printed one and is the form used for
   the functions of `C_0^a(V)` in Step 2.
+- **Step 2.** The function `w − u` is assumed to vanish on `∂_a V`. The source asserts this at line 1420, but `w` equals
+  `ū` there, not `f`, at the points of `∂(ℤ² ∩ B_r)` inside the convex hull.
 - **Forward differences and the centered flux.** The decomposition pairs the centered flux `g̃` (not the translated flux `g̃*`)
   with the forward differences `D_i F_k`, the divergence field carries the corrector at the base point of each edge and the
   extra field `−a_i D_i F_i`, and the discrete divergence is `Σ_k D_k F_k`. The left side of (3.25) is printed with `∂_t − D^*·aD`;

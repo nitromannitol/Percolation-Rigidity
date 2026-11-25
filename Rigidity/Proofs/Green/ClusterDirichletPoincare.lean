@@ -15,7 +15,8 @@ leaving `V`; this set is contained in the boundary `∂(ℤ² ∩ B_R(y)) ∩ �
 statement implies the printed one. The gradient is over the open edges inside `V` (`gradEnergy`).
 
 Proof: the extension `ũ` of `u` by `0` has the same gradient energy on the larger ball
-`𝒞_∞ ∩ B_{24KR}(y)` as `u` on `V` (`gradEnergy_extend_eq`), because every open edge leaving `V`
+`𝒞_∞ ∩ B_{LKR}(y)` (`L` the dilation of the weak inequality) as `u` on `V`
+(`gradEnergy_extend_eq`), because every open edge leaving `V`
 starts at a point of `∂_a V`; the weak Poincaré inequality (`clusterPoincareTwo_holds`) on
 `𝒞_∞ ∩ B_{KR}(y)` bounds `Σ (ũ - m)²`, and the mean `m` is controlled since `ũ = 0` on at least half
 of `𝒞_∞ ∩ B_{KR}(y)` when `K` is large (the density lower bound of Proposition A.1,

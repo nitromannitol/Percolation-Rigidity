@@ -12,8 +12,7 @@ decomposition of `timeDeriv_sub_openLaplacian_cutoffTwoScale`:
 
 * `weakNormLe_div_field`: the divergence `Σ_i (H_i(x) - H_i(x - e_i))` of a field carried by the
   open edges has norm at most `|V|^{-1/2} (Σ_{x ∈ V} Σ_i (H_i(x)² + H_i(x - e_i)²))^{1/2}`
-  (the terms
-  (3.25)-c1 and e, first lines of (3.30) and (3.32));
+  (the terms (3.25)-c1 and e, first lines of (3.30) and (3.32));
 * `weakNormLe_time_term`: `Σ_k ∂_t F_k χ_k` ((3.25)-b, first line of (3.29));
 * `weakNormLe_flux_term`: `Σ_{k,i} g̃_{k,i} D_i F_k` ((3.25)-d, first line of (3.31));
 * `weakNormLe_of_abs_le`: a term bounded by `ε` on `V` has norm at most `|V|^{1/2} ε` ((3.27), for

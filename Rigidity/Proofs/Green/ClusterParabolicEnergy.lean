@@ -21,8 +21,8 @@ edges, with the Poincaré inequality and the weak norm bound as hypotheses.
   `int_a(V)` for `t ∈ (a, b)` and `v(a) = 0`, then
   `∫_a^b Σ_V v² ≤ 64 P² (P + |V|^{1/2})² ∫_a^b B²`.
 
-With `[a, b] = [-r², 0]`, `P = C r` (the Poincaré inequality of Proposition 2.7 for functions
-vanishing on `∂(ℤ² ∩ B_r) ∩ 𝒞_∞`) and `|V| ≤ 25 r²`, the last estimate reads
+With `[a, b] = [-r², 0]`, `P = C r` (the Poincaré inequality `clusterDirichletPoincareTwo_holds`
+for functions vanishing on `∂_a V`) and `|V| ≤ 25 r²`, the last estimate reads
 `r^{-1} ‖v‖_{L̲²(I_r × V)} ≤ 8 C (C + 5) r |V|^{-1/2} ‖B‖_{L̲²(I_r)}`, the conclusion of Step 2
 (the source has the constant `λ^{-1}` and normalized norms; with `|V| ≥ c r²` the factor
 `r |V|^{-1/2}` is bounded). In Step 2 of the source, `v = w - u` is required to vanish on `∂_a V`;
