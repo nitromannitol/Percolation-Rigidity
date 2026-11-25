@@ -1074,6 +1074,23 @@ further = {
          'Rigidity.Green.parabolic_caccioppoli_of_cutoff',
          'Rigidity.Green.darioGuTimesliceTwo_holds',
          'Rigidity.Green.timeslice_of_cutoff'],
+    'The Gaussian upper bound of Barlow (Theorem 4 of Dario and Gu) from the very good balls of the cluster (d = 2)':
+        ['Rigidity.Barlow.tsum_mul_openLaplacian',
+         'Rigidity.Barlow.hasDerivAt_openHeat_two_mul',
+         'Rigidity.Barlow.openHeat_diag_le_of_good',
+         'Rigidity.Barlow.openHeat_le_of_good',
+         'Rigidity.Barlow.neg_log_le_heatEntropy',
+         'Rigidity.Barlow.heatEntropy_le_log_meanDist',
+         'Rigidity.Barlow.meanDist_le_of_entropy',
+         'Rigidity.Barlow.exitGen_le_mul_of_subset',
+         'Rigidity.Barlow.mul_exitProb_le',
+         'Rigidity.Barlow.exitProb_clBall_le',
+         'Rigidity.Barlow.exitProb_clBall_le_exp',
+         'Rigidity.Barlow.BarlowRegion.tsum_far_le',
+         'Rigidity.Barlow.BarlowRegion.openHeat_le_gauss',
+         'Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
