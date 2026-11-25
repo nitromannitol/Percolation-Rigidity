@@ -178,7 +178,8 @@ theorem exists_multiscalePoincare_box [NeZero d] : ∃ K : ℝ, 0 < K ∧ ∀ u 
     ring
   have hV0 : 0 ≤ ∑ z ∈ supBox 0 ρ, |u z - boxMean (supBox 0 ρ) u| ^ q :=
     Finset.sum_nonneg fun z _ => Real.rpow_nonneg (abs_nonneg _) _
-  have hKq : 0 < (6 * (2 * Real.sqrt 2 * (2 ^ (d + 1) * Real.exp d) * Cs + d * Real.sqrt Kl) * q) ^ q :=
+  have hKq :
+      0 < (6 * (2 * Real.sqrt 2 * (2 ^ (d + 1) * Real.exp d) * Cs + d * Real.sqrt Kl) * q) ^ q :=
     Real.rpow_pos_of_pos (mul_pos (by linarith) hq0) _
   by_cases htop : ∑' x, dwt (2 * ρ + 1) x * sqInt u (2 * (2 * ρ + 1)) x ^ (q / 2) = ⊤
   · rw [htop, ENNReal.mul_top (by rw [ne_eq, ENNReal.ofReal_eq_zero, not_le]; exact hKq)]
@@ -253,10 +254,12 @@ theorem exists_multiscalePoincare_box [NeZero d] : ∃ K : ℝ, 0 < K ∧ ∀ u 
       nlinarith
     have t2 := mul_le_mul_of_nonneg_left hGp
       (mul_nonneg hc1.le (mul_nonneg hq0.le hRq) :
-        (0 : ℝ) ≤ 2 * Real.sqrt 2 * (2 ^ (d + 1) * Real.exp d) * Cs * (q * (2 * ρ + 1 : ℝ) ^ ((d : ℝ) / q)))
+        (0 : ℝ) ≤ 2 * Real.sqrt 2 * (2 ^ (d + 1) * Real.exp d) * Cs *
+          (q * (2 * ρ + 1 : ℝ) ^ ((d : ℝ) / q)))
     nlinarith
   have hsum : ENNReal.ofReal (∑ z ∈ supBox 0 ρ, |u z - boxMean (supBox 0 ρ) u| ^ q) ≤
-      ENNReal.ofReal (6 * (2 * Real.sqrt 2 * (2 ^ (d + 1) * Real.exp d) * Cs + d * Real.sqrt Kl) * q *
+      ENNReal.ofReal (6 * (2 * Real.sqrt 2 * (2 ^ (d + 1) * Real.exp d) * Cs + d * Real.sqrt Kl) *
+        q *
         (2 * ρ + 1 : ℝ) ^ ((d : ℝ) / q) * Vp) *
       (∑' x, dwt (2 * ρ + 1) x * sqInt u (2 * (2 * ρ + 1)) x ^ (q / 2)) ^ (1 / q) := by
     rw [hid]
