@@ -15,6 +15,7 @@ import Rigidity.Proofs.Assembly.Unconditional
 import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.ProvedGreenColumn
+import Rigidity.Proofs.Assembly.ProvedOrderOne
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
 import Rigidity.Proofs.Green.SupercriticalGreenBounds
@@ -588,6 +589,16 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBound
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.largeGradientSensitive
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBoundDirectional
+
+-- The regularity of order one in every dimension from the existence of the corrected planes, and the main
+-- theorems that take it with every proved input supplied
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwo_holds
+#print axioms Rigidity.Proofs.Regularity.correctorSublinearL2At_of_correctedPlanes
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_correctorSublinear
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fast_decay
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayDichotomy
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayPotential
 
 -- Existence of planar Green columns, and Theorem 1.3 from five dimension-two literature inputs
 #print axioms Rigidity.Proofs.Section5.planar_greenColumn_exists

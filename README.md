@@ -24,7 +24,12 @@ of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero
 of the Green columns. The other four remain hypotheses: the qualitative and the quantitative
 corrector inputs (Theorem 2.5), the regularity of order one at the origin (Theorem 2.4 at order
 one) and the quantitative estimate of the Green function of Dario and Gu; the dimension-two forms
-of all four are proved. Theorems 6.5 and 1.3 are proved with no literature hypothesis
+of all four are proved. The regularity of order one at the origin is proved in every dimension
+from the existence of the corrected planes, the first part of the qualitative corrector input
+(`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`), so that Theorem 1.3 in the form
+with the twelve inputs takes only the two corrector inputs and the Green estimate
+(`Rigidity.Assembly.WithProvedOrderOne.fast_decay`). Theorems 6.5 and 1.3 are proved with no
+literature hypothesis
 ([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
 Theorem 1.3). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
 the dimension-two proof of Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in dimension two
@@ -116,7 +121,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Theorem 1.3 | `theorem:fast-decay` | `Rigidity.Assembly.Main.fastDecay` | `d = 2`: integer Laplacian of finite support and decay faster than `\|x\|⁻¹` force finite support. |
 | Lemma 2.1 | `lemma:finite-energy` | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
 | Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput`; proved: `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
-| Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin`; proved at order zero in every `d ≥ 2`: `Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
+| Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin`; proved at order zero in every `d ≥ 2`: `Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds`; at order one at the origin in every `d ≥ 2` from the existence of the corrected planes: `Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
 | Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
@@ -316,14 +321,18 @@ Theorem 1.3, without it.
 [`Rigidity.Assembly.WithProvedGreenColumn`](Rigidity/Proofs/Assembly/ProvedGreenColumn.lean) gives
 the theorems of `Rigidity.Assembly.Main` that take `SupercriticalBondGreenColumnExistence` with
 every proved input supplied: Theorem 1.1 there takes only the two corrector inputs and the
-quantitative Green estimate, and Theorem 1.3 these and the regularity of order one. The other
-inputs listed below remain hypotheses.
+quantitative Green estimate, and Theorem 1.3 these and the regularity of order one.
+[`Rigidity.Assembly.WithProvedOrderOne`](Rigidity/Proofs/Assembly/ProvedOrderOne.lean) gives the three of
+them that take the regularity of order one without it: Theorem 1.3 there takes only the two corrector
+inputs and the quantitative Green estimate. The other inputs listed below remain hypotheses.
 
 For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proofs/Assembly/PlanarInputs.lean)
 assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
 order-zero and order-one regularity, and the Green-column existence and quantitative estimates.
 These six planar forms are stated in
-[`PercolationClusterHomogenization/External/PlanarInputs.lean`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/External/PlanarInputs.lean) and are not proved.
+[`PercolationClusterHomogenization/External/PlanarInputs.lean`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/External/PlanarInputs.lean); all six are
+proved (see below), and Theorem 1.3 holds with no hypothesis
+([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean)).
 The planar well-connectedness and cluster-density concentration estimates are supplied by
 [`wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) and
 [`planar_cluster_density_concentration`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Density/PlanarDensityConcentration.lean).
@@ -378,9 +387,12 @@ Theorem 2.18 with Lemma 2.19, and Proposition 2.7 of Dario and Gu in its weak fo
 (`Rigidity.WeakPoincare.clusterGoodBalls_holds`, `clusterVeryGoodBalls_holds`, `clusterPoincare_holds`; see
 [Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension)).
 
-The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
-and the corrector inputs
-([`armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneOrigin.lean)); see
+The input `ArmstrongDarioOrderOneOrigin` is proved in every dimension from the existence of the corrected planes,
+the first part of `SupercriticalBondCorrectorInput`
+([`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/CorrectorSublinearFromRegularity.lean)):
+the mesoscopic estimate (7.18) of AD at `k = 2` is proved in every dimension, and it makes the sublinearity of the
+corrected planes quantitative. Theorem 1.3 and the two other theorems that take the input are restated without it
+in [`Rigidity.Assembly.WithProvedOrderOne`](Rigidity/Proofs/Assembly/ProvedOrderOne.lean); see
 [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate).
 In dimension two, (7.18) at `k = 2` is proved from the estimates on squares of the proof of AD Lemma 7.1, and
 `ArmstrongDarioOrderOneOriginTwo` (R4) from them with Theorem 1 of Dario alone (the existence of corrected planes and
@@ -754,11 +766,12 @@ route bounds the heat kernel of the cluster for `d ≥ 2` and the decay of the G
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from `ArmstrongDarioOrderZeroTwo`. |
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean) | `SupercriticalBondGreenColumnExistence`, with no hypothesis. |
 | [`Rigidity.Assembly.WithProvedGreenColumn`](Rigidity/Proofs/Assembly/ProvedGreenColumn.lean): `lipschitz`, `fast_decay`, `notLipschitz`, `fastDecayDichotomy`, `fastDecayPotential`, `gradientTrichotomy`, `levelSetDensity`, `goodEventLowerBound`, `largeGradientSensitive`, `goodEventLowerBoundDirectional` | the theorems of `Rigidity.Assembly.Main` that take `SupercriticalBondGreenColumnExistence`, with it and the other proved inputs supplied; they take only those of `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin` and `SupercriticalBondGreenQuantitative` that their proofs use. |
+| [`Rigidity.Assembly.WithProvedOrderOne`](Rigidity/Proofs/Assembly/ProvedOrderOne.lean): `fast_decay`, `fastDecayDichotomy`, `fastDecayPotential` | the three theorems of `Rigidity.Assembly.WithProvedGreenColumn` that take `ArmstrongDarioOrderOneOrigin`, with it supplied from `SupercriticalBondCorrectorInput` (`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`); they take `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`. |
 | [`Rigidity.Green.heat_le_of_two_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 2`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster, then for `0 ≤ t ≤ 1` there are `K` and `N` with `p_n(x, y) ≤ K n^{−(d/2 − 1/100)(1 − t)} exp(−t\|x − y\|²/(2n))` for all `n ≥ N` and all vertices `x` of the cluster. |
 | [`Rigidity.Green.greenColumn_le_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0` the Green column `g` with pole `y` satisfies `0 ≤ g(x) ≤ K \|x − y\|^{2 − d + 1/50 + δ}` for `\|x − y\| ≥ R`. |
 | [`Rigidity.Green.greenColumn_le_one_add_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0`, `0 ≤ g(x) ≤ K (1 + \|x − y\|)^{2 − d + 1/50 + δ}` at every vertex `x`. |
 
-The eighteen theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+The twenty-one theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
 are in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/).
 
 1. **Isoperimetry of `ℤᵈ`** (`LatticeIsoperimetry.lean`). The lattice `ℓ¹` Sobolev inequality
@@ -1736,23 +1749,36 @@ The thirteen declarations depend on exactly `propext`, `Classical.choice` and `Q
 ## Regularity of order one at the origin from the mesoscopic estimate
 
 `Rigidity.External.ArmstrongDarioOrderOneOrigin` (Theorem 2.4, part (iii) at `k = 1`; AD Theorem 2(iii)
-at `k = 1`) is a theorem from one new hypothesis and two inputs that are already assumed:
+at `k = 1`) is a theorem from the existence of the corrected planes alone, the first part of
+`LatticeProb.External.SupercriticalBondCorrectorInput`
+([`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/CorrectorSublinearFromRegularity.lean)).
+It was first proved from
 [`ArmstrongDarioMesoscopicDegreeTwo`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneOrigin.lean), AD Lemma 7.3, display (7.18) at `k = 2`
 for bond percolation at the origin, with `Ā₂` the harmonic quadratic polynomials and the normalization
 `r^{−d/2} ‖·‖_{L²(𝒞_∞ ∩ B_r)}`, together with `Rigidity.External.CorrectorQuantitativeInput` and
-`LatticeProb.External.SupercriticalBondCorrectorInput`. The mesoscopic estimate itself needs the
-harmonic approximation of AD Lemma 7.1, hence Theorem 1 (Sections 5 and 6), and is not proved in general; in
+`LatticeProb.External.SupercriticalBondCorrectorInput` (the table below). The mesoscopic estimate is proved
+in every dimension in Percolation-Cluster-Homogenization from Lemma 7.1 for the partition into good cubes
+([`armstrongDarioMesoscopicDegreeTwo_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/GeneralMesoscopicDegreeTwo.lean)). For a corrected
+plane `u` of slope `q`, letting `R → ∞` in (7.18) bounds its excess over `Ā₂` on `B_r` by `C |q| r^{1−δ}`, and
+the telescoping of the near-best harmonic quadratic polynomials on the balls `B_{2^k 𝒳}` gives the
+sublinearity (1.18) of AD with a minimal scale of class `O_s`
+([`correctorSublinearL2At_of_correctedPlanes`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/CorrectorSublinearFromRegularity.lean)); (1.18) replaces
+`CorrectorQuantitativeInput` in the lifts of the affine functions. In
 dimension two it is proved from the estimates on squares of Lemma 7.1, which are proved in [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1) (see
 [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two)).
 
 | Lean declaration | Statement |
 | --- | --- |
+| [`Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/CorrectorSublinearFromRegularity.lean) | `ArmstrongDarioOrderOneOrigin` from the existence of the corrected planes, the first part of `SupercriticalBondCorrectorInput`. |
+| [`Rigidity.Proofs.Regularity.correctorSublinearL2At_of_correctedPlanes`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/CorrectorSublinearFromRegularity.lean) | for `d ≥ 2` and `𝔭_c(d) < p < 1`, from the existence of the corrected planes: almost surely every slope `q` has a harmonic function `u` of linear growth with `‖u − q · x‖_{L̲²(𝒞_∞ ∩ B_r)} ≤ K |q|₁ r^{1−δ}` for `r ≥ 𝒳`, `𝒳` of class `O_s` (AD (1.18)). |
+| [`Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_correctorSublinear`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneOriginSublinear.lean) | `ArmstrongDarioOrderOneOrigin` from (1.18) with a minimal scale of class `O_s`. |
+| [`Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwo_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/GeneralMesoscopicDegreeTwo.lean) | `ArmstrongDarioMesoscopicDegreeTwo` with no hypothesis: (7.18) at `k = 2` in every dimension `d ≥ 2`. |
 | [`Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_mesoscopicDegreeTwo`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneOrigin.lean) | `ArmstrongDarioOrderOneOrigin` from `ArmstrongDarioMesoscopicDegreeTwo`, `CorrectorQuantitativeInput` and `SupercriticalBondCorrectorInput`. |
 | [`Rigidity.Proofs.Regularity.ballExcess_le_of_clusterBallVolumeL2`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneOrigin.lean) | the change of normalization from `r^{−d/2} ‖·‖_{L²}` to the ball excess, under the volume comparison `K` of the cluster balls, with the constant multiplied by `√K`. |
 | [`Rigidity.Proofs.Regularity.orderOneEndpointData_cluster`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/ClusterOrderOne.lean), [`clusterLiftMap_mem_harmonicGrowthSpace`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/ClusterOrderOne.lean) | the hypotheses of the endpoint iteration on the cluster: the lifts of the affine functions by the corrected planes, with relative error `C t^{−1/2}` on `B_t` (absolute error `C t^{1/2}`), the trace-free quadratic polynomials, and the comparison of sizes from the density of the infinite cluster in cubes. |
 | [`Rigidity.Proofs.Regularity.weighted_endpoint_step`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneEndpoint.lean), [`orderOneEndpoint_step`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneEndpoint.lean), [`orderOneEndpoint_iterate`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneEndpoint.lean), [`orderOneEndpoint_fit`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneEndpoint.lean), [`exists_forall_le_of_orderOneEndpoint`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneEndpoint.lean) | the endpoint iteration for abstract data: one step at the endpoint of the scale range, the product of the step factors bounded by `exp(c r^{−δ}/(1 − θ^δ))`, the fit `N_t(u − Lℓ₀) ≤ C (t/R)² N_R(u)` at each radius `t ∈ [𝒳, R/2]`, and one lifted affine function `Lℓ` for all such radii. |
 
-`ArmstrongDarioMesoscopicDegreeTwo` is a definition of a proposition, not an axiom. The nine theorems of the
+`ArmstrongDarioMesoscopicDegreeTwo` is a definition of a proposition, not an axiom. The thirteen theorems of the
 table and the definition, which have axiom reports in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean),
 depend only on `propext`, `Classical.choice` and `Quot.sound`.
 
@@ -1767,6 +1793,11 @@ Departures from Armstrong and Dario:
   `|g_i − x_i| ≤ C t^{1/2}` from `CorrectorQuantitativeInput`, with the edge `(a_0, a_1)` in `B_X`.
   The literature proof of `CorrectorQuantitativeInput` (DG, Proposition 2.12) rests on the regularity theory of
   AD, so this route cannot later serve as a proof of that input.
+- **(1.18) from (7.18).** AD obtain (1.18) by the construction of the corrected planes of Armstrong, Kuusi and
+  Mourrat, Proposition 3.1, from Theorem 1 with the minimal scale of the flatness (5.33). Here (1.18) is derived
+  from (7.18) at `k = 2` and the existence of the corrected planes, with the minimal scale of (7.18) and of the
+  density of the cluster in cubes; this route uses neither `CorrectorQuantitativeInput` nor the uniqueness part
+  of `SupercriticalBondCorrectorInput`.
 - **Normalization.** The statement (7.18) is used with `|B_r| = r^d`; the Lebesgue measure
   `ω_d r^d` gives the same statement, and `Ā₂` is the space of the trace-free quadratic polynomials, as the
   homogenized matrix is a multiple of the identity.
@@ -3051,7 +3082,7 @@ Departures from Barlow:
   [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
-  the eighteen theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
+  the twenty-one theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
   declarations of
   [Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension), the two
   theorems of
@@ -3073,7 +3104,7 @@ Departures from Barlow:
   [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two),
   the twelve theorems of
   [The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two](#the-rate-of-proposition-52-and-lemmas-53-510-and-511-step-2-in-dimension-two),
-  the nine theorems and one definition of
+  the thirteen theorems and one definition of
   [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate),
   the twenty-three theorems of
   [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two),
@@ -3118,7 +3149,7 @@ Departures from Barlow:
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1064 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1071 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3152,9 +3183,9 @@ Departures from Barlow:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 764 Lean files with 157,549 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 765 Lean files with 157,609 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,688 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,699 lines) are counted separately.
 
 ## Building
 
