@@ -1,6 +1,7 @@
 import Rigidity
 import Rigidity.Proofs.Assembly.Main
 import Rigidity.Proofs.Assembly.Section2
+import Rigidity.Proofs.Assembly.Section2Polyomino
 import Rigidity.Proofs.Assembly.Section3
 import Rigidity.Proofs.Assembly.Section4
 import Rigidity.Proofs.Assembly.Section5
@@ -14,6 +15,7 @@ import Rigidity.Proofs.Assembly.Unconditional
 import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.ProvedGreenColumn
+import Rigidity.Proofs.Assembly.ProvedOrderOne
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
 import Rigidity.Proofs.Green.SupercriticalGreenBounds
@@ -439,6 +441,8 @@ import Rigidity.Proofs.Green.DarioGuDirichletSteps
 import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
+import Rigidity.Proofs.Assembly.PlanarDarioGuDirect
+import Rigidity.Proofs.Assembly.ProvedGradient
 import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 import Rigidity.Proofs.Assembly.ProvedBarlow
@@ -464,7 +468,9 @@ and Lemma 7.3 at `k = 2` with Theorem 2(iii) at `k = 1` in dimension two (§7);
 Each proved result is reported through its Lean theorem. A result cited from the literature is
 reported through the proposition that states it; the theorems that use it take that proposition
 as an explicit hypothesis. Lemma 2.13 (Remark 14.20 of Rudin's *Real and Complex Analysis*) is
-cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
+cited in the paper and used by no Lean proof, so it has no Lean declaration; its special case for
+unions of lattice squares, the form applied at L2124, is reported as a further proved result
+(`Rigidity.Assembly.polyominoJordan`). -/
 
 -- Section 1
 #print axioms Rigidity.Assembly.Main.lipschitz                        -- Theorem 1.1
@@ -482,6 +488,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.mixed_green                                    -- Proposition 2.8
 #print axioms Rigidity.External.JordanCurveTheoremSphere              -- Lemma 2.14 (cited)
 #print axioms Rigidity.Assembly.jordanCurves                          -- Lemma 2.16
+#print axioms Rigidity.Assembly.polyominoJordan    -- Lemma 2.13 for unions of lattice squares (L2124)
 
 -- Section 3
 #print axioms Rigidity.Assembly.reductionToSlopeE1                    -- Lemma 3.1
@@ -581,6 +588,16 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBound
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.largeGradientSensitive
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBoundDirectional
+
+-- The regularity of order one in every dimension from the existence of the corrected planes, and the main
+-- theorems that take it with every proved input supplied
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwo_holds
+#print axioms Rigidity.Proofs.Regularity.correctorSublinearL2At_of_correctedPlanes
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_correctorSublinear
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fast_decay
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayDichotomy
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayPotential
 
 -- Existence of planar Green columns, and Theorem 1.3 from five dimension-two literature inputs
 #print axioms Rigidity.Proofs.Section5.planar_greenColumn_exists
@@ -1595,6 +1612,23 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Green.parabolic_caccioppoli_of_cutoff
 #print axioms Rigidity.Green.darioGuTimesliceTwo_holds
 #print axioms Rigidity.Green.timeslice_of_cutoff
+
+-- Theorem 3 of Dario and Gu (Remark 1.3) from Theorem 4 and with no hypothesis, and Theorems 1 and 2 from Proposition 2.13, in dimension two
+#print axioms Rigidity.Green.abs_heatDeriv_two_le
+#print axioms Rigidity.Green.exitFunction_le_two_mul
+#print axioms Rigidity.Green.abs_sub_le_mul_exitFunction
+#print axioms Rigidity.Green.exists_nL2_sub_le_of_laplacian
+#print axioms Rigidity.Green.pairEnergy_le_of_laplacian
+#print axioms Rigidity.Green.exists_orderZero_clusterBall
+#print axioms Rigidity.Green.sqrt_gradEnergy_openHeat_le
+#print axioms Rigidity.Green.darioGuGradientBoundTwo_of_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenQuantitativeTwo_of_flux_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow
+#print axioms Rigidity.Green.darioGuGradientBoundTwo_holds
+#print axioms Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux
+#print axioms Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux
 
 -- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
 #print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds

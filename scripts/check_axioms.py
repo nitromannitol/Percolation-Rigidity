@@ -71,6 +71,8 @@ cited = {'Proposition 2.3', 'Theorem 2.4', 'Theorem 2.5', 'Lemma 2.13', 'Lemma 2
 # Further proved results: results that are not numbered results of the paper, proofs of literature
 # inputs, and forms of the main theorems with fewer hypotheses.
 further = {
+    'Lemma 2.13 for unions of lattice squares (the form used at L2124)':
+        ['Rigidity.Assembly.polyominoJordan'],
     'Slab connectivity (Grimmett and Marstrand, d >= 3)':
         ['Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt'],
     'Proposition 2.3 for d >= 3 and its reduction to d = 2':
@@ -119,6 +121,14 @@ further = {
          'Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBound',
          'Rigidity.Assembly.WithProvedGreenColumn.largeGradientSensitive',
          'Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBoundDirectional'],
+    'The regularity of order one in every dimension from the existence of the corrected planes':
+        ['Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwo_holds',
+         'Rigidity.Proofs.Regularity.correctorSublinearL2At_of_correctedPlanes',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_correctorSublinear',
+         'Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput',
+         'Rigidity.Assembly.WithProvedOrderOne.fast_decay',
+         'Rigidity.Assembly.WithProvedOrderOne.fastDecayDichotomy',
+         'Rigidity.Assembly.WithProvedOrderOne.fastDecayPotential'],
     'Planar Green-column existence and Theorem 1.3 from five dimension-two inputs':
         ['Rigidity.Proofs.Section5.planar_greenColumn_exists',
          'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenColumnExistenceTwo_of_orderZero',
@@ -1074,6 +1084,22 @@ further = {
          'Rigidity.Green.parabolic_caccioppoli_of_cutoff',
          'Rigidity.Green.darioGuTimesliceTwo_holds',
          'Rigidity.Green.timeslice_of_cutoff'],
+    'Theorem 3 of Dario and Gu from Theorem 4 and with no hypothesis, and Theorems 1 and 2 from Proposition 2.13 (d = 2)':
+        ['Rigidity.Green.abs_heatDeriv_two_le',
+         'Rigidity.Green.exitFunction_le_two_mul',
+         'Rigidity.Green.abs_sub_le_mul_exitFunction',
+         'Rigidity.Green.exists_nL2_sub_le_of_laplacian',
+         'Rigidity.Green.pairEnergy_le_of_laplacian',
+         'Rigidity.Green.exists_orderZero_clusterBall',
+         'Rigidity.Green.sqrt_gradEnergy_openHeat_le',
+         'Rigidity.Green.darioGuGradientBoundTwo_of_barlow',
+         'Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow',
+         'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenQuantitativeTwo_of_flux_barlow',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow',
+         'Rigidity.Green.darioGuGradientBoundTwo_holds',
+         'Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux',
+         'Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux',
+         'Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux'],
     'Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension':
         ['Rigidity.WeakPoincare.clusterGoodBalls_holds',
          'Rigidity.WeakPoincare.clusterVeryGoodBalls_holds',
