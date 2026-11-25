@@ -1092,6 +1092,18 @@ further = {
          'Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux',
          'Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux',
          'Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux'],
+    'Theorem 2 of Dario and Gu for d >= 3 from Theorem 1 in dimension d and the small-time bound, and in every dimension; the heat semigroup of a graph on l^2':
+        ['Rigidity.Green.supercriticalBondGreenQuantitative_of_two_of_three',
+         'Rigidity.Green.integral_gaussianHeatD',
+         'Rigidity.Green.inv_mul_integral_gaussianHeatD_eq',
+         'Rigidity.Green.HeatBoundsD.laplacian_timeGreenD',
+         'Rigidity.Green.HeatBoundsD.abs_timeGreenD_sub_le',
+         'Rigidity.Green.HeatBoundsD.isGreenColumn_timeGreenD',
+         'Rigidity.Green.supercriticalBondGreenQuantitativeThree_of_heatKernel',
+         'Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitative_of_flux_heatKernel',
+         'Rigidity.Green.hasSum_sq_heatFlowG_le',
+         'Rigidity.Green.sq_heatFlowG_le_diag',
+         'Rigidity.Green.sq_laplacian_heatFlowG_le'],
     'Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension':
         ['Rigidity.WeakPoincare.clusterGoodBalls_holds',
          'Rigidity.WeakPoincare.clusterVeryGoodBalls_holds',
