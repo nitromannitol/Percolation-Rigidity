@@ -2966,7 +2966,7 @@ Departures from Barlow:
   [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
-  the eighteen theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
+  the twenty-one theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
   declarations of
   [Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension), the two
   theorems of
@@ -2988,7 +2988,7 @@ Departures from Barlow:
   [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two),
   the twelve theorems of
   [The rate of Proposition 5.2 and Lemmas 5.3, 5.10 and 5.11 (Step 2) in dimension two](#the-rate-of-proposition-52-and-lemmas-53-510-and-511-step-2-in-dimension-two),
-  the nine theorems and one definition of
+  the thirteen theorems and one definition of
   [Regularity of order one at the origin from the mesoscopic estimate](#regularity-of-order-one-at-the-origin-from-the-mesoscopic-estimate),
   the twenty-three theorems of
   [Propositions 5.2 and 5.13, Lemma 5.11 and the minimal scales in dimension two](#propositions-52-and-513-lemma-511-and-the-minimal-scales-in-dimension-two),
@@ -3031,7 +3031,7 @@ Departures from Barlow:
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1015 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1022 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
