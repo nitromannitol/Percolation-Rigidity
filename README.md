@@ -16,7 +16,7 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses. Six of these twelve inputs, among them Proposition 2.3 and the concentration of the
+hypotheses. Seven of these twelve inputs, among them Proposition 2.3 and the concentration of the
 density of the infinite cluster, are also proved in Lean, the Green-column input is proved for
 `d ≥ 3` and follows from the planar order-zero estimate, and Theorem 6.5 is proved with no
 literature hypothesis (see
@@ -227,7 +227,7 @@ Proposition 3.2.
    Proposition 6.4; Propositions 4.1 and 6.4 are proved in every dimension `d ≥ 2`.
 2. **Literature inputs.** Twelve results of the literature enter as explicit hypotheses of the
    theorems that use them; none is an `axiom`. They are listed in
-   [Assumed literature inputs](#assumed-literature-inputs), with the six of them that are proved.
+   [Assumed literature inputs](#assumed-literature-inputs), with the seven of them that are proved.
 3. **Measurability.** Some events quantify over the corrected planes of every configuration and are
    not shown to be measurable. For them, "with positive probability" means that the event contains a
    measurable event of positive probability (Proposition 3.2 and Lemmas 5.25 and 5.27), and an upper bound on
@@ -2783,7 +2783,7 @@ Departures from Armstrong and Dario:
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
   checked against its source in an independent model review; the sources are listed in
   [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
-  hypotheses; six of them are proved, and the versions described there discharge them.
+  hypotheses; seven of them are proved, and the versions described there discharge them.
 
 ## Size
 
