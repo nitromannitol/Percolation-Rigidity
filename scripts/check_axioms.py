@@ -1045,6 +1045,14 @@ further = {
         ['Rigidity.Poincare.GeneralDim.multiscalePoincare_holds',
          'Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box',
          'Rigidity.Poincare.GeneralDim.exists_steinSigned'],
+    'Theorem 3 of Dario and Gu from Proposition 3.9, Proposition 2.9 and Lemma 2.10 (d = 2)':
+        ['Rigidity.Green.darioGuGradientBoundTwo_of_lipschitz',
+         'Rigidity.Green.goodTimes_anchorDist',
+         'Rigidity.Green.abs_coarsenPar_openHeat_le',
+         'Rigidity.Green.darioGuCaccioppoliTwo_holds',
+         'Rigidity.Green.parabolic_caccioppoli_of_cutoff',
+         'Rigidity.Green.darioGuTimesliceTwo_holds',
+         'Rigidity.Green.timeslice_of_cutoff'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

@@ -2408,7 +2408,8 @@ from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
   (`darioGuHeatKernelTwo_of_reduced_dario`).
 
 Lemma 3.11 (Lemma 8.9 of Armstrong, Kuusi and Mourrat, `AKMLemmaEightNineTwo`) is stated, since it is used in the
-proof of Proposition 3.9, which is not formalized.
+proof of Proposition 3.9, which is a named statement; Theorem 3 is proved from Proposition 3.9 and Theorem 4 in
+[Theorem 3 of Dario and Gu in dimension two from Proposition 3.9](#theorem-3-of-dario-and-gu-in-dimension-two-from-proposition-39).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2564,6 +2565,55 @@ Departures from Dario and Gu:
   the scale sum of Step 3 is bounded by `Σ_m sup · ‖·‖` without Cauchy-Schwarz, with piecewise linear cutoffs on the balls of radius `2^{m+2}√r`, and the truncations
   are removed by dominated convergence. The bound (4.40) is proved for its square root.
 - **The statement for one `σ`.** `DarioGuTwoScaleErrorTwo p σ` is proved for the `σ` of Proposition 2.13 (`σ = σ̄²`); Theorem 1 uses it for some `σ > 0`.
+
+## Theorem 3 of Dario and Gu in dimension two from Proposition 3.9
+
+Theorem 3 of Dario and Gu in the form of Remark 1.3 (the gradient bound on the heat kernel, `DarioGuGradientBoundTwo`) is
+proved in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) from two statements: the large-scale `C^{0,1}` estimate for caloric
+functions on the infinite cluster, Proposition 3.9 (`DarioGuLipschitzTwo`, a named statement, in the range `2r ≤ R`), and the
+Gaussian upper bound of Barlow (Theorem 4, `BarlowGaussianUpperBoundTwo`, cited). The proof is that of the source
+(DG21.tex, proof of Theorem 3): Proposition 3.9 applied to the heat kernel on a cylinder of radius of order `√t`, its right
+side bounded by Barlow's bound at the poles near the centre, after the minimal time `T'_NA` of (3.52). The parabolic
+Caccioppoli inequality (Proposition 2.9) and the time-slice estimate (Lemma 2.10), used in the proof of Proposition 3.9, are
+proved, the latter in its unnormalized form.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.DarioGuLipschitzTwo`](Rigidity/Proofs/Green/DarioGuParabolicInputs.lean), [`IsClusterCaloric`](Rigidity/Proofs/Green/DarioGuParabolicInputs.lean), [`coarsenPar`](Rigidity/Proofs/Green/DarioGuParabolicInputs.lean) | Proposition 3.9 as a named statement: `sup_{t ∈ I_r} ‖∇u(t)‖_{L̲²(𝒞_∞ ∩ B_r(y))} ≤ (C/R) ‖[u]_𝒫 - ([u]_𝒫)_{I_R × B_R(y)}‖_{L̲²(I_R × B_R(y))}` for `M(y) ≤ r`, `2r ≤ R`, `u` caloric on `I_R × (𝒞_∞ ∩ B_R(y))`, with the coarsening `[u]_𝒫` through the anchors of the planar partition. |
+| [`darioGuGradientBoundTwo_of_lipschitz`](Rigidity/Proofs/Green/DarioGuGradientFromLipschitz.lean), [`goodTimes_anchorDist`](Rigidity/Proofs/Green/DarioGuGradientFromLipschitz.lean), [`abs_coarsenPar_openHeat_le`](Rigidity/Proofs/Green/DarioGuGradientFromLipschitz.lean) | Theorem 3 (Remark 1.3) from Proposition 3.9 and Theorem 4; the tail of the distance to the anchors of the partition cubes; the bound of the coarsened heat kernel on the cylinder. |
+| [`darioGuCaccioppoliTwo_holds`](Rigidity/Proofs/Green/DarioGuParabolicCaccioppoli.lean), [`parabolic_caccioppoli_of_cutoff`](Rigidity/Proofs/Green/DarioGuParabolicCaccioppoli.lean) | Proposition 2.9 (parabolic Caccioppoli inequality, `DarioGuCaccioppoliTwo`), for every open component, with `C = 128`. |
+| [`darioGuTimesliceTwo_holds`](Rigidity/Proofs/Green/DarioGuParabolicTimeslice.lean), [`timeslice_of_cutoff`](Rigidity/Proofs/Green/DarioGuParabolicTimeslice.lean) | Lemma 2.10 (the `L^∞ L²` gradient estimate in time slices, `DarioGuTimesliceTwo`) in the unnormalized form, for every open component, with `C = 4096`. |
+
+The seven reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Dario and Gu:
+
+- **The range of Proposition 3.9.** As printed (lines 1699-1702, `r ∈ [M, R]`) the inequality fails at `r = R`: a
+  time-independent `u`, harmonic at the interior vertices of `𝒞_∞ ∩ B_R(y)` with values `±1` at the boundary vertices of
+  opposite signs along about `cR` open edges between them, has `‖∇u‖²_{L̲²(𝒞_∞ ∩ B_R(y))}` of order `R^{-1}` while the square
+  of the right side is at most of order `R^{-2}`. The proof of the source gives the estimate at the radius `r/2` for `r ∈ [M, R]`
+  (Step 4: "with the radius `r/2` instead of `r`"), that is for `2r ≤ R`, the range of `DarioGuLipschitzTwo`.
+- **The cylinder in the proof of Theorem 3.** With `2r ≤ R` and `t ≥ 4r²` the cylinder of the source (`R = √t/2`, top time
+  `t + 1`) is replaced by the cylinder of top time `t + r²/2` and radius `(7t/8 + r²/2)^{1/2}`, on which the times lie in
+  `[t/8, 9t/8]`; `t` is its time `-r²/2 ∈ I_r`.
+- **The gradient.** The gradient on the left of Theorem 3 and Proposition 3.9 is over the open edges inside the ball, as in
+  `DarioGuGradientBoundTwo`; the caloric functions are functions on `ℝ × ℤ²` constrained on `𝒞_∞ ∩ B_R(y)`, since the
+  coarsening on `B_R(y)` reads them at anchors which may lie outside the ball; they are continuous in time at the
+  vertices of the ball and solve the equation pointwise in time at its interior vertices (`IsClusterCaloric`), a
+  classical form of the weak solutions in `H_par`, whose boundary values need only be square integrable in time.
+- **Lemma 2.10 unnormalized.** With the normalized norms and a constant independent of the configuration the printed
+  inequality (lines 1023-1032) fails: if `𝒞_∞ ∩ B_{R/2}(y)` is a path of length of order `R` joining two large clusters of the
+  annulus, a time-independent caloric `u` close to `0` on one and to `1` on the other has the square of the left side of order `R^{-2}` and
+  the square of the right side of order `R^{-3}`. `DarioGuTimesliceTwo` is the unnormalized form,
+  `sup_{t ∈ I_{R/2}} ‖∇u(t)‖²_{L²(𝒞_∞ ∩ B_{R/2})} ≤ C R^{-2} ‖∇u‖²_{L²(I_R × (𝒞_∞ ∩ B_R))}`, which gives the printed one where the
+  volumes of `𝒞_∞ ∩ B_R(y)` and `𝒞_∞ ∩ B_{R/2}(y)` are comparable.
+- **Proofs written out.** The source omits the proofs of Proposition 2.9 and Lemma 2.10 (lines 1017-1019 and 1021, the
+  latter by reference to Lemma 8.2 of Armstrong, Kuusi and Mourrat); they are the standard energy arguments with a spatial
+  cutoff, by summation by parts on the cluster, and a time cutoff (Proposition 2.9) or an average over the initial time
+  (Lemma 2.10).
+
+Proposition 3.9 remains a named statement: its proof in the source goes through Theorem 5 (homogenization of the parabolic
+Dirichlet problem), whose printed estimate has no term in the time derivative of the boundary condition.
 
 ## The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10
 
@@ -2817,9 +2867,9 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 677 Lean files with 133,728 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 698 Lean files with 139,411 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,545 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,564 lines) are counted separately.
 
 ## Building
 
