@@ -53,8 +53,10 @@ not appear in the reports of the theorems.
 
 ## Comparators
 
-`RigidityAudit/` has four pairs, `Lipschitz/`, `IntegerLinearGrowth/`, `FastDecay/` and
-`SlowMixing/`, for Theorems 1.1, 1.2, 1.3 and 6.5. Each has a mathlib-only `Challenge.lean`, a
+`RigidityAudit/` has five pairs, `Lipschitz/`, `IntegerLinearGrowth/`, `FastDecay/` and
+`SlowMixing/`, for Theorems 1.1, 1.2, 1.3 and 6.5, and `SlowMixingUnconditional/`, for Theorem 6.5
+with the regime as its only hypothesis (its vocabulary is that of `SlowMixing/` without the three
+cited results, and its solution uses `SlowMixing/SolutionBasic.lean`). Each has a mathlib-only `Challenge.lean`, a
 `Solution.lean` that proves the same statement from the library, and a `comparator.json` that
 permits exactly `propext`, `Classical.choice` and `Quot.sound` and enables the nanoda kernel. Do
 not add a declaration to a challenge that the statement does not need, and do not change a
@@ -71,5 +73,5 @@ check is a failure.
   runs the axiom audit and builds the comparator surface. It runs on pushes to `main` that change
   more than documentation, the paper, `formalization.yaml` or `CITATION.cff`.
 - **Comparator audit** (`.github/workflows/comparator.yml`) builds the comparator tools at pinned
-  revisions and runs the four pairs with the Lean kernel and the independent nanoda kernel. It is
+  revisions and runs the five pairs with the Lean kernel and the independent nanoda kernel. It is
   started manually from the Actions page.

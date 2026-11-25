@@ -152,7 +152,7 @@ status:
     declaration.
   sorry_count: 0
   sorry_count_scope: "Rigidity/ and Rigidity.lean"
-  comparator_challenge_sorry_count: 4
+  comparator_challenge_sorry_count: 5
   sorry_in_definitions: 0
   axioms:
     - "propext"
@@ -237,6 +237,7 @@ status:
       statement: "Theorem 6.5, with its three literature inputs proved"
       sorry_count: 0
       axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "RigidityAudit/SlowMixingUnconditional/comparator.json"
       literature_dependencies: []
 
 automation:
@@ -292,7 +293,7 @@ automation:
     the policy that results of the literature enter only as explicit hypotheses. Every numbered
     result was stated in Lean before its proof; each proof step of the paper was then stated as its
     own Lean proposition and proved from the propositions of the steps it uses. Every proof is
-    checked by the Lean kernel. The library contains no sorry; each of the four comparator challenge
+    checked by the Lean kernel. The library contains no sorry; each of the five comparator challenge
     files contains exactly one intentional statement-level sorry, which the corresponding
     Solution.lean proves.
 
