@@ -117,7 +117,8 @@ theorem laplacian_heatFlowG (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {t : �
     exact Finset.sum_congr rfl fun z' _ => by rw [heatDeriv_zero, heatDeriv_zero]; ring
   rw [hfun]
   exact hasSum_sum fun z' _ =>
-    (summable_vsrwHeat_mul_l2 hD hdeg ht hf z').hasSum.sub (summable_vsrwHeat_mul_l2 hD hdeg ht hf z).hasSum
+    (summable_vsrwHeat_mul_l2 hD hdeg ht hf z').hasSum.sub
+      (summable_vsrwHeat_mul_l2 hD hdeg ht hf z).hasSum
 
 /-- `(Δ P_t f)(z)² ≤ 8 (2t)^{-2} p_{t/2}(z, z) Σ_w f(w)²` for `t > 0`. -/
 theorem sq_laplacian_heatFlowG_le (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {t : ℝ} (ht : 0 < t)
