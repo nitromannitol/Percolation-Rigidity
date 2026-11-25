@@ -1553,6 +1553,7 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
+
 -- Proposition 2.7 (second part) of Dario and Gu in dimension two and Steps 1, 2, 3 and 5 of the proof of Theorem 5
 #print axioms Rigidity.Green.sum_neg_openLaplacian_mul
 #print axioms Rigidity.Green.sum_mul_le_of_weakNormLe
