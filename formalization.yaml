@@ -421,10 +421,16 @@ fidelity:
     two follows from Proposition 4.3, Theorem 3 (Remark 1.3), Barlow's bound and Lemma 3.3 of Dario,
     or its flip form; Proposition 4.3 is proved from Proposition 2.13, the weak norm of the flux, and the
     quantitative corrector estimate, with the centered flux in place of the translated flux, the weight (4.27) handled by the
-    edge identity and the steps that the source leaves to the reader written out; Proposition 2.13 is proved in dimension two
-    (Appendix B, from Proposition 1.1 of Gu, proved here with the heat kernel of Z^2, the weak norm of the flux of Z^2 by a dyadic
-    heat decomposition, the weak norm of the density from Proposition A.1, the coarsening of the test functions by the anchors of
-    the partition of the good cubes and a minimal scale), so that Theorem 1 follows from Theorem 3 and Barlow's bound alone) (the Carne-Varopoulos bound
+    edge identity and the steps that the source leaves to the reader written out, so that Theorem 1 follows from Proposition 2.13,
+    Theorem 3, Barlow's bound and Lemma 3.3 of Dario, its flip form, or Lemma 3.5 with the Step 2 sum; Theorem 3 in the form of
+    Remark 1.3 is proved from Barlow's bound by an elliptic estimate for the time slices of the heat kernel, without Theorem 5
+    and Proposition 3.9 of the source (Rigidity.Green.darioGuGradientBoundTwo_holds), so that Theorems 1 and 2 of Dario and Gu
+    in dimension two follow from Proposition 2.13 alone (Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux);
+    Proposition 2.13 is proved in dimension two (Appendix B, from Proposition 1.1 of Gu, proved here with the heat kernel of Z^2,
+    the weak norm of the flux of Z^2 by a dyadic heat decomposition, the weak norm of the density from Proposition A.1, the
+    coarsening of the test functions by the anchors of the partition of the good cubes and a minimal scale;
+    Rigidity.Green.darioGuFluxWeakNormTwo_holds), so that Theorems 1 and 2 of Dario and Gu and Theorem 1.3 hold in dimension two
+    with no hypothesis (Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds, fast_decay_holds)) (the Carne-Varopoulos bound
     for small times is proved for the lazy walk; the pairs of points in a ball are treated by a
     union bound and the time integral of the Gaussian kernel is normalized by its value at a unit
     vector), for

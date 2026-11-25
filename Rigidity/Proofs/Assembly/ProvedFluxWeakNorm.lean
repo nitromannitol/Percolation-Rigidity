@@ -5,6 +5,7 @@ import Rigidity.Proofs.Poincare.DarioStepTwoBridges
 import Rigidity.Proofs.Assembly.PlanarDarioGu
 import Rigidity.Proofs.Assembly.ProvedBarlow
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
+import Rigidity.Proofs.Assembly.ProvedGradient
 
 /-!
 # The results that use Proposition 2.13 of Dario–Gu, with Proposition 2.13 proved
@@ -26,7 +27,11 @@ results that took it as the hypothesis `hflux` are restated without it:
 * with the Gaussian upper bound of Barlow proved (`barlowGaussianUpperBoundTwo_holds`), Theorem 1
   and Theorem 2 of Dario and Gu and Theorem 1.3 in dimension two from Theorem 3 alone
   (`darioGuHeatKernelTwo_of_gradient`, `supercriticalBondGreenQuantitativeTwo_of_gradient`,
-  `fast_decay_of_gradient`).
+  `fast_decay_of_gradient`);
+* with Theorem 3 of Dario and Gu proved too (`darioGuGradientBoundTwo_holds`), Theorem 1 and
+  Theorem 2 of Dario and Gu and Theorem 1.3 in dimension two with no hypothesis
+  (`darioGuHeatKernelTwo_holds`, `supercriticalBondGreenQuantitativeTwo_holds`,
+  `fast_decay_holds`).
 -/
 
 namespace Rigidity.Assembly.ProvedFluxWeakNorm
@@ -128,5 +133,21 @@ theorem fast_decay_of_gradient (p : unitInterval) (hpc : criticalProbability 2 <
     (hp1 : (p : ℝ) < 1) (hG3 : DarioGuGradientBoundTwo) : Rigidity.Section5.FastDecayStmt p :=
   Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient p hpc hp1
     darioGuFluxWeakNormTwo_holds hG3
+
+/-- **Theorem 1 of Dario–Gu in dimension two**, with no hypothesis. -/
+theorem darioGuHeatKernelTwo_holds : DarioGuHeatKernelTwo :=
+  Rigidity.Assembly.WithProvedBarlow.darioGuHeatKernelTwo_of_flux darioGuFluxWeakNormTwo_holds
+
+/-- **Theorem 2 of Dario–Gu in dimension two** (`SupercriticalBondGreenQuantitativeTwo`, the
+quantitative Green estimate with the random additive constant of the plane), with no hypothesis. -/
+theorem supercriticalBondGreenQuantitativeTwo_holds : SupercriticalBondGreenQuantitativeTwo :=
+  Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux
+    darioGuFluxWeakNormTwo_holds
+
+/-- **Theorem 1.3** of the paper (fast decay on the planar cluster), with no literature
+hypothesis: for `p_c(2) < p < 1`. -/
+theorem fast_decay_holds (p : unitInterval) (hpc : criticalProbability 2 < (p : ℝ))
+    (hp1 : (p : ℝ) < 1) : Rigidity.Section5.FastDecayStmt p :=
+  Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux p hpc hp1 darioGuFluxWeakNormTwo_holds
 
 end Rigidity.Assembly.ProvedFluxWeakNorm
