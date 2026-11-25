@@ -254,7 +254,13 @@ theorem measure_not_weightGood_le_large {p : unitInterval} {κ : ℕ} (hκ : 1 �
   refine hA.trans (ENNReal.ofReal_le_ofReal (hreal n _ ?_ hle))
   rw [Nat.cast_pow, Nat.cast_ofNat]
 
-/-- **The failure bound for the weight bound of the triadic cubes.** -/
+/-- **The failure bound for the weight bound of the triadic cubes**, in place of Lemma 3.7 of
+Dario (the minimal scale (3.31)): for each `q ≥ 1` there is `M` such that a triadic cube `T` of
+side `3ⁿ` fails `Σ_{u ∈ T} W(u)^q ≤ M |T|` for the weight `W` of the Step 2 sum, or has a vertex of
+infinite weight, with probability at most `C₁ exp(−c (3ⁿ)^{s₀})`. Dario states (3.31) on the
+cubes `□_m` above a minimal scale, for the weight `size(□_𝒫(z))^{3d} Σ (𝒳^e(x))^d` and the exponent
+`(2 + ε)/ε`; here the weight is that of the Step 2 sum in flip form, `q` is any exponent, and the
+bound is a tail bound for each triadic cube. -/
 theorem exists_measure_not_weightGood_le {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw 2 p, ω ∈ G) {κ : ℕ} (hκ : 1 ≤ κ) {q : ℝ} (hq : 1 ≤ q) :

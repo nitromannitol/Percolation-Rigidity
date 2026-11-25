@@ -71,8 +71,11 @@ theorem exists_measure_not_mem_stepTwoGood_le {p : unitInterval}
     _ = _ := by ring
 
 /-- **The partition of the good cubes of the summation of estimate (2)** (Proposition 2.1 of
-Armstrong and Dario): almost surely every vertex lies in exactly one maximal good cube, and the
-sizes of the cubes have stretched exponential moments. -/
+Armstrong and Dario), in place of the partition `𝒰` of Definition 3.8 of Dario: almost surely every
+vertex lies in exactly one maximal good cube, and the sizes of the cubes have stretched exponential
+moments. Dario's good cubes carry (3.30) and (3.31); here they carry the homogeneous Meyers estimate
+on their children, from which `meyers_source` gives estimate (2) in place of (3.30), and the weight
+bound of `exists_measure_not_weightGood_le` in place of (3.31). -/
 theorem exists_stepTwoGood_partition {p : unitInterval}
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw 2 p, ω ∈ G) {κ : ℕ} (hκ : 1 ≤ κ) :
