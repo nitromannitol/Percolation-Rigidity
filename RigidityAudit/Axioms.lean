@@ -439,6 +439,7 @@ import Rigidity.Proofs.Green.DarioGuDirichletSteps
 import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
 import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
+import Rigidity.Proofs.Assembly.PlanarDarioGuDirect
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1592,3 +1593,16 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Green.parabolic_caccioppoli_of_cutoff
 #print axioms Rigidity.Green.darioGuTimesliceTwo_holds
 #print axioms Rigidity.Green.timeslice_of_cutoff
+
+-- Theorem 3 of Dario and Gu (Remark 1.3) from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4, in dimension two
+#print axioms Rigidity.Green.abs_heatDeriv_two_le
+#print axioms Rigidity.Green.exitFunction_le_two_mul
+#print axioms Rigidity.Green.abs_sub_le_mul_exitFunction
+#print axioms Rigidity.Green.exists_nL2_sub_le_of_laplacian
+#print axioms Rigidity.Green.pairEnergy_le_of_laplacian
+#print axioms Rigidity.Green.exists_orderZero_clusterBall
+#print axioms Rigidity.Green.sqrt_gradEnergy_openHeat_le
+#print axioms Rigidity.Green.darioGuGradientBoundTwo_of_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenQuantitativeTwo_of_flux_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow

@@ -1074,6 +1074,18 @@ further = {
          'Rigidity.Green.parabolic_caccioppoli_of_cutoff',
          'Rigidity.Green.darioGuTimesliceTwo_holds',
          'Rigidity.Green.timeslice_of_cutoff'],
+    'Theorem 3 of Dario and Gu from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4 (d = 2)':
+        ['Rigidity.Green.abs_heatDeriv_two_le',
+         'Rigidity.Green.exitFunction_le_two_mul',
+         'Rigidity.Green.abs_sub_le_mul_exitFunction',
+         'Rigidity.Green.exists_nL2_sub_le_of_laplacian',
+         'Rigidity.Green.pairEnergy_le_of_laplacian',
+         'Rigidity.Green.exists_orderZero_clusterBall',
+         'Rigidity.Green.sqrt_gradEnergy_openHeat_le',
+         'Rigidity.Green.darioGuGradientBoundTwo_of_barlow',
+         'Rigidity.Assembly.WithPlanarInputs.darioGuHeatKernelTwo_of_flux_barlow',
+         'Rigidity.Assembly.WithPlanarInputs.supercriticalBondGreenQuantitativeTwo_of_flux_barlow',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_barlow'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
