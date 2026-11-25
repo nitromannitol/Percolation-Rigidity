@@ -27,7 +27,10 @@ one) and the quantitative estimate of the Green function of Dario and Gu; the di
 of the first three are proved. Theorem 6.5 is proved with no literature hypothesis. The Gaussian
 upper bound of Barlow, which is not one of the twelve inputs but enters the dimension-two proof of
 Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in dimension two
-(`barlowGaussianUpperBoundTwo_holds`). The five numbered results that the paper does not prove are
+(`barlowGaussianUpperBoundTwo_holds`), and so is Proposition 2.13 of Dario and Gu, the weak norm of
+the centered flux of the corrector (`darioGuFluxWeakNormTwo_holds`), so that the quantitative
+estimate of the Green function in dimension two, and Theorem 1.3, follow from Theorem 3 of Dario and
+Gu alone (`ProvedFluxWeakNorm.fast_decay_of_gradient`). The five numbered results that the paper does not prove are
 quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
 Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
 them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
