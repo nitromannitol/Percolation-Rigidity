@@ -3,6 +3,8 @@ import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
 import Rigidity.Proofs.Poincare.DarioGuFluxBridges
 import Rigidity.Proofs.Poincare.DarioStepTwoBridges
 import Rigidity.Proofs.Assembly.PlanarDarioGu
+import Rigidity.Proofs.Assembly.ProvedBarlow
+import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 
 /-!
 # The results that use Proposition 2.13 of Dario–Gu, with Proposition 2.13 proved
@@ -19,7 +21,12 @@ results that took it as the hypothesis `hflux` are restated without it:
 * the quantitative Green function estimate `SupercriticalBondGreenQuantitativeTwo` from these two
   inputs (`supercriticalBondGreenQuantitativeTwo_of_gradient_barlow`);
 * Theorem 1.3 of the paper in dimension two from these two inputs
-  (`fast_decay_of_gradient_barlow`).
+  (`fast_decay_of_gradient_barlow`), or from Theorem 3 and the very good balls of the cluster
+  (`fast_decay_of_gradient_veryGood`);
+* with the Gaussian upper bound of Barlow proved (`barlowGaussianUpperBoundTwo_holds`), Theorem 1
+  and Theorem 2 of Dario and Gu and Theorem 1.3 in dimension two from Theorem 3 alone
+  (`darioGuHeatKernelTwo_of_gradient`, `supercriticalBondGreenQuantitativeTwo_of_gradient`,
+  `fast_decay_of_gradient`).
 -/
 
 namespace Rigidity.Assembly.ProvedFluxWeakNorm
@@ -96,5 +103,30 @@ theorem fast_decay_of_gradient_barlow (p : unitInterval) (hpc : criticalProbabil
     Rigidity.Section5.FastDecayStmt p :=
   Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_barlow p hpc hp1
     darioGuFluxWeakNormTwo_holds hG3 hBar
+
+/-- **Theorem 1.3** of the paper in dimension two from Theorem 3 of Dario and Gu and the very good
+balls of the cluster. -/
+theorem fast_decay_of_gradient_veryGood (p : unitInterval)
+    (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) (hG3 : DarioGuGradientBoundTwo)
+    (hVG : Rigidity.Barlow.ClusterVeryGoodBallsTwo) : Rigidity.Section5.FastDecayStmt p :=
+  Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood p hpc hp1
+    darioGuFluxWeakNormTwo_holds hG3 hVG
+
+/-- **Theorem 1 of Dario–Gu in dimension two** from Theorem 3 (Remark 1.3) alone. -/
+theorem darioGuHeatKernelTwo_of_gradient (hG3 : DarioGuGradientBoundTwo) : DarioGuHeatKernelTwo :=
+  darioGuHeatKernelTwo_of_gradient_barlow hG3 Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
+
+/-- **Theorem 2 of Dario–Gu in dimension two** (`SupercriticalBondGreenQuantitativeTwo`) from
+Theorem 3 (Remark 1.3) alone. -/
+theorem supercriticalBondGreenQuantitativeTwo_of_gradient (hG3 : DarioGuGradientBoundTwo) :
+    SupercriticalBondGreenQuantitativeTwo :=
+  supercriticalBondGreenQuantitativeTwo_of_gradient_barlow hG3
+    Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
+
+/-- **Theorem 1.3** of the paper in dimension two from Theorem 3 of Dario and Gu alone. -/
+theorem fast_decay_of_gradient (p : unitInterval) (hpc : criticalProbability 2 < (p : ℝ))
+    (hp1 : (p : ℝ) < 1) (hG3 : DarioGuGradientBoundTwo) : Rigidity.Section5.FastDecayStmt p :=
+  Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient p hpc hp1
+    darioGuFluxWeakNormTwo_holds hG3
 
 end Rigidity.Assembly.ProvedFluxWeakNorm

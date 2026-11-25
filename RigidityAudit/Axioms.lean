@@ -208,6 +208,7 @@ import Rigidity.Proofs.Corrector.OsCalculus
 import Rigidity.Proofs.Corrector.PlanarCorrectorQuantitative
 import Rigidity.Proofs.Corrector.CorrectorQuantitative
 import Rigidity.Proofs.Corrector.Concentration
+import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
 import Rigidity.Proofs.Green.HeatTimeIntegrals
 import Rigidity.Proofs.Green.LazyCarneVaropoulos
@@ -435,6 +436,13 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
 import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
 import Rigidity.Proofs.Assembly.ProvedFluxWeakNorm
+import Rigidity.Proofs.Green.DarioGuDirichletSteps
+import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
+import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
+import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
+import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
+import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
+import Rigidity.Proofs.Assembly.ProvedBarlow
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1581,3 +1589,74 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_of_gradient_barlow
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient_barlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient_veryGood
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient
+-- The multiscale Poincare inequality (2.26) of Dario in every dimension
+#print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
+#print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
+#print axioms Rigidity.Poincare.GeneralDim.exists_steinSigned
+
+-- Proposition 2.7 (second part) of Dario and Gu in dimension two and Steps 1, 2, 3 and 5 of the proof of Theorem 5
+#print axioms Rigidity.Green.sum_neg_openLaplacian_mul
+#print axioms Rigidity.Green.sum_mul_le_of_weakNormLe
+#print axioms Rigidity.Green.integral_sum_sq_le_of_energy
+#print axioms Rigidity.Green.weakNormLe_sqrt_sum_sq
+#print axioms Rigidity.Green.WeakNormLe.mul_right
+#print axioms Rigidity.Green.weakNormLe_sum_antisymm
+#print axioms Rigidity.Green.openLaplacian_cutoffTwoScale
+#print axioms Rigidity.Green.openLaplacian_cutoffTwoScale_of_corrector
+#print axioms Rigidity.Green.timeDeriv_sub_openLaplacian_cutoffTwoScale
+#print axioms Rigidity.Green.weakNormLe_div_field
+#print axioms Rigidity.Green.weakNormLe_time_term
+#print axioms Rigidity.Green.weakNormLe_flux_term
+#print axioms Rigidity.Green.weakNormLe_twoScale_equation
+#print axioms Rigidity.Green.clusterDirichletPoincareTwo_holds
+#print axioms Rigidity.Green.sum_sq_le_of_weakPoincare
+#print axioms Rigidity.Green.sum_sq_twoScale_sub_le
+#print axioms Rigidity.Green.integral_sum_sq_le_of_dirichletPoincare
+#print axioms Rigidity.Green.dgStepFive
+#print axioms Rigidity.Green.abs_discrete_div_sub_le
+#print axioms Rigidity.Green.weakNormLe_term_a
+
+-- Theorem 3 of Dario and Gu (Remark 1.3) from Proposition 3.9 and Theorem 4, and Proposition 2.9 and Lemma 2.10 (unnormalized), in dimension two
+#print axioms Rigidity.Green.darioGuGradientBoundTwo_of_lipschitz
+#print axioms Rigidity.Green.goodTimes_anchorDist
+#print axioms Rigidity.Green.abs_coarsenPar_openHeat_le
+#print axioms Rigidity.Green.darioGuCaccioppoliTwo_holds
+#print axioms Rigidity.Green.parabolic_caccioppoli_of_cutoff
+#print axioms Rigidity.Green.darioGuTimesliceTwo_holds
+#print axioms Rigidity.Green.timeslice_of_cutoff
+
+-- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
+#print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.clusterPoincare_holds
+#print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_of_goodBalls
+#print axioms Rigidity.WeakPoincare.planarVeryGoodBalls_holds
+#print axioms Rigidity.WeakPoincare.sum_sq_sub_finAvg_clusterBall_le
+
+-- The Gaussian upper bound of Barlow (Theorem 4 of Dario and Gu) from the very good balls of the cluster (d = 2)
+#print axioms Rigidity.Barlow.tsum_mul_openLaplacian
+#print axioms Rigidity.Barlow.hasDerivAt_openHeat_two_mul
+#print axioms Rigidity.Barlow.openHeat_diag_le_of_good
+#print axioms Rigidity.Barlow.openHeat_le_of_good
+#print axioms Rigidity.Barlow.neg_log_le_heatEntropy
+#print axioms Rigidity.Barlow.heatEntropy_le_log_meanDist
+#print axioms Rigidity.Barlow.meanDist_le_of_entropy
+#print axioms Rigidity.Barlow.exitGen_le_mul_of_subset
+#print axioms Rigidity.Barlow.mul_exitProb_le
+#print axioms Rigidity.Barlow.exitProb_clBall_le
+#print axioms Rigidity.Barlow.exitProb_clBall_le_exp
+#print axioms Rigidity.Barlow.BarlowRegion.tsum_far_le
+#print axioms Rigidity.Barlow.BarlowRegion.openHeat_le_gauss
+#print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_veryGood
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_veryGood
+
+-- The Gaussian upper bound of Barlow with no hypothesis, and Theorem 1.3 without it (d = 2)
+#print axioms Rigidity.Barlow.clusterVeryGoodBallsTwo_holds
+#print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections
+#print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient
