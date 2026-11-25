@@ -148,4 +148,79 @@ theorem sum_sq_le_of_weakPoincare (ω : Configuration 2) {V W W' : Finset (Verte
   rw [hV]
   nlinarith
 
+/-- **The Poincaré inequality for functions vanishing on the boundary of a ball of the planar
+infinite cluster** (Dario–Gu, Proposition 2.7, second part, `p = 2`). -/
+theorem clusterDirichletPoincareTwo_holds : ClusterDirichletPoincareTwo := by
+  intro p hpc hp1
+  obtain ⟨sP, CP, L, hsP, hCP, hL, hP⟩ := clusterPoincareTwo_holds p hpc hp1
+  obtain ⟨sD, CD, cD, hsD, hCD, hcD, hD⟩ :=
+    clusterDensityInputFaithful_of_concentration cluster_density_concentration 2 le_rfl p hpc hp1
+  set K : ℝ := max 1 (Real.sqrt (50 / (cD * 100 ^ 2))) with hK
+  have hK1 : 1 ≤ K := le_max_left _ _
+  have hK2 : 50 ≤ cD * 100 ^ 2 * K ^ 2 := by
+    have h1 : Real.sqrt (50 / (cD * 100 ^ 2)) ≤ K := le_max_right _ _
+    have h2 : 50 / (cD * 100 ^ 2) ≤ K ^ 2 := by
+      have := pow_le_pow_left₀ (Real.sqrt_nonneg _) h1 2
+      rwa [Real.sq_sqrt (by positivity)] at this
+    have h3 : (0 : ℝ) < cD * 100 ^ 2 := by positivity
+    rw [div_le_iff₀ h3] at h2
+    linarith
+  set s := min sP sD with hs
+  have hs0 : 0 < s := lt_min hsP hsD
+  set θP := CP * 6 ^ (1 / s)
+  set θD := CD * 6 ^ (1 / s)
+  set θ1 := (1 : ℝ) * 3 ^ (1 / s)
+  set θ2 := max θD θ1 * 4 ^ (1 / s)
+  set θ := max θP θ2 * 4 ^ (1 / s)
+  set C := max θ (Real.sqrt 6 * CP * K) with hC
+  have hθP : 0 < θP := by positivity
+  have hθ2 : 0 < θ2 := by positivity
+  have hθ : 0 < θ := by positivity
+  have hC0 : 0 < C := lt_max_of_lt_left hθ
+  refine ⟨s, C, hs0, hC0, fun y => ?_⟩
+  obtain ⟨MP, hMPm, hMP0, hMPos, hPae⟩ := hP y
+  obtain ⟨MD, hMDm, hMD0, hMDos, hDae⟩ := hD y
+  have hosP : IsOsBond 2 p MP s θP := IsOsBond.mono_exponent hs0 (min_le_left _ _) hMPm hMPos
+  have hosD : IsOsBond 2 p MD s θD := IsOsBond.mono_exponent hs0 (min_le_right _ _) hMDm hMDos
+  have hos1 : IsOsBond 2 p (fun _ => (1 : ℝ)) s θ1 := isOsBond_const one_pos hs0
+  have hos2 := IsOsBond.max hs0 (by positivity) (by positivity) hMDm measurable_const hosD hos1
+  have hos := IsOsBond.max hs0 hθP hθ2 hMPm (hMDm.max measurable_const) hosP hos2
+  set M : Configuration 2 → ℝ := fun ω => max (MP ω) (max (MD ω) 1) with hM
+  have hMm : Measurable M := hMPm.max (hMDm.max measurable_const)
+  refine ⟨M, hMm, fun ω => le_max_of_le_right (le_max_of_le_right zero_le_one),
+    IsOsBond.mono_scale hs0 hθ (le_max_left _ _) hMm hos, ?_⟩
+  filter_upwards [hPae, hDae] with ω hPω hDω
+  intro h R hR u hu
+  set Kc := uniqueInfiniteComponent h
+  have hR1 : 1 ≤ R := (le_max_right _ _).trans ((le_max_right _ _).trans hR)
+  have hRD : MD ω ≤ R := (le_max_left _ _).trans ((le_max_right _ _).trans hR)
+  have hRP : MP ω ≤ R := (le_max_left _ _).trans hR
+  have hR0 : 0 < R := by linarith
+  have hKR : R ≤ K * R := le_mul_of_one_le_left hR0.le hK1
+  have hLKR : K * R ≤ L * (K * R) := le_mul_of_one_le_left (by positivity) hL
+  have hVW : clusterBall Kc y R ⊆ clusterBall Kc y (K * R) := clusterBall_mono hKR
+  have hWW' : clusterBall Kc y (K * R) ⊆ clusterBall Kc y (L * (K * R)) := clusterBall_mono hLKR
+  have hvol : cD * 100 ^ 2 * K ^ 2 * R ^ 2 ≤ (clusterBall Kc y (K * R)).card := by
+    have h1 := hDω h (100 * (K * R)) (by nlinarith) (latticeEuclideanEmbedding y) (by
+      rw [dist_self]; positivity)
+    rw [show 100 * (K * R) / 100 = K * R by ring, ncard_eq_card_clusterBall] at h1
+    calc cD * 100 ^ 2 * K ^ 2 * R ^ 2 = cD * (100 * (K * R)) ^ 2 := by ring
+      _ ≤ _ := h1
+  have hcardV : ((clusterBall Kc y R).card : ℝ) ≤ 25 * R ^ 2 := card_clusterBall_le Kc y hR1
+  have hcard : 2 * ((clusterBall Kc y R).card : ℝ) ≤ (clusterBall Kc y (K * R)).card := by
+    nlinarith [sq_nonneg R]
+  have hPu := hPω h (K * R) (hRP.trans hKR) (extendZero (clusterBall Kc y R) u)
+  have hmain := sum_sq_le_of_weakPoincare ω hVW hWW' hcard hu hPu
+  have hG0 := gradEnergy_nonneg ω (clusterBall Kc y R) u
+  have hCK : 6 * CP ^ 2 * K ^ 2 ≤ C ^ 2 := by
+    have h1 : Real.sqrt 6 * CP * K ≤ C := le_max_right _ _
+    have h2 := pow_le_pow_left₀ (by positivity) h1 2
+    rw [mul_pow, mul_pow, Real.sq_sqrt (by norm_num)] at h2
+    linarith
+  calc ∑ x ∈ clusterBall Kc y R, u x ^ 2
+      ≤ 6 * CP ^ 2 * (K * R) ^ 2 * gradEnergy ω (clusterBall Kc y R) u := hmain
+    _ = 6 * CP ^ 2 * K ^ 2 * R ^ 2 * gradEnergy ω (clusterBall Kc y R) u := by ring
+    _ ≤ C ^ 2 * R ^ 2 * gradEnergy ω (clusterBall Kc y R) u := by gcongr
+    _ = (C * R) ^ 2 * gradEnergy ω (clusterBall Kc y R) u := by ring
+
 end Rigidity.Green

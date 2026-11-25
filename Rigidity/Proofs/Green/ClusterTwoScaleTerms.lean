@@ -11,7 +11,8 @@ rule (3.26), the bound (3.27) and the divergence form. This file proves these bo
 decomposition of `timeDeriv_sub_openLaplacian_cutoffTwoScale`:
 
 * `weakNormLe_div_field`: the divergence `Σ_i (H_i(x) - H_i(x - e_i))` of a field carried by the
-  open edges has norm at most `|V|^{-1/2} (Σ_{x ∈ V} Σ_i (H_i(x)² + H_i(x - e_i)²))^{1/2}` (the terms
+  open edges has norm at most `|V|^{-1/2} (Σ_{x ∈ V} Σ_i (H_i(x)² + H_i(x - e_i)²))^{1/2}`
+  (the terms
   (3.25)-c1 and e, first lines of (3.30) and (3.32));
 * `weakNormLe_time_term`: `Σ_k ∂_t F_k χ_k` ((3.25)-b, first line of (3.29));
 * `weakNormLe_flux_term`: `Σ_{k,i} g̃_{k,i} D_i F_k` ((3.25)-d, first line of (3.31));
@@ -122,7 +123,8 @@ theorem weakNormLe_div_field (ω : Configuration 2) (V : Finset (Vertex 2))
     intro x _
     set S := V.filter (fun z => (openGraph ω).Adj x z)
     have hpt : ∀ z, fieldEdge H x z ^ 2 ≤ 4 * ∑ i : Fin 2,
-        ((if z = x + unit i then H i x ^ 2 else 0) + (if x = z + unit i then H i z ^ 2 else 0)) := by
+        ((if z = x + unit i then H i x ^ 2 else 0) +
+          (if x = z + unit i then H i z ^ 2 else 0)) := by
       intro z
       unfold fieldEdge
       simp only [Fin.sum_univ_two]
