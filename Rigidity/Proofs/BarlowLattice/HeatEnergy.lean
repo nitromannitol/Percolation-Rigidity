@@ -23,6 +23,10 @@ open LatticeProb.Percolation Rigidity.Green Rigidity.WeakPoincare
 
 namespace Rigidity.BarlowLattice
 
+export Rigidity.WeakPoincare (latticeDist latticeDist_nonneg latticeDist_comm latticeDist_self
+  latticeDist_triangle latticeDist_sq clusterBall mem_clusterBall clusterBall_mono
+  card_clusterBall_le finAvg nbrEnergy IsGoodBall sum_sq_sub_finAvg_le)
+
 variable {d : ℕ}
 
 section Darts
