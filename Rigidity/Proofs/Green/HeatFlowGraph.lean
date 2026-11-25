@@ -13,8 +13,9 @@ summable `f`:
 * `laplacian_heatFlowG` and `sq_laplacian_heatFlowG_le`: `Δ(P_t f)(z) = Σ_w ∂_t p_t(z, w) f(w)` and
   `(Δ P_t f)(z)² ≤ 8 (2t)^{-2} p_{t/2}(z, z) ‖f‖²` (from `heatDeriv_two_le`).
 
-These are the bounds `|P_σ φ| ≤ C t^{-d/4}` and `|Δ P_σ φ| ≤ C t^{-d/4-1}` of the elliptic estimate (2)
-for the time slices of the heat semigroup, written with the diagonal of the heat kernel.
+With the diagonal bound `p_t(z, z) ≤ C t^{-d/2}` these give `|P_σ φ| ≤ C t^{-d/4} ‖φ‖` and
+`|Δ P_σ φ| ≤ C t^{-d/4-1} ‖φ‖`, the bounds on a ball of `|v|` and `|Δv|` for the elliptic oscillation
+estimate applied to a time slice `v = P_σ φ` of the heat semigroup.
 -/
 
 open scoped Classical

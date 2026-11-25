@@ -12,11 +12,12 @@ of Theorem 1, `|p(t, x, y) - θ^{-1} p̄(t, x - y)| ≤ C₁ t^{-β} e^{-|x-y|²
 
 * `G(x) = ∫_0^∞ p(t, x, y) dt` converges (`integrableOn_openHeatD`) and solves `-Δ G = δ_y`
   (`laplacian_timeGreenD`);
-* for `|x - y| ≥ T₀`,
-  `|G(x) - θ^{-1} ∫_0^∞ p̄(t, x - y) dt| ≤ C |x - y|^{2 - 2β}` (`abs_timeGreenD_sub_le`), splitting the
-  time integral at `|x - y|`, as in the proof of the source;
-* `G` tends to zero at infinity (`tendsto_timeGreenD`), so that it is a Green column
-  (`isGreenColumn_timeGreenD`).
+* for `|x - y| ≥ T₀`, `|G(x) - θ^{-1} ∫_0^∞ p̄(t, x - y) dt|` is at most the sum of the three terms of
+  `abs_timeGreenD_sub_le_raw`, splitting the time integral at `|x - y|`, as in the proof of the source.
+
+In `GreenQuantitativeThree.lean` these terms are bounded by `C |x - y|^{2 - 2β}`
+(`abs_timeGreenD_sub_le`), `G` tends to zero at infinity (`timeGreenD_small`) and `G` is a Green
+column (`isGreenColumn_timeGreenD`).
 -/
 
 open MeasureTheory Set Real Filter Topology LatticeProb.Percolation

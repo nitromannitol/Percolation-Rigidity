@@ -10,7 +10,7 @@ For `d ≥ 3`, `σ > 0` and `z ≠ 0` in `ℝ^d`, the Gaussian kernel
   `∫_0^∞ p̄(t, z) dt = Γ(d/2 - 1) / (2 π^{d/2} σ) |z|^{2-d}`  (`integral_gaussianHeatD`),
 
 so that `θ^{-1} ∫_0^∞ p̄(t, z) dt` is the homogenized Green function `continuumGreen d κ z` with
-`κ = σ θ / 2` (`integral_gaussianHeatD_eq_continuumGreen`). The proof is the Gamma integral
+`κ = σ θ / 2` (`inv_mul_integral_gaussianHeatD_eq`). The proof is the Gamma integral
 `∫_0^∞ t^{-a} e^{-b/t} dt = b^{1-a} Γ(a - 1)` (`integral_rpow_neg_mul_exp_neg_div`).
 -/
 
