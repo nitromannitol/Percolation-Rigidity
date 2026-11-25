@@ -2863,7 +2863,7 @@ Departures from Armstrong and Dario:
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 689 Lean files with 137,383 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 693 Lean files with 138,210 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
 lines) and the axiom report `RigidityAudit/Axioms.lean` (1,564 lines) are counted separately.
 
