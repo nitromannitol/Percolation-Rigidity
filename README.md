@@ -350,6 +350,10 @@ and the qualitative corrector input, by the printed proof of Proposition 2.12 of
 the dimension two case is `correctorQuantitativeInputTwo_holds`).
 The concentration inequality of Dario (Proposition 2.17) holds in every dimension
 ([`Rigidity.Corrector.GeneralDim.concentration_holds`](Rigidity/Proofs/Corrector/Concentration.lean)).
+The multiscale Poincaré inequality (2.26) of Dario (Proposition 2.19) holds in every dimension
+([`Rigidity.Poincare.GeneralDim.multiscalePoincare_holds`](Rigidity/Proofs/Poincare/GeneralMultiscalePoincare.lean),
+the lattice argument of the planar proof on `ℤ^d`, with a vector field of prescribed divergence
+along the coordinate paths in place of the planar row-and-column field).
 
 The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
 and the corrector inputs

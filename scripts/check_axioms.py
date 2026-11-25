@@ -1041,6 +1041,10 @@ further = {
         ['Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario'],
     'The concentration inequality of Dario (Proposition 2.17) in every dimension':
         ['Rigidity.Corrector.GeneralDim.concentration_holds'],
+    'The multiscale Poincare inequality (2.26) of Dario in every dimension':
+        ['Rigidity.Poincare.GeneralDim.multiscalePoincare_holds',
+         'Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box',
+         'Rigidity.Poincare.GeneralDim.exists_steinSigned'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

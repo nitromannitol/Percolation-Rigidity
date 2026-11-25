@@ -281,4 +281,69 @@ theorem exists_multiscalePoincare_box [NeZero d] : ∃ K : ℝ, 0 < K ∧ ∀ u 
   exact ENNReal.ofReal_le_ofReal (div_pow_le_of_le_rpow hVpos hQ0 hR0
     (mul_nonneg (by linarith) hq0.le) hq0 hpq hsumR)
 
+/-- `|Φ_{r²} * ∇u(x)| = Σ_j |Σ_y Φ_{r²}(x, y) ∇_j u(y)|`, the integrand of Dario's (2.26). -/
+noncomputable def heatGradient (u : Vertex d → ℝ) (r : ℝ) (x : Vertex d) : ℝ :=
+  ∑ j : Fin d, |∑' y, zdHeat d (r ^ 2) x y * (u (y + unit j) - u y)|
+
+/-- The `L^q` oscillation `3^{-dm} Σ_{□_m} |u - (u)_{□_m}|^q` of `u` on the cube `□_m` of side
+`3^m` centred at the origin. -/
+noncomputable def boxOscFun (u : Vertex d → ℝ) (m : ℕ) (q : ℝ) : ℝ :=
+  (∑ z ∈ supBox 0 (3 ^ m / 2),
+    |u z - (∑ w ∈ supBox 0 (3 ^ m / 2), u w) / ((3 : ℝ) ^ m) ^ d| ^ q) / ((3 : ℝ) ^ m) ^ d
+
+/-- **The multiscale Poincaré inequality of Dario, Proposition 2.19 (2.26), in cube form at
+`R = 3^m` on `ℤ^d`**, with the bound `C(d, q) ≤ A₀ q^{3/2}` for `q ≥ 2`. The convolutions
+`Φ_{r²} * ∇u` of (2.26) are required to converge absolutely. -/
+def MultiscalePoincare (d : ℕ) (A₀ : ℝ) : Prop :=
+  ∀ u : Vertex d → ℝ, (∀ (x : Vertex d) (j : Fin d) (r : ℝ), 0 < r →
+      Summable fun y => zdHeat d (r ^ 2) x y * (u (y + unit j) - u y)) →
+    ∀ m : ℕ, 1 ≤ m → ∀ q : ℝ, 2 ≤ q →
+    ENNReal.ofReal (boxOscFun u m q) ≤
+      ENNReal.ofReal ((A₀ * q ^ (3 / 2 : ℝ)) ^ q) *
+        ∑' x : Vertex d, ENNReal.ofReal
+          (Real.exp (-‖latticeEuclideanEmbedding x‖ / (2 * 3 ^ m)) / ((3 : ℝ) ^ m) ^ d) *
+          (∫⁻ r in Set.Ioc 0 (2 * 3 ^ m), ENNReal.ofReal (r * heatGradient u r x ^ 2)) ^ (q / 2)
+
+/-- **Dario's multiscale Poincaré inequality, Proposition 2.19 (2.26), on `ℤ^d`**, `d ≥ 1`, with
+a constant `A₀ q^{3/2}` for every `q ≥ 2`. -/
+theorem multiscalePoincare_holds [NeZero d] : ∃ A₀ : ℝ, 0 < A₀ ∧ MultiscalePoincare d A₀ := by
+  obtain ⟨K, hK, hkey⟩ := exists_multiscalePoincare_box (d := d)
+  refine ⟨K, hK, fun u hsum m hm q hq => ?_⟩
+  have hu : HeatSummable u := by
+    intro x j t ht
+    have h := hsum x j (Real.sqrt t) (Real.sqrt_pos.2 ht)
+    rwa [Real.sq_sqrt ht.le] at h
+  set ρ : ℕ := 3 ^ m / 2 with hρ
+  have hodd : Odd (3 ^ m) := Odd.pow (by decide)
+  have hρ2 : 2 * ρ + 1 = 3 ^ m := Nat.two_mul_div_two_add_one_of_odd hodd
+  have hρ1 : 1 ≤ ρ := by
+    have h3 : 3 ≤ 3 ^ m := by
+      calc 3 = 3 ^ 1 := by norm_num
+        _ ≤ 3 ^ m := Nat.pow_le_pow_right (by norm_num) hm
+    omega
+  have hRreal : (2 * (ρ : ℝ) + 1) = 3 ^ m := by exact_mod_cast hρ2
+  have hcard : ((supBox (0 : Vertex d) ρ).card : ℝ) = ((3 : ℝ) ^ m) ^ d := by
+    rw [card_supBox]
+    push_cast
+    rw [hRreal]
+  have hLHS : boxOscFun u m q =
+      (∑ z ∈ supBox 0 ρ, |u z - boxMean (supBox 0 ρ) u| ^ q) / (2 * ρ + 1 : ℝ) ^ d := by
+    rw [boxOscFun, hRreal, boxMean, hcard]
+  have hRHS : ∀ x, dwt (2 * ρ + 1) x * sqInt u (2 * (2 * ρ + 1)) x ^ (q / 2) =
+      ENNReal.ofReal (Real.exp (-‖latticeEuclideanEmbedding x‖ / (2 * 3 ^ m)) /
+          ((3 : ℝ) ^ m) ^ d) *
+        (∫⁻ r in Set.Ioc 0 (2 * 3 ^ m),
+          ENNReal.ofReal (r * heatGradient u r x ^ 2)) ^ (q / 2) := by
+    intro x
+    rw [dwt, sqInt, hRreal]
+    rfl
+  have h := hkey u hu ρ hρ1 q hq
+  rw [← hLHS] at h
+  simp only [hRHS] at h
+  refine h.trans (mul_le_mul_of_nonneg_right (ENNReal.ofReal_le_ofReal ?_) (by simp))
+  have hq1 : (1 : ℝ) ≤ q := by linarith
+  refine Real.rpow_le_rpow (by positivity) (mul_le_mul_of_nonneg_left ?_ hK.le) (by linarith)
+  calc q = q ^ (1 : ℝ) := (Real.rpow_one q).symm
+    _ ≤ q ^ (3 / 2 : ℝ) := Real.rpow_le_rpow_of_exponent_le hq1 (by norm_num)
+
 end Rigidity.Poincare.GeneralDim

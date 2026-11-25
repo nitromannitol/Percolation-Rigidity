@@ -208,6 +208,7 @@ import Rigidity.Proofs.Corrector.OsCalculus
 import Rigidity.Proofs.Corrector.PlanarCorrectorQuantitative
 import Rigidity.Proofs.Corrector.CorrectorQuantitative
 import Rigidity.Proofs.Corrector.Concentration
+import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
 import Rigidity.Proofs.Green.HeatTimeIntegrals
 import Rigidity.Proofs.Green.LazyCarneVaropoulos
@@ -1551,3 +1552,8 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
+
+-- The multiscale Poincare inequality (2.26) of Dario in every dimension
+#print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
+#print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
+#print axioms Rigidity.Poincare.GeneralDim.exists_steinSigned
