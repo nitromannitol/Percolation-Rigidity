@@ -10,7 +10,7 @@ file fixes the objects of Proposition 3.9 and states it.
 
 * `IsClusterCaloric ω V a b u`: `∂_t u = Δ u` (unit conductances) at the vertices of `V` all of
   whose open neighbours lie in `V` (the interior `int_a V` of §1.6.3), for times in `(a, b)`, with
-  `u(·, x)` continuous on `[a, b]` for `x ∈ V` (a weak solution in `H_par`; the equation is an ODE).
+  `u(·, x)` continuous on `[a, b]` for `x ∈ V` (a classical form of the weak solutions in `H_par`).
 * `coarsenPar ω K u`: the coarsened function `[u]_𝒫` of (2.5)-(2.6) on `ℝ × ℝ²`, piecewise constant
   on the cells `x + [-1/2, 1/2)²`, equal to `u(t, x)` if `x ∈ K` and to `u(t, z(x))` otherwise,
   `z(x)` the anchor of the partition cube of `x` (the point of its crossing cluster closest to the
@@ -61,7 +61,7 @@ def parabolicCylinderAt (y : Vertex 2) (r : ℝ) : Set (ℝ × EuclideanSpace �
 /-- **Dario–Gu, Proposition 3.9** (large-scale `C^{0,1}` estimate for caloric functions on `𝒞_∞`),
 in dimension two, for `r ∈ [M, R/2]`.
 
-Printed statement (lines 1690-1709 of the source): *There exist a constant `C < ∞`, an exponent
+Printed statement (lines 1690-1703 of the source): *There exist a constant `C < ∞`, an exponent
 `s > 0` such that for each point `y ∈ ℤ^d`, there exists a non-negative random variable
 `M_{C^{0,1}-reg}(y) ≤ O_s(C)` such that, for every `r ≥ M_{C^{0,1}-reg}(y)`, and every weak
 solution `u ∈ H_par(I_R × (𝒞_∞ ∩ B_R(y)))` of `∂_t u - ∇·a∇u = 0`, one has, for every radius
@@ -71,7 +71,7 @@ solution `u ∈ H_par(I_R × (𝒞_∞ ∩ B_R(y)))` of `∂_t u - ∇·a∇u = 
 At `r = R` the printed inequality fails: a time-independent `u`, harmonic at the interior vertices
 of `𝒞_∞ ∩ B_R(y)`, with values `±1` at the boundary vertices of opposite signs along about `cR` open
 edges between them, has `‖∇u‖²_{L̲²(𝒞_∞ ∩ B_R(y))}` of order `R^{-1}`, while the square of the right
-side is at most of order `R^{-2}`. The proof (Step 4, lines 1851-1859: "completes the proof of
+side is at most of order `R^{-2}`. The proof (Step 4, lines 1854-1858: "completes the proof of
 Proposition 3.9 with the radius `r/2` instead of `r`") gives the estimate at the radius `r/2` for
 `r ∈ [M, R]`, that is for `2r ≤ R`, the form stated here. The gradient is over the open edges inside
 `𝒞_∞ ∩ B_r(y)`; `u` is a function on `ℝ × ℤ²` which is caloric on `𝒞_∞ ∩ B_R(y)` (the coarsening

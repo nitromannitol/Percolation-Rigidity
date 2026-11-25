@@ -2584,24 +2584,26 @@ The seven reports for the declarations of this section are in [`RigidityAudit/Ax
 
 Departures from Dario and Gu:
 
-- **The range of Proposition 3.9.** As printed (lines 1704-1709, `r ∈ [M, R]`) the inequality fails at `r = R`: a
+- **The range of Proposition 3.9.** As printed (lines 1699-1702, `r ∈ [M, R]`) the inequality fails at `r = R`: a
   time-independent `u`, harmonic at the interior vertices of `𝒞_∞ ∩ B_R(y)` with values `±1` at the boundary vertices of
   opposite signs along about `cR` open edges between them, has `‖∇u‖²_{L̲²(𝒞_∞ ∩ B_R(y))}` of order `R^{-1}` while the square
-  of the right side is of order `R^{-2}`. The proof of the source gives the estimate at the radius `r/2` for `r ∈ [M, R]`
+  of the right side is at most of order `R^{-2}`. The proof of the source gives the estimate at the radius `r/2` for `r ∈ [M, R]`
   (Step 4: "with the radius `r/2` instead of `r`"), that is for `2r ≤ R`, the range of `DarioGuLipschitzTwo`.
 - **The cylinder in the proof of Theorem 3.** With `2r ≤ R` and `t ≥ 4r²` the cylinder of the source (`R = √t/2`, top time
   `t + 1`) is replaced by the cylinder of top time `t + r²/2` and radius `(7t/8 + r²/2)^{1/2}`, on which the times lie in
   `[t/8, 9t/8]`; `t` is its time `-r²/2 ∈ I_r`.
 - **The gradient.** The gradient on the left of Theorem 3 and Proposition 3.9 is over the open edges inside the ball, as in
   `DarioGuGradientBoundTwo`; the caloric functions are functions on `ℝ × ℤ²` constrained on `𝒞_∞ ∩ B_R(y)`, since the
-  coarsening on `B_R(y)` reads them at anchors which may lie outside the ball.
+  coarsening on `B_R(y)` reads them at anchors which may lie outside the ball; they are continuous in time at the
+  vertices of the ball and solve the equation pointwise in time at its interior vertices (`IsClusterCaloric`), a
+  classical form of the weak solutions in `H_par`, whose boundary values need only be square integrable in time.
 - **Lemma 2.10 unnormalized.** With the normalized norms and a constant independent of the configuration the printed
-  inequality (lines 1023-1036) fails: if `𝒞_∞ ∩ B_{R/2}(y)` is a path of length of order `R` joining two large clusters of the
-  annulus, a time-independent caloric `u` close to `0` on one and to `1` on the other has the left side of order `R^{-2}` and
+  inequality (lines 1023-1032) fails: if `𝒞_∞ ∩ B_{R/2}(y)` is a path of length of order `R` joining two large clusters of the
+  annulus, a time-independent caloric `u` close to `0` on one and to `1` on the other has the square of the left side of order `R^{-2}` and
   the square of the right side of order `R^{-3}`. `DarioGuTimesliceTwo` is the unnormalized form,
   `sup_{t ∈ I_{R/2}} ‖∇u(t)‖²_{L²(𝒞_∞ ∩ B_{R/2})} ≤ C R^{-2} ‖∇u‖²_{L²(I_R × (𝒞_∞ ∩ B_R))}`, which gives the printed one where the
   volumes of `𝒞_∞ ∩ B_R(y)` and `𝒞_∞ ∩ B_{R/2}(y)` are comparable.
-- **Proofs written out.** The source omits the proofs of Proposition 2.9 and Lemma 2.10 (lines 1019-1021 and 1023-1027, the
+- **Proofs written out.** The source omits the proofs of Proposition 2.9 and Lemma 2.10 (lines 1017-1019 and 1021, the
   latter by reference to Lemma 8.2 of Armstrong, Kuusi and Mourrat); they are the standard energy arguments with a spatial
   cutoff, by summation by parts on the cluster, and a time cutoff (Proposition 2.9) or an average over the initial time
   (Lemma 2.10).

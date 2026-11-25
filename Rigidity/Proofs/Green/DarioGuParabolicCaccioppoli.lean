@@ -5,7 +5,7 @@ import PercolationClusterHomogenization.Proofs.Cluster.Caccioppoli
 /-!
 # The parabolic Caccioppoli inequality on the planar cluster
 
-**Dario–Gu, Proposition 2.9** (lines 1006-1021 of the source): *There exists a finite positive
+**Dario–Gu, Proposition 2.9** (lines 1006-1019 of the source): *There exists a finite positive
 constant `C` such that, for each point `y ∈ ℤ^d`, each radius `R ≥ 1` and each function
 `u : I_R × (𝒞_∞ ∩ B_R(y)) → ℝ` which is `a`-caloric, i.e., which is a solution of
 `∂_t u - ∇·a∇u = 0` in `I_R × (𝒞_∞ ∩ B_R(y))`, one has
@@ -23,7 +23,7 @@ all the open edges at these vertices). The proof is the standard one:
   `D(t) = Σ_x η(x)² Σ_{z ∼ x} (u(z) - u(x))²` is at most `-2 E'(t) + 32 ℓ² Σ (u - m)²` when `η` varies
   by at most `ℓ` along edges (the pointwise inequality of the elliptic Caccioppoli inequality);
 * `parabolic_caccioppoli_of_cutoff`: integration against the time cutoff `(t - a)/(b - a)`;
-* `darioGuCaccioppoliTwo_holds`: the cutoff `η = 1` on `B_{R/2}` vanishing at distance `R - 1`.
+* `darioGuCaccioppoliTwo_holds`: the cutoff `η = 1` on `B_{R/2}` vanishing at distance `R - 2`.
 -/
 
 open MeasureTheory Finset LatticeProb.Percolation Rigidity.External Rigidity.Percolation

@@ -3,7 +3,7 @@ import Rigidity.Proofs.Green.DarioGuParabolicCaccioppoli
 /-!
 # The `L^∞ L²` gradient estimate in time slices on the planar cluster
 
-**Dario–Gu, Lemma 2.10** (lines 1023-1036 of the source): *There exists a positive constant
+**Dario–Gu, Lemma 2.10** (lines 1023-1032 of the source): *There exists a positive constant
 `C < ∞` such that for any radius `R ≥ 1`, any point `y ∈ ℤ^d` and any function
 `u : I_R × (𝒞_∞ ∩ B_R(y)) → ℝ` which satisfies `∂_t u - ∇·a∇u = 0` in `I_R × (𝒞_∞ ∩ B_R(y))`, one has
 `sup_{t ∈ I_{R/2}} ‖∇u(t, ·)‖_{L̲²(𝒞_∞ ∩ B_{R/2}(y))} ≤ C ‖∇u‖_{L̲²(I_R × (𝒞_∞ ∩ B_R(y)))}`.*
