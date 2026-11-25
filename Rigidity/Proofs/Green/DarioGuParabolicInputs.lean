@@ -182,7 +182,8 @@ general `f` the printed estimate cannot hold: for `f(t, x) = t` the right side v
 `u - ū` does not. The boundary condition `f̃` on `cv(ℤ² ∩ B_r(y))` reads `f` at the anchors of the
 partition cubes meeting the ball, and its gradient is bounded through (2.7) (Armstrong–Dario,
 Lemma 3.3) by the gradient of `f` on these cubes; the right sides here are on `I_{5r/4} ×
-(𝒞_∞ ∩ B_{5r/4}(y))`, which contains them above the minimal scale. -/
+(𝒞_∞ ∩ B_{5r/4}(y))`, which contains them above the minimal scale, and `u(·, x)` is taken `C¹` on
+`[-(5r/4)², 0]`, so that the integrals in time are of continuous functions. -/
 def DarioGuThmFiveTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∃ σ : ℝ, 0 < σ ∧ ∀ δ : ℝ, 0 < δ → ∀ η : EuclideanSpace ℝ (Fin 2) → ℝ, IsMollifier η →
@@ -191,7 +192,7 @@ def DarioGuThmFiveTwo : Prop :=
           ∀ᵐ ω ∂latticeBondLaw 2 p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ r : ℝ, M ω ≤ r →
             ∀ u : ℝ → Vertex 2 → ℝ,
               IsClusterCaloric ω (clusterBall (uniqueInfiniteComponent h) y r) (-r ^ 2) 0 u →
-              IsTimeCOne (-r ^ 2) 0 u →
+              IsTimeCOne (-(5 * r / 4) ^ 2) 0 u →
               ∀ ū : ℝ × EuclideanSpace ℝ (Fin 2) → ℝ,
                 IsHeatDirichletSolution σ (latticeHull y r) r
                   (mollifiedCoarsening ω (uniqueInfiniteComponent h) η u) ū →
