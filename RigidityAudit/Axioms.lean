@@ -425,6 +425,7 @@ import Rigidity.Proofs.Corrector.DarioStepTwoFiniteWeight
 import Rigidity.Proofs.Corrector.DarioStepTwoWeightMeas
 import Rigidity.Proofs.Corrector.DarioStepTwoPartition
 import Rigidity.Proofs.Poincare.DarioStepTwoHolds
+import Rigidity.Proofs.Assembly.PlanarDarioGu
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
@@ -1506,3 +1507,9 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 #print axioms Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_holds
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_sections_barlow
 #print axioms Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow
+
+-- Theorem 1.3 from the quantitative Green estimate of Dario and Gu (d = 2)
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_greenQuantitative
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_darioGu
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_barlow
+#print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_barlow

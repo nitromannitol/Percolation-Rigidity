@@ -323,9 +323,12 @@ The planar Green-column input (R6) follows from it with no further hypothesis
 (`supercriticalBondGreenColumnExistenceTwo_holds`), the quantitative
 corrector estimate from it with Theorem 1 of Dario, and the quantitative Green estimate with Theorem 1 of Dario and Gu
 (see [The corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two)).
-The quantitative sublinearity (1.22) of AD is proved in dimension two, and with it Lemma 3.2 of Dario, so Theorem 1 of
-Dario rests on the multiscale Poincaré inequality, the concentration inequality and Lemma 3.3 of Dario (see
+The quantitative sublinearity (1.22) of AD is proved in dimension two, and with it Lemma 3.2 of Dario (see
 [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two)).
+The multiscale Poincaré inequality, the concentration inequality and Lemma 3.3 of Dario are proved too, so Theorem 1 of
+Dario and the quantitative corrector estimate (R5) hold in dimension two (`darioOptimalCorrectorTwo_holds`,
+`correctorQuantitativeInputTwo_holds`; see
+[Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition)).
 
 The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
 and the corrector inputs
@@ -335,6 +338,12 @@ In dimension two, (7.18) at `k = 2` is proved from the estimates on squares of t
 `ArmstrongDarioOrderOneOriginTwo` (R4) from them with Theorem 1 of Dario alone (the existence of corrected planes and
 the bound `dim 𝒜₁ ≤ 3` are proved); see
 [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two).
+Theorem 1 of Dario being proved, R4 holds (`armstrongDarioOrderOneOriginTwo_holds`). Of the five planar inputs of
+`fast_decay_of_planar_estimates` only the quantitative Green estimate remains, and Theorem 1.3 follows from it alone
+([`fast_decay_of_greenQuantitative`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean)), from Theorem 1 of Dario and Gu
+alone (`fast_decay_of_darioGu`), or from the inputs of that theorem that are not proved: `hSec` and the Gaussian upper
+bound of Barlow (`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound
+(`fast_decay_of_flux_gradient_barlow`).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -2301,9 +2310,10 @@ then `size(□_{𝒫(ω')}(z)) ≤ C size(□_{𝒫(ω)}(x))`; otherwise `□_{�
 | [`Rigidity.Corrector.ae_flipSumTwo_le`](Rigidity/Proofs/Corrector/DarioStepTwoSum.lean), [`ae_flipTermTwo_sq_le_closed`](Rigidity/Proofs/Corrector/DarioStepTwoWeight.lean), [`ae_flipTermTwo_sq_le_open`](Rigidity/Proofs/Corrector/DarioStepTwoOpenBound.lean), [`ae_dipoleCoeff_eq`](Rigidity/Proofs/Corrector/DarioStepTwoElectric.lean), [`ae_flipTermTwo_eq_open`](Rigidity/Proofs/Corrector/DarioStepTwoOpen.lean), [`ae_flipTermTwo_eq_walkSum`](Rigidity/Proofs/Corrector/DarioStepTwoSplit.lean) | the Step 2 sum of the proof of Lemma 3.3 of Dario bounded by a weighted energy: almost surely `Σ_e T₂(e)² ≤ K₀ (Σ_u W(u) E_v(u) + Σ_y W(y) Φ_{r²}(x, y)²)`, with `v` the potential of `P_ω γ_ω` on the infinite cluster, `E_v` its energy at a vertex and `W(u) = Σ_a 1{u ∈ B_a} R_a¹⁴ (Σ_{B_a} G)²` built from the sides of the partition cubes at the endpoints of the edges and a bound `G` for the gradient of the corrected plane of the actual configuration; through Case 3 per bond (the bond closed: `T₂ = (ℓ₁(x) - ℓ₁(y))(v(y) - v(x))`; the bond open: `(ℓ₀(x) - ℓ₀(y))((Pγ)(a) + Δ)` with `Δ` local by Lemma 3.5) and the relation `ℓ₀(x) - ℓ₀(y) = (1 + R)(ℓ₁(x) - ℓ₁(y))` by the effective resistance `R` of the configuration with the bond closed. |
 | [`Rigidity.Corrector.meyers_source`](Rigidity/Proofs/Corrector/DarioMeyersSource.lean), [`openLaplacian_sub_eq_zero`](Rigidity/Proofs/Corrector/DarioMeyersSource.lean), [`sum_clusterEnergy_localSolution_le`](Rigidity/Proofs/Corrector/DarioMeyersSource.lean), [`greenProj_apply_of_not_open`](Rigidity/Proofs/Corrector/DarioMeyersSource.lean) | the Meyers estimate with a divergence source, used in place of Proposition 3.6 (which does not hold as printed, with the same exponent on the source and on the gradient): on a cube with the homogeneous Meyers estimate (`MeyersCube`), for `v` with `∇·∇v = ∇·ξ` inside `U₀ ⊆ 3□`, `avg_□ |∇v|^{2p} ≤ K ((avg_{3□} |∇v|²)^p + (S/|3□|)^p + S^p/|□|)`, `S` the squared norm of `ξ` on the open edges inside `U₀`; the local part is the Green projection of the configuration restricted to `U₀`. |
 | [`Rigidity.Poincare.darioStepTwoSumBound_holds`](Rigidity/Proofs/Poincare/DarioStepTwoHolds.lean), [`darioOptimalCorrectorTwo_holds`](Rigidity/Proofs/Poincare/DarioStepTwoHolds.lean), [`correctorQuantitativeInputTwo_holds`](Rigidity/Proofs/Poincare/DarioStepTwoHolds.lean), [`armstrongDarioOrderOneOriginTwo_holds`](Rigidity/Proofs/Poincare/DarioStepTwoHolds.lean), [`exists_stepTwo_weight_data`](Rigidity/Proofs/Poincare/DarioStepTwoHolds.lean), [`darioGuHeatKernelTwo_of_sections_barlow`](Rigidity/Proofs/Poincare/DarioStepTwoHolds.lean), [`darioGuHeatKernelTwo_of_flux_gradient_barlow`](Rigidity/Proofs/Poincare/DarioStepTwoHolds.lean) | the Step 2 sum (H2) holds: almost surely `Σ_e T₂(e)² ≤ Σ_y Φ_{r²}(x, y)² W(y)` with `W(y)` built from the majorant of the Step 2 weight (from the corrector increments of Step 1) and a ball sum of the squared sizes of the good cubes times the weighted numbers of anchor regions, all with moments of polynomial growth uniform in `y`, so `Σ_e T₂(e)² = O_s(C/r²)`; hence Theorem 1 of Dario, R5 and R4 in dimension two, and Theorem 1 of Dario and Gu from `hSec` and the Gaussian upper bound of Barlow alone, or from Proposition 2.13, Theorem 3 and that bound. Dario's route through Proposition 3.6 with equal exponents is replaced by estimate (2). |
+| [`Rigidity.Assembly.WithPlanarInputs.fast_decay_of_greenQuantitative`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean), [`fast_decay_of_darioGu`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean), [`fast_decay_of_sections_barlow`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean), [`fast_decay_of_flux_gradient_barlow`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean) | Theorem 1.3 in dimension two from `SupercriticalBondGreenQuantitativeTwo` alone, from `DarioGuHeatKernelTwo` alone, from `hSec` and `BarlowGaussianUpperBoundTwo`, or from `DarioGuFluxWeakNormTwo`, `DarioGuGradientBoundTwo` and `BarlowGaussianUpperBoundTwo`: of the five planar inputs of `fast_decay_of_planar_estimates`, the corrector inputs R2 and R5 and the regularity of orders zero and one are proved. |
 | [`Rigidity.Poincare.DarioStepTwoSumBound`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioFlipSumBound_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioOptimalCorrectorTwo_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`correctorQuantitativeInputTwo_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`armstrongDarioOrderOneOriginTwo_of_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioGuHeatKernelTwo_of_reduced_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean), [`darioGuHeatKernelTwo_of_flux_gradient_barlow_stepTwo`](Rigidity/Proofs/Poincare/DarioStepTwoBridges.lean) | the Step 2 sum (H2) as a named statement, and `DarioFlipSumBound`, Theorem 1 of Dario (`DarioOptimalCorrectorTwo`), R5, R4 and Theorem 1 of Dario and Gu (with its further inputs) from it. |
 
-The thirty-four reports for the declarations of this section, and eight reports for Lemma 3.5 and the bridges from (H2), are in
+The reports for the declarations of this section, for Lemma 3.5 and for the bridges from (H2) are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Departures from Dario:
@@ -2698,8 +2708,10 @@ Departures from Armstrong and Dario:
   [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1),
   the thirty-five theorems of
   [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two),
-  the thirty-four theorems of
-  [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition),
+  the theorems of
+  [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition)
+  and the four forms of Theorem 1.3 of
+  [`PlanarDarioGu`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean),
   the thirty-three theorems of
   [Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two),
   the ten theorems of
@@ -2720,7 +2732,7 @@ Departures from Armstrong and Dario:
   [Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 857 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 932 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -2822,6 +2834,7 @@ Rigidity/
       Unconditional.lean      Theorem 6.5 from the regime only, its literature inputs being proved
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
       PlanarGreenInputs.lean  Theorem 1.3 from five planar inputs, with the planar Green columns
+      PlanarDarioGu.lean      Theorem 1.3 from the Green estimate of Dario and Gu alone, in dimension two
     Green/                    Green columns and heat kernel bounds of the cluster for d ≥ 3
     Corrector/, Poincare/     Dario (2018) and Dario and Gu (2021)
     Regularity/               the corrector input and Theorem 2 (iii) at k = 1 in dimension two from

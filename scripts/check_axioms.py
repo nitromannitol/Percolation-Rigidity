@@ -1006,6 +1006,11 @@ further = {
          'Rigidity.Poincare.armstrongDarioOrderOneOriginTwo_holds',
          'Rigidity.Poincare.darioGuHeatKernelTwo_of_sections_barlow',
          'Rigidity.Poincare.darioGuHeatKernelTwo_of_flux_gradient_barlow'],
+    'Theorem 1.3 from the quantitative Green estimate of Dario and Gu (d = 2)':
+        ['Rigidity.Assembly.WithPlanarInputs.fast_decay_of_greenQuantitative',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_darioGu',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_sections_barlow',
+         'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_barlow'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
