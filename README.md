@@ -348,6 +348,8 @@ Theorem 1 of Dario in dimension `d ≥ 3` (`DarioOptimalCorrectorThree`: `|χ_q(
 and the qualitative corrector input, by the printed proof of Proposition 2.12 of Dario and Gu
 ([`Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario`](Rigidity/Proofs/Corrector/CorrectorQuantitative.lean);
 the dimension two case is `correctorQuantitativeInputTwo_holds`).
+The concentration inequality of Dario (Proposition 2.17) holds in every dimension
+([`Rigidity.Corrector.GeneralDim.concentration_holds`](Rigidity/Proofs/Corrector/Concentration.lean)).
 
 The input `ArmstrongDarioOrderOneOrigin` is proved from the mesoscopic estimate (7.18) of AD at `k = 2`
 and the corrector inputs

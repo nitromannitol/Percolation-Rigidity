@@ -1039,6 +1039,8 @@ further = {
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_flux_gradient_barlow'],
     'Proposition 2.12 of Dario and Gu in every dimension from Theorem 1 of Dario in dimension d >= 3':
         ['Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario'],
+    'The concentration inequality of Dario (Proposition 2.17) in every dimension':
+        ['Rigidity.Corrector.GeneralDim.concentration_holds'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 

@@ -207,6 +207,7 @@ import PercolationClusterHomogenization.Proofs.Cluster.PlanarSubcubeIndex
 import Rigidity.Proofs.Corrector.OsCalculus
 import Rigidity.Proofs.Corrector.PlanarCorrectorQuantitative
 import Rigidity.Proofs.Corrector.CorrectorQuantitative
+import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Green.FrullaniGaussian
 import Rigidity.Proofs.Green.HeatTimeIntegrals
 import Rigidity.Proofs.Green.LazyCarneVaropoulos
@@ -1547,3 +1548,6 @@ cited in the paper and used by no Lean proof, so it has no Lean declaration. -/
 
 -- Proposition 2.12 of Dario and Gu in every dimension from Theorem 1 of Dario in dimension d >= 3
 #print axioms Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario
+
+-- The concentration inequality of Dario (Proposition 2.17) in every dimension
+#print axioms Rigidity.Corrector.GeneralDim.concentration_holds
