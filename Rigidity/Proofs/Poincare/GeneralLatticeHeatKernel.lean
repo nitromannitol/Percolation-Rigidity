@@ -91,7 +91,8 @@ theorem zdHeat_eq_ctHeat [NeZero d] (t : ℝ) (x y : Vertex d) :
   have h := hasSum_ctHeat (d := d) (Nat.one_le_iff_ne_zero.mpr (NeZero.ne d)) (2 * d * t) (y - x)
   have e : (fun n : ℕ => poissonWeight (2 * d) t n *
       lazyPow (openGraph (allOpen d)) (2 * d) n x y) =
-      fun n : ℕ => Real.exp (-(2 * d * t)) * (2 * d * t) ^ n / n.factorial * srwHeat d n (y - x) := by
+      fun n : ℕ => Real.exp (-(2 * d * t)) * (2 * d * t) ^ n / n.factorial *
+        srwHeat d n (y - x) := by
     funext n
     rw [lazyPow_allOpen_eq_srwHeat, poissonWeight]
     push_cast

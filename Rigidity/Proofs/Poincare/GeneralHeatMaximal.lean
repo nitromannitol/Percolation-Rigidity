@@ -169,7 +169,8 @@ theorem exists_tsum_exp_mul_le_boxMax (d : ℕ) : ∃ K : ℝ, 0 < K ∧
       push_cast
       exact pow_le_pow_left₀ (by positivity)
         (by nlinarith [mul_le_mul hρ1 h2j zero_le_one (by linarith)]) d
-    calc e j * (2 * ((ρ * 2 ^ j : ℕ) : ℝ) + 1) ^ d ≤ e j * (3 ^ d * (ρ : ℝ) ^ d * ((2 : ℝ) ^ j) ^ d) :=
+    calc e j * (2 * ((ρ * 2 ^ j : ℕ) : ℝ) + 1) ^ d
+        ≤ e j * (3 ^ d * (ρ : ℝ) ^ d * ((2 : ℝ) ^ j) ^ d) :=
           mul_le_mul_of_nonneg_left h1 (Real.exp_pos _).le
       _ = 3 ^ d * (ρ : ℝ) ^ d * (e j * ((2 : ℝ) ^ j) ^ d) := by ring
       _ ≤ 3 ^ d * (ρ : ℝ) ^ d * (A * (1 / 2) ^ j) :=
@@ -195,7 +196,8 @@ theorem exists_tsum_exp_mul_le_boxMax (d : ℕ) : ∃ K : ℝ, 0 < K ∧
           exact pow_le_pow_left₀ (Nat.cast_nonneg _) hρ2 d
         have h6 : (6 : ℝ) ^ d = 3 ^ d * 2 ^ d := by rw [← mul_pow]; norm_num
         have hc : 0 ≤ 3 ^ d * A * boxMax F x * 2 := by positivity
-        calc 3 ^ d * (ρ : ℝ) ^ d * A * boxMax F x * 2 = (ρ : ℝ) ^ d * (3 ^ d * A * boxMax F x * 2) :=
+        calc 3 ^ d * (ρ : ℝ) ^ d * A * boxMax F x * 2
+            = (ρ : ℝ) ^ d * (3 ^ d * A * boxMax F x * 2) :=
               by ring
           _ ≤ 2 ^ d * σ ^ d * (3 ^ d * A * boxMax F x * 2) := mul_le_mul_of_nonneg_right hρd hc
           _ = 2 * 6 ^ d * A * σ ^ d * boxMax F x := by rw [h6]; ring
