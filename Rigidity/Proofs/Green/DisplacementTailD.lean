@@ -3,10 +3,10 @@ import Rigidity.Proofs.Green.GaussFlowTailD
 /-!
 # The displacement of the heat kernel on `ℤ^d` from the Carne–Varopoulos bound
 
-If `p_u(w, x) ≤ C e^{-|x - w|²/(Cu)} + C e^{-|x - w|/C}` for every `x` (the two branches of the
-Carne–Varopoulos bound, Dario–Gu, Proposition 2.15), then for `u ≥ 1` and `L ≥ 0`
+If `p_u(w, x) ≤ C e^{-|x - w|²/(Cu)} + C e^{-|x - w|/C} 1_{|x - w| ≥ u}` for every `x` (the two
+branches of the Carne–Varopoulos bound, Dario–Gu, Proposition 2.15), then for `u ≥ 1` and `L ≥ 0`
 
-  `Σ_{|x - w| ≥ L} p_u(w, x) ≤ C (2πCu)^{d/2} M_C e^{-L²/(2Cu)} + C E_C e^{-L/(2C)}`
+  `Σ_{|x - w| ≥ L} p_u(w, x) ≤ C (2πCu)^{d/2} M_C e^{-L²/(2Cu)} + C E_C e^{-u/(2C)}`
 
 (`tsum_far_vsrwHeat_le`), with the lattice sums `M_C` of the Gaussian (`gaussMassBoundD`) and
 `E_C = (Σ_{n ∈ ℤ} e^{-|n|/(2Cd)})^d` of the exponential (`tsum_exp_neg_norm_edzD_le`).
@@ -97,11 +97,12 @@ variable [NeZero d] {ω : Configuration d}
 bound. -/
 theorem tsum_far_vsrwHeat_le {w : Vertex d} {u L C : ℝ} (hu : 1 ≤ u) (hL : 0 ≤ L) (hC : 0 < C)
     (hcv : ∀ x, vsrwHeat (openGraph ω) (2 * d) u w x ≤
-      C * Real.exp (-(ldist x w ^ 2 / (C * u))) + C * Real.exp (-(ldist x w / C))) :
+      C * Real.exp (-(ldist x w ^ 2 / (C * u))) +
+        (if u ≤ ldist x w then C * Real.exp (-(ldist x w / C)) else 0)) :
     ∑' x, (if L ≤ ldist x w then vsrwHeat (openGraph ω) (2 * d) u w x else 0) ≤
       C * (2 * Real.pi * C * u) ^ ((d : ℝ) / 2) * gaussMassBoundD d C *
           Real.exp (-(L ^ 2 / (2 * C * u))) +
-        C * expMassBoundD d C * Real.exp (-(L / (2 * C))) := by
+        C * expMassBoundD d C * Real.exp (-(u / (2 * C))) := by
   have hD := two_mul_pos_d (d := d)
   have hdeg := openGraph_degree_le ω
   have hu0 : 0 < u := by linarith
@@ -118,7 +119,7 @@ theorem tsum_far_vsrwHeat_le {w : Vertex d} {u L C : ℝ} (hu : 1 ≤ u) (hL : 0
       one_mul, latticeDist_eq_norm_edzD]
   have hbound : ∀ x, (if L ≤ ldist x w then vsrwHeat (openGraph ω) (2 * d) u w x else 0) ≤
       C * Real.exp (-(L ^ 2 / (2 * C * u))) * (K₁ * gaussianHeatD d C u (edzD x w)) +
-        C * Real.exp (-(L / (2 * C))) * Real.exp (-(1 / (2 * C)) * ‖edzD x w‖) := by
+        C * Real.exp (-(u / (2 * C))) * Real.exp (-(1 / (2 * C)) * ‖edzD x w‖) := by
     intro x
     have hr0 : 0 ≤ ldist x w := Rigidity.WeakPoincare.latticeDist_nonneg x w
     have hg0 : 0 ≤ gaussianHeatD d C u (edzD x w) :=
@@ -135,32 +136,34 @@ theorem tsum_far_vsrwHeat_le {w : Vertex d} {u L C : ℝ} (hu : 1 ≤ u) (hL : 0
           div_le_div_of_nonneg_right hL2 hCu.le
         rw [e1]
         linarith
-      · rw [mul_assoc, ← Real.exp_add, ← latticeDist_eq_norm_edzD]
-        refine mul_le_mul_of_nonneg_left (Real.exp_le_exp.2 ?_) hC.le
-        have e1 : ldist x w / C = 2 * (ldist x w / (2 * C)) := by field_simp
-        have e2 : -(1 / (2 * C)) * ldist x w = -(ldist x w / (2 * C)) := by ring
-        have e3 : L / (2 * C) ≤ ldist x w / (2 * C) :=
-          div_le_div_of_nonneg_right hLx (by positivity)
-        rw [e1, e2]
-        linarith
+      · split_ifs with hux
+        · rw [mul_assoc, ← Real.exp_add, ← latticeDist_eq_norm_edzD]
+          refine mul_le_mul_of_nonneg_left (Real.exp_le_exp.2 ?_) hC.le
+          have e1 : ldist x w / C = 2 * (ldist x w / (2 * C)) := by field_simp
+          have e2 : -(1 / (2 * C)) * ldist x w = -(ldist x w / (2 * C)) := by ring
+          have e3 : u / (2 * C) ≤ ldist x w / (2 * C) :=
+            div_le_div_of_nonneg_right hux (by positivity)
+          rw [e1, e2]
+          linarith
+        · positivity
     · positivity
   obtain ⟨hes, hel⟩ := tsum_exp_neg_norm_edzD_le (d := d) (c := 1 / (2 * C)) (by positivity) w
   have hgs := summable_gaussianHeatD (d := d) hC hu0 w
   have hR : Summable fun x =>
       C * Real.exp (-(L ^ 2 / (2 * C * u))) * (K₁ * gaussianHeatD d C u (edzD x w)) +
-        C * Real.exp (-(L / (2 * C))) * Real.exp (-(1 / (2 * C)) * ‖edzD x w‖) :=
+        C * Real.exp (-(u / (2 * C))) * Real.exp (-(1 / (2 * C)) * ‖edzD x w‖) :=
     ((hgs.mul_left K₁).mul_left _).add (hes.mul_left _)
   have hT : Summable fun x => (if L ≤ ldist x w then vsrwHeat (openGraph ω) (2 * d) u w x else 0) :=
     hR.of_nonneg_of_le (fun x => by split_ifs; exacts [hp0 x, le_rfl]) hbound
   calc _ ≤ ∑' x, (C * Real.exp (-(L ^ 2 / (2 * C * u))) * (K₁ * gaussianHeatD d C u (edzD x w)) +
-        C * Real.exp (-(L / (2 * C))) * Real.exp (-(1 / (2 * C)) * ‖edzD x w‖)) :=
+        C * Real.exp (-(u / (2 * C))) * Real.exp (-(1 / (2 * C)) * ‖edzD x w‖)) :=
         hT.tsum_le_tsum hbound hR
     _ = C * Real.exp (-(L ^ 2 / (2 * C * u))) * (K₁ * ∑' x, gaussianHeatD d C u (edzD x w)) +
-        C * Real.exp (-(L / (2 * C))) * ∑' x, Real.exp (-(1 / (2 * C)) * ‖edzD x w‖) := by
+        C * Real.exp (-(u / (2 * C))) * ∑' x, Real.exp (-(1 / (2 * C)) * ‖edzD x w‖) := by
         rw [((hgs.mul_left K₁).mul_left _).tsum_add (hes.mul_left _), tsum_mul_left, tsum_mul_left,
           tsum_mul_left]
     _ ≤ C * Real.exp (-(L ^ 2 / (2 * C * u))) * (K₁ * gaussMassBoundD d C) +
-        C * Real.exp (-(L / (2 * C))) * expMassBoundD d C := by
+        C * Real.exp (-(u / (2 * C))) * expMassBoundD d C := by
         gcongr
         · exact tsum_gaussianHeatD_le hC hu w
         · exact hel
