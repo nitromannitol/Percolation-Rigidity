@@ -10,9 +10,11 @@ proof) is proved in every dimension `d ≥ 2`
 (`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`). The theorems of
 `Rigidity.Assembly.WithProvedOrderZero` that take it are restated here without it, and without
 the other proved inputs: supercritical uniqueness, Proposition 2.3, the density concentration,
-the rectangle crossings and the Jordan curve theorem on the sphere. What remains are the
-corrector inputs (Theorem 2.5), the regularity of order one (Theorem 2.4 (iii) at `k = 1`) and
-the quantitative Green estimate of Dario and Gu, for the results that use them.
+the rectangle crossings and the Jordan curve theorem on the sphere. Eleven theorems there take it
+and ten are restated: `fastDecay` and `fastDecayWithProvedDensity` give the same statement,
+`fast_decay`. What remains are the corrector inputs (Theorem 2.5), the regularity of order one
+(Theorem 2.4 (iii) at `k = 1`) and the quantitative Green estimate of Dario and Gu, for the results
+that use them.
 -/
 
 namespace Rigidity.Assembly.WithProvedGreenColumn

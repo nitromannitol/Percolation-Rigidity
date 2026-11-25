@@ -321,10 +321,10 @@ regularity, and the quantitative Green estimate; see
 The Green-column input `SupercriticalBondGreenColumnExistence` is proved for `d ≥ 3`
 ([`Rigidity.Green.greenColumnExistence_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean)),
 and [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean)
-derives it in every dimension from the planar order-zero estimate `ArmstrongDarioOrderZeroTwo`. The planar
-case is proved, so the input is proved in every dimension
-([`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean)); see
-[Green columns for d ≥ 3](#green-columns-for-d--3).
+derives it in every dimension from the planar order-zero estimate `ArmstrongDarioOrderZeroTwo`.
+The planar case is proved, so the input is proved in every dimension
+([`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean));
+see [Green columns for d ≥ 3](#green-columns-for-d--3).
 
 In dimension two the planar inputs are reduced further. `ArmstrongDarioOrderZeroTwo` follows from the harmonic
 approximation `PlanarHarmonicApproximationTwo` of AD Lemma 7.1 and is proved. `SupercriticalBondCorrectorInputTwo`
@@ -2713,7 +2713,9 @@ Departures from Armstrong and Dario:
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
   the eighteen theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
-  declarations of [Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension), the two theorems of
+  declarations of
+  [Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension), the two
+  theorems of
   [Multiscale Poincaré inequality](#multiscale-poincaré-inequality), the twenty-one theorems of
   [Partitions into good cubes and functional inequalities on the cluster](#partitions-into-good-cubes-and-functional-inequalities-on-the-cluster),
   the eleven theorems of
