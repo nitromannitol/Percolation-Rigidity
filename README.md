@@ -2702,7 +2702,7 @@ Departures from Armstrong and Dario:
 
 ## Guarantees
 
-- **No `sorry`.** The library has none. The four comparator challenges under
+- **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
 - **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 956 axiom
@@ -2787,9 +2787,12 @@ Departures from Armstrong and Dario:
   alone in [`RigidityAudit/Lipschitz/`](RigidityAudit/Lipschitz/),
   [`RigidityAudit/IntegerLinearGrowth/`](RigidityAudit/IntegerLinearGrowth/),
   [`RigidityAudit/FastDecay/`](RigidityAudit/FastDecay/) and
-  [`RigidityAudit/SlowMixing/`](RigidityAudit/SlowMixing/). Each `Challenge.lean` restates every
-  definition that its statement unfolds to and the literature inputs that the theorem takes as
-  hypotheses; each `Solution.lean` proves the restatement from the library; and
+  [`RigidityAudit/SlowMixing/`](RigidityAudit/SlowMixing/), and Theorem 6.5 with the regime as its
+  only hypothesis, as `Rigidity.Assembly.Unconditional.slow_mixing` proves it, in
+  [`RigidityAudit/SlowMixingUnconditional/`](RigidityAudit/SlowMixingUnconditional/). Each
+  `Challenge.lean` restates every definition that its statement unfolds to and the literature inputs
+  that the theorem takes as hypotheses (none for `SlowMixingUnconditional/`); each `Solution.lean`
+  proves the restatement from the library; and
   [leanprover/comparator](https://github.com/leanprover/comparator) checks that the two statements
   agree, that only the permitted axioms are used, and replays the proof through an independent
   implementation of the Lean kernel. The other numbered results have no comparator pair.
@@ -2811,7 +2814,7 @@ Departures from Armstrong and Dario:
 ## Size
 
 `Rigidity/` and `Rigidity.lean`: 677 Lean files with 133,728 lines, on top of mathlib,
-Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (15 files, 5,052
+Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
 lines) and the axiom report `RigidityAudit/Axioms.lean` (1,545 lines) are counted separately.
 
 ## Building
@@ -2860,7 +2863,7 @@ script builds the library and the audit modules, runs the comparator on every pa
 pair is missing or rejected; its logs are kept under `.lake/comparator-logs/`.
 
 There are two continuous-integration workflows: **CI** builds the library, checks the axiom reports
-and builds the comparator pairs; **Comparator audit** runs the comparator on the four pairs. CI runs
+and builds the comparator pairs; **Comparator audit** runs the comparator on the five pairs. CI runs
 on pushes to `main` that change more than documentation, the paper, `formalization.yaml` or
 `CITATION.cff`; the comparator audit runs when it is started manually. Both workflows can be started
 manually from the [Actions page](https://github.com/nitromannitol/Percolation-Rigidity/actions).
@@ -2894,6 +2897,7 @@ RigidityAudit/
   Axioms.lean                 the axiom report of every numbered result and of the further results
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
+  SlowMixingUnconditional/    Theorem 6.5 with the regime as its only hypothesis
 paper/                        the arXiv v2 source and the corrected draft (LaTeX and PDF), figures,
                               CORRECTIONS.md, make_corrected.py, the note on the gadget, README.md
 scripts/                      check_axioms.py, run_comparators.sh, prefetch_toolchain.py (used by CI)
