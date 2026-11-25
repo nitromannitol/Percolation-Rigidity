@@ -2805,7 +2805,7 @@ and the sum over the open edges.
 
 | Lean declaration | Statement |
 | --- | --- |
-| [`Rigidity.WeakPoincare.clusterGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/GoodBallsHolds.lean) | `ClusterGoodBalls d`, `d ≥ 2`: Barlow's Theorem 2.18 (a), (b) with the random scale of Lemma 2.19 at a fixed centre: for `R ≥ M(y) ≤ O_s(C)` the ball `𝒞_∞ ∩ B_R(y)` is good with `C_V = C⁻¹`, `C_P = C`, `L = 12d`, and `\|𝒞_∞ ∩ B_R(y)\| ≤ C R^d`. |
+| [`Rigidity.WeakPoincare.clusterGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/GoodBallsHolds.lean) | `ClusterGoodBalls d`, `d ≥ 2`: Barlow's Theorem 2.18 (a), (b) with the random scale of Lemma 2.19 at a fixed centre: for `R ≥ M(y) ≤ O_s(C)` the ball `𝒞_∞ ∩ B_R(y)` is good with `C_V = C⁻¹`, `C_P = C` and a dilation `L` (the proof gives `L = 12d`), and `\|𝒞_∞ ∩ B_R(y)\| ≤ C R^d`. |
 | [`clusterVeryGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/VeryGood.lean), [`clusterVeryGoodBalls_of_goodBalls`](Rigidity/Proofs/WeakPoincare/VeryGood.lean) | `ClusterVeryGoodBalls d`: Barlow's Theorem 2.18 (c) with Lemma 2.19: for `θ > 0` and `A ≥ 1`, above a random scale `S(y) ≤ O_s(C')` every ball `𝒞_∞ ∩ B_r(z)` with `\|z − y\| ≤ A R` and `r ≥ R^θ` is good, with `C_V`, `C_P`, `L` not depending on `θ` and `A`. |
 | [`clusterPoincare_holds`](Rigidity/Proofs/WeakPoincare/VeryGood.lean) | `ClusterPoincare d`: Proposition 2.7 of Dario and Gu, weak form, `p = 2`: `‖u − (u)‖_{L̲²(𝒞_∞ ∩ B_R(y))} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_{LR}(y))}` for `R ≥ M(y) ≤ O_s(C)`. |
 | [`planarVeryGoodBalls_holds`](Rigidity/Proofs/WeakPoincare/PlanarVeryGood.lean) | the case `d = 2` of `ClusterVeryGoodBalls`, `θ ∈ (0, 1]`, `A = 1`, with the planar balls, averages and distance of `Rigidity.Green` and the good ball written out. |
@@ -2823,8 +2823,10 @@ scale.
 
 Departures from Barlow: the balls are Euclidean (Barlow uses the balls of the graph distance of `𝒞_∞`), the measure is the
 counting measure (Barlow's `μ_x` is the number of open edges at `x`) and the centre is any lattice point; the very good balls
-are stated for all radii `r ≥ R^θ` (Barlow: `N_B ≤ r ≤ R`, `N_B ≤ R^{1/(d+2)}`). These change the constants only. Proposition
-2.7 of Dario and Gu is stated in its weak form: the printed form, with the gradient on the same ball, fails (see
+are stated for all radii `r ≥ R^θ` (Barlow: `N_B ≤ r ≤ R`, `N_B ≤ R^{1/(d+2)}`). The Euclidean balls are a different family
+from Barlow's balls of the graph distance, not a change of constants. The counting measure changes the constants only
+(`1 ≤ μ_x ≤ 2d` on `𝒞_∞`); the other changes are those of the statements used by Dario and Gu. Proposition 2.7 of Dario and
+Gu is stated in its weak form: the printed form, with the gradient on the same ball, fails in every dimension (see
 `ClusterPoincareTwo`).
 
 The six reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
@@ -2834,7 +2836,7 @@ The six reports for the declarations of this section are in [`RigidityAudit/Axio
 - **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 985 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 994 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -2942,9 +2944,9 @@ The six reports for the declarations of this section are in [`RigidityAudit/Axio
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 705 Lean files with 140,976 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 715 Lean files with 143,423 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,588 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,603 lines) are counted separately.
 
 ## Building
 

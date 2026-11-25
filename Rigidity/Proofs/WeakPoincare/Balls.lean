@@ -32,9 +32,11 @@ Named statements:
   `‖u - (u)_{𝒞_∞ ∩ B_R(y)}‖_{L̲²} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_{LR}(y))}` for `R ≥ M(y) ≤ O_s(C)`.
 
 Barlow works with the balls of the graph distance of `𝒞_∞` and the measure `μ_x = deg(x)`; here the
-balls are Euclidean and the measure is the counting measure, as in Dario–Gu, which changes the
-constants only. The printed form of Proposition 2.7 of Dario–Gu, with the gradient on the same
-ball, fails in every dimension for the reason given at `Rigidity.Green.ClusterPoincareTwo`.
+balls are Euclidean and the measure is the counting measure, as in Dario–Gu. The Euclidean balls are
+a different family from the balls of the graph distance, not a change of constants; the counting
+measure changes the constants only (`1 ≤ μ_x ≤ 2d` on `𝒞_∞`). The printed form of Proposition 2.7
+of Dario–Gu, with the gradient on the same ball, fails in every dimension for the reason given at
+`Rigidity.Green.ClusterPoincareTwo`.
 -/
 
 open Finset LatticeProb.Percolation Rigidity.External Rigidity.Proofs.Cluster
