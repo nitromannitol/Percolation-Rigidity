@@ -300,7 +300,7 @@ theorem three_pow_succ_le (hd : 2 ≤ d) (k : ℕ) :
   rw [pow_succ]
   linarith
 
-/-- **Step 2 of the proof of Proposition B.1 of Dario–Gu, in dimension two.** -/
+/-- **Step 2 of the proof of Proposition B.1 of Dario–Gu, on `ℤ^d`.** -/
 theorem exists_densityWeakNormD [NeZero d] (hd : 2 ≤ d) (hpc : criticalProbability d < (p : ℝ))
     (hp1 : (p : ℝ) < 1) :
     ∃ A κ : ℝ, 0 < A ∧ 0 < κ ∧ ∀ (K : ℕ) (S : Finset (Vertex d)), IsCubeUnion K S →

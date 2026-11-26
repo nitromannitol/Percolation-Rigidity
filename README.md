@@ -2731,13 +2731,16 @@ Proposition 2.13 of Dario and Gu on `ℤ^d` is stated as `DarioGuFluxWeakNormD d
 ([`GeneralFluxWeakNormStatement.lean`](Rigidity/Proofs/Green/GeneralFluxWeakNormStatement.lean)): the planar statement with
 `ℤ²` replaced by `ℤ^d` and the normalized Sobolev norm (1.32) with the factor `|V|^{-1/d}`; at `d = 2` it is
 `DarioGuFluxWeakNormTwo p σ` (`darioGuFluxWeakNormD_two_iff`). It is proved for every `d ≥ 2` and `𝔭_c(d) < p < 1`, with
-`σ = 2 θ(p)^{-1} ā`, from one named hypothesis, `FluxVarianceBoundD d p`: the variance bound (3.4) of Gu's proof of his
+`σ = 2 θ(p)^{-1} ā`, from one named hypothesis,
+[`FluxVarianceBoundD d p`](Rigidity/Proofs/Green/GeneralFluxSpatialAverage.lean): the variance bound (3.4) of Gu's proof of his
 Proposition 1.1, `𝕍[Φ_{r²} ⋆ flux(x)] ≤ O_s(C r^{-d})`, which in the source follows from `𝕍[X] ≤ Σ_e (D_e X)²` and the bound of
 the vertical derivatives through the Green function of the cluster (the argument of Step 2 of Dario's Lemma 3.3; in dimension two
-`fluxFlipSum_isOsBond`). The proof is the one of Appendix B in the lattice form of the planar case, with the exponents of `ℤ^d`
+`fluxFlipSum_isOsBond`; `FluxVarianceBoundD 2 p` is not stated as a theorem, the case `d = 2` goes through the planar chain).
+The proof is the one of Appendix B in the lattice form of the planar case, with the exponents of `ℤ^d`
 and the partition into good cubes of `ℤ^d` of Percolation-Cluster-Homogenization. Departures: the positivity of `ā` uses the
-Lipschitz bound of the corrected planes (Dario, Proposition 2.15) instead of Theorem 2.5; the density bound keeps the exponent
-`3^{-dk/2}` of Proposition A.1; the cardinality bound `|𝒞_∞ ∩ B_r(y)| ≥ (2m + 1)^d/L^d` with `m = 3^{n-d}` replaces the minimal
+Lipschitz bound of the corrected planes (Dario, Proposition 2.15) instead of Theorem 2.5; in the density bound the
+term `3^{k+1} 3^{-dk/2}` of each scale is bounded by `3`, so its gradient constant has the factor `K + 1` in every dimension (the
+source has `O_s(C)` for `d ≥ 3`); the factor `|V|^{-1/d}` of (1.32) is bounded below by `|V|^{-1/2}`; the cardinality bound `|𝒞_∞ ∩ B_r(y)| ≥ (2m + 1)^d/L^d` with `m = 3^{n-d}` replaces the minimal
 scale of the density.
 
 | Lean declaration | Statement |

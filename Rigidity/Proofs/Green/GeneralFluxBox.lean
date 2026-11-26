@@ -17,8 +17,8 @@ almost surely (`exists_fluxWeakNormBoxD`), where `Y` and `Z` do not depend on `w
 centered flux at the dyadic times `4^j ≥ 1` are bounded by Gu's Proposition 1.1
 (`exists_fluxSpatialAverageD`, used in the weaker form `O_s(C/r)` valid for `d ≥ 2`), and the times
 below `2` by the moments of the flux itself, from the Lipschitz bound of the corrected planes
-(Dario, Proposition 2.15, `lipschitz_correctedPlane_origin`), which is (fluxbounded.est). As in the
-planar case, the bound holds under the variance bound (3.4) of Gu (`FluxVarianceBoundD`).
+(Dario, Proposition 2.15, `lipschitz_correctedPlane_origin`), which is (fluxbounded.est). Unlike the
+planar case, where (3.4) is proved, the bound here assumes (3.4) (`FluxVarianceBoundD`).
 -/
 
 open MeasureTheory LatticeProb LatticeProb.Percolation Rigidity.Poincare.GeneralDim
@@ -490,7 +490,7 @@ theorem growthMoments_fluxBoxR0_mul {k i : Fin d} {abar BΛ κ : ℝ} (hBΛ : 0 
         ≤ 2 * (2 * d * Real.sqrt T.card * BΛ * 2 ^ κ) := by gcongr
       _ = 4 * d * BΛ * 2 ^ κ * Real.sqrt T.card := by ring
 
-/-- **Dario–Gu, (eq.gsmallH-1), in dimension two, on finite sets of `ℤ²`.** -/
+/-- **Dario–Gu, (eq.gsmallH-1), on finite sets of `ℤ^d`.** -/
 theorem exists_fluxWeakNormBoxD (hd : 2 ≤ d) (hpc : criticalProbability d < (p : ℝ))
     (hp1 : (p : ℝ) < 1) (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) (hV : FluxVarianceBoundD d p) :
     ∃ abar A κ : ℝ, 0 < abar ∧ 0 < A ∧ 0 < κ ∧ ∀ (k i : Fin d) (J : ℕ) (S T : Finset (Vertex d)),

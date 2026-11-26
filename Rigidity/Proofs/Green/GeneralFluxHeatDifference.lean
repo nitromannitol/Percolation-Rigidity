@@ -150,7 +150,7 @@ theorem ofReal_abs_heatF_sub_leD {S T : Finset (Vertex d)} {w : Vertex d → ℝ
         rw [lintegral_mul_const _ (hAm j x)]
         rfl
 
-/-! ### Heat averages of functions on `ℤ²` -/
+/-! ### Heat averages of functions on `ℤ^d` -/
 
 /-- `f` is summable against every heat kernel. -/
 def HeatSummableAllD (f : Vertex d → ℝ) : Prop :=

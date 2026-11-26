@@ -19,7 +19,7 @@ hypothesis, with unit conductances on the open edges (`a ∈ {0, 1}`).
 * `clusterH1Norm ω V v` is `‖v‖_{H̲¹(V)} = |V|^{-1/2} ‖v‖_{L̲²(V)} + ‖∇v‖_{L̲²(V)}` ((1.32), `d = 2`);
 * `WeakNormLe ω V g B` is `‖g‖_{H̲^{-1}(V)} ≤ B` ((1.33), `p = 2`): for every `v ∈ C_0^a(V)`,
   `|V|^{-1} Σ_V g v ≤ B ‖v‖_{H̲¹(V)}`, which is the bound on the supremum of (1.33);
-* `centeredFlux ω σ χ k i` is the `i`-th component of `g̃_{e_k}` (§2.2.2), and
+* `centeredFlux ω σ χ k i` is the `i`-th component of `g̃_{e_k}` (§2.3.2), and
   `translatedFlux ω σ χ k i` the `i`-th component of the translated flux `g̃*_{e_k}` of (4.26),
   `[g̃*_{e_k}]_i = T_{-e_i} [a(Dχ_{e_k} + e_k) - (σ̄²/2) e_k]_i`.
 -/
@@ -57,7 +57,7 @@ noncomputable def dgClusterBall {ω : Configuration 2} (K : OpenComponent ω) (y
   (componentEuclideanBall K y r).image Subtype.val
 
 /-- The `i`-th component of the centered flux `g̃_{e_k} = a(Dχ_{e_k} + e_k) - (σ/2) e_k` at `x`
-(Dario–Gu, §2.2.2, `σ = σ̄²`), with `a = 1` on the open edges and `a = 0` on the closed ones. -/
+(Dario–Gu, §2.3.2, `σ = σ̄²`), with `a = 1` on the open edges and `a = 0` on the closed ones. -/
 noncomputable def centeredFlux (ω : Configuration 2) (σ : ℝ) (χ : Fin 2 → Vertex 2 → ℝ)
     (k i : Fin 2) (x : Vertex 2) : ℝ :=
   (if (openGraph ω).Adj x (x + Pi.single i 1) then
