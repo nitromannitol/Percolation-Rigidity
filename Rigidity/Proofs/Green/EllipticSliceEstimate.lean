@@ -16,7 +16,7 @@ Then for `X ≤ r`, `ρ₀ ≤ 2r`, `2r ≤ R`, and `v` with `|v| ≤ U` on `B_R
 
   `‖v - c‖_{B_r} ≤ (C₀ + (10 C₀ + 32) A) r (U/R + R F)`  for some constant `c`
 
-(`exists_nL2_sub_le_of_laplacian`). This is the elliptic estimate (1) for time slices of the heat
+(`exists_nL2_sub_le_of_laplacian`). This is the elliptic estimate for time slices of the heat
 equation in the proof of Theorem 3 of Dario–Gu given here. Proof: with `ρ_k = R/2^k` down to
 `ρ_K ∈ [2r, 4r)`, let `h_k` be the harmonic replacement on `int B_{ρ_k}` of `v` truncated to
 `B_{ρ_k}`. The exit-time bound gives `|v - h_k| ≤ 2Aρ_k² F` on `B_{ρ_k}`; the order-zero estimate
