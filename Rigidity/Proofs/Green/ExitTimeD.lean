@@ -6,9 +6,9 @@ import Rigidity.Proofs.Green.TimeSliceOscillationD
 * `boundaryAccessible_of_infiniteD`: every finite set of an infinite open component is boundary
   accessible (the `d`-dimensional form of `boundaryAccessible_of_infinite`);
 * `exitHyp_clusterBallD`: if `p_τ(z, w) ≤ C_B τ^{-d/2}` for the points `z, w` of `V_ρ(y)` and
-  `τ ≥ r²`, then for `ρ ≥ max(r, 1)` the heat kernel started in the interior of `V_ρ(y)` keeps at
-  most `1/2` of its mass there at time `A ρ²`, `A = (2 · 5^d C_B + 1)^{2/d}`: the volume bound
-  `|V_ρ| ≤ (5ρ)^d` and `5^d C_B A^{-d/2} ≤ 1/2`.
+  `τ ≥ ρ²`, for every `ρ ≥ r ≥ 1`, then for `ρ ≥ r` the heat kernel started in the interior of
+  `V_ρ(y)` keeps at most `1/2` of its mass there at time `A ρ²`, `A = (2 · 5^d C_B + 1)^{2/d}`:
+  the volume bound `|V_ρ| ≤ (5ρ)^d` and `5^d C_B A^{-d/2} ≤ 1/2`.
 -/
 
 open scoped Classical
@@ -34,7 +34,7 @@ noncomputable def exitConstD (d : ℕ) (CB : ℝ) : ℝ := (2 * 5 ^ d * CB + 1) 
 /-- **The exit time of the cluster balls.** -/
 theorem exitHyp_clusterBallD [NeZero d] {CB : ℝ} (hCB : 0 ≤ CB) {K : OpenComponent ω}
     {y : Vertex d} {r : ℝ} (hr1 : 1 ≤ r)
-    (hB : ∀ ρ, r ≤ ρ → ∀ z ∈ clusterBall K y ρ, ∀ w ∈ clusterBall K y ρ, ∀ τ, r ^ 2 ≤ τ →
+    (hB : ∀ ρ, r ≤ ρ → ∀ z ∈ clusterBall K y ρ, ∀ w ∈ clusterBall K y ρ, ∀ τ, ρ ^ 2 ≤ τ →
       vsrwHeat (openGraph ω) (2 * d) τ z w ≤ CB * τ ^ (-((d : ℝ) / 2))) :
     ∀ ρ, r ≤ ρ → ∀ z ∈ interiorOf (openGraph ω) (clusterBall K y ρ),
       ∑ w ∈ interiorOf (openGraph ω) (clusterBall K y ρ),
@@ -62,9 +62,8 @@ theorem exitHyp_clusterBallD [NeZero d] {CB : ℝ} (hCB : 0 ≤ CB) {K : OpenCom
   have hterm : ∀ w ∈ interiorOf (openGraph ω) (clusterBall K y ρ),
       vsrwHeat (openGraph ω) (2 * d) (A * ρ ^ 2) z w ≤ CB * ((2 * 5 ^ d * CB + 1) * ρ ^ d)⁻¹ := by
     intro w hw
-    have h1 := hB ρ hρ z hzK w (interiorOf_subset _ hw) (A * ρ ^ 2) (by
-      have : r ^ 2 ≤ ρ ^ 2 := pow_le_pow_left₀ (by linarith) hρ 2
-      nlinarith)
+    have h1 := hB ρ hρ z hzK w (interiorOf_subset _ hw) (A * ρ ^ 2)
+      (le_mul_of_one_le_left (sq_nonneg ρ) hA1)
     rwa [hτpow] at h1
   have hc1 : ((interiorOf (openGraph ω) (clusterBall K y ρ)).card : ℝ) ≤
       (clusterBall K y ρ).card := by
