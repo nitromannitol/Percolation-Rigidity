@@ -262,7 +262,7 @@ theorem discMean_le_self (z : Vertex d) (k : ℕ) : discMean ω z k ≤ k := by
   rw [discMean_zero] at this
   simpa using this
 
-/-- **Tonelli**: `M(z, t) = Σ_n Pois_{4t}(n) E^z |X_n - z|`. -/
+/-- **Tonelli**: `M(z, t) = Σ_n Pois_{2dt}(n) E^z |X_n - z|`. -/
 theorem meanDist_eq_tsum {t : ℝ} (ht : 0 ≤ t) (z : Vertex d) :
     meanDist ω z t = ∑' n, poissonWeight (2 * d) t n * discMean ω z n := by
   have hdeg := openGraph_degree_le_two_mul ω

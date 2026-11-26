@@ -6,9 +6,9 @@ import Rigidity.Proofs.Barlow.MeanDisplacement
 
 This file proves Lemma 3.3 and Proposition 3.4 of Barlow (*Random walks on supercritical
 percolation clusters*, Ann. Probab. 32 (2004)) for the variable speed random walk on the open
-graph of a configuration of `ℤ^d`: if the entropy satisfies `Q(s) ≥ c₁ + log s` on `[T₀, t]` with
-`T₀² ≤ t`, and `M(t) ≥ 1/2`, then the mean displacement satisfies `M(t) ≤ K √t`
-(`meanDist_le_of_entropy`), with `K` depending only on `c₁`.
+graph of a configuration of `ℤ^d`: if the entropy satisfies `Q(s) ≥ c₁ + (d/2) log s` on `[T₀, t]`
+with `T₀² ≤ t`, and `M(t) ≥ 1/2`, then the mean displacement satisfies `M(t) ≤ K √t`
+(`meanDist_le_of_entropy`), with `K` depending only on `d` and `c₁`.
 
 The ingredients are the derivatives (3.8) and (3.10) of the source as sums over directed edges
 (from the Gauss–Green formula `tsum_mul_openLaplacian_eq`), the inequality

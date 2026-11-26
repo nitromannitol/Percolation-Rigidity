@@ -379,8 +379,9 @@ The volume regularity and the weak Poincaré inequality on the Euclidean balls o
 Theorem 2.18 with Lemma 2.19, and Proposition 2.7 of Dario and Gu in its weak form) hold in every dimension `d ≥ 2`
 (`Rigidity.WeakPoincare.clusterGoodBalls_holds`, `clusterVeryGoodBalls_holds`, `clusterPoincare_holds`; see
 [Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension)).
-The heat kernel of the variable-speed walk on the open graph of `ℤ^d`, the Carne–Varopoulos bound and the Gaussian
-upper bound of Barlow (Theorem 4 of Dario and Gu, with the prefactor `t^{−d/2}`) hold in every dimension `d ≥ 2`
+The heat kernel of the variable-speed walk on the open graph of `ℤ^d` is defined, and the Carne–Varopoulos bound and
+the Gaussian upper bound of Barlow (Theorem 4 of Dario and Gu, with the prefactor `t^{−d/2}`) are proved in every
+dimension `d ≥ 2`
 (`Rigidity.Green.carneVaropoulos_holds`, `Rigidity.BarlowLattice.barlowGaussianUpperBound_holds`; see
 [The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension)).
 
