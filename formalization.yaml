@@ -430,7 +430,9 @@ fidelity:
     Proposition 2.13 is proved in dimension two (Appendix B, from Proposition 1.1 of Gu, proved here with the heat kernel of Z^2,
     the weak norm of the flux of Z^2 by a dyadic heat decomposition, the weak norm of the density from Proposition A.1, the
     coarsening of the test functions by the anchors of the partition of the good cubes and a minimal scale;
-    Rigidity.Green.darioGuFluxWeakNormTwo_holds), so that Theorems 1 and 2 of Dario and Gu and Theorem 1.3 hold in dimension two
+    Rigidity.Green.darioGuFluxWeakNormTwo_holds; in every dimension d >= 2 from the variance bound (3.4) of the proof of
+    Proposition 1.1 of Gu, Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance), so that Theorems 1 and 2 of Dario
+    and Gu and Theorem 1.3 hold in dimension two
     with no hypothesis (Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds, fast_decay_holds)) (the Carne-Varopoulos bound
     for small times is proved for the lazy walk; the pairs of points in a ball are treated by a
     union bound and the time integral of the Gaussian kernel is normalized by its value at a unit
