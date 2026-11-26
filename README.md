@@ -446,9 +446,10 @@ Dario and Gu in each dimension `d ≥ 3` alone (`DarioGuHeatKernelD d`;
 its planar case is proved, and so is the small-time bound of the heat kernel on `ℤ^d`, from the Carne–Varopoulos
 bound (`openHeatSmallTimeD_holds`); see
 [Theorem 2 of Dario and Gu for d ≥ 3 from Theorem 1, and in every dimension](#theorem-2-of-dario-and-gu-for-d--3-from-theorem-1-and-in-every-dimension).
-Theorem 1 in dimension `d` follows from the whole-cluster estimate (4.40) with Proposition 2.12 alone
-(`DarioGuGaussianFlowD d`;
-[`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean));
+Theorem 1 in dimension `d ≥ 2` follows from the whole-cluster estimate (4.40) with Proposition 2.12 alone
+(`DarioGuGaussianFlowD d`; [`darioGuHeatKernelD_of_gaussianFlow`](Rigidity/Proofs/Green/HeatKernelHoldsD.lean)), so the
+quantitative Green estimate follows from that estimate in each dimension `d ≥ 3`
+([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean));
 see [Theorem 1 of Dario and Gu in every dimension from the whole-cluster estimate](#theorem-1-of-dario-and-gu-in-every-dimension-from-the-whole-cluster-estimate).
 
 | Lean name | Statement | Source | Results that use it |
@@ -2740,7 +2741,7 @@ proved, the latter in its unnormalized form.
 | [`darioGuCaccioppoliTwo_holds`](Rigidity/Proofs/Green/DarioGuParabolicCaccioppoli.lean), [`parabolic_caccioppoli_of_cutoff`](Rigidity/Proofs/Green/DarioGuParabolicCaccioppoli.lean) | Proposition 2.9 (parabolic Caccioppoli inequality, `DarioGuCaccioppoliTwo`), for every open component, with `C = 128`. |
 | [`darioGuTimesliceTwo_holds`](Rigidity/Proofs/Green/DarioGuParabolicTimeslice.lean), [`timeslice_of_cutoff`](Rigidity/Proofs/Green/DarioGuParabolicTimeslice.lean) | Lemma 2.10 (the `L^∞ L²` gradient estimate in time slices, `DarioGuTimesliceTwo`) in the unnormalized form, for every open component, with `C = 4096`. |
 
-The eight reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+The seven reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Departures from Dario and Gu:
 
@@ -3057,7 +3058,8 @@ The eight reports for the declarations of this section are in [`RigidityAudit/Ax
 Departures from Dario and Gu: the radii of the pairing are `√s t^{η/(d+2)}` instead of `√s log(2 + t)`; the minimal time of
 Theorem 1 at `y` is the supremum of the thresholds of the inputs over the points `w` with `|w − y| ≤ T(w) + 1`
 (`latticeSupD`), which keeps a stretched exponential tail; the exponent of the error is `1/2 − δ` with the point-source
-exponent `δ/2`.
+exponent `min(δ, 1/2)/2`. Lemmas 4.1 and 4.2 and the weighted estimate (4.3) of the source are not used: the passage
+from smooth initial data to a point source and the geometric mean with the Gaussian upper bound replace them.
 
 ## Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension
 
