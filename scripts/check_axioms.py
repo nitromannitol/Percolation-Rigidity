@@ -1125,7 +1125,8 @@ further = {
          'Rigidity.Green.GeneralFlux.weakNormLeD_of_scale_bounds',
          'Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_bounds',
          'Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance',
-         'Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_two_holds'],
+         'Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_two_holds',
+         'Rigidity.Green.GeneralFlux.fluxVarianceBoundD_two'],
     'The multiscale Poincare inequality (2.26) of Dario in every dimension':
         ['Rigidity.Poincare.GeneralDim.multiscalePoincare_holds',
          'Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box',

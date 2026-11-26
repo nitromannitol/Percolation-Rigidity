@@ -301,6 +301,7 @@ import Rigidity.Proofs.Green.DarioGuCorrectorLemma
 import Rigidity.Proofs.Green.DarioGuGaussian
 import Rigidity.Proofs.Green.DarioGuHeatKernelInputs
 import Rigidity.Proofs.Green.GeneralFluxHolds
+import Rigidity.Proofs.Green.GeneralFluxVarianceTwo
 import Rigidity.Proofs.Green.DarioGuLatticeSup
 import Rigidity.Proofs.Green.DarioGuLevels
 import Rigidity.Proofs.Green.DarioGuPhiCalculus
@@ -1665,6 +1666,7 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_bounds
 #print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance
 #print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_two_holds
+#print axioms Rigidity.Green.GeneralFlux.fluxVarianceBoundD_two
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
