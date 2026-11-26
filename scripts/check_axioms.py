@@ -1199,6 +1199,15 @@ further = {
          'Rigidity.Green.exists_abs_vsrwHeat_sub_le_gaussian',
          'Rigidity.Green.darioGuHeatKernelD_of_gaussianFlow',
          'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow'],
+    'The whole-cluster estimate of Dario and Gu in every dimension from Propositions 2.12 and 2.13, and Theorem 2 in every dimension from Propositions 2.12 and 2.13 in every dimension d >= 3':
+        ['Rigidity.Green.GeneralDim.hasDerivAt_dgTwoScaleD_eq',
+         'Rigidity.Green.GeneralDim.tsum_clusterSourceD_le',
+         'Rigidity.Green.GeneralDim.tsum_sq_clusterWD_le',
+         'Rigidity.Green.GeneralDim.exists_isDGCorrectorD',
+         'Rigidity.Green.GeneralDim.correctorGrowthD_of_input',
+         'Rigidity.Green.GeneralDim.l2norm_initialErrorD_le',
+         'Rigidity.Green.GeneralDim.darioGuGaussianFlowD_of_inputs',
+         'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_flux'],
     'Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension':
         ['Rigidity.WeakPoincare.clusterGoodBalls_holds',
          'Rigidity.WeakPoincare.clusterVeryGoodBalls_holds',

@@ -453,6 +453,10 @@ Theorem 1 in dimension `d ≥ 2` follows from the whole-cluster estimate (4.40) 
 quantitative Green estimate follows from that estimate in each dimension `d ≥ 3`
 ([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean));
 see [Theorem 1 of Dario and Gu in every dimension from the whole-cluster estimate](#theorem-1-of-dario-and-gu-in-every-dimension-from-the-whole-cluster-estimate).
+The whole-cluster estimate on `ℤ^d` follows from Proposition 2.12 (`CorrectorQuantitativeInput`) and Proposition 2.13 on
+`ℤ^d` (`DarioGuFluxWeakNormD d`), so the quantitative Green estimate follows from these two in each dimension `d ≥ 3`
+([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_flux`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFlux.lean));
+see [The whole-cluster estimate of Dario and Gu in every dimension from Propositions 2.12 and 2.13](#the-whole-cluster-estimate-of-dario-and-gu-in-every-dimension-from-propositions-212-and-213).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -3092,6 +3096,39 @@ Theorem 1 at `y` is the supremum of the thresholds of the inputs over the points
 exponent `min(δ, 1/2)/2`. Lemmas 4.1 and 4.2 and the weighted estimate (4.3) of the source are not used: the passage
 from smooth initial data to a point source and the geometric mean with the Gaussian upper bound replace them.
 
+## The whole-cluster estimate of Dario and Gu in every dimension from Propositions 2.12 and 2.13
+
+The whole-cluster estimate on `ℤ^d`, `d ≥ 2` (`DarioGuGaussianFlowD d p σ`, previous section) is proved from Proposition 2.12
+(the quantitative corrector estimate `CorrectorQuantitativeInput`) and Proposition 2.13 on `ℤ^d` (the weak norm of the centered
+flux, `DarioGuFluxWeakNormD d p σ`), along Proposition 4.3, Steps 1-5, of Dario and Gu with the weight `ψ = 1`. With the correctors
+`χ_{e_k}` normalized at `y`, the two-scale expansion `h(s, ·, y) = θ^{-1}(p̄(s, · − y) + Σ_k D_k p̄(s, · − y) χ_{e_k})` satisfies
+`∂_s h = Δh + θ^{-1} G` on `𝒞_∞` (Step 1, `hasDerivAt_dgTwoScaleD_eq`); `u(s) = 1_{𝒞_∞}(h(s) − P_{s−τ} 1_{𝒞_∞} h(τ))` vanishes at
+`s = τ`, and the energy identity with the estimate `Σ_x u G ≤ E(u) + (2s)^{-1} Σ_x u² + Q s^{α − d/2 − 2}` of the source (Steps 3-4:
+the duality of the centered flux with the dyadic pieces `(η_m − η_{m−1}) D_i D_k p̄` on the balls of radius `2^{m+2}√s`, the
+growth of the corrector, Young's inequality) integrate to (4.40), `Σ_x u(3τ)² ≤ C τ^{α − d/2 − 1}` (`tsum_sq_clusterWD_le`). The
+initial error `‖1_{𝒞_∞}(h(s) − θ^{-1} p̄(s, · − y))‖_{ℓ²} ≤ C s^{α/2 − d/4 − 1/2}` (`l2norm_initialErrorD_le`) and the contraction of
+`P_{2τ}` give `DarioGuGaussianFlowD d p σ` above `M(y) = max(M_corr(y)², M_flux(y)², 1)`
+(`darioGuGaussianFlowD_of_inputs`). The correctors exist by the qualitative corrector input, proved in every dimension
+(`exists_isDGCorrectorD`). Hence the quantitative Green estimate in every dimension follows from Proposition 2.12 and
+Proposition 2.13 in every dimension `d ≥ 3` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_flux`).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`hasDerivAt_dgTwoScaleD_eq`](Rigidity/Proofs/Green/GeneralTwoScaleStepOne.lean) | Step 1 on `ℤ^d`: the equation of the two-scale expansion on the cluster with its source term. |
+| [`tsum_clusterSourceD_le`](Rigidity/Proofs/Green/GeneralTwoScaleSourceBound.lean) | Steps 3-4 on `ℤ^d`, for one configuration: the estimate of the source term from the growth of the corrector and the weak norms of the centered flux. |
+| [`tsum_sq_clusterWD_le`](Rigidity/Proofs/Green/GeneralTwoScaleError.lean) | (4.40) on `ℤ^d` with `t = 3τ`, for one configuration. |
+| [`exists_isDGCorrectorD`](Rigidity/Proofs/Green/GeneralTwoScaleInitial.lean), [`correctorGrowthD_of_input`](Rigidity/Proofs/Green/GeneralTwoScaleInitial.lean), [`l2norm_initialErrorD_le`](Rigidity/Proofs/Green/GeneralTwoScaleInitial.lean) | The normalized correctors on `ℤ^d`; their growth `C (ρ + \|x − y\| + 2)^α` above `M_corr(y) ≤ O_s(C)` from Proposition 2.12; the initial error of the two-scale expansion. |
+| [`darioGuGaussianFlowD_of_inputs`](Rigidity/Proofs/Green/GeneralTwoScaleFlow.lean), [`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_flux`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFlux.lean) | The whole-cluster estimate on `ℤ^d` from Propositions 2.12 and 2.13; the input in every dimension from Proposition 2.12 and Proposition 2.13 for `d ≥ 3`. |
+
+The eight reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Dario and Gu: only the first pass of Step 5 (weight one) is used, with initial time `τ` and final time `3τ`; the
+corrector and flux exponents are both `min(α, 1)`; the flux term pairs the centered flux with the forward differences
+`D_i D_k p̄` (not the translated flux), and the divergence term carries the corrector at the base point of each edge, as in the
+planar proof (`DarioGuTwoScaleStepOne`); the normalized Sobolev norm (1.32) on `ℤ^d` carries the factor `|V|^{−1/d}`, which
+gives the factor `|V|^{1/2 − 1/d}` in the duality of Step 3; the sum over the scales uses the decay
+`Σ_m 2^{(m+2)(d+1)} e^{−4^{m−1}/(512σ)} < ∞`.
+
 ## Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension
 
 The volume regularity and the weak Poincaré inequality on the Euclidean balls of the supercritical infinite cluster are proved
@@ -3337,7 +3374,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1149 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1157 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3371,9 +3408,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 847 Lean files with 180,327 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 860 Lean files with 184,642 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,805 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,816 lines) are counted separately.
 
 ## Building
 
