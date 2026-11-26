@@ -53,7 +53,9 @@ dimension (`barlowGaussianUpperBound_holds`; in dimension two `barlowGaussianUpp
 and in dimension two so are Theorem 3 of Dario and Gu
 (`darioGuGradientBoundTwo_holds`) and Proposition 2.13 of Dario and Gu, the weak norm of the centered
 flux of the corrector (`darioGuFluxWeakNormTwo_holds`), from which the quantitative estimate of the
-Green function in dimension two follows (`supercriticalBondGreenQuantitativeTwo_holds`). The five numbered results that the paper does not prove are
+Green function in dimension two follows (`supercriticalBondGreenQuantitativeTwo_holds`). Proposition 2.13 is
+proved in every dimension `d ≥ 2` from the variance bound (3.4) of the proof of Gu's Proposition 1.1, a named hypothesis
+(`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`). The five numbered results that the paper does not prove are
 quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
 Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
 them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
@@ -2723,6 +2725,32 @@ Departures from Dario and Gu:
   `E[exp(M^s)]` bounded uniformly in `y`; for `α > 1` the bound for `min(α, 1)` is used.
 - **Componentwise.** The bound is stated for each component `[g̃_{e_k}]_i`, as in `DarioGuFluxWeakNormTwo`.
 
+## Proposition 2.13 of Dario and Gu in every dimension from the variance bound of Gu
+
+Proposition 2.13 of Dario and Gu on `ℤ^d` is stated as `DarioGuFluxWeakNormD d p σ`
+([`GeneralFluxWeakNormStatement.lean`](Rigidity/Proofs/Green/GeneralFluxWeakNormStatement.lean)): the planar statement with
+`ℤ²` replaced by `ℤ^d` and the normalized Sobolev norm (1.32) with the factor `|V|^{-1/d}`; at `d = 2` it is
+`DarioGuFluxWeakNormTwo p σ` (`darioGuFluxWeakNormD_two_iff`). It is proved for every `d ≥ 2` and `𝔭_c(d) < p < 1`, with
+`σ = 2 θ(p)^{-1} ā`, from one named hypothesis, `FluxVarianceBoundD d p`: the variance bound (3.4) of Gu's proof of his
+Proposition 1.1, `𝕍[Φ_{r²} ⋆ flux(x)] ≤ O_s(C r^{-d})`, which in the source follows from `𝕍[X] ≤ Σ_e (D_e X)²` and the bound of
+the vertical derivatives through the Green function of the cluster (the argument of Step 2 of Dario's Lemma 3.3; in dimension two
+`fluxFlipSum_isOsBond`). The proof is the one of Appendix B in the lattice form of the planar case, with the exponents of `ℤ^d`
+and the partition into good cubes of `ℤ^d` of Percolation-Cluster-Homogenization. Departures: the positivity of `ā` uses the
+Lipschitz bound of the corrected planes (Dario, Proposition 2.15) instead of Theorem 2.5; the density bound keeps the exponent
+`3^{-dk/2}` of Proposition A.1; the cardinality bound `|𝒞_∞ ∩ B_r(y)| ≥ (2m + 1)^d/L^d` with `m = 3^{n-d}` replaces the minimal
+scale of the density.
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.GeneralFlux.exists_homogenizedCoefficientD`](Rigidity/Proofs/Green/GeneralFluxMean.lean), [`exists_fluxMeanD`](Rigidity/Proofs/Green/GeneralFluxMean.lean) | the mean of the flux of the corrected plane of slope `e_k` along `e_i` is `ā δ_{ik}` with `ā > 0`, on `ℤ^d`. |
+| [`exists_fluxSpatialAverageD`](Rigidity/Proofs/Green/GeneralFluxSpatialAverage.lean) | Gu's Proposition 1.1 on `ℤ^d` under `FluxVarianceBoundD d p`: `\|Φ_{r²} ⋆ [g_{e_k}]_i(x)\| ≤ O_s(C r^{-d/2})`. |
+| [`exists_fluxWeakNormBoxD`](Rigidity/Proofs/Green/GeneralFluxBox.lean), [`exists_densityWeakNormD`](Rigidity/Proofs/Green/GeneralFluxDensity.lean) | the estimates (eq.gsmallH-1) of the flux of `ℤ^d` on finite sets and (eq:DensityWeakNorm) of the density on unions of triadic cubes, with random constants having moments of polynomial growth. |
+| [`sum_sq_grad_coarseTestD_le`](Rigidity/Proofs/Green/GeneralFluxCoarsening.lean), [`weakNormLeD_of_scale_bounds`](Rigidity/Proofs/Green/GeneralFluxScale.lean) | the gradient of the coarsened test function (est.nablacoarsenL2) on the partition into good cubes of `ℤ^d`, and the weak norm of the centered flux on `𝒞_∞ ∩ B_r(y)` at a good scale. |
+| [`darioGuFluxWeakNormD_of_bounds`](Rigidity/Proofs/Green/GeneralFluxHolds.lean), [`darioGuFluxWeakNormD_of_variance`](Rigidity/Proofs/Green/GeneralFluxHolds.lean), [`darioGuFluxWeakNormD_two_holds`](Rigidity/Proofs/Green/GeneralFluxHolds.lean) | Proposition 2.13 on `ℤ^d` from the two weak norm bounds (Step 3, the minimal scale), hence from `FluxVarianceBoundD d p`; in dimension two with no hypothesis. |
+
+The files are `GeneralFlux*.lean` in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) (fifteen files). The eleven reports for
+the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
 ## Theorem 3 of Dario and Gu in dimension two from Proposition 3.9
 
 Theorem 3 of Dario and Gu in the form of Remark 1.3 (the gradient bound on the heat kernel, `DarioGuGradientBoundTwo`) is
@@ -3299,12 +3327,14 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two),
   the thirty-four theorems of
   [Proposition 2.13 of Dario and Gu in dimension two](#proposition-213-of-dario-and-gu-in-dimension-two),
+  the eleven theorems of
+  [Proposition 2.13 of Dario and Gu in every dimension from the variance bound of Gu](#proposition-213-of-dario-and-gu-in-every-dimension-from-the-variance-bound-of-gu),
   the twenty-six theorems of
   [The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension),
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1138 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1149 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3338,9 +3368,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 832 Lean files with 175,111 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 847 Lean files with 180,327 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,792 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,805 lines) are counted separately.
 
 ## Building
 

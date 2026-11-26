@@ -1114,6 +1114,18 @@ further = {
          'Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds',
          'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds',
          'Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_holds'],
+    'Proposition 2.13 of Dario and Gu in every dimension from the variance bound of Gu':
+        ['Rigidity.Green.darioGuFluxWeakNormD_two_iff',
+         'Rigidity.Green.GeneralFlux.exists_homogenizedCoefficientD',
+         'Rigidity.Green.GeneralFlux.exists_fluxMeanD',
+         'Rigidity.Green.GeneralFlux.exists_fluxSpatialAverageD',
+         'Rigidity.Green.GeneralFlux.exists_fluxWeakNormBoxD',
+         'Rigidity.Green.GeneralFlux.exists_densityWeakNormD',
+         'Rigidity.Green.GeneralFlux.sum_sq_grad_coarseTestD_le',
+         'Rigidity.Green.GeneralFlux.weakNormLeD_of_scale_bounds',
+         'Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_bounds',
+         'Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance',
+         'Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_two_holds'],
     'The multiscale Poincare inequality (2.26) of Dario in every dimension':
         ['Rigidity.Poincare.GeneralDim.multiscalePoincare_holds',
          'Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box',

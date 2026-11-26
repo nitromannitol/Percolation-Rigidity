@@ -300,6 +300,7 @@ import Rigidity.Proofs.Green.LazyHeatMass
 import Rigidity.Proofs.Green.DarioGuCorrectorLemma
 import Rigidity.Proofs.Green.DarioGuGaussian
 import Rigidity.Proofs.Green.DarioGuHeatKernelInputs
+import Rigidity.Proofs.Green.GeneralFluxHolds
 import Rigidity.Proofs.Green.DarioGuLatticeSup
 import Rigidity.Proofs.Green.DarioGuLevels
 import Rigidity.Proofs.Green.DarioGuPhiCalculus
@@ -1651,6 +1652,18 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_holds
+-- Proposition 2.13 of Dario and Gu in every dimension from the variance bound of Gu
+#print axioms Rigidity.Green.darioGuFluxWeakNormD_two_iff
+#print axioms Rigidity.Green.GeneralFlux.exists_homogenizedCoefficientD
+#print axioms Rigidity.Green.GeneralFlux.exists_fluxMeanD
+#print axioms Rigidity.Green.GeneralFlux.exists_fluxSpatialAverageD
+#print axioms Rigidity.Green.GeneralFlux.exists_fluxWeakNormBoxD
+#print axioms Rigidity.Green.GeneralFlux.exists_densityWeakNormD
+#print axioms Rigidity.Green.GeneralFlux.sum_sq_grad_coarseTestD_le
+#print axioms Rigidity.Green.GeneralFlux.weakNormLeD_of_scale_bounds
+#print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_bounds
+#print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance
+#print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_two_holds
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
