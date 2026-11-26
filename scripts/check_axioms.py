@@ -1062,7 +1062,13 @@ further = {
          'Rigidity.Corrector.GeneralDim.isOsBond_sub_of_linftyIterationData_zero',
          'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_coarsened',
          'Rigidity.Corrector.GeneralDim.darioCoarsenedCorrectorThree_of_base',
-         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_base'],
+         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_base',
+         'Rigidity.Corrector.GeneralDim.lipschitz_correctedPlane_origin',
+         'Rigidity.Corrector.GeneralDim.lintegral_randomBallSum_le',
+         'Rigidity.Corrector.GeneralDim.abs_correctorDiff_guardAnchor_le',
+         'Rigidity.Corrector.GeneralDim.baseCoarseningError',
+         'Rigidity.Corrector.GeneralDim.baseComparison',
+         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_baseTheorem'],
     'The concentration inequality of Dario (Proposition 2.17) in every dimension':
         ['Rigidity.Corrector.GeneralDim.concentration_holds'],
     'Proposition 2.13 of Dario and Gu in dimension two (Gu, Proposition 1.1, and Appendix B), and the results that used it':

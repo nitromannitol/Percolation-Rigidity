@@ -32,7 +32,11 @@ every dimension `d ≥ 3` the quantitative corrector input reduces to Theorem 1 
 follows from the coarsened corrector data of Dario's Section 5 in dimension `d ≥ 3`
 (`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_coarsened`), which in turn follows from
 the base hypotheses (5.5), (5.7) and (5.10) on the coarsened correctors of the translated partitions
-into good cubes (`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_base`). Theorem 1.3 in the
+into good cubes (`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_base`). The comparison
+(5.7) and the coarsening error (5.10) are proved in every dimension `d ≥ 2`
+(`Rigidity.Corrector.GeneralDim.baseComparison`, `Rigidity.Corrector.GeneralDim.baseCoarseningError`),
+so Dario's Theorem 1 in dimension `d ≥ 3` follows from (5.5) alone, with box oscillations bounded
+uniformly in the scale (`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_baseTheorem`). Theorem 1.3 in the
 form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
 Theorems 6.5 and 1.3 are proved with no literature hypothesis
 ([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
@@ -3212,7 +3216,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1111 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1117 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
