@@ -175,7 +175,8 @@ theorem l2norm_vsrwHeat_sub_le (hD : 0 < D) (hdeg : ∀ x, G.degree x ≤ D) {F 
     intro j hj
     have hjJ : j + 1 ≤ J := Finset.mem_range.1 hj
     exact summable_sq_heatFlowG hD hdeg (by linarith [hmono _ _ hjJ])
-      (summable_sq_sub_l2 (summable_sq_heatFlowG hD hdeg (by linarith [hsnn j]) (hF j)) (hF (j + 1)))
+      (summable_sq_sub_l2 (summable_sq_heatFlowG hD hdeg (by linarith [hsnn j]) (hF j))
+        (hF (j + 1)))
   obtain ⟨hsum2, hsum⟩ := l2norm_sum_le (Finset.range J) hterms
   obtain ⟨-, htot⟩ := l2norm_add_le (summable_sq_heatFlowG hD hdeg ht hE) hsum2
   have heq : (fun x => vsrwHeat G D (s J) x y - F J x) = fun x =>

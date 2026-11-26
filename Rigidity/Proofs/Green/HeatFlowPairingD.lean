@@ -10,8 +10,9 @@ summable and square summable `δ` of mass zero,
 
   `‖P_σ δ‖ ≤ ε (Σ_{V_l} δ²)^{1/2} + (2 + η) Σ_{x ∉ V_l} |δ(x)|`,
 
-with `η = K l (A₁^{1/2}/R + R (8 A₂)^{1/2}/(2σ))` and `ε = |V_l|^{1/2} η`, where `V_l = 𝒞_∞ ∩ B_l(y)` and
-`A₁`, `A₂` bound the diagonal of the heat kernel at the times `2σ` and `σ/2` on `B_R(y)`.
+with `η = K l (A₁^{1/2}/R + R (8 A₂)^{1/2}/(2σ))` and `ε = |V_l|^{1/2} η`, where
+`V_l = 𝒞_∞ ∩ B_l(y)` and `A₁`, `A₂` bound the diagonal of the heat kernel at the times `2σ` and
+`σ/2` on `B_R(y)`.
 -/
 
 open MeasureTheory LatticeProb.Percolation

@@ -152,7 +152,8 @@ theorem l2norm_initialError_le [NeZero d] (hσ : 0 < σ) (hθ : 0 < θ) {u η CA
   have hGs : Summable fun z => (-clusterGaussNorm K σ u y z) ^ 2 := by
     simpa using summable_sq_clusterGaussNorm (K := K) (y := y) hσ hu
   obtain ⟨-, htri⟩ := l2norm_add_le hp2.summable hGs
-  have hneg : l2norm (fun z => -clusterGaussNorm K σ u y z) = l2norm (clusterGaussNorm K σ u y) := by
+  have hneg : l2norm (fun z => -clusterGaussNorm K σ u y z) =
+      l2norm (clusterGaussNorm K σ u y) := by
     unfold l2norm; simp_rw [neg_sq]
   have heq : (fun x => vsrwHeat (openGraph ω) (2 * d) u x y - clusterGaussNorm K σ u y x) =
       fun x => vsrwHeat (openGraph ω) (2 * d) u x y + -clusterGaussNorm K σ u y x :=
@@ -160,7 +161,8 @@ theorem l2norm_initialError_le [NeZero d] (hσ : 0 < σ) (hθ : 0 < θ) {u η CA
   rw [heq]
   calc _ ≤ _ := htri
     _ ≤ Real.sqrt CB * u ^ (-((d : ℝ) / 4)) +
-        2 / θ * Real.sqrt (2 * θ * (2 * Real.pi * σ) ^ (-((d : ℝ) / 2))) * u ^ (-((d : ℝ) / 4)) := by
+        2 / θ * Real.sqrt (2 * θ * (2 * Real.pi * σ) ^ (-((d : ℝ) / 2))) *
+          u ^ (-((d : ℝ) / 4)) := by
         rw [hneg]; exact add_le_add hpn hGn
     _ = _ := by ring
 

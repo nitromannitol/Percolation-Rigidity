@@ -14,7 +14,8 @@ import PercolationClusterHomogenization.Proofs.Regularity.GeneralOrderZeroHolds
   harmonic for the open graph at the vertices of `interiorOf`;
 * `exists_nL2_heatFlowG_sub_le`: for a square summable `φ` and `σ > 0`, the time slice
   `v = P_σ φ` of the heat semigroup of the open graph has
-  `‖v - c‖_{L̲²(𝒞_∞ ∩ B_l(y))} ≤ K l (U/R + R F)` with `U² = A₁ ‖φ‖²`, `F² = 8 (2σ)^{-2} A₂ ‖φ‖²`, where
+  `‖v - c‖_{L̲²(𝒞_∞ ∩ B_l(y))} ≤ K l (U/R + R F)` with `U² = A₁ ‖φ‖²`,
+  `F² = 8 (2σ)^{-2} A₂ ‖φ‖²`, where
   `A₁` and `A₂` bound `p_{2σ}(z, z)` and `p_{σ/2}(z, z)` on `B_R(y)`: the elliptic oscillation
   estimate with the bounds of `HeatFlowGraph.lean`. With `σ ≈ t`, `R ≈ √t` and the diagonal bound
   `p_s(z, z) ≤ C s^{-d/2}` of Theorem 4 this is `‖P_σ φ - c‖_{L̲²(B_l)} ≤ C l t^{-d/4 - 1/2} ‖φ‖`.

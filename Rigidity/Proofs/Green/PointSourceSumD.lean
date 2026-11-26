@@ -14,7 +14,8 @@ the order-zero estimate and the exit-time bound at the pole above the scale `l_0
 the telescoping identity gives (`l2norm_pointSource_le`)
 
   `‖p_t(·, y) - G_t‖ ≤ Q_E + J Q`,
-  `Q = 5^{d/2} κ √C_B C_N L^{d/2+1} t^{η-d/4-1/2} + C_N (4L²)^{d/4+1/2} t^{η-d/4-1/2} + (2 + κ√C_B) T₀`,
+  `Q = 5^{d/2} κ √C_B C_N L^{d/2+1} t^{η-d/4-1/2} + C_N (4L²)^{d/4+1/2} t^{η-d/4-1/2}`
+    `+ (2 + κ√C_B) T₀`,
   `Q_E = 5^{d/2} κ √C_B C_E L^{d/2+1} s_0^{1/2} t^{-d/4-1/2} + (2 + κ√C_B) T₀`.
 
 The terms with `4L² s_j ≤ t` are paired with the time slices (`l2norm_heatFlowG_le_of_scale`), the
