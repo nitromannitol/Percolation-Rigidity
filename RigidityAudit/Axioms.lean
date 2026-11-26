@@ -15,6 +15,7 @@ import Rigidity.Proofs.Assembly.Unconditional
 import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.ProvedGreenColumn
+import Rigidity.Proofs.Assembly.ProvedCorrector
 import Rigidity.Proofs.Assembly.ProvedOrderOne
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
@@ -602,6 +603,12 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Assembly.WithProvedOrderOne.fast_decay
 #print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayDichotomy
 #print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayPotential
+#print axioms Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_holds
+#print axioms Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioThree
+#print axioms Rigidity.Assembly.WithProvedCorrector.fast_decay
+#print axioms Rigidity.Assembly.WithProvedCorrector.fastDecayDichotomy
+#print axioms Rigidity.Assembly.WithProvedCorrector.fastDecayPotential
 
 -- Existence of planar Green columns, and Theorem 1.3 from five dimension-two literature inputs
 #print axioms Rigidity.Proofs.Section5.planar_greenColumn_exists

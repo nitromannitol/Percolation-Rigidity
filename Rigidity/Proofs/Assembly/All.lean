@@ -1,6 +1,7 @@
 import Rigidity.Proofs.Assembly.Audit
 import Rigidity.Proofs.Assembly.Main
 import Rigidity.Proofs.Assembly.ProvedGreenColumn
+import Rigidity.Proofs.Assembly.ProvedCorrector
 import Rigidity.Proofs.Assembly.ProvedOrderOne
 import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.Section2

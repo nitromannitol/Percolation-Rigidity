@@ -16,22 +16,23 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses (see [Assumed literature inputs](#assumed-literature-inputs)). Eight of these twelve
+hypotheses (see [Assumed literature inputs](#assumed-literature-inputs)). Ten of these twelve
 inputs are also proved in Lean: the uniqueness of the infinite cluster, the smoothing bound of
 Micciancio and Regev, the crossing estimate of Kesten, the Jordan curve theorem on `S²`
 (Lemma 2.14), the well-connectedness of boxes (Proposition 2.3), the concentration of the density
-of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero) and the existence
-of the Green columns. The other four remain hypotheses: the qualitative and the quantitative
-corrector inputs (Theorem 2.5), the regularity of order one at the origin (Theorem 2.4 at order
-one) and the quantitative estimate of the Green function of Dario and Gu; the dimension-two forms
-of all four are proved, and the Green estimate in every dimension follows from Theorem 1 of Dario
-and Gu in each dimension `d ≥ 3` alone (`supercriticalBondGreenQuantitative_of_heatKernel`). The
-regularity of order one at the origin is proved in every dimension from the existence of the
-corrected planes, the first part of the qualitative corrector input
-(`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`), so that Theorem 1.3 in the form
-with the twelve inputs takes only the two corrector inputs and the Green estimate
-(`Rigidity.Assembly.WithProvedOrderOne.fast_decay`). Theorems 6.5 and 1.3 are proved with no
-literature hypothesis
+of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero), the existence
+of the Green columns, the qualitative corrector input (Theorem 2.5, qualitative part,
+`supercriticalBondCorrectorInput_holds`) and the regularity of order one at the origin (Theorem 2.4
+at order one, `armstrongDarioOrderOneOrigin_holds`), both in every dimension. The other two remain
+hypotheses: the quantitative corrector input (Theorem 2.5, quantitative part) and the quantitative
+estimate of the Green function of Dario and Gu; the dimension-two forms of both are proved, and in
+every dimension `d ≥ 3` the quantitative corrector input reduces to Theorem 1 of Dario
+(`DarioOptimalCorrectorThree`,
+`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioThree`) and the Green
+estimate to Theorem 1 of Dario and Gu (`DarioGuHeatKernelD d`,
+`supercriticalBondGreenQuantitative_of_heatKernel`). Theorem 1.3 in the
+form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
+Theorems 6.5 and 1.3 are proved with no literature hypothesis
 ([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
 Theorem 1.3). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
 the dimension-two proof of Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in every
@@ -125,7 +126,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Lemma 2.1 | `lemma:finite-energy` | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
 | Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput`; proved: `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
 | Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin`; proved at order zero in every `d ≥ 2`: `Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds`; at order one at the origin in every `d ≥ 2` from the existence of the corrected planes: `Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
-| Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
+| Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput`; the qualitative part proved in every `d ≥ 2`: `Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
 | Lemma 2.13 | (none) | quoted, not used; the special case used in the proof of Proposition 5.12 (line 2124 of the corrected draft; the interior of a finite union of lattice squares) proved: `Rigidity.Assembly.polyominoJordan` (statement `Rigidity.Section2.PolyominoJordanStmt`); the general lemma is not formalized | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
@@ -780,6 +781,7 @@ route bounds the heat kernel of the cluster for `d ≥ 2` and the decay of the G
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from `ArmstrongDarioOrderZeroTwo`. |
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean) | `SupercriticalBondGreenColumnExistence`, with no hypothesis. |
 | [`Rigidity.Assembly.WithProvedGreenColumn`](Rigidity/Proofs/Assembly/ProvedGreenColumn.lean): `lipschitz`, `fast_decay`, `notLipschitz`, `fastDecayDichotomy`, `fastDecayPotential`, `gradientTrichotomy`, `levelSetDensity`, `goodEventLowerBound`, `largeGradientSensitive`, `goodEventLowerBoundDirectional` | the theorems of `Rigidity.Assembly.Main` that take `SupercriticalBondGreenColumnExistence`, with it and the other proved inputs supplied; they take only those of `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin` and `SupercriticalBondGreenQuantitative` that their proofs use. |
+| [`Rigidity.Assembly.WithProvedCorrector`](Rigidity/Proofs/Assembly/ProvedCorrector.lean): `correctorQuantitativeInput_of_darioThree`, `fast_decay`, `fastDecayDichotomy`, `fastDecayPotential` | the three theorems of `Rigidity.Assembly.WithProvedOrderOne` with the qualitative corrector input supplied (`supercriticalBondCorrectorInput_holds`, every `d ≥ 2`); they take `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`. The quantitative corrector input from `DarioOptimalCorrectorThree` (Theorem 1 of Dario in `d ≥ 3`) alone. |
 | [`Rigidity.Assembly.WithProvedOrderOne`](Rigidity/Proofs/Assembly/ProvedOrderOne.lean): `fast_decay`, `fastDecayDichotomy`, `fastDecayPotential` | the three theorems of `Rigidity.Assembly.WithProvedGreenColumn` that take `ArmstrongDarioOrderOneOrigin`, with it supplied from `SupercriticalBondCorrectorInput` (`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`); they take `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`. |
 | [`Rigidity.Green.heat_le_of_two_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 2`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster, then for `0 ≤ t ≤ 1` there are `K` and `N` with `p_n(x, y) ≤ K n^{−(d/2 − 1/100)(1 − t)} exp(−t\|x − y\|²/(2n))` for all `n ≥ N` and all vertices `x` of the cluster. |
 | [`Rigidity.Green.greenColumn_le_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0` the Green column `g` with pole `y` satisfies `0 ≤ g(x) ≤ K \|x − y\|^{2 − d + 1/50 + δ}` for `\|x − y\| ≥ R`. |
@@ -3165,7 +3167,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 - **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1110 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1116 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -3248,7 +3250,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1110 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1116 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3282,9 +3284,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 783 Lean files with 163,826 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 784 Lean files with 163,888 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,747 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,754 lines) are counted separately.
 
 ## Building
 
