@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Corrector.DarioStationaryPartition
 import Rigidity.Proofs.Corrector.DarioCoarsenedFields
+import Rigidity.Proofs.Corrector.GeneralShiftedAnchor
 import PercolationClusterHomogenization.Proofs.Percolation.PlanarMuMeasurable
 import PercolationClusterHomogenization.Proofs.Partition.Translation
 import PercolationClusterHomogenization.Proofs.Percolation.PlanarAnchorTranslation
@@ -30,19 +31,21 @@ namespace Rigidity.Percolation
 open LatticeProb.Percolation MeasureTheory
 open scoped Classical
 
+variable {d : ℕ}
+
 /-- `v` is the point of the infinite open components which is the smallest for the anchor order
 of `□`. -/
-def TriadicCube.IsNearestInf (ω : Configuration 2) (Q : TriadicCube 2) (v : Vertex 2) : Prop :=
+def TriadicCube.IsNearestInf (ω : Configuration d) (Q : TriadicCube d) (v : Vertex d) : Prop :=
   ω ∈ infiniteComponentEvent v ∧ ∀ w, ω ∈ infiniteComponentEvent w → Q.anchorKey v ≤ Q.anchorKey w
 
-theorem TriadicCube.anchorKey_fst (Q : TriadicCube 2) (y : Vertex 2) :
+theorem TriadicCube.anchorKey_fst (Q : TriadicCube d) (y : Vertex d) :
     (ofLex (Q.anchorKey y)).1 = Finset.univ.sup fun i => (y i - Q.center i).natAbs := rfl
 
 /-- A nearest point exists as soon as the infinite open components are not empty. -/
-theorem TriadicCube.exists_isNearestInf {ω : Configuration 2} (Q : TriadicCube 2) {v₀ : Vertex 2}
+theorem TriadicCube.exists_isNearestInf {ω : Configuration d} (Q : TriadicCube d) {v₀ : Vertex d}
     (h₀ : ω ∈ infiniteComponentEvent v₀) : ∃ v, Q.IsNearestInf ω v := by
   set m : ℕ := (ofLex (Q.anchorKey v₀)).1 with hm
-  have hbox : ∀ y : Vertex 2, (ofLex (Q.anchorKey y)).1 ≤ m ↔
+  have hbox : ∀ y : Vertex d, (ofLex (Q.anchorKey y)).1 ≤ m ↔
       ∀ i, Q.center i - m ≤ y i ∧ y i ≤ Q.center i + m := by
     intro y
     rw [anchorKey_fst, Finset.sup_le_iff]
@@ -58,7 +61,7 @@ theorem TriadicCube.exists_isNearestInf {ω : Configuration 2} (Q : TriadicCube 
       have : |y i - Q.center i| ≤ (m : ℤ) := abs_le.2 ⟨by linarith, by linarith⟩
       rw [← h] at this
       exact_mod_cast this
-  set S : Finset (Vertex 2) := (Fintype.piFinset fun i =>
+  set S : Finset (Vertex d) := (Fintype.piFinset fun i =>
     Finset.Icc (Q.center i - m) (Q.center i + m)).filter fun v => ω ∈ infiniteComponentEvent v
   have hmemS : ∀ y, y ∈ S ↔ (ofLex (Q.anchorKey y)).1 ≤ m ∧ ω ∈ infiniteComponentEvent y := by
     intro y
@@ -77,37 +80,37 @@ theorem TriadicCube.exists_isNearestInf {ω : Configuration 2} (Q : TriadicCube 
     change (ofLex (Q.anchorKey v)).1 < (ofLex (Q.anchorKey w)).1
     omega
 
-theorem TriadicCube.IsNearestInf.unique {ω : Configuration 2} {Q : TriadicCube 2} {v v' : Vertex 2}
+theorem TriadicCube.IsNearestInf.unique {ω : Configuration d} {Q : TriadicCube d} {v v' : Vertex d}
     (h : Q.IsNearestInf ω v) (h' : Q.IsNearestInf ω v') : v = v' :=
   Q.anchorKey_injective (le_antisymm (h.2 v' h'.1) (h'.2 v h.1))
 
 /-- The nearest point of the infinite open components to `□` in the anchor order (the centre of
 `□` if there is no infinite open component). -/
-noncomputable def TriadicCube.nearestInf (ω : Configuration 2) (Q : TriadicCube 2) : Vertex 2 :=
+noncomputable def TriadicCube.nearestInf (ω : Configuration d) (Q : TriadicCube d) : Vertex d :=
   if h : ∃ v, Q.IsNearestInf ω v then Classical.choose h else Q.center
 
-theorem TriadicCube.isNearestInf_nearestInf {ω : Configuration 2} (Q : TriadicCube 2)
-    {v₀ : Vertex 2} (h₀ : ω ∈ infiniteComponentEvent v₀) : Q.IsNearestInf ω (Q.nearestInf ω) := by
+theorem TriadicCube.isNearestInf_nearestInf {ω : Configuration d} (Q : TriadicCube d)
+    {v₀ : Vertex d} (h₀ : ω ∈ infiniteComponentEvent v₀) : Q.IsNearestInf ω (Q.nearestInf ω) := by
   have h := Q.exists_isNearestInf h₀
   unfold nearestInf
   rw [dif_pos h]
   exact Classical.choose_spec h
 
-theorem mem_infiniteComponentEvent_translation_iff (c : Vertex 2) (ω : Configuration 2)
-    (v : Vertex 2) :
+theorem mem_infiniteComponentEvent_translation_iff (c : Vertex d) (ω : Configuration d)
+    (v : Vertex d) :
     configurationTranslation c ω ∈ infiniteComponentEvent (v + c) ↔
       ω ∈ infiniteComponentEvent v := by
   constructor
   · intro h
-    have h' := Rigidity.Corrector.mem_infiniteComponentEvent_translation (-c) h
-    have e := Rigidity.Corrector.configurationTranslation_neg_cancel (-c) ω
-    rw [neg_neg] at e
+    have h' := Rigidity.Corrector.GeneralDim.mem_infiniteComponentEvent_translation (-c) h
+    have e : configurationTranslation (-c) (configurationTranslation c ω) = ω := by
+      rw [configurationTranslation_add, neg_add_cancel, configurationTranslation_zero]
     rwa [e, add_neg_cancel_right] at h'
-  · exact Rigidity.Corrector.mem_infiniteComponentEvent_translation c
+  · exact Rigidity.Corrector.GeneralDim.mem_infiniteComponentEvent_translation c
 
 /-- The nearest point moves with a translation which moves the cube. -/
-theorem TriadicCube.isNearestInf_shift_iff {Q : TriadicCube 2} {c : Vertex 2}
-    (hc : ∀ i, Q.side ∣ c i) (ω : Configuration 2) (v : Vertex 2) :
+theorem TriadicCube.isNearestInf_shift_iff {Q : TriadicCube d} {c : Vertex d}
+    (hc : ∀ i, Q.side ∣ c i) (ω : Configuration d) (v : Vertex d) :
     (Q.shift c).IsNearestInf (configurationTranslation c ω) (v + c) ↔ Q.IsNearestInf ω v := by
   unfold IsNearestInf
   rw [mem_infiniteComponentEvent_translation_iff]
@@ -120,8 +123,8 @@ theorem TriadicCube.isNearestInf_shift_iff {Q : TriadicCube 2} {c : Vertex 2}
     have := (anchorKey_shift_le_iff hc v (w - c)).2 (h _ hw')
     rwa [sub_add_cancel] at this
 
-theorem TriadicCube.nearestInf_shift {Q : TriadicCube 2} {c : Vertex 2} (hc : ∀ i, Q.side ∣ c i)
-    (ω : Configuration 2) :
+theorem TriadicCube.nearestInf_shift {Q : TriadicCube d} {c : Vertex d} (hc : ∀ i, Q.side ∣ c i)
+    (ω : Configuration d) :
     (Q.shift c).nearestInf (configurationTranslation c ω) = Q.nearestInf ω + c := by
   by_cases h : ∃ v, ω ∈ infiniteComponentEvent v
   · obtain ⟨v₀, h₀⟩ := h
@@ -139,16 +142,16 @@ theorem TriadicCube.nearestInf_shift {Q : TriadicCube 2} {c : Vertex 2} (hc : �
     rw [dif_neg hn, dif_neg hn']
     exact funext fun i => center_shift' hc i
 
-theorem TriadicCube.measurable_isNearestInf (Q : TriadicCube 2) (v : Vertex 2) :
-    Measurable fun ω : Configuration 2 => Q.IsNearestInf ω v :=
+theorem TriadicCube.measurable_isNearestInf (Q : TriadicCube d) (v : Vertex d) :
+    Measurable fun ω : Configuration d => Q.IsNearestInf ω v :=
   (measurableSet_setOf.1 (measurableSet_infiniteComponentEvent v)).and
     (Measurable.forall fun w =>
       (measurableSet_setOf.1 (measurableSet_infiniteComponentEvent w)).imp measurable_const)
 
-theorem TriadicCube.measurable_nearestInf (Q : TriadicCube 2) :
-    Measurable fun ω : Configuration 2 => Q.nearestInf ω := by
+theorem TriadicCube.measurable_nearestInf (Q : TriadicCube d) :
+    Measurable fun ω : Configuration d => Q.nearestInf ω := by
   refine measurable_to_countable' fun v => ?_
-  have heq : (fun ω : Configuration 2 => Q.nearestInf ω) ⁻¹' {v} =
+  have heq : (fun ω : Configuration d => Q.nearestInf ω) ⁻¹' {v} =
       {ω | Q.IsNearestInf ω v} ∪
         ({ω | ∀ w, ω ∉ infiniteComponentEvent w} ∩ {_ω | Q.center = v}) := by
     ext ω
@@ -173,8 +176,8 @@ theorem TriadicCube.measurable_nearestInf (Q : TriadicCube 2) :
       · rintro (h2 | ⟨-, h2⟩)
         · exact absurd h2.1 (h v)
         · exact h2
-  have h2 : MeasurableSet {ω : Configuration 2 | ∀ w, ω ∉ infiniteComponentEvent w} := by
-    have e : {ω : Configuration 2 | ∀ w, ω ∉ infiniteComponentEvent w} =
+  have h2 : MeasurableSet {ω : Configuration d | ∀ w, ω ∉ infiniteComponentEvent w} := by
+    have e : {ω : Configuration d | ∀ w, ω ∉ infiniteComponentEvent w} =
         ⋂ w, (infiniteComponentEvent w)ᶜ := by
       ext ω
       simp
