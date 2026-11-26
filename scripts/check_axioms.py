@@ -1178,6 +1178,15 @@ further = {
     'The small-time bound of the heat kernel on Z^d in the form used by Theorem 2 of Dario and Gu for d >= 3, and Theorem 2 in every dimension from Theorem 1 in every dimension d >= 3 alone':
         ['Rigidity.Green.openHeatSmallTimeD_holds',
          'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel'],
+    'Theorem 1 of Dario and Gu in every dimension from the whole-cluster estimate, Proposition A.7 of Dario and Gu on Z^d, and Theorem 2 in every dimension from the whole-cluster estimate in every dimension d >= 3 alone':
+        ['Rigidity.Green.darioGuDensityGaussianD_holds',
+         'Rigidity.Green.l2norm_pointSource_le_of_time',
+         'Rigidity.Green.exists_l2norm_pointSource_le_rpow',
+         'Rigidity.Green.abs_vsrwHeat_sub_le_rpow',
+         'Rigidity.Green.abs_vsrwHeat_sub_le_gaussian',
+         'Rigidity.Green.exists_abs_vsrwHeat_sub_le_gaussian',
+         'Rigidity.Green.darioGuHeatKernelD_of_gaussianFlow',
+         'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow'],
     'Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension':
         ['Rigidity.WeakPoincare.clusterGoodBalls_holds',
          'Rigidity.WeakPoincare.clusterVeryGoodBalls_holds',
