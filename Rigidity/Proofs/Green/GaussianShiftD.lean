@@ -23,7 +23,7 @@ theorem exp_neg_sub_exp_neg_le (a b : ℝ) :
   have := Real.exp_pos (-a)
   nlinarith
 
-theorem abs_exp_neg_sub_exp_neg_le {a b m : ℝ} (ha : m ≤ a) (hb : m ≤ b) :
+theorem abs_exp_neg_sub_exp_neg_le_of_ge {a b m : ℝ} (ha : m ≤ a) (hb : m ≤ b) :
     |Real.exp (-a) - Real.exp (-b)| ≤ |b - a| * Real.exp (-m) := by
   rcases le_total a b with hab | hab
   · have h1 := exp_neg_sub_exp_neg_le a b
@@ -93,7 +93,7 @@ theorem abs_gaussianHeatD_sub_le {σ s ρ : ℝ} (hσ : 0 < σ) (hs : 0 < s) (h�
     apply div_le_div_of_nonneg_right _ hc.le
     rw [abs_le]
     constructor <;> nlinarith
-  have hexp := abs_exp_neg_sub_exp_neg_le hma hmb
+  have hexp := abs_exp_neg_sub_exp_neg_le_of_ge hma hmb
   have hem : Real.exp (-m) = Real.exp (ρ ^ 2 / (2 * σ * s)) *
       Real.exp (-(‖u‖ ^ 2 / (4 * σ * s))) := by
     rw [← Real.exp_add, hm]

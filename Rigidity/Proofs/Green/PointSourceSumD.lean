@@ -109,7 +109,7 @@ theorem pointSource_initial_le {K : OpenComponent ω} {y : Vertex d} (hy : y ∈
   have hE1 := summable_abs_initialError (K := K) (y := y) hσ hu0
   have hE2 : Summable fun x => (vsrwHeat (openGraph ω) (2 * d) u x y -
       clusterGaussNorm K σ u y x) ^ 2 :=
-    summable_sq_sub (summable_sq_vsrwHeat_col hD hdeg hu0.le y)
+    summable_sq_sub_l2 (summable_sq_vsrwHeat_col hD hdeg hu0.le y)
       (summable_sq_clusterGaussNorm hσ hu0)
   have hE0 := tsum_initialError (K := K) (y := y) hσ hu0 hM.ne'
   have hb := l2norm_heatFlowG_le_of_scale hy hacc hC₀ hOZ hA hHK ht0

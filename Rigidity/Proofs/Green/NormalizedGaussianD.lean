@@ -190,7 +190,7 @@ theorem summable_abs_gaussFlowDiff (hσ : 0 < σ) {s : ℝ} (hs : 0 < s) :
 
 theorem summable_sq_gaussFlowDiff (hσ : 0 < σ) {s : ℝ} (hs : 0 < s) :
     Summable fun x => gaussFlowDiff K σ s y x ^ 2 :=
-  summable_sq_sub (summable_sq_heatFlowG two_mul_pos_d (openGraph_degree_le ω)
+  summable_sq_sub_l2 (summable_sq_heatFlowG two_mul_pos_d (openGraph_degree_le ω)
     (by linarith : (0 : ℝ) ≤ 2 * s) (summable_sq_clusterGaussNorm hσ hs))
     (summable_sq_clusterGaussNorm hσ (by linarith : (0 : ℝ) < 3 * s))
 
@@ -228,10 +228,10 @@ theorem l2norm_gaussFlowDiff_le (hσ : 0 < σ) {s : ℝ} (hs : 0 < s) (θ : ℝ)
     simp_rw [H1, mul_pow]; exact (summable_sq_clusterInd hσ hs).mul_left _
   have hH3 : Summable fun z => H3 z ^ 2 := by
     simp_rw [H3, mul_pow]; exact (summable_sq_clusterInd hσ h3s).mul_left _
-  have hA : Summable fun z => (G1 z - H1 z) ^ 2 := summable_sq_sub hG1 hH1
+  have hA : Summable fun z => (G1 z - H1 z) ^ 2 := summable_sq_sub_l2 hG1 hH1
   have hB : Summable fun x => (heatFlowG (openGraph ω) (2 * d) (2 * s) H1 x - H3 x) ^ 2 :=
-    summable_sq_sub (summable_sq_heatFlowG hD hdeg h2s hH1) hH3
-  have hC : Summable fun z => (H3 z - G3 z) ^ 2 := summable_sq_sub hH3 hG3
+    summable_sq_sub_l2 (summable_sq_heatFlowG hD hdeg h2s hH1) hH3
+  have hC : Summable fun z => (H3 z - G3 z) ^ 2 := summable_sq_sub_l2 hH3 hG3
   have hPA : Summable fun x => heatFlowG (openGraph ω) (2 * d) (2 * s)
       (fun z => G1 z - H1 z) x ^ 2 := summable_sq_heatFlowG hD hdeg h2s hA
   have heq : gaussFlowDiff K σ s y = fun x =>
