@@ -215,6 +215,7 @@ import Rigidity.Proofs.Corrector.GeneralDarioOptimalCorrector
 import Rigidity.Proofs.Corrector.GeneralCoarsenedFields
 import Rigidity.Proofs.Corrector.GeneralPartitionComparison
 import Rigidity.Proofs.Corrector.GeneralHeatSmoothing
+import Rigidity.Proofs.Corrector.GeneralPropThreeOne
 import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
@@ -1608,6 +1609,9 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.heatGradient_coarseField_isOsBond
 #print axioms Rigidity.Corrector.GeneralDim.ae_summable_heat_coarseField
 #print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_prop31
+#print axioms Rigidity.Corrector.GeneralDim.lintegral_abs_sub_integral_rpow_le
+#print axioms Rigidity.Corrector.GeneralDim.darioPropThreeOneThree_of_lemmas
+#print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_lemmas
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
