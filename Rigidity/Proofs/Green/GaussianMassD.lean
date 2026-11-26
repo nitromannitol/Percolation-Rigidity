@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Green.LatticeGaussianD
+import Rigidity.Proofs.WeakPoincare.Balls
 
 /-!
 # The mass of the Gaussian kernel on `ℤ^d`
@@ -6,6 +7,7 @@ import Rigidity.Proofs.Green.LatticeGaussianD
 `|Σ_{x ∈ ℤ^d} p̄(t, x - y) - 1| ≤ C t^{-1/2}` for `t ≥ 1` (`abs_tsum_gaussianHeatD_sub_one_le`), the
 `d`-dimensional form of `abs_tsum_latticeGaussian_sub_one_le`: by the Poisson summation formula the
 sum is `Θ_t^d` with `1 ≤ Θ_t ≤ 1 + e^{-2π²σ(t - 1)} Θ_1`, and `Θ^d - 1 = (Θ - 1) Σ_{i < d} Θ^i`.
+The mass at distance at least `t` from `y` is at most `C t^{-1/2}` (`sum_gaussianHeatD_far_le`).
 -/
 
 open LatticeProb.Percolation
@@ -79,5 +81,45 @@ theorem abs_tsum_gaussianHeatD_sub_one_le {σ : ℝ} (hσ : 0 < σ) :
     _ ≤ (d * (1 + Θ₀) ^ d * Θ₀ / lam + 1) / Real.sqrt t := by
         apply div_le_div_of_nonneg_right _ hst.le
         linarith
+
+/-- **The mass far from `y`**: for `t ≥ 1` the mass of `p̄(t, · - y)` on a finite set of vertices
+at distance at least `t` from `y` is at most `C t^{-1/2}`. -/
+theorem sum_gaussianHeatD_far_le {σ : ℝ} (hσ : 0 < σ) :
+    ∃ C : ℝ, 0 < C ∧ ∀ t : ℝ, 1 ≤ t → ∀ (y : Vertex d) (S : Finset (Vertex d)),
+      (∀ x ∈ S, t ≤ Rigidity.WeakPoincare.latticeDist x y) →
+      ∑ x ∈ S, gaussianHeatD d σ t (edzD x y) ≤ C / Real.sqrt t := by
+  have hM := one_le_gaussMassBoundD (d := d) hσ
+  refine ⟨2 ^ ((d : ℝ) / 2) * gaussMassBoundD d σ * (4 * σ), by positivity,
+    fun t ht y S hS => ?_⟩
+  have ht0 : 0 < t := by linarith
+  have hst : 0 < Real.sqrt t := Real.sqrt_pos.2 ht0
+  have hsqt : Real.sqrt t ≤ t := by
+    rw [Real.sqrt_le_left ht0.le]; nlinarith
+  have hfar := tsum_gaussianHeatD_far_le (d := d) hσ ht ht0.le y
+  have hs := summable_gaussianHeatD (d := d) hσ ht0 y
+  have hsI : Summable fun x => (if t ≤ ‖edzD x y‖ then gaussianHeatD d σ t (edzD x y) else 0) :=
+    hs.of_nonneg_of_le (fun x => by split_ifs <;> simp [gaussianHeatD_nonneg' σ t (by positivity)])
+      (fun x => by split_ifs <;> simp [gaussianHeatD_nonneg' σ t (by positivity)])
+  have h1 : ∑ x ∈ S, gaussianHeatD d σ t (edzD x y) =
+      ∑ x ∈ S, (if t ≤ ‖edzD x y‖ then gaussianHeatD d σ t (edzD x y) else 0) :=
+    Finset.sum_congr rfl fun x hx => by rw [if_pos (show t ≤ ‖edzD x y‖ from hS x hx)]
+  have h2 : ∑ x ∈ S, (if t ≤ ‖edzD x y‖ then gaussianHeatD d σ t (edzD x y) else 0) ≤
+      ∑' x, (if t ≤ ‖edzD x y‖ then gaussianHeatD d σ t (edzD x y) else 0) :=
+    hsI.sum_le_tsum S fun x _ => by split_ifs <;> simp [gaussianHeatD_nonneg' σ t (by positivity)]
+  have hexp : Real.exp (-(t ^ 2 / (4 * σ * t))) ≤ 4 * σ / Real.sqrt t := by
+    have e : t ^ 2 / (4 * σ * t) = t / (4 * σ) := by field_simp; try ring
+    rw [e, Real.exp_neg]
+    have h3 : t / (4 * σ) ≤ Real.exp (t / (4 * σ)) := by
+      have := Real.add_one_le_exp (t / (4 * σ)); linarith
+    have h4 : 0 < t / (4 * σ) := by positivity
+    calc (Real.exp (t / (4 * σ)))⁻¹ ≤ (t / (4 * σ))⁻¹ := inv_anti₀ h4 h3
+      _ = 4 * σ / t := by rw [inv_div]
+      _ ≤ 4 * σ / Real.sqrt t := div_le_div_of_nonneg_left (by positivity) hst hsqt
+  rw [h1]
+  calc _ ≤ _ := h2
+    _ ≤ 2 ^ ((d : ℝ) / 2) * gaussMassBoundD d σ * Real.exp (-(t ^ 2 / (4 * σ * t))) := hfar
+    _ ≤ 2 ^ ((d : ℝ) / 2) * gaussMassBoundD d σ * (4 * σ / Real.sqrt t) :=
+        mul_le_mul_of_nonneg_left hexp (by positivity)
+    _ = _ := by ring
 
 end Rigidity.Green
