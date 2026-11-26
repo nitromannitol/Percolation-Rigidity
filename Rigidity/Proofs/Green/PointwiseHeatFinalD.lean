@@ -11,9 +11,10 @@ At one configuration, for `x, y ∈ K` and `t = 2s`, `s ≥ 2`, with
 * Proposition A.7 at `x`, `y` (time `s`) and at `midLattice x y` (time `s/2`), with errors
   `C_A s^{η - 1/2} ≤ θ/2` (`η ≤ ε`),
 
-`|p_t(x, y) - θ^{-1} p̄(t, x - y)| ≤ C₁ t^{-d/2 - 1/2 + ε}` (`abs_vsrwHeat_sub_le_rpow`). Together with
-the Gaussian bound `C₂ t^{-d/2} e^{-|x - y|²/(C₃ t)}` of both terms (the Gaussian upper bound of the
-heat kernel), the geometric mean (`le_of_two_bounds`) gives the estimate (4) of the route.
+`|p_t(x, y) - θ^{-1} p̄(t, x - y)| ≤ C₁ t^{-d/2 - 1/2 + ε}` (`abs_vsrwHeat_sub_le_rpow`). Together
+with the Gaussian bound `C₂ t^{-d/2} e^{-|x - y|²/(C₃ t)}` of both terms (the Gaussian upper bound
+of the heat kernel), the geometric mean (`le_of_two_bounds`) gives the error of Theorem 1 of
+Dario–Gu at one configuration (`abs_vsrwHeat_sub_le_gaussian`).
 -/
 
 open scoped Classical
@@ -45,7 +46,8 @@ theorem l2norm_clusterGaussNorm_le (hσ : 0 < σ) (hθ : 0 < θ) {s : ℝ} (hs :
     (hM1 : θ / 2 ≤ clusterGaussMass K σ s x) (hM2 : clusterGaussMass K σ s x ≤ 2 * θ) :
     l2norm (clusterGaussNorm K σ s x) ≤ 2 / θ * psGauss d σ θ * s ^ (-((d : ℝ) / 4)) := by
   have hM0 : 0 < clusterGaussMass K σ s x := by linarith
-  have e : clusterGaussNorm K σ s x = fun z => (clusterGaussMass K σ s x)⁻¹ * clusterInd K σ s x z := by
+  have e : clusterGaussNorm K σ s x =
+      fun z => (clusterGaussMass K σ s x)⁻¹ * clusterInd K σ s x z := by
     funext z; unfold clusterGaussNorm; ring
   rw [e, l2norm_const_mul, abs_of_pos (inv_pos.2 hM0)]
   have hb := l2norm_clusterInd_le (K := K) (y := x) hσ hθ hs hM2

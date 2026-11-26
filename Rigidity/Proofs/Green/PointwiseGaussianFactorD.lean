@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Green.PointwiseHeatFinalD
 
 /-!
-# The estimate (4) at one configuration
+# The heat kernel against the Gaussian with a Gaussian factor, at one configuration
 
 From `|p_t(x, y) - θ^{-1} p̄(t, x - y)| ≤ C₁ (t/2)^{ε - d/2 - 1/2}` (`abs_vsrwHeat_sub_le_rpow` at
 `s = t/2`) and the Gaussian upper bound `p_t(x, y) ≤ C₂ t^{-d/2} e^{-D²/(C₃ t)}` (`D = |x - y|`),
@@ -18,12 +18,12 @@ namespace Rigidity.Green
 
 variable {d : ℕ}
 
-/-- The constant `K` of the estimate (4). -/
+/-- The constant `K` of the error with a Gaussian factor. -/
 noncomputable def gaussFactorConst (d : ℕ) (σ θ C₁ C₂ C₃ δ : ℝ) : ℝ :=
   max ((C₁ * 2 ^ ((d : ℝ) / 2 + 1)) ^ (1 - δ / 2) *
     (C₂ + θ⁻¹ * (2 * Real.pi * σ) ^ (-((d : ℝ) / 2))) ^ (δ / 2)) (max C₃ (2 * σ) / (δ / 2))
 
-/-- **The estimate (4) at one configuration.** -/
+/-- **The error with a Gaussian factor at one configuration** (Theorem 1 of Dario–Gu). -/
 theorem abs_vsrwHeat_sub_le_gaussian {σ θ C₁ C₂ C₃ δ ε t a b D : ℝ} (hσ : 0 < σ) (hθ : 0 < θ)
     (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) (hC₃ : 0 < C₃) (hδ : 0 < δ) (hδ2 : δ ≤ 1 / 2)
     (hε0 : 0 ≤ ε) (hε : ε ≤ δ / 2) (ht : 2 ≤ t) (ha : 0 ≤ a)

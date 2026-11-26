@@ -13,7 +13,7 @@ for `t ≥ latticeSupD T y ω` (and a bounded family) every `w` with `|w - y| �
 bound over `w`, with `Σ_w (1 + |w - y|)^{-2d} < ∞` (`summable_inv_one_add_pow`), gives
 `latticeSupD T y` a tail of the same form, and the family is almost surely bounded
 (`hasTail_latticeSupD`). This is the enlargement of the minimal times over the centres within
-distance `t` used in the assembly of the estimate (4).
+distance `t` used in the assembly of Theorem 1 of Dario–Gu on `ℤ^d`.
 -/
 
 open MeasureTheory Finset LatticeProb.Percolation

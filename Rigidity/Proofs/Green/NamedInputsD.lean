@@ -2,7 +2,7 @@ import Rigidity.Proofs.Green.NormalizedGaussianD
 import Rigidity.Proofs.Green.GreenQuantitativeThree
 
 /-!
-# Two inputs of Theorem 1 of Dario–Gu on `ℤ^d`, stated for the route given here
+# Two inputs of Theorem 1 of Dario–Gu on `ℤ^d`
 
 * `DarioGuDensityGaussianD d p σ`: **Proposition A.7** of Dario–Gu (lines 2911-2920), second part,
   on `ℤ^d`: for every `α > 0` there is `T_dense,α(y) ≤ O_s(C)` such that for `t > T_dense,α(y)` the

@@ -13,7 +13,7 @@ the tails from the Carne–Varopoulos bound (`tsum_out_gaussFlowDiff_le_of_cv`,
   `‖p_t(·, y) - G_t‖ ≤ psBound`,
 
 an explicit bound in `t`, `L` and the constants of the inputs. The radii `√s t^{η/(d+2)}` replace
-the radii `√s log(2 + t)` of the source of the route; the powers of `L` they produce are absorbed in
+the radii `√s log(2 + t)` of the written proof; the powers of `L` they produce are absorbed in
 the same way.
 -/
 
