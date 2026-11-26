@@ -9,7 +9,7 @@ Step 5 of the proof of Proposition 4.3 of Dario–Gu (lines 2448-2490 of the sou
 
 `Σ_x u(3τ, x)² ≤ C τ^{α - d/2 - 1}`
 
-(`tsum_sq_clusterWD_le`), when on the cluster the corrector grows like
+(`tsum_sq_clusterWD_le`, with the square summability of `u(3τ)`), when on the cluster the corrector grows like
 `B (√r + |x - y| + 2)^α` and the weak norms of the centered flux on the dyadic balls of radius
 `2^{m+2}√r` are at most `C_f (2^{m+2}√r)^α`, at every scale `r ≥ τ` (Propositions 2.12 and 2.13 above
 their minimal scales). This is (4.40) with `t = 3τ`: the energy inequality
@@ -33,7 +33,8 @@ theorem tsum_sq_clusterWD_le [NeZero d] (hd : 2 ≤ d) {σ θ : ℝ} (hσ : 0 < 
       (∀ r, τ ≤ r → ∀ k i : Fin d, ∀ m : ℕ,
         WeakNormLeD ω (dgClusterBallD K y (2 ^ (m + 2) * Real.sqrt r))
           (centeredFluxD ω σ χ k i) (Cf * (2 ^ (m + 2) * Real.sqrt r) ^ α)) →
-      ∑' x, clusterWD K σ θ χ τ y (3 * τ) x ^ 2 ≤ C * τ ^ (α - (d : ℝ) / 2 - 1) := by
+      Summable (fun x => clusterWD K σ θ χ τ y (3 * τ) x ^ 2) ∧
+        ∑' x, clusterWD K σ θ χ τ y (3 * τ) x ^ 2 ≤ C * τ ^ (α - (d : ℝ) / 2 - 1) := by
   obtain ⟨Q, hQ0, hQ⟩ := tsum_clusterSourceD_le hd hσ hθ hB hCf hα0 hα1
   have hd2 : (2 : ℝ) ≤ d := by exact_mod_cast hd
   have h3 : 0 < 3 - (α - (d : ℝ) / 2 + 1) := by linarith
@@ -87,7 +88,8 @@ theorem tsum_sq_clusterWD_le [NeZero d] (hd : 2 ≤ d) {σ θ : ℝ} (hσ : 0 < 
       ⟨by linarith [hs.1], by linarith [hs.2]⟩ (hτ0.trans hs.1) x)
     (continuousOn_tsum_sq_clusterWD hσ hτ hτt hA hlin)
     (fun x => clusterWD_self K σ θ χ τ y x) hsrc
-  refine h.trans (le_of_eq ?_)
+  refine ⟨Summable.of_nonneg_of_le (fun x => sq_nonneg _)
+    (fun x => sq_le_sq_of_abs_leD (hDu (3 * τ) ⟨hτt, le_rfl⟩ x)) hD, h.trans (le_of_eq ?_)⟩
   rw [show (α - (d : ℝ) / 2 + 1) - 2 = α - (d : ℝ) / 2 - 1 by ring,
     show 3 * τ / τ = 3 by field_simp]
 
