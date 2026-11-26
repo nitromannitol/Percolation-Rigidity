@@ -13,7 +13,7 @@ require «lattice-probability» from git
 
 require «percolation-cluster-homogenization» from git
   "https://github.com/nitromannitol/Percolation-Cluster-Homogenization.git" @
-    "5c4169703ffe2d7eb75ed07d0d4811f9835b8c95"
+    "51e38b875e2fdebe3a4ec08b84595ff060be59ea"
 
 /-- The formalization: every module under `Rigidity/`. A warning is an error. -/
 @[default_target]
