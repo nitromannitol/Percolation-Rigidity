@@ -438,6 +438,7 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
 import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
+import Rigidity.Proofs.Assembly.ProvedFluxWeakNorm
 import Rigidity.Proofs.Green.DarioGuDirichletSteps
 import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
@@ -1585,6 +1586,41 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
 
+-- Proposition 2.13 of Dario and Gu in dimension two (Gu, Proposition 1.1, and Appendix B), and the results that used it
+#print axioms Rigidity.Green.exists_fluxMean_two
+#print axioms Rigidity.Green.ae_fluxFlip_sq_le_open
+#print axioms Rigidity.Green.ae_fluxFlip_sq_le_closed
+#print axioms Rigidity.Green.fluxFlipSum_isOsBond
+#print axioms Rigidity.Green.exists_fluxSpatialAverage_two
+#print axioms Rigidity.Green.exists_tsum_ofReal_abs_openHeat_grad_le
+#print axioms Rigidity.Green.ofReal_abs_heatF_sub_le
+#print axioms Rigidity.Green.sum_heatAvg_sub_mul_eq
+#print axioms Rigidity.Green.ofReal_abs_sum_mul_le_dyadic
+#print axioms Rigidity.Green.exists_fluxWeakNormBox
+#print axioms Rigidity.Green.exists_densityWeakNorm
+#print axioms Rigidity.Green.sum_sq_coarseTest_le
+#print axioms Rigidity.Green.sum_sq_grad_coarseTest_le
+#print axioms Rigidity.Green.card_mul_le_card_dgClusterBall
+#print axioms Rigidity.Green.weakNormLe_of_scale_bounds
+#print axioms Rigidity.Green.exists_summable_badBound
+#print axioms Rigidity.Green.darioGuFluxWeakNormTwo_of_bounds
+#print axioms Rigidity.Green.darioGuFluxWeakNormTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.exists_darioGuTwoScaleErrorTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.exists_darioGuTranslatedFluxTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_threeThree
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_flipSum
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_resample
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_stepTwo
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_of_gradient_barlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient_barlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient_veryGood
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_holds
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box

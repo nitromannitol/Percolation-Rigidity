@@ -25,15 +25,20 @@ of the Green columns, the qualitative corrector input (Theorem 2.5, qualitative 
 `supercriticalBondCorrectorInput_holds`) and the regularity of order one at the origin (Theorem 2.4
 at order one, `armstrongDarioOrderOneOrigin_holds`), both in every dimension. The other two remain
 hypotheses: the quantitative corrector input (Theorem 2.5, quantitative part) and the quantitative
-estimate of the Green function of Dario and Gu. The dimension-two form of the first is proved, and in
-every dimension `d ≥ 3` it reduces to Theorem 1 of Dario (`DarioOptimalCorrectorThree`,
-`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioThree`), so that Theorem 1.3
-takes only the quantitative corrector input and the Green estimate
-(`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
-Theorem 6.5 is proved with no literature hypothesis. The Gaussian
-upper bound of Barlow, which is not one of the twelve inputs but enters the dimension-two proof of
-Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in dimension two
-(`barlowGaussianUpperBoundTwo_holds`). The five numbered results that the paper does not prove are
+estimate of the Green function of Dario and Gu; the dimension-two forms of both are proved, and in
+every dimension `d ≥ 3` the quantitative corrector input reduces to Theorem 1 of Dario
+(`DarioOptimalCorrectorThree`,
+`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioThree`). Theorem 1.3 in the
+form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
+Theorems 6.5 and 1.3 are proved with no literature hypothesis
+([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
+Theorem 1.3). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
+the dimension-two proof of Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in every
+dimension (`barlowGaussianUpperBound_holds`; in dimension two `barlowGaussianUpperBoundTwo_holds`),
+and in dimension two so are Theorem 3 of Dario and Gu
+(`darioGuGradientBoundTwo_holds`) and Proposition 2.13 of Dario and Gu, the weak norm of the centered
+flux of the corrector (`darioGuFluxWeakNormTwo_holds`), from which the quantitative estimate of the
+Green function in dimension two follows (`supercriticalBondGreenQuantitativeTwo_holds`). The five numbered results that the paper does not prove are
 quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
 Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
 them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
@@ -327,7 +332,9 @@ For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proo
 assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
 order-zero and order-one regularity, and the Green-column existence and quantitative estimates.
 These six planar forms are stated in
-[`PercolationClusterHomogenization/External/PlanarInputs.lean`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/External/PlanarInputs.lean) and are not proved.
+[`PercolationClusterHomogenization/External/PlanarInputs.lean`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/External/PlanarInputs.lean); all six are
+proved (see below), and Theorem 1.3 holds with no hypothesis
+([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean)).
 The planar well-connectedness and cluster-density concentration estimates are supplied by
 [`wellConnected_input_two`](Rigidity/Proofs/Percolation/PlanarWellConnected.lean) and
 [`planar_cluster_density_concentration`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Density/PlanarDensityConcentration.lean).
@@ -404,7 +411,9 @@ Theorem 1 of Dario being proved, R4 holds (`armstrongDarioOrderOneOriginTwo_hold
 alone (`fast_decay_of_darioGu`), or from the inputs of that theorem: `hSec` and the Gaussian upper bound of Barlow
 (`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound (`fast_decay_of_flux_gradient_barlow`).
 The Gaussian upper bound of Barlow is proved (`barlowGaussianUpperBoundTwo_holds`; see
-[The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two)), so
+[The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two)), and so is
+Proposition 2.13 (`darioGuFluxWeakNormTwo_holds`; see
+[Proposition 2.13 of Dario and Gu in dimension two](#proposition-213-of-dario-and-gu-in-dimension-two)).
 Theorem 1.3 follows from `hSec` alone
 ([`WithProvedBarlow.fast_decay_of_sections`](Rigidity/Proofs/Assembly/ProvedBarlow.lean)), or from Proposition 2.13 and
 Theorem 3 alone (`WithProvedBarlow.fast_decay_of_flux_gradient`). Theorem 3 is proved from the Gaussian upper bound of
@@ -413,7 +422,9 @@ Barlow (`darioGuGradientBoundTwo_holds`; see
 so Theorems 1 and 2 of Dario and Gu, the quantitative Green estimate in dimension two, and Theorem 1.3 follow from
 Proposition 2.13 alone
 ([`WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux`](Rigidity/Proofs/Assembly/ProvedGradient.lean),
-`fast_decay_of_flux`).
+`fast_decay_of_flux`). Proposition 2.13 being proved, they hold with no hypothesis
+([`ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean),
+`supercriticalBondGreenQuantitativeTwo_holds`, `fast_decay_holds`).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -2462,7 +2473,8 @@ from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
   infinite cluster), which Dario and Gu prove from Sections 3 and 4.1–4.2 and Appendix A. The second part (A.13) of
   Proposition A.7 is proved, and Lemma 4.1 is proved from Theorem 3 (Remark 1.3) and Theorem 4
   ([Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality));
-  Proposition 4.3 is proved from the flux estimate of Proposition 2.13 (`DarioGuFluxWeakNormTwo p σ`, a named input) and the
+  Proposition 4.3 is proved from the flux estimate of Proposition 2.13 (`DarioGuFluxWeakNormTwo p σ`, proved, see
+  [Proposition 2.13 of Dario and Gu in dimension two](#proposition-213-of-dario-and-gu-in-dimension-two)) and the
   quantitative corrector estimate, in
   [Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two);
 * the Gaussian upper bound of Barlow, Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited by Dario and Gu, proved in
@@ -2581,7 +2593,9 @@ Departures from Dario and Gu:
 
 Proposition 4.3 of Dario and Gu (the two-scale error bound, `DarioGuTwoScaleErrorTwo p σ`) is proved in
 [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) from two statements: the estimate of the flux in the weak norm, Proposition 2.13
-(`DarioGuFluxWeakNormTwo p σ`, a named input, the estimate (1.33) of `Rigidity.Green.WeakNormLe` for the centered flux on the balls
+(`DarioGuFluxWeakNormTwo p σ`, proved in
+[Proposition 2.13 of Dario and Gu in dimension two](#proposition-213-of-dario-and-gu-in-dimension-two), the estimate (1.33) of
+`Rigidity.Green.WeakNormLe` for the centered flux on the balls
 of the infinite cluster), and the quantitative corrector estimate of Proposition 2.12 (`CorrectorQuantitativeInputTwo`, R5, which
 follows from Lemma 3.3 of Dario). The witness is `σ = σ̄²`, where `σ̄` is the constant that Proposition 2.13 defines through (B.5).
 The proof follows Steps 1 to 5 of the source (DG21.tex, proof of Proposition 4.3): the heat flow of the two-scale expansion and its
@@ -2590,7 +2604,7 @@ equation (Step 1), the weighted energy inequality (Step 2), the source terms (St
 
 | Lean declaration | Statement |
 | --- | --- |
-| [`Rigidity.Green.DarioGuFluxWeakNormTwo`](Rigidity/Proofs/Green/DarioGuFluxInput.lean), [`WeakNormLe`](Rigidity/Proofs/Green/DarioGuFluxInput.lean), [`centeredFlux`](Rigidity/Proofs/Green/DarioGuFluxInput.lean) | Proposition 2.13 as a named input: the weak norm of the centered flux of the corrector on the balls of the cluster at all scales above a random minimal scale. |
+| [`Rigidity.Green.DarioGuFluxWeakNormTwo`](Rigidity/Proofs/Green/DarioGuFluxInput.lean), [`WeakNormLe`](Rigidity/Proofs/Green/DarioGuFluxInput.lean), [`centeredFlux`](Rigidity/Proofs/Green/DarioGuFluxInput.lean) | Proposition 2.13: the weak norm of the centered flux of the corrector on the balls of the cluster at all scales above a random minimal scale (proved, `darioGuFluxWeakNormTwo_holds`). |
 | [`weakNormLe_translatedFlux`](Rigidity/Proofs/Green/DarioGuFluxTranslate.lean), [`darioGuTranslatedFluxTwo_of_inputs`](Rigidity/Proofs/Green/DarioGuFluxTranslateHolds.lean) | Remark B.3: the weak norm bound of the translated flux of the source from the bound for the centered flux. |
 | [`dgWeight_bound`](Rigidity/Proofs/Green/DarioGuTwoScaleWeight.lean), [`dgWeightTrunc_edgeKappa_bound`](Rigidity/Proofs/Green/DarioGuTwoScaleWeightTrunc.lean) | the weight `exp(dgExponent)` and its truncation: the discrete product rule and the pointwise bound replacing (4.27) and (4.41). |
 | [`openLaplacian_twoScale`](Rigidity/Proofs/Green/DarioGuTwoScaleStepOne.lean), [`openLaplacian_twoScale_of_corrector`](Rigidity/Proofs/Green/DarioGuTwoScaleCorrectorEq.lean), [`hasDerivAt_dgTwoScale_eq`](Rigidity/Proofs/Green/DarioGuTwoScaleHeatEq.lean) | Step 1, (4.26): the equation of the two-scale expansion with the flux of the corrector as source. |
@@ -2607,9 +2621,10 @@ equation (Step 1), the weighted energy inequality (Step 2), the source terms (St
 The thirty-three reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
-Exactly the following named inputs remain for Theorem 1 of Dario and Gu in `d = 2`
+The following named inputs were the hypotheses of Theorem 1 of Dario and Gu in `d = 2`
 (`darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree`): Proposition 2.13, for each `𝔭_c(2) < p < 1` and some `σ > 0`
-(`DarioGuFluxWeakNormTwo p σ`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`); Theorem 4 of Barlow
+(`DarioGuFluxWeakNormTwo p σ`, now proved, `darioGuFluxWeakNormTwo_holds`, so that Theorem 1 of Dario and Gu follows from Theorem 3 and
+Theorem 4 alone, `darioGuHeatKernelTwo_of_gradient_barlow`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`); Theorem 4 of Barlow
 (`BarlowGaussianUpperBoundTwo`, cited); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
 (`darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum`), or Lemma 3.5 for the planar partition (`DarioResamplePartitionTwo`)
 together with the Step 2 sum (H2) (`darioGuHeatKernelTwo_of_flux_gradient_barlow_resample`, by `darioFlipSumBound_of_resample`).
@@ -2631,6 +2646,56 @@ Departures from Dario and Gu:
   the scale sum of Step 3 is bounded by `Σ_m sup · ‖·‖` without Cauchy-Schwarz, with piecewise linear cutoffs on the balls of radius `2^{m+2}√r`, and the truncations
   are removed by dominated convergence. The bound (4.40) is proved for its square root.
 - **The statement for one `σ`.** `DarioGuTwoScaleErrorTwo p σ` is proved for the `σ` of Proposition 2.13 (`σ = σ̄²`); Theorem 1 uses it for some `σ > 0`.
+
+## Proposition 2.13 of Dario and Gu in dimension two
+
+Proposition 2.13 of Dario and Gu (Proposition B.1, DG21.tex:2974-2986: the weak norm of the centered flux of the corrector on the
+balls of the infinite cluster), in the form `DarioGuFluxWeakNormTwo p σ` (`d = 2`), is proved in
+[`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) for every `𝔭_c(2) < p < 1` with the diffusivity `σ = σ̄² = 2 θ(p)^{-1} ā` of (B.5),
+where `ā` is the mean of the flux of the corrected planes
+([`darioGuFluxWeakNormTwo_holds`](Rigidity/Proofs/Green/DarioGuFluxWeakNormHolds.lean)). The proof follows Appendix B of the source:
+the decay (B.8) of the spatial averages of the flux (Gu, *An efficient algorithm for solving elliptic problems on percolation clusters*,
+arXiv:1907.13571, Proposition 1.1, proved here in dimension two), the estimate (eq.gsmallH-1) of the weak norm of the flux of `ℤ²`, the
+estimate (eq:DensityWeakNorm) of the density of the cluster (Step 2), the coarsening of the test functions (Step 1) and the minimal scale
+(Step 3).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`Rigidity.Green.exists_fluxMean_two`](Rigidity/Proofs/Green/DarioGuFluxMean.lean) | the mean of the flux of the corrected plane of slope `e_k` along `e_i` is `ā δ_{ik}` with `ā > 0`, by stationarity and the symmetries of the lattice. |
+| [`fluxFlipSum_isOsBond`](Rigidity/Proofs/Green/DarioGuFluxFlipMoments.lean), [`ae_fluxFlip_sq_le_open`](Rigidity/Proofs/Green/DarioGuFluxOpenBound.lean), [`ae_fluxFlip_sq_le_closed`](Rigidity/Proofs/Green/DarioGuFluxClosedBound.lean) | Gu's Steps 1-4 in flip form: the sum over the bonds of the squared flip differences of the heat average of the flux is `O_s(C/r²)`. |
+| [`exists_fluxSpatialAverage_two`](Rigidity/Proofs/Green/DarioGuFluxSpatialAverage.lean) | **Gu, Proposition 1.1** ((B.8)) in dimension two with the heat kernel `Φ_{r²}` of `ℤ²`: `\|Φ_{r²} ⋆ g(x)\| ≤ O_s(C/r)` for `r ≥ 1`. |
+| [`exists_tsum_ofReal_abs_openHeat_grad_le`](Rigidity/Proofs/Green/DarioGuFluxKernelGradient.lean), [`ofReal_abs_heatF_sub_le`](Rigidity/Proofs/Green/DarioGuFluxHeatDifference.lean), [`sum_heatAvg_sub_mul_eq`](Rigidity/Proofs/Green/DarioGuFluxHeatDifference.lean), [`ofReal_abs_sum_mul_le_dyadic`](Rigidity/Proofs/Green/DarioGuFluxDyadic.lean) | the `ℓ¹` norm `C/√t` of the gradient of the heat kernel of `ℤ²` (from the local limit theorem of Lattice-Probability), the time increments of the heat flow of a test function through its gradient, the duality with the heat averages, and the dyadic heat decomposition of a pairing. |
+| [`exists_fluxWeakNormBox`](Rigidity/Proofs/Green/DarioGuFluxWeakNormBox.lean) | (eq.gsmallH-1): `\|Σ_S g w\| ≤ Y ‖w‖_{ℓ²(S)} + Z ‖∇w‖_{ℓ²(T)}` with `E[Y^q]^{1/q} ≲ q^κ √\|S\| 2^{-J}` and `E[Z^q]^{1/q} ≲ q^κ (J + 1) √\|T\|`. |
+| [`exists_densityWeakNorm`](Rigidity/Proofs/Green/DarioGuDensityWeakNorm.lean) | Step 2, (eq:DensityWeakNorm): the same bound for `1_{𝒞_∞} − θ(p)` on unions of triadic cubes of scale `K`, from Proposition A.1 and the Poincaré inequality on triadic cubes. |
+| [`coarseTest`](Rigidity/Proofs/Green/DarioGuFluxCoarsening.lean), [`sum_sq_coarseTest_le`](Rigidity/Proofs/Green/DarioGuFluxCoarsening.lean), [`sum_sq_grad_coarseTest_le`](Rigidity/Proofs/Green/DarioGuFluxCoarsening.lean), [`card_mul_le_card_dgClusterBall`](Rigidity/Proofs/Green/DarioGuFluxCoarsening.lean) | Step 1: the coarsened test function (def.coarsenu), its `ℓ²` norm (eq:estcoarseminusu), its gradient (est.nablacoarsenL2), and the size of `𝒞_∞ ∩ B_r(y)`. |
+| [`weakNormLe_of_scale_bounds`](Rigidity/Proofs/Green/DarioGuFluxWeakNormScale.lean) | Steps 1 and 3 at a scale `r ∈ [3^n, 3^{n+1})`: the weak norm of the centered flux on `𝒞_∞ ∩ B_r(y)` from the bounds of the flux and the density and the sizes of the partition cubes near `y`. |
+| [`exists_summable_badBound`](Rigidity/Proofs/Green/DarioGuFluxWeakNormBad.lean), [`darioGuFluxWeakNormTwo_of_bounds`](Rigidity/Proofs/Green/DarioGuFluxWeakNormHolds.lean), [`darioGuFluxWeakNormTwo_holds`](Rigidity/Proofs/Green/DarioGuFluxWeakNormHolds.lean) | Step 3: the bad scales and their probabilities, the minimal scale, and **Proposition 2.13** in dimension two. |
+| [`Rigidity.Assembly.ProvedFluxWeakNorm`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean): `exists_darioGuTwoScaleErrorTwo_holds`, `exists_darioGuTranslatedFluxTwo_holds`, `darioGuHeatKernelTwo_of_gradient_barlow` (and its variants `_threeThree`, `_flipSum`, `_resample`, `_stepTwo`), `supercriticalBondGreenQuantitativeTwo_of_gradient_barlow`, `fast_decay_of_gradient_barlow`, `fast_decay_of_gradient_veryGood`, `darioGuHeatKernelTwo_of_gradient`, `supercriticalBondGreenQuantitativeTwo_of_gradient`, `fast_decay_of_gradient`, `darioGuHeatKernelTwo_holds`, `supercriticalBondGreenQuantitativeTwo_holds`, `fast_decay_holds` | the results that took Proposition 2.13 as the hypothesis `hflux`, without it: Proposition 4.3 and Remark B.3 with no hypothesis; Theorem 1 of Dario and Gu, Theorem 2 of Dario and Gu (R7) and Theorem 1.3 in dimension two from Theorem 3 (`DarioGuGradientBoundTwo`) and the Gaussian upper bound of Barlow (`BarlowGaussianUpperBoundTwo`), or the very good balls of the cluster, and, that bound being proved, from Theorem 3 alone; Theorem 3 being proved too, Theorems 1 and 2 of Dario and Gu and Theorem 1.3 in dimension two with no hypothesis. |
+
+The thirty-four reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Dario and Gu:
+
+- **Lattice heat kernel and dyadic times.** (eq.gsmallH-1) is proved from the heat averages of the flux of `ℤ²` at the dyadic times
+  `4^j ≥ 1` against the time increments of the heat flow of the test function (DG21.tex:3046-3080 use the continuous multiscale Poincaré
+  inequality (D.28) of Armstrong, Kuusi and Mourrat and the heat averages at all times `t ∈ (0, 1]`); the times below `2` are handled by
+  the moments of the flux itself, the Lipschitz bound of the corrector (eq:lip.corr), which is (fluxbounded.est).
+- **Gu's Proposition 1.1 in the lattice form.** (B.8) is used, and proved, with the heat kernel of `ℤ²` on the lattice points in place of
+  a continuous kernel against the piecewise constant extension `[g]`.
+- **The weak norms on `ℤ²` in the form of the test functions.** The bounds of the flux and of the density on `ℤ²` are stated for test
+  functions vanishing off a finite set `S`, as `Y ‖w‖ + Z ‖∇w‖` with explicit moments, which is what the coarsened test functions need;
+  the source writes them as `‖·‖_{H̲^{-1}(ℤ^d ∩ B_r)}` with the normalization `r^{-1} ‖φ‖_{L̲²}`.
+- **The coarsening and the minimal scale of the partition.** The coarsened function takes `v` (extended by zero off `𝒞_∞ ∩ B_r(y)`) at the
+  anchor of the partition cube of the planar partition of the good cubes off the cluster (the source chooses the point of `𝒞_*(□)`
+  closest to the centre). The minimal scale `M_q(𝒫)` of (eq:Mt) is replaced by the event that every partition cube within `2·3^{n+2} + 2`
+  of `y` has side at most `⌊3^{αn/4}⌋`, and the bound of `\|ℤ^d ∩ B_r\|/\|𝒞_∞ ∩ B_r\|` used in Step 1 by
+  `\|𝒞_∞ ∩ B_r(y)\| ≥ (2·3^{n-1} + 1)²/L²` (`card_mul_le_card_dgClusterBall`).
+- **Step 2 on unions of triadic cubes.** The density bound is proved on the `3 × 3` triadic cubes of scale `n + 2` around the cube of `y`,
+  with the Poincaré inequality on the triadic cubes of Percolation-Cluster-Homogenization (`multiscalePoincare_holds`) in the multiscale
+  decomposition; the source passes from `B_r` to the cube `□_m ⊇ B_r`.
+- **Lemma 1.5.** The minimal scale is the first triadic scale after which every scale is good (`exists_minimalScale_of_summable`), with
+  `E[exp(M^s)]` bounded uniformly in `y`; for `α > 1` the bound for `min(α, 1)` is used.
+- **Componentwise.** The bound is stated for each component `[g̃_{e_k}]_i`, as in `DarioGuFluxWeakNormTwo`.
 
 ## Theorem 3 of Dario and Gu in dimension two from Proposition 3.9
 
@@ -3136,12 +3201,14 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   [Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension](#good-balls-of-the-infinite-cluster-and-proposition-27-of-dario-and-gu-in-every-dimension),
   the twenty theorems of
   [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two),
+  the thirty-four theorems of
+  [Proposition 2.13 of Dario and Gu in dimension two](#proposition-213-of-dario-and-gu-in-dimension-two),
   the twenty-six theorems of
   [The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension),
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1069 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1103 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3175,9 +3242,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 756 Lean files with 156,580 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 777 Lean files with 162,696 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,692 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,728 lines) are counted separately.
 
 ## Building
 
