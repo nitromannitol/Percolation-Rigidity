@@ -24,8 +24,10 @@ of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero
 of the Green columns. The other four remain hypotheses: the qualitative and the quantitative
 corrector inputs (Theorem 2.5), the regularity of order one at the origin (Theorem 2.4 at order
 one) and the quantitative estimate of the Green function of Dario and Gu; the dimension-two forms
-of all four are proved. The regularity of order one at the origin is proved in every dimension
-from the existence of the corrected planes, the first part of the qualitative corrector input
+of all four are proved, and the Green estimate in every dimension follows from Theorem 1 of Dario
+and Gu in each dimension `d ≥ 3` alone (`supercriticalBondGreenQuantitative_of_heatKernel`). The
+regularity of order one at the origin is proved in every dimension from the existence of the
+corrected planes, the first part of the qualitative corrector input
 (`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`), so that Theorem 1.3 in the form
 with the twelve inputs takes only the two corrector inputs and the Green estimate
 (`Rigidity.Assembly.WithProvedOrderOne.fast_decay`). Theorems 6.5 and 1.3 are proved with no
@@ -424,6 +426,12 @@ Proposition 2.13 alone
 `fast_decay_of_flux`). Proposition 2.13 being proved, they hold with no hypothesis
 ([`ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean),
 `supercriticalBondGreenQuantitativeTwo_holds`, `fast_decay_holds`).
+In every dimension, the quantitative Green estimate `SupercriticalBondGreenQuantitative` follows from Theorem 1 of
+Dario and Gu in each dimension `d ≥ 3` alone (`DarioGuHeatKernelD d`;
+[`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean)):
+its planar case is proved, and so is the small-time bound of the heat kernel on `ℤ^d`, from the Carne–Varopoulos
+bound (`openHeatSmallTimeD_holds`); see
+[Theorem 2 of Dario and Gu for d ≥ 3 from Theorem 1, and in every dimension](#theorem-2-of-dario-and-gu-for-d--3-from-theorem-1-and-in-every-dimension).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -2975,7 +2983,12 @@ Carne–Varopoulos bound, Proposition 2.15), along §5 of the source: the Green 
 function is `θ^{-1} ∫_0^∞ p̄(t, ·) dt = Γ(d/2 − 1) |z|^{2−d} / (2 π^{d/2} σ θ)`, and the time integral of the error of Theorem 1,
 split at `t = |x − y|`, is at most `C |x − y|^{1 − d + δ}`. With the planar case proved from Proposition 2.13 (previous
 section), the input in every dimension follows from Proposition 2.13 in dimension two and `DarioGuHeatKernelD d`,
-`OpenHeatSmallTimeD d` for `d ≥ 3` (`supercriticalBondGreenQuantitative_of_flux_heatKernel`).
+`OpenHeatSmallTimeD d` for `d ≥ 3` (`supercriticalBondGreenQuantitative_of_flux_heatKernel`). The small-time bound is
+proved: `openHeatD` is `bondHeat` and `‖edzD x y‖` is the Euclidean distance `latticeDist x y`, both by definition, so
+`OpenHeatSmallTimeD d` is `HeatSmallTimeD d` (`openHeatSmallTimeD_holds`, from `heatSmallTimeD_holds`; see
+[The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension)).
+Proposition 2.13 is proved too (`darioGuFluxWeakNormTwo_holds`), so only Theorem 1 of Dario and Gu in dimension `d`
+remains for `d ≥ 3` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2983,9 +2996,10 @@ section), the input in every dimension follows from Proposition 2.13 in dimensio
 | [`gaussianHeatD`](Rigidity/Proofs/Green/GaussianTimeIntegral.lean), [`integral_gaussianHeatD`](Rigidity/Proofs/Green/GaussianTimeIntegral.lean), [`inv_mul_integral_gaussianHeatD_eq`](Rigidity/Proofs/Green/GaussianTimeIntegral.lean) | The Gaussian kernel of `ℝ^d`, its time integral, and `θ^{-1} ∫_0^∞ p̄(t, z) dt = continuumGreen d (σθ/2) z` for `d ≥ 3`. |
 | [`HeatBoundsD`](Rigidity/Proofs/Green/GreenTimeIntegralThree.lean), [`HeatBoundsD.laplacian_timeGreenD`](Rigidity/Proofs/Green/GreenTimeIntegralThree.lean), [`HeatBoundsD.abs_timeGreenD_sub_le`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`HeatBoundsD.isGreenColumn_timeGreenD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean) | At one configuration, under the bounds of Theorem 1 and the small-time bound: the time integral of the heat kernel solves `−Δg = δ_y`, is within `C \|x − y\|^{2−2β}` of the homogenized Green function, and is a Green column. |
 | [`DarioGuHeatKernelD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`OpenHeatSmallTimeD`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`supercriticalBondGreenQuantitativeThree_of_heatKernel`](Rigidity/Proofs/Green/GreenQuantitativeThree.lean), [`Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitative_of_flux_heatKernel`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean) | Theorem 1 and the small-time bound in dimension `d` as named statements; Theorem 2 for `d ≥ 3` from them; the input in every dimension. |
+| [`openHeatSmallTimeD_holds`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean), [`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean) | The small-time bound in dimension `d`; the input in every dimension from `DarioGuHeatKernelD d` for `d ≥ 3` alone. |
 | [`heatFlowG`](Rigidity/Proofs/Green/HeatFlowGraph.lean), [`hasSum_sq_heatFlowG_le`](Rigidity/Proofs/Green/HeatFlowGraph.lean), [`sq_heatFlowG_le_diag`](Rigidity/Proofs/Green/HeatFlowGraph.lean), [`sq_laplacian_heatFlowG_le`](Rigidity/Proofs/Green/HeatFlowGraph.lean) | The heat semigroup of a graph of bounded degree on `ℓ²`: a contraction, `(P_t f)(z)² ≤ p_{2t}(z, z) ‖f‖²` and `(ΔP_t f)(z)² ≤ 8 (2t)^{-2} p_{t/2}(z, z) ‖f‖²`. |
 
-The eleven reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+The thirteen reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Departures from Dario and Gu: the time integral is split at `t = |x − y|`, and the Gaussian kernel at small times is bounded
 through the Gamma integral `∫_0^∞ t^{-d/2} e^{-a/t} dt = a^{1-d/2} Γ(d/2 − 1)` after the factor `e^{-|x−y|/(4σ)}` is taken out;
@@ -3151,7 +3165,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 - **No `sorry`.** The library has none. The five comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1108 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1110 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -3234,7 +3248,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1108 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1110 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3268,9 +3282,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 783 Lean files with 163,794 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 783 Lean files with 163,826 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,743 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,747 lines) are counted separately.
 
 ## Building
 

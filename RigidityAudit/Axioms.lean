@@ -1682,6 +1682,10 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.sq_heatFlowG_le_diag
 #print axioms Rigidity.Green.sq_laplacian_heatFlowG_le
 
+-- The small-time bound of the heat kernel on Z^d in the form used by Theorem 2 of Dario and Gu for d >= 3, and Theorem 2 in every dimension from Theorem 1 in every dimension d >= 3 alone
+#print axioms Rigidity.Green.openHeatSmallTimeD_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel
+
 -- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
 #print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
 #print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_holds

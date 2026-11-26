@@ -1147,6 +1147,9 @@ further = {
          'Rigidity.Green.hasSum_sq_heatFlowG_le',
          'Rigidity.Green.sq_heatFlowG_le_diag',
          'Rigidity.Green.sq_laplacian_heatFlowG_le'],
+    'The small-time bound of the heat kernel on Z^d in the form used by Theorem 2 of Dario and Gu for d >= 3, and Theorem 2 in every dimension from Theorem 1 in every dimension d >= 3 alone':
+        ['Rigidity.Green.openHeatSmallTimeD_holds',
+         'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel'],
     'Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension':
         ['Rigidity.WeakPoincare.clusterGoodBalls_holds',
          'Rigidity.WeakPoincare.clusterVeryGoodBalls_holds',
