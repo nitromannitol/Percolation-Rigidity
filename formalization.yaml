@@ -13,7 +13,8 @@ project:
     numbered results that the paper proves are proved in Lean, from twelve results of the literature
     that enter as explicit hypotheses; eight of these inputs are also proved in Lean, the other four
     (the qualitative and quantitative corrector inputs, the regularity of order one at the origin
-    and the quantitative Green estimate of Dario and Gu) remain hypotheses, and Theorem 6.5 is
+    and the quantitative Green estimate of Dario and Gu) remain hypotheses in general dimension;
+    their dimension-two forms are proved, so Theorem 1.3 (fast_decay_holds) and Theorem 6.5 are
     proved with no literature hypothesis. The other five numbered results are quoted from the
     literature; one of them, Lemma 2.13, is not an input and is used by no Lean proof, and its
     special case for unions of lattice squares is proved. Theorems 1.1, 1.2, 1.3 and 6.5 are
@@ -128,7 +129,7 @@ sources:
     type: "paper"
     location: "Sections 3 and 6: Propositions 3.1, 3.4, 3.7 and 6.1, Theorem 3.8, Theorem 1 (upper bound)"
     relationship: "adapts"
-    note: "Ann. Probab. 32 (2004), 3024-3084. The upper bound (0.4) of Theorem 1 with the tail (0.5), Theorem 4 of Dario and Gu (Rigidity.Green.BarlowGaussianUpperBoundTwo), is proved in dimension two along Sections 3 and 6 (Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood) from the Carne-Varopoulos bound and the very good balls of Theorem 2.18(c) and Lemma 2.19 for Euclidean balls (Rigidity.Barlow.ClusterVeryGoodBallsTwo). These are proved in every dimension (Rigidity.WeakPoincare.clusterVeryGoodBalls_holds; Rigidity.Barlow.clusterVeryGoodBallsTwo_holds in dimension two), so the bound holds with no hypothesis (Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds), and Theorem 1.3 follows without it (Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections, fast_decay_of_flux_gradient) (README, The Gaussian upper bound of Barlow in dimension two)."
+    note: "Ann. Probab. 32 (2004), 3024-3084. The upper bound (0.4) of Theorem 1 with the tail (0.5), Theorem 4 of Dario and Gu (Rigidity.Green.BarlowGaussianUpperBoundTwo), is proved in dimension two along Sections 3 and 6 (Rigidity.Barlow.barlowGaussianUpperBoundTwo_of_veryGood) from the Carne-Varopoulos bound and the very good balls of Theorem 2.18(c) and Lemma 2.19 for Euclidean balls (Rigidity.Barlow.ClusterVeryGoodBallsTwo). These are proved in every dimension (Rigidity.WeakPoincare.clusterVeryGoodBalls_holds; Rigidity.Barlow.clusterVeryGoodBallsTwo_holds in dimension two), so the bound holds with no hypothesis (Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds), and Theorem 1.3 follows without it (Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections, fast_decay_of_flux_gradient) (README, The Gaussian upper bound of Barlow in dimension two). The bound is proved in every dimension d >= 2 with the prefactor t^(-d/2) (Rigidity.BarlowLattice.barlowGaussianUpperBound_holds : Rigidity.Green.BarlowGaussianUpperBound d), for the heat kernel Rigidity.Green.bondHeat of the variable speed walk on Z^d, from the Carne-Varopoulos bound on Z^d (Rigidity.Green.carneVaropoulos_holds) and Rigidity.WeakPoincare.clusterVeryGoodBalls_holds (README, The heat kernel and the Gaussian upper bound of Barlow in every dimension)."
 
 related_formalizations:
   - id: "https://github.com/nitromannitol/Percolation-Cluster-Homogenization"
@@ -419,13 +420,18 @@ fidelity:
     Armstrong and Dario; Lemma 4.1 is proved from Theorem 3 in the form of Remark 1.3, the weak
     Poincare inequality, Barlow's bound and Propositions 2.15 and A.7, so that Theorem 1 in dimension
     two follows from Proposition 4.3, Theorem 3 (Remark 1.3), Barlow's bound and Lemma 3.3 of Dario,
-    or its flip form; Proposition 4.3 is proved from Proposition 2.13, the weak norm of the flux, a named input, and the
+    or its flip form; Proposition 4.3 is proved from Proposition 2.13, the weak norm of the flux, and the
     quantitative corrector estimate, with the centered flux in place of the translated flux, the weight (4.27) handled by the
     edge identity and the steps that the source leaves to the reader written out, so that Theorem 1 follows from Proposition 2.13,
     Theorem 3, Barlow's bound and Lemma 3.3 of Dario, its flip form, or Lemma 3.5 with the Step 2 sum; Theorem 3 in the form of
     Remark 1.3 is proved from Barlow's bound by an elliptic estimate for the time slices of the heat kernel, without Theorem 5
     and Proposition 3.9 of the source (Rigidity.Green.darioGuGradientBoundTwo_holds), so that Theorems 1 and 2 of Dario and Gu
-    in dimension two follow from Proposition 2.13 alone (Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux)) (the Carne-Varopoulos bound
+    in dimension two follow from Proposition 2.13 alone (Rigidity.Assembly.WithProvedBarlow.supercriticalBondGreenQuantitativeTwo_of_flux);
+    Proposition 2.13 is proved in dimension two (Appendix B, from Proposition 1.1 of Gu, proved here with the heat kernel of Z^2,
+    the weak norm of the flux of Z^2 by a dyadic heat decomposition, the weak norm of the density from Proposition A.1, the
+    coarsening of the test functions by the anchors of the partition of the good cubes and a minimal scale;
+    Rigidity.Green.darioGuFluxWeakNormTwo_holds), so that Theorems 1 and 2 of Dario and Gu and Theorem 1.3 hold in dimension two
+    with no hypothesis (Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds, fast_decay_holds)) (the Carne-Varopoulos bound
     for small times is proved for the lazy walk; the pairs of points in a ball are treated by a
     union bound and the time integral of the Gaussian kernel is normalized by its value at a unit
     vector), for

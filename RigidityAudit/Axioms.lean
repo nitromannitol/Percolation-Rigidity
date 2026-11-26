@@ -15,6 +15,7 @@ import Rigidity.Proofs.Assembly.Unconditional
 import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.ProvedGreenColumn
+import Rigidity.Proofs.Assembly.ProvedOrderOne
 import Rigidity.Proofs.Assembly.PlanarGreenInputs
 import Rigidity.Proofs.Green.SupercriticalGreenColumn
 import Rigidity.Proofs.Green.SupercriticalGreenBounds
@@ -436,6 +437,7 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Green.DarioGuTwoScaleAssembly
 import Rigidity.Proofs.Green.DarioGuTwoScaleErrorFromSource
 import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
+import Rigidity.Proofs.Assembly.ProvedFluxWeakNorm
 import Rigidity.Proofs.Green.DarioGuDirichletSteps
 import Rigidity.Proofs.Green.DarioGuDiscreteDivergence
 import Rigidity.Proofs.Green.DarioGuGradientFromLipschitz
@@ -447,6 +449,7 @@ import Rigidity.Proofs.Green.HeatFlowGraph
 import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 import Rigidity.Proofs.Assembly.ProvedBarlow
+import Rigidity.Proofs.BarlowLattice.GaussianHolds
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -589,6 +592,16 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBound
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.largeGradientSensitive
 #print axioms Rigidity.Assembly.WithProvedGreenColumn.goodEventLowerBoundDirectional
+
+-- The regularity of order one in every dimension from the existence of the corrected planes, and the main
+-- theorems that take it with every proved input supplied
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioMesoscopicDegreeTwo_holds
+#print axioms Rigidity.Proofs.Regularity.correctorSublinearL2At_of_correctedPlanes
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_correctorSublinear
+#print axioms Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fast_decay
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayDichotomy
+#print axioms Rigidity.Assembly.WithProvedOrderOne.fastDecayPotential
 
 -- Existence of planar Green columns, and Theorem 1.3 from five dimension-two literature inputs
 #print axioms Rigidity.Proofs.Section5.planar_greenColumn_exists
@@ -1568,6 +1581,41 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
 
+-- Proposition 2.13 of Dario and Gu in dimension two (Gu, Proposition 1.1, and Appendix B), and the results that used it
+#print axioms Rigidity.Green.exists_fluxMean_two
+#print axioms Rigidity.Green.ae_fluxFlip_sq_le_open
+#print axioms Rigidity.Green.ae_fluxFlip_sq_le_closed
+#print axioms Rigidity.Green.fluxFlipSum_isOsBond
+#print axioms Rigidity.Green.exists_fluxSpatialAverage_two
+#print axioms Rigidity.Green.exists_tsum_ofReal_abs_openHeat_grad_le
+#print axioms Rigidity.Green.ofReal_abs_heatF_sub_le
+#print axioms Rigidity.Green.sum_heatAvg_sub_mul_eq
+#print axioms Rigidity.Green.ofReal_abs_sum_mul_le_dyadic
+#print axioms Rigidity.Green.exists_fluxWeakNormBox
+#print axioms Rigidity.Green.exists_densityWeakNorm
+#print axioms Rigidity.Green.sum_sq_coarseTest_le
+#print axioms Rigidity.Green.sum_sq_grad_coarseTest_le
+#print axioms Rigidity.Green.card_mul_le_card_dgClusterBall
+#print axioms Rigidity.Green.weakNormLe_of_scale_bounds
+#print axioms Rigidity.Green.exists_summable_badBound
+#print axioms Rigidity.Green.darioGuFluxWeakNormTwo_of_bounds
+#print axioms Rigidity.Green.darioGuFluxWeakNormTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.exists_darioGuTwoScaleErrorTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.exists_darioGuTranslatedFluxTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_threeThree
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_flipSum
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_resample
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow_stepTwo
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient_barlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_of_gradient_barlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient_barlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient_veryGood
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_of_gradient
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_holds
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
@@ -1665,3 +1713,31 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds
 #print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_sections
 #print axioms Rigidity.Assembly.WithProvedBarlow.fast_decay_of_flux_gradient
+
+-- The heat kernel on Z^d, the Carne-Varopoulos bound and the Gaussian upper bound of Barlow in every dimension
+#print axioms Rigidity.Green.bondHeat_symm
+#print axioms Rigidity.Green.hasSum_bondHeat
+#print axioms Rigidity.Green.hasSum_bondHeat_mul
+#print axioms Rigidity.Green.hasDerivAt_bondHeat
+#print axioms Rigidity.Green.measurable_bondHeat
+#print axioms Rigidity.Green.carneVaropoulos_holds
+#print axioms Rigidity.Green.carneVaropoulosTwo_of_carneVaropoulos
+#print axioms Rigidity.Green.heatSmallTimeD_holds
+#print axioms Rigidity.Green.dgPhiDim_eq_rpow
+#print axioms Rigidity.Green.barlowGaussianUpperBoundTwo_of_dim
+#print axioms Rigidity.BarlowLattice.tsum_mul_openLaplacian
+#print axioms Rigidity.BarlowLattice.hasDerivAt_bondHeat_two_mul
+#print axioms Rigidity.BarlowLattice.bondHeat_diag_le_of_good
+#print axioms Rigidity.BarlowLattice.bondHeat_le_of_good
+#print axioms Rigidity.BarlowLattice.neg_log_le_heatEntropy
+#print axioms Rigidity.BarlowLattice.heatEntropy_le_log_meanDist
+#print axioms Rigidity.BarlowLattice.meanDist_le_of_entropy
+#print axioms Rigidity.BarlowLattice.exitGen_le_mul_of_subset
+#print axioms Rigidity.BarlowLattice.mul_exitProb_le
+#print axioms Rigidity.BarlowLattice.exitProb_clBall_le
+#print axioms Rigidity.BarlowLattice.exitProb_clBall_le_exp
+#print axioms Rigidity.BarlowLattice.BarlowRegion.tsum_far_le
+#print axioms Rigidity.BarlowLattice.BarlowRegion.bondHeat_le_gauss
+#print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_of_veryGood
+#print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_holds
+#print axioms Rigidity.BarlowLattice.barlowGaussianUpperBoundTwo_of_lattice
