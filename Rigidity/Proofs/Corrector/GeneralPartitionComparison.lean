@@ -144,7 +144,8 @@ theorem mem_anchorBox_of_mem_partitionCube {ω : Configuration d} (hP : Partitio
   rw [mem_anchorBox]
   intro i
   have h := Rigidity.Proofs.Regularity.abs_sub_lt_side_of_mem hx (mem_partitionCube hP u) i
-  have h3 : (3 : ℤ) ^ (partitionCube ω u).scale ≤ ((3 ^ ((partitionCube ω u).scale + 1) : ℕ) : ℤ) := by
+  have h3 : (3 : ℤ) ^ (partitionCube ω u).scale ≤
+      ((3 ^ ((partitionCube ω u).scale + 1) : ℕ) : ℤ) := by
     push_cast
     exact pow_le_pow_right₀ (by norm_num) (Nat.le_succ _)
   linarith
@@ -186,7 +187,8 @@ theorem ofReal_abs_coarseField_sub_le (hd : 0 < d) {ω : Configuration d} (hω :
         (TriadicCube.goodCubes (configurationTranslation (-y') ω)) (z - y')
         then stepSixSum Λ u ω else 0 := by
   set a' := shiftedAnchor y' ω z with ha'def
-  set R := TriadicCube.stoppingSize (TriadicCube.goodCubes (configurationTranslation (-y') ω)) (z - y') with hR
+  set R := TriadicCube.stoppingSize (TriadicCube.goodCubes (configurationTranslation (-y') ω))
+    (z - y') with hR
   set T := ∑' u, if ‖latticeEuclideanEmbedding (u - z)‖ ≤ d * R then stepSixSum Λ u ω else 0
     with hT
   have ha' : ω ∈ infiniteComponentEvent a' := infinite_shiftedAnchor hd hP' z
@@ -202,7 +204,8 @@ theorem ofReal_abs_coarseField_sub_le (hd : 0 < d) {ω : Configuration d} (hω :
   -- the distance from `z` to `a'`
   have hRsize : R = (3 : ℝ) ^ (partitionCube (configurationTranslation (-y') ω) (z - y')).scale :=
     TriadicCube.stoppingSize_eq_of_mem (mem_partitionCube hP' _) (partitionCube_spec hP' _).2
-  have ha'z : ∀ k, |a' k - z k| < (3 : ℤ) ^ (partitionCube (configurationTranslation (-y') ω) (z - y')).scale := by
+  have ha'z : ∀ k, |a' k - z k| <
+      (3 : ℤ) ^ (partitionCube (configurationTranslation (-y') ω) (z - y')).scale := by
     intro k
     have h := Rigidity.Proofs.Regularity.abs_sub_lt_side_of_mem
       (partitionAnchor_mem hP' (z - y')) (mem_partitionCube hP' (z - y')) k
@@ -263,7 +266,8 @@ theorem ofReal_abs_coarseField_sub_le (hd : 0 < d) {ω : Configuration d} (hω :
   have hev := edgeVariationIn_correctorDiff_le hG hGv hω (hinf z) S (Λ := fun x => Λ x ω) hΛ0 hΛ
   have hbu := sum_biUnion_le_of_nonneg W.support.toFinset (anchorBox ω) (f := fun x => Λ x ω) hΛ0
   have h2 : ENNReal.ofReal
-      |correctorDiff hG hGv (Pi.single i 1) ω (partitionAnchor ω a') (partitionAnchor ω z)| ≤ T := by
+      |correctorDiff hG hGv (Pi.single i 1) ω (partitionAnchor ω a') (partitionAnchor ω z)| ≤
+        T := by
     refine le_trans ?_ hsupp
     calc ENNReal.ofReal
           |correctorDiff hG hGv (Pi.single i 1) ω (partitionAnchor ω a') (partitionAnchor ω z)|
@@ -291,6 +295,159 @@ theorem ofReal_abs_coarseField_sub_le (hd : 0 < d) {ω : Configuration d} (hω :
     _ ≤ T + T := add_le_add h1 h2
     _ = 2 * T := (two_mul T).symm
 
+/-- **The moment form of (5.7)** for the coarsened correctors in dimension `d ≥ 2`, from the
+order-zero regularity and the exponential moments of the partition sizes. -/
+theorem baseComparison [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) :
+    ∃ B k : ℝ, 0 < B ∧ 0 < k ∧ BaseComparison hG hGv p B k := by
+  obtain ⟨Λ, A, k, hA0, hk0, hΛm, hΛ0, hlip, hmom6⟩ := stepSix_data hG hGv hd hpc hp1 hGae
+  obtain ⟨θ', hθ', hexp⟩ := (partition_estimates hd hpc).2.1
+  have hd0 : (0 : ℝ) < d := by exact_mod_cast (show 0 < d by omega)
+  set B₂ : ℝ := (2 * (1 + d * (4 * (d * θ')))) ^ d with hB₂
+  have hB₂0 : 0 < B₂ := by positivity
+  set B : ℝ := Real.sqrt 2 * (2 * B₂ * A * 2 ^ k) with hB
+  refine ⟨B, k + d, by positivity, by positivity, fun i y' z q hq => ?_⟩
+  have hq0 : 0 < q := by linarith
+  set ρ : Configuration d → ℝ := fun ω => d * TriadicCube.stoppingSize
+    (TriadicCube.goodCubes (configurationTranslation (-y') ω)) (z - y') with hρ
+  have hρm : Measurable ρ := ((measurable_stoppingSize_goodCubes (z - y')).comp
+    (configurationTranslationMeasurableEquiv (-y')).measurable).const_mul _
+  have htail : ∀ t : ℝ, 0 ≤ t →
+      latticeBondLaw d p {ω | t ≤ ρ ω} ≤ ENNReal.ofReal (2 * Real.exp (-(t / (d * θ')))) := by
+    intro t _
+    have hmeas : MeasurableSet {ω : Configuration d |
+        t ≤ d * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) (z - y')} :=
+      measurableSet_le measurable_const ((measurable_stoppingSize_goodCubes (z - y')).const_mul _)
+    have hpre : {ω | t ≤ ρ ω} = configurationTranslation (-y') ⁻¹'
+        {ω | t ≤ d * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) (z - y')} := rfl
+    rw [hpre, (measurePreserving_configurationTranslation p (-y')).measure_preimage
+      hmeas.nullMeasurableSet]
+    exact measure_le_const_mul_stoppingSize_le hθ' hd0 (z - y') (hexp _).1 (hexp _).2 t
+  have hYm : ∀ u, ∫⁻ ω, stepSixSum (Λ i) u ω ^ (2 * q) ∂latticeBondLaw d p ≤
+      ENNReal.ofReal (((A * (2 * q) ^ k) ^ q) ^ 2) := by
+    intro u
+    refine (hmom6 i u (2 * q) (by linarith)).trans (ENNReal.ofReal_le_ofReal (le_of_eq ?_))
+    rw [← Real.rpow_natCast, ← Real.rpow_mul (by positivity)]
+    push_cast
+    ring_nf
+  have hball := lintegral_randomBallSum_le (p := p) z (θ := d * θ') (by positivity) htail hρm
+    (Y := fun u => stepSixSum (Λ i) u) (fun u => measurable_stepSixSum (hΛm i) u) hq
+    (by positivity) hYm
+  have hall : ∀ᵐ ω ∂latticeBondLaw d p, ∀ x, ω ∈ infiniteComponentEvent x → ∀ y,
+      (openGraph ω).Adj x y → |correctorDiff hG hGv (Pi.single i 1) ω x y| ≤ Λ i x ω :=
+    ae_all_iff.2 fun x => hlip i x
+  have hpt : ∀ᵐ ω ∂latticeBondLaw d p,
+      ENNReal.ofReal (|coarseField hG hGv i y' z ω - coarseField hG hGv i 0 z ω| ^ q) ≤
+        2 ^ q * (∑' u, if ‖latticeEuclideanEmbedding (u - z)‖ ≤ ρ ω then
+          stepSixSum (Λ i) u ω else 0) ^ q := by
+    filter_upwards [hGae, ae_partitionEvent hd hpc,
+      ae_partitionEvent_translation hd hpc (-y'), hall] with ω hω hP hP' hl
+    have h := ofReal_abs_coarseField_sub_le hG hGv (by omega) hω hP hP' (Λ := Λ i)
+      (fun x => hΛ0 i x ω) hl z
+    rw [← ENNReal.ofReal_rpow_of_nonneg (abs_nonneg _) hq0.le]
+    calc ENNReal.ofReal |coarseField hG hGv i y' z ω - coarseField hG hGv i 0 z ω| ^ q
+        ≤ (2 * ∑' u, if ‖latticeEuclideanEmbedding (u - z)‖ ≤ ρ ω then
+            stepSixSum (Λ i) u ω else 0) ^ q := ENNReal.rpow_le_rpow h hq0.le
+      _ = _ := ENNReal.mul_rpow_of_nonneg _ _ hq0.le
+  unfold mom
+  have h2q : (2 : ℝ≥0∞) ^ q = ENNReal.ofReal (2 ^ q) := by
+    rw [← ENNReal.ofReal_rpow_of_nonneg (by norm_num) hq0.le, ENNReal.ofReal_ofNat]
+  calc ∫⁻ ω, ENNReal.ofReal (|coarseField hG hGv i y' z ω - coarseField hG hGv i 0 z ω| ^ q)
+        ∂latticeBondLaw d p
+      ≤ ∫⁻ ω, 2 ^ q * (∑' u, if ‖latticeEuclideanEmbedding (u - z)‖ ≤ ρ ω then
+          stepSixSum (Λ i) u ω else 0) ^ q ∂latticeBondLaw d p := lintegral_mono_ae hpt
+    _ = 2 ^ q * ∫⁻ ω, (∑' u, if ‖latticeEuclideanEmbedding (u - z)‖ ≤ ρ ω then
+          stepSixSum (Λ i) u ω else 0) ^ q ∂latticeBondLaw d p :=
+        lintegral_const_mul' _ _ (by rw [h2q]; exact ENNReal.ofReal_ne_top)
+    _ ≤ ENNReal.ofReal (2 ^ q) * ENNReal.ofReal (((2 * (1 + d * (4 * q * (d * θ')))) ^ d) ^
+          (q - 1) *
+            (Real.sqrt 2 * (2 * (1 + d * (4 * (d * θ')))) ^ d * (A * (2 * q) ^ k) ^ q)) := by
+        rw [h2q]
+        exact mul_le_mul_right hball _
+    _ ≤ ENNReal.ofReal ((B * q ^ (k + d)) ^ q) := by
+        rw [← ENNReal.ofReal_mul (by positivity)]
+        refine ENNReal.ofReal_le_ofReal ?_
+        rw [← hB₂]
+        have hqd : (1 : ℝ) ≤ q ^ d := one_le_pow₀ hq
+        have hbase : (2 * (1 + d * (4 * q * (d * θ')))) ^ d ≤ B₂ * q ^ d := by
+          rw [hB₂, ← mul_pow]
+          refine pow_le_pow_left₀ (by positivity) ?_ d
+          have h0 : 0 ≤ d * (4 * (d * θ')) := by positivity
+          nlinarith
+        have h1 : ((2 * (1 + d * (4 * q * (d * θ')))) ^ d) ^ (q - 1) ≤
+            (B₂ * q ^ d) ^ q / B₂ := by
+          calc ((2 * (1 + d * (4 * q * (d * θ')))) ^ d) ^ (q - 1) ≤ (B₂ * q ^ d) ^ (q - 1) :=
+                Real.rpow_le_rpow (by positivity) hbase (by linarith)
+            _ = (B₂ * q ^ d) ^ q / (B₂ * q ^ d) := by
+                rw [Real.rpow_sub (by positivity), Real.rpow_one]
+            _ ≤ (B₂ * q ^ d) ^ q / B₂ := by
+                gcongr
+                exact le_mul_of_one_le_right hB₂0.le hqd
+        have h2 : Real.sqrt 2 ≤ Real.sqrt 2 ^ q := by
+          simpa using Real.rpow_le_rpow_of_exponent_le
+            (show (1 : ℝ) ≤ Real.sqrt 2 by rw [Real.one_le_sqrt]; norm_num) hq
+        have hAq : (A * (2 * q) ^ k) ^ q = (A * 2 ^ k * q ^ k) ^ q := by
+          rw [Real.mul_rpow (by norm_num) hq0.le, mul_assoc]
+        have hkq : q ^ d * q ^ k = q ^ (k + d) := by
+          rw [Real.rpow_add hq0, Real.rpow_natCast, mul_comm]
+        rw [hAq]
+        calc 2 ^ q * (((2 * (1 + d * (4 * q * (d * θ')))) ^ d) ^ (q - 1) *
+              (Real.sqrt 2 * B₂ * (A * 2 ^ k * q ^ k) ^ q))
+            ≤ 2 ^ q * ((B₂ * q ^ d) ^ q / B₂ * (Real.sqrt 2 * B₂ * (A * 2 ^ k * q ^ k) ^ q)) := by
+              gcongr
+          _ = Real.sqrt 2 * (2 ^ q * (B₂ * q ^ d) ^ q * (A * 2 ^ k * q ^ k) ^ q) := by
+              rw [div_mul_eq_mul_div, mul_div_assoc', div_eq_iff hB₂0.ne']
+              ring
+          _ ≤ Real.sqrt 2 ^ q * (2 ^ q * (B₂ * q ^ d) ^ q * (A * 2 ^ k * q ^ k) ^ q) := by
+              gcongr
+          _ = (B * q ^ (k + d)) ^ q := by
+              rw [← Real.mul_rpow (by positivity) (by positivity),
+                ← Real.mul_rpow (by positivity) (by positivity),
+                ← Real.mul_rpow (by positivity) (by positivity), hB, ← hkq]
+              congr 1
+              ring
+
+/-- `BaseTheorem` is monotone in the exponent of `q`. -/
+theorem BaseTheorem.mono [NeZero d] {p : unitInterval} {A k k' a : ℝ} (hA : 0 ≤ A)
+    (hkk : k ≤ k') (h : BaseTheorem hG hGv p A k a) : BaseTheorem hG hGv p A k' a := by
+  intro i m hm q hq
+  refine (h i m hm q hq).trans (ENNReal.ofReal_le_ofReal ?_)
+  have hq0 : 0 ≤ q := by linarith
+  have : (A * q ^ k) ^ q ≤ (A * q ^ k') ^ q :=
+    Real.rpow_le_rpow (by positivity)
+      (mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le hq hkk) hA) hq0
+  exact mul_le_mul_of_nonneg_right this (by positivity)
+
+/-- `BaseComparison` is monotone in the exponent of `q`. -/
+theorem BaseComparison.mono [NeZero d] {p : unitInterval} {B k k' : ℝ} (hB : 0 ≤ B)
+    (hkk : k ≤ k') (h : BaseComparison hG hGv p B k) : BaseComparison hG hGv p B k' := by
+  intro i y' z q hq
+  refine (h i y' z q hq).trans (ENNReal.ofReal_le_ofReal ?_)
+  have hq0 : 0 ≤ q := by linarith
+  exact Real.rpow_le_rpow (by positivity)
+    (mul_le_mul_of_nonneg_left (Real.rpow_le_rpow_of_exponent_le hq hkk) hB) hq0
+
 end Base
+
+/-- **Dario's Theorem 1 in dimension `d ≥ 3`** (`DarioOptimalCorrectorThree`) from (5.5) at the
+origin with box oscillations bounded uniformly in the scale, for the coarsened correctors of
+every measurable almost sure event of valid correctors; the comparison (5.7)
+(`baseComparison`) and the coarsening error (5.10) (`baseCoarseningError`) are proved. -/
+theorem darioOptimalCorrectorThree_of_baseTheorem
+    (h5 : ∀ (d : ℕ) [NeZero d], 3 ≤ d → ∀ p : unitInterval, criticalProbability d < (p : ℝ) →
+      (p : ℝ) < 1 → ∀ (G : Set (Configuration d)) (hG : MeasurableSet G)
+        (hGv : G ⊆ correctorValidEvent d), (∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) →
+        ∃ A k : ℝ, 0 ≤ A ∧ BaseTheorem hG hGv p A k 0) :
+    DarioOptimalCorrectorThree := by
+  refine darioOptimalCorrectorThree_of_base fun d _ hd3 p hpc hp1 => ?_
+  have hd : 2 ≤ d := by omega
+  obtain ⟨G, hG, hGae, hGv⟩ := exists_measurable_correctorValid hd hpc hp1
+  obtain ⟨A, k₅, hA, h2⟩ := h5 d hd3 p hpc hp1 G hG hGv hGae
+  obtain ⟨B, k₇, hB, -, hc⟩ := baseComparison hG hGv hd hpc hp1 hGae
+  obtain ⟨s₆, C₆, hs₆, hC₆, h6⟩ := baseCoarseningError hG hGv hd hpc hp1 hGae
+  exact ⟨G, hG, hGv, hGae, A, B, max k₅ k₇, s₆, C₆, hA, hB.le, hs₆, hC₆,
+    BaseTheorem.mono hG hGv hA (le_max_left _ _) h2,
+    BaseComparison.mono hG hGv hB.le (le_max_right _ _) hc, h6⟩
 
 end Rigidity.Corrector.GeneralDim
