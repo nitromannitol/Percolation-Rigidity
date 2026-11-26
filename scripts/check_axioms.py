@@ -1068,7 +1068,12 @@ further = {
          'Rigidity.Corrector.GeneralDim.abs_correctorDiff_guardAnchor_le',
          'Rigidity.Corrector.GeneralDim.baseCoarseningError',
          'Rigidity.Corrector.GeneralDim.baseComparison',
-         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_baseTheorem'],
+         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_baseTheorem',
+         'Rigidity.Corrector.GeneralDim.lintegral_boxOsc_le_of_poincare_three',
+         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_poincareInputs',
+         'Rigidity.Corrector.GeneralDim.heatGradient_coarseField_isOsBond',
+         'Rigidity.Corrector.GeneralDim.ae_summable_heat_coarseField',
+         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_prop31'],
     'The concentration inequality of Dario (Proposition 2.17) in every dimension':
         ['Rigidity.Corrector.GeneralDim.concentration_holds'],
     'Proposition 2.13 of Dario and Gu in dimension two (Gu, Proposition 1.1, and Appendix B), and the results that used it':
