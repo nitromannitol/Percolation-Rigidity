@@ -20,7 +20,7 @@ that depends on the dimension is the factor `|V|^{-1/d}` of the normalized Sobol
 * `WeakNormLeD ω V g B` is `‖g‖_{H̲^{-1}(V)} ≤ B` ((1.33), `p = 2`): for every `v ∈ C_0^a(V)`,
   `|V|^{-1} Σ_V g v ≤ B ‖v‖_{H̲¹(V)}`, which is the bound on the supremum of (1.33);
 * `IsDGCorrectorD K y χ`: the correctors `χ_{e_k}` of the cluster `K`, normalized at `y`;
-* `centeredFluxD ω σ χ k i` is the `i`-th component of `g̃_{e_k}` (§2.2.2), and
+* `centeredFluxD ω σ χ k i` is the `i`-th component of `g̃_{e_k}` (§2.3.2), and
   `translatedFluxD ω σ χ k i` the `i`-th component of the translated flux `g̃*_{e_k}` of (4.26).
 -/
 
@@ -69,7 +69,7 @@ def IsDGCorrectorD {ω : Configuration d} (K : OpenComponent ω) (y : Vertex d)
     χ k y = 0
 
 /-- The `i`-th component of the centered flux `g̃_{e_k} = a(Dχ_{e_k} + e_k) - (σ/2) e_k` at `x`
-(Dario–Gu, §2.2.2, `σ = σ̄²`) on `ℤ^d`, with `a = 1` on the open edges and `a = 0` on the closed
+(Dario–Gu, §2.3.2, `σ = σ̄²`) on `ℤ^d`, with `a = 1` on the open edges and `a = 0` on the closed
 ones. -/
 noncomputable def centeredFluxD (ω : Configuration d) (σ : ℝ) (χ : Fin d → Vertex d → ℝ)
     (k i : Fin d) (x : Vertex d) : ℝ :=

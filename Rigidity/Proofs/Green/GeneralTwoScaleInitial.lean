@@ -14,7 +14,7 @@ import PercolationClusterHomogenization.External.CorrectorQuantitative
 * `l2norm_initialErrorD_le`: the initial error of the two-scale expansion,
   `h(s, ·, y) - θ^{-1} p̄(s, · - y) = θ^{-1} Σ_k D_{e_k} p̄(s, · - y) χ_{e_k}` on the cluster, has
   `ℓ²` norm at most `C B s^{α/2 - d/4 - 1/2}` when `|χ_{e_k}(x)| ≤ B (√s + |x - y| + 2)^α`: this is the
-  fourth item of the base case of §4.3 of Dario–Gu (lines 2556-2562, "the details are left to the
+  fourth item of the base case of §4.3 of Dario–Gu (lines 2558-2562, "the details are left to the
   reader"), with the order `s^{-d/4 - 1/2 + α}` of the source.
 -/
 
