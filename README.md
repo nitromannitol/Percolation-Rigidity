@@ -28,7 +28,9 @@ hypotheses: the quantitative corrector input (Theorem 2.5, quantitative part) an
 estimate of the Green function of Dario and Gu; the dimension-two forms of both are proved, and in
 every dimension `d ≥ 3` the quantitative corrector input reduces to Theorem 1 of Dario
 (`DarioOptimalCorrectorThree`,
-`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioThree`). Theorem 1.3 in the
+`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioThree`), and that theorem
+follows from the coarsened corrector data of Dario's Section 5 in dimension `d ≥ 3`
+(`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_coarsened`). Theorem 1.3 in the
 form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
 Theorems 6.5 and 1.3 are proved with no literature hypothesis
 ([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
@@ -3208,7 +3210,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1106 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1109 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.

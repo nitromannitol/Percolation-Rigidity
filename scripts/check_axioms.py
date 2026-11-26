@@ -1057,7 +1057,10 @@ further = {
         ['Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario',
          'Rigidity.Corrector.exists_measurable_correctorValid',
          'Rigidity.Corrector.GeneralDim.measurable_shiftedAnchor',
-         'Rigidity.Corrector.GeneralDim.infinite_shiftedAnchor'],
+         'Rigidity.Corrector.GeneralDim.infinite_shiftedAnchor',
+         'Rigidity.Corrector.GeneralDim.LinftyIterationData.mom_sub_le',
+         'Rigidity.Corrector.GeneralDim.isOsBond_sub_of_linftyIterationData_zero',
+         'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_coarsened'],
     'The concentration inequality of Dario (Proposition 2.17) in every dimension':
         ['Rigidity.Corrector.GeneralDim.concentration_holds'],
     'Proposition 2.13 of Dario and Gu in dimension two (Gu, Proposition 1.1, and Appendix B), and the results that used it':
