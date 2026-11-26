@@ -248,7 +248,8 @@ theorem sum_abs_sub_boxAvg_le (G : Vertex d → ℝ) {x : Vertex d} {m : ℕ}
           ring
       _ ≤ 2 ^ q * (S' + (3 ^ m) ^ d * |ax - a'| ^ q) := by gcongr
   have hax : (3 ^ m) ^ d * |ax - a'| ^ q ≤ S' := by
-    calc (3 ^ m) ^ d * |ax - a'| ^ q ≤ (3 ^ m) ^ d * ((∑ w ∈ boxAt x m, |G w - a'| ^ q) / (3 ^ m) ^ d) := by gcongr
+    calc (3 ^ m) ^ d * |ax - a'| ^ q
+        ≤ (3 ^ m) ^ d * ((∑ w ∈ boxAt x m, |G w - a'| ^ q) / (3 ^ m) ^ d) := by gcongr
       _ = ∑ w ∈ boxAt x m, |G w - a'| ^ q := by field_simp
       _ ≤ S' := hsub1
   have h2 : (0 : ℝ) ≤ 2 ^ q := by positivity
@@ -328,7 +329,8 @@ theorem mom_step3 (hD : LinftyIterationData p F A B k a) {x : Vertex d} {m : ℕ
 theorem mom_sub_le (hD : LinftyIterationData p F A B k a) {x : Vertex d} {m : ℕ} (hm : 1 ≤ m)
     (hx : ∀ i, |x i| < ((3 ^ (m + 1) : ℕ) : ℤ)) {q : ℝ} (hq : 1 ≤ q) :
     mom p (fun ω => F 0 x ω - F 0 0 ω) q ≤
-      ENNReal.ofReal (((36 * (7 + 2 * 9 ^ d)) * max A B * q ^ k) ^ q * ((m : ℝ) + 2) ^ (q * a)) := by
+      ENNReal.ofReal (((36 * (7 + 2 * 9 ^ d)) * max A B * q ^ k) ^ q *
+        ((m : ℝ) + 2) ^ (q * a)) := by
   have hq0 : (0 : ℝ) ≤ q := by linarith
   set W : ℝ := (A * q ^ k) ^ q * ((m : ℝ) + 2) ^ (q * a) + (B * q ^ k) ^ q with hW
   have hqk : 0 ≤ q ^ k := Real.rpow_nonneg hq0 k
@@ -403,7 +405,8 @@ theorem mom_sub_le (hD : LinftyIterationData p F A B k a) {x : Vertex d} {m : �
           3 ^ q * ((2 * 9 ^ d) * 2 ^ q * W + 2 * W))) := by
         rw [← ENNReal.ofReal_add (by positivity) (by positivity),
           ← ENNReal.ofReal_mul (by positivity)]
-    _ ≤ ENNReal.ofReal (((36 * (7 + 2 * 9 ^ d)) * max A B * q ^ k) ^ q * ((m : ℝ) + 2) ^ (q * a)) := by
+    _ ≤ ENNReal.ofReal (((36 * (7 + 2 * 9 ^ d)) * max A B * q ^ k) ^ q *
+          ((m : ℝ) + 2) ^ (q * a)) := by
         refine ENNReal.ofReal_le_ofReal ?_
         -- `2^q 3^q 3^q ≤ 18^q`, `2^q 3^q ≤ 18^q`, `2^q 3^q 2^q ≤ 18^q`
         have e18 : (2 : ℝ) ^ q * 3 ^ q * 3 ^ q = 18 ^ q := by
@@ -421,7 +424,8 @@ theorem mom_sub_le (hD : LinftyIterationData p F A B k a) {x : Vertex d} {m : �
         have hbound : 2 ^ q * (3 ^ q * (3 ^ q * (3 * W) + 2 * W) +
             3 ^ q * ((2 * 9 ^ d) * 2 ^ q * W + 2 * W)) ≤ (7 + 2 * 9 ^ d) * 18 ^ q * W := by
           have h18 : 0 ≤ (18 : ℝ) ^ q := by positivity
-          have : 2 ^ q * (3 ^ q * (3 ^ q * (3 * W) + 2 * W) + 3 ^ q * ((2 * 9 ^ d) * 2 ^ q * W + 2 * W)) =
+          have : 2 ^ q * (3 ^ q * (3 ^ q * (3 * W) + 2 * W) +
+              3 ^ q * ((2 * 9 ^ d) * 2 ^ q * W + 2 * W)) =
               3 * (2 ^ q * 3 ^ q * 3 ^ q) * W + 2 * (2 ^ q * 3 ^ q) * W +
                 (2 * 9 ^ d) * (2 ^ q * 3 ^ q * 2 ^ q) * W + 2 * (2 ^ q * 3 ^ q) * W := by ring
           rw [this, e18, e12]
@@ -442,7 +446,8 @@ theorem mom_sub_le (hD : LinftyIterationData p F A B k a) {x : Vertex d} {m : �
         have hMq : 0 ≤ (M * q ^ k) ^ q := Real.rpow_nonneg (mul_nonneg hM0 hqk) q
         have hWle : W ≤ 2 * ((M * q ^ k) ^ q * ((m : ℝ) + 2) ^ (q * a)) := by
           rw [hW]
-          nlinarith [mul_le_mul_of_nonneg_right hAM (by positivity : (0 : ℝ) ≤ ((m : ℝ) + 2) ^ (q * a)),
+          nlinarith [mul_le_mul_of_nonneg_right hAM
+              (by positivity : (0 : ℝ) ≤ ((m : ℝ) + 2) ^ (q * a)),
             mul_le_mul_of_nonneg_left hm2q hMq]
         have hc1 : (1 : ℝ) ≤ 2 * (7 + 2 * 9 ^ d) := by
           have : (1 : ℝ) ≤ 9 ^ d := one_le_pow₀ (by norm_num)
@@ -452,8 +457,8 @@ theorem mom_sub_le (hD : LinftyIterationData p F A B k a) {x : Vertex d} {m : �
             _ ≤ (2 * (7 + 2 * 9 ^ d)) ^ q := Real.rpow_le_rpow_of_exponent_le hc1 hq
         have hK : ((36 * (7 + 2 * 9 ^ d)) * M * q ^ k) ^ q =
             (2 * (7 + 2 * 9 ^ d)) ^ q * 18 ^ q * (M * q ^ k) ^ q := by
-          rw [show (36 * (7 + 2 * 9 ^ d) : ℝ) * M * q ^ k = (2 * (7 + 2 * 9 ^ d)) * 18 * (M * q ^ k) by
-              ring,
+          rw [show (36 * (7 + 2 * 9 ^ d) : ℝ) * M * q ^ k =
+                (2 * (7 + 2 * 9 ^ d)) * 18 * (M * q ^ k) by ring,
             Real.mul_rpow (by positivity) (mul_nonneg hM0 hqk),
             Real.mul_rpow (by positivity) (by norm_num)]
         rw [hK]

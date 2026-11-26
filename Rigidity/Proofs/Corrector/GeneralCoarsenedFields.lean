@@ -12,8 +12,8 @@ at `y` are `recentredField i y y' z = coarseField i (y + y') (y + z)`. The trans
 `coarseField_translation` (from the stationarity (2.3) of the corrector and the translation of the
 partitions) reduces the hypotheses of `DarioCoarsenedCorrectorThree` to statements about
 `coarseField` at the base point: (5.5) at the origin with box oscillations bounded uniformly in the
-scale (`BaseTheorem` with the growth exponent `0`), the moment form of (5.7) and the coarsening error
-(5.10) (`darioCoarsenedCorrectorThree_of_base`).
+scale (`BaseTheorem` with the growth exponent `0`), the moment form of (5.7) and the coarsening
+error (5.10) (`darioCoarsenedCorrectorThree_of_base`).
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -52,7 +52,8 @@ theorem correctorDiff_sub_eq {q : Fin d → ℝ} {ω : Configuration d} (hω : �
   have e : correctorDiff hG hGv q ω a c =
       correctorDiff hG hGv q ω a b + correctorDiff hG hGv q ω b c :=
     correctorDiff_add hG hGv hω (uniqueInfiniteComponent_infinite h)
-      ⟨a, (mem_uniqueInfiniteComponent_iff h a).2 ha⟩ ⟨b, (mem_uniqueInfiniteComponent_iff h b).2 hb⟩
+      ⟨a, (mem_uniqueInfiniteComponent_iff h a).2 ha⟩
+      ⟨b, (mem_uniqueInfiniteComponent_iff h b).2 hb⟩
       ⟨c, (mem_uniqueInfiniteComponent_iff h c).2 hc⟩
   linarith
 
@@ -92,7 +93,8 @@ theorem measurable_coarseField (i : Fin d) (y' z : Vertex d) :
 /-- The anchors of `𝒫_y` are in the infinite cluster on the partition event of `τ_{-y} ω`. -/
 theorem infinite_shiftedAnchor_zero {ω : Configuration d} (hP : PartitionEvent ω)
     (z : Vertex d) : ω ∈ infiniteComponentEvent (shiftedAnchor 0 ω z) :=
-  infinite_shiftedAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) (by rw [neg_zero, configurationTranslation_zero]; exact hP) z
+  infinite_shiftedAnchor (Nat.pos_of_neZero d)
+    (by rw [neg_zero, configurationTranslation_zero]; exact hP) z
 
 /-- **Translation identity of the coarsened correctors**: for a configuration `ω'` and a
 translation `t`,
@@ -114,10 +116,11 @@ theorem coarseField_translation (i : Fin d) {ω' : Configuration d} (t Y' Y'' Z 
       shiftedAnchor Y'' ω' W + t := by
     rw [add_comm t Y'', add_comm t W]
     exact shiftedAnchor_translation Y'' t ω' W
-  have h1 := infinite_shiftedAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) hP' Z
-  have h2 := infinite_shiftedAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) hP'' W
+  have h1 := infinite_shiftedAnchor (Nat.pos_of_neZero d) hP' Z
+  have h2 := infinite_shiftedAnchor (Nat.pos_of_neZero d) hP'' W
   unfold coarseField
-  rw [correctorDiff_sub_eq hG hGv htω' (by rw [hA1]; exact mem_infiniteComponentEvent_translation t h1)
+  rw [correctorDiff_sub_eq hG hGv htω'
+      (by rw [hA1]; exact mem_infiniteComponentEvent_translation t h1)
       (by rw [hA2]; exact mem_infiniteComponentEvent_translation t h2)
       (infinite_shiftedAnchor_zero htP 0),
     correctorDiff_sub_eq hG hGv hω' h1 h2 (infinite_shiftedAnchor_zero hP 0), hA1, hA2]
@@ -139,8 +142,8 @@ theorem correctorDiff_swap' {q : Fin d → ℝ} {ω : Configuration d} (hω : ω
   have h0 := correctorDiff_sub_eq hG hGv (q := q) hω ha ha ha
   linarith
 
-/-- The `q`-th moment of the oscillation of a field over the box `[-3^m, 3^m]ᵈ` of `ℤᵈ`, normalized by
-`(3^m)^d`. -/
+/-- The `q`-th moment of the oscillation of a field over the box `[-3^m, 3^m]ᵈ` of `ℤᵈ`, normalized
+by `(3^m)^d`. -/
 noncomputable def boxOsc (u : Vertex d → Configuration d → ℝ) (m : ℕ) (q : ℝ)
     (ω : Configuration d) : ℝ :=
   (∑ z ∈ boxAt 0 m, |u z ω - boxAvg u 0 m ω| ^ q) / (3 ^ m) ^ d
@@ -207,7 +210,8 @@ theorem linftyIterationData_recentred {A B k a : ℝ} (hA : 0 ≤ A) (hB : 0 ≤
       filter_upwards [hGae, hGt (-y), ae_partitionEvent hd hpc,
         ae_partitionEvent_translation hd hpc (-y)] with ω h1 h2 h3 h4
       refine boxOsc_eq_of_sub_eq (fun z w => ?_) m q
-      have h4' : PartitionEvent (configurationTranslation (-0) (configurationTranslation (-y) ω)) := by
+      have h4' :
+          PartitionEvent (configurationTranslation (-0) (configurationTranslation (-y) ω)) := by
         rw [neg_zero, configurationTranslation_zero]; exact h4
       have e := coarseField_translation hG hGv i y 0 0 z w h2
         (by rw [configurationTranslation_neg_cancel]; exact h1) h4
@@ -244,9 +248,11 @@ theorem linftyIterationData_recentred {A B k a : ℝ} (hA : 0 ≤ A) (hB : 0 ≤
       filter_upwards [hGae, hGt (-y), ae_partitionEvent hd hpc,
         ae_partitionEvent_translation hd hpc (-y),
         ae_partitionEvent_translation hd hpc (-y' + -y)] with ω h1 h2 h3 h4 h5
-      have h5' : PartitionEvent (configurationTranslation (-y') (configurationTranslation (-y) ω)) := by
+      have h5' :
+          PartitionEvent (configurationTranslation (-y') (configurationTranslation (-y) ω)) := by
         rw [configurationTranslation_add]; exact h5
-      have h4' : PartitionEvent (configurationTranslation (-0) (configurationTranslation (-y) ω)) := by
+      have h4' :
+          PartitionEvent (configurationTranslation (-0) (configurationTranslation (-y) ω)) := by
         rw [neg_zero, configurationTranslation_zero]; exact h4
       have e := coarseField_translation hG hGv i y y' 0 z z h2
         (by rw [configurationTranslation_neg_cancel]; exact h1) h4
@@ -256,7 +262,8 @@ theorem linftyIterationData_recentred {A B k a : ℝ} (hA : 0 ≤ A) (hB : 0 ≤
       simp only [recentredField, add_zero]
       rw [e]
     have hcomp := (measurePreserving_configurationTranslation p (-y)).lintegral_comp
-      (f := fun ω => ENNReal.ofReal (|coarseField hG hGv i y' z ω - coarseField hG hGv i 0 z ω| ^ q))
+      (f := fun ω =>
+        ENNReal.ofReal (|coarseField hG hGv i y' z ω - coarseField hG hGv i 0 z ω| ^ q))
       (measurable_ofReal_abs_rpow ((measurable_coarseField hG hGv i y' z).sub
         (measurable_coarseField hG hGv i 0 z)) q)
     unfold mom
@@ -307,8 +314,10 @@ theorem coarseningError_recentred {s₆ C₆ : ℝ} (hs₆ : 0 < s₆) (hC₆ : 
       rwa [hωω'] at this
     have hax := infinite_shiftedAnchor_zero hP' (x - y)
     have hay := infinite_shiftedAnchor_zero hP' 0
-    have hAxω : ω ∈ infiniteComponentEvent (shiftedAnchor y ω x) := infinite_shiftedAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) hP' x
-    have hAyω : ω ∈ infiniteComponentEvent (shiftedAnchor y ω y) := infinite_shiftedAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) hP' y
+    have hAxω : ω ∈ infiniteComponentEvent (shiftedAnchor y ω x) :=
+      infinite_shiftedAnchor (Nat.pos_of_neZero d) hP' x
+    have hAyω : ω ∈ infiniteComponentEvent (shiftedAnchor y ω y) :=
+      infinite_shiftedAnchor (Nat.pos_of_neZero d) hP' y
     have hbase := infinite_shiftedAnchor_zero hP 0
     -- the corrector increments at `x` and `y`
     have tx := correctorDiff_translate hG hGv (q := Pi.single i 1) y hω'
