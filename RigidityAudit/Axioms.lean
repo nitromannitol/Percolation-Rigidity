@@ -216,6 +216,7 @@ import Rigidity.Proofs.Corrector.GeneralCoarsenedFields
 import Rigidity.Proofs.Corrector.GeneralPartitionComparison
 import Rigidity.Proofs.Corrector.GeneralHeatSmoothing
 import Rigidity.Proofs.Corrector.GeneralPropThreeOne
+import Rigidity.Proofs.Corrector.GeneralVarianceSums
 import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
@@ -1612,6 +1613,14 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.lintegral_abs_sub_integral_rpow_le
 #print axioms Rigidity.Corrector.GeneralDim.darioPropThreeOneThree_of_lemmas
 #print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_lemmas
+#print axioms Rigidity.Corrector.GeneralDim.ae_resampleVar_le_tsum_bondFlipDiff
+#print axioms Rigidity.Corrector.GeneralDim.IsOsBond.comp_setBond
+#print axioms Rigidity.Corrector.GeneralDim.ae_setBond
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipSeries_summable
+#print axioms Rigidity.Corrector.GeneralDim.bondFlipDiff_eq_flipTermOne_add_flipTermTwo
+#print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_flipSum
+#print axioms Rigidity.Corrector.GeneralDim.darioFlipSumBoundThree_of_sums
+#print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_sums
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
