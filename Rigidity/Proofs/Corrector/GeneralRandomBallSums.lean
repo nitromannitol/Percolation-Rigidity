@@ -213,7 +213,8 @@ theorem lintegral_randomBallSum_le {p : unitInterval} (v : Vertex d) {ρ : Confi
     _ ≤ (∑' x, ENNReal.ofReal (Real.sqrt 2 * M) *
           ENNReal.ofReal (Real.exp (-‖latticeEuclideanEmbedding (x - v)‖ / (4 * θ)))) *
           ENNReal.ofReal ((2 * (1 + d * (4 * q * θ))) ^ d) ^ (q - 1) := by
-        exact mul_le_mul' (ENNReal.tsum_le_tsum fun x => (mul_le_mul_right (hCS x) _).trans (hterm x))
+        exact mul_le_mul'
+          (ENNReal.tsum_le_tsum fun x => (mul_le_mul_right (hCS x) _).trans (hterm x))
           (ENNReal.rpow_le_rpow hWle (by linarith))
     _ ≤ (ENNReal.ofReal (Real.sqrt 2 * M) * ENNReal.ofReal ((2 * (1 + d * (4 * θ))) ^ d)) *
           ENNReal.ofReal ((2 * (1 + d * (4 * q * θ))) ^ d) ^ (q - 1) := by
