@@ -446,6 +446,11 @@ Dario and Gu in each dimension `d ≥ 3` alone (`DarioGuHeatKernelD d`;
 its planar case is proved, and so is the small-time bound of the heat kernel on `ℤ^d`, from the Carne–Varopoulos
 bound (`openHeatSmallTimeD_holds`); see
 [Theorem 2 of Dario and Gu for d ≥ 3 from Theorem 1, and in every dimension](#theorem-2-of-dario-and-gu-for-d--3-from-theorem-1-and-in-every-dimension).
+Theorem 1 in dimension `d ≥ 2` follows from the whole-cluster estimate (4.40) with Proposition 2.12 alone
+(`DarioGuGaussianFlowD d`; [`darioGuHeatKernelD_of_gaussianFlow`](Rigidity/Proofs/Green/HeatKernelHoldsD.lean)), so the
+quantitative Green estimate follows from that estimate in each dimension `d ≥ 3`
+([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean));
+see [Theorem 1 of Dario and Gu in every dimension from the whole-cluster estimate](#theorem-1-of-dario-and-gu-in-every-dimension-from-the-whole-cluster-estimate).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -3003,7 +3008,8 @@ proved: `openHeatD` is `bondHeat` and `‖edzD x y‖` is the Euclidean distance
 `OpenHeatSmallTimeD d` is `HeatSmallTimeD d` (`openHeatSmallTimeD_holds`, from `heatSmallTimeD_holds`; see
 [The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension)).
 Proposition 2.13 is proved too (`darioGuFluxWeakNormTwo_holds`), so only Theorem 1 of Dario and Gu in dimension `d`
-remains for `d ≥ 3` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`).
+remains for `d ≥ 3` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`); it follows from the
+whole-cluster estimate of Dario and Gu (next section).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -3019,6 +3025,41 @@ The thirteen reports for the declarations of this section are in [`RigidityAudit
 Departures from Dario and Gu: the time integral is split at `t = |x − y|`, and the Gaussian kernel at small times is bounded
 through the Gamma integral `∫_0^∞ t^{-d/2} e^{-a/t} dt = a^{1-d/2} Γ(d/2 − 1)` after the factor `e^{-|x−y|/(4σ)}` is taken out;
 the minimal scale is `max(T(y), 1)` with `T(y)` the minimal time of Theorem 1.
+
+## Theorem 1 of Dario and Gu in every dimension from the whole-cluster estimate
+
+Theorem 1 of Dario and Gu in dimension `d ≥ 2` (`DarioGuHeatKernelD d`) follows from one estimate, the whole-cluster
+estimate of Proposition 4.3, Step 5, (4.40), with initial time `τ` and final time `3τ`, combined with the initial error of
+Proposition 2.12 by the triangle inequality: for `H_τ = θ^{-1} p̄(τ, · − y)` on `𝒞_∞` and `τ` above a minimal time
+`M(y) ≤ O_s(C)`, `‖P_{2τ} H_τ − H_{3τ}‖_{ℓ²} ≤ C τ^{α − d/4 − 1/2}` (`DarioGuGaussianFlowD d p σ`;
+`darioGuHeatKernelD_of_gaussianFlow`). The proof is the passage from smooth initial data to a point source: with the
+Gaussian `G_s` normalized on the cluster, the times `s_j = 3^j s_0`, `s_0 ∈ [t^η, 3t^η)`, and the identity
+`p_t^y − G_t = P_{t−s_0}(p_{s_0}^y − G_{s_0}) + Σ_j P_{t−3s_j}(P_{2s_j} G_{s_j} − G_{3s_j})`, each term of zero mass is paired with
+a time slice of the heat semigroup, whose oscillation on the cluster balls is bounded by the order-zero estimate of Armstrong
+and Dario, a harmonic replacement and the exit time of the balls; this gives `‖p_t^y − G_t‖_{ℓ²} ≤ C t^{3η − d/4 − 1/2}`.
+The product `p_t(x, y) = ⟨p^x_{t/2}, p^y_{t/2}⟩`, Proposition A.7 at `x`, `y` and the lattice midpoint, and the geometric mean
+with the Gaussian upper bound give the error `C t^{-d/2 − (1/2 − δ)} e^{−|x − y|²/(C t)}` for `|x − y| ≤ t`. The other inputs
+are proved: the Gaussian upper bound of Barlow (Theorem 4, `barlowGaussianUpperBound_holds`), the Carne–Varopoulos bound
+(Proposition 2.15), Proposition A.7 on `ℤ^d` (`darioGuDensityGaussianD_holds`, from the concentration of the density of the
+infinite cluster in triadic cubes, `cluster_density_concentration` of Percolation-Cluster-Homogenization) and the order-zero
+estimate at every centre (`exists_orderZero_clusterBallD`). Hence the quantitative Green estimate in every dimension follows
+from the whole-cluster estimate in every dimension `d ≥ 3` alone
+(`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`).
+
+| Lean declaration | Statement |
+| --- | --- |
+| [`DarioGuDensityGaussianD`](Rigidity/Proofs/Green/NamedInputsD.lean), [`darioGuDensityGaussianD_holds`](Rigidity/Proofs/Green/DensityGaussianD.lean) | Proposition A.7 on `ℤ^d`, `d ≥ 2`: above `T_dense(y) ≤ O_s(C)`, `\|Σ_{x ∈ 𝒞_∞} p̄(t, x − y) − θ\| ≤ C t^{−(1/2 − α)}`. |
+| [`l2norm_pointSource_le_of_time`](Rigidity/Proofs/Green/PointSourceFinalD.lean), [`exists_l2norm_pointSource_le_rpow`](Rigidity/Proofs/Green/HeatKernelCoreD.lean) | At one configuration: `‖p_s(·, y) − G_s‖_{ℓ²} ≤ C s^{3η − d/4 − 1/2}` above a deterministic time, from the order-zero estimate, the on-diagonal bound near `y`, Proposition A.7 and the whole-cluster estimate at `y`. |
+| [`abs_vsrwHeat_sub_le_rpow`](Rigidity/Proofs/Green/PointwiseHeatFinalD.lean), [`abs_vsrwHeat_sub_le_gaussian`](Rigidity/Proofs/Green/PointwiseGaussianFactorD.lean), [`exists_abs_vsrwHeat_sub_le_gaussian`](Rigidity/Proofs/Green/HeatKernelCoreD.lean) | At one configuration: the error of Theorem 1 at a pair of points from the point source at both poles, Proposition A.7 and the Gaussian upper bound. |
+| [`DarioGuGaussianFlowD`](Rigidity/Proofs/Green/NamedInputsD.lean), [`darioGuHeatKernelD_of_gaussianFlow`](Rigidity/Proofs/Green/HeatKernelHoldsD.lean), [`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`](Rigidity/Proofs/Assembly/GreenQuantitativeEveryDim.lean) | The whole-cluster estimate as a named statement; Theorem 1 in dimension `d ≥ 2` from it; the input in every dimension from it for `d ≥ 3`. |
+
+The eight reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+
+Departures from Dario and Gu: the radii of the pairing are `√s t^{η/(d+2)}` instead of `√s log(2 + t)`; the minimal time of
+Theorem 1 at `y` is the supremum of the thresholds of the inputs over the points `w` with `|w − y| ≤ T(w) + 1`
+(`latticeSupD`), which keeps a stretched exponential tail; the exponent of the error is `1/2 − δ` with the point-source
+exponent `min(δ, 1/2)/2`. Lemmas 4.1 and 4.2 and the weighted estimate (4.3) of the source are not used: the passage
+from smooth initial data to a point source and the geometric mean with the Gaussian upper bound replace them.
 
 ## Good balls of the infinite cluster and Proposition 2.7 of Dario and Gu in every dimension
 
@@ -3297,9 +3338,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 789 Lean files with 165,487 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 832 Lean files with 175,111 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,765 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,792 lines) are counted separately.
 
 ## Building
 

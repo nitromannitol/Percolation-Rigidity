@@ -1721,6 +1721,16 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.openHeatSmallTimeD_holds
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel
 
+-- Theorem 1 of Dario and Gu in every dimension from the whole-cluster estimate, Proposition A.7 of Dario and Gu on Z^d, and Theorem 2 in every dimension from the whole-cluster estimate in every dimension d >= 3 alone
+#print axioms Rigidity.Green.darioGuDensityGaussianD_holds
+#print axioms Rigidity.Green.l2norm_pointSource_le_of_time
+#print axioms Rigidity.Green.exists_l2norm_pointSource_le_rpow
+#print axioms Rigidity.Green.abs_vsrwHeat_sub_le_rpow
+#print axioms Rigidity.Green.abs_vsrwHeat_sub_le_gaussian
+#print axioms Rigidity.Green.exists_abs_vsrwHeat_sub_le_gaussian
+#print axioms Rigidity.Green.darioGuHeatKernelD_of_gaussianFlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow
+
 -- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
 #print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
 #print axioms Rigidity.WeakPoincare.clusterVeryGoodBalls_holds
