@@ -88,7 +88,8 @@ theorem abs_gaussianHeatD_sub_le {σ s ρ : ℝ} (hσ : 0 < σ) (hs : 0 < s) (h�
   have hmb : m ≤ ‖v‖ ^ 2 / (2 * σ * s) := by
     rw [hm]; apply div_le_div_of_nonneg_right _ hc.le
     nlinarith [sq_nonneg (‖v‖ - ρ), pow_le_pow_left₀ hnu htri2 2]
-  have hdiff : |‖v‖ ^ 2 / (2 * σ * s) - ‖u‖ ^ 2 / (2 * σ * s)| ≤ ρ * (2 * ‖u‖ + ρ) / (2 * σ * s) := by
+  have hdiff : |‖v‖ ^ 2 / (2 * σ * s) - ‖u‖ ^ 2 / (2 * σ * s)| ≤
+      ρ * (2 * ‖u‖ + ρ) / (2 * σ * s) := by
     rw [← sub_div, abs_div, abs_of_pos hc]
     apply div_le_div_of_nonneg_right _ hc.le
     rw [abs_le]

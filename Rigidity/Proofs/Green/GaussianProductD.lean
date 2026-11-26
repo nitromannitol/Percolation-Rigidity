@@ -5,8 +5,8 @@ import Rigidity.Proofs.Green.GaussianTimeIntegral
 
 `p̄(a, u) p̄(a, v) = p̄(2a, u - v) p̄(a/2, (u + v)/2)` (`gaussianHeatD_mul_gaussianHeatD`), from the
 parallelogram law `|u|² + |v|² = |u - v|²/2 + 2|(u + v)/2|²`. With `u = z - x` and `v = z - y`
-this writes `p̄(t/2, z - x) p̄(t/2, z - y)` as `p̄(t, x - y)` times the Gaussian kernel at time `t/4`
-centred at the midpoint of `x` and `y`.
+this writes `p̄(t/2, z - x) p̄(t/2, z - y)` as `p̄(t, x - y)` times the Gaussian kernel at time
+`t/4` centred at the midpoint of `x` and `y`.
 -/
 
 namespace Rigidity.Green
