@@ -8,7 +8,7 @@ one term is
 
   `√((5l)^d) (κ l √Λ / √t) N = 5^{d/2} κ √C_B C_N L^{d/2+1} s^η t^{-d/4-1/2}`
 
-(`caseA_eq`), which is at most the same with `t^η` for `s ≤ t` (`caseA_le`); the same computation
+(`case_eq`), which is at most the same with `t^η` for `s ≤ t` (`caseA_le`); the same computation
 with `N = C_E s^{-d/4}` gives `s^{1/2}` in place of `s^η` (`caseE_eq`). For `s ≥ t/(4L²)` the
 contraction bound `C_N s^{η - d/4 - 1/2}` is at most `C_N (4L²)^{d/4+1/2} t^{η - d/4 - 1/2}`
 (`caseB_le`).
