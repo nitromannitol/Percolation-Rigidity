@@ -3,6 +3,7 @@ import Rigidity.Proofs.Partition.Uniqueness
 import LatticeProb.Prob.Percolation.MeasurableRootedPlane
 import LatticeProb.Prob.Percolation.CorrectedPlaneTranslation
 import LatticeProb.Prob.Percolation.CorrectedPlaneAlgebra
+import PercolationClusterHomogenization.Proofs.Regularity.GeneralCorrectorInput
 
 /-!
 # A measurable planar corrector
@@ -43,9 +44,30 @@ theorem exists_measurable_correctorValid_two (hC : SupercriticalBondCorrectorInp
   filter_upwards [hae, heqG] with ω hω heqω
   exact heqω.mpr hω
 
+/-- A measurable conull set of configurations on which the infinite cluster is unique and the
+qualitative corrector input holds, in every dimension `d ≥ 2` (the input is proved in every
+dimension, `Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds`). -/
+theorem exists_measurable_correctorValid {d : ℕ} [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∃ G : Set (Configuration d), MeasurableSet G ∧ (∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) ∧
+      G ⊆ correctorValidEvent d := by
+  have hae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ correctorValidEvent d :=
+    (Rigidity.Percolation.ae_hasUniqueInfiniteOpenComponent hd hpc).and
+      (Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds d hd p hpc hp1)
+  have heq : (Set.univ : Set (Configuration d)) =ᵐ[latticeBondLaw d p]
+      correctorValidEvent d := by
+    filter_upwards [hae] with ω hω
+    exact propext ⟨fun _ => hω, fun _ => Set.mem_univ ω⟩
+  have hnull : NullMeasurableSet (correctorValidEvent d) (latticeBondLaw d p) :=
+    MeasurableSet.univ.nullMeasurableSet.congr heq
+  obtain ⟨G, hsub, hG, heqG⟩ := hnull.exists_measurable_subset_ae_eq
+  refine ⟨G, hG, ?_, hsub⟩
+  filter_upwards [hae, heqG] with ω hω heqω
+  exact heqω.mpr hω
+
 /-- Every infinite component of a valid configuration carries a corrected plane of each slope. -/
-theorem exists_correctedPlane_of_valid {ω : Configuration 2} (hv : ω ∈ correctorValidEvent 2)
-    {K : OpenComponent ω} (hKinf : K.supp.Infinite) (q : Fin 2 → ℝ) :
+theorem exists_correctedPlane_of_valid {d : ℕ} {ω : Configuration d} (hv : ω ∈ correctorValidEvent d)
+    {K : OpenComponent ω} (hKinf : K.supp.Infinite) (q : Fin d → ℝ) :
     ∃ ℓ : K → ℝ, IsCorrectedPlane K q ℓ := by
   obtain ⟨h, hv⟩ := hv
   have hK : K = uniqueInfiniteComponent h := (eq_uniqueInfiniteComponent_iff h K).2 hKinf
@@ -56,17 +78,19 @@ theorem exists_correctedPlane_of_valid {ω : Configuration 2} (hv : ω ∈ corre
 
 section Carrier
 
-variable {G : Set (Configuration 2)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent 2)
+variable {d : ℕ}
+
+variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
 
 /-- The measurable encoding of the corrected plane of slope `q` vanishing at the root `o`. -/
-noncomputable def rootedPlaneField (o : Vertex 2) :
-    (↥(G ∩ infiniteComponentEvent o) × (Fin 2 → ℝ)) → (Vertex 2 → ℝ) :=
+noncomputable def rootedPlaneField (o : Vertex d) :
+    (↥(G ∩ infiniteComponentEvent o) × (Fin d → ℝ)) → (Vertex d → ℝ) :=
   Classical.choose (exists_measurable_rooted_plane_on_valid_set G hG hGv o)
 
-theorem measurable_rootedPlaneField (o : Vertex 2) : Measurable (rootedPlaneField hG hGv o) :=
+theorem measurable_rootedPlaneField (o : Vertex d) : Measurable (rootedPlaneField hG hGv o) :=
   (Classical.choose_spec (exists_measurable_rooted_plane_on_valid_set G hG hGv o)).1
 
-theorem rootedPlaneField_spec (o : Vertex 2) (z : ↥(G ∩ infiniteComponentEvent o) × (Fin 2 → ℝ)) :
+theorem rootedPlaneField_spec (o : Vertex d) (z : ↥(G ∩ infiniteComponentEvent o) × (Fin d → ℝ)) :
     rootedPlaneField hG hGv o z o = 0 ∧
       IsCorrectedPlane ((openGraph z.1.val).connectedComponentMk o) z.2
         (fun x => rootedPlaneField hG hGv o z x.val) :=
@@ -76,12 +100,12 @@ theorem rootedPlaneField_spec (o : Vertex 2) (z : ↥(G ∩ infiniteComponentEve
 
 /-- The corrector increment `χ_q(a) - χ_q(b)`: the value at `a` of the corrected plane of slope
 `q` vanishing at `b`, minus `q · (a - b)`; `0` when `ω ∉ G` or the component of `b` is finite. -/
-noncomputable def correctorDiff (q : Fin 2 → ℝ) (ω : Configuration 2) (a b : Vertex 2) : ℝ :=
+noncomputable def correctorDiff (q : Fin d → ℝ) (ω : Configuration d) (a b : Vertex d) : ℝ :=
   if h : ω ∈ G ∩ infiniteComponentEvent b then
     rootedPlaneField hG hGv b (⟨ω, h⟩, q) a - ∑ i, q i * (a i : ℝ) + ∑ i, q i * (b i : ℝ)
   else 0
 
-theorem measurable_correctorDiff (q : Fin 2 → ℝ) (a b : Vertex 2) :
+theorem measurable_correctorDiff (q : Fin d → ℝ) (a b : Vertex d) :
     Measurable fun ω => correctorDiff hG hGv q ω a b := by
   unfold correctorDiff
   refine Measurable.dite (f := fun z : ↥(G ∩ infiniteComponentEvent b) =>
@@ -91,8 +115,8 @@ theorem measurable_correctorDiff (q : Fin 2 → ℝ) (a b : Vertex 2) :
     (measurable_id.prodMk measurable_const))).sub_const _).add_const _
 
 /-- The rooted value of a corrected plane on the component of the root. -/
-theorem rootedPlaneField_eq {ω : Configuration 2} {b : Vertex 2}
-    (hmem : ω ∈ G ∩ infiniteComponentEvent b) (q : Fin 2 → ℝ) {K : OpenComponent ω}
+theorem rootedPlaneField_eq {ω : Configuration d} {b : Vertex d}
+    (hmem : ω ∈ G ∩ infiniteComponentEvent b) (q : Fin d → ℝ) {K : OpenComponent ω}
     (hK : (openGraph ω).connectedComponentMk b = K) {ℓ : K → ℝ} (hℓ : IsCorrectedPlane K q ℓ)
     (a : K) (hbK : b ∈ K.supp) :
     rootedPlaneField hG hGv b (⟨ω, hmem⟩, q) a.val = ℓ a - ℓ ⟨b, hbK⟩ := by
@@ -107,7 +131,7 @@ theorem rootedPlaneField_eq {ω : Configuration 2} {b : Vertex 2}
   exact congrFun heq a
 
 /-- **The corrector increment as a corrected-plane increment.** -/
-theorem correctorDiff_eq {q : Fin 2 → ℝ} {ω : Configuration 2} (hω : ω ∈ G)
+theorem correctorDiff_eq {q : Fin d → ℝ} {ω : Configuration d} (hω : ω ∈ G)
     {K : OpenComponent ω} (hKinf : K.supp.Infinite) {ℓ : K → ℝ} (hℓ : IsCorrectedPlane K q ℓ)
     (a b : K) :
     correctorDiff hG hGv q ω a.val b.val =
@@ -124,7 +148,7 @@ theorem correctorDiff_eq {q : Fin 2 → ℝ} {ω : Configuration 2} (hω : ω �
   ring
 
 /-- Increments add along chains in an infinite component. -/
-theorem correctorDiff_add {q : Fin 2 → ℝ} {ω : Configuration 2} (hω : ω ∈ G)
+theorem correctorDiff_add {q : Fin d → ℝ} {ω : Configuration d} (hω : ω ∈ G)
     {K : OpenComponent ω} (hKinf : K.supp.Infinite) (a b c : K) :
     correctorDiff hG hGv q ω a.val c.val =
       correctorDiff hG hGv q ω a.val b.val + correctorDiff hG hGv q ω b.val c.val := by
@@ -133,14 +157,14 @@ theorem correctorDiff_add {q : Fin 2 → ℝ} {ω : Configuration 2} (hω : ω �
     correctorDiff_eq hG hGv hω hKinf hℓ]
   ring
 
-theorem correctorDiff_self {q : Fin 2 → ℝ} {ω : Configuration 2} (hω : ω ∈ G)
+theorem correctorDiff_self {q : Fin d → ℝ} {ω : Configuration d} (hω : ω ∈ G)
     {K : OpenComponent ω} (hKinf : K.supp.Infinite) (a : K) :
     correctorDiff hG hGv q ω a.val a.val = 0 := by
   obtain ⟨ℓ, hℓ⟩ := exists_correctedPlane_of_valid (hGv hω) hKinf q
   rw [correctorDiff_eq hG hGv hω hKinf hℓ]
   ring
 
-theorem correctorDiff_swap {q : Fin 2 → ℝ} {ω : Configuration 2} (hω : ω ∈ G)
+theorem correctorDiff_swap {q : Fin d → ℝ} {ω : Configuration d} (hω : ω ∈ G)
     {K : OpenComponent ω} (hKinf : K.supp.Infinite) (a b : K) :
     correctorDiff hG hGv q ω b.val a.val = -correctorDiff hG hGv q ω a.val b.val := by
   obtain ⟨ℓ, hℓ⟩ := exists_correctedPlane_of_valid (hGv hω) hKinf q
@@ -149,7 +173,7 @@ theorem correctorDiff_swap {q : Fin 2 → ℝ} {ω : Configuration 2} (hω : ω 
 
 /-- **Stationarity of the corrector increments** (Dario, (2.3)): translating the configuration
 by `z` translates the increments. -/
-theorem correctorDiff_translation {q : Fin 2 → ℝ} {ω : Configuration 2} (z : Vertex 2)
+theorem correctorDiff_translation {q : Fin d → ℝ} {ω : Configuration d} (z : Vertex d)
     (hω : ω ∈ G) (hω' : configurationTranslation z ω ∈ G) {K : OpenComponent ω}
     (hKinf : K.supp.Infinite) (a b : K) :
     correctorDiff hG hGv q (configurationTranslation z ω) (a.val + z) (b.val + z) =
