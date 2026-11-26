@@ -260,7 +260,8 @@ theorem heatGradient_coarseField_isOsBond [NeZero d] (hd : 2 ≤ d)
     (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) :
     ∃ s C : ℝ, 0 < s ∧ 0 < C ∧ ∀ (i : Fin d) (r : ℝ) (x : Vertex d),
       IsOsBond d p
-        (fun ω => Rigidity.Poincare.GeneralDim.heatGradient (fun z => coarseField hG hGv i 0 z ω) r x) s C := by
+        (fun ω => Rigidity.Poincare.GeneralDim.heatGradient
+          (fun z => coarseField hG hGv i 0 z ω) r x) s C := by
   obtain ⟨Λ, A, k, hA0, hk0, hΛm, hΛ0, hlip, hmom6⟩ := stepSix_data hG hGv hd hpc hp1 hGae
   have hd0 : (0 : ℝ) < d := by exact_mod_cast (show 0 < d by omega)
   have hs0 : 0 < 1 / (2 * k) := by positivity
@@ -355,7 +356,8 @@ def DarioPropThreeOneThree : Prop :=
       (hGv : G ⊆ correctorValidEvent d), (∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) →
       ∃ s C : ℝ, 0 < s ∧ 0 < C ∧ ∀ (i : Fin d) (r : ℝ), 1 ≤ r → ∀ x : Vertex d,
         IsOsBond d p
-          (fun ω => Rigidity.Poincare.GeneralDim.heatGradient (fun z => coarseField hG hGv i 0 z ω) r x) s
+          (fun ω => Rigidity.Poincare.GeneralDim.heatGradient
+            (fun z => coarseField hG hGv i 0 z ω) r x) s
           (C / r ^ ((d : ℝ) / 2))
 
 /-- **Dario's Theorem 1 in dimension `d ≥ 3`** (`DarioOptimalCorrectorThree`) from his
@@ -373,8 +375,10 @@ theorem darioOptimalCorrectorThree_of_prop31 (h31 : DarioPropThreeOneThree) :
   have hs : 0 < s := lt_min hs₁ hs₂
   set C := max C₁ C₂ * 6 ^ (1 / s)
   have hC : 0 < C := mul_pos (lt_max_of_lt_left hC₁) (by positivity)
-  refine ⟨fun i r x ω => Rigidity.Poincare.GeneralDim.heatGradient (fun z => coarseField hG hGv i 0 z ω) r x,
-    A₀, C, s, hA₀, hC, hs, fun i x => measurable_heatGradient (fun z => measurable_coarseField hG hGv i 0 z) x,
+  refine ⟨fun i r x ω =>
+      Rigidity.Poincare.GeneralDim.heatGradient (fun z => coarseField hG hGv i 0 z ω) r x,
+    A₀, C, s, hA₀, hC, hs,
+    fun i x => measurable_heatGradient (fun z => measurable_coarseField hG hGv i 0 z) x,
     fun i r x ω => heatGradient_nonneg' _ _ _,
     fun i m hm q hq => (ae_summable_heat_coarseField hG hGv hd hpc hp1 hGae i).mono fun ω hω =>
       hMSP (fun z => coarseField hG hGv i 0 z ω) hω m hm q hq,
