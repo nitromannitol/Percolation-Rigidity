@@ -210,6 +210,9 @@ import PercolationClusterHomogenization.Proofs.Cluster.PlanarSubcubeIndex
 import Rigidity.Proofs.Corrector.OsCalculus
 import Rigidity.Proofs.Corrector.PlanarCorrectorQuantitative
 import Rigidity.Proofs.Corrector.CorrectorQuantitative
+import Rigidity.Proofs.Corrector.GeneralShiftedAnchor
+import Rigidity.Proofs.Corrector.GeneralDarioOptimalCorrector
+import Rigidity.Proofs.Corrector.GeneralCoarsenedFields
 import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
@@ -1584,6 +1587,14 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 
 -- Proposition 2.12 of Dario and Gu in every dimension from Theorem 1 of Dario in dimension d >= 3
 #print axioms Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario
+#print axioms Rigidity.Corrector.exists_measurable_correctorValid
+#print axioms Rigidity.Corrector.GeneralDim.measurable_shiftedAnchor
+#print axioms Rigidity.Corrector.GeneralDim.infinite_shiftedAnchor
+#print axioms Rigidity.Corrector.GeneralDim.LinftyIterationData.mom_sub_le
+#print axioms Rigidity.Corrector.GeneralDim.isOsBond_sub_of_linftyIterationData_zero
+#print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_coarsened
+#print axioms Rigidity.Corrector.GeneralDim.darioCoarsenedCorrectorThree_of_base
+#print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_base
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
