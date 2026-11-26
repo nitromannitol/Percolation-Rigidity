@@ -1,0 +1,103 @@
+import Rigidity.Proofs.Corrector.GeneralStepOneLocal
+import Rigidity.Proofs.Corrector.GeneralFlipTerms
+
+/-!
+# Step 1 of Lemma 3.3 of Dario on `ℤᵈ` with the Lipschitz bounds of the corrector
+
+The term `T₁(e)` of the split (3.15) in flip form (`flipTermOne`) is the heat average of
+`partitionChange ω⁰ ω¹ χ₁` (`flipTermOne_eq_tsum_partitionChange`), which only sees the values of
+`χ₁` at anchors, all in the infinite cluster of `ω¹ = ω^{e,1}`. Replacing `χ₁` by its restriction
+to that cluster, the total variations of Step 1 over the open edges of `ω⁰ = ω^{e,0}` and of `ω¹`
+are both at most the one over the open edges of `ω¹` (`edgeVariationIn_mono_config`), hence at
+most `2d Σ_{z ∈ box} Λ(z)` for Lipschitz bounds `Λ` of the corrector of `ω¹`
+(`edgeVariationIn_correctorDiff_le`). Under the locality of the change of partition
+(`ResampleLocal ρ M`, from Lemma 3.5):
+
+`T₁(e)² ≤ |B| (Σ_{y ∈ B} Φ_{r²}(x, y)²) (4d Σ_{z ∈ B'} Λ(z))²` (`flipTermOne_sq_le`),
+
+with `B` the box of radius `ρ` and `B'` the box of radius `(ρ + 1) + 3M` around the endpoint of
+`e`; this is (3.16) of Dario with the Lipschitz bound (3.19) inserted, as in the planar
+`Rigidity.Corrector.flipTermOne_sq_le`.
+-/
+
+namespace Rigidity.Corrector.GeneralDim
+
+open MeasureTheory Filter LatticeProb.Percolation Rigidity.Percolation Rigidity.External
+  Rigidity.Poincare.GeneralDim
+open scoped Classical
+
+variable {d : ℕ}
+
+/-- The total variation over the open edges grows with the set of open edges. -/
+theorem edgeVariationIn_mono_config {ω ω' : Configuration d}
+    (h : ∀ x y, (openGraph ω).Adj x y → (openGraph ω').Adj x y) (S : Finset (Vertex d))
+    (w : Vertex d → ℝ) : edgeVariationIn ω S w ≤ edgeVariationIn ω' S w := by
+  unfold edgeVariationIn
+  refine Finset.sum_le_sum fun x _ => Finset.sum_le_sum fun y _ => ?_
+  by_cases hxy : (openGraph ω).Adj x y
+  · rw [if_pos hxy, if_pos (h x y hxy)]
+  · rw [if_neg hxy]
+    split_ifs <;> positivity
+
+section Lipschitz
+
+variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
+
+theorem flipTermOne_eq_tsum_partitionChange (i j : Fin d) (r : ℝ) (x : Vertex d) (e : Bond d)
+    (ω : Configuration d) :
+    flipTermOne hG hGv i j r x e ω = ∑' y, zdHeat d (r ^ 2) x y *
+      partitionChange (setBond e false ω) (setBond e true ω)
+        (flipCorrector hG hGv i true e ω) j y :=
+  rfl
+
+/-- **Step 1 with the Lipschitz bounds**: `T₁(e)² ≤ |B| (Σ_{y ∈ B} Φ²) (4d Σ_{z ∈ B'} Λ(z))²`. -/
+theorem flipTermOne_sq_le (hd : 0 < d) {e : Bond d} {ω : Configuration d}
+    (hω₁ : setBond e true ω ∈ G) (hP₁ : PartitionEvent (setBond e true ω))
+    (hP₀ : PartitionEvent (setBond e false ω))
+    {ρ M : ℕ} {a : Vertex d} (hloc : ResampleLocal ρ M (setBond e false ω) (setBond e true ω) a)
+    {i : Fin d} {Λ : Vertex d → ℝ} (hΛ0 : ∀ z, 0 ≤ Λ z)
+    (hΛ : ∀ z, setBond e true ω ∈ infiniteComponentEvent z → ∀ y,
+      (openGraph (setBond e true ω)).Adj z y →
+        |correctorDiff hG hGv (Pi.single i 1) (setBond e true ω) z y| ≤ Λ z)
+    (j : Fin d) (r : ℝ) (x : Vertex d) :
+    flipTermOne hG hGv i j r x e ω ^ 2 ≤
+      (supBox a ρ).card * (∑ y ∈ supBox a ρ, zdHeat d (r ^ 2) x y ^ 2) *
+        (4 * d * ∑ z ∈ supBox a ((ρ + 1) + 3 * M), Λ z) ^ 2 := by
+  set w : Vertex d → ℝ := fun v => if setBond e true ω ∈ infiniteComponentEvent v then
+    correctorDiff hG hGv (Pi.single i 1) (setBond e true ω) v (guardAnchor (setBond e false ω) 0)
+    else 0 with hw
+  -- the anchors of both partitions lie in the infinite cluster of `ω¹`
+  have hA₁ : ∀ z, setBond e true ω ∈
+      infiniteComponentEvent (guardAnchor (setBond e true ω) z) := fun z => by
+    rw [guardAnchor_of_event hP₁]
+    exact infinite_partitionAnchor hd hP₁ z
+  have hA₀ : ∀ z, setBond e true ω ∈
+      infiniteComponentEvent (guardAnchor (setBond e false ω) z) := fun z => by
+    rw [guardAnchor_of_event hP₀]
+    exact infiniteComponentEvent_setBond_true (infinite_partitionAnchor hd hP₀ z) true
+  have hpc : ∀ y, partitionChange (setBond e false ω) (setBond e true ω)
+      (flipCorrector hG hGv i true e ω) j y =
+      partitionChange (setBond e false ω) (setBond e true ω) w j y := fun y => by
+    simp only [partitionChange, hw, if_pos (hA₁ _), if_pos (hA₀ _)]
+    rfl
+  rw [flipTermOne_eq_tsum_partitionChange hG hGv]
+  rw [tsum_congr fun y => by rw [hpc y]]
+  refine (sq_tsum_partitionChange_le hd hloc hP₀ hP₁ (fun y => zdHeat d (r ^ 2) x y) w j).trans ?_
+  have ho : setBond e true ω ∈ infiniteComponentEvent (guardAnchor (setBond e false ω) 0) :=
+    hA₀ 0
+  set S := supBox a ((ρ + 1) + 3 * M)
+  have hV₁ : edgeVariationIn (setBond e true ω) S w ≤ (2 * d) * ∑ z ∈ S, Λ z :=
+    edgeVariationIn_correctorDiff_le hG hGv hω₁ ho S hΛ0 hΛ
+  have hV₀ : edgeVariationIn (setBond e false ω) S w ≤ edgeVariationIn (setBond e true ω) S w :=
+    edgeVariationIn_mono_config (fun u v huv => openGraph_setBond_le e ω huv) S w
+  have h0 := edgeVariationIn_nonneg (setBond e false ω) S w
+  have hsum : edgeVariationIn (setBond e false ω) S w + edgeVariationIn (setBond e true ω) S w ≤
+      4 * d * ∑ z ∈ S, Λ z := by linarith
+  have hB : (0 : ℝ) ≤ (supBox a ρ).card * ∑ y ∈ supBox a ρ, zdHeat d (r ^ 2) x y ^ 2 := by
+    positivity
+  exact mul_le_mul_of_nonneg_left
+    (pow_le_pow_left₀ (add_nonneg h0 (edgeVariationIn_nonneg _ _ _)) hsum 2) hB
+
+end Lipschitz
+
+end Rigidity.Corrector.GeneralDim
