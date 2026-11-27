@@ -53,7 +53,7 @@ theorem card_boxFinset_le_pow {x : Vertex d} {r R : ℕ} (hr : r ≤ R) (hR : 1 
 
 section Weight
 
-variable [NeZero d] {G : Set (Configuration d)} (hG : MeasurableSet G)
+variable {G : Set (Configuration d)} (hG : MeasurableSet G)
   (hGv : G ⊆ correctorValidEvent d)
 
 /-- The factor `F_a = R_a^{7d} (Σ_{z ∈ B_a} G(z))²`. -/
@@ -126,7 +126,7 @@ end Partition
 
 section Good
 
-variable [NeZero d] {G : Set (Configuration d)} (hG : MeasurableSet G)
+variable {G : Set (Configuration d)} (hG : MeasurableSet G)
   (hGv : G ⊆ correctorValidEvent d)
 
 /-- The weight of the Step 2 sum is finite on `T` and `Σ_T W^q ≤ M |T|`. -/
