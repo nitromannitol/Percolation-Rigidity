@@ -948,9 +948,8 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Proofs.Cluster.planarWeakConvergence_holds
 #print axioms Rigidity.Proofs.Cluster.planarMuLimit_eq
 
--- The inputs of Lemmas 5.5 and 5.7 in dimension two from the partition hypothesis
--- PlanarGehringPartition (the form of Lemmas 5.5 and 5.7 and of the qualitative part of
--- Proposition 5.2, d = 2, with the partition as a hypothesis)
+-- The inputs of Lemmas 5.5 and 5.7 in dimension two from the partition hypothesis PlanarGehringPartition (the earlier
+-- form of Lemmas 5.5 and 5.7 and of the qualitative part of Proposition 5.2, d = 2)
 #print axioms Rigidity.Proofs.Cluster.PlanarGehringPartition
 #print axioms Rigidity.Proofs.Cluster.PlanarReachConcentration
 #print axioms Rigidity.Proofs.Cluster.planarReachConcentration_holds
