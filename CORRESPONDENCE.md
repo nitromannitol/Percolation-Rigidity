@@ -511,6 +511,19 @@ report of the library is [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean
   at the scale `S = max(s_ω(x₀), s_{ω^{e,0}}(x₀))`: the partition cubes of `ω^{e,0}` at `x₀` and `y₀` have side at most
   `243 S`, so `R ≤ (8d 7^d 243^d S^d)²` and
   `(D_e X)² ≤ 2 (1 + (8d 7^d 243^d S^d)²)² G(x₀)² (E_v(x₀) + Φ_{r²}(x, x₀)²)`.
+- **Closed-bond bound and the Step 2 factor on `ℤᵈ` (planar [`Rigidity.Green.ae_fluxFlip_sq_le_closed`](Rigidity/Proofs/Green/DarioGuFluxClosedBound.lean),
+  [`Rigidity.Green.ae_fluxFlip_sq_le_weight`](Rigidity/Proofs/Green/DarioGuFluxFlipSum.lean); `ℤᵈ`
+  [`Rigidity.Green.GeneralFlux.ae_fluxFlipD_sq_le_closed`](Rigidity/Proofs/Green/GeneralFluxClosedBound.lean),
+  [`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipWeight.lean)).** For a bond of
+  `a = (x₀, i')` closed in `ω` the bound is that of the planar proof, through the boxes `anchorBox` of the partition into
+  good cubes of `ℤᵈ`: `(D_e X)² ≤ 4096 d³ (Σ_B G)² |B| (Σ_B E_v + Φ_{r²}(x, x₀)²)` for the box `B` of radius
+  `1 + 5 max(s(x₀), s(y₀))` around `x₀` (planar constant `2¹⁵`); Lemma 3.5 is not used. The planar combination of the
+  bounds for the open and the closed bonds into the Step 2 factor has the radius `κ max(s(x₀), s(y₀))` with the box
+  parameter `κ = C₀ + 5C + 6` from Lemma 3.5 in its printed form with constants `C₀, C`, and the constant
+  `2 · 1297⁴ · 46656`. On `ℤᵈ` the open-bond bound is at the scale `S = max(s_ω(x₀), s_{ω^{e,0}}(x₀))` of the corrected
+  Lemma 3.5, so the radius of the Step 2 factor is `6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))` (`stepTwoRadius 6`, the
+  radius of the Step 2 weight; see the entry on Lemma 3.3, Step 2, in dimension `d ≥ 3` under Dario), the box parameter
+  is `6`, and the constant is `K₀ = 2 (1 + (8d 7^d 243^d)²)² + 4096 d³ 3^d`.
 
 ### Barlow
 
