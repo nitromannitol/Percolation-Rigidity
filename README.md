@@ -2784,7 +2784,7 @@ Departures from Dario and Gu:
 - **Step 2 on unions of triadic cubes.** The density bound is proved on the `3 × 3` triadic cubes of scale `n + 2` around the cube of `y`,
   with the Poincaré inequality on the triadic cubes of Percolation-Cluster-Homogenization (`multiscalePoincare_holds`) in the multiscale
   decomposition; the source passes from `B_r` to the cube `□_m ⊇ B_r`.
-- **Lemma 1.5.** The minimal scale is the first triadic scale after which every scale is good (`exists_minimalScale_of_summable`), with
+- **Lemma 1.6.** The minimal scale is the first triadic scale after which every scale is good (`exists_minimalScale_of_summable`), with
   `E[exp(M^s)]` bounded uniformly in `y`; for `α > 1` the bound for `min(α, 1)` is used.
 - **Componentwise.** The bound is stated for each component `[g̃_{e_k}]_i`, as in `DarioGuFluxWeakNormTwo`.
 
