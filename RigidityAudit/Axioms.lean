@@ -473,6 +473,7 @@ import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 import Rigidity.Proofs.Assembly.ProvedBarlow
 import Rigidity.Proofs.BarlowLattice.GaussianHolds
+import Rigidity.Proofs.Assembly.EveryDimension
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1919,3 +1920,9 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_of_veryGood
 #print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_holds
 #print axioms Rigidity.BarlowLattice.barlowGaussianUpperBoundTwo_of_lattice
+
+-- Theorem 1.1 and Proposition 3.2 in every dimension from the inputs that remain in d >= 3
+#print axioms Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_of_stepTwoWeight
+#print axioms Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_of_stepTwoWeight
+#print axioms Rigidity.Assembly.EveryDimension.lipschitz
+#print axioms Rigidity.Assembly.EveryDimension.notLipschitz

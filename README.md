@@ -106,8 +106,13 @@ Step 2 (`DarioStepTwoWeightThree`: the partition of the good cubes and the momen
 Green estimate reduces in every dimension `d ≥ 3` to Theorem 1 of Dario and Gu (`DarioGuHeatKernelD d`,
 `supercriticalBondGreenQuantitative_of_heatKernel`), and follows from `CorrectorQuantitativeInput`,
 `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
-(`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`). Theorem 1.3 in the
-form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
+(`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`).
+Hence Theorem 1.1 and Proposition 3.2 hold in every dimension `d ≥ 2` from the two statements
+`DarioStepTwoWeightThree` and `FluxFlipWeightBoundD` for `d ≥ 3`, every other literature input being
+proved ([`Rigidity.Assembly.EveryDimension.lipschitz`](Rigidity/Proofs/Assembly/EveryDimension.lean),
+`Rigidity.Assembly.EveryDimension.notLipschitz`). Theorem 1.3 in the
+form with the twelve inputs takes only `CorrectorQuantitativeInput` and
+`SupercriticalBondGreenQuantitative` (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
 Theorems 6.5 and 1.3 are proved with no literature hypothesis
 ([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
 Theorem 1.3). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
@@ -120,7 +125,8 @@ Green function in dimension two follows (`supercriticalBondGreenQuantitativeTwo_
 proved in every dimension `d ≥ 2` from the variance bound (3.4) of the proof of Gu's Proposition 1.1, a named hypothesis
 (`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`), which for `d ≥ 3` follows from `FluxFlipWeightBoundD` and
 `DarioStepTwoWeightThree` (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`); `FluxFlipWeightBoundD` is
-not proved, and its part for the bonds open in the configuration, `FluxOpenBoundD`, is stated and not proved. The five numbered results that the paper does not prove are
+not proved; its part for the bonds open in the configuration, `FluxOpenBoundD`, is proved
+(`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`). The five numbered results that the paper does not prove are
 quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
 Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
 them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
@@ -533,7 +539,8 @@ For `d ≥ 3`, Proposition 2.13 follows from the variance bound `FluxVarianceBou
 ([`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean)), so the
 quantitative Green estimate follows from `CorrectorQuantitativeInput`, `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
 ([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeight.lean));
-`FluxFlipWeightBoundD` is not proved, and its part `FluxOpenBoundD` for the bonds open in the configuration is stated and not proved.
+`FluxFlipWeightBoundD` is not proved; its part `FluxOpenBoundD` for the bonds open in the configuration is proved
+([`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean)).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
