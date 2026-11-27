@@ -223,7 +223,8 @@ theorem finiteWeight_eq_of_localBonds {ω ω' : Configuration d} {κ R : ℕ} (h
   refine Finset.sum_congr rfl fun v hv => Finset.sum_congr rfl fun k _ => ?_
   rw [hcap v hv k, hball v hv k]
 
-/-- No edge with its tail outside `B(u, R)` has `u` in its box. -/
+/-- Every vertex `v` with `u` in the box `B(v, 3κ s(v))` lies in `B(u, R)`; with `FarGoodFlip`, no
+edge with its tail outside `B(u, R)` has `u` in its box. -/
 def FarGood (κ R : ℕ) (ω : Configuration d) (u : Vertex d) : Prop :=
   ∀ v, u ∈ supBox v (3 * κ * partSide ω v) → v ∈ supBox u R
 

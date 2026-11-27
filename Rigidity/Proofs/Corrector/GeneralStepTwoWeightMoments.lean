@@ -278,8 +278,9 @@ theorem measurable_weightMajorant {Λ : Vertex d → Configuration d → ℝ}
     ((measurable_stoppingSize_goodCubes a.1).const_mul K₁))
     ((measurable_sizeBallSum hΛm K₂ a.1).pow_const _) measurable_const
 
-/-- **The moments of the majorant of the weights**, with constants depending only on `d`, on the
-growth constants `B, κ` of `1 + Λ` and on `K₁, K₂`. -/
+/-- **The moments of the majorant of the weights**, with constants depending only on `d`, on `p`
+(through the tail of the sizes of the partition cubes), on the growth constants `B, κ` of `1 + Λ`
+and on `K₁, K₂`. -/
 theorem growthMoments_weightMajorant_uniform [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     (hpc : criticalProbability d < (p : ℝ)) {B κ : ℝ} (hB : 0 < B) (hκ : 0 < κ) {K₁ K₂ : ℝ}
     (hK₁ : 0 < K₁) (hK₂ : 0 < K₂) :

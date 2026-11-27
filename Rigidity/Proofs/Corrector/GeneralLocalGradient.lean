@@ -18,8 +18,9 @@ cluster:
   `B(0, 2R + 1)`, hence is measurable.
 
 This is the planar file `DarioLocalGradient` on `ℤᵈ`: the boxes are the `ℓ^∞` boxes of `ℤᵈ`
-(`supBox`), and the open paths inside a set are those of `ReachIn` (the planar `ReachIn` on `ℤᵈ`,
-with its locality `reachIn_iff_of_adj_iff`); the statements and proofs are otherwise the same.
+(`supBox`), and the open paths inside a set are those of `ReachIn` (defined as the planar
+`ReachIn`, with `Vertex d` in place of `Vertex 2`, with its locality `reachIn_iff_of_adj_iff`); the
+statements and proofs are otherwise the same.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
