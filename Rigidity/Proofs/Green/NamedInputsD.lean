@@ -7,7 +7,8 @@ import Rigidity.Proofs.Green.GreenQuantitativeThree
 * `DarioGuDensityGaussianD d p σ`: **Proposition A.7** of Dario–Gu (lines 2911-2920), second part,
   on `ℤ^d`: for every `α > 0` there is `T_dense,α(y) ≤ O_s(C)` such that for `t > T_dense,α(y)` the
   Gaussian mass of the infinite cluster `Σ_{x ∈ 𝒞_∞} p̄(t, x - y)` (`clusterGaussMass`) is within
-  `C t^{-(1/2 - α)}` of `θ(p)`. The planar statement is `DarioGuDensityGaussianTwo`.
+  `C t^{-(1/2 - α)}` of `θ(p)`. The planar statement is `DarioGuDensityGaussianTwo`. It is proved
+  for `d ≥ 2` as `darioGuDensityGaussianD_holds` (`DensityGaussianD`).
 * `DarioGuGaussianFlowD d p σ`: the **whole-cluster estimate** of Dario–Gu, Proposition 4.3,
   Step 5, (4.40), with initial time `τ` and final time `3τ`, combined with the initial error of
   Proposition 2.12 by the triangle inequality: for `H_τ = θ^{-1} p̄(τ, · - y)` on `𝒞_∞` and

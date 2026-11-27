@@ -12,7 +12,7 @@ Steps 2 and 3 of the proof of Lemma 4.1 (lines 2029-2148 of the source). For the
   ((4.11): the average on `U_0` is replaced by the average on `U_n` at the cost of
   `|U_n| O_n / |U_0|`, the term (4.11)-b).
 * `dgPhi_annulusInner_le`, `dgPhi_annulusInner_le_mul_dgPhi`: the bounds on `a_n = Φ_{C₀}(τ, ρ_n)`,
-  `ρ_0 = 0`, `ρ_n = 2^{n-1} √τ`, used with Theorem 3 and with (eq:PhiCTrick) respectively.
+  `ρ_0 = 0`, `ρ_n = 2^{n-1} √τ`, used with Theorem 3 and with (4.12) respectively.
 * `approx_O_le`: `O_n ≤ 25 C_P C_G 8^n τ^{3/2} s^{-3/2} e^{-|x - y|²/(C_G s)}` from the Poincaré
   inequality and the gradient bound ((4.9), (4.10), (4.13)); `approx_real_A`, `approx_real_B1`: the
   arithmetic of the scales.

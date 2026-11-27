@@ -5,7 +5,7 @@ import Rigidity.Proofs.Green.DarioGuCorrectorLemma
 
 * `dgPhi_anti`: `Φ_C(t, r)` is nonincreasing in `r`.
 * `dgPhi_le_mul_dgPhi`: for `r' ≤ 2r`, `Φ_C(τ, r) ≤ e^{-g(τ, r)/(2C)} Φ_{16C}(τ, r') / 16`
-  (the comparison (eq:PhiCTrick) of the source between the supremum and the infimum of `Φ_C` on
+  (the comparison (4.12) of the source between the supremum and the infimum of `Φ_C` on
   a dyadic annulus).
 * `dgPhi_le_rpow_mul_dgPhi`: for `r ≥ 2t/3`, `Φ_C(t, r) ≤ (9C/4) t^{-1/2} Φ_{2C}(t, r)`.
 * `inv_mul_exp_le_dgPhi`: for `r ≤ s ≤ t ≤ 3s/2`, `s^{-1} exp(-r²/(C s)) ≤ (3/(2C')) Φ_{C'}(t, r)`.

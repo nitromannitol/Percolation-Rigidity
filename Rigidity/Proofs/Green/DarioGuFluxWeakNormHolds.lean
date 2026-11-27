@@ -11,13 +11,13 @@ with the diffusivity `σ̄² = 2 θ(p)^{-1} ā` of (B.5) (`ā` the mean of the f
 (`darioGuFluxWeakNormTwo_holds`, the statement `DarioGuFluxWeakNormTwo`).
 
 The proof follows Steps 1-3 of the source at the triadic scales `r ∈ [3^n, 3^{n+1})`: the bound
-(eq.gsmallH-1) of the flux of `ℤ²` on a box of side `≈ 3^n` (`exists_fluxWeakNormBox`, dyadic
-time `4^{2n}`), the bound (eq:DensityWeakNorm) of the density on the triadic cubes of scale
+(B.4) of the flux of `ℤ²` on a box of side `≈ 3^n` (`exists_fluxWeakNormBox`, dyadic
+time `4^{2n}`), the bound (B.14) of the density on the triadic cubes of scale
 `n + 2` around `y` (`exists_densityWeakNorm`), and the partition of the good cubes with cubes of
 side at most `L_n = ⌊3^{αn/4}⌋` near `y`, combined by the coarsening of the test functions
 (`weakNormLe_of_scale_bounds`). A scale is bad when one of the normalized weak norms exceeds
 `3^{αn/4}` or a partition cube near `y` has side more than `L_n`; the minimal scale is the first
-scale after which every scale is good (`exists_minimalScale_of_summable`, the role of Lemma 1.5 of
+scale after which every scale is good (`exists_minimalScale_of_summable`, the role of Lemma 1.6 of
 the source), with `E[exp(M^s)]` bounded uniformly in `y`. The source's `M_q(𝒫)` and its minimal
 scale of the density are replaced by the bound on the sizes of the partition cubes and the
 lower bound `|𝒞_∞ ∩ B_r(y)| ≥ (2·3^{n-1} + 1)²/L_n²` of `card_mul_le_card_dgClusterBall`.

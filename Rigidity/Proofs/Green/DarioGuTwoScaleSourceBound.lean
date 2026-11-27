@@ -8,12 +8,13 @@ The source term of the equation of `w` on the cluster splits as
 `F_i = 1_𝒞 stepOneF` (`clusterFlux`) and `ξ = 1_𝒞 Σ_{k,i} g̃_{k,i} D_i D_k p̄` (`clusterXi`)
 (`clusterSource_eq_split`; on the cluster `1_𝒞 F_i(x - e_i) = F_i(x - e_i)` because an open edge
 does not leave the cluster). Step 4 bounds `f` and `F` (`tsum_sq_clusterF_le`,
-`tsum_sq_clusterFlux_le`), with the growth of the corrector given by Proposition 2.12 (R5).
+`tsum_sq_clusterFlux_le`), with the growth of the corrector given by Proposition 2.12
+(`CorrectorQuantitativeInputTwo`).
 
 `DarioGuTwoScaleFluxTermTwo` is the estimate of Step 3 of the source (lines 2333-2405), (4.32)
 after Young's inequality: `-θ^{-1} Σ_x ψ_R² v ξ ≤ E(ψ_R v)/4 + (8r)^{-1} Σ_x (ψ_R v)² + Q r^{α - 3}`.
 `darioGuTwoScaleSourceBoundTwo_of_fluxTerm` proves `DarioGuTwoScaleSourceBoundTwo` (Steps 3-4)
-from it and R5, through `tsum_source_le_of_split`, and
+from it and Proposition 2.12, through `tsum_source_le_of_split`, and
 `darioGuTwoScaleErrorTwo_of_fluxTerm` proves Proposition 4.3 (`DarioGuTwoScaleErrorTwo`).
 -/
 

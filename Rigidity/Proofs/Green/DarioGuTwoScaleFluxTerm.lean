@@ -7,7 +7,8 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleSourceBound
 `darioGuTwoScaleFluxTermTwo_of_inputs` proves the estimate of Step 3 of the proof of Proposition
 4.3 of Dario–Gu (`DarioGuTwoScaleFluxTermTwo`, (4.32) after Young's inequality) from
 Proposition 2.13 (`DarioGuFluxWeakNormTwo`, the weak norm of the centered flux) and Proposition
-2.12 (R5, which gives the growth of the corrector and with it the absolute convergence of the
+2.12 (`CorrectorQuantitativeInputTwo`, which gives the growth of the corrector and with it the
+absolute convergence of the
 sums). For `r ≥ M(y) = max(M_flux², M_corr², 1)` every dyadic radius `2^{m+2} √r` is at least
 `M_flux`, and `neg_tsum_flux_le` applies to the four components `(k, i)` of the flux.
 
@@ -356,7 +357,7 @@ theorem darioGuTwoScaleFluxTermTwo_of_inputs (hR5 : CorrectorQuantitativeInputTw
         linarith only [hQ]
 
 /-- **Proposition 4.3 of Dario–Gu** (`DarioGuTwoScaleErrorTwo`) from Proposition 2.13
-(`DarioGuFluxWeakNormTwo`) and Proposition 2.12 (R5). -/
+(`DarioGuFluxWeakNormTwo`) and Proposition 2.12 (`CorrectorQuantitativeInputTwo`). -/
 theorem darioGuTwoScaleErrorTwo_of_inputs (hR5 : CorrectorQuantitativeInputTwo)
     {p : unitInterval} (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) {σ : ℝ}
     (hσ : 0 < σ) (hflux : DarioGuFluxWeakNormTwo p σ) : DarioGuTwoScaleErrorTwo p σ :=

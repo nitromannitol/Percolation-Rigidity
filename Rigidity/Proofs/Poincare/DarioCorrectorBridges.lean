@@ -14,8 +14,11 @@ quantitative sublinearity (1.22) (`correctorOscSublinearTwo_holds`) are proved. 
 dimension two (`DarioOptimalCorrectorTwo`) therefore follows from Lemma 3.3 (`DarioLemmaThreeThree`)
 alone (`darioOptimalCorrectorTwo_of_threeThree`), or from the flip form `DarioFlipSumBound` of (3.13)
 alone (`darioOptimalCorrectorTwo_of_flipSum`). The same inputs give
-`CorrectorQuantitativeInputTwo` and `ArmstrongDarioOrderOneOriginTwo`, and, with the further named
-inputs of `darioGuHeatKernelTwo_of_reduced_dario`, Theorem 1 of Dario and Gu.
+`CorrectorQuantitativeInputTwo` and `ArmstrongDarioOrderOneOriginTwo`, and, with the further
+hypotheses of `darioGuHeatKernelTwo_of_reduced_dario`, Theorem 1 of Dario and Gu. Lemma 3.3 holds
+in dimension two: it follows from `darioStepTwoSumBound_holds` through
+`darioFlipSumBound_of_stepTwo` and `darioLemmaThreeThree_of_flipSum`, hence
+`darioOptimalCorrectorTwo_holds`.
 -/
 
 namespace Rigidity.Poincare

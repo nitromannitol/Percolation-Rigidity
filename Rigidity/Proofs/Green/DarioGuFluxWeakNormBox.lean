@@ -5,7 +5,7 @@ import Rigidity.Proofs.Corrector.PlanarCoarseningError
 /-!
 # The weak norm of the centered flux on boxes of `ℤ²`
 
-The estimate (eq.gsmallH-1) of Dario–Gu, Appendix B, in dimension two and in the lattice form of
+The estimate (B.4) of Dario–Gu, Appendix B, in dimension two and in the lattice form of
 `DarioGuFluxDyadic`: for the centered flux `g = a(Dχ_{e_k} + e_k) - ā e_k` on `ℤ²` (component `i`,
 zero off the infinite cluster), every finite set `S`, every `J` and every `w` vanishing off `S`
 with gradient supported in `T`,
@@ -17,7 +17,7 @@ on `w` and have moments `E[Y^q] ≤ (A √|S| 2^{-J} q^κ)^q` and `E[Z^q] ≤ (A
 With `S` a box of side `R` and `2^J ≈ R`, this is `‖g‖_{H̲^{-1}} ≤ O_s(C log R)` in the normalization
 of the source, the bound (mainstep1propb1) for `d = 2`.
 
-The source proves (eq.gsmallH-1) from the continuous multiscale Poincaré inequality (D.28) of
+The source proves (B.4) from the continuous multiscale Poincaré inequality (D.28) of
 Armstrong, Kuusi and Mourrat with the heat averages of Gu's Proposition 1.1 at every time
 `t ∈ (0, 1]`; here the heat averages are those of `ℤ²` at the dyadic times `4^j ≥ 1`
 (`exists_fluxSpatialAverage_two`), and the times below `2` are handled by the moments of the flux
@@ -351,7 +351,7 @@ theorem growthMoments_fluxBoxR0_mul {k i : Fin 2} {abar BΛ κ : ℝ} (hBΛ : 0 
         ≤ 2 * (3 * Real.sqrt T.card * BΛ * 2 ^ κ) := by gcongr
       _ = 6 * BΛ * 2 ^ κ * Real.sqrt T.card := by ring
 
-/-- **Dario–Gu, (eq.gsmallH-1), in dimension two, on finite sets of `ℤ²`.** -/
+/-- **Dario–Gu, (B.4), in dimension two, on finite sets of `ℤ²`.** -/
 theorem exists_fluxWeakNormBox (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw 2 p, ω ∈ G) :
     ∃ abar A κ : ℝ, 0 < abar ∧ 0 < A ∧ 0 < κ ∧ ∀ (k i : Fin 2) (J : ℕ) (S T : Finset (Vertex 2)),

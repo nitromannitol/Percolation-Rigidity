@@ -2,17 +2,20 @@ import Rigidity.Proofs.Green.DarioGuTheoremOneCorrector
 import Rigidity.Proofs.Green.DarioGuCorrectorLemma
 
 /-!
-# Theorem 1 of Dario–Gu in dimension two: the remaining hypotheses
+# Theorem 1 of Dario–Gu in dimension two: the hypotheses of the reduction
 
 With the estimate of the two-scale initial error and Lemma 4.2 proved from Proposition 2.12,
 Theorem 4 and Proposition 2.15, Theorem 1 of Dario–Gu in dimension two (`DarioGuHeatKernelTwo`)
 holds under:
 
 * Lemma 4.1 (in the form of the iteration step), Proposition 4.3 and Proposition A.7 of the source
-  for some diffusivity `σ > 0` (proved in the source from §3, §4.1–§4.2 and Appendix A; not
-  formalized here);
-* Theorem 4 (Barlow 2004, cited), Proposition 2.15 (Davies 1993, cited);
-* the qualitative corrector input and Proposition 2.12 (R5), or Dario's Theorem 1.
+  for some diffusivity `σ > 0` (proved in the source from §3, §4.1–§4.2 and Appendix A; proved
+  here as `darioGuApproxLemmaTwo_of_gradient`, `exists_darioGuTwoScaleErrorTwo_holds` and
+  `darioGuDensityGaussianTwo_holds`);
+* Theorem 4 (Barlow 2004, proved as `barlowGaussianUpperBoundTwo_holds`), Proposition 2.15
+  (Davies 1993, proved as `carneVaropoulosTwo_holds`);
+* the qualitative corrector input and Proposition 2.12 (`CorrectorQuantitativeInputTwo`), or
+  Dario's Theorem 1.
 -/
 
 namespace Rigidity.Green

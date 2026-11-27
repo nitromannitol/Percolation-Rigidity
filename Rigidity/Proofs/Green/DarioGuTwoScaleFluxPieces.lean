@@ -9,8 +9,8 @@ The coefficient of the `m`-th piece in Step 3 of the proof of Proposition 4.3 of
 factor is at most `dyDecay σ m = e^{1/(64σ)} exp(-4^{m-1}/(512σ))` (the bound
 `‖D² p̄ ψ‖_{L^∞(A_m)} ≤ C t^{-d/2-1} exp(-2^{2m}/(8σ))` of the source, line 2408):
 
-* `abs_dyCoeff_le`: `|A_m| ≤ K r^{-2} dyDecay σ m`;
-* `abs_dyCoeff_sub_le`: `|A_m(x + e_j) - A_m(x)| ≤ K r^{-5/2} dyDecay σ m`;
+* `dyCoeff_bounds`: `|A_m| ≤ K r^{-2} dyDecay σ m` and
+  `|A_m(x + e_j) - A_m(x)| ≤ K r^{-5/2} dyDecay σ m`;
 * `dyCoeff_support`: `A_m(x) u(x) ≠ 0` with `u` vanishing off the cluster forces `x` to lie in
   the interior `int_a(𝒞 ∩ B_{2^{m+2} √r}(y))`.
 -/
