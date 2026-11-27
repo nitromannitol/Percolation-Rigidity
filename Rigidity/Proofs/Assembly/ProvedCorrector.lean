@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Assembly.ProvedOrderOne
 import Rigidity.Proofs.Corrector.CorrectorQuantitative
+import Rigidity.Proofs.Corrector.GeneralLemmaThreeTwoProof
 import PercolationClusterHomogenization.Proofs.Regularity.GeneralOrderOneHolds
 
 /-!
@@ -13,7 +14,9 @@ and (ii) at `k = 1`; Dario and Gu, Proposition 2.12, qualitative part) is proved
 `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`. By the reduction of
 `CorrectorQuantitativeInput` to Theorem 1 of Dario in `d ≥ 3`
 (`Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario`), the quantitative corrector
-input follows from `DarioOptimalCorrectorThree` alone (`correctorQuantitativeInput_of_darioThree`).
+input follows from `DarioOptimalCorrectorThree` alone (`correctorQuantitativeInput_of_darioThree`),
+and since Lemma 3.2 of Dario is proved in every dimension, from Lemma 3.3 of Dario in `d ≥ 3` alone
+(`correctorQuantitativeInput_of_darioVarianceBoundThree`).
 -/
 
 namespace Rigidity.Assembly.WithProvedCorrector
@@ -27,6 +30,14 @@ theorem correctorQuantitativeInput_of_darioThree
     Rigidity.External.CorrectorQuantitativeInput :=
   Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario hD
     Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds
+
+/-- The quantitative corrector input from Lemma 3.3 of Dario in `d ≥ 3`, Lemma 3.2 of Dario and the
+qualitative corrector input being proved. -/
+theorem correctorQuantitativeInput_of_darioVarianceBoundThree
+    (h33 : Rigidity.Corrector.GeneralDim.DarioVarianceBoundThree) :
+    Rigidity.External.CorrectorQuantitativeInput :=
+  correctorQuantitativeInput_of_darioThree
+    (Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound h33)
 
 /-- **Theorem 1.3**, with every proved literature input supplied, the qualitative corrector input
 and the regularity of order one included. -/
