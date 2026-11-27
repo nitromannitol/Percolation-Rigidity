@@ -7,8 +7,9 @@ import Rigidity.Proofs.Corrector.GeneralStepTwoDefs
 For a bond `e` of `a = (x, i')` open in `ω`, `ω^{e,1} = ω` and, in Case 3,
 `T₂(e) = c' ((P_ω γ_ω)(a) + Σ_y Φ_{r²}(x, y) Δ_y)` (`ae_flipTermTwo_eq_open`), with
 `c' = ℓ₀(x) - ℓ₀(y) = (1 + R) (ℓ_ω(x) - ℓ_ω(y))` (`ae_dipoleCoeff_eq`). As in the planar file
-`DarioStepTwoOpenBound`, with `s = s(x)` the side of the partition cube of `ω` at `x` and Lemma
-3.5 in the form `ResamplePartitionBound C₀ C`:
+`DarioStepTwoOpenBound`, with `s = max(s(x), s⁰(x))` the scale of the corrected Lemma 3.5 at `x`
+(the larger side of the partition cubes of `ω` and of `ω^{e,0}` at `x`) and Lemma 3.5 in the form
+`ResamplePartitionBound C₀ C`:
 
 * `|ℓ_ω(x) - ℓ_ω(y)| ≤ G(x)`, since the bond is open in `ω`;
 * the partition cubes of `ω^{e,0}` at `x` and `y` have side at most `C s`, so their boxes
@@ -101,13 +102,18 @@ theorem ae_flipTermTwo_sq_le_open [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC�
     ∀ᵐ ω ∂latticeBondLaw d p, ∀ (i j : Fin d) (r : ℝ), 0 < r → ∀ (x : Vertex d)
       (a : LatticeEdge d), EdgeOpen ω a → ∀ hP : PartitionEvent ω,
       flipTermTwo hG hGv i j r x (edgeBond a) ω ^ 2 ≤
-        2 * (1 + (8 * d * 7 ^ d * (C : ℝ) ^ d * (partSide ω a.1 : ℝ) ^ d) ^ 2) ^ 2 *
+        2 * (1 + (8 * d * 7 ^ d * (C : ℝ) ^ d *
+          ((max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) : ℕ) : ℝ) ^ d) ^ 2) ^ 2 *
           planeGrad hG hGv i ω a.1 ^ 2 *
           (openEnergy ω (clusterPot ω (coarseHeatField hP r x j)) a.1 +
-            (supBox a.1 (C₀ * partSide ω a.1)).card *
-              (∑ y ∈ supBox a.1 (C₀ * partSide ω a.1), zdHeat d (r ^ 2) x y ^ 2) *
-              (4 * d * (supBox a.1 ((C₀ * partSide ω a.1 + 1) +
-                3 * (C * partSide ω a.1))).card) ^ 2) := by
+            (supBox a.1 (C₀ * max (partSide ω a.1)
+                (partSide (setBond (edgeBond a) false ω) a.1))).card *
+              (∑ y ∈ supBox a.1 (C₀ * max (partSide ω a.1)
+                  (partSide (setBond (edgeBond a) false ω) a.1)), zdHeat d (r ^ 2) x y ^ 2) *
+              (4 * d * (supBox a.1 ((C₀ * max (partSide ω a.1)
+                  (partSide (setBond (edgeBond a) false ω) a.1) + 1) +
+                3 * (C * max (partSide ω a.1)
+                  (partSide (setBond (edgeBond a) false ω) a.1)))).card) ^ 2) := by
   have hp0 : 0 < (p : ℝ) := (criticalProbability_nonneg d).trans_lt hpc
   have hd0 : 0 < d := by omega
   filter_upwards [ae_setBond hp0 hp1 hGae, ae_setBond hp0 hp1 (ae_partitionEvent hd hpc),
@@ -120,9 +126,10 @@ theorem ae_flipTermTwo_sq_le_open [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC�
     rwa [hωe] at this
   have hP₀ := hPs (edgeBond a) false
   have hP₁ : PartitionEvent (setBond (edgeBond a) true ω) := by rw [heq]; exact hP
-  set s := partSide ω a.1 with hs
+  set s := max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) with hs
   have hs1 : 1 ≤ s := by
-    rw [hs, partSide_eq hP]
+    refine le_trans ?_ (le_max_left _ _)
+    rw [partSide_eq hP]
     exact Nat.one_le_pow _ _ (by norm_num)
   set E := openEnergy ω (clusterPot ω (coarseHeatField hP r x j)) a.1 with hE
   have hE0 : 0 ≤ E := openEnergy_nonneg _ _ _
@@ -187,14 +194,18 @@ theorem ae_flipTermTwo_sq_le_open [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC�
   -- Lemma 3.5
   have hloc := resampleLocal_of_bound hres (setBond_agree_off (edgeBond a) true false ω) hP₁ hP₀
     (mem_edgeBond_fst a)
-  have hside : 3 ^ (partitionCube (setBond (edgeBond a) true ω) a.1).scale = s := by
-    rw [heq, hs, partSide_eq hP]
+  have hside : resampleScale (setBond (edgeBond a) true ω) (setBond (edgeBond a) false ω) a.1 =
+      s := by
+    rw [hs, partSide_eq hP, partSide_eq hP₀]
+    unfold resampleScale
+    rw [heq]
   rw [hside] at hloc
   have hρ : ∀ z : Vertex d, (∀ i, |z i - a.1 i| ≤ 1) → ∀ i, |z i - a.1 i| < ((C₀ * s : ℕ) : ℤ) := by
     intro z hz i
     have : (2 : ℤ) ≤ ((C₀ * s : ℕ) : ℤ) := by
       have hs3 : 3 ≤ s := by
-        rw [hs, partSide_eq hP]
+        refine le_trans ?_ (le_max_left _ _)
+        rw [partSide_eq hP]
         calc 3 = 3 ^ 1 := by norm_num
           _ ≤ 3 ^ (partitionCube ω a.1).scale := Nat.pow_le_pow_right (by norm_num)
               (by have := three_le_scale_partitionCube hP a.1; omega)

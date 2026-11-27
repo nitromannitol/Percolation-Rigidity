@@ -1,6 +1,5 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoSum
 import Rigidity.Proofs.Corrector.GeneralStepOneHolds
-import Rigidity.Proofs.Corrector.GeneralResamplePartitionHolds
 
 /-!
 # The Step 2 sum of Lemma 3.3 of Dario on `ℤᵈ` through a partition of good cubes

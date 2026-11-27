@@ -3,8 +3,8 @@ import Rigidity.Proofs.Corrector.GeneralStepTwoClosedBound
 /-!
 # The Step 2 sum of Lemma 3.3 of Dario on `ℤᵈ` bounded by a weighted energy
 
-For an oriented edge `a = (x, i')` with endpoints `x, y`, let `m_a = max(s(x), s(y))` be the larger
-side of the partition cubes of `ω` at its endpoints, `R_a = κ m_a`, `B_a = B(x, R_a)` and
+For an oriented edge `a = (x, i')` with endpoints `x, y`, let `m_a = max(s(x), s(y), s⁰(x))`, with `s⁰(x)` the side at `x`
+of the partition of the configuration with the bond of `a` closed, `R_a = κ m_a`, `B_a = B(x, R_a)` and
 
 `F_a = R_a^{7d} (Σ_{z ∈ B_a} G(z))²`,   `W(u) = Σ_a 1{u ∈ B_a} F_a`
 
@@ -190,7 +190,8 @@ theorem ae_flipTermTwo_sq_le_weight [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC
   have hd1 : 1 ≤ d := by omega
   filter_upwards [ae_flipTermTwo_sq_le_closed hG hGv hd hpc hp1 hGae,
     ae_flipTermTwo_sq_le_open hG hGv hd hC₀ hres hpc hp1 hGae] with ω hcl hop i j r hr x a hP
-  obtain ⟨m, hm⟩ : ∃ m, m = max (partSide ω a.1) (partSide ω (edgeHead a)) := ⟨_, rfl⟩
+  obtain ⟨m, hm⟩ : ∃ m, m = max (max (partSide ω a.1) (partSide ω (edgeHead a)))
+      (partSide (setBond (edgeBond a) false ω) a.1) := ⟨_, rfl⟩
   have hm1 : 1 ≤ m := by
     have : 1 ≤ partSide ω a.1 := by
       rw [partSide_eq hP]; exact Nat.one_le_pow _ _ (by norm_num)
@@ -229,15 +230,16 @@ theorem ae_flipTermTwo_sq_le_weight [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC
   by_cases haopen : EdgeOpen ω a
   · -- the bond is open
     have h := hop i j r hr x a haopen hP
-    have hsm : partSide ω a.1 ≤ m := by rw [hm]; exact le_max_left _ _
-    have hr1 : C₀ * partSide ω a.1 ≤ κ * m := Nat.mul_le_mul (by omega) hsm
-    have hr2 : (C₀ * partSide ω a.1 + 1) + 3 * (C * partSide ω a.1) ≤ κ * m := by
-      have h1 : C₀ * partSide ω a.1 ≤ C₀ * m := Nat.mul_le_mul_left _ hsm
-      have h2 : C * partSide ω a.1 ≤ C * m := Nat.mul_le_mul_left _ hsm
+    have hsm : max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) ≤ m := by
+      rw [hm]; omega
+    have hr1 : C₀ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) ≤ κ * m := Nat.mul_le_mul (by omega) hsm
+    have hr2 : (C₀ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) + 1) + 3 * (C * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1)) ≤ κ * m := by
+      have h1 : C₀ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) ≤ C₀ * m := Nat.mul_le_mul_left _ hsm
+      have h2 : C * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) ≤ C * m := Nat.mul_le_mul_left _ hsm
       have h3 : κ * m = C₀ * m + 3 * (C * m) + 6 * m := by rw [hκ]; ring
       omega
-    have hcs : C * partSide ω a.1 ≤ κ * m := Nat.mul_le_mul (by omega) hsm
-    have hcs' : (C : ℝ) * (partSide ω a.1 : ℝ) ≤ ((κ * m : ℕ) : ℝ) := by exact_mod_cast hcs
+    have hcs : C * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) ≤ κ * m := Nat.mul_le_mul (by omega) hsm
+    have hcs' : (C : ℝ) * (max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) : ℕ) ≤ ((κ * m : ℕ) : ℝ) := by exact_mod_cast hcs
     refine h.trans ?_
     exact open_weight_arith hd1 hRr1 (Nat.cast_nonneg _) (Nat.cast_nonneg _) hcs'
       (planeGrad_nonneg hG hGv i ω a.1)
@@ -251,8 +253,8 @@ theorem ae_flipTermTwo_sq_le_weight [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC
       (Finset.sum_nonneg fun _ _ => sq_nonneg _) (hΦs hr1)
   · -- the bond is closed
     have h := hcl i j r hr x a haopen hP
-    rw [← hm] at h
-    have hr0 : 1 + 5 * m ≤ κ * m := by
+    have hm2 : max (partSide ω a.1) (partSide ω (edgeHead a)) ≤ m := by rw [hm]; omega
+    have hr0 : 1 + 5 * max (partSide ω a.1) (partSide ω (edgeHead a)) ≤ κ * m := by
       have h3 : κ * m = C₀ * m + 3 * (C * m) + 6 * m := by rw [hκ]; ring
       omega
     rw [← supBox_eq_boxFinset] at h

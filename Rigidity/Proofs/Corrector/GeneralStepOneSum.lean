@@ -7,11 +7,11 @@ import Mathlib.MeasureTheory.Function.Floor
 Summing `flipTermOne_sq_le_of_bound` over the bonds and exchanging the sums gives Dario's (3.18) in
 flip form: almost surely
 
-`Σ_e T₁(e)² ≤ Σ_y Φ_{r²}(x, y)² W(y)`, `W(y) = Σ_e 1{y ∈ B(a_e, C₀ C s₁(e))} F_e`,
+`Σ_e T₁(e)² ≤ Σ_y Φ_{r²}(x, y)² W(y)`, `W(y) = Σ_e 1{y ∈ B(a_e, C₀ S(e))} F_e`,
 
-with `a_e = bondBase e`, `s₁(e)` the side of the partition cube of `ω^{e,1}` at `a_e`
-(`flipSide`, measurable through the stopping size) and
-`F_e = |B(a_e, C₀ C s₁)| (4d Σ_{z ∈ B(a_e, R₁)} Λ(z, ω^{e,1}))²` (`stepOneFactor`, `stepOneW`,
+with `a_e = bondBase e`, `S(e)` the scale of the corrected Lemma 3.5 for the flips of `e` at `a_e`
+(`flipSide`, measurable through the stopping sizes) and
+`F_e = |B(a_e, C₀ S)| (4d Σ_{z ∈ B(a_e, R₁)} Λ(z, ω^{e,1}))²`, `R₁ = (C₀ S + 1) + 3 C S` (`stepOneFactor`, `stepOneW`,
 `ae_flipSumOne_le`). With `isOsBond_heatSqSum_of_moments`, Step 1 (`Σ_e T₁(e)² ≤ O_s(C r^{-d})`)
 then reduces to uniform moments `E[W(y)^q] ≤ (A q^k)^q` (`flipSumOne_isOsBond_of_moments`). This
 is the planar argument of `Rigidity.Corrector.flipSumOne_isOsBond_of_moments` on `ℤᵈ`.
@@ -25,29 +25,37 @@ open scoped Classical ENNReal
 
 variable {d : ℕ}
 
-/-- The side of the partition cube of `ω^{e,1}` at the base of `e`, through the stopping size. -/
+/-- The scale `S` of the flips of `e` at its base, through the stopping sizes. -/
 noncomputable def flipSide (e : Bond d) (ω : Configuration d) : ℕ :=
-  ⌊TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e true ω)) (bondBase e)⌋₊
+  ⌊max (TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e false ω)) (bondBase e))
+    (TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e true ω)) (bondBase e))⌋₊
 
 theorem measurable_flipSide (e : Bond d) : Measurable (flipSide e) :=
   Nat.measurable_floor.comp
-    ((measurable_stoppingSize_goodCubes (bondBase e)).comp (measurable_setBond e true))
+    (((measurable_stoppingSize_goodCubes (bondBase e)).comp (measurable_setBond e false)).max
+      ((measurable_stoppingSize_goodCubes (bondBase e)).comp (measurable_setBond e true)))
+
+theorem stoppingSize_goodCubes_eq_cast {ω : Configuration d} (hP : PartitionEvent ω)
+    (v : Vertex d) :
+    TriadicCube.stoppingSize (TriadicCube.goodCubes ω) v =
+      ((3 ^ (partitionCube ω v).scale : ℕ) : ℝ) := by
+  rw [TriadicCube.stoppingSize_eq_of_mem (mem_partitionCube hP _) (partitionCube_spec hP _).2]
+  push_cast
+  rfl
 
 theorem flipSide_eq {e : Bond d} {ω : Configuration d}
-    (hP : PartitionEvent (setBond e true ω)) :
-    flipSide e ω = 3 ^ (partitionCube (setBond e true ω) (bondBase e)).scale := by
-  unfold flipSide
-  rw [TriadicCube.stoppingSize_eq_of_mem (mem_partitionCube hP _) (partitionCube_spec hP _).2]
-  rw [show (3 : ℝ) ^ (partitionCube (setBond e true ω) (bondBase e)).scale =
-    ((3 ^ (partitionCube (setBond e true ω) (bondBase e)).scale : ℕ) : ℝ) by push_cast; rfl,
+    (hP₀ : PartitionEvent (setBond e false ω)) (hP₁ : PartitionEvent (setBond e true ω)) :
+    flipSide e ω = flipScale e ω := by
+  unfold flipSide flipScale resampleScale
+  rw [stoppingSize_goodCubes_eq_cast hP₀, stoppingSize_goodCubes_eq_cast hP₁, ← Nat.cast_max,
     Nat.floor_natCast]
 
 /-- The local factor of Step 1 at the bond `e` seen from `y`, for the side `n`. -/
 noncomputable def stepOneFactorAt (Λ : Vertex d → Configuration d → ℝ) (C₀ C : ℕ) (e : Bond d)
     (y : Vertex d) (n : ℕ) (ω : Configuration d) : ℝ≥0∞ :=
-  if y ∈ supBox (bondBase e) (C₀ * C * n) then
-    ENNReal.ofReal ((supBox (bondBase e) (C₀ * C * n)).card *
-      (4 * d * ∑ z ∈ supBox (bondBase e) ((C₀ * C * n + 1) + 3 * (C * (C * n))),
+  if y ∈ supBox (bondBase e) (C₀ * n) then
+    ENNReal.ofReal ((supBox (bondBase e) (C₀ * n)).card *
+      (4 * d * ∑ z ∈ supBox (bondBase e) ((C₀ * n + 1) + 3 * (C * n)),
         Λ z (setBond e true ω)) ^ 2)
   else 0
 
@@ -65,7 +73,7 @@ theorem measurable_stepOneFactor {Λ : Vertex d → Configuration d → ℝ}
     (hΛm : ∀ z, Measurable (Λ z)) (C₀ C : ℕ) (e : Bond d) (y : Vertex d) :
     Measurable (stepOneFactor Λ C₀ C e y) := by
   have hF : ∀ n, Measurable (stepOneFactorAt Λ C₀ C e y n) := fun n => by
-    by_cases hc : y ∈ supBox (bondBase e) (C₀ * C * n)
+    by_cases hc : y ∈ supBox (bondBase e) (C₀ * n)
     · unfold stepOneFactorAt
       simp only [if_pos hc]
       exact ENNReal.measurable_ofReal.comp (measurable_const.mul (((Finset.measurable_sum _
@@ -108,7 +116,7 @@ variable [NeZero d] {G : Set (Configuration d)} (hG : MeasurableSet G)
 /-- **Dario's (3.18) in flip form on `ℤᵈ`**: almost surely, `Σ_e T₁(e)² ≤ Σ_y Φ_{r²}(x, y)² W(y)`,
 for Lipschitz bounds `Λ` of the corrector holding almost surely. -/
 theorem ae_flipSumOne_le (hd : 2 ≤ d) {p : unitInterval} (hpc : criticalProbability d < (p : ℝ))
-    (hp1 : (p : ℝ) < 1) (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {C₀ C : ℕ} (hC₀ : 0 < C₀)
+    (hp1 : (p : ℝ) < 1) (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {C₀ C : ℕ}
     (hres : ResamplePartitionBound (d := d) C₀ C) {i : Fin d}
     {Λ : Vertex d → Configuration d → ℝ} (hΛ0 : ∀ z ω, 0 ≤ Λ z ω)
     (hlip : ∀ᵐ ω ∂latticeBondLaw d p, ∀ z, ω ∈ infiniteComponentEvent z → ∀ y,
@@ -124,13 +132,13 @@ theorem ae_flipSumOne_le (hd : 2 ≤ d) {p : unitInterval} (hpc : criticalProbab
   calc ∑' e, ENNReal.ofReal (flipTermOne hG hGv i j r x e ω ^ 2)
       ≤ ∑' e, ∑' y, ENNReal.ofReal (zdHeat d (r ^ 2) x y ^ 2) *
           stepOneFactor Λ C₀ C e y ω := ENNReal.tsum_le_tsum fun e => by
-        have h := flipTermOne_sq_le_of_bound hG hGv hd0 hC₀ hres (hG' e true) (hP' e true)
+        have h := flipTermOne_sq_le_of_bound hG hGv hd0 hres (hG' e true) (hP' e true)
           (hP' e false) (Λ := fun z => Λ z (setBond e true ω)) (fun z => hΛ0 z _) (hl e true)
           j r x
         refine (ENNReal.ofReal_le_ofReal h).trans (le_of_eq ?_)
         rw [ofReal_card_mul_sum_sq_mul_eq]
         refine tsum_congr fun y => ?_
-        simp only [stepOneFactor, stepOneFactorAt, flipSide_eq (hP' e true)]
+        simp only [stepOneFactor, stepOneFactorAt, flipSide_eq (hP' e false) (hP' e true)]
     _ = ∑' y, ∑' e, ENNReal.ofReal (zdHeat d (r ^ 2) x y ^ 2) * stepOneFactor Λ C₀ C e y ω :=
         ENNReal.tsum_comm
     _ = ∑' y, ENNReal.ofReal (zdHeat d (r ^ 2) x y ^ 2) * ∑' e, stepOneFactor Λ C₀ C e y ω :=
@@ -141,7 +149,7 @@ Lipschitz bounds `Λ` of the corrector, uniform moments `E[W(y)^q] ≤ (A q^k)^q
 with `Σ_e T₁(e)²` almost surely finite and `≤ O_s(C' r^{-d})` for all `j`, `r ≥ 1` and `x`. -/
 theorem flipSumOne_isOsBond_of_moments (hd : 2 ≤ d) {p : unitInterval}
     (hpc : criticalProbability d < (p : ℝ))
-    (hp1 : (p : ℝ) < 1) (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {C₀ C : ℕ} (hC₀ : 0 < C₀)
+    (hp1 : (p : ℝ) < 1) (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {C₀ C : ℕ}
     (hres : ResamplePartitionBound (d := d) C₀ C) {i : Fin d}
     {Λ : Vertex d → Configuration d → ℝ}
     (hΛm : ∀ z, Measurable (Λ z)) (hΛ0 : ∀ z ω, 0 ≤ Λ z ω)
@@ -154,7 +162,7 @@ theorem flipSumOne_isOsBond_of_moments (hd : 2 ≤ d) {p : unitInterval}
       (∀ᵐ ω ∂latticeBondLaw d p, flipSumOne hG hGv i j r x ω < ∞) ∧
       IsOsBond d p (fun ω => (flipSumOne hG hGv i j r x ω).toReal) s (C' / r ^ (d : ℝ)) := by
   obtain ⟨s, C', hs, hC', h⟩ := isOsBond_heatSqSum_of_moments (d := d) (p := p) hA hk
-  have hle := ae_flipSumOne_le hG hGv hd hpc hp1 hGae hC₀ hres hΛ0 hlip
+  have hle := ae_flipSumOne_le hG hGv hd hpc hp1 hGae hres hΛ0 hlip
   refine ⟨s, C', hs, hC', fun j r hr x => ?_⟩
   refine h r hr x (stepOneW Λ C₀ C) (fun y => measurable_stepOneW hΛm C₀ C y) hmom _
     (measurable_flipSumOne hG hGv i j r x) ?_

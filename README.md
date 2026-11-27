@@ -69,7 +69,17 @@ locality of good cubes and the stability of the cubes of side at least `9 side(�
 `Rigidity.Corrector.GeneralDim.mem_stableGood_of_mem_centeredTriple`), the partitions agree outside
 the ball of radius `81 S` (`Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree`), and the partition cubes of
 nearby points have comparable sizes (`Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near`). The
-conclusion of Dario's Theorem 1 is unchanged, since `S` has the same stretched-exponential tail as `s`. For the Step 2 sum the objects
+conclusion of Dario's Theorem 1 is unchanged, since `S` has the same stretched-exponential tail as `s`.
+Steps 1 and 2 use this corrected form (`ResamplePartitionBound C₀ C`, the ball and the bound at the
+scale `S = Rigidity.Corrector.GeneralDim.resampleScale`), which holds with `C₀ = 81` and `C = 243`
+(`Rigidity.Corrector.GeneralDim.resamplePartitionBound_holds`,
+`Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_holds`); the tail of `S` enters Step 1
+through the density of the law with one bond forced, at most `min(p, 1 - p)⁻¹`
+(`Rigidity.Corrector.GeneralDim.lintegral_comp_setBond_le`,
+`Rigidity.Corrector.GeneralDim.lintegral_stepOneFactor_rpow_le`), so the bound of the Step 1 sum holds
+with no hypothesis (`Rigidity.Corrector.GeneralDim.darioStepOneSumBoundThree_holds`), and Lemma 3.3 in
+dimension `d ≥ 3` follows from the probabilistic part of Step 2 alone
+(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight`). For the Step 2 sum the objects
 of Dario's proof are defined on `ℤᵈ` with their first properties: the Green projection on the
 open graph (Propositions 2.11 and 2.12, `Rigidity.Corrector.GeneralDim.greenProj`,
 `Rigidity.Corrector.GeneralDim.edgeDiv_greenProj`, `Rigidity.Corrector.GeneralDim.norm_greenProj_le`),
@@ -2795,6 +2805,20 @@ term `3^{k+1} 3^{-dk/2}` of each scale is bounded by `3`, so its gradient consta
 source has `O_s(C)` for `d ≥ 3`); the factor `|V|^{-1/d}` of (1.32) is bounded below by `|V|^{-1/2}`; the cardinality bound `|𝒞_∞ ∩ B_r(y)| ≥ (2m + 1)^d/L^d` with `m = 3^{n-d}` replaces the minimal
 scale of the density.
 
+In dimension `d ≥ 3` the variance bound for all `d ≥ 3` and `𝔭_c(d) < p < 1`, `FluxVarianceBoundThree`
+([`GeneralFluxStepTwoInput.lean`](Rigidity/Proofs/Green/GeneralFluxStepTwoInput.lean)), is the target of the port to `ℤ^d` of the
+planar flip chain `DarioGuFlux{Flip,Pairing,OpenBound,ClosedBound,FlipSum,Partition,FlipMoments}`, on the Step 2 objects of
+Dario's Lemma 3.3 on `ℤ^d`, in four parts whose boundaries are stated in that file: the flip difference of the heat average of
+the flux in Cases 1, 2 and 3 (`FluxPairing{Open,Closed,Zero}D`), the bound of each squared flip difference by the Step 2 factor
+(`FluxFlipWeightBoundD`, whose proof uses Lemma 3.5), the flip sum through a partition of good cubes (`FluxFlipSumPartitionD`),
+and the moments of the flip sum from the probabilistic part of Step 2 (`DarioStepTwoWeightThree`). The first, third and fourth
+parts are proved: `FluxVarianceBoundThree` follows from `FluxFlipWeightBoundD` and `DarioStepTwoWeightThree`
+([`GeneralFluxFlipMoments.lean`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean)). `FluxFlipWeightBoundD` is not yet proved; its
+bound for the bonds open in the configuration is stated as `FluxOpenBoundD` (not proved)
+([`GeneralFluxP2Input.lean`](Rigidity/Proofs/Green/GeneralFluxP2Input.lean)), with the larger side `S` of the partition cubes of
+`ω` and `ω^{e,0}`. With Proposition 2.12, `FluxVarianceBoundThree` gives the quantitative Green estimate in every dimension, which
+therefore rests on Proposition 2.12, `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD` alone.
+
 | Lean declaration | Statement |
 | --- | --- |
 | [`Rigidity.Green.GeneralFlux.exists_homogenizedCoefficientD`](Rigidity/Proofs/Green/GeneralFluxMean.lean), [`exists_fluxMeanD`](Rigidity/Proofs/Green/GeneralFluxMean.lean) | the mean of the flux of the corrected plane of slope `e_k` along `e_i` is `ā δ_{ik}` with `ā > 0`, on `ℤ^d`. |
@@ -2803,9 +2827,18 @@ scale of the density.
 | [`sum_sq_grad_coarseTestD_le`](Rigidity/Proofs/Green/GeneralFluxCoarsening.lean), [`weakNormLeD_of_scale_bounds`](Rigidity/Proofs/Green/GeneralFluxScale.lean) | the gradient of the coarsened test function (est.nablacoarsenL2) on the partition into good cubes of `ℤ^d`, and the weak norm of the centered flux on `𝒞_∞ ∩ B_r(y)` at a good scale. |
 | [`darioGuFluxWeakNormD_of_bounds`](Rigidity/Proofs/Green/GeneralFluxHolds.lean), [`darioGuFluxWeakNormD_of_variance`](Rigidity/Proofs/Green/GeneralFluxHolds.lean), [`darioGuFluxWeakNormD_two_holds`](Rigidity/Proofs/Green/GeneralFluxHolds.lean) | Proposition 2.13 on `ℤ^d` from the two weak norm bounds (Step 3, the minimal scale), hence from `FluxVarianceBoundD d p`; in dimension two with no hypothesis. |
 | [`fluxVarianceBoundD_two`](Rigidity/Proofs/Green/GeneralFluxVarianceTwo.lean) | `FluxVarianceBoundD 2 p` for every `𝔭_c(2) < p < 1`: at `d = 2` the flux, its heat average and the resampling variance are the planar ones, and the variance is at most the planar flip sum, which is `O_s(C/r²)`. |
+| [`bondFlipDiff_fluxObsD_eq`](Rigidity/Proofs/Green/GeneralFluxHeatEdge.lean), [`heatEdgeD_apply`](Rigidity/Proofs/Green/GeneralFluxHeatEdge.lean), [`tsum_weight_openEnergy_heatD_le`](Rigidity/Proofs/Green/GeneralFluxHeatEdge.lean) | on `ℤ^d`: the flip difference across a bond of the heat average of the flux is the difference of the heat averages of the fluxes of the corrected planes of `ω^{e,1}` and `ω^{e,0}`; the heat field of the edges is `Φ_{r²}(x, z)` on the open edges `(z, i)` of the infinite components; its weighted energy through a partition into cells carrying the Meyers estimate is at most `3 K Σ_y Φ_{r²}(x, y)² ((3^d)^{n(y)})^{1 - 1/(1 + ε/2)}`. |
+| [`ae_planeFluxD_setBond_eq`](Rigidity/Proofs/Green/GeneralFluxFlip.lean), [`fluxPairingOpenD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`fluxPairingClosedD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`fluxPairingZeroD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean) | Gu, Lemma 3.2 and Steps 3 and 4, on `ℤ^d`: if the endpoints of `e` are not both in the infinite cluster of `ω^{e,0}`, the fluxes of the corrected planes of `ω^{e,1}` and `ω^{e,0}` agree and the flip difference of the heat average vanishes; otherwise it is `c ((P₁ h₁)(a) − 1{a.2 = i} Φ_{r²}(x, a.1))` and `c' (Σ_{b ∈ π} (P₀ h₀)(b) − 1{a.2 = i} Φ_{r²}(x, a.1))`. |
+| [`fluxFlipSumPartitionD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipSum.lean) | from the bound of each flip difference by the Step 2 factor, for every partition into maximal stopping cubes of the good cubes of Step 2, `Σ_e (D_e X)² ≤ Σ_y Φ_{r²}(x, y)² K₀ (W(y) + K_c ((3^d)^{n(y)})^{1 − 1/(1 + ε/2)})` with the Step 2 weight `W`. |
+| [`supercriticalBondGreenQuantitative_of_corrector_fluxVariance`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFluxVariance.lean) | `SupercriticalBondGreenQuantitative` from Proposition 2.12 (`CorrectorQuantitativeInput`) and `FluxVarianceBoundThree`. |
+| [`ofReal_le_pathWeight`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean), [`exists_fluxFlipD_weight_data`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean), [`fluxFlipSumD_isOsBond`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean) | on `ℤ^d`, `d ≥ 3`: the cell factor `((3^d)^{n(y)})^{1 − 1/(1 + ε/2)}` is at most the path weight of the partition at `y`; from the bound of each flip difference by the Step 2 factor and `DarioStepTwoWeightThree`, `Σ_e (D_e X)² ≤ Σ_y Φ_{r²}(x, y)² W(y)` with `E[W(y)^q] ≤ (A q^κ)^q` uniformly in `y`, hence `Σ_e (D_e X)² = O_s(C r^{-d})`. |
+| [`fluxVarianceBoundThree_of_weight`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean), [`fluxVarianceBoundThree_of_weightBound`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean) | `FluxVarianceBoundThree` from `FluxFlipWeightBoundD`, `FluxFlipSumPartitionD` and `DarioStepTwoWeightThree`, and with `fluxFlipSumPartitionD_holds` from `FluxFlipWeightBoundD` and `DarioStepTwoWeightThree` alone, the hypotheses on the parts for `d ≥ 3` and `𝔭_c(d) < p < 1`: the resampling variance is at most the flip sum. |
+| [`supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeight.lean) | `SupercriticalBondGreenQuantitative` from Proposition 2.12 (`CorrectorQuantitativeInput`), `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`. |
 
-The files are `GeneralFlux*.lean` in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) (sixteen files). The twelve reports for
-the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+The files are `GeneralFlux*.lean` in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) (twenty-three files),
+[`GreenQuantitativeFromFluxVariance.lean`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFluxVariance.lean) and
+[`GreenQuantitativeFromStepTwoWeight.lean`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeight.lean). The twenty-seven
+reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 ## Theorem 3 of Dario and Gu in dimension two from Proposition 3.9
 
@@ -3423,7 +3456,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1231 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1253 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3457,9 +3490,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 861 Lean files with 184,705 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 909 Lean files with 197,624 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,818 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,909 lines) are counted separately.
 
 ## Building
 

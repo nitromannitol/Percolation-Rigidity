@@ -1,16 +1,15 @@
 import Rigidity.Proofs.Corrector.GeneralStepOneMoments
 
 /-!
-# Step 1 of Lemma 3.3 of Dario on `ℤᵈ`, bond by bond, with the partition of the open flip
+# Step 1 of Lemma 3.3 of Dario on `ℤᵈ`, bond by bond
 
 `flipTermOne_sq_le` bounds `T₁(e)²` through boxes around an endpoint `a` of `e` of radii comparable
-to the side `s₀` of the partition cube of `ω^{e,0}` at `a`. Applying Lemma 3.5
-(`ResamplePartitionBound C₀ C`) with the roles of the flips exchanged, `s₀ ≤ C s₁` with `s₁` the
-side of the partition cube of `ω^{e,1}` at `a`; since all the factors grow with the boxes,
-`flipTermOne_sq_le_of_bound` bounds `T₁(e)²` by quantities of the single configuration
-`ω^{e,1}`: boxes of radii `C₀ C s₁` and `(C₀ C s₁ + 1) + 3 C² s₁` and the Lipschitz bounds of its
-corrector. The endpoint is `bondBase e`, the first point of a presentation of the bond. This is
-the planar `Rigidity.Corrector.flipTermOne_sq_le_of_bound` on `ℤᵈ`.
+to the scale `S` of the corrected Lemma 3.5, the larger side of the partition cubes of `ω^{e,0}`
+and `ω^{e,1}` at `a` (`resampleScale`). With `ResamplePartitionBound C₀ C`,
+`flipTermOne_sq_le_of_bound` bounds `T₁(e)²` by boxes of radii `C₀ S` and `(C₀ S + 1) + 3 C S` and
+the Lipschitz bounds of the corrector of `ω^{e,1}`. The endpoint is `bondBase e`, the first point
+of a presentation of the bond. This is the planar `Rigidity.Corrector.flipTermOne_sq_le_of_bound`
+on `ℤᵈ`, with the scale `S` in place of the side of one partition.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -61,10 +60,15 @@ section Bound
 
 variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
 
-/-- **Step 1 for one bond, in terms of `ω^{e,1}`**: with `s₁` the side of the partition cube of
-`ω^{e,1}` at the base `a` of `e`, `ρ₁ = C₀ C s₁` and `R₁ = (ρ₁ + 1) + 3 C (C s₁)`,
-`T₁(e)² ≤ |B(a, ρ₁)| (Σ_{y ∈ B(a, ρ₁)} Φ²) (4d Σ_{z ∈ B(a, R₁)} Λ(z))²`. -/
-theorem flipTermOne_sq_le_of_bound (hd : 0 < d) {C₀ C : ℕ} (hC₀ : 0 < C₀)
+/-- The scale `S` of the corrected Lemma 3.5 for the flips of `e` at its base: the larger side of
+the partition cubes of `ω^{e,0}` and `ω^{e,1}` at `bondBase e`. -/
+noncomputable def flipScale (e : Bond d) (ω : Configuration d) : ℕ :=
+  resampleScale (setBond e false ω) (setBond e true ω) (bondBase e)
+
+/-- **Step 1 for one bond**: with `S` the scale of the flips of `e` at its base `a`,
+`T₁(e)² ≤ |B(a, C₀ S)| (Σ_{y ∈ B(a, C₀ S)} Φ²) (4d Σ_{z ∈ B(a, R)} Λ(z))²`,
+`R = (C₀ S + 1) + 3 C S`, with Lipschitz bounds `Λ` of the corrector of `ω^{e,1}`. -/
+theorem flipTermOne_sq_le_of_bound (hd : 0 < d) {C₀ C : ℕ}
     (hres : ResamplePartitionBound (d := d) C₀ C)
     {e : Bond d} {ω : Configuration d} (hω₁ : setBond e true ω ∈ G)
     (hP₁ : PartitionEvent (setBond e true ω)) (hP₀ : PartitionEvent (setBond e false ω))
@@ -74,35 +78,13 @@ theorem flipTermOne_sq_le_of_bound (hd : 0 < d) {C₀ C : ℕ} (hC₀ : 0 < C₀
         |correctorDiff hG hGv (Pi.single i 1) (setBond e true ω) z y| ≤ Λ z)
     (j : Fin d) (r : ℝ) (x : Vertex d) :
     flipTermOne hG hGv i j r x e ω ^ 2 ≤
-      (supBox (bondBase e)
-        (C₀ * C * 3 ^ (partitionCube (setBond e true ω) (bondBase e)).scale)).card *
-        (∑ y ∈ supBox (bondBase e)
-            (C₀ * C * 3 ^ (partitionCube (setBond e true ω) (bondBase e)).scale),
-          zdHeat d (r ^ 2) x y ^ 2) *
+      (supBox (bondBase e) (C₀ * flipScale e ω)).card *
+        (∑ y ∈ supBox (bondBase e) (C₀ * flipScale e ω), zdHeat d (r ^ 2) x y ^ 2) *
         (4 * d * ∑ z ∈ supBox (bondBase e)
-            ((C₀ * C * 3 ^ (partitionCube (setBond e true ω) (bondBase e)).scale + 1) +
-              3 * (C * (C * 3 ^ (partitionCube (setBond e true ω) (bondBase e)).scale))),
-          Λ z) ^ 2 := by
-  have hx : bondBase e ∈ e.1 := bondBase_mem e
-  -- Lemma 3.5 with the flips exchanged: `s₀ ≤ C s₁`
-  have hss : 3 ^ (partitionCube (setBond e false ω) (bondBase e)).scale ≤
-      C * 3 ^ (partitionCube (setBond e true ω) (bondBase e)).scale := by
-    refine (hres e (setBond e true ω) (setBond e false ω) (setBond_agree_off e true false ω) hP₁
-      hP₀ (bondBase e) hx (bondBase e)).1 fun i => ?_
-    rw [sub_self, abs_zero]
-    exact mul_pos (by exact_mod_cast hC₀) (by positivity)
-  have key : ∀ s₀ s₁ : ℕ, s₀ ≤ C * s₁ → C₀ * s₀ ≤ C₀ * C * s₁ ∧
-      (C₀ * s₀ + 1) + 3 * (C * s₀) ≤ (C₀ * C * s₁ + 1) + 3 * (C * (C * s₁)) := by
-    intro s₀ s₁ h
-    have h1 : C₀ * s₀ ≤ C₀ * C * s₁ := by
-      rw [mul_assoc]
-      exact Nat.mul_le_mul_left _ h
-    exact ⟨h1, Nat.add_le_add (Nat.add_le_add_right h1 1)
-      (Nat.mul_le_mul_left 3 (Nat.mul_le_mul_left C h))⟩
-  have hloc := resampleLocal_of_bound hres (setBond_agree_off e false true ω) hP₀ hP₁ hx
-  have hk := key _ _ hss
-  exact (flipTermOne_sq_le hG hGv hd hω₁ hP₁ hP₀ hloc hΛ0 hΛ j r x).trans
-    (stepOne_box_bound_mono (bondBase e) hk.1 hk.2 _ Λ hΛ0)
+            ((C₀ * flipScale e ω + 1) + 3 * (C * flipScale e ω)), Λ z) ^ 2 :=
+  flipTermOne_sq_le hG hGv hd hω₁ hP₁ hP₀
+    (resampleLocal_of_bound hres (setBond_agree_off e false true ω) hP₀ hP₁ (bondBase_mem e))
+    hΛ0 hΛ j r x
 
 end Bound
 
