@@ -11,7 +11,7 @@ concludes by the Liouville theorem. The missing ingredient is the sublinear grow
 `W` of finite energy on the infinite cluster. This is the argument of the planar file
 `DarioFiniteEnergyGrowth` for the partition into good cubes of `ℤᵈ`:
 
-* `abs_partitionAnchor_sub_le` (in `GeneralStepOneLocal`): the anchors of the partition cubes of lattice neighbours are
+* `abs_partitionAnchor_sub_le_of_adj` (in `GeneralStepOneLocal`): the anchors of the partition cubes of lattice neighbours are
   joined inside the union of the two cubes (Armstrong and Dario, Corollary 2.10,
   `reachable_partitionAnchor_of_adj`), so `W` changes between them by at most its total variation
   over the box of radius `s` around the first point, `s` bounding the sides of the two cubes;
@@ -129,7 +129,7 @@ theorem abs_partitionAnchor_chain_le (hd : 0 < d) {ω : Configuration d} (hP : P
   | zero => simp
   | succ n ih =>
     have ih' := ih (fun k hk => hstep k (by omega)) (fun k hk => hs k (by omega))
-    have hst := abs_partitionAnchor_sub_le hd hP (hstep n (by omega)) (hs n (by omega))
+    have hst := abs_partitionAnchor_sub_le_of_adj hd hP (hstep n (by omega)) (hs n (by omega))
       (hs (n + 1) le_rfl) W
     have htri := abs_sub_le (W (partitionAnchor ω (z (n + 1))))
       (W (partitionAnchor ω (z n))) (W (partitionAnchor ω (z 0)))

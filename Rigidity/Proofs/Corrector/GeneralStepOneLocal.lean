@@ -49,7 +49,7 @@ theorem abs_sub_le_of_mem_partitionCube {ω : Configuration d} (hP : PartitionEv
 /-- The anchors of the partition cubes of lattice neighbours `x, y`, of sides at most `s`, are
 joined inside the box of radius `s` around `x`; so `W` changes between them by at most its total
 variation over that box. -/
-theorem abs_partitionAnchor_sub_le (hd : 0 < d) {ω : Configuration d} (hP : PartitionEvent ω)
+theorem abs_partitionAnchor_sub_le_of_adj (hd : 0 < d) {ω : Configuration d} (hP : PartitionEvent ω)
     {x y : Vertex d} (hxy : (nearestNeighborGraph d).Adj x y) {s : ℕ}
     (hsx : 3 ^ (partitionCube ω x).scale ≤ s) (hsy : 3 ^ (partitionCube ω y).scale ≤ s)
     (W : Vertex d → ℝ) :
@@ -109,7 +109,7 @@ theorem abs_partitionAnchor_sub_le_supBox (hd : 0 < d) {ω : Configuration d}
     · exact ⟨hb.trans (by omega), h3 h2 hb⟩
     · exact ⟨h3 h1 hb, hb.trans (by omega)⟩
   have hadj : (nearestNeighborGraph d).Adj y (y + LatticeProb.unit j) := ⟨j, Or.inl rfl⟩
-  refine (abs_partitionAnchor_sub_le hd hP hadj hM3.1 hM3.2 w).trans
+  refine (abs_partitionAnchor_sub_le_of_adj hd hP hadj hM3.1 hM3.2 w).trans
     (edgeVariationIn_mono (fun v hv => ?_) w)
   rw [← supBox_eq_boxFinset, mem_supBox] at hv
   rw [mem_supBox]
