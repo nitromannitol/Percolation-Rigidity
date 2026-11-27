@@ -383,7 +383,7 @@ import Rigidity.Proofs.Poincare.DualTestFunction
 import Rigidity.Proofs.Poincare.DualityTerms
 import Rigidity.Proofs.Poincare.MultiscalePoincareHolds
 import Rigidity.Proofs.Poincare.DarioCorrectorPoincare
-import Rigidity.Proofs.Poincare.DarioCorrectorBridges
+import Rigidity.Proofs.Assembly.DarioCorrectorFromLemmaThreeThree
 import Rigidity.Proofs.Corrector.DarioBondResampling
 import Rigidity.Proofs.Corrector.DarioCaseOneTwo
 import Rigidity.Proofs.Corrector.DarioCaseThree
@@ -445,10 +445,10 @@ import Rigidity.Proofs.Green.DarioGuTheoremOneDensity
 import Rigidity.Proofs.Green.DarioGuTheoremOneApprox
 import Rigidity.Proofs.Green.DarioGuTheoremOneCarne
 import Rigidity.Proofs.Green.DarioGuTheoremOnePoincare
-import Rigidity.Proofs.Poincare.DarioGuBridges
-import Rigidity.Proofs.Poincare.DarioGuFluxBridges
+import Rigidity.Proofs.Assembly.DarioGuHeatKernelFromTwoScale
+import Rigidity.Proofs.Assembly.DarioGuHeatKernelFromFlux
 import Rigidity.Proofs.Corrector.DarioResamplePartitionHolds
-import Rigidity.Proofs.Poincare.DarioStepTwoBridges
+import Rigidity.Proofs.Assembly.DarioCorrectorFromStepTwoSum
 import Rigidity.Proofs.Corrector.DarioMeyersSource
 import Rigidity.Proofs.Corrector.DarioStepTwoSum
 import Rigidity.Proofs.Corrector.DarioStepTwoReduce

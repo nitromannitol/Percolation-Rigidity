@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Poincare.DarioGuBridges
+import Rigidity.Proofs.Assembly.DarioGuHeatKernelFromTwoScale
 import Rigidity.Proofs.Green.DarioGuTwoScaleFluxTerm
 import Rigidity.Proofs.Corrector.DarioStepOneHolds
 

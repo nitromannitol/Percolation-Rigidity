@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Poincare.DarioStepTwoBridges
+import Rigidity.Proofs.Assembly.DarioCorrectorFromStepTwoSum
 import Rigidity.Proofs.Corrector.DarioStepTwoFinalMoments
 
 /-!

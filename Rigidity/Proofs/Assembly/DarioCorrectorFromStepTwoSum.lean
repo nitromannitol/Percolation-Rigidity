@@ -1,5 +1,5 @@
-import Rigidity.Proofs.Poincare.DarioCorrectorBridges
-import Rigidity.Proofs.Poincare.DarioGuFluxBridges
+import Rigidity.Proofs.Assembly.DarioCorrectorFromLemmaThreeThree
+import Rigidity.Proofs.Assembly.DarioGuHeatKernelFromFlux
 import Rigidity.Proofs.Corrector.DarioResamplePartitionHolds
 
 /-!
