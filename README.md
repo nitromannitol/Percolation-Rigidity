@@ -1881,7 +1881,9 @@ Theorem 2(iii) at `k = 1` at the origin in dimension two follows from this and f
 `DarioOptimalCorrectorTwo` (Theorem 1 of Dario) alone, since `PlanarCorrectedPlaneExistenceTwo` and
 `PlanarOrderOneDimensionTwo` are proved (`armstrongDarioOrderOneOriginTwo_of_dario` and
 `armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector`; see
-[Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)).
+[Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)),
+and `DarioOptimalCorrectorTwo` is proved (`darioOptimalCorrectorTwo_holds`, see
+[Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two)).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1923,7 +1925,7 @@ that take it, without it.
 | --- | --- |
 | [`Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/GeneralOrderZeroHolds.lean) | `ArmstrongDarioOrderZero` with no hypothesis: for `d ≥ 2` and `𝔭_c(d) < p < 1`, the infinite cluster is unique, `𝒜₀(𝒞_∞)` is one-dimensional, and harmonic functions in large balls at the origin are close to constants above a minimal scale with stretched exponential moments (AD, Theorem 2(iii) at `k = 0`). |
 | [`Rigidity.Assembly.WithProvedOrderZero`](Rigidity/Proofs/Assembly/ProvedOrderZero.lean): `lipschitz`, `fastDecay`, `notLipschitz`, `nonConstantOnGadget`, `fastDecayDichotomy`, `fastDecayPotential`, `gradientTrichotomy`, `levelSetDensity`, `goodEventLowerBound`, `largeGradientSensitive`, `goodEventLowerBoundDirectional` | the eleven theorems of `Rigidity.Assembly.Main` with the hypothesis `ArmstrongDarioOrderZero`, with the same statements and the other hypotheses. |
-| [`Rigidity.Assembly.WithProvedOrderZero.fastDecayWithProvedDensity`](Rigidity/Proofs/Assembly/ProvedOrderZero.lean) | Theorem 1.3, with the hypotheses `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin`, `SupercriticalBondGreenColumnExistence` and `SupercriticalBondGreenQuantitative`. |
+| [`Rigidity.Assembly.WithProvedOrderZero.fastDecayWithProvedDensity`](Rigidity/Proofs/Assembly/ProvedOrderZero.lean) | Theorem 1.3, with the hypotheses `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin`, `SupercriticalBondGreenColumnExistence` and `SupercriticalBondGreenQuantitative`, all five of which are proved (`Rigidity.Assembly.Unconditional.fast_decay` takes none of them). |
 
 The thirteen declarations depend on exactly `propext`, `Classical.choice` and `Quot.sound`.
 
@@ -1973,7 +1975,8 @@ Departures from Armstrong and Dario:
   `a_0` of the cluster in `B_{X−1}` (`SupercriticalBondCorrectorInput`), with the error
   `|g_i − x_i| ≤ C t^{1/2}` from `CorrectorQuantitativeInput`, with the edge `(a_0, a_1)` in `B_X`.
   The literature proof of `CorrectorQuantitativeInput` (DG, Proposition 2.12) rests on the regularity theory of
-  AD, so this route cannot later serve as a proof of that input.
+  AD, so this route is not a proof of that input; the input is proved in every dimension
+  (`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`).
 - **(1.18) from (7.18).** AD obtain (1.18) by the construction of the corrected planes of Armstrong, Kuusi and
   Mourrat, Proposition 3.1, from Theorem 1 with the minimal scale of the flatness (5.33). Here (1.18) is derived
   from (7.18) at `k = 2` and the existence of the corrected planes, with the minimal scale of (7.18) and of the
@@ -2700,7 +2703,8 @@ from the following named inputs, for each `𝔭_c(2) < p < 1` and some `σ > 0`:
   (`darioGuHeatKernelTwo_of_reduced_dario`).
 
 Lemma 3.11 (Lemma 8.9 of Armstrong, Kuusi and Mourrat, `AKMLemmaEightNineTwo`) is stated, since it is used in the
-proof of Proposition 3.9, which is a named statement; Theorem 3 is proved from Proposition 3.9 and Theorem 4 in
+proof of Proposition 3.9, which is a named statement that is not proved here and is not needed: Theorem 3 is proved from
+Theorem 4 alone (`darioGuGradientBoundTwo_holds`), and its reduction to Proposition 3.9 and Theorem 4 is in
 [Theorem 3 of Dario and Gu in dimension two from Proposition 3.9](#theorem-3-of-dario-and-gu-in-dimension-two-from-proposition-39).
 
 | Lean declaration | Statement |
@@ -2931,7 +2935,7 @@ source has `O_s(C)` for `d ≥ 3`); the factor `|V|^{-1/d}` of (1.32) is bounded
 scale of the density.
 
 In dimension `d ≥ 3` the variance bound for all `d ≥ 3` and `𝔭_c(d) < p < 1`, `FluxVarianceBoundThree`
-([`GeneralFluxStepTwoInput.lean`](Rigidity/Proofs/Green/GeneralFluxStepTwoInput.lean)), is the target of the port to `ℤ^d` of the
+([`GeneralFluxStepTwoInput.lean`](Rigidity/Proofs/Green/GeneralFluxStepTwoInput.lean)), is proved by the port to `ℤ^d` of the
 planar flip chain `DarioGuFlux{Flip,Pairing,OpenBound,ClosedBound,FlipSum,Partition,FlipMoments}`, on the Step 2 objects of
 Dario's Lemma 3.3 on `ℤ^d`, in four parts whose boundaries are stated in that file: the flip difference of the heat average of
 the flux in Cases 1, 2 and 3 (`FluxPairing{Open,Closed,Zero}D`), the bound of each squared flip difference by the Step 2 factor
@@ -2950,7 +2954,8 @@ the bound for the bonds open in the configuration, `FluxOpenBoundD`
 therefore rests on Proposition 2.12 and `DarioStepTwoWeightThree` alone; both are proved
 (`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`,
 `Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`), so it holds with no hypothesis
-([`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`](Rigidity/Proofs/Assembly/ProvedCorrectorQuantitative.lean)).
+([`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`](Rigidity/Proofs/Assembly/ProvedCorrectorQuantitative.lean)),
+and `FluxVarianceBoundThree` holds with no hypothesis (`fluxVarianceBoundThree_of_stepTwoWeight` with `darioStepTwoWeightThree_holds`).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -3024,8 +3029,10 @@ Departures from Dario and Gu:
   cutoff, by summation by parts on the cluster, and a time cutoff (Proposition 2.9) or an average over the initial time
   (Lemma 2.10).
 
-Proposition 3.9 remains a named statement: its proof in the source goes through Theorem 5 (homogenization of the parabolic
-Dirichlet problem), whose printed estimate has no term in the time derivative of the boundary condition.
+Proposition 3.9 is a named statement and is not proved here: its proof in the source goes through Theorem 5 (homogenization
+of the parabolic Dirichlet problem), whose printed estimate has no term in the time derivative of the boundary condition.
+Theorem 3 does not need it, since it is proved from Theorem 4 alone in
+[Theorem 3 of Dario and Gu in dimension two from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4](#theorem-3-of-dario-and-gu-in-dimension-two-from-theorem-4-and-theorems-1-and-2-from-proposition-213-and-theorem-4).
 
 ## The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10
 
@@ -3266,10 +3273,13 @@ section), the input in every dimension follows from Proposition 2.13 in dimensio
 proved: `openHeatD` is `bondHeat` and `‖edzD x y‖` is the Euclidean distance `latticeDist x y`, both by definition, so
 `OpenHeatSmallTimeD d` is `HeatSmallTimeD d` (`openHeatSmallTimeD_holds`, from `heatSmallTimeD_holds`; see
 [The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension)).
-Proposition 2.13 is proved too (`darioGuFluxWeakNormTwo_holds`), so only Theorem 1 of Dario and Gu in dimension `d`
-remains for `d ≥ 3` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`); it follows from the
+Proposition 2.13 is proved too (`darioGuFluxWeakNormTwo_holds`), so the input follows from Theorem 1 of Dario and Gu in
+dimension `d` for `d ≥ 3` alone (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`); Theorem 1 follows from the
 whole-cluster estimate of Dario and Gu (next section), and so from `CorrectorQuantitativeInput` and `DarioStepTwoWeightThree`
-(`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight`).
+(`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight`), both of which are proved
+(`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`,
+`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`), so that the input holds in every dimension with no hypothesis
+(`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -3304,7 +3314,8 @@ are proved: the Gaussian upper bound of Barlow (Theorem 4, `barlowGaussianUpperB
 infinite cluster in triadic cubes, `cluster_density_concentration` of Percolation-Cluster-Homogenization) and the order-zero
 estimate at every centre (`exists_orderZero_clusterBallD`). Hence the quantitative Green estimate in every dimension follows
 from the whole-cluster estimate in every dimension `d ≥ 3` alone
-(`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`).
+(`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow`); the whole-cluster estimate is proved from Propositions 2.12
+and 2.13, both proved, in the next section.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -3336,6 +3347,9 @@ initial error `‖1_{𝒞_∞}(h(s) − θ^{-1} p̄(s, · − y))‖_{ℓ²} ≤
 (`darioGuGaussianFlowD_of_inputs`). The correctors exist by the qualitative corrector input, proved in every dimension
 (`exists_isDGCorrectorD`). Hence the quantitative Green estimate in every dimension follows from Proposition 2.12 and
 Proposition 2.13 in every dimension `d ≥ 3` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_flux`).
+Proposition 2.12 is proved (`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`) and so is Proposition 2.13 for
+`d ≥ 3` (the section on the variance bound of Gu above, `fluxVarianceBoundThree_of_stepTwoWeight`), so the estimate holds with no hypothesis
+(`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -3592,7 +3606,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two),
   the thirty-four theorems of
   [Proposition 2.13 of Dario and Gu in dimension two](#proposition-213-of-dario-and-gu-in-dimension-two),
-  the twelve theorems of
+  the thirty-eight theorems of
   [Proposition 2.13 of Dario and Gu in every dimension from the variance bound of Gu](#proposition-213-of-dario-and-gu-in-every-dimension-from-the-variance-bound-of-gu),
   the twenty-six theorems of
   [The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension),
