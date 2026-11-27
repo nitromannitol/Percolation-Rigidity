@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Corrector.GeneralFlipCluster
+import Rigidity.Proofs.Corrector.GeneralStepRegionSummable
 
 /-!
 # Step 2 of Lemma 3.3 of Dario on `ℤᵈ`: the term `T₂(e)` in Cases 1, 2 and 3
@@ -19,6 +20,7 @@ the planar files `DarioCaseThreeClosed`, `DarioCaseOneTwo`, `DarioStepTwoCases` 
 namespace Rigidity.Corrector.GeneralDim
 
 open MeasureTheory Filter LatticeProb.Percolation Rigidity.Percolation Rigidity.External
+  Rigidity.Poincare.GeneralDim
 open scoped Classical ENNReal InnerProductSpace
 
 variable {d : ℕ}
@@ -228,7 +230,7 @@ theorem ae_exists_correctedPlane_eq_add_const [NeZero d] (hd : 2 ≤ d) {p : uni
             extendComp _ ℓ₁ z = extendComp _ ℓ₀ z + k := by
   have hp0 : 0 < (p : ℝ) := (criticalProbability_nonneg d).trans_lt hpc
   filter_upwards [ae_setBond hp0 hp1
-    (Rigidity.Proofs.Regularity.supercriticalBondCorrectorInputTwo_holds p hpc hp1)] with ω hR2
+    (Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds d hd p hpc hp1)] with ω hR2
   intro a h₁ h₀ hnot q ℓ₁ ℓ₀ hℓ₁ hℓ₀
   set f : Vertex d → ℝ := extendComp (uniqueInfiniteComponent h₁) ℓ₁ with hfdef
   have hsub01 : ∀ z, z ∈ (uniqueInfiniteComponent h₀).supp →
@@ -361,7 +363,7 @@ theorem ae_heatComp_coarse_sub_eq_zero [NeZero d] (hd : 2 ≤ d) {p : unitInterv
     funext z
     have hz : partitionAnchor (setBond (edgeBond a) false ω) z ∈
         (uniqueInfiniteComponent h₀).supp :=
-      (mem_uniqueInfiniteComponent_iff h₀ _).2 (infinite_planarCoarseAnchor hP z)
+      (mem_uniqueInfiniteComponent_iff h₀ _).2 (infinite_partitionAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) hP z)
     rw [hk _ hz]
     ring
   rw [e, heatComp_const]
@@ -369,6 +371,30 @@ theorem ae_heatComp_coarse_sub_eq_zero [NeZero d] (hd : 2 ≤ d) {p : unitInterv
 section Planes
 
 variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
+
+include hGv in
+/-- A corrected plane of every slope on the infinite cluster of a configuration of `G`. -/
+theorem exists_isCorrectedPlane {ω : Configuration d} (hω : ω ∈ G)
+    (h : HasUniqueInfiniteOpenComponent ω) (q : Fin d → ℝ) :
+    ∃ ℓ : uniqueInfiniteComponent h → ℝ, IsCorrectedPlane (uniqueInfiniteComponent h) q ℓ := by
+  obtain ⟨v, hv⟩ := (uniqueInfiniteComponent_infinite h).nonempty
+  obtain ⟨u, hu, -⟩ := ((hGv hω).2 h).1 q ⟨v, hv⟩
+  exact ⟨u, hu.1⟩
+
+/-- On the infinite cluster of `ω^{e,b}`, `χ_b = ℓ - q · (·)` up to its value at the root. -/
+theorem flipCorrector_eq_plane {e : Bond d} {ω : Configuration d} {b : Bool}
+    (hω : setBond e b ω ∈ G) (h : HasUniqueInfiniteOpenComponent (setBond e b ω)) (i : Fin d)
+    {ℓ : uniqueInfiniteComponent h → ℝ}
+    (hℓ : IsCorrectedPlane (uniqueInfiniteComponent h) (Pi.single i 1) ℓ) {v : Vertex d}
+    (hv : v ∈ (uniqueInfiniteComponent h).supp)
+    (ho : guardAnchor (setBond e false ω) 0 ∈ (uniqueInfiniteComponent h).supp) :
+    flipCorrector hG hGv i b e ω v =
+      (extendComp _ ℓ v - ∑ k, (Pi.single i 1 : Fin d → ℝ) k * (v k : ℝ)) -
+        (extendComp _ ℓ (guardAnchor (setBond e false ω) 0) -
+          ∑ k, (Pi.single i 1 : Fin d → ℝ) k * ((guardAnchor (setBond e false ω) 0) k : ℝ)) := by
+  unfold flipCorrector
+  rw [extendComp_of_mem _ _ hv, extendComp_of_mem _ _ ho]
+  exact correctorDiff_eq hG hGv hω (uniqueInfiniteComponent_infinite h) hℓ ⟨v, hv⟩ ⟨_, ho⟩
 
 /-- **The term (3.15)-(ii) per bond in Case 3.** -/
 theorem ae_flipTermTwo_eq_walkSum [NeZero d] (hd : 2 ≤ d) {p : unitInterval} (hpc : criticalProbability d < (p : ℝ))
@@ -405,7 +431,7 @@ theorem ae_flipTermTwo_eq_walkSum [NeZero d] (hd : 2 ≤ d) {p : unitInterval} (
   have hA : ∀ z, (setBond (edgeBond a) false ω) ∈
       infiniteComponentEvent (guardAnchor (setBond (edgeBond a) false ω) z) := fun z => by
     rw [guardAnchor_of_event hP₀]
-    exact infinite_planarCoarseAnchor hP₀ z
+    exact infinite_partitionAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) hP₀ z
   set L : Vertex d → ℝ := fun v => extendComp _ ℓ₁ v - extendComp _ ℓ₀ v with hL
   have hdiff : ∀ z,
       flipCorrector hG hGv i true (edgeBond a) ω (guardAnchor (setBond (edgeBond a) false ω) z) -
@@ -472,7 +498,7 @@ theorem ae_flipTermTwo_eq_zero [NeZero d] (hd : 2 ≤ d) {p : unitInterval} (hpc
   have hA : ∀ z, (setBond (edgeBond a) false ω) ∈
       infiniteComponentEvent (guardAnchor (setBond (edgeBond a) false ω) z) := fun z => by
     rw [guardAnchor_of_event hP₀]
-    exact infinite_planarCoarseAnchor hP₀ z
+    exact infinite_partitionAnchor (Nat.pos_of_ne_zero (NeZero.ne d)) hP₀ z
   have hconst : ∀ z,
       flipCorrector hG hGv i true (edgeBond a) ω (guardAnchor (setBond (edgeBond a) false ω) z) -
         flipCorrector hG hGv i false (edgeBond a) ω (guardAnchor (setBond (edgeBond a) false ω) z) =
