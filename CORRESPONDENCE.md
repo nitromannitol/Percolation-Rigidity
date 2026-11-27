@@ -576,13 +576,12 @@ report of the library is [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean
 
 ## Hypotheses that remain open for `d ≥ 3`
 
-- `FluxFlipWeightBoundD d p` ([`Rigidity.Green.GeneralFlux.FluxFlipWeightBoundD`](Rigidity/Proofs/Green/GeneralFluxStepTwoInput.lean)): the bound of each squared flip
-  difference of the heat average of the flux by the Step 2 factor, for `d ≥ 3`; its part for the bonds open in the
-  configuration, `FluxOpenBoundD` ([`Rigidity.Green.GeneralFlux.FluxOpenBoundD`](Rigidity/Proofs/Green/GeneralFluxP2Input.lean)), is proved
-  ([`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean)); `FluxFlipWeightBoundD` remains.
-  With `DarioStepTwoWeightThree`, which is proved, it gives the variance bound `FluxVarianceBoundThree` of Gu's proof of his
-  Proposition 1.1, hence Proposition 2.13 of DG on `ℤ^d`, and with `CorrectorQuantitativeInput` it gives
-  `DarioGuHeatKernelD d` (Theorem 1 of DG) and `SupercriticalBondGreenQuantitative` (Theorem 2 of DG).
+None. `DarioStepTwoWeightThree` ([`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`](Rigidity/Proofs/Poincare/GeneralStepTwoWeightThreeHolds.lean))
+and `FluxFlipWeightBoundD d p` ([`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipWeight.lean))
+are proved, so `CorrectorQuantitativeInput` (Proposition 2.12 of DG) and `SupercriticalBondGreenQuantitative`
+(Theorem 2 of DG) hold in every dimension
+([`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`](Rigidity/Proofs/Assembly/ProvedCorrectorQuantitative.lean),
+[`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`](Rigidity/Proofs/Assembly/ProvedCorrectorQuantitative.lean)).
 
 Not formalized: Theorem 5 and Theorem 6 of DG, the first part (A.12) of Proposition A.7, Theorem 3 of DG for
 `d ≥ 3`, and Proposition 3.9 beyond its statement `DarioGuLipschitzTwo`.

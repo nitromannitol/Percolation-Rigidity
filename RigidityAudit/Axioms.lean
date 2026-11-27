@@ -1723,6 +1723,7 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_holds
 #print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_holds
 #print axioms Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds
+#print axioms Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds
 #print axioms Rigidity.Corrector.GeneralDim.dario_errorstatpart
 #print axioms Rigidity.Corrector.GeneralDim.statAnchor_translation
 #print axioms Rigidity.Corrector.GeneralDim.statGrad_translation

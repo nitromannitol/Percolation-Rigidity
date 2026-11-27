@@ -1167,6 +1167,7 @@ further = {
          'Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_holds',
          'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_holds',
          'Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds',
+         'Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds',
          'Rigidity.Corrector.GeneralDim.dario_errorstatpart',
          'Rigidity.Corrector.GeneralDim.statAnchor_translation',
          'Rigidity.Corrector.GeneralDim.statGrad_translation',
