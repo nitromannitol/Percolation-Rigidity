@@ -1,3 +1,4 @@
+import Rigidity.Proofs.Green.GeneralFluxClosedBound
 import Rigidity.Proofs.Green.GeneralFluxP2Input
 
 /-!
@@ -166,5 +167,46 @@ theorem sq_le_radius_of_bounds {X c : ℝ} {P : Prop} {x₀ : Vertex d} {g e φ 
       _ ≤ flipWeightConst d c * ((R : ℝ) ^ (7 * d) * SG ^ 2) * (SE + SΦ) := by
           rw [mul_assoc, mul_assoc (flipWeightConst d c)]
           exact mul_le_mul_of_nonneg_right hK hF0
+
+section Weight
+
+variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
+
+/-- **One flip, at every radius above the scale**: almost surely, for every
+`R ≥ 6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))`,
+`(D_e X)² ≤ K₀ R^{7d} (Σ_{B(x₀, R)} G)² (Σ_{B(x₀, R)} E_v + Σ_{B(x₀, R)} Φ²)`. -/
+theorem ae_fluxFlipD_sq_le_radius [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) (hO : FluxOpenBoundD d p)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) :
+    ∀ᵐ ω ∂latticeBondLaw d p, ∀ (k i : Fin d) (r : ℝ), 0 < r → ∀ (x : Vertex d)
+      (a : LatticeEdge d), PartitionEvent ω → ∀ R : ℕ,
+      6 * max (max (partSide ω a.1) (partSide ω (edgeHead a)))
+          (partSide (setBond (edgeBond a) false ω) a.1) ≤ R →
+      bondFlipDiff (fluxObsD hG hGv k i r x) (edgeBond a) ω ^ 2 ≤
+        flipWeightConst d (fluxOpenConst d) * ((R : ℝ) ^ (7 * d) *
+            (∑ z ∈ LatticeProb.boxFinset a.1 R, planeGrad hG hGv k ω z) ^ 2) *
+          (∑ u ∈ LatticeProb.boxFinset a.1 R,
+              Rigidity.Corrector.GeneralDim.openEnergy ω (clusterPot ω (heatEdgeD ω r x i)) u +
+            ∑ y ∈ LatticeProb.boxFinset a.1 R, zdHeat d (r ^ 2) x y ^ 2) := by
+  filter_upwards [ae_fluxFlipD_sq_le_closed hG hGv hd hpc hp1 hGae, hO G hG hGv hGae] with
+    ω hcl hop k i r hr x a hP R hR
+  have hs₀ : 1 ≤ partSide ω a.1 := by
+    rw [partSide_eq hP]; exact Nat.one_le_pow _ _ (by norm_num)
+  exact sq_le_radius_of_bounds (by unfold fluxOpenConst; positivity)
+    (planeGrad_nonneg hG hGv k ω) (openEnergy_nonneg _ _) hs₀ hR
+    (fun h => hcl k i r hr x a h hP) (fun h => hop k i r hr x a h hP)
+
+/-- **Part 2 of the port, from the bound for the open bonds** (planar:
+`Rigidity.Green.ae_fluxFlip_sq_le_weight`): `FluxFlipWeightBoundD d p`, with the constant
+`flipWeightConst d (fluxOpenConst d)` and the box parameter `6`. -/
+theorem fluxFlipWeightBoundD_of_open [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) (hO : FluxOpenBoundD d p) :
+    FluxFlipWeightBoundD d p := by
+  intro G hG hGv hGae
+  refine ⟨flipWeightConst d (fluxOpenConst d), flipWeightConst_pos d _, 6, by norm_num, ?_⟩
+  filter_upwards [ae_fluxFlipD_sq_le_radius hG hGv hd hpc hp1 hO hGae] with ω h k i r hr x a hP
+  exact h k i r hr x a hP (stepTwoRadius 6 ω a) le_rfl
+
+end Weight
 
 end Rigidity.Green.GeneralFlux
