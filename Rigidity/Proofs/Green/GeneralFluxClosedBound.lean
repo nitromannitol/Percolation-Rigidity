@@ -2,7 +2,7 @@ import Rigidity.Proofs.Green.GeneralFluxPairing
 import Rigidity.Proofs.Corrector.GeneralStepTwoClosedBound
 
 /-!
-# The flip difference of the heat average of the flux on `ℤ^d` for the bonds closed in the configuration
+# The flip difference of the flux on `ℤ^d` for the bonds closed in the configuration
 
 The extension of `DarioGuFluxClosedBound.lean` from `ℤ²` to `ℤ^d`. For a bond `e` of
 `a = (x₀, i')` closed in `ω`, `ω^{e,0} = ω` and, in Case 3, for an open path `π` of `ω` joining
