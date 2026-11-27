@@ -17,7 +17,7 @@ time `4^{2n}`), the bound (eq:DensityWeakNorm) of the density on the triadic cub
 side at most `L_n = ⌊3^{αn/4}⌋` near `y`, combined by the coarsening of the test functions
 (`weakNormLe_of_scale_bounds`). A scale is bad when one of the normalized weak norms exceeds
 `3^{αn/4}` or a partition cube near `y` has side more than `L_n`; the minimal scale is the first
-scale after which every scale is good (`exists_minimalScale_of_summable`, the role of Lemma 1.5 of
+scale after which every scale is good (`exists_minimalScale_of_summable`, the role of Lemma 1.6 of
 the source), with `E[exp(M^s)]` bounded uniformly in `y`. The source's `M_q(𝒫)` and its minimal
 scale of the density are replaced by the bound on the sizes of the partition cubes and the
 lower bound `|𝒞_∞ ∩ B_r(y)| ≥ (2·3^{n-1} + 1)²/L_n²` of `card_mul_le_card_dgClusterBall`.
