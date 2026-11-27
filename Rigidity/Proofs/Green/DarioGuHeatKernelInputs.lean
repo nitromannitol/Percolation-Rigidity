@@ -8,9 +8,10 @@ import Mathlib.MeasureTheory.Integral.Average
 Dario–Gu, *Quantitative homogenization of the parabolic and elliptic Green's functions on
 percolation clusters* (arXiv:1909.10439v4), prove Theorem 1 (`DarioGuHeatKernelTwo`) in §4.3 from
 the results of §4.1–§4.2 (Lemma 4.1, Lemma 4.2, Proposition 4.3), the Gaussian upper bound of
-Barlow (Theorem 4, cited), the Carne–Varopoulos bound (Proposition 2.15, cited; rigr57's
-`CarneVaropoulosTwo`) and the concentration of the Gaussian mass of the cluster (Proposition A.7).
-This file fixes the planar objects of §3–§4 and states these results as named hypotheses.
+Barlow (Theorem 4), the Carne–Varopoulos bound (Proposition 2.15, `CarneVaropoulosTwo`) and the
+concentration of the Gaussian mass of the cluster (Proposition A.7). This file fixes the planar
+objects of §3–§4 and states these results as propositions, which the reductions of later files take
+as hypotheses; each of them is proved elsewhere in the repository, as indicated below.
 
 * `dgPhi C t r` is `Φ_C(t, x)` of (3.1) at `|x| = r` in dimension two, and `dgExponent C t r` its
   exponent: `Φ_C = C t^{-1} exp(-dgExponent)`.
@@ -20,17 +21,22 @@ This file fixes the planar objects of §3–§4 and states these results as name
 * `WeightedL2Le K C t y f B` is `‖f exp(|· - y|² / (C t))‖_{L²(K)} ≤ B` (in the regime `|x| ≤ t`;
   in general with the weight `exp(dgExponent C t |· - y|)`), expressed through finite sums.
 
-Cited results with no proof on hand (named hypotheses with their printed statements):
+Results of the literature, with their printed statements:
 
-* `BarlowGaussianUpperBoundTwo`: Theorem 4 of Dario–Gu (Barlow 2004, Theorem 1 and Lemma 1.1).
-* `AKMLemmaEightNineTwo`: Lemma 3.11 of Dario–Gu (Armstrong–Kuusi–Mourrat, Lemma 8.9).
+* `BarlowGaussianUpperBoundTwo`: Theorem 4 of Dario–Gu (Barlow 2004, Theorem 1 and Lemma 1.1);
+  proved as `Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds`.
+* `AKMLemmaEightNineTwo`: Lemma 3.11 of Dario–Gu (Armstrong–Kuusi–Mourrat, Lemma 8.9); not proved
+  in this repository, and not used by the proofs of the other statements.
 
-Results of Dario–Gu whose proofs (§3, §4.1–§4.2, App. A) are not formalized here:
+Results of Dario–Gu (§3, §4.1–§4.2, App. A):
 
-* `DarioGuApproxLemmaTwo` (Lemma 4.1, in the form used in the iteration step of §4.3),
-  `DarioGuCorrectorLemmaTwo` (Lemma 4.2), `DarioGuTwoScaleErrorTwo` (Proposition 4.3),
-  `DarioGuTwoScaleInitialTwo` (the estimate of `h - θ^{-1} p̄` in §4.3, whose details the source
-  leaves to the reader), `DarioGuDensityGaussianTwo` (Proposition A.7).
+* `DarioGuApproxLemmaTwo` (Lemma 4.1, in the form used in the iteration step of §4.3), proved as
+  `darioGuApproxLemmaTwo_of_gradient`;
+* `DarioGuCorrectorLemmaTwo` (Lemma 4.2), proved as `darioGuCorrectorLemmaTwo_of_inputs`;
+* `DarioGuTwoScaleErrorTwo` (Proposition 4.3), proved as `exists_darioGuTwoScaleErrorTwo_holds`;
+* `DarioGuTwoScaleInitialTwo` (the estimate of `h - θ^{-1} p̄` in §4.3, whose details the source
+  leaves to the reader), proved as `darioGuTwoScaleInitialTwo_of_correctorQuantitative`;
+* `DarioGuDensityGaussianTwo` (Proposition A.7), proved as `darioGuDensityGaussianTwo_holds`.
 -/
 
 open MeasureTheory LatticeProb.Percolation Rigidity.External
@@ -67,7 +73,8 @@ Theorem 1.1 of [Ba] but is mentioned in its remark equation (0.5) following the 
 (1231-1232); "the result of Barlow is proved for the heat kernel associated to the constant speed
 random walk and on the percolation cluster only ... The adaptation to the variable speed random
 walk ... only requires a typographical change of the proof" (1251-1254). `openHeat` is the
-variable speed walk with unit conductances. -/
+variable speed walk with unit conductances. It is proved as
+`Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds`. -/
 def BarlowGaussianUpperBoundTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∃ s C : ℝ, 0 < s ∧ 0 < C ∧ ∀ y : Vertex 2,
@@ -113,8 +120,7 @@ Then there exists a constant `C(β, K, d, λ) < ∞` such that for every `r ∈ 
 
 Citing lines: "Lemma 3.11 [Lemma 8.9 of [AKM]]" (1720); "To prove Proposition 3.9, we apply the
 previous lemma and combine it with Theorem 5" (1745). The comparison functions `w` are taken
-classical (`IsCaloricOn`), which are weak solutions; the printed statement implies this one. The
-QSH formalization of the book has no declaration for Lemma 8.9 at its current head. -/
+classical (`IsCaloricOn`), which are weak solutions; the printed statement implies this one. -/
 def AKMLemmaEightNineTwo : Prop :=
   ∀ σ β K : ℝ, 0 < σ → 0 < β → β ≤ 1 → 1 ≤ K → ∃ C : ℝ, 0 < C ∧
     ∀ X R : ℝ, 1 ≤ X → 4 * X ≤ R → ∀ v : ℝ × EuclideanSpace ℝ (Fin 2) → ℝ,
@@ -185,7 +191,8 @@ Printed Lemma 4.1 (lines 1977-1990) is the case where the hypothesis is Barlow's
 instead of using the Nash-Aronson estimate stated in Theorem 4, we use the homogenization
 estimate (4.50). We then proceed with the proof and do not make any other modification. This
 implies the following improved version of Lemma 4.1". In the proof (lines 2005-2023) the
-hypothesis enters only through the first term of (4.7), linearly. -/
+hypothesis enters only through the first term of (4.7), linearly. It is proved as
+`darioGuApproxLemmaTwo_of_gradient`. -/
 def DarioGuApproxLemmaTwo (p : unitInterval) (σ : ℝ) : Prop :=
   ∀ α : ℝ, 0 < α → ∀ C₀ : ℝ, 0 < C₀ → ∃ C s : ℝ, 0 < C ∧ 0 < s ∧ ∀ y : Vertex 2,
     ∃ T : Configuration 2 → ℝ, Measurable T ∧ (∀ ω, 0 ≤ T ω) ∧ IsOsBond 2 p T s C ∧
@@ -201,7 +208,7 @@ def DarioGuApproxLemmaTwo (p : unitInterval) (σ : ℝ) : Prop :=
 
 /-- **Dario–Gu, Lemma 4.2** (lines 2159-2163): for `t ≥ 3τ`, `t - τ ≥ T'_NA(y)` and
 `√τ ≥ M_corr,α(y)`, `|v(t, x, τ, y)| ≤ C τ^{-1/2 + α/2} Φ_C(t, x - y)`. The two minimal times are
-merged into one `M ≤ O_s(C)` with `τ ≥ M`. -/
+merged into one `M ≤ O_s(C)` with `τ ≥ M`. It is proved as `darioGuCorrectorLemmaTwo_of_inputs`. -/
 def DarioGuCorrectorLemmaTwo (p : unitInterval) (σ : ℝ) : Prop :=
   ∀ α : ℝ, 0 < α → ∃ C s : ℝ, 0 < C ∧ 0 < s ∧ ∀ y : Vertex 2,
     ∃ M : Configuration 2 → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond 2 p M s C ∧
@@ -215,7 +222,8 @@ def DarioGuCorrectorLemmaTwo (p : unitInterval) (σ : ℝ) : Prop :=
 /-- **Dario–Gu, Proposition 4.3** (lines 2234-2239), in dimension two:
 `‖w(t, ·, τ, y) exp(Ψ_C(t, |· - y|))‖_{L²(𝒞_∞)} ≤ C (t/τ)^{1/2} τ^{-d/4 - 1/2 + α/2}` for
 `√t ≥ max(M_corr,α(y), M_flux,α(y))`. Here `τ ≥ M` and `t ≥ 3τ` (the regime of §4.3), and the
-weight is the Gaussian factor of `exp Ψ_C` (see `WeightedL2Le`). -/
+weight is the Gaussian factor of `exp Ψ_C` (see `WeightedL2Le`). It is proved, for some `σ > 0`, as
+`exists_darioGuTwoScaleErrorTwo_holds`. -/
 def DarioGuTwoScaleErrorTwo (p : unitInterval) (σ : ℝ) : Prop :=
   ∀ α : ℝ, 0 < α → ∃ C s : ℝ, 0 < C ∧ 0 < s ∧ ∀ y : Vertex 2,
     ∃ M : Configuration 2 → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond 2 p M s C ∧
@@ -230,7 +238,7 @@ def DarioGuTwoScaleErrorTwo (p : unitInterval) (σ : ℝ) : Prop :=
 `h(t, ·, y) - θ^{-1} p̄(t, · - y) = θ^{-1} Σ_k D_{e_k} p̄(t, · - y) χ_{e_k}` "can then be estimated
 by using the sublinearity of the corrector stated in Proposition 2.12 and the assumption
 `√t ≥ M_corr,α(z)` ... the details are left to the reader. It accounts for an error of order
-`t^{-d/4 - 1/2 + δ}`." -/
+`t^{-d/4 - 1/2 + δ}`." It is proved as `darioGuTwoScaleInitialTwo_of_correctorQuantitative`. -/
 def DarioGuTwoScaleInitialTwo (p : unitInterval) (σ : ℝ) : Prop :=
   ∀ α : ℝ, 0 < α → ∃ C s : ℝ, 0 < C ∧ 0 < s ∧ ∀ y : Vertex 2,
     ∃ M : Configuration 2 → ℝ, Measurable M ∧ (∀ ω, 0 ≤ M ω) ∧ IsOsBond 2 p M s C ∧
@@ -244,7 +252,8 @@ def DarioGuTwoScaleInitialTwo (p : unitInterval) (σ : ℝ) : Prop :=
 
 /-- **Dario–Gu, Proposition A.7** (lines 2911-2920), second part, in dimension two: for every
 `α > 0` there is `T_dense,α(y) ≤ O_s(C)` such that for `t > T_dense,α(y)`,
-`|∫_{𝒞_∞} p̄(t, x - y) dx - θ(p)| ≤ C t^{-(1/2 - α)}`. -/
+`|∫_{𝒞_∞} p̄(t, x - y) dx - θ(p)| ≤ C t^{-(1/2 - α)}`. It is proved as
+`darioGuDensityGaussianTwo_holds`. -/
 def DarioGuDensityGaussianTwo (p : unitInterval) (σ : ℝ) : Prop :=
   ∀ α : ℝ, 0 < α → ∃ C s : ℝ, 0 < C ∧ 0 < s ∧ ∀ y : Vertex 2,
     ∃ T : Configuration 2 → ℝ, Measurable T ∧ (∀ ω, 0 ≤ T ω) ∧ IsOsBond 2 p T s C ∧

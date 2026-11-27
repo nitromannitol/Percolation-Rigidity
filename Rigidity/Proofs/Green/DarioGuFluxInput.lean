@@ -10,8 +10,9 @@ diffusivity `σ̄² = 2 θ(p)^{-1} ā` is defined by (B.5) so that this estimate
 Appendix B rests on the decay of the spatial averages of the flux on `ℤ^d` (Gu, *An efficient
 algorithm for solving elliptic problems on percolation clusters*, Section 3.1 and Proposition 1.1,
 cited as (B.8)), the multiscale Poincaré inequality (D.28) of Armstrong–Kuusi–Mourrat and the
-homogenized coefficient of Armstrong–Dario (Definition 5.1); this file states it as a named
-hypothesis, with unit conductances on the open edges (`a ∈ {0, 1}`).
+homogenized coefficient of Armstrong–Dario (Definition 5.1); this file states it as a proposition
+(`DarioGuFluxWeakNormTwo`), with unit conductances on the open edges (`a ∈ {0, 1}`). It is proved
+as `darioGuFluxWeakNormTwo_holds` (`DarioGuFluxWeakNormHolds`).
 
 * `openInterior ω V` is `int_a(V)` and `C_0^a(V)` is the set of functions vanishing on
   `V \ int_a(V)` (§1.6.3, (1.25));

@@ -11,7 +11,7 @@ Lemma 4.2 (lines 2159-2163, proof 2166-2225): for `t ≥ 3τ`, `t - τ ≥ T'_NA
 `√τ ≥ M_corr,α(y)`, `|v(t, x, τ, y)| ≤ C τ^{-1/2 + α/2} Φ_C(t, x - y)`. The proof of the source
 uses, for `v(t, x, τ, y) = Σ_z p(t - τ, x, z) (h(τ, z, y) - θ^{-1} p̄(τ, z - y))`:
 
-1. the sublinearity of the corrector (Proposition 2.12, R5), giving
+1. the sublinearity of the corrector (Proposition 2.12, `CorrectorQuantitativeInputTwo`), giving
    `|h(τ, z, y) - θ^{-1} p̄(τ, z - y)| ≤ K τ^{-1/2 + α/2} Φ_{16σ}(τ, z - y)` (with the Lipschitz
    bound of `p̄`, item (iv));
 2. Theorem 4 at the points `z` with `|z - y| ≤ t - τ + 1` (the time `T'_NA(y)` of (3.52)), item (ii);

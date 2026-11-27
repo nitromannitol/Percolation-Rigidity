@@ -8,8 +8,10 @@ import Rigidity.Proofs.Regularity.PlanarCorrectorHolds
 Proposition A.7 holds for every diffusivity `σ > 0` (`darioGuDensityGaussianTwo_holds`) and the
 qualitative corrector input holds (`supercriticalBondCorrectorInputTwo_holds`), so Theorem 1 of
 Dario–Gu in dimension two (`DarioGuHeatKernelTwo`) holds under Lemma 4.1 (in the form of the
-iteration step) and Proposition 4.3 for some `σ > 0`, Theorem 4 (Barlow 2004, cited),
-Proposition 2.15 (Davies 1993, cited) and Proposition 2.12 (R5), or Dario's Theorem 1.
+iteration step) and Proposition 4.3 for some `σ > 0`, Theorem 4 (Barlow 2004), Proposition 2.15
+(Davies 1993) and Proposition 2.12 (`CorrectorQuantitativeInputTwo`), or Dario's Theorem 1;
+Theorem 4 and Proposition 2.15 are proved (`barlowGaussianUpperBoundTwo_holds`,
+`carneVaropoulosTwo_holds`).
 -/
 
 namespace Rigidity.Green

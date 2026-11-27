@@ -11,8 +11,8 @@ with the diffusivity `σ̄² = 2 θ(p)^{-1} ā` of (B.5) (`ā` the mean of the f
 (`darioGuFluxWeakNormTwo_holds`, the statement `DarioGuFluxWeakNormTwo`).
 
 The proof follows Steps 1-3 of the source at the triadic scales `r ∈ [3^n, 3^{n+1})`: the bound
-(eq.gsmallH-1) of the flux of `ℤ²` on a box of side `≈ 3^n` (`exists_fluxWeakNormBox`, dyadic
-time `4^{2n}`), the bound (eq:DensityWeakNorm) of the density on the triadic cubes of scale
+(B.4) of the flux of `ℤ²` on a box of side `≈ 3^n` (`exists_fluxWeakNormBox`, dyadic
+time `4^{2n}`), the bound (B.14) of the density on the triadic cubes of scale
 `n + 2` around `y` (`exists_densityWeakNorm`), and the partition of the good cubes with cubes of
 side at most `L_n = ⌊3^{αn/4}⌋` near `y`, combined by the coarsening of the test functions
 (`weakNormLe_of_scale_bounds`). A scale is bad when one of the normalized weak norms exceeds

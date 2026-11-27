@@ -11,7 +11,8 @@ summable `v` vanishing off the cluster,
 `G = 1_{𝒞_∞} θ^{-1} twoScaleSource` is the source term of the equation of `w`.
 
 `darioGuTwoScaleErrorTwo_of_sourceBound` proves `DarioGuTwoScaleErrorTwo` (Proposition 4.3) from
-this estimate and the quantitative corrector estimate (Proposition 2.12, R5), which gives the
+this estimate and the quantitative corrector estimate (Proposition 2.12,
+`CorrectorQuantitativeInputTwo`), which gives the
 linear growth of the corrector on the cluster used by the summability layer.
 -/
 
