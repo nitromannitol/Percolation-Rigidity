@@ -91,6 +91,9 @@ further = {
     'Theorems 1.2 and 1.3 with every literature input proved':
         ['Rigidity.Assembly.Unconditional.integer_valued_linear_growth',
          'Rigidity.Assembly.Unconditional.fast_decay'],
+    'Theorem 1.1 and Proposition 3.2 with every literature input proved':
+        ['Rigidity.Assembly.Unconditional.lipschitz',
+         'Rigidity.Assembly.Unconditional.notLipschitz'],
     'Theorem 1.3 from its dimension-two inputs':
         ['Rigidity.Assembly.WithPlanarInputs.fast_decay',
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists'],
@@ -1402,7 +1405,7 @@ further = {
          'Rigidity.BarlowLattice.barlowGaussianUpperBound_of_veryGood',
          'Rigidity.BarlowLattice.barlowGaussianUpperBound_holds',
          'Rigidity.BarlowLattice.barlowGaussianUpperBoundTwo_of_lattice'],
-    'Theorem 1.1 and Proposition 3.2 in every dimension from the inputs that remain in d >= 3':
+    'Theorem 1.1 and Proposition 3.2 in every dimension from two statements of dimension d >= 3':
         ['Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_of_stepTwoWeight',
          'Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_of_stepTwoWeight',
          'Rigidity.Assembly.EveryDimension.lipschitz',
