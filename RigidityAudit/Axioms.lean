@@ -575,8 +575,10 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Percolation.wellConnected_input_two
 #print axioms Rigidity.Proofs.S2.planar_cluster_density_concentration
 
--- Theorem 6.5 with every literature input proved
+-- Theorems 6.5, 1.2 and 1.3 with every literature input proved
 #print axioms Rigidity.Assembly.Unconditional.slow_mixing
+#print axioms Rigidity.Assembly.Unconditional.integer_valued_linear_growth
+#print axioms Rigidity.Assembly.Unconditional.fast_decay
 
 -- Theorem 1.3 from its dimension-two literature inputs
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay
