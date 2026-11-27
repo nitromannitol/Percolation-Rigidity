@@ -1670,8 +1670,9 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree
 #print axioms Rigidity.Corrector.GeneralDim.goodCubes_iff_of_far
 #print axioms Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near
-#print axioms Rigidity.Corrector.GeneralDim.resamplePartitionBound_of_goodFlipStable
-#print axioms Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_of_goodFlipStable
+#print axioms Rigidity.Corrector.GeneralDim.mem_stableGood_of_mem_centeredTriple
+#print axioms Rigidity.Corrector.GeneralDim.goodCubes_iff_of_flip
+#print axioms Rigidity.Corrector.GeneralDim.resamplePartition_max_bound
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds

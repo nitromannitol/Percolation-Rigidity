@@ -56,12 +56,20 @@ the change of the partition and the change of the corrector (3.15)
 Step 1 sum follows from Lemma 3.5 of Dario for the partition into good cubes of `ℤᵈ`
 (`DarioResamplePartitionThree`, `Rigidity.Corrector.GeneralDim.darioStepOneSumBoundThree_of_resample`),
 so Lemma 3.3 in dimension `d ≥ 3` follows from Lemma 3.5 and the bound of the Step 2 sum
-(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_resample`). Lemma 3.5 follows from the
-one-bond stability of good cubes at large scales, the step that Dario's proof of Lemma 3.5 states
-without proof (`Rigidity.Corrector.GeneralDim.GoodFlipStable`,
-`Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_of_goodFlipStable`, with the comparison of
-the partitions near the bond, `Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree`, and
-of the partition cubes of nearby points, `Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near`). For the Step 2 sum the objects
+(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_resample`). Lemma 3.5 as printed, with the scale
+`s = side(□_{𝒫(ω)}(x))` of the old partition cube of an endpoint `x` of the resampled bond, fails in
+dimension `d ≥ 3` for the partition into good cubes: one bond can destroy property (ii) of a good cube
+of any size while the old partition has side 27 everywhere, both on opening and on closing the bond;
+the printed proof asserts the large-scale stability of good cubes (ingredients 3 and 4) without
+argument. The corrected form uses the scale `S = max(side □_{𝒫(ω)}(x), side □_{𝒫(ω')}(x))` and is
+proved with no hypothesis, with `C₀ = 81` and `C = 243`
+(`Rigidity.Corrector.GeneralDim.resamplePartition_max_bound`): every cube of side at least `9S` is good
+for both configurations or for neither (`Rigidity.Corrector.GeneralDim.goodCubes_iff_of_flip`, from the
+locality of good cubes and the stability of the cubes of side at least `9 side(□_𝒫(x))` near `x`,
+`Rigidity.Corrector.GeneralDim.mem_stableGood_of_mem_centeredTriple`), the partitions agree outside
+the ball of radius `81 S` (`Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree`), and the partition cubes of
+nearby points have comparable sizes (`Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near`). The
+conclusion of Dario's Theorem 1 is unchanged, since `S` has the same stretched-exponential tail as `s`. For the Step 2 sum the objects
 of Dario's proof are defined on `ℤᵈ` with their first properties: the Green projection on the
 open graph (Propositions 2.11 and 2.12, `Rigidity.Corrector.GeneralDim.greenProj`,
 `Rigidity.Corrector.GeneralDim.edgeDiv_greenProj`, `Rigidity.Corrector.GeneralDim.norm_greenProj_le`),
@@ -3406,7 +3414,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1218 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1219 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
