@@ -308,6 +308,9 @@ import Rigidity.Proofs.Green.DarioGuGaussian
 import Rigidity.Proofs.Green.DarioGuHeatKernelInputs
 import Rigidity.Proofs.Green.GeneralFluxHolds
 import Rigidity.Proofs.Green.GeneralFluxVarianceTwo
+import Rigidity.Proofs.Green.GeneralFluxPairing
+import Rigidity.Proofs.Green.GeneralFluxFlipSum
+import Rigidity.Proofs.Assembly.GreenQuantitativeFromFluxVariance
 import Rigidity.Proofs.Green.DarioGuLatticeSup
 import Rigidity.Proofs.Green.DarioGuLevels
 import Rigidity.Proofs.Green.DarioGuPhiCalculus
@@ -1738,6 +1741,15 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance
 #print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_two_holds
 #print axioms Rigidity.Green.GeneralFlux.fluxVarianceBoundD_two
+#print axioms Rigidity.Green.GeneralFlux.bondFlipDiff_fluxObsD_eq
+#print axioms Rigidity.Green.GeneralFlux.heatEdgeD_apply
+#print axioms Rigidity.Green.GeneralFlux.tsum_weight_openEnergy_heatD_le
+#print axioms Rigidity.Green.GeneralFlux.ae_planeFluxD_setBond_eq
+#print axioms Rigidity.Green.GeneralFlux.fluxPairingOpenD_holds
+#print axioms Rigidity.Green.GeneralFlux.fluxPairingClosedD_holds
+#print axioms Rigidity.Green.GeneralFlux.fluxPairingZeroD_holds
+#print axioms Rigidity.Green.GeneralFlux.fluxFlipSumPartitionD_holds
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_fluxVariance
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
