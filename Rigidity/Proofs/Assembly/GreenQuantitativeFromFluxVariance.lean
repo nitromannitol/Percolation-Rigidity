@@ -14,7 +14,8 @@ elliptic problems on percolation clusters*), `FluxVarianceBoundD d p`
 quantitative corrector estimate and the variance bound in every dimension `d ≥ 3`
 (`supercriticalBondGreenQuantitative_of_corrector_fluxVariance`); the variance bound is the target
 `FluxVarianceBoundThree` of the port of the flip chain of the flux to `ℤ^d`
-(`Rigidity.Green.GeneralFlux`, `GeneralFluxStepTwoInput.lean`).
+(`Rigidity.Green.GeneralFlux`, `GeneralFluxStepTwoInput.lean`), which follows from
+`DarioStepTwoWeightThree` (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight`).
 -/
 
 namespace Rigidity.Assembly.ProvedFluxWeakNorm
