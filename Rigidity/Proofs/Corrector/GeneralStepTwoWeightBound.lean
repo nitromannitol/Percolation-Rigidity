@@ -53,6 +53,24 @@ theorem norm_le_of_mem_supBox {x z : Vertex d} {r : ℕ} (h : z ∈ supBox x r) 
     ‖latticeEuclideanEmbedding (z - x)‖ ≤ d * r :=
   (norm_sub_le_of_mem_supBox h).1
 
+/-- **The radius with one bond closed**: on the partition event of `ω`,
+`max(max(s(x), s(y)), s♭(x)) ≤ 3 max(s(x), s♭(x))` for the edge `a` from `x` to `y`, with `s♭` the
+side of the partition cubes of the configuration with the bond `e` closed. -/
+theorem max_partSide_setBond_le {ω : Configuration d} (hP : PartitionEvent ω) (e : Bond d)
+    (a : LatticeEdge d) :
+    max (max (partSide ω a.1) (partSide ω (edgeHead a))) (partSide (setBond e false ω) a.1) ≤
+      3 * max (partSide ω a.1) (partSide (setBond e false ω) a.1) :=
+  max_le ((max_partSide_le hP a).trans (Nat.mul_le_mul_left 3 (le_max_left _ _)))
+    ((le_max_right _ _).trans (le_mul_of_one_le_left (Nat.zero_le _) (by norm_num)))
+
+/-- On the partition events of `ω` and of the configuration with the bond `β(a)` closed, the radius
+of the edge `a` is `max(s(x), s♭(x))`. -/
+theorem edgeRadius_eq_partSide {ω : Configuration d} (β : LatticeEdge d → Bond d)
+    (a : LatticeEdge d) (hP : PartitionEvent ω) (hP' : PartitionEvent (setBond (β a) false ω)) :
+    edgeRadius β a ω = max (partSide ω a.1 : ℝ) (partSide (setBond (β a) false ω) a.1 : ℝ) := by
+  unfold edgeRadius flipSize
+  rw [stoppingSize_eq_partSide hP, stoppingSize_eq_partSide hP']
+
 section Grad
 
 variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
