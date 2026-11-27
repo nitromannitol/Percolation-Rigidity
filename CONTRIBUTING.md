@@ -53,10 +53,10 @@ not appear in the reports of the theorems.
 
 ## Comparators
 
-`RigidityAudit/` has seven pairs, `Lipschitz/`, `IntegerLinearGrowth/`, `FastDecay/` and
-`SlowMixing/`, for Theorems 1.1, 1.2, 1.3 and 6.5, and `SlowMixingUnconditional/`,
-`IntegerLinearGrowthUnconditional/` and `FastDecayUnconditional/`, for Theorems 6.5, 1.2 and 1.3
-with the regime as their only hypothesis (the vocabulary of each is that of the corresponding pair
+`RigidityAudit/` has eight pairs, `Lipschitz/`, `IntegerLinearGrowth/`, `FastDecay/` and
+`SlowMixing/`, for Theorems 1.1, 1.2, 1.3 and 6.5, and `LipschitzUnconditional/`,
+`IntegerLinearGrowthUnconditional/`, `FastDecayUnconditional/` and `SlowMixingUnconditional/`, for
+Theorems 1.1, 1.2, 1.3 and 6.5 with the regime as their only hypothesis (the vocabulary of each is that of the corresponding pair
 without its cited results, and its solution uses that pair's `SolutionBasic.lean`). Each has a mathlib-only `Challenge.lean`, a
 `Solution.lean` that proves the same statement from the library, and a `comparator.json` that
 permits exactly `propext`, `Classical.choice` and `Quot.sound` and enables the nanoda kernel. Do

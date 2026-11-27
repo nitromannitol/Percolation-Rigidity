@@ -36,8 +36,11 @@ import sys
 
 root, destination = map(pathlib.Path, sys.argv[1:])
 audit = root / 'RigidityAudit'
-# The four main theorems: Theorems 1.1, 1.2, 1.3 and 6.5.
-required = {'Lipschitz', 'IntegerLinearGrowth', 'FastDecay', 'SlowMixing'}
+# The four main theorems, Theorems 1.1, 1.2, 1.3 and 6.5, with their literature inputs as hypotheses
+# and with the regime as their only hypothesis.
+required = {'Lipschitz', 'IntegerLinearGrowth', 'FastDecay', 'SlowMixing',
+            'LipschitzUnconditional', 'IntegerLinearGrowthUnconditional',
+            'FastDecayUnconditional', 'SlowMixingUnconditional'}
 paths = sorted(audit.glob('*/comparator.json'))
 missing = required - {p.parent.name for p in paths}
 if missing:
