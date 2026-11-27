@@ -11,12 +11,16 @@ import PercolationClusterHomogenization.Proofs.Partition.AlmostSure
   `d r`), so a union bound with the exponential tail of the sizes of the partition into good cubes
   (`partition_estimates`) gives `P(¬ FarGood) ≤ 2 (2 (1 + 2d · 3dκθ))ᵈ e^{-R/(2 · 3dκθ)}`;
 * `measure_not_sideGood_le`: a difference between the side and the capped side at a vertex of
-  `B(u, R)` is a discrepancy of the capped partition, of probability `(2R + 1)ᵈ C e^{-c 3ⁿ}`.
+  `B(u, R)` is a discrepancy of the capped partition, of probability `(2R + 1)ᵈ C e^{-c 3ⁿ}`;
+* `measure_not_gradGood_le`: a failure of the local gradient bound at a site of `B(u, R + 3κR)` is
+  a failure of `LocalGradGood` for the configuration seen from the site, which has the law of the
+  configuration; for `d ≥ 3` this has the tail of `measure_not_localGradGood_le`.
 
-This ports the planar file `DarioStepTwoFiniteProb` (the parts not using the local gradient bound):
-the planar partition becomes the partition into good cubes of `ℤᵈ`, the factor `2` of the
-Euclidean radius of a planar box becomes `d`, the lattice sum `Σ_v e^{-|v - u|/κ}` is bounded by
-`(2 (1 + dκ))ᵈ` (`tsum_exp_neg_norm_sub_le`) and the count `(2R + 1)²` of a box by `(2R + 1)ᵈ`.
+This ports the planar file `DarioStepTwoFiniteProb`: the planar partition becomes the partition
+into good cubes of `ℤᵈ`, the factor `2` of the Euclidean radius of a planar box becomes `d`, the
+lattice sum `Σ_v e^{-|v - u|/κ}` is bounded by `(2 (1 + dκ))ᵈ` (`tsum_exp_neg_norm_sub_le`), the
+count `(2R + 1)²` of a box becomes `(2R + 1)ᵈ`, and the planar tail `C e^{-c √(R + 1)}` of the
+finite clusters becomes `C e^{-c (R + 1)^{1/d}}`.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -135,5 +139,52 @@ theorem measure_not_sideGood_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
   push Not at hs
   obtain ⟨v, hv, hne⟩ := hs
   exact ⟨v, hv, not_not.1 fun hdisc => hne (partSide_eq_cappedSide hP hdisc)⟩
+
+section Grad
+
+variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
+
+/-- **The local gradient bounds dominate the plane gradient bound near `u`, with high
+probability**, for `d ≥ 3`. -/
+theorem measure_not_gradGood_le [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) :
+    ∃ C₁ c₁ s δ C₂ : ℝ, 0 < C₁ ∧ 0 < c₁ ∧ 0 < s ∧ 0 < δ ∧ 0 < C₂ ∧ ∀ (κ R : ℕ) (i : Fin d),
+      1 ≤ R → ∀ u : Vertex d,
+        latticeBondLaw d p {ω | ω ∈ G ∧ ¬ GradGood hG hGv κ R i ω u} ≤
+          ((2 * (R + 3 * κ * R) + 1) ^ d : ℕ) *
+            ENNReal.ofReal ((2 * R + 1) ^ d *
+                (C₁ * Real.exp (-(c₁ * ((R : ℝ) + 1) ^ (d : ℝ)⁻¹))) +
+              2 * Real.exp (-((R : ℝ) / (C₂ * (2 * (d : ℝ) * R) ^ (1 - δ))) ^ s)) := by
+  obtain ⟨C₁, c₁, s, δ, C₂, h1, h2, h3, h4, h5, hL⟩ :=
+    measure_not_localGradGood_le hG hGv hd hpc hp1
+  refine ⟨C₁, c₁, s, δ, C₂, h1, h2, h3, h4, h5, fun κ R i hR u => ?_⟩
+  have hG0 : latticeBondLaw d p Gᶜ = 0 := ae_iff.1 hGae
+  have hsub : {ω | ω ∈ G ∧ ¬ GradGood hG hGv κ R i ω u} ⊆
+      ⋃ z ∈ supBox u (R + 3 * κ * R), (configurationTranslation (-z) ⁻¹' Gᶜ ∪
+        configurationTranslation (-z) ⁻¹' {ω | ω ∈ G ∧ ¬ LocalGradGood hG hGv i R ω}) := by
+    rintro ω ⟨hω, hg⟩
+    unfold GradGood at hg
+    push Not at hg
+    obtain ⟨z, hz, hlt⟩ := hg
+    refine Set.mem_iUnion₂.2 ⟨z, hz, ?_⟩
+    by_cases hτ : configurationTranslation (-z) ω ∈ G
+    · exact Or.inr ⟨hτ, fun hgood =>
+        absurd (planeGrad_le_siteGrad hG hGv hω hR hτ hgood) (not_le.2 hlt)⟩
+    · exact Or.inl hτ
+  refine (measure_mono hsub).trans ((measure_biUnion_finset_le _ _).trans ?_)
+  calc _ ≤ ∑ _z ∈ supBox u (R + 3 * κ * R),
+        ENNReal.ofReal ((2 * R + 1) ^ d *
+            (C₁ * Real.exp (-(c₁ * ((R : ℝ) + 1) ^ (d : ℝ)⁻¹))) +
+          2 * Real.exp (-((R : ℝ) / (C₂ * (2 * (d : ℝ) * R) ^ (1 - δ))) ^ s)) :=
+        Finset.sum_le_sum fun z _ => by
+          have hmp := measurePreserving_configurationTranslation p (-z)
+          refine (measure_union_le _ _).trans
+            ((add_le_add (hmp.measure_preimage_le _) (hmp.measure_preimage_le _)).trans ?_)
+          rw [hG0, zero_add]
+          exact hL i R hR
+    _ = _ := by rw [Finset.sum_const, nsmul_eq_mul, card_supBox]
+
+end Grad
 
 end Rigidity.Corrector.GeneralDim
