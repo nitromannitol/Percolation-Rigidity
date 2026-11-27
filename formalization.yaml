@@ -406,8 +406,9 @@ fidelity:
     the bound dim A_1 <= 3, and for the planar Green-column existence, the quantitative corrector
     estimate and the quantitative Green estimate as theorems from the qualitative corrector input
     with Theorem 1 of Dario (DarioOptimalCorrectorTwo, proved from the multiscale Poincare inequality
-    (cited, with the convergence of the convolutions required), the concentration inequality and
-    Lemmas 3.2 and 3.3 of Dario as named inputs, Proposition 3.1 being derived from the last three, with moments in place of the O_s
+    (proved, with the convergence of the convolutions required), the concentration inequality and
+    Lemmas 3.2 and 3.3 of Dario, all proved (Lemma 3.3 from Lemma 3.5 for the planar partition in an adapted form and the
+    Step 2 sum, darioOptimalCorrectorTwo_holds), Proposition 3.1 being derived from the last three, with moments in place of the O_s
     calculus, the Lipschitz bound with max(X, 2)^2 and the log factor log(2 + |x - y|)) and the heat
     kernel estimate of Dario and Gu
     (DarioGuHeatKernelTwo, for t >= 1, proved by the induction of Section 4.3 from Lemma 4.1,

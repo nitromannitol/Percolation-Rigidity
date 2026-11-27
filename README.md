@@ -2190,7 +2190,7 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
   (`correctorQuantitativeInputTwo_of_dario`). `DarioOptimalCorrectorTwo` states: for every `p ∈ (𝔭_c(2), 1)`
   there are `s, C > 0` such that for all `x, y ∈ ℤ²` and every slope `q` there is a measurable `Z` with
   `Z ≤ O_s(C ‖q‖₁ √(log(2 + ‖x − y‖)))` and, almost surely, every corrected plane `ℓ` of slope `q` satisfies
-  `|(ℓ(x) − q·x) − (ℓ(y) − q·y)| ≤ Z` for `x, y` in the infinite cluster. It is derived from named inputs in [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two).
+  `|(ℓ(x) − q·x) − (ℓ(y) − q·y)| ≤ Z` for `x, y` in the infinite cluster. It is derived from statements that are proved in [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two).
 * **R7 in dimension two** (`SupercriticalBondGreenQuantitativeTwo`, Dario and Gu, Theorem 2) from
   `DarioGuHeatKernelTwo`, Theorem 1 of Dario and Gu for the heat kernel `openHeat` of the infinite cluster (for
   `t ≥ 1`), and the Liouville theorem at order zero, which follows from `SupercriticalBondCorrectorInputTwo` or
@@ -2238,8 +2238,9 @@ exponent of the tail).
 Theorem 1 of Dario (*Optimal corrector estimates on percolation clusters*) in `d = 2`, the statement
 `DarioOptimalCorrectorTwo` (`|χ_q(x) − χ_q(y)| 1_{x, y ∈ 𝒞_∞} ≤ O_s(C ‖q‖₁ √(log(2 + ‖x − y‖)))`, see
 [the corrector estimate, the Green column and the Green function estimate in dimension two](#the-corrector-estimate-the-green-column-and-the-green-function-estimate-in-dimension-two)),
-and with it the quantitative corrector input `CorrectorQuantitativeInputTwo` of Dario and Gu are proved from the
-following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/)
+and with it the quantitative corrector input `CorrectorQuantitativeInputTwo` of Dario and Gu are proved with no hypothesis
+(`Rigidity.Poincare.darioOptimalCorrectorTwo_holds`, `Rigidity.Poincare.correctorQuantitativeInputTwo_holds`) from the
+following statements, each of which is proved, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/)
 ([`darioOptimalCorrectorTwo_of_inputs`, `correctorQuantitativeInputTwo_of_inputs`](Rigidity/Proofs/Corrector/PlanarDarioCorrectorHolds.lean)):
 
 * `SupercriticalBondCorrectorInputTwo` (R2), which is proved for `𝔭_c(2) < 𝔭 < 1`
@@ -2274,6 +2275,9 @@ following named inputs, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Correc
   (`Rigidity.Poincare.darioOptimalCorrectorTwo_of_threeThree`) and from `DarioFlipSumBound` alone
   (`darioOptimalCorrectorTwo_of_flipSum`); see
   [Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1).
+  Lemma 3.3 is proved in `d = 2`, from `DarioResamplePartitionTwo` and the Step 2 sum `DarioStepTwoSumBound`
+  (`darioFlipSumBound_of_resample`, `darioResamplePartitionTwo_holds`, `darioStepTwoSumBound_holds`), and so is
+  Theorem 1 of Dario (`darioOptimalCorrectorTwo_holds`).
 
 The order-zero regularity input (R3), which Dario uses in Proposition 2.14, is proved in dimension two
 (`armstrongDarioOrderZeroTwo_holds`, see
