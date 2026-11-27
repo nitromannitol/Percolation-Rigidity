@@ -41,7 +41,12 @@ hence from Dario's Proposition 3.1 alone (`DarioPropThreeOneThree`,
 `Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_prop31`: the multiscale Poincaré
 inequality (2.26) on `ℤᵈ` and the bound of the smoothed gradients for `r ≤ 1` are proved), which
 follows from Dario's Lemmas 3.2 and 3.3 in dimension `d ≥ 3` with the concentration inequality
-(`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_lemmas`). Lemma 3.3 in dimension
+(`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_lemmas`). Lemma 3.2 is proved in every
+dimension `d ≥ 2` (`Rigidity.Corrector.GeneralDim.darioMeanBound`, from (1.22) of Armstrong and Dario in
+every dimension, proved in Percolation-Cluster-Homogenization), so Dario's Theorem 1 in dimension
+`d ≥ 3`, and with it the quantitative corrector input, follows from Lemma 3.3 alone
+(`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound`,
+`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree`). Lemma 3.3 in dimension
 `d ≥ 3` follows from the bounds of the sums `Σ_e T₁(e)²` and `Σ_e T₂(e)²` of Steps 1 and 2 of its
 proof (`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_sums`): the resampling variance is
 at most the sum over the bonds of the squared differences of the flips of one bond
@@ -825,7 +830,7 @@ route bounds the heat kernel of the cluster for `d ≥ 2` and the decay of the G
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_of_orderZeroTwo`](Rigidity/Proofs/Green/SupercriticalGreenColumn.lean) | `SupercriticalBondGreenColumnExistence` from `ArmstrongDarioOrderZeroTwo`. |
 | [`Rigidity.Green.supercriticalBondGreenColumnExistence_holds`](Rigidity/Proofs/Green/GreenColumnHolds.lean) | `SupercriticalBondGreenColumnExistence`, with no hypothesis. |
 | [`Rigidity.Assembly.WithProvedGreenColumn`](Rigidity/Proofs/Assembly/ProvedGreenColumn.lean): `lipschitz`, `fast_decay`, `notLipschitz`, `fastDecayDichotomy`, `fastDecayPotential`, `gradientTrichotomy`, `levelSetDensity`, `goodEventLowerBound`, `largeGradientSensitive`, `goodEventLowerBoundDirectional` | the theorems of `Rigidity.Assembly.Main` that take `SupercriticalBondGreenColumnExistence`, with it and the other proved inputs supplied; they take only those of `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`, `ArmstrongDarioOrderOneOrigin` and `SupercriticalBondGreenQuantitative` that their proofs use. |
-| [`Rigidity.Assembly.WithProvedCorrector`](Rigidity/Proofs/Assembly/ProvedCorrector.lean): `correctorQuantitativeInput_of_darioThree`, `fast_decay`, `fastDecayDichotomy`, `fastDecayPotential` | the three theorems of `Rigidity.Assembly.WithProvedOrderOne` with the qualitative corrector input supplied (`supercriticalBondCorrectorInput_holds`, every `d ≥ 2`); they take `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`. The quantitative corrector input from `DarioOptimalCorrectorThree` (Theorem 1 of Dario in `d ≥ 3`) alone. |
+| [`Rigidity.Assembly.WithProvedCorrector`](Rigidity/Proofs/Assembly/ProvedCorrector.lean): `correctorQuantitativeInput_of_darioThree`, `correctorQuantitativeInput_of_darioVarianceBoundThree`, `fast_decay`, `fastDecayDichotomy`, `fastDecayPotential` | the three theorems of `Rigidity.Assembly.WithProvedOrderOne` with the qualitative corrector input supplied (`supercriticalBondCorrectorInput_holds`, every `d ≥ 2`); they take `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`. The quantitative corrector input from `DarioOptimalCorrectorThree` (Theorem 1 of Dario in `d ≥ 3`) alone. |
 | [`Rigidity.Assembly.WithProvedOrderOne`](Rigidity/Proofs/Assembly/ProvedOrderOne.lean): `fast_decay`, `fastDecayDichotomy`, `fastDecayPotential` | the three theorems of `Rigidity.Assembly.WithProvedGreenColumn` that take `ArmstrongDarioOrderOneOrigin`, with it supplied from `SupercriticalBondCorrectorInput` (`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`); they take `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`. |
 | [`Rigidity.Green.heat_le_of_two_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 2`, `𝔭_c(d) < p < 1` and each vertex `y`, almost surely, if `y` is in the infinite cluster, then for `0 ≤ t ≤ 1` there are `K` and `N` with `p_n(x, y) ≤ K n^{−(d/2 − 1/100)(1 − t)} exp(−t\|x − y\|²/(2n))` for all `n ≥ N` and all vertices `x` of the cluster. |
 | [`Rigidity.Green.greenColumn_le_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0` the Green column `g` with pole `y` satisfies `0 ≤ g(x) ≤ K \|x − y\|^{2 − d + 1/50 + δ}` for `\|x − y\| ≥ R`. |
@@ -3396,7 +3401,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1202 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1213 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.

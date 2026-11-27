@@ -219,6 +219,7 @@ import Rigidity.Proofs.Corrector.GeneralPropThreeOne
 import Rigidity.Proofs.Corrector.GeneralVarianceSums
 import Rigidity.Proofs.Corrector.GeneralStepOneHolds
 import Rigidity.Proofs.Corrector.GeneralStepTwoDefs
+import Rigidity.Proofs.Corrector.GeneralLemmaThreeTwoProof
 import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
@@ -1654,6 +1655,17 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.tsum_weight_energy_le
 #print axioms Rigidity.Corrector.GeneralDim.tsum_clusterOpenEnergy_le
 #print axioms Rigidity.Corrector.GeneralDim.tsum_weight_openEnergy_le
+#print axioms Rigidity.Corrector.GeneralDim.dario_errorstatpart
+#print axioms Rigidity.Corrector.GeneralDim.statAnchor_translation
+#print axioms Rigidity.Corrector.GeneralDim.statGrad_translation
+#print axioms Rigidity.Corrector.GeneralDim.exists_lintegral_abs_statDiscrepancy_le
+#print axioms Rigidity.Corrector.GeneralDim.abs_tsum_zdHeat_mul_periodic_le_exp
+#print axioms Rigidity.Corrector.GeneralDim.exists_lintegral_abs_coarseSegment_le
+#print axioms Rigidity.Corrector.GeneralDim.sum_statMean_period_eq_zero
+#print axioms Rigidity.Corrector.GeneralDim.darioMeanBound
+#print axioms Rigidity.Corrector.GeneralDim.darioMeanBoundThree_holds
+#print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound
+#print axioms Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
