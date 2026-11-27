@@ -106,8 +106,13 @@ Step 2 (`DarioStepTwoWeightThree`: the partition of the good cubes and the momen
 Green estimate reduces in every dimension `d ≥ 3` to Theorem 1 of Dario and Gu (`DarioGuHeatKernelD d`,
 `supercriticalBondGreenQuantitative_of_heatKernel`), and follows from `CorrectorQuantitativeInput`,
 `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
-(`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`). Theorem 1.3 in the
-form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
+(`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`).
+Hence Theorem 1.1 and Proposition 3.2 hold in every dimension `d ≥ 2` from the two statements
+`DarioStepTwoWeightThree` and `FluxFlipWeightBoundD` for `d ≥ 3`, every other literature input being
+proved ([`Rigidity.Assembly.EveryDimension.lipschitz`](Rigidity/Proofs/Assembly/EveryDimension.lean),
+`Rigidity.Assembly.EveryDimension.notLipschitz`). Theorem 1.3 in the
+form with the twelve inputs takes only `CorrectorQuantitativeInput` and
+`SupercriticalBondGreenQuantitative` (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
 Theorems 6.5 and 1.3 are proved with no literature hypothesis
 ([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
 Theorem 1.3). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
