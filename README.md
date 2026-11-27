@@ -125,7 +125,8 @@ Green function in dimension two follows (`supercriticalBondGreenQuantitativeTwo_
 proved in every dimension `d ≥ 2` from the variance bound (3.4) of the proof of Gu's Proposition 1.1, a named hypothesis
 (`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`), which for `d ≥ 3` follows from `FluxFlipWeightBoundD` and
 `DarioStepTwoWeightThree` (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`); `FluxFlipWeightBoundD` is
-not proved, and its part for the bonds open in the configuration, `FluxOpenBoundD`, is stated and not proved. The five numbered results that the paper does not prove are
+not proved; its part for the bonds open in the configuration, `FluxOpenBoundD`, is proved
+(`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`). The five numbered results that the paper does not prove are
 quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
 Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
 them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
@@ -538,7 +539,8 @@ For `d ≥ 3`, Proposition 2.13 follows from the variance bound `FluxVarianceBou
 ([`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean)), so the
 quantitative Green estimate follows from `CorrectorQuantitativeInput`, `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
 ([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeight.lean));
-`FluxFlipWeightBoundD` is not proved, and its part `FluxOpenBoundD` for the bonds open in the configuration is stated and not proved.
+`FluxFlipWeightBoundD` is not proved; its part `FluxOpenBoundD` for the bonds open in the configuration is proved
+([`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean)).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
