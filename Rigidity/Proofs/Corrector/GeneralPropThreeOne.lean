@@ -15,8 +15,8 @@ partition into good cubes of `ℤᵈ` and the components
   (`concentration_holds`) and `𝕍[X] ≤ O_s(θ)` bound the moments of `|X - E[X]|` by
   `(A √θ q^{(1+s)/(2s)})^q`;
 * `DarioMeanBoundThree`, `DarioVarianceBoundThree`: Lemmas 3.2 and 3.3 in dimension `d ≥ 3`
-  (hypotheses of this reduction; Lemma 3.2 is proved, `darioMeanBoundThree_holds`), at every
-  point `x`;
+  at every point `x`, both proved (`darioMeanBoundThree_holds`,
+  `darioVarianceBoundThree_holds`);
 * `darioPropThreeOneThree_of_lemmas`: Proposition 3.1 (`DarioPropThreeOneThree`) from these,
   as in the source: `|X| ≤ |E[X]| + |X - E[X]|` componentwise;
 * `darioOptimalCorrectorThree_of_lemmas`: Dario's Theorem 1 in dimension `d ≥ 3` from Lemmas 3.2
@@ -213,7 +213,7 @@ def DarioMeanBoundThree : Prop :=
         |∫ ω, heatComp (fun z => coarseField hG hGv i 0 z ω) r x j ∂latticeBondLaw d p| ≤
           C / r ^ ((d : ℝ) / 2)
 
-/-- **Dario, Lemma 3.3 in dimension `d ≥ 3`** (hypothesis):
+/-- **Dario, Lemma 3.3 in dimension `d ≥ 3`**, proved in `darioVarianceBoundThree_holds`:
 `𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C r^{-d})` for `r ≥ 1`. -/
 def DarioVarianceBoundThree : Prop :=
   ∀ (d : ℕ) [NeZero d], 3 ≤ d → ∀ p : unitInterval, criticalProbability d < (p : ℝ) →

@@ -11,8 +11,9 @@ hypothesis (`Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds`). The two forms 
 `fast_decay_of_flux_gradient_barlow`, are restated here without it. The other inputs of Theorem 1
 of Dario and Gu are `hSec` (Lemma 4.1, Proposition 4.3 and Proposition A.7 of Dario and Gu with a
 common exponent `σ`), or Proposition 2.13 and Theorem 3 (Remark 1.3); they are proved:
-Lemma 4.1 in `Rigidity/Proofs/Green/DarioGuApproxLemma.lean`, Proposition 4.3 in
-`Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean`, Proposition A.7 in
+Lemma 4.1 in `Rigidity/Proofs/Green/DarioGuApproxLemma.lean` (`darioGuApproxLemmaTwo_of_inputs`,
+from Theorem 3, Proposition 2.7, Theorem 4 and Proposition 2.15, which are proved),
+Proposition 4.3 in `Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean`, Proposition A.7 in
 `Rigidity/Proofs/Green/DarioGuDensityGaussian.lean` (`darioGuDensityGaussianTwo_holds`),
 Proposition 2.13 in `Rigidity/Proofs/Green/DarioGuFluxWeakNormHolds.lean`
 (`darioGuFluxWeakNormTwo_holds`) and Theorem 3 in `Rigidity/Proofs/Green/DarioGuGradientHolds.lean`

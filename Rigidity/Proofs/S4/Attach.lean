@@ -69,7 +69,7 @@ theorem stairBonds_reach {a b z : Vertex d} (hz : z ∈ bondSites (stairBonds a 
   obtain ⟨e, he, hze⟩ := hz
   obtain ⟨j, hj⟩ := Set.mem_iUnion.mp he
   obtain ⟨v, hv1, hv2, rfl⟩ := mem_bondSites_segmentBonds ⟨e, hj, hze⟩
-  obtain ⟨W, hW⟩ := stair_walk_aux a b j.val j.isLt.le
+  obtain ⟨W, hW⟩ := stair_walk_stairCornerAfter a b j.val j.isLt.le
   have hc : stairCornerAfter a b j.val =
       Function.update (stairCorner a b j) j (a j) := by
     funext i

@@ -638,12 +638,14 @@ theorem segment_walk (z : Vertex d) (j : Fin d) (u w : ℤ) :
 /-- The corner of the staircase from `a` to `b` after its first `n` legs. -/
 def stairCornerAfter (a b : Vertex d) (n : ℕ) : Vertex d := fun i => if i.val < n then b i else a i
 
-theorem stair_walk_aux (a b : Vertex d) : ∀ n : ℕ, n ≤ d →
+/-- The first `n` legs of the staircase from `a` to `b` form a walk along `stairBonds a b` from `a`
+to the corner `stairCornerAfter a b n`. -/
+theorem stair_walk_stairCornerAfter (a b : Vertex d) : ∀ n : ℕ, n ≤ d →
     ∃ W : (nearestNeighborGraph d).Walk a (stairCornerAfter a b n),
       ∀ e ∈ W.edges, ∃ f ∈ stairBonds a b, (f : Sym2 (Vertex d)) = e
   | 0, _ => ⟨SimpleGraph.Walk.nil.copy rfl (by funext i; simp [stairCornerAfter]), by simp⟩
   | n + 1, hn => by
-    obtain ⟨W, hW⟩ := stair_walk_aux a b n (by omega)
+    obtain ⟨W, hW⟩ := stair_walk_stairCornerAfter a b n (by omega)
     have hnd : n < d := by omega
     have h₁ : Function.update (stairCorner a b ⟨n, hnd⟩) ⟨n, hnd⟩ (a ⟨n, hnd⟩) =
         stairCornerAfter a b n := by
@@ -675,7 +677,7 @@ theorem stair_walk_aux (a b : Vertex d) : ∀ n : ℕ, n ≤ d →
 theorem stair_walk (a b : Vertex d) :
     ∃ W : (nearestNeighborGraph d).Walk a b,
       ∀ e ∈ W.edges, ∃ f ∈ stairBonds a b, (f : Sym2 (Vertex d)) = e := by
-  obtain ⟨W, hW⟩ := stair_walk_aux a b d le_rfl
+  obtain ⟨W, hW⟩ := stair_walk_stairCornerAfter a b d le_rfl
   have : stairCornerAfter a b d = b := by funext i; simp [stairCornerAfter, i.isLt]
   exact ⟨W.copy rfl this, by simpa using hW⟩
 

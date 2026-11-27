@@ -28,7 +28,7 @@ fix (`OuterNonConstantStep`).
   `P[patternConfig R H ⁻¹' (A_H ∩ G)] ≤ P[A_H ∩ G] / P[A_H]` (`conditional_ge_pattern`).
 
 The step `OuterNonConstantStep` of this route asks for `H ⊇` (gadget) whose outer event has
-probability `≥ c R^{-2d+2}`; see its docstring for what is known about it.
+probability `≥ c R^{-2d+2}`.
 -/
 
 namespace Rigidity.Proofs.S4.Conditioning
@@ -229,25 +229,11 @@ theorem conditional_ge_pattern {p : unitInterval} (hp0 : 0 < (p : ℝ)) (hp1 : (
         ENNReal.div_le_div_right (measure_patternEvent_mul_le p R H (A ∩ G)) _
     _ ≤ μ (A ∩ G) / μ A := ENNReal.div_le_div_left hAB _
 
-/-- **Step of the fixed-`H` route to the conditional Lemma 4.8**, not proved here (the lemma is
-proved by averaging over `H`, see the module docstring): for large `R` there is a bond set `H` of
-`Q_R` containing a translate of the gadget of height `R` as an induced subgraph whose outer event
-`patternConfig R H ⁻¹' (A_H ∩ G)`, an event of the bonds not fixed by `A_H`, has probability at
-least `c R^{-2d+2}`.
-
-Route and obstruction. Take `H` connected and
-containing every site of `∂Q_R` up to an independent set (otherwise the bonds of `Q_R` between two
-free boundary sites are not fixed by `A_H`, and whether they may be open depends on the outer
-bonds). Write `H = S ∪ P₁ ∪ T ∪ P₂` with `S ⊇ ∂Q_R` and the gadget `T` joined to `S`
-by interior paths at two sites `s₁, s₂`, which must have a neighbour inside `Q_{R-1}`. If the
-corrected plane `ℓ^S` of the environment with `S` inside `Q_R` separates `s₁, s₂`, then `ℓ_q` is
-not constant on the gadget (the Liouville argument of `AttachStep`). Comparing `ℓ^S` with the
-corrected plane of `ω` on the event `E_R` of `EventStep` shows that `ℓ^S` is not constant on the
-sites of `S`, and a union bound over pairs gives `c R^{-2d+2}`, PROVIDED the sites of `S` with no
-neighbour in `Q_{R-1}` can be avoided. For `d = 2` these are the four corners; forcing their eight
-bonds of `Q_R` closed costs the constant `(1-p)^8`. For `d ≥ 3` they form the `(d-2)`-skeleton of
-`∂Q_R`, about `R^{d-2}` sites: the comparison with `ω` gives no information on the face sites
-alone, and forcing the skeleton bonds costs `(1-p)^{c R^{d-2}}`. -/
+/-- **The step of the fixed-`H` route to the conditional Lemma 4.8**: for large `R` there is a
+bond set `H` of `Q_R` containing a translate of the gadget of height `R` as an induced subgraph
+whose outer event `patternConfig R H ⁻¹' (A_H ∩ G)`, an event of the bonds not fixed by `A_H`,
+has probability at least `c R^{-2d+2}`. Lemma 4.8 is proved without it, by averaging over `H`
+(`Rigidity/Proofs/S4/OuterNonConstant.lean`). -/
 def OuterNonConstantStep (d : ℕ) (hd : 2 ≤ d) (p : unitInterval) : Prop :=
   ∀ q : Fin d → ℝ, q ≠ 0 → ∃ c : ℝ, 0 < c ∧ ∃ R₀ : ℕ, ∀ R : ℕ, R₀ ≤ R →
     ∃ (H : Set (Bond d)) (τ : Vertex d), IsGadgetPlacement hd R H τ ∧
