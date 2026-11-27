@@ -159,8 +159,11 @@ def SegmentCondition (g : ℕ → E2) (M : ℕ) : Prop :=
   ∀ i j, i < j → j < M → ∀ p ∈ segment ℝ (g i) (g (i + 1)), p ∈ segment ℝ (g j) (g (j + 1)) →
     (j = i + 1 ∧ p = g (i + 1)) ∨ (i = 0 ∧ j + 1 = M ∧ p = g 0 ∧ p = g M)
 
-theorem polyline_eq_aux {g : ℕ → E2} {M : ℕ} (hg : SegmentCondition g M) {i j : ℕ} (hij : i ≤ j)
-    (hj : j < M) {s s' : ℝ} (hs : s ∈ Icc (i : ℝ) (i + 1)) (hs' : s' ∈ Icc (j : ℝ) (j + 1))
+/-- Two parameters `s ∈ [i, i + 1]` and `s' ∈ [j, j + 1]`, `i ≤ j < M`, of a polyline satisfying
+the segment condition have the same image only if they are equal or are the two ends `0` and `M`
+of a closed polyline. -/
+theorem eq_or_ends_of_polyline_eq_of_le {g : ℕ → E2} {M : ℕ} (hg : SegmentCondition g M)
+    {i j : ℕ} (hij : i ≤ j) (hj : j < M) {s s' : ℝ} (hs : s ∈ Icc (i : ℝ) (i + 1)) (hs' : s' ∈ Icc (j : ℝ) (j + 1))
     (h : polyline g s = polyline g s') : s = s' ∨ (s = 0 ∧ s' = M) := by
   have e1 := polyline_natCast_add g i (t := s - i) (by linarith [hs.1]) (by linarith [hs.2])
   have e2 := polyline_natCast_add g j (t := s' - j) (by linarith [hs'.1]) (by linarith [hs'.2])
@@ -199,10 +202,10 @@ theorem polyline_eq_of_mem {g : ℕ → E2} {M : ℕ} (hg : SegmentCondition g M
   obtain ⟨i, hi, hsi⟩ := exists_index hM hs
   obtain ⟨j, hj, hsj⟩ := exists_index hM hs'
   rcases le_total i j with hij | hij
-  · rcases polyline_eq_aux hg hij hj hsi hsj h with h | h
+  · rcases eq_or_ends_of_polyline_eq_of_le hg hij hj hsi hsj h with h | h
     · exact Or.inl h
     · exact Or.inr (Or.inl h)
-  · rcases polyline_eq_aux hg hij hi hsj hsi h.symm with h | h
+  · rcases eq_or_ends_of_polyline_eq_of_le hg hij hi hsj hsi h.symm with h | h
     · exact Or.inl h.symm
     · exact Or.inr (Or.inr h)
 

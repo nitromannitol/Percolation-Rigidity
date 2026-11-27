@@ -7,13 +7,23 @@ import Mathlib.Data.Countable.Basic
 import Rigidity.Frozen.BondV1
 import Rigidity.Frozen.MaskFlipV1
 
+/-!
+# Flips of finitely many coordinates of a Bernoulli product law
+
+For `0 < p < 1`, flipping the coordinates in a finite set `F` (`RigidityFinitePatch.flip`)
+preserves the null sets of the product of Bernoulli laws of parameter `p`, in both directions:
+on a finite product (`RigidityFinitePatch.finite_patch_flip_null_iff`) and on a countable
+product, by splitting the product at `F` (`RigidityFullProduct.full_product_flip_null_iff`). So an
+event of probability one stays of probability one after every finite flip simultaneously
+(`RigidityFullProduct.full_product_all_flips`). For a law of independent Bernoulli bonds this
+gives the same for every finitely supported Boolean mask (`RigidityFullProduct.bond_all_masks`),
+the form of `Rigidity.finite_flip_full_measure`.
+-/
+
 open MeasureTheory ProbabilityTheory
 open scoped BigOperators
 
 namespace RigidityFinitePatch
-
-example (d : ℕ) : Countable (Bond d) := inferInstance
-example (d : ℕ) : Countable (Finset (Bond d)) := inferInstance
 
 noncomputable def flip {ι : Type*} (F : Finset ι) (ω : ι → Bool) : ι → Bool := by
   classical

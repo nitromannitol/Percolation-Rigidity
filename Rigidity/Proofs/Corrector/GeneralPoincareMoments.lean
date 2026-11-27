@@ -466,10 +466,10 @@ theorem lintegral_boxOsc_le_of_poincare_three (hd : 3 ≤ d) {u : Vertex d → C
             _ ≤ A₁ * 2 ^ k * q ^ k := mul_le_mul_of_nonneg_left hqk this
 
 /-- **The inputs of Step 1 of the proof of Theorem 2 in dimension `d ≥ 3`** for the coarsened
-correctors (hypothesis): smoothed gradients `S i r x` (standing for
-`|Φ_{r²} * ∇[χ_{e_i}]_𝒫(x)|`) satisfying the multiscale Poincaré inequality (Proposition 2.19 in
-cube form), Proposition 3.1 (`S i r x ≤ O_s(C r^{-d/2})` for `r ≥ 1`) and the Lipschitz bound
-(2.22) for `r ≤ 1`. -/
+correctors: smoothed gradients `S i r x` (standing for `|Φ_{r²} * ∇[χ_{e_i}]_𝒫(x)|`) satisfying
+the multiscale Poincaré inequality (Proposition 2.19 in cube form), Proposition 3.1
+(`S i r x ≤ O_s(C r^{-d/2})` for `r ≥ 1`) and the Lipschitz bound (2.22) for `r ≤ 1`. They are
+established from Proposition 3.1 in `darioOptimalCorrectorThree_of_prop31`. -/
 def DarioPoincareInputsThree : Prop :=
   ∀ (d : ℕ) [NeZero d], 3 ≤ d → ∀ p : unitInterval, criticalProbability d < (p : ℝ) →
     (p : ℝ) < 1 → ∀ (G : Set (Configuration d)) (hG : MeasurableSet G)

@@ -137,14 +137,14 @@ theorem supBox_subset_of_mem {u v : Vertex 2} {r₁ r₂ : ℕ} (hv : v ∈ supB
     (↑(supBox v r₁) : Set (Vertex 2)) ⊆ ↑(supBox u (r₁ + r₂)) := fun _ hz =>
   Finset.mem_coe.2 (mem_supBox_trans (Finset.mem_coe.1 hz) hv)
 
-theorem cap_le_aux₁ {κ R a : ℕ} (ha : a ≤ R) : 8 * a + R ≤ (3 * κ + 9) * R + 1 := by
+private theorem cap_le_aux₁ {κ R a : ℕ} (ha : a ≤ R) : 8 * a + R ≤ (3 * κ + 9) * R + 1 := by
   nlinarith
 
-theorem cap_le_aux₂ {κ R a : ℕ} (ha : a ≤ R) :
+private theorem cap_le_aux₂ {κ R a : ℕ} (ha : a ≤ R) :
     2 * R + 1 + (3 * κ * a + R) ≤ (3 * κ + 9) * R + 1 := by
   nlinarith
 
-theorem cap_le_aux₃ {κ R c : ℕ} (hc : c ≤ R) : 3 * κ * c + R ≤ R + 3 * κ * R := by
+private theorem cap_le_aux₃ {κ R c : ℕ} (hc : c ≤ R) : 3 * κ * c + R ≤ R + 3 * κ * R := by
   nlinarith
 
 /-- **Locality of the finite-range weight.** -/

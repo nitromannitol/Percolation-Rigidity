@@ -14,7 +14,7 @@ is bounded on average, the weighted energy of the bound (4) is summed through th
 
 The probabilistic part of Step 2 in dimension `d ≥ 3`, the existence of such a partition almost
 surely and a majorant of `W₂ + pathWeight` with moments of polynomial growth uniformly in `y`, is
-the named hypothesis `DarioStepTwoWeightThree` (in dimension two these are
+`DarioStepTwoWeightThree`, proved in `darioStepTwoWeightThree_holds` (in dimension two these are
 `exists_stepTwoGood_partition`, `stepTwoWeight_le_weightMajorant`, `pathWeight_le_ballSum` and the
 moments of the majorants). From it and Lemma 3.5 for the partition into good cubes,
 `isOsBond_heatSqSum_of_moments` gives the bound of the Step 2 sum
@@ -100,8 +100,8 @@ theorem flipSumTwo_le_of_partition [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC�
 
 end Good
 
-/-- **The probabilistic part of Step 2 of Lemma 3.3 of Dario in dimension `d ≥ 3`**
-(hypothesis): for every `κ ≥ 1` there are `ε > 0` and `C_M, M ≥ 0` such that, for each direction
+/-- **The probabilistic part of Step 2 of Lemma 3.3 of Dario in dimension `d ≥ 3`**, proved in
+`darioStepTwoWeightThree_holds`: for every `κ ≥ 1` there are `ε > 0` and `C_M, M ≥ 0` such that, for each direction
 `i`, almost surely the good cubes `stepTwoGood` of the summation of estimate (2) partition `ℤᵈ`
 into maximal stopping cubes, and a majorant `W` of `W₂(y) + pathWeight(y)` (the weight of the
 Step 2 sum and the path weight of the partition, for every such partition) has moments

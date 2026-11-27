@@ -347,9 +347,11 @@ theorem ae_summable_heat_coarseField [NeZero d] (hd : 2 ≤ d)
 
 end Carrier
 
-/-- **Dario's Proposition 3.1 in dimension `d ≥ 3`** for the coarsened correctors (hypothesis):
+/-- **Dario's Proposition 3.1 in dimension `d ≥ 3`** for the coarsened correctors:
 `|Φ_{r²} * ∇[χ_{e_i}]_𝒫(x)| ≤ O_s(C r^{-d/2})` for `r ≥ 1`, on every measurable conull carrier
-of the qualitative corrector input. -/
+of the qualitative corrector input. It follows from Lemmas 3.2 and 3.3
+(`darioPropThreeOneThree_of_lemmas`), which are proved (`darioMeanBoundThree_holds`,
+`darioVarianceBoundThree_holds`). -/
 def DarioPropThreeOneThree : Prop :=
   ∀ (d : ℕ) [NeZero d], 3 ≤ d → ∀ p : unitInterval, criticalProbability d < (p : ℝ) →
     (p : ℝ) < 1 → ∀ (G : Set (Configuration d)) (hG : MeasurableSet G)

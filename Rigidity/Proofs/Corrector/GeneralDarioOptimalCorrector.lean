@@ -170,10 +170,12 @@ def CoarseningError [NeZero d] (p : unitInterval)
             (ℓ ⟨y, hy⟩ - ∑ j, (Pi.single i (1 : ℝ) : Fin d → ℝ) j * y j)) -
           (G i y 0 (x - y) ω - G i y 0 0 ω)| ≤ E ω
 
-/-- **The coarsened corrector of Dario, §5, in dimension `d ≥ 3`** (hypothesis): for every base
-point `y` and every coordinate slope `e_i`, fields `G i y` satisfying the hypotheses of Steps 1–4
-with box oscillations bounded uniformly in the scale (`LinftyIterationData` with the growth
-exponent `0`), and the coarsening error of Step 6 (`CoarseningError`). -/
+/-- **The coarsened corrector of Dario, §5, in dimension `d ≥ 3`**: for every base point `y` and
+every coordinate slope `e_i`, fields `G i y` satisfying the hypotheses of Steps 1–4 with box
+oscillations bounded uniformly in the scale (`LinftyIterationData` with the growth exponent `0`),
+and the coarsening error of Step 6 (`CoarseningError`). It follows from the base hypotheses of §5
+(`darioCoarsenedCorrectorThree_of_base`), which hold on the route of
+`darioOptimalCorrectorThree_holds`. -/
 def DarioCoarsenedCorrectorThree (d : ℕ) [NeZero d] (p : unitInterval) : Prop :=
   ∃ A B k s₆ C₆ : ℝ, 0 < s₆ ∧ 0 < C₆ ∧
     ∃ G : Fin d → Vertex d → Vertex d → Vertex d → Configuration d → ℝ,

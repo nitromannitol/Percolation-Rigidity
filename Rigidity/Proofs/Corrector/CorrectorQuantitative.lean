@@ -12,9 +12,9 @@ Ann. Appl. Probab. 2021, arXiv:1805.00902), which in dimension `d ≥ 3` reads
 `|χ_p(x) - χ_p(y)| 1_{x, y ∈ 𝒞_∞} ≤ O_s(C |p|)`, with Lemma 1.6 applied to the sequence
 `X_n = 3^{-αn} sup_{x ∈ B_{3^n}(y)} |χ_p(x) - χ_p(y)| 1_{x, y ∈ 𝒞_∞}`.
 
-This file states Dario's Theorem 1 in dimension `d ≥ 3` as the named hypothesis
-`DarioOptimalCorrectorThree` and proves the corrector input `CorrectorQuantitativeInput` in every
-dimension from it and the qualitative corrector input `SupercriticalBondCorrectorInput`; in
+This file states Dario's Theorem 1 in dimension `d ≥ 3` as `DarioOptimalCorrectorThree`, proved
+in `darioOptimalCorrectorThree_holds`, and proves the corrector input `CorrectorQuantitativeInput`
+in every dimension from it (`correctorQuantitativeInput_of_dario`) and the qualitative corrector input `SupercriticalBondCorrectorInput`; in
 dimension two it is `Rigidity.Poincare.correctorQuantitativeInputTwo_holds`. The argument is the
 one of `PlanarCorrectorQuantitative.lean` in dimension `d`:
 
