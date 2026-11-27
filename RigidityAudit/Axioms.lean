@@ -221,6 +221,7 @@ import Rigidity.Proofs.Corrector.GeneralStepOneHolds
 import Rigidity.Proofs.Corrector.GeneralStepTwoDefs
 import Rigidity.Proofs.Corrector.GeneralStepTwoReduce
 import Rigidity.Proofs.Corrector.GeneralLemmaThreeTwoProof
+import Rigidity.Proofs.Corrector.GeneralResamplePartitionHolds
 import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
@@ -1668,6 +1669,7 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.flipSumTwo_le_of_partition
 #print axioms Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_of_weight
 #print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight
+#print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_goodFlipStable
 #print axioms Rigidity.Corrector.GeneralDim.dario_errorstatpart
 #print axioms Rigidity.Corrector.GeneralDim.statAnchor_translation
 #print axioms Rigidity.Corrector.GeneralDim.statGrad_translation
@@ -1679,6 +1681,11 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.darioMeanBoundThree_holds
 #print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound
 #print axioms Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree
+#print axioms Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree
+#print axioms Rigidity.Corrector.GeneralDim.goodCubes_iff_of_far
+#print axioms Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near
+#print axioms Rigidity.Corrector.GeneralDim.resamplePartitionBound_of_goodFlipStable
+#print axioms Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_of_goodFlipStable
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds

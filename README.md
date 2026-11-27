@@ -56,7 +56,12 @@ the change of the partition and the change of the corrector (3.15)
 Step 1 sum follows from Lemma 3.5 of Dario for the partition into good cubes of `ℤᵈ`
 (`DarioResamplePartitionThree`, `Rigidity.Corrector.GeneralDim.darioStepOneSumBoundThree_of_resample`),
 so Lemma 3.3 in dimension `d ≥ 3` follows from Lemma 3.5 and the bound of the Step 2 sum
-(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_resample`). For the Step 2 sum the objects
+(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_resample`). Lemma 3.5 follows from the
+one-bond stability of good cubes at large scales, the step that Dario's proof of Lemma 3.5 states
+without proof (`Rigidity.Corrector.GeneralDim.GoodFlipStable`,
+`Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_of_goodFlipStable`, with the comparison of
+the partitions near the bond, `Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree`, and
+of the partition cubes of nearby points, `Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near`). For the Step 2 sum the objects
 of Dario's proof are defined on `ℤᵈ` with their first properties: the Green projection on the
 open graph (Propositions 2.11 and 2.12, `Rigidity.Corrector.GeneralDim.greenProj`,
 `Rigidity.Corrector.GeneralDim.edgeDiv_greenProj`, `Rigidity.Corrector.GeneralDim.norm_greenProj_le`),
@@ -75,7 +80,9 @@ cubes (`Rigidity.Corrector.GeneralDim.flipSumTwo_le_of_partition`), so the bound
 and with it Lemma 3.3 in dimension `d ≥ 3`, follows from Lemma 3.5 and the probabilistic part of
 Step 2 (`DarioStepTwoWeightThree`: the partition of the good cubes and the moments of the weight,
 `Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_of_weight`,
-`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight`). The
+`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight`), hence from the one-bond
+stability of good cubes and that part
+(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_goodFlipStable`). The
 Green estimate reduces in every dimension `d ≥ 3` to Theorem 1 of Dario and Gu (`DarioGuHeatKernelD d`,
 `supercriticalBondGreenQuantitative_of_heatKernel`). Theorem 1.3 in the
 form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
@@ -3410,7 +3417,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1225 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1231 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.

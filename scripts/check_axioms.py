@@ -1125,6 +1125,7 @@ further = {
          'Rigidity.Corrector.GeneralDim.flipSumTwo_le_of_partition',
          'Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_of_weight',
          'Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight',
+         'Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_goodFlipStable',
          'Rigidity.Corrector.GeneralDim.dario_errorstatpart',
          'Rigidity.Corrector.GeneralDim.statAnchor_translation',
          'Rigidity.Corrector.GeneralDim.statGrad_translation',
@@ -1135,7 +1136,12 @@ further = {
          'Rigidity.Corrector.GeneralDim.darioMeanBound',
          'Rigidity.Corrector.GeneralDim.darioMeanBoundThree_holds',
          'Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound',
-         'Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree'],
+         'Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree',
+         'Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree',
+         'Rigidity.Corrector.GeneralDim.goodCubes_iff_of_far',
+         'Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near',
+         'Rigidity.Corrector.GeneralDim.resamplePartitionBound_of_goodFlipStable',
+         'Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_of_goodFlipStable'],
     'The concentration inequality of Dario (Proposition 2.17) in every dimension':
         ['Rigidity.Corrector.GeneralDim.concentration_holds'],
     'Proposition 2.13 of Dario and Gu in dimension two (Gu, Proposition 1.1, and Appendix B), and the results that used it':
