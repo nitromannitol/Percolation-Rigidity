@@ -9,9 +9,11 @@ With `Λ_R(z) = 2d (J_R(z) + 1)` (`siteLambda`), so that `1 + Λ_R(z)` is the su
 sums of the finite-range weight, the moments of `1 + Λ_R(z)` are `((1 + 2d) B q^κ)^q` uniformly in
 `R` and `z` for `d ≥ 3`, since the configuration seen from `z` has the law of the configuration
 (`growthMoments_siteLambda`, from `growthMoments_localGrad`). The finite-range weight is at most the
-majorant `weightMajorant Λ_R (3dκ) (3dκ) u` when the capped sides are the sides near `u`
+majorant `weightMajorantOf (edgeRadius edgeBond) Λ_R (3dκ) (3dκ) u`, whose radius at the edge `a`
+is `max(σ(v), σ♭(a, v))` with `σ♭` the stopping size of the configuration with the bond of `a`
+closed, when the partitions exist and the capped sides are the sides near `u`
 (`finiteWeight_le_weightMajorant`); otherwise it is at most a power of `R`, on an event of
-probability `(2R + 1)ᵈ C e^{-c R/3}`, and the product is bounded uniformly in `R`
+probability at most `(2R + 1)ᵈ C' e^{-c' R/3}`, and the product is bounded uniformly in `R`
 (`finiteWeight_tail_le`). Hence `E[W_R(u)^q] ≤ M₀` uniformly in `R ≥ 1` and `u`
 (`exists_lintegral_finiteWeight_rpow_le`).
 
@@ -39,75 +41,83 @@ noncomputable def siteLambda (R : ℕ) (z : Vertex d) (ω : Configuration d) : �
 theorem measurable_siteLambda (R : ℕ) (z : Vertex d) : Measurable (siteLambda (d := d) R z) :=
   ((measurable_siteGrad R z).add_const 1).const_mul (2 * d)
 
-/-- **The finite-range weight under the majorant** when the capped sides are the sides. -/
+/-- **The finite-range weight under the majorant** when the partitions of `ω` and of the
+configurations with one bond closed exist and the capped sides are the sides. -/
 theorem finiteWeight_le_weightMajorant {ω : Configuration d} (hP : PartitionEvent ω)
-    {κ R : ℕ} (hR : 1 ≤ R) {u : Vertex d} (hs : SideGood R ω u) :
+    (hP' : ∀ a : LatticeEdge d, PartitionEvent (setBond (edgeBond a) false ω))
+    {κ R : ℕ} (hR : 1 ≤ R) {u : Vertex d} (hs : SideGood R ω u)
+    (hsF : SideGoodFlip edgeBond R ω u) :
     ENNReal.ofReal (finiteWeight κ R ω u) ≤
-      weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω := by
+      weightMajorantOf (edgeRadius edgeBond) (siteLambda R) (3 * d * κ) (3 * d * κ) u ω := by
   set g : LatticeEdge d → ℝ≥0∞ := fun a =>
-    if ‖latticeEuclideanEmbedding (a.1 - u)‖ ≤
-        3 * d * κ * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a.1 then
-      stepOneBallSum (siteLambda R) (3 * d * κ) a.1 ω ^ (9 : ℝ) else 0 with hg
-  have hball : ∀ v, ENNReal.ofReal
-      (∑ z ∈ supBox v (3 * κ * partSide ω v), (1 + 2 * d * (siteGrad R ω z + 1))) ≤
-        stepOneBallSum (siteLambda R) (3 * d * κ) v ω := by
-    intro v
-    unfold stepOneBallSum
+    if ‖latticeEuclideanEmbedding (a.1 - u)‖ ≤ 3 * d * κ * edgeRadius edgeBond a ω then
+      radiusBallSum (siteLambda R) (fun ω => 3 * d * κ * edgeRadius edgeBond a ω) a.1 ω ^ (9 : ℝ)
+    else 0 with hg
+  have hρ : ∀ v (k : Fin d), edgeRadius edgeBond (v, k) ω =
+      max (partSide ω v : ℝ) (partSide (setBond (edgeBond (v, k)) false ω) v : ℝ) :=
+    fun v k => edgeRadius_eq_partSide edgeBond (v, k) hP (hP' (v, k))
+  have hball : ∀ v (k : Fin d), ENNReal.ofReal
+      (∑ z ∈ supBox v (3 * κ * max (partSide ω v) (partSide (setBond (edgeBond (v, k)) false ω) v)),
+        (1 + 2 * d * (siteGrad R ω z + 1))) ≤
+        radiusBallSum (siteLambda R) (fun ω => 3 * d * κ * edgeRadius edgeBond (v, k) ω) v ω := by
+    intro v k
+    unfold radiusBallSum
     rw [ENNReal.ofReal_sum_of_nonneg fun z _ => by have := siteGrad_nonneg hR ω z; positivity]
-    refine le_trans (le_of_eq ?_) (ENNReal.sum_le_tsum (supBox v (3 * κ * partSide ω v)))
+    refine le_trans (le_of_eq ?_) (ENNReal.sum_le_tsum
+      (supBox v (3 * κ * max (partSide ω v) (partSide (setBond (edgeBond (v, k)) false ω) v))))
     refine Finset.sum_congr rfl fun z hz => ?_
-    have hc : ‖latticeEuclideanEmbedding (z - v)‖ ≤
-        3 * d * κ * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) v := by
+    have hc : ‖latticeEuclideanEmbedding (z - v)‖ ≤ 3 * d * κ * edgeRadius edgeBond (v, k) ω := by
       have h1 := norm_le_of_mem_supBox hz
-      rw [stoppingSize_eq_partSide hP]
+      rw [hρ v k]
       push_cast at h1
       linarith
     simp only [if_pos hc, siteLambda]
-  have hv : ∀ v ∈ supBox u R, ENNReal.ofReal
-      (if u ∈ supBox v (3 * κ * cappedSide (capScale R) ω v) then
-        d * finiteBallSum κ R ω v ^ 9 else 0) ≤ ∑' k : Fin d, g (v, k) := by
-    intro v hvu
-    by_cases hc : u ∈ supBox v (3 * κ * cappedSide (capScale R) ω v)
+  have hvk : ∀ v ∈ supBox u R, ∀ k : Fin d, ENNReal.ofReal
+      (if u ∈ supBox v (3 * κ * cappedEdgeSide (capScale R) ω (v, k)) then
+        finiteBallSum κ R ω (v, k) ^ 9 else 0) ≤ g (v, k) := by
+    intro v hvu k
+    by_cases hc : u ∈ supBox v (3 * κ * cappedEdgeSide (capScale R) ω (v, k))
     · rw [if_pos hc]
-      have hsv := hs v hvu
+      have hmax := cappedEdgeSide_eq_max k hs hsF hvu
       have hcond : ‖latticeEuclideanEmbedding (v - u)‖ ≤
-          3 * d * κ * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) v := by
-        rw [← hsv] at hc
+          3 * d * κ * edgeRadius edgeBond (v, k) ω := by
+        rw [hmax] at hc
         have h1 := norm_le_of_mem_supBox hc
         rw [LatticeProb.Percolation.latticeEuclideanEmbedding_sub, norm_sub_rev,
-            ← LatticeProb.Percolation.latticeEuclideanEmbedding_sub,
-            stoppingSize_eq_partSide hP]
+          ← LatticeProb.Percolation.latticeEuclideanEmbedding_sub, hρ v k]
         push_cast at h1
         linarith
-      have hT0 := finiteBallSum_nonneg (κ := κ) hR ω v
-      have hT : ENNReal.ofReal (finiteBallSum κ R ω v) ≤
-          stepOneBallSum (siteLambda R) (3 * d * κ) v ω := by
-        rw [finiteBallSum_eq, ← hsv]
-        exact hball v
-      rw [tsum_fintype]
+      have hT0 := finiteBallSum_nonneg (κ := κ) hR ω (v, k)
+      have hT : ENNReal.ofReal (finiteBallSum κ R ω (v, k)) ≤
+          radiusBallSum (siteLambda R) (fun ω => 3 * d * κ * edgeRadius edgeBond (v, k) ω) v ω := by
+        rw [finiteBallSum_eq, hmax]
+        exact hball v k
       simp only [hg, if_pos hcond]
-      rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]
-      calc ENNReal.ofReal (d * finiteBallSum κ R ω v ^ 9)
-          = d * ENNReal.ofReal (finiteBallSum κ R ω v) ^ (9 : ℝ) := by
-            rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_natCast,
-              ENNReal.ofReal_pow hT0, ← ENNReal.rpow_natCast]
+      calc ENNReal.ofReal (finiteBallSum κ R ω (v, k) ^ 9)
+          = ENNReal.ofReal (finiteBallSum κ R ω (v, k)) ^ (9 : ℝ) := by
+            rw [ENNReal.ofReal_pow hT0, ← ENNReal.rpow_natCast]
             norm_num
-        _ ≤ d * stepOneBallSum (siteLambda R) (3 * d * κ) v ω ^ (9 : ℝ) := by gcongr
+        _ ≤ _ := by gcongr
     · rw [if_neg hc, ENNReal.ofReal_zero]
       positivity
+  have hnn : ∀ v (k : Fin d), 0 ≤ (if u ∈ supBox v (3 * κ * cappedEdgeSide (capScale R) ω (v, k))
+      then finiteBallSum κ R ω (v, k) ^ 9 else 0) := fun v k => by
+    split_ifs
+    · have := finiteBallSum_nonneg (κ := κ) hR ω (v, k); positivity
+    · exact le_rfl
   calc ENNReal.ofReal (finiteWeight κ R ω u)
-      = ∑ v ∈ supBox u R, ENNReal.ofReal
-          (if u ∈ supBox v (3 * κ * cappedSide (capScale R) ω v) then
-            d * finiteBallSum κ R ω v ^ 9 else 0) := by
+      = ∑ v ∈ supBox u R, ∑ k : Fin d, ENNReal.ofReal
+          (if u ∈ supBox v (3 * κ * cappedEdgeSide (capScale R) ω (v, k)) then
+            finiteBallSum κ R ω (v, k) ^ 9 else 0) := by
         unfold finiteWeight
-        exact ENNReal.ofReal_sum_of_nonneg fun v _ => by
-          split_ifs
-          · have := finiteBallSum_nonneg (κ := κ) hR ω v; positivity
-          · exact le_rfl
-    _ ≤ ∑ v ∈ supBox u R, ∑' k : Fin d, g (v, k) := Finset.sum_le_sum hv
+        rw [ENNReal.ofReal_sum_of_nonneg fun v _ => Finset.sum_nonneg fun k _ => hnn v k]
+        exact Finset.sum_congr rfl fun v _ => ENNReal.ofReal_sum_of_nonneg fun k _ => hnn v k
+    _ ≤ ∑ v ∈ supBox u R, ∑ k : Fin d, g (v, k) :=
+        Finset.sum_le_sum fun v hv => Finset.sum_le_sum fun k _ => hvk v hv k
+    _ = ∑ v ∈ supBox u R, ∑' k : Fin d, g (v, k) := by simp only [tsum_fintype]
     _ ≤ ∑' v, ∑' k : Fin d, g (v, k) := ENNReal.sum_le_tsum _
     _ = ∑' a : LatticeEdge d, g a := (ENNReal.tsum_prod (f := fun v k => g (v, k))).symm
-    _ = weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω := rfl
+    _ = weightMajorantOf (edgeRadius edgeBond) (siteLambda R) (3 * d * κ) (3 * d * κ) u ω := rfl
 
 /-- The tail term: a power of `R` against `(2R + 1)ᵈ e^{-c 3^{⌊log₃ R⌋}}`. -/
 theorem finiteWeight_tail_le {κ : ℕ} (hκ : 1 ≤ κ) {q c C' : ℝ} (hq : 1 ≤ q) (hc : 0 < c)
@@ -220,65 +230,119 @@ theorem exists_lintegral_finiteWeight_rpow_le [NeZero d] (hd : 3 ≤ d) {p : uni
     have h1 : (1 : ℝ) ≤ κ := by exact_mod_cast hκ
     have h3 : (3 : ℝ) ≤ d := by exact_mod_cast hd
     positivity
-  obtain ⟨A, k, hA, hk, hW⟩ := growthMoments_weightMajorant_uniform (by omega) hpc hB hκm hK hK
+  obtain ⟨A, k, hA, hk, hW⟩ :=
+    growthMoments_weightMajorant_edgeRadius_uniform (by omega) hpc hp1 hB hκm hK hK
   obtain ⟨C, hC, c, hc, hD⟩ := measure_not_sideGood_le (by omega) hpc
-  have hC'0 : 0 ≤ C.toReal := ENNReal.toReal_nonneg
+  obtain ⟨C₂, hC₂, c₂, hc₂, hD₂⟩ := measure_not_sideGoodFlip_le (by omega) hpc hp1
   have hq0 : 0 ≤ q := by linarith
+  have hp' : (0 : ℝ) < 1 - p := by linarith
+  have hC0 : 0 ≤ C.toReal := ENNReal.toReal_nonneg
+  have hC₂0 : 0 ≤ C₂.toReal := ENNReal.toReal_nonneg
+  set C' : ℝ := C.toReal + d * C₂.toReal / (1 - p) with hC'
+  have hC'0 : 0 ≤ C' := by positivity
+  set c' : ℝ := min c c₂ with hc'
+  have hc'0 : 0 < c' := lt_min hc hc₂
   set T : ℝ := (3 ^ d * d * 7 ^ (9 * d) * (1 + 14 * d) ^ 9 * κ ^ (9 * d)) ^ q *
-      (3 ^ d * C.toReal * (((10 * d + 9) * q + d) / (c / 3)) ^ ((10 * d + 9) * q + d)) with hT
+      (3 ^ d * C' * (((10 * d + 9) * q + d) / (c' / 3)) ^ ((10 * d + 9) * q + d)) with hT
   have hT0 : 0 ≤ T := by positivity
   refine ⟨(A * q ^ k) ^ q + T, by positivity, fun R hR u => ?_⟩
   have hPPE : latticeBondLaw d p {ω | ¬ PartitionEvent ω} = 0 :=
     ae_iff.1 (ae_partitionEvent (by omega) hpc)
+  have hPF : latticeBondLaw d p
+      {ω | ¬ ∀ (e : Bond d) (b : Bool), PartitionEvent (setBond e b ω)} = 0 :=
+    ae_iff.1 (ae_partitionEvent_setBond (by omega) hpc hp1)
   set W : ℝ := (2 * R + 1) ^ d * (d * ((6 * κ * R + 1) ^ d * (1 + 2 * d * (6 * R + 1))) ^ 9)
     with hWd
   have hW0 : 0 ≤ W := by positivity
+  set bad : Set (Configuration d) := {ω | ¬ (PartitionEvent ω ∧
+    (∀ a : LatticeEdge d, PartitionEvent (setBond (edgeBond a) false ω)) ∧
+      SideGood R ω u ∧ SideGoodFlip edgeBond R ω u)} with hbad_def
   have hpt : ∀ ω, ENNReal.ofReal (finiteWeight κ R ω u) ^ q ≤
-      weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q +
-        {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)}.indicator
-          (fun _ => ENNReal.ofReal (W ^ q)) ω := by
+      weightMajorantOf (edgeRadius edgeBond) (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q +
+        bad.indicator (fun _ => ENNReal.ofReal (W ^ q)) ω := by
     intro ω
-    by_cases hω : PartitionEvent ω ∧ SideGood R ω u
-    · exact le_add_right (ENNReal.rpow_le_rpow (finiteWeight_le_weightMajorant hω.1 hR hω.2) hq0)
-    · rw [Set.indicator_of_mem (show ω ∈ {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} from hω)]
+    by_cases hω : ω ∈ bad
+    · rw [Set.indicator_of_mem hω]
       refine le_add_left ?_
       rw [ENNReal.ofReal_rpow_of_nonneg (finiteWeight_nonneg hR ω u) hq0]
       exact ENNReal.ofReal_le_ofReal
         (Real.rpow_le_rpow (finiteWeight_nonneg hR ω u) (finiteWeight_le hR ω u) hq0)
-  have hbad : latticeBondLaw d p {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} ≤
-      ((2 * R + 1) ^ d : ℕ) * (C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ capScale R))) := by
-    have hsub : {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} ⊆
-        {ω | ¬ PartitionEvent ω} ∪ {ω | PartitionEvent ω ∧ ¬ SideGood R ω u} := by
+    · simp only [hbad_def, Set.mem_setOf_eq, not_not] at hω
+      exact le_add_right (ENNReal.rpow_le_rpow
+        (finiteWeight_le_weightMajorant hω.1 hω.2.1 hR hω.2.2.1 hω.2.2.2) hq0)
+  have hbad : latticeBondLaw d p bad ≤
+      ((2 * R + 1) ^ d : ℕ) * (C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ capScale R))) +
+        ((d * (2 * R + 1) ^ d : ℕ) : ℝ≥0∞) *
+          (C₂ * ENNReal.ofReal (Real.exp (-c₂ * (3 : ℝ) ^ capScale R) / (1 - p))) := by
+    have hsub : bad ⊆ {ω | ¬ PartitionEvent ω} ∪
+        ({ω | ¬ ∀ (e : Bond d) (b : Bool), PartitionEvent (setBond e b ω)} ∪
+          ({ω | PartitionEvent ω ∧ ¬ SideGood R ω u} ∪ {ω | ¬ SideGoodFlip edgeBond R ω u})) := by
       intro ω hω
+      simp only [hbad_def, Set.mem_setOf_eq] at hω
+      simp only [Set.mem_union, Set.mem_setOf_eq]
       by_cases hP : PartitionEvent ω
-      · exact Or.inr ⟨hP, fun hs => hω ⟨hP, hs⟩⟩
+      · by_cases hPf : ∀ (e : Bond d) (b : Bool), PartitionEvent (setBond e b ω)
+        · by_cases hs : SideGood R ω u
+          · exact Or.inr (Or.inr (Or.inr fun hsf => hω ⟨hP, fun a => hPf _ _, hs, hsf⟩))
+          · exact Or.inr (Or.inr (Or.inl ⟨hP, hs⟩))
+        · exact Or.inr (Or.inl hPf)
       · exact Or.inl hP
     refine (measure_mono hsub).trans ((measure_union_le _ _).trans ?_)
     rw [hPPE, zero_add]
-    exact hD R u
+    refine (measure_union_le _ _).trans ?_
+    rw [hPF, zero_add]
+    exact (measure_union_le _ _).trans (add_le_add (hD R u) (hD₂ edgeBond R u))
+  have hbad' : latticeBondLaw d p bad ≤ ENNReal.ofReal
+      ((((2 * R + 1) ^ d : ℕ) : ℝ) * (C' * Real.exp (-c' * (3 : ℝ) ^ capScale R))) := by
+    refine hbad.trans ?_
+    have h3 : (0 : ℝ) ≤ (3 : ℝ) ^ capScale R := by positivity
+    have e1 : Real.exp (-c * (3 : ℝ) ^ capScale R) ≤ Real.exp (-c' * (3 : ℝ) ^ capScale R) :=
+      Real.exp_le_exp.2 (by nlinarith [min_le_left c c₂])
+    have e2 : Real.exp (-c₂ * (3 : ℝ) ^ capScale R) ≤ Real.exp (-c' * (3 : ℝ) ^ capScale R) :=
+      Real.exp_le_exp.2 (by nlinarith [min_le_right c c₂])
+    rw [show (C : ℝ≥0∞) = ENNReal.ofReal C.toReal from (ENNReal.ofReal_toReal hC).symm,
+      show (C₂ : ℝ≥0∞) = ENNReal.ofReal C₂.toReal from (ENNReal.ofReal_toReal hC₂).symm,
+      ← ENNReal.ofReal_natCast, ← ENNReal.ofReal_natCast, ← ENNReal.ofReal_mul hC0,
+      ← ENNReal.ofReal_mul (Nat.cast_nonneg _), ← ENNReal.ofReal_mul hC₂0,
+      ← ENNReal.ofReal_mul (Nat.cast_nonneg _), ← ENNReal.ofReal_add (by positivity)
+        (by positivity)]
+    refine ENNReal.ofReal_le_ofReal ?_
+    set N : ℝ := (((2 * R + 1) ^ d : ℕ) : ℝ) with hN
+    have hN0 : 0 ≤ N := Nat.cast_nonneg _
+    have hdN : (((d * (2 * R + 1) ^ d : ℕ)) : ℝ) = d * N := by rw [hN]; push_cast; ring
+    rw [hdN]
+    set e' := Real.exp (-c' * (3 : ℝ) ^ capScale R)
+    have t1 : N * (C.toReal * Real.exp (-c * (3 : ℝ) ^ capScale R)) ≤ N * (C.toReal * e') := by
+      gcongr
+    have t2 : d * N * (C₂.toReal * (Real.exp (-c₂ * (3 : ℝ) ^ capScale R) / (1 - p))) ≤
+        d * N * (C₂.toReal * (e' / (1 - p))) := by
+      gcongr
+    have t3 : N * (C' * e') = N * (C.toReal * e') + d * N * (C₂.toReal * (e' / (1 - p))) := by
+      rw [hC']
+      field_simp
+    linarith
   calc ∫⁻ ω, ENNReal.ofReal (finiteWeight κ R ω u) ^ q ∂latticeBondLaw d p
-      ≤ ∫⁻ ω, (weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q +
-          {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)}.indicator
-            (fun _ => ENNReal.ofReal (W ^ q)) ω) ∂latticeBondLaw d p := lintegral_mono hpt
-    _ = ∫⁻ ω, weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q ∂latticeBondLaw d p +
-        ∫⁻ ω, {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)}.indicator
-            (fun _ => ENNReal.ofReal (W ^ q)) ω ∂latticeBondLaw d p :=
-        lintegral_add_left'
-          ((measurable_weightMajorant (measurable_siteLambda R) _ _ u).pow_const q).aemeasurable _
-    _ ≤ ENNReal.ofReal ((A * q ^ k) ^ q) + ENNReal.ofReal (W ^ q) *
-          latticeBondLaw d p {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} :=
-        add_le_add (hW (siteLambda R) (measurable_siteLambda R) (hmom R hR) u q hq)
+      ≤ ∫⁻ ω, (weightMajorantOf (edgeRadius edgeBond) (siteLambda R) (3 * d * κ) (3 * d * κ) u ω
+            ^ q + bad.indicator (fun _ => ENNReal.ofReal (W ^ q)) ω) ∂latticeBondLaw d p :=
+        lintegral_mono hpt
+    _ = ∫⁻ ω, weightMajorantOf (edgeRadius edgeBond) (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q
+          ∂latticeBondLaw d p +
+        ∫⁻ ω, bad.indicator (fun _ => ENNReal.ofReal (W ^ q)) ω ∂latticeBondLaw d p :=
+        lintegral_add_left' ((measurable_weightMajorantOf
+          (fun a => measurable_edgeRadius edgeBond a) (measurable_siteLambda R) _ _ u).pow_const
+            q).aemeasurable _
+    _ ≤ ENNReal.ofReal ((A * q ^ k) ^ q) + ENNReal.ofReal (W ^ q) * latticeBondLaw d p bad :=
+        add_le_add (hW edgeBond (siteLambda R) (measurable_siteLambda R) (hmom R hR) u q hq)
           (lintegral_indicator_const_le _ _)
     _ ≤ ENNReal.ofReal ((A * q ^ k) ^ q) + ENNReal.ofReal T := by
         gcongr
-        calc _ ≤ ENNReal.ofReal (W ^ q) *
-              (((2 * R + 1) ^ d : ℕ) *
-                (C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ capScale R)))) := by gcongr
+        calc _ ≤ ENNReal.ofReal (W ^ q) * ENNReal.ofReal
+              ((((2 * R + 1) ^ d : ℕ) : ℝ) * (C' * Real.exp (-c' * (3 : ℝ) ^ capScale R))) := by
+              gcongr
           _ = ENNReal.ofReal (W ^ q * ((((2 * R + 1) ^ d : ℕ) : ℝ) *
-                (C.toReal * Real.exp (-c * (3 : ℝ) ^ capScale R)))) := by
-              rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity),
-                ENNReal.ofReal_mul hC'0, ENNReal.ofReal_natCast, ENNReal.ofReal_toReal hC]
-          _ ≤ _ := ENNReal.ofReal_le_ofReal (finiteWeight_tail_le hκ hq hc hC'0 hR)
+                (C' * Real.exp (-c' * (3 : ℝ) ^ capScale R)))) :=
+              (ENNReal.ofReal_mul (by positivity)).symm
+          _ ≤ _ := ENNReal.ofReal_le_ofReal (finiteWeight_tail_le hκ hq hc'0 hC'0 hR)
     _ = _ := (ENNReal.ofReal_add (by positivity) hT0).symm
 
 end Rigidity.Corrector.GeneralDim
