@@ -15,7 +15,7 @@ lake build RigidityAudit      # the comparator challenges and solutions
 
 The library must build with **no warnings**. Lattice-Probability and
 Percolation-Cluster-Homogenization have no prebuilt cache, so the first build compiles them as well
-as the library. The only intentional `sorry`s are the five statement-level ones, one in each
+as the library. The only intentional `sorry`s are the statement-level ones, one in each
 `RigidityAudit/*/Challenge.lean`; `lake build RigidityAudit` reports them as warnings, and the
 comparator checks each against its solution.
 
@@ -42,7 +42,7 @@ not appear in the reports of the theorems.
 ## Conventions for Lean files
 
 - No `sorry`, `admit`, `native_decide` or new `axiom` in the library. Avoid `set_option maxHeartbeats`;
-  the four existing uses raise the limit to 400000 for a single declaration each.
+  where it is used, it raises the limit to at most 400000 for a single declaration.
 - Statements stay faithful to the corrected draft `paper/percolation-harmonic-corrected.tex` and
   are referred to by their number and LaTeX label, never by line number. Where a statement
   departs from the printed paper, the departure is listed in `paper/CORRECTIONS.md`.
