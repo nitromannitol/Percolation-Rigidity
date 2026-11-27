@@ -10,14 +10,17 @@ import Rigidity.Proofs.Corrector.GeneralStepTwoWeightBound
   it is measurable, at most `6R`, depends only on the bonds inside `B(z, 2R + 1)`
   (`siteGrad_eq_of_localBonds`), and dominates the plane gradient bound at `z` on the good event
   of the configuration seen from `z` (`planeGrad_le_siteGrad`);
-* `stepTwoFactor_le_of_bound`: the factor of an edge of the weight of the Step 2 sum is at most
-  `(Σ_{B(x, 3κ s(x))} g)⁹` for any `g ≥ 1` dominating the plane gradient bound on that box.
+* `stepTwoFactor_le_of_bound`: the factor of an edge `a = (x, i')` of the weight of the Step 2 sum
+  is at most `(Σ_{B(x, 3κ m)} g)⁹`, `m = max(s(x), s♭(x))` with `s♭(x)` the side at `x` of the
+  partition of the configuration with the bond of `a` closed, for any `g ≥ 1` dominating the plane
+  gradient bound on that box.
 
 This is the planar file `DarioStepTwoSiteGrad` on `ℤᵈ`. The planar partition is replaced by the
-partition into good cubes of `ℤᵈ` (`partSide`, `max_partSide_le`), the bound `5 + 4 siteGrad` of the
-plane gradient by `1 + 2d(siteGrad + 1)`, and in the factor `R_a^{7d} (Σ_{B_a} G)²` the power `7d`
-of the radius is bounded by the `7`-th power of the `(3κ s(x))^d` points of the box, so that the
-power `9` of the planar bound is unchanged.
+partition into good cubes of `ℤᵈ` (`partSide`, `max_partSide_setBond_le`), the radius of the box of
+an edge also carries the side `s♭(x)` of the partition with the bond of the edge closed, the bound
+`5 + 4 siteGrad` of the plane gradient becomes `1 + 2d(siteGrad + 1)`, and in the factor
+`R_a^{7d} (Σ_{B_a} G)²` the power `7d` of the radius is bounded by the `7`-th power of the
+`(3κ m)^d` points of the box, so that the power `9` of the planar bound is unchanged.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -134,32 +137,43 @@ theorem planeGrad_le_siteGrad {ω : Configuration d} (hω : ω ∈ G) {i : Fin d
   unfold siteGrad
   linarith
 
-/-- The radius of the box of an edge is at most `3κ s(x)`. -/
+/-- The radius of the box of an edge `a = (x, i')` is at most `3κ max(s(x), s♭(x))`. -/
 theorem stepTwoRadius_le {ω : Configuration d} (hP : PartitionEvent ω) (κ : ℕ)
-    (a : LatticeEdge d) : stepTwoRadius κ ω a ≤ 3 * κ * partSide ω a.1 := by
+    (a : LatticeEdge d) :
+    stepTwoRadius κ ω a ≤
+      3 * κ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) := by
   unfold stepTwoRadius
-  calc κ * max (partSide ω a.1) (partSide ω (edgeHead a)) ≤ κ * (3 * partSide ω a.1) :=
-        Nat.mul_le_mul_left _ (max_partSide_le hP a)
-    _ = 3 * κ * partSide ω a.1 := by ring
+  calc κ * max (max (partSide ω a.1) (partSide ω (edgeHead a)))
+        (partSide (setBond (edgeBond a) false ω) a.1)
+      ≤ κ * (3 * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1)) :=
+        Nat.mul_le_mul_left _ (max_partSide_setBond_le hP (edgeBond a) a)
+    _ = 3 * κ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) := by ring
 
-/-- A point of the box of an edge is within `3κ s(x)` of its tail. -/
+/-- A point of the box of an edge `a = (x, i')` is within `3κ max(s(x), s♭(x))` of `x`. -/
 theorem mem_supBox_of_mem_stepTwoBox {ω : Configuration d} (hP : PartitionEvent ω)
     {κ : ℕ} {a : LatticeEdge d} {u : Vertex d} (hu : u ∈ stepTwoBox κ ω a) :
-    u ∈ supBox a.1 (3 * κ * partSide ω a.1) := by
+    u ∈ supBox a.1
+      (3 * κ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1)) := by
   unfold stepTwoBox at hu
   rw [LatticeProb.mem_boxFinset_iff] at hu
   exact mem_supBox.2 fun j => (hu j).trans (by exact_mod_cast stepTwoRadius_le hP κ a)
 
 /-- **The factor of an edge under a dominating function**: if `g ≥ 1` dominates the plane gradient
-bound on `B(x, 3κ s(x))`, the factor of the edge is at most `(Σ_{B(x, 3κ s(x))} g)⁹`. -/
+bound on `B(x, 3κ m)`, `m = max(s(x), s♭(x))`, the factor of the edge `a = (x, i')` is at most
+`(Σ_{B(x, 3κ m)} g)⁹`. -/
 theorem stepTwoFactor_le_of_bound {ω : Configuration d} (hP : PartitionEvent ω) {κ : ℕ}
     {i : Fin d} {a : LatticeEdge d} {g : Vertex d → ℝ} (hg1 : ∀ z, 1 ≤ g z)
-    (hgb : ∀ z ∈ supBox a.1 (3 * κ * partSide ω a.1), planeGrad hG hGv i ω z ≤ g z) :
-    stepTwoFactor hG hGv κ i ω a ≤ (∑ z ∈ supBox a.1 (3 * κ * partSide ω a.1), g z) ^ 9 := by
+    (hgb : ∀ z ∈ supBox a.1
+        (3 * κ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1)),
+      planeGrad hG hGv i ω z ≤ g z) :
+    stepTwoFactor hG hGv κ i ω a ≤
+      (∑ z ∈ supBox a.1
+        (3 * κ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1)), g z) ^ 9 := by
   have hrad' := stepTwoRadius_le hP κ a
-  have hsubB : stepTwoBox κ ω a ⊆ supBox a.1 (3 * κ * partSide ω a.1) := fun u hu =>
-    mem_supBox_of_mem_stepTwoBox hP hu
-  set s := partSide ω a.1 with hs
+  have hsubB : stepTwoBox κ ω a ⊆
+      supBox a.1 (3 * κ * max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1)) :=
+    fun u hu => mem_supBox_of_mem_stepTwoBox hP hu
+  set s := max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) with hs
   set S := supBox a.1 (3 * κ * s) with hS
   set T : ℝ := ∑ z ∈ S, g z with hT
   have hcardT : ((3 * κ * s : ℕ) : ℝ) ^ d ≤ T := by
