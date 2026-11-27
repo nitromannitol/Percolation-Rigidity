@@ -75,7 +75,7 @@ theorem inner_gradDelta (η : EdgeField d) (z : Vertex d) :
   split_ifs <;> simp [lp.inner_single_right]
 
 /-- The closure in `ℓ²` of the gradients of the finitely supported functions on the open graph. -/
-noncomputable def gradSpace : Submodule ℝ EdgeField d :=
+noncomputable def gradSpace : Submodule ℝ (EdgeField d) :=
   (Submodule.span ℝ (Set.range (gradDelta ω))).topologicalClosure
 
 instance : (gradSpace ω).HasOrthogonalProjection := by
@@ -383,7 +383,7 @@ theorem componentRoot_eq_of_adj {x y : Vertex d} (h : (openGraph ω).Adj x y) :
 edges. -/
 theorem exists_isGradOf_of_mem_gradSpace {η : EdgeField d} (hη : η ∈ gradSpace ω) :
     ∃ w, IsGradOf ω η w := by
-  have hcl : η ∈ closure (Submodule.span ℝ (Set.range (gradDelta ω)) : Set EdgeField d) := by
+  have hcl : η ∈ closure (Submodule.span ℝ (Set.range (gradDelta ω)) : Set (EdgeField d)) := by
     rw [← Submodule.topologicalClosure_coe]
     exact hη
   obtain ⟨u, hu, hlim⟩ := mem_closure_iff_seq_limit.1 hcl

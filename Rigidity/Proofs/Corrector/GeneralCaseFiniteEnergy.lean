@@ -285,7 +285,7 @@ theorem segPoint_stairPoint (z : Vertex d) {m : ℕ} (hm : m < d) :
   unfold segPoint stairPoint
   by_cases hi : i = ⟨m, hm⟩
   · subst hi
-    simp [h]
+    simpa using h
   · have hi' : (i : ℕ) ≠ m := fun e => hi (Fin.ext e)
     rw [if_neg hi]
     by_cases hlt : (i : ℕ) < m
@@ -435,8 +435,7 @@ theorem mem_triadicCube_zero_of_abs_le {m R : ℕ} (hR : 2 * R + 1 ≤ 3 ^ m) {y
   constructor <;> linarith
 
 /-- The numerical step: if `S⁴ ≤ 9R`, `R ≥ 1` and `R > 9 (K E)⁴ / ε⁸`, then `K S R E ≤ (ε R)²`. -/
-theorem growth_bound_le' {S R K E ε : ℝ} (hS : 0 ≤ S) (hR : 1 ≤ R) (hKE : 0 ≤ K * E)
-    (hε : 0 < ε) (hS4 : S ^ 4 ≤ 9 * R) (hRC : 9 * (K * E) ^ 4 / ε ^ 8 < R) :
+theorem growth_bound_le' {S R K E ε : ℝ} (hR : 1 ≤ R) (hε : 0 < ε) (hS4 : S ^ 4 ≤ 9 * R) (hRC : 9 * (K * E) ^ 4 / ε ^ 8 < R) :
     K * S * R * E ≤ (ε * R) ^ 2 := by
   have hR0 : 0 < R := by linarith
   have h8 : 0 < ε ^ 8 := by positivity
@@ -477,7 +476,7 @@ theorem ae_abs_sub_partitionAnchor_le_of_finiteEnergy [NeZero d] (hd : 2 ≤ d) 
   have ht : (1 : ℝ) ≤ (4 * (d + 1) * d - d : ℝ) := by
     have : (1 : ℝ) ≤ d := by exact_mod_cast hd0
     nlinarith
-  obtain ⟨-, -, -, -, M, -, -, -, hae⟩ :=
+  obtain ⟨_, _, -, -, M, -, -, -, hae⟩ :=
     Rigidity.Dirichlet.cubeMinimalScales_holds hd hpc _ ht
   filter_upwards [hae, ae_partitionEvent hd hpc] with ω hω hP
   intro W E hE ε hε
@@ -539,7 +538,7 @@ theorem ae_abs_sub_partitionAnchor_le_of_finiteEnergy [NeZero d] (hd : 2 ≤ d) 
   have hRreal : (1 : ℝ) ≤ R := by exact_mod_cast hR1
   have hRC : 9 * (K * E) ^ 4 / ε ^ 8 < (R : ℝ) :=
     lt_of_lt_of_le hR₁ (by exact_mod_cast hRR₁)
-  have hfin := growth_bound_le' (by positivity) hRreal (mul_nonneg hK0 hE0) hε hS4 hRC
+  have hfin := growth_bound_le' hRreal hε hS4 hRC
   rw [← hK] at hbound
   have hsq := hbound.trans hfin
   exact le_of_pow_le_pow_left₀ two_ne_zero (by positivity) hsq
