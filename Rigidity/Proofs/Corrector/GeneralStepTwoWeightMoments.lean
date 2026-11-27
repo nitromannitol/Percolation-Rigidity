@@ -250,19 +250,33 @@ theorem growthMoments_weightMajorantOf_uniform (hd : 0 < d) {p : unitInterval} {
 
 /-! ### The majorant on the stopping sizes of the good cubes -/
 
+/-- The sum `Σ_{|z - v| ≤ K σ(v)} (1 + Λ(z))` of `1 + Λ` over the ball of radius `K σ(v)` around
+`v`. -/
+noncomputable def sizeBallSum (Λ : Vertex d → Configuration d → ℝ) (K : ℝ) (v : Vertex d)
+    (ω : Configuration d) : ℝ≥0∞ :=
+  ∑' z, if ‖latticeEuclideanEmbedding (z - v)‖ ≤
+      K * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) v
+    then ENNReal.ofReal (1 + Λ z ω) else 0
+
+theorem measurable_sizeBallSum {Λ : Vertex d → Configuration d → ℝ}
+    (hΛm : ∀ z, Measurable (Λ z)) (K : ℝ) (v : Vertex d) : Measurable (sizeBallSum Λ K v) :=
+  Measurable.tsum fun z => Measurable.ite (measurableSet_le measurable_const
+    ((measurable_stoppingSize_goodCubes v).const_mul K))
+    ((measurable_const.add (hΛm z)).ennreal_ofReal) measurable_const
+
 /-- The majorant `Σ_a 1{|a - u| ≤ K₁ σ(a)} T(a)⁹` of the weights of the Step 2 sum. -/
 noncomputable def weightMajorant (Λ : Vertex d → Configuration d → ℝ) (K₁ K₂ : ℝ) (u : Vertex d)
     (ω : Configuration d) : ℝ≥0∞ :=
   ∑' a : LatticeEdge d, if ‖latticeEuclideanEmbedding (a.1 - u)‖ ≤
       K₁ * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a.1 then
-    stepOneBallSum Λ K₂ a.1 ω ^ (9 : ℝ) else 0
+    sizeBallSum Λ K₂ a.1 ω ^ (9 : ℝ) else 0
 
 theorem measurable_weightMajorant {Λ : Vertex d → Configuration d → ℝ}
     (hΛm : ∀ z, Measurable (Λ z)) (K₁ K₂ : ℝ) (u : Vertex d) :
     Measurable (weightMajorant Λ K₁ K₂ u) :=
   Measurable.tsum fun a => Measurable.ite (measurableSet_le measurable_const
     ((measurable_stoppingSize_goodCubes a.1).const_mul K₁))
-    ((measurable_stepOneBallSum hΛm K₂ a.1).pow_const _) measurable_const
+    ((measurable_sizeBallSum hΛm K₂ a.1).pow_const _) measurable_const
 
 /-- **The moments of the majorant of the weights**, with constants depending only on `d`, on the
 growth constants `B, κ` of `1 + Λ` and on `K₁, K₂`. -/

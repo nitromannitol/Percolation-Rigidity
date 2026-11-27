@@ -4,18 +4,22 @@ import Rigidity.Proofs.Corrector.GeneralStepTwoWeightMoments
 # The weight of the Step 2 sum on `ℤᵈ` under its majorant
 
 On the partition event of the good cubes of `ℤᵈ`, the sides at the two endpoints of an edge differ
-by at most a factor `3`, so `m_a = max(s(x), s(y)) ≤ 3 s(x)` (`max_partSide_le`). If the plane
-gradient bound satisfies `G ≤ 1 + Λ`, the factor `F_a = (κ m_a)^{7d} (Σ_{B_a} G)²` of the weight is
-at most `T⁹` for the sum `T` of `1 + Λ` over the box of radius `3κ s(x)`, which has at least
-`(3κ s(x))^d` points and lies in the Euclidean ball of radius `3dκ s(x)`. Hence
-(`stepTwoWeight_le_weightMajorant`)
+by at most a factor `3`, so `max(s(x), s(y)) ≤ 3 s(x)` (`max_partSide_le`), and the radius
+`R_a = κ max(s(x), s(y), s♭(x))` of the weight, with `s♭(x)` the side at `x` of the partition of the
+configuration with the bond of `a` closed, is at most `3κ s_a`, `s_a = max(s(x), s♭(x))`
+(`max_partSide_setBond_le`), which is at most the radius `ρ(a) = max(σ(x), σ♭(x))` of the edge
+(`cast_max_partSide_le_edgeRadius`). If the plane gradient bound satisfies `G ≤ 1 + Λ`, the factor
+`F_a = R_a^{7d} (Σ_{B_a} G)²` of the weight is at most `T⁹` for the sum `T` of `1 + Λ` over the box
+of radius `3κ s_a`, which has at least `(3κ s_a)^d` points and lies in the Euclidean ball of radius
+`3dκ s_a`. Hence (`stepTwoWeight_le_weightMajorant`)
 
-`W(u) ≤ Σ_a 1{|a - u| ≤ 3dκ σ(a)} T(a)⁹ = weightMajorant Λ (3dκ) (3dκ) u`.
+`W(u) ≤ Σ_a 1{|a - u| ≤ 3dκ ρ(a)} T(a)⁹ = weightMajorantOf (edgeRadius edgeBond) Λ (3dκ) (3dκ) u`.
 
 This is the planar file `DarioStepTwoWeightBound` on `ℤᵈ`: the planar partition is replaced by the
 partition into good cubes of `ℤᵈ` (`partSide`, `partSide_eq`), the power `14 = 7 · 2` by `7d`, the
-`(3κ s)²` points of the box by `(3κ s)^d`, and the Euclidean radius `2r` of a box of radius `r` by
-`d r`, so that the radii `6κ` of the majorant become `3dκ`.
+`(3κ s)²` points of the box by `(3κ s)^d`, the Euclidean radius `2r` of a box of radius `r` by
+`d r`, so that the radii `6κ` of the majorant become `3dκ`, and the radius of the weight includes
+the side of the partition with the bond of the edge closed (the scale of the corrected Lemma 3.5).
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -71,45 +75,61 @@ theorem edgeRadius_eq_partSide {ω : Configuration d} (β : LatticeEdge d → Bo
   unfold edgeRadius flipSize
   rw [stoppingSize_eq_partSide hP, stoppingSize_eq_partSide hP']
 
+/-- The side of the partition cube is at most the stopping size of the good cubes. -/
+theorem partSide_le_stoppingSize (ω : Configuration d) (v : Vertex d) :
+    (partSide ω v : ℝ) ≤ TriadicCube.stoppingSize (TriadicCube.goodCubes ω) v :=
+  Nat.floor_le (TriadicCube.stoppingSize_nonneg _ v)
+
+/-- The side `max(s(x), s♭(x))` is at most the radius `ρ(a)` of the edge `a` from `x`. -/
+theorem cast_max_partSide_le_edgeRadius (β : LatticeEdge d → Bond d) (a : LatticeEdge d)
+    (ω : Configuration d) :
+    ((max (partSide ω a.1) (partSide (setBond (β a) false ω) a.1) : ℕ) : ℝ) ≤
+      edgeRadius β a ω := by
+  rw [Nat.cast_max]
+  exact max_le_max (partSide_le_stoppingSize ω a.1) (partSide_le_stoppingSize _ a.1)
+
 section Grad
 
 variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
 
 /-- **The weight under its majorant**: on the partition event, if `G ≤ 1 + Λ` with `Λ ≥ 0`, then
-`W(u) ≤ Σ_a 1{|a - u| ≤ 3dκ σ(a)} T(a)⁹` with `T(a)` the sum of `1 + Λ` over the ball of radius
-`3dκ σ(a)` around `a`. -/
+`W(u) ≤ Σ_a 1{|a - u| ≤ 3dκ ρ(a)} T(a)⁹` with `ρ(a) = max(σ(a), σ♭(a))` the radius of the edge `a`
+(`edgeRadius edgeBond`) and `T(a)` the sum of `1 + Λ` over the ball of radius `3dκ ρ(a)` around
+`a`. -/
 theorem stepTwoWeight_le_weightMajorant {ω : Configuration d} (hP : PartitionEvent ω)
     {κ : ℕ} {i : Fin d} {Λ : Vertex d → Configuration d → ℝ}
     (hΛ0 : ∀ z, 0 ≤ Λ z ω) (hGΛ : ∀ z, planeGrad hG hGv i ω z ≤ 1 + Λ z ω) (u : Vertex d) :
-    stepTwoWeight hG hGv κ i ω u ≤ weightMajorant Λ (3 * d * κ) (3 * d * κ) u ω := by
-  unfold stepTwoWeight weightMajorant
+    stepTwoWeight hG hGv κ i ω u ≤
+      weightMajorantOf (edgeRadius edgeBond) Λ (3 * d * κ) (3 * d * κ) u ω := by
+  unfold stepTwoWeight weightMajorantOf
   refine ENNReal.tsum_le_tsum fun a => ?_
   by_cases hu : u ∈ stepTwoBox κ ω a
   swap
   · rw [if_neg hu]; positivity
   rw [if_pos hu]
-  have hm := max_partSide_le hP a
-  have hσ := stoppingSize_eq_partSide hP a.1
-  set s := partSide ω a.1 with hs
+  have hm := max_partSide_setBond_le hP (edgeBond a) a
+  have hσ := cast_max_partSide_le_edgeRadius edgeBond a ω
+  set s := max (partSide ω a.1) (partSide (setBond (edgeBond a) false ω) a.1) with hs
+  have hκ0 : (0 : ℝ) ≤ 3 * d * κ := by positivity
+  have hσκ := mul_le_mul_of_nonneg_left hσ hκ0
   -- the box of the edge and the box of radius `3κ s`
   have hRle : stepTwoRadius κ ω a ≤ 3 * κ * s := by
     unfold stepTwoRadius
-    calc κ * max (partSide ω a.1) (partSide ω (edgeHead a)) ≤ κ * (3 * s) :=
+    calc κ * max (max (partSide ω a.1) (partSide ω (edgeHead a)))
+          (partSide (setBond (edgeBond a) false ω) a.1) ≤ κ * (3 * s) :=
           Nat.mul_le_mul_left _ hm
       _ = 3 * κ * s := by ring
   set S := supBox a.1 (3 * κ * s) with hS
   have hsubB : stepTwoBox κ ω a ⊆ S := by
     rw [hS, supBox_eq_boxFinset]
     exact boxFinset_mono hRle
-  have hcond : ‖latticeEuclideanEmbedding (a.1 - u)‖ ≤
-      3 * d * κ * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a.1 := by
+  have hcond : ‖latticeEuclideanEmbedding (a.1 - u)‖ ≤ 3 * d * κ * edgeRadius edgeBond a ω := by
     have hu' : a.1 ∈ supBox u (3 * κ * s) := by
       rw [mem_supBox]
       intro k
       rw [abs_sub_comm]
       exact (mem_supBox.1 (hsubB hu)) k
     have h1 := norm_le_of_mem_supBox hu'
-    rw [hσ]
     push_cast at h1
     linarith
   rw [if_pos hcond]
@@ -146,21 +166,23 @@ theorem stepTwoWeight_le_weightMajorant {ω : Configuration d} (hP : PartitionEv
           mul_le_mul h7 (pow_le_pow_left₀ hG0 hGsum 2) (sq_nonneg _) (by positivity)
       _ = T ^ 9 := by ring
   -- the finite sum under the ball sum
-  have hball : ENNReal.ofReal T ≤ stepOneBallSum Λ (3 * d * κ) a.1 ω := by
-    unfold stepOneBallSum
+  have hball : ENNReal.ofReal T ≤
+      radiusBallSum Λ (fun ω => 3 * d * κ * edgeRadius edgeBond a ω) a.1 ω := by
+    unfold radiusBallSum
     rw [hT, ENNReal.ofReal_sum_of_nonneg fun z _ => by linarith [hΛ0 z]]
     refine le_trans (le_of_eq ?_) (ENNReal.sum_le_tsum S)
     refine Finset.sum_congr rfl fun z hz => ?_
     rw [if_pos]
+    show ‖latticeEuclideanEmbedding (z - a.1)‖ ≤ 3 * d * κ * edgeRadius edgeBond a ω
     have h1 := norm_le_of_mem_supBox hz
-    rw [hσ]
     push_cast at h1
     linarith
   calc ENNReal.ofReal (stepTwoFactor hG hGv κ i ω a) ≤ ENNReal.ofReal (T ^ 9) :=
         ENNReal.ofReal_le_ofReal hF
     _ = ENNReal.ofReal T ^ (9 : ℝ) := by
         rw [ENNReal.ofReal_pow hT0, ← ENNReal.rpow_natCast]; norm_num
-    _ ≤ stepOneBallSum Λ (3 * d * κ) a.1 ω ^ (9 : ℝ) := ENNReal.rpow_le_rpow hball (by norm_num)
+    _ ≤ radiusBallSum Λ (fun ω => 3 * d * κ * edgeRadius edgeBond a ω) a.1 ω ^ (9 : ℝ) :=
+        ENNReal.rpow_le_rpow hball (by norm_num)
 
 end Grad
 

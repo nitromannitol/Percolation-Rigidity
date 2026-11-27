@@ -76,7 +76,7 @@ theorem regionWeight_le {ω : Configuration d} (hP : PartitionEvent ω) (j : Fin
 /-- `(1 + 3^d) σ(y)^d` is at most the number of points within `4dσ(y)` of `y`. -/
 theorem ballCount_le [NeZero d] {ω : Configuration d} (hP : PartitionEvent ω) (y : Vertex d) :
     ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d) ≤
-      stepOneBallSum (fun _ _ => 0) (4 * d) y ω := by
+      sizeBallSum (fun _ _ => 0) (4 * d) y ω := by
   have hσ := stoppingSize_eq_partSide hP y
   have hs1 : 1 ≤ partSide ω y := by
     rw [partSide_eq hP]; exact Nat.one_le_pow _ _ (by norm_num)
@@ -86,7 +86,7 @@ theorem ballCount_le [NeZero d] {ω : Configuration d} (hP : PartitionEvent ω) 
     rw [one_pow] at h
     norm_num at h
     exact h
-  unfold stepOneBallSum
+  unfold sizeBallSum
   calc ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d)
       ≤ ((supBox y (4 * partSide ω y)).card : ℝ≥0∞) := by
         rw [← ENNReal.ofReal_natCast, card_supBox, hσ]
@@ -116,7 +116,7 @@ theorem regionWeight_le_weightMajorant [NeZero d] {ω : Configuration d} (hP : P
   set g : LatticeEdge d → ℝ≥0∞ := fun a =>
     if ‖latticeEuclideanEmbedding (a.1 - z)‖ ≤
         3 * d * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a.1 then
-      stepOneBallSum (fun _ _ => 0) (4 * d) a.1 ω ^ (9 : ℝ) else 0 with hg
+      sizeBallSum (fun _ _ => 0) (4 * d) a.1 ω ^ (9 : ℝ) else 0 with hg
   refine (regionWeight_le hP j z).trans ?_
   calc (∑' y, if z ∈ supBox y (3 * partSide ω y) then
         ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d)
@@ -130,7 +130,7 @@ theorem regionWeight_le_weightMajorant [NeZero d] {ω : Configuration d} (hP : P
             rw [stoppingSize_eq_partSide hP]
             push_cast at h1
             linarith
-          have hb1 : 1 ≤ stepOneBallSum (fun _ _ => 0) (4 * d) y ω := by
+          have hb1 : 1 ≤ sizeBallSum (fun _ _ => 0) (4 * d) y ω := by
             refine le_trans ?_ (ballCount_le hP y)
             rw [← ENNReal.ofReal_one]
             refine ENNReal.ofReal_le_ofReal ?_
@@ -144,9 +144,9 @@ theorem regionWeight_le_weightMajorant [NeZero d] {ω : Configuration d} (hP : P
           simp only [hg, if_pos hc]
           calc ENNReal.ofReal
                 ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d)
-              ≤ stepOneBallSum (fun _ _ => 0) (4 * d) y ω := ballCount_le hP y
-            _ = stepOneBallSum (fun _ _ => 0) (4 * d) y ω ^ (1 : ℝ) := (ENNReal.rpow_one _).symm
-            _ ≤ stepOneBallSum (fun _ _ => 0) (4 * d) y ω ^ (9 : ℝ) :=
+              ≤ sizeBallSum (fun _ _ => 0) (4 * d) y ω := ballCount_le hP y
+            _ = sizeBallSum (fun _ _ => 0) (4 * d) y ω ^ (1 : ℝ) := (ENNReal.rpow_one _).symm
+            _ ≤ sizeBallSum (fun _ _ => 0) (4 * d) y ω ^ (9 : ℝ) :=
                 ENNReal.rpow_le_rpow_of_exponent_le hb1 (by norm_num)
         · positivity
     _ = ∑' a : LatticeEdge d, g a := (ENNReal.tsum_prod (f := fun v k => g (v, k))).symm

@@ -10,9 +10,10 @@ the weight bound (`measurableSet_weightGood`) or is a good cube of the summation
 (`measurableSet_mem_stepTwoGood`) are measurable.
 
 This is the planar file `DarioStepTwoWeightMeas` on `ℤᵈ`: the side of the planar partition is
-replaced by the side `partSide` of the partition into good cubes of `ℤᵈ`, the boxes of the edges are
-the boxes `LatticeProb.boxFinset`, the power `14` of the factor is `7d`, and the Meyers estimate of
-the good cubes is the one on `ℤᵈ`.
+replaced by the side `partSide` of the partition into good cubes of `ℤᵈ`, the radius of an edge
+also uses the side of the partition of the configuration with the bond of the edge closed
+(`setBond`), the boxes of the edges are the boxes `LatticeProb.boxFinset`, the power `14` of the
+factor is `7d`, and the Meyers estimate of the good cubes is the one on `ℤᵈ`.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -30,14 +31,18 @@ theorem measurable_nat_comp {β : Type*} [MeasurableSpace β] {f : Configuration
     measurable_from_prod_countable_left fun n => hg n
   exact h.comp (measurable_id.prodMk hf)
 
-/-- The radius `κ max(s(x), s(y))` of the box of an edge is measurable. -/
+/-- The radius `κ max(s(x), s(y), s♭(x))` of the box of an edge is measurable. -/
 theorem measurable_stepTwoRadius (κ : ℕ) (a : LatticeEdge d) :
     Measurable fun ω => stepTwoRadius κ ω a := by
   unfold stepTwoRadius
   refine measurable_nat_comp (measurable_partSide a.1)
-    (g := fun n ω => κ * max n (partSide ω (edgeHead a))) fun n => ?_
-  exact measurable_nat_comp (measurable_partSide (edgeHead a)) (g := fun m _ => κ * max n m)
-    fun _ => measurable_const
+    (g := fun n ω => κ * max (max n (partSide ω (edgeHead a)))
+      (partSide (setBond (edgeBond a) false ω) a.1)) fun n => ?_
+  refine measurable_nat_comp (measurable_partSide (edgeHead a))
+    (g := fun m ω => κ * max (max n m) (partSide (setBond (edgeBond a) false ω) a.1))
+    fun m => ?_
+  exact measurable_nat_comp ((measurable_partSide a.1).comp (measurable_setBond (edgeBond a) false))
+    (g := fun l _ => κ * max (max n m) l) fun _ => measurable_const
 
 section Grad
 
