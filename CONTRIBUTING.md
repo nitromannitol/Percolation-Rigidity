@@ -77,5 +77,5 @@ check is a failure.
   runs the axiom audit and builds the comparator surface. It runs on pushes to `main` that change
   more than documentation, the paper, `formalization.yaml` or `CITATION.cff`.
 - **Comparator audit** (`.github/workflows/comparator.yml`) builds the comparator tools at pinned
-  revisions and runs the seven pairs with the Lean kernel and the independent nanoda kernel. It runs
+  revisions and runs the eight pairs with the Lean kernel and the independent nanoda kernel. It runs
   after each successful CI run on `main` (on the commit that CI built) and on manual dispatch.
