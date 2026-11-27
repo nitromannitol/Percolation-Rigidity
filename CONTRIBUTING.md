@@ -50,8 +50,9 @@ not appear in the reports of the theorems.
   `External/` module of a dependency), with its source in the docstring, and enters a theorem as an
   explicit hypothesis. Do not add an `axiom` for it.
 - New declarations go under `Rigidity/`. The dependencies under `.lake/packages/` are read-only.
-- Avoid `lake clean`: it removes the prebuilt mathlib and Lattice-Probability builds and forces
-  the dependencies to be rebuilt from source.
+- Avoid `lake clean`: it removes the builds of the dependencies, the mathlib build from its cache
+  and the builds of Lattice-Probability and Percolation-Cluster-Homogenization, which have no cache
+  and are rebuilt from source.
 
 ## Comparators
 
