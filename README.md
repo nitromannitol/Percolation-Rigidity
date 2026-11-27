@@ -500,7 +500,9 @@ In dimension two, (7.18) at `k = 2` is proved from the estimates on squares of t
 the bound `dim 𝒜₁ ≤ 3` are proved); see
 [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two).
 Theorem 1 of Dario being proved, R4 holds (`armstrongDarioOrderOneOriginTwo_holds`). Of the five planar inputs of
-`fast_decay_of_planar_estimates` four are proved, and Theorem 1.3 follows from the quantitative Green estimate alone
+`fast_decay_of_planar_estimates` all five are proved (the quantitative Green estimate by
+`supercriticalBondGreenQuantitativeTwo_holds`), so Theorem 1.3 holds with no hypothesis
+([`fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean)); it also follows from the quantitative Green estimate alone
 ([`fast_decay_of_greenQuantitative`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean)), from Theorem 1 of Dario and Gu
 alone (`fast_decay_of_darioGu`), or from the inputs of that theorem: `hSec` and the Gaussian upper bound of Barlow
 (`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound (`fast_decay_of_flux_gradient_barlow`).
@@ -2229,7 +2231,8 @@ The twenty-seven reports for the declarations of this section are in
 `DarioGuHeatKernelTwo` alone (`supercriticalBondGreenQuantitativeTwo_of_darioGu_of_orderZero`, with the order-zero regularity
 `armstrongDarioOrderZeroTwo_holds` proved in
 [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1)).
-`DarioGuHeatKernelTwo` is proved from named inputs in [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two).
+`DarioGuHeatKernelTwo` and R7 are proved with no hypothesis (`darioGuHeatKernelTwo_holds`,
+`supercriticalBondGreenQuantitativeTwo_holds`); see [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two).
 
 Departures from Dario and from Dario and Gu:
 
@@ -2579,7 +2582,7 @@ Departures from Dario:
   of points of the box times the sum of the squares; the ball `B(x, r)` is the box in the supremum norm.
 - **Lemma 3.5 with the anchors.** The anchors of the planar partition depend on the bonds of the square of side nine times the side of the cube, so
   `DarioResamplePartitionTwo` states the second clause for the cube and for its anchor. For a meshed partition cube of side at least 1000 the anchor
-  depends only on the bonds inside the cube, so `DarioResamplePartitionTwo` is equivalent to Lemma 3.5 as Dario prints it, for this partition. In dimension `d ≥ 3` the printed scale does not suffice for the partition into good cubes of `ℤ^d`; the corrected form, with the larger side `S` of the partition cubes of the endpoint for the two configurations, holds with `C₀ = 81` and `C = 243` (`Rigidity.Corrector.GeneralDim.resamplePartition_max_bound`, and for `d ≥ 3` `darioResamplePartitionThree_holds`).
+  depends only on the bonds inside the cube, so `DarioResamplePartitionTwo` is equivalent to Lemma 3.5 as Dario prints it, for this partition. In dimension `d ≥ 3` the printed scale does not suffice for the partition into good cubes of `ℤᵈ`; the corrected form, with the larger side `S` of the partition cubes of the endpoint for the two configurations, holds with `C₀ = 81` and `C = 243` (`Rigidity.Corrector.GeneralDim.resamplePartition_max_bound`, and for `d ≥ 3` `darioResamplePartitionThree_holds`).
 - **The proof of Lemma 3.5.** Dario's proof uses large cubes crossable by clusters avoiding a cube, which the strip meshes of this partition do not
   provide. Here, with `s` the side of the partition cube of an endpoint `x` of the bond, the square of side `s` around `x` is tested in the mesh of that
   cube; by planar duality a change of a crossing of a strip of width at least `s + 2` would give a walk of faces through closed edges from the bond
