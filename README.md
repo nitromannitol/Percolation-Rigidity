@@ -2678,13 +2678,13 @@ Four inputs of the induction of Section 4.3 of Dario and Gu are proved in dimens
 The fifteen reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
-Exactly the following named inputs remain for Theorem 1 of Dario and Gu in `d = 2`
-(`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree`; with Proposition 4.3 proved, see
-[Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two) for the shorter list): Proposition 4.3, for each `𝔭_c(2) < p < 1` and some
-`σ > 0` (`DarioGuTwoScaleErrorTwo p σ`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`); Theorem 4 of
-Barlow (`BarlowGaussianUpperBoundTwo`, cited); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
-(`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_flipSum`). The qualitative corrector input is proved, and Proposition 2.15, Proposition A.7,
-Lemma 4.1 and the Poincaré inequality are no longer inputs.
+The named inputs of `darioGuHeatKernelTwo_of_twoScale_gradient_barlow_threeThree` for Theorem 1 of Dario and Gu in `d = 2` are
+Proposition 4.3, for each `𝔭_c(2) < p < 1` and some
+`σ > 0` (`DarioGuTwoScaleErrorTwo p σ`, proved, see
+[Proposition 4.3 of Dario and Gu in dimension two](#proposition-43-of-dario-and-gu-in-dimension-two)); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`, proved: `darioGuGradientBoundTwo_holds`); Theorem 4 of
+Barlow (`BarlowGaussianUpperBoundTwo`, proved: `barlowGaussianUpperBoundTwo_holds`); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
+(`darioGuHeatKernelTwo_of_twoScale_gradient_barlow_flipSum`; proved, `darioFlipSumBound_of_stepTwo`, `darioStepTwoSumBound_holds`). The qualitative corrector input is proved, and Proposition 2.15, Proposition A.7,
+Lemma 4.1 and the Poincaré inequality are proved and are not inputs.
 
 Departures from Dario and Gu:
 
@@ -2734,14 +2734,14 @@ equation (Step 1), the weighted energy inequality (Step 2), the source terms (St
 The thirty-three reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
-The following named inputs were the hypotheses of Theorem 1 of Dario and Gu in `d = 2`
-(`darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree`): Proposition 2.13, for each `𝔭_c(2) < p < 1` and some `σ > 0`
-(`DarioGuFluxWeakNormTwo p σ`, now proved, `darioGuFluxWeakNormTwo_holds`, so that Theorem 1 of Dario and Gu follows from Theorem 3 and
-Theorem 4 alone, `darioGuHeatKernelTwo_of_gradient_barlow`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`); Theorem 4 of Barlow
-(`BarlowGaussianUpperBoundTwo`, cited); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
-(`darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum`), or Lemma 3.5 for the planar partition (`DarioResamplePartitionTwo`)
-together with the Step 2 sum (H2) (`darioGuHeatKernelTwo_of_flux_gradient_barlow_resample`, by `darioFlipSumBound_of_resample`).
-Proposition 4.3 and the quantitative corrector estimate are no longer inputs.
+The named inputs of `darioGuHeatKernelTwo_of_flux_gradient_barlow_threeThree` for Theorem 1 of Dario and Gu in `d = 2` are
+Proposition 2.13, for each `𝔭_c(2) < p < 1` and some `σ > 0`
+(`DarioGuFluxWeakNormTwo p σ`, proved, `darioGuFluxWeakNormTwo_holds`, so that Theorem 1 of Dario and Gu follows from Theorem 3 and
+Theorem 4 alone, `darioGuHeatKernelTwo_of_gradient_barlow`); Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`, proved: `darioGuGradientBoundTwo_holds`); Theorem 4 of Barlow
+(`BarlowGaussianUpperBoundTwo`, proved: `barlowGaussianUpperBoundTwo_holds`); and `DarioLemmaThreeThree` (Lemma 3.3 of Dario), or `DarioFlipSumBound` in its place
+(`darioGuHeatKernelTwo_of_flux_gradient_barlow_flipSum`), or Lemma 3.5 for the planar partition (`DarioResamplePartitionTwo`, proved)
+together with the Step 2 sum (H2) (proved; `darioGuHeatKernelTwo_of_flux_gradient_barlow_resample`, by `darioFlipSumBound_of_resample`).
+Proposition 4.3 and the quantitative corrector estimate are not inputs.
 
 Departures from Dario and Gu:
 
@@ -2871,7 +2871,7 @@ reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`
 Theorem 3 of Dario and Gu in the form of Remark 1.3 (the gradient bound on the heat kernel, `DarioGuGradientBoundTwo`) is
 proved in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) from two statements: the large-scale `C^{0,1}` estimate for caloric
 functions on the infinite cluster, Proposition 3.9 (`DarioGuLipschitzTwo`, a named statement, in the range `2r ≤ R`), and the
-Gaussian upper bound of Barlow (Theorem 4, `BarlowGaussianUpperBoundTwo`, cited). The proof is that of the source
+Gaussian upper bound of Barlow (Theorem 4, `BarlowGaussianUpperBoundTwo`, proved, see [The Gaussian upper bound of Barlow in dimension two](#the-gaussian-upper-bound-of-barlow-in-dimension-two)). The proof is that of the source
 (DG21.tex, proof of Theorem 3): Proposition 3.9 applied to the heat kernel on a cylinder of radius of order `√t`, its right
 side bounded by Barlow's bound at the poles near the centre, after the minimal time `T'_NA` of (3.52). The parabolic
 Caccioppoli inequality (Proposition 2.9) and the time-slice estimate (Lemma 2.10), used in the proof of Proposition 3.9, are
@@ -2938,7 +2938,7 @@ identity (`IsSlopeQuadratic`) and by the cube quantities `cubeMu`, `cubeNu` and 
 
 The thirty-five reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 The second part of Step 1 of Lemma 5.10 and the rest of Lemma 5.10, Lemmas 5.5, 5.7, 5.8, 5.9 and 5.11 and Proposition 5.2
-are not yet proved in every dimension; in dimension two they are proved in the planar sections above.
+are not proved in every dimension; in dimension two they are proved in the planar sections above.
 
 Departures from Armstrong and Dario:
 
@@ -3092,11 +3092,11 @@ Departures from Dario and Gu:
 ## Theorem 3 of Dario and Gu in dimension two from Theorem 4, and Theorems 1 and 2 from Proposition 2.13 and Theorem 4
 
 Theorem 3 of Dario and Gu in the form of Remark 1.3 (`DarioGuGradientBoundTwo`) is proved from the Gaussian upper bound of
-Barlow (Theorem 4, `BarlowGaussianUpperBoundTwo`, cited) alone, with the order-zero regularity of Armstrong and Dario and
+Barlow (Theorem 4, `BarlowGaussianUpperBoundTwo`) alone, with the order-zero regularity of Armstrong and Dario and
 Proposition A.1, which are proved, by an elliptic estimate for the time slices of the heat kernel. Neither Theorem 5 nor
 Proposition 3.9 of the source is used, so the reduction to Proposition 3.9 of the section
 [Theorem 3 of Dario and Gu in dimension two from Proposition 3.9](#theorem-3-of-dario-and-gu-in-dimension-two-from-proposition-39)
-is no longer needed. With it, Theorem 1 of Dario and Gu (`DarioGuHeatKernelTwo`), their Theorem 2 (the quantitative Green
+is not needed. With it, Theorem 1 of Dario and Gu (`DarioGuHeatKernelTwo`), their Theorem 2 (the quantitative Green
 estimate `SupercriticalBondGreenQuantitativeTwo`, with the random additive constant of the plane) and Theorem 1.3 of the paper
 follow from Proposition 2.13 of Dario and Gu (`DarioGuFluxWeakNormTwo`) and Theorem 4. Theorem 4 being proved
 (`barlowGaussianUpperBoundTwo_holds`), Theorem 3 holds with no hypothesis (`darioGuGradientBoundTwo_holds`), and
