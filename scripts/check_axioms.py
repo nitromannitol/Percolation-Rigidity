@@ -1213,7 +1213,10 @@ further = {
          'Rigidity.Green.GeneralFlux.fluxFlipSumD_isOsBond',
          'Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weight',
          'Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound',
-         'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight'],
+         'Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight',
+         'Rigidity.Green.GeneralFlux.increment_eq_flipCorrectorD',
+         'Rigidity.Green.GeneralFlux.ae_fluxFlip_sq_le_openD',
+         'Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds'],
     'The multiscale Poincare inequality (2.26) of Dario in every dimension':
         ['Rigidity.Poincare.GeneralDim.multiscalePoincare_holds',
          'Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box',
