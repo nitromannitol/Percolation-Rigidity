@@ -1,0 +1,14 @@
+{
+  "challenge_module": "RigidityAudit.FastDecayUnconditional.Challenge",
+  "solution_module": "RigidityAudit.FastDecayUnconditional.Solution",
+  "theorem_names": [
+    "Rigidity.StatementAudit.FastDecay.fast_decay_unconditional"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

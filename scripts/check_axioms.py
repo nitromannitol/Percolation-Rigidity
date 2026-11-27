@@ -88,6 +88,9 @@ further = {
          'Rigidity.Proofs.S2.planar_cluster_density_concentration'],
     'Theorem 6.5 with every literature input proved':
         ['Rigidity.Assembly.Unconditional.slow_mixing'],
+    'Theorems 1.2 and 1.3 with every literature input proved':
+        ['Rigidity.Assembly.Unconditional.integer_valued_linear_growth',
+         'Rigidity.Assembly.Unconditional.fast_decay'],
     'Theorem 1.3 from its dimension-two inputs':
         ['Rigidity.Assembly.WithPlanarInputs.fast_decay',
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists'],
