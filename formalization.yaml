@@ -18,11 +18,13 @@ project:
     Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds) and the quantitative Green estimate of
     Dario and Gu in every dimension (Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds,
     from Proposition 2.12 and DarioStepTwoWeightThree, FluxFlipWeightBoundD being proved,
-    Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds); Theorem 1.3 (fast_decay_holds) and
-    Theorem 6.5 are proved with no literature hypothesis. The other five numbered results are quoted from the
+    Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds); Theorem 1.3 (fast_decay_holds), Theorem 6.5 and Theorem 1.2
+    (Rigidity.Assembly.Unconditional.integer_valued_linear_growth) are proved with no literature
+    hypothesis. The other five numbered results are quoted from the
     literature; one of them, Lemma 2.13, is not an input and is used by no Lean proof, and its
     special case for unions of lattice squares is proved. Theorems 1.1, 1.2, 1.3 and 6.5 are
-    independently checked by the comparator pairs under RigidityAudit/.
+    independently checked by the comparator pairs under RigidityAudit/, and so are Theorems 6.5, 1.2
+    and 1.3 with the regime as their only hypothesis.
   authors:
     - "Ahmed Bou-Rabee"
   responsible_maintainers:
@@ -168,7 +170,7 @@ status:
     declaration.
   sorry_count: 0
   sorry_count_scope: "Rigidity/ and Rigidity.lean"
-  comparator_challenge_sorry_count: 5
+  comparator_challenge_sorry_count: 7
   sorry_in_definitions: 0
   axioms:
     - "propext"
@@ -256,6 +258,20 @@ status:
       axioms: ["propext", "Classical.choice", "Quot.sound"]
       comparator_config: "RigidityAudit/SlowMixingUnconditional/comparator.json"
       literature_dependencies: []
+    - declaration: "Rigidity.Assembly.Unconditional.integer_valued_linear_growth"
+      file: "Rigidity/Proofs/Assembly/Unconditional.lean"
+      statement: "Theorem 1.2, with its literature inputs proved"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "RigidityAudit/IntegerLinearGrowthUnconditional/comparator.json"
+      literature_dependencies: []
+    - declaration: "Rigidity.Assembly.Unconditional.fast_decay"
+      file: "Rigidity/Proofs/Assembly/Unconditional.lean"
+      statement: "Theorem 1.3, with its literature inputs proved"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "RigidityAudit/FastDecayUnconditional/comparator.json"
+      literature_dependencies: []
 
 automation:
   methods:
@@ -310,7 +326,7 @@ automation:
     the policy that results of the literature enter only as explicit hypotheses. Every numbered
     result was stated in Lean before its proof; each proof step of the paper was then stated as its
     own Lean proposition and proved from the propositions of the steps it uses. Every proof is
-    checked by the Lean kernel. The library contains no sorry; each of the five comparator challenge
+    checked by the Lean kernel. The library contains no sorry; each of the seven comparator challenge
     files contains exactly one intentional statement-level sorry, which the corresponding
     Solution.lean proves.
 
