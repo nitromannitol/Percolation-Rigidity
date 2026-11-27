@@ -300,6 +300,8 @@ import Rigidity.Proofs.Green.LazyHeatMass
 import Rigidity.Proofs.Green.DarioGuCorrectorLemma
 import Rigidity.Proofs.Green.DarioGuGaussian
 import Rigidity.Proofs.Green.DarioGuHeatKernelInputs
+import Rigidity.Proofs.Green.GeneralFluxHolds
+import Rigidity.Proofs.Green.GeneralFluxVarianceTwo
 import Rigidity.Proofs.Green.DarioGuLatticeSup
 import Rigidity.Proofs.Green.DarioGuLevels
 import Rigidity.Proofs.Green.DarioGuPhiCalculus
@@ -452,6 +454,7 @@ import Rigidity.Proofs.Green.DarioGuParabolicTimeslice
 import Rigidity.Proofs.Assembly.PlanarDarioGuDirect
 import Rigidity.Proofs.Assembly.ProvedGradient
 import Rigidity.Proofs.Assembly.GreenQuantitativeEveryDim
+import Rigidity.Proofs.Assembly.GreenQuantitativeFromFlux
 import Rigidity.Proofs.Green.HeatFlowGraph
 import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
@@ -1651,6 +1654,19 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_holds
+-- Proposition 2.13 of Dario and Gu in every dimension from the variance bound of Gu
+#print axioms Rigidity.Green.darioGuFluxWeakNormD_two_iff
+#print axioms Rigidity.Green.GeneralFlux.exists_homogenizedCoefficientD
+#print axioms Rigidity.Green.GeneralFlux.exists_fluxMeanD
+#print axioms Rigidity.Green.GeneralFlux.exists_fluxSpatialAverageD
+#print axioms Rigidity.Green.GeneralFlux.exists_fluxWeakNormBoxD
+#print axioms Rigidity.Green.GeneralFlux.exists_densityWeakNormD
+#print axioms Rigidity.Green.GeneralFlux.sum_sq_grad_coarseTestD_le
+#print axioms Rigidity.Green.GeneralFlux.weakNormLeD_of_scale_bounds
+#print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_bounds
+#print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance
+#print axioms Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_two_holds
+#print axioms Rigidity.Green.GeneralFlux.fluxVarianceBoundD_two
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
@@ -1720,6 +1736,26 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 -- The small-time bound of the heat kernel on Z^d in the form used by Theorem 2 of Dario and Gu for d >= 3, and Theorem 2 in every dimension from Theorem 1 in every dimension d >= 3 alone
 #print axioms Rigidity.Green.openHeatSmallTimeD_holds
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel
+
+-- Theorem 1 of Dario and Gu in every dimension from the whole-cluster estimate, Proposition A.7 of Dario and Gu on Z^d, and Theorem 2 in every dimension from the whole-cluster estimate in every dimension d >= 3 alone
+#print axioms Rigidity.Green.darioGuDensityGaussianD_holds
+#print axioms Rigidity.Green.l2norm_pointSource_le_of_time
+#print axioms Rigidity.Green.exists_l2norm_pointSource_le_rpow
+#print axioms Rigidity.Green.abs_vsrwHeat_sub_le_rpow
+#print axioms Rigidity.Green.abs_vsrwHeat_sub_le_gaussian
+#print axioms Rigidity.Green.exists_abs_vsrwHeat_sub_le_gaussian
+#print axioms Rigidity.Green.darioGuHeatKernelD_of_gaussianFlow
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_gaussianFlow
+
+-- The whole-cluster estimate of Dario and Gu in every dimension from Propositions 2.12 and 2.13, and Theorem 2 in every dimension from Propositions 2.12 and 2.13 in every dimension d >= 3
+#print axioms Rigidity.Green.GeneralDim.hasDerivAt_dgTwoScaleD_eq
+#print axioms Rigidity.Green.GeneralDim.tsum_clusterSourceD_le
+#print axioms Rigidity.Green.GeneralDim.tsum_sq_clusterWD_le
+#print axioms Rigidity.Green.GeneralDim.exists_isDGCorrectorD
+#print axioms Rigidity.Green.GeneralDim.correctorGrowthD_of_input
+#print axioms Rigidity.Green.GeneralDim.l2norm_initialErrorD_le
+#print axioms Rigidity.Green.GeneralDim.darioGuGaussianFlowD_of_inputs
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_flux
 
 -- Good and very good balls of the infinite cluster (Barlow 2004, Theorem 2.18 and Lemma 2.19) and Proposition 2.7 (weak form) of Dario and Gu in every dimension
 #print axioms Rigidity.WeakPoincare.clusterGoodBalls_holds
