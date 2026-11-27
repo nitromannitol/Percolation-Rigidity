@@ -16,10 +16,11 @@ project:
     hypotheses in general dimension; their dimension-two forms are proved, so Theorem 1.3
     (fast_decay_holds) and Theorem 6.5 are proved with no literature hypothesis, and so is Theorem 1.2
     (Rigidity.Assembly.Unconditional.integer_valued_linear_growth), the qualitative corrector input
-    being proved in every dimension. For d >= 3 the quantitative corrector input rests on the
-    single hypothesis DarioStepTwoWeightThree (Lemma 3.5 of Dario in corrected form and the Step 1
-    sum being proved), and the quantitative Green estimate on that hypothesis and
-    FluxFlipWeightBoundD. The other five numbered results are quoted from the
+    being proved in every dimension. For d >= 3 the
+    quantitative corrector input rests on the single hypothesis DarioStepTwoWeightThree (Lemma 3.5
+    of Dario in corrected form and the Step 1 sum being proved), and the quantitative Green
+    estimate on that hypothesis alone (FluxFlipWeightBoundD is proved,
+    Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds). The other five numbered results are quoted from the
     literature; one of them, Lemma 2.13, is not an input and is used by no Lean proof, and its
     special case for unions of lattice squares is proved. Theorems 1.1, 1.2, 1.3 and 6.5 are
     independently checked by the comparator pairs under RigidityAudit/, and so are Theorems 6.5, 1.2
@@ -453,7 +454,8 @@ fidelity:
     coarsening of the test functions by the anchors of the partition of the good cubes and a minimal scale;
     Rigidity.Green.darioGuFluxWeakNormTwo_holds; in every dimension d >= 2 from the variance bound (3.4) of the proof of
     Proposition 1.1 of Gu, Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance, which for d >= 3 follows from
-    FluxFlipWeightBoundD, not proved, and DarioStepTwoWeightThree, Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound), so that Theorems 1 and 2 of Dario
+    DarioStepTwoWeightThree, Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound, FluxFlipWeightBoundD being proved,
+    Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds), so that Theorems 1 and 2 of Dario
     and Gu and Theorem 1.3 hold in dimension two
     with no hypothesis (Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds, fast_decay_holds)) (the Carne-Varopoulos bound
     for small times is proved for the lazy walk; the pairs of points in a ball are treated by a
