@@ -23,7 +23,9 @@ squares. On `ℤ^d` the proof uses Lemma 3.5 in its corrected form,
 `Rigidity.Corrector.GeneralDim.resamplePartition_max_bound` (constants `81` and `243`, with the
 scale `S`), and the dipole bound `ae_dipoleCoeff_eq` with the boxes `anchorBox`
 (`|anchorBox| ≤ 7^d M^d` when the side is at most `M`: `card_anchorBox_le`), whence the constant
-`8d 7^d 243^d S^d`. No hypothesis on Lemma 3.5 remains in the statement.
+`8d 7^d 243^d S^d`. No hypothesis on Lemma 3.5 remains in the statement. The bound is proved in
+`GeneralFluxOpenBound.lean` (`fluxOpenBoundD_holds`) and combined with the bound for the closed
+bonds in `GeneralFluxFlipWeight.lean` (`fluxFlipWeightBoundD_holds`).
 -/
 
 set_option autoImplicit false

@@ -13,9 +13,11 @@ follows from the probabilistic part of Step 2 of the proof of Lemma 3.3 of Dario
 corrector estimates on percolation clusters*) in dimension `d ≥ 3` (`DarioStepTwoWeightThree`) and
 the bound of each squared flip difference of the heat average of the flux by the Step 2 factor
 (`FluxFlipWeightBoundD`) (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`).
-Hence the Green input of Theorem 1.1 in every dimension rests on Proposition 2.12,
-`DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`, and on nothing else
-(`supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`).
+Hence the Green input of Theorem 1.1 in every dimension follows from Proposition 2.12,
+`DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
+(`supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`). Since `FluxFlipWeightBoundD` is
+proved (`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`), it rests on Proposition 2.12 and
+`DarioStepTwoWeightThree` alone (`supercriticalBondGreenQuantitative_of_corrector_weight`).
 -/
 
 namespace Rigidity.Assembly.ProvedFluxWeakNorm
@@ -26,8 +28,8 @@ open LatticeProb.Percolation
 corrector estimate, `CorrectorQuantitativeInput`), the probabilistic part of Step 2 of the proof of
 Lemma 3.3 of Dario in dimension `d ≥ 3` (`DarioStepTwoWeightThree`) and the bound of each squared
 flip difference of the heat average of the flux by the Step 2 factor (`FluxFlipWeightBoundD`, for
-`d ≥ 3` and supercritical `p < 1`): the Green input of Theorem 1.1 in every dimension rests on
-these three statements and nothing else. -/
+`d ≥ 3` and supercritical `p < 1`). The third is proved (`fluxFlipWeightBoundD_holds`), which gives
+`supercriticalBondGreenQuantitative_of_corrector_weight`. -/
 theorem supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight
     (hCQ : Rigidity.External.CorrectorQuantitativeInput)
     (hW : Rigidity.Corrector.GeneralDim.DarioStepTwoWeightThree)
