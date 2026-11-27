@@ -1,0 +1,14 @@
+{
+  "challenge_module": "RigidityAudit.IntegerLinearGrowthUnconditional.Challenge",
+  "solution_module": "RigidityAudit.IntegerLinearGrowthUnconditional.Solution",
+  "theorem_names": [
+    "Rigidity.StatementAudit.IntegerLinearGrowth.integer_valued_linear_growth_unconditional"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}
