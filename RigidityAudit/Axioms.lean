@@ -219,7 +219,9 @@ import Rigidity.Proofs.Corrector.GeneralPropThreeOne
 import Rigidity.Proofs.Corrector.GeneralVarianceSums
 import Rigidity.Proofs.Corrector.GeneralStepOneHolds
 import Rigidity.Proofs.Corrector.GeneralStepTwoDefs
+import Rigidity.Proofs.Corrector.GeneralStepTwoReduce
 import Rigidity.Proofs.Corrector.GeneralLemmaThreeTwoProof
+import Rigidity.Proofs.Corrector.GeneralResamplePartitionHolds
 import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
@@ -1655,6 +1657,18 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.tsum_weight_energy_le
 #print axioms Rigidity.Corrector.GeneralDim.tsum_clusterOpenEnergy_le
 #print axioms Rigidity.Corrector.GeneralDim.tsum_weight_openEnergy_le
+#print axioms Rigidity.Corrector.GeneralDim.ae_correctedPlane_sub_eq_smul_greenProj
+#print axioms Rigidity.Corrector.GeneralDim.ae_summable_heat_stepRegion
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipTermTwo_eq_walkSum
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipTermTwo_eq_zero
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipTermTwo_eq_open
+#print axioms Rigidity.Corrector.GeneralDim.ae_dipoleCoeff_eq
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipTermTwo_sq_le_open
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipTermTwo_sq_le_closed
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipSumTwo_le
+#print axioms Rigidity.Corrector.GeneralDim.flipSumTwo_le_of_partition
+#print axioms Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_of_weight
+#print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight
 #print axioms Rigidity.Corrector.GeneralDim.dario_errorstatpart
 #print axioms Rigidity.Corrector.GeneralDim.statAnchor_translation
 #print axioms Rigidity.Corrector.GeneralDim.statGrad_translation
@@ -1666,6 +1680,12 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.darioMeanBoundThree_holds
 #print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound
 #print axioms Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree
+#print axioms Rigidity.Percolation.TriadicCube.eq_of_isMaximalStopping_of_agree
+#print axioms Rigidity.Corrector.GeneralDim.goodCubes_iff_of_far
+#print axioms Rigidity.Corrector.GeneralDim.scale_partitionCube_le_of_near
+#print axioms Rigidity.Corrector.GeneralDim.mem_stableGood_of_mem_centeredTriple
+#print axioms Rigidity.Corrector.GeneralDim.goodCubes_iff_of_flip
+#print axioms Rigidity.Corrector.GeneralDim.resamplePartition_max_bound
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds
