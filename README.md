@@ -2811,9 +2811,13 @@ planar flip chain `DarioGuFlux{Flip,Pairing,OpenBound,ClosedBound,FlipSum,Partit
 Dario's Lemma 3.3 on `ℤ^d`, in four parts whose boundaries are stated in that file: the flip difference of the heat average of
 the flux in Cases 1, 2 and 3 (`FluxPairing{Open,Closed,Zero}D`), the bound of each squared flip difference by the Step 2 factor
 (`FluxFlipWeightBoundD`, whose proof uses Lemma 3.5), the flip sum through a partition of good cubes (`FluxFlipSumPartitionD`),
-and the moments of the flip sum from the probabilistic part of Step 2 (`DarioStepTwoWeightThree`). The first and third parts
-are proved; `FluxFlipWeightBoundD` and `FluxVarianceBoundThree` are not yet proved. With Proposition 2.12, `FluxVarianceBoundThree`
-gives the quantitative Green estimate in every dimension.
+and the moments of the flip sum from the probabilistic part of Step 2 (`DarioStepTwoWeightThree`). The first, third and fourth
+parts are proved: `FluxVarianceBoundThree` follows from `FluxFlipWeightBoundD` and `DarioStepTwoWeightThree`
+([`GeneralFluxFlipMoments.lean`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean)). `FluxFlipWeightBoundD` is not yet proved; its
+bound for the bonds open in the configuration is stated as `FluxOpenBoundD` (not proved)
+([`GeneralFluxP2Input.lean`](Rigidity/Proofs/Green/GeneralFluxP2Input.lean)), with the larger side `S` of the partition cubes of
+`ω` and `ω^{e,0}`. With Proposition 2.12, `FluxVarianceBoundThree` gives the quantitative Green estimate in every dimension, which
+therefore rests on Proposition 2.12, `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD` alone.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -2827,10 +2831,14 @@ gives the quantitative Green estimate in every dimension.
 | [`ae_planeFluxD_setBond_eq`](Rigidity/Proofs/Green/GeneralFluxFlip.lean), [`fluxPairingOpenD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`fluxPairingClosedD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`fluxPairingZeroD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean) | Gu, Lemma 3.2 and Steps 3 and 4, on `ℤ^d`: if the endpoints of `e` are not both in the infinite cluster of `ω^{e,0}`, the fluxes of the corrected planes of `ω^{e,1}` and `ω^{e,0}` agree and the flip difference of the heat average vanishes; otherwise it is `c ((P₁ h₁)(a) − 1{a.2 = i} Φ_{r²}(x, a.1))` and `c' (Σ_{b ∈ π} (P₀ h₀)(b) − 1{a.2 = i} Φ_{r²}(x, a.1))`. |
 | [`fluxFlipSumPartitionD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipSum.lean) | from the bound of each flip difference by the Step 2 factor, for every partition into maximal stopping cubes of the good cubes of Step 2, `Σ_e (D_e X)² ≤ Σ_y Φ_{r²}(x, y)² K₀ (W(y) + K_c ((3^d)^{n(y)})^{1 − 1/(1 + ε/2)})` with the Step 2 weight `W`. |
 | [`supercriticalBondGreenQuantitative_of_corrector_fluxVariance`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFluxVariance.lean) | `SupercriticalBondGreenQuantitative` from Proposition 2.12 (`CorrectorQuantitativeInput`) and `FluxVarianceBoundThree`. |
+| [`ofReal_le_pathWeight`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean), [`exists_fluxFlipD_weight_data`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean), [`fluxFlipSumD_isOsBond`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean) | on `ℤ^d`, `d ≥ 3`: the cell factor `((3^d)^{n(y)})^{1 − 1/(1 + ε/2)}` is at most the path weight of the partition at `y`; from the bound of each flip difference by the Step 2 factor and `DarioStepTwoWeightThree`, `Σ_e (D_e X)² ≤ Σ_y Φ_{r²}(x, y)² W(y)` with `E[W(y)^q] ≤ (A q^κ)^q` uniformly in `y`, hence `Σ_e (D_e X)² = O_s(C r^{-d})`. |
+| [`fluxVarianceBoundThree_of_weight`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean), [`fluxVarianceBoundThree_of_weightBound`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean) | `FluxVarianceBoundThree` from `FluxFlipWeightBoundD`, `FluxFlipSumPartitionD` and `DarioStepTwoWeightThree`, and with `fluxFlipSumPartitionD_holds` from `FluxFlipWeightBoundD` and `DarioStepTwoWeightThree` alone, the hypotheses on the parts for `d ≥ 3` and `𝔭_c(d) < p < 1`: the resampling variance is at most the flip sum. |
+| [`supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeight.lean) | `SupercriticalBondGreenQuantitative` from Proposition 2.12 (`CorrectorQuantitativeInput`), `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`. |
 
-The files are `GeneralFlux*.lean` in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) (twenty-one files) and
-[`GreenQuantitativeFromFluxVariance.lean`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFluxVariance.lean). The twenty-one reports
-for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
+The files are `GeneralFlux*.lean` in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/) (twenty-three files),
+[`GreenQuantitativeFromFluxVariance.lean`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFluxVariance.lean) and
+[`GreenQuantitativeFromStepTwoWeight.lean`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeight.lean). The twenty-seven
+reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 ## Theorem 3 of Dario and Gu in dimension two from Proposition 3.9
 
@@ -3448,7 +3456,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1247 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1253 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3482,9 +3490,9 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 906 Lean files with 197,338 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 909 Lean files with 197,624 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (17 files, 5,355
-lines) and the axiom report `RigidityAudit/Axioms.lean` (1,901 lines) are counted separately.
+lines) and the axiom report `RigidityAudit/Axioms.lean` (1,909 lines) are counted separately.
 
 ## Building
 
