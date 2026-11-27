@@ -315,6 +315,9 @@ import Rigidity.Proofs.Assembly.GreenQuantitativeFromFluxVariance
 import Rigidity.Proofs.Green.GeneralFluxFlipMoments
 import Rigidity.Proofs.Assembly.GreenQuantitativeFromStepTwoWeight
 import Rigidity.Proofs.Green.GeneralFluxOpenBound
+import Rigidity.Proofs.Green.GeneralFluxClosedBound
+import Rigidity.Proofs.Green.GeneralFluxFlipWeight
+import Rigidity.Proofs.Assembly.GreenQuantitativeFromStepTwoWeightOnly
 import Rigidity.Proofs.Green.DarioGuLatticeSup
 import Rigidity.Proofs.Green.DarioGuLevels
 import Rigidity.Proofs.Green.DarioGuPhiCalculus
@@ -473,6 +476,7 @@ import Rigidity.Proofs.WeakPoincare.PlanarVeryGood
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 import Rigidity.Proofs.Assembly.ProvedBarlow
 import Rigidity.Proofs.BarlowLattice.GaussianHolds
+import Rigidity.Proofs.Assembly.EveryDimension
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1770,6 +1774,14 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.GeneralFlux.increment_eq_flipCorrectorD
 #print axioms Rigidity.Green.GeneralFlux.ae_fluxFlip_sq_le_openD
 #print axioms Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds
+#print axioms Rigidity.Green.GeneralFlux.increment_eq_flipCorrector_trueD
+#print axioms Rigidity.Green.GeneralFlux.ae_fluxFlipD_sq_le_closed
+#print axioms Rigidity.Green.GeneralFlux.sq_le_radius_of_bounds
+#print axioms Rigidity.Green.GeneralFlux.ae_fluxFlipD_sq_le_radius
+#print axioms Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_of_open
+#print axioms Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds
+#print axioms Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box
@@ -1919,3 +1931,9 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_of_veryGood
 #print axioms Rigidity.BarlowLattice.barlowGaussianUpperBound_holds
 #print axioms Rigidity.BarlowLattice.barlowGaussianUpperBoundTwo_of_lattice
+
+-- Theorem 1.1 and Proposition 3.2 in every dimension from the inputs that remain in d >= 3
+#print axioms Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_of_stepTwoWeight
+#print axioms Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_of_stepTwoWeight
+#print axioms Rigidity.Assembly.EveryDimension.lipschitz
+#print axioms Rigidity.Assembly.EveryDimension.notLipschitz
