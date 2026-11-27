@@ -1264,7 +1264,8 @@ Here Lemmas 3.2 and 3.3 and Proposition 3.4 (with `s = 2` and `∑_{C(B)} w = 0`
 cluster `C(B)` of every integer cube `B` resolved by the partition, in every dimension `d ≥ 2`, and
 the deterministic part of the Meyers estimate (AD, Proposition 3.8) and of Step 3 of the proof of
 Lemma 5.5 follow in `d = 2`. The results are conditional: each states, as hypotheses, exactly the
-events and moment bounds listed in its row, which are not proved here.
+events and moment bounds listed in its row, which are not proved in this section; for the planar partition
+they are proved in [Lemmas 5.5 and 5.7 in dimension two](#lemmas-55-and-57-in-dimension-two).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1512,9 +1513,9 @@ Caccioppoli inequality; the parts that leave the triple meet its cluster, by the
 planar cells. The concentration of the averages of the powers of the reach (the analogue of AD
 Proposition 2.4 for the planar partition) is proved as well (`planarReachConcentration_holds`). The
 hypothesis `PlanarGehringPartition`, a Gehring partition in the form used by the planar Meyers estimate,
-remains only as the hypothesis of the earlier theorems `planarRestrictQuadCoarsenMu_of_gehring`,
+is the hypothesis only of the theorems `planarRestrictQuadCoarsenMu_of_gehring`,
 `planarRestrictQuadCoarsenNu_of_gehring`, `planarWeakConvergence_of_gehring` and
-`planarMuLimit_eq_of_gehring_partition`, which the theorems above supersede.
+`planarMuLimit_eq_of_gehring_partition`; the theorems above do not assume it.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -1530,7 +1531,7 @@ remains only as the hypothesis of the earlier theorems `planarRestrictQuadCoarse
 | [`Rigidity.Percolation.exists_lintegral_planarMuDefect_le_tau`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/PlanarDefectTauCube.lean), [`exists_lintegral_planarNuDefect_le_tau`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/PlanarNuDefectTauCube.lean) | AD Lemma 5.4, display (5.10), `d = 2`, on every triadic cube `U`: `E[1{𝒫, U resolved} D_n(U, q)] ≤ \|U\| C \|q\|² (∑_{k=n}^{m−1} τ_k + 3^{−n/4})` for `μ` and for `ν`. |
 | [`planarWeakConvergence_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Cluster/PlanarRHWeakConv.lean), [`planarMuLimit_eq`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Cluster/PlanarRHWeakConv.lean) | AD Lemma 5.7, display (5.25), for every triadic cube, and AD Proposition 5.2, qualitative part, `d = 2`, `p > 𝔭_c(2)`: `lim E[−μ(□_m, q)] = (1/2) q · ā⁻¹ q`. |
 
-The theorems of the table and the earlier theorems from `PlanarGehringPartition` depend only on axioms among
+The theorems of the table and the theorems from `PlanarGehringPartition` depend only on axioms among
 `propext`, `Classical.choice` and `Quot.sound`; forty reports (thirty-eight theorems and two definitions)
 are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
@@ -1742,7 +1743,9 @@ Departures from Armstrong and Dario:
   is a multiple of the identity, by the symmetries of the model): for the harmonic functions of
   `ℤᵈ`, and in the plane for the continuum norms of AD; for `d ≥ 3` the continuum excess decay is not
   proved. The harmonic approximation (AD, Lemma 7.1) and the transfer from the coarsened function to
-  `u` in AD, Lemma 7.3, remain hypotheses; the general `k` follows the case `k = 0` with the excess
+  `u` in AD, Lemma 7.3, are hypotheses of the theorems of this section (Lemma 7.1 is proved in `d = 2` in
+  [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1)
+  and in every dimension in [Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension)); the general `k` follows the case `k = 0` with the excess
   over the polynomials of degree `k`, whose details AD omit, referring to Step 3 of the proof of
   Lemma 2.4 of Armstrong, Kuusi and Mourrat.
 
@@ -1813,7 +1816,7 @@ minimal scales of Proposition 2.4
 the statements `PlanarMinimalScalesTwo p` and `PlanarHomogenizationErrorTwo p p'` of the files on Lemma 7.1 are the
 statements `Rigidity.Proofs.Cluster.PlanarMinimalScales p` and `Rigidity.Dirichlet.PlanarHomogenizationError p p'`
 (`planarMinimalScalesTwo_holds`, `planarHomogenizationErrorTwo_holds`).
-Theorem 2(iii) at `k = 1` at the origin in dimension two follows from this and from the named hypothesis
+Theorem 2(iii) at `k = 1` at the origin in dimension two follows from this and from
 `DarioOptimalCorrectorTwo` (Theorem 1 of Dario) alone, since `PlanarCorrectedPlaneExistenceTwo` and
 `PlanarOrderOneDimensionTwo` are proved (`armstrongDarioOrderOneOriginTwo_of_dario` and
 `armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector`; see
@@ -1869,7 +1872,7 @@ The thirteen declarations depend on exactly `propext`, `Classical.choice` and `Q
 at `k = 1`) is a theorem from the existence of the corrected planes alone, the first part of
 `LatticeProb.External.SupercriticalBondCorrectorInput`
 ([`armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/CorrectorSublinearFromRegularity.lean)).
-It was first proved from
+It is proved from
 [`ArmstrongDarioMesoscopicDegreeTwo`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/OrderOneOrigin.lean), AD Lemma 7.3, display (7.18) at `k = 2`
 for bond percolation at the origin, with `Ā₂` the harmonic quadratic polynomials and the normalization
 `r^{−d/2} ‖·‖_{L²(𝒞_∞ ∩ B_r)}`, together with `Rigidity.External.CorrectorQuantitativeInput` and
@@ -1987,7 +1990,9 @@ is proved from `PlanarSquareEstimatesTwo`, Theorem 1 of Dario in dimension two (
 in [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1), and the last two in
 [Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two),
 so that only `DarioOptimalCorrectorTwo` is a hypothesis (`armstrongDarioOrderOneOriginTwo_of_dario`,
-`armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector`). The other inputs are proved: the minimal
+`armstrongDarioOrderOneOriginTwo_of_darioOptimalCorrector`); it is proved in
+[Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two), so that
+`armstrongDarioOrderOneOriginTwo_holds` has no hypothesis. The other inputs are proved: the minimal
 scales of AD Proposition 2.4 (`Rigidity.Proofs.Cluster.planarMinimalScales_holds`), which also give the
 hypothesis `PlanarPartitionSizeScale` of Lemma 7.1, and the density of the infinite cluster in cubes.
 
@@ -2190,7 +2195,7 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
   (`correctorQuantitativeInputTwo_of_dario`). `DarioOptimalCorrectorTwo` states: for every `p ∈ (𝔭_c(2), 1)`
   there are `s, C > 0` such that for all `x, y ∈ ℤ²` and every slope `q` there is a measurable `Z` with
   `Z ≤ O_s(C ‖q‖₁ √(log(2 + ‖x − y‖)))` and, almost surely, every corrected plane `ℓ` of slope `q` satisfies
-  `|(ℓ(x) − q·x) − (ℓ(y) − q·y)| ≤ Z` for `x, y` in the infinite cluster. It is derived from statements that are proved in [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two).
+  `|(ℓ(x) − q·x) − (ℓ(y) − q·y)| ≤ Z` for `x, y` in the infinite cluster. It is proved (`darioOptimalCorrectorTwo_holds`) in [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two).
 * **R7 in dimension two** (`SupercriticalBondGreenQuantitativeTwo`, Dario and Gu, Theorem 2) from
   `DarioGuHeatKernelTwo`, Theorem 1 of Dario and Gu for the heat kernel `openHeat` of the infinite cluster (for
   `t ≥ 1`), and the Liouville theorem at order zero, which follows from `SupercriticalBondCorrectorInputTwo` or
@@ -2210,10 +2215,11 @@ Three planar inputs are reduced to named statements of Dario and of Dario and Gu
 | [`supercriticalBondGreenQuantitativeTwo_of_darioGu`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`..._of_darioGu_of_correctorInput`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`..._of_darioGu_of_orderZero`](Rigidity/Proofs/Green/LazyCarneVaropoulos.lean), [`supercriticalBondGreenQuantitativeTwo_of_heatKernel`](Rigidity/Proofs/Green/PlanarGreenQuantitative.lean), [`supercriticalBondGreenQuantitativeTwo_of_smallTime`](Rigidity/Proofs/Green/PlanarGreenQuantitative.lean) | `SupercriticalBondGreenQuantitativeTwo` from `DarioGuHeatKernelTwo` and the Liouville theorem at order zero (as a hypothesis, from `SupercriticalBondCorrectorInputTwo`, or from `ArmstrongDarioOrderZeroTwo`); the last two take the small-time heat kernel bound as a hypothesis. |
 
 The twenty-seven reports for the declarations of this section are in
-[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). With the previous section, the three planar inputs
-are consequences of `DarioGuHeatKernelTwo` and the inputs `MultiscalePoincareTwo`, `ConcentrationTwo` and `DarioLemmaThreeThree` of [Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two) (Lemma 3.2 of Dario is
-proved, `darioLemmaThreeTwo_holds`, and the order-zero regularity
-`PlanarHarmonicApproximationTwo` is proved, in
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). With the previous section and
+[Theorem 1 of Dario in dimension two](#theorem-1-of-dario-in-dimension-two), R6 and R5 are proved with no hypothesis
+(`supercriticalBondGreenColumnExistenceTwo_holds`, `correctorQuantitativeInputTwo_holds`), and R7 follows from
+`DarioGuHeatKernelTwo` alone (`supercriticalBondGreenQuantitativeTwo_of_darioGu_of_orderZero`, with the order-zero regularity
+`armstrongDarioOrderZeroTwo_holds` proved in
 [Lemma 7.1 and the order-zero regularity in dimension two from Theorem 1](#lemma-71-and-the-order-zero-regularity-in-dimension-two-from-theorem-1)).
 `DarioGuHeatKernelTwo` is proved from named inputs in [Theorem 1 of Dario and Gu in dimension two](#theorem-1-of-dario-and-gu-in-dimension-two).
 
@@ -2246,7 +2252,7 @@ following statements, each of which is proved, in [`Rigidity/Proofs/Corrector/`]
 * `SupercriticalBondCorrectorInputTwo` (R2), which is proved for `𝔭_c(2) < 𝔭 < 1`
   (`supercriticalBondCorrectorInputTwo_holds`, in
   [Corrected planes, the dimension of the harmonic functions of linear growth and the corrector input in dimension two](#corrected-planes-the-dimension-of-the-harmonic-functions-of-linear-growth-and-the-corrector-input-in-dimension-two)),
-  and is no longer a hypothesis of `darioOptimalCorrectorTwo_of_oscillation`;
+  and is not a hypothesis of `darioOptimalCorrectorTwo_of_oscillation`;
 * `MultiscalePoincareTwo A₀` with some `A₀ > 0`: the multiscale Poincaré inequality of Dario, Proposition 2.19,
   display (2.26), in cube form at `R = 3^m`, with the constant `A₀ q^{3/2}` for `q ≥ 2`, and with the absolute
   convergence of the convolutions `Φ_{r²} * ∇u` required, as the printed statement uses them (the statement is
@@ -2255,12 +2261,12 @@ following statements, each of which is proved, in [`Rigidity/Proofs/Corrector/`]
   [The multiscale Poincaré inequality (2.26) on the square lattice](#the-multiscale-poincaré-inequality-226-on-the-square-lattice));
   Dario proves (2.26) in the continuum, from Proposition D.1 of Armstrong, Kuusi and Mourrat with Remark D.6 and
   Lemma 7.12 and Proposition 9.9 of Gilbarg and Trudinger, and states the version on the lattice by "standard
-  arguments". The named input `MultiscalePoincareTwo` remains the hypothesis of the older theorems of this section;
-  the bridge theorems of the next paragraph discharge it;
+  arguments". The input `MultiscalePoincareTwo` is a hypothesis of the theorems of the table that are stated with it;
+  the bridge theorems of the next paragraph do not assume it;
 * `ConcentrationTwo`: the concentration inequality of Dario, Proposition 2.17, for integrable variables with
   finite resampling variance almost surely, in the moment-inequality form of Boucheron, Bousquet, Lugosi and Massart. The constant `C` depends on `p` as well as on `β`, where Dario prints `C(d, β)`. It is proved (`Rigidity.Corrector.concentrationTwo_holds`, see
-  [The concentration inequality of Proposition 2.17](#the-concentration-inequality-of-proposition-217)); it remains
-  a hypothesis of the older theorems of this section;
+  [The concentration inequality of Proposition 2.17](#the-concentration-inequality-of-proposition-217)); it is
+  a hypothesis of the theorems of the table that are stated with it;
 * `DarioLemmaThreeTwo` and `DarioLemmaThreeThree`: Lemmas 3.2 and 3.3 of Dario for the coarsened correctors at every
   point, `|E[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)]| ≤ C/r` and `𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C/r²)` for `r ≥ 1`
   (Dario takes `x = 0` by stationarity, which does not hold for the partition `𝒫` itself, so these are the lemmas for the
@@ -2315,7 +2321,7 @@ The thirty-five reports for the declarations of this section are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 Lemma 3.3 of Dario rests on steps that Dario only sketches and that are part of the
-named input `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, which is proved for the planar
+statement `DarioLemmaThreeThree`: Lemma 3.5 on resampling the partition, which is proved for the planar
 partition of the repository in the section on Steps 1 and 2 below, and the Green gradient bounds of Propositions 2.11 and 2.12, which Dario proves by
 "standard arguments" and which are proved here (see
 [Lemma 3.3 in flip form and the bridges to Theorem 1](#lemma-33-in-flip-form-and-the-bridges-to-theorem-1)). Lemma 3.2 does not use them: it
@@ -2340,8 +2346,8 @@ inequality, (1.22) and `DarioLemmaThreeThree`. The statement (1.22) is proved in
 [The quantitative sublinearity of the correctors in dimension two](#the-quantitative-sublinearity-of-the-correctors-in-dimension-two)),
 so `darioLemmaThreeTwo_holds` is Lemma 3.2 with no hypothesis.
 The seven reports for these declarations are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). Lemma 3.3 is
-reduced to the named input `DarioFlipSumBound`, the estimate (3.13) in flip form; its proof is reduced to Lemma 3.5 for
-the planar partition and the Step 2 sum in
+proved in `d = 2` from `DarioFlipSumBound`, the estimate (3.13) in flip form (`darioLemmaThreeThree_of_flipSum`), which is proved from Lemma 3.5 for
+the planar partition and the Step 2 sum (`darioFlipSumBound_of_resample`, `darioStepTwoSumBound_holds`) in
 [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition).
 
 Departures from Dario:
