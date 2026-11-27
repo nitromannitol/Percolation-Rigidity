@@ -248,6 +248,8 @@ carries the tags `Cn`, `Cnb`, `Cnc`, …. The full list, with the reason for eac
 [`paper/make_corrected.py`](paper/make_corrected.py) produces the corrected draft from the arXiv
 source by applying them. Each correction was tested in an independent model review. The corrected
 draft carries 60 tags, for 38 numbered corrections C1–C39; there is no correction C27.
+[`CORRESPONDENCE.md`](CORRESPONDENCE.md) maps the results of the cited works that the repository proves to their Lean
+declarations and records where the Lean proofs depart from the paper or from the cited source.
 
 Corrections C4, C7, C9, C11, C12, C13, C14, C17, C18, C19, C21 and C29 change the statement of a
 numbered result; C1, C2, C3, C23, C24 and C31 change a definition that statements use; C34, C38 and
@@ -3562,6 +3564,7 @@ RigidityAudit/
   SlowMixingUnconditional/    Theorem 6.5 with the regime as its only hypothesis
 paper/                        the arXiv v2 source and the corrected draft (LaTeX and PDF), figures,
                               CORRECTIONS.md, make_corrected.py, the note on the gadget, README.md
+CORRESPONDENCE.md             the results of the cited works mapped to their Lean declarations, with the departures
 scripts/                      check_axioms.py, run_comparators.sh, prefetch_toolchain.py (used by CI)
 .github/workflows/            build.yml (CI) and comparator.yml (Comparator audit)
 LICENSE                       the Apache License 2.0
