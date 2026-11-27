@@ -1,5 +1,5 @@
 import Rigidity.Proofs.Green.GeneralFluxClosedBound
-import Rigidity.Proofs.Green.GeneralFluxP2Input
+import Rigidity.Proofs.Green.GeneralFluxOpenBound
 
 /-!
 # Each flip difference of the heat average of the flux on `ℤ^d` bounded by the Step 2 factor
@@ -12,12 +12,13 @@ is at most
 `K₀ R^{7d} (Σ_{B(x₀, R)} G)² (Σ_{B(x₀, R)} E_v + Σ_{B(x₀, R)} Φ_{r²}(x, ·)²)`
 
 for every radius `R ≥ 6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))` (`ae_fluxFlipD_sq_le_radius`, from
-the deterministic `sq_le_radius_of_bounds`), with `K₀ = fluxFlipConst d`, `G = planeGrad` and `v`
-the potential of the Green projection of the heat field of the edges. With the radius
-`stepTwoRadius 6 ω a = 6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))` this is the boundary statement
-`FluxFlipWeightBoundD` of part 2 of the port (`fluxFlipWeightBoundD_of_open`), the form of the bound
-(4) of the Step 2 sum of the proof of Lemma 3.3 of Dario (*Optimal corrector estimates on
-percolation clusters*) used for the corrector (`ae_flipTermTwo_sq_le_weight`).
+the deterministic `sq_le_radius_of_bounds`), with `K₀ = flipWeightConst d (fluxOpenConst d)`,
+`G = planeGrad` and `v` the potential of the Green projection of the heat field of the edges. With
+the radius `stepTwoRadius 6 ω a = 6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))` this is the boundary
+statement `FluxFlipWeightBoundD` of part 2 of the port (`fluxFlipWeightBoundD_of_open`), the form of
+the bound (4) of the Step 2 sum of the proof of Lemma 3.3 of Dario (*Optimal corrector estimates on
+percolation clusters*) used for the corrector (`ae_flipTermTwo_sq_le_weight`). With the bound for
+the open bonds (`fluxOpenBoundD_holds`) it holds with no hypothesis (`fluxFlipWeightBoundD_holds`).
 
 The planar statement has the box parameter `C₀ + 5C + 6` and the constant `2 · 1297⁴ · 46656`
 from Lemma 3.5 with constants `C₀, C`; here the scale of the corrected Lemma 3.5 enters through
@@ -61,7 +62,6 @@ theorem open_flux_weight_arithD {c S R g SG e SE φ SΦ : ℝ} {n m : ℕ} (hc :
   have hS' : e + φ ≤ SE + SΦ := add_le_add heS hφS
   calc 2 * (1 + (c * S ^ n) ^ 2) ^ 2 * g ^ 2 * (e + φ)
       ≤ 2 * ((1 + c ^ 2) ^ 2 * R ^ m) * SG ^ 2 * (SE + SΦ) := by
-        have := hR0
         gcongr
     _ = 2 * (1 + c ^ 2) ^ 2 * (R ^ m * SG ^ 2) * (SE + SΦ) := by ring
 
@@ -206,6 +206,13 @@ theorem fluxFlipWeightBoundD_of_open [NeZero d] (hd : 2 ≤ d) {p : unitInterval
   refine ⟨flipWeightConst d (fluxOpenConst d), flipWeightConst_pos d _, 6, by norm_num, ?_⟩
   filter_upwards [ae_fluxFlipD_sq_le_radius hG hGv hd hpc hp1 hO hGae] with ω h k i r hr x a hP
   exact h k i r hr x a hP (stepTwoRadius 6 ω a) le_rfl
+
+/-- **Part 2 of the port** (planar: `Rigidity.Green.ae_fluxFlip_sq_le_weight`): the bound of each
+squared flip difference of the heat average of the flux by the Step 2 factor,
+`FluxFlipWeightBoundD d p`, for `d ≥ 2` and `𝔭_c(d) < p < 1`, with no hypothesis. -/
+theorem fluxFlipWeightBoundD_holds [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) : FluxFlipWeightBoundD d p :=
+  fluxFlipWeightBoundD_of_open hd hpc hp1 (fluxOpenBoundD_holds hd hpc hp1)
 
 end Weight
 
