@@ -1,5 +1,4 @@
-import Rigidity.Proofs.Green.GeneralFluxStepTwoInput
-import Rigidity.Proofs.Corrector.GeneralStepTwoReduce
+import Rigidity.Proofs.Green.GeneralFluxFlipSum
 
 /-!
 # The variance bound of Gu on `ℤ^d`, `d ≥ 3`, from the boundaries of the flip chain
@@ -22,7 +21,9 @@ The cell factor `c(y) = ((3^d)^{n(y)})^{1 - 1/(1 + ε/2)}` of part 3 is at most 
 of `y`. Hence `Σ_e (D_e X)² = O_s(C r^{-d})` (`fluxFlipSumD_isOsBond`, by
 `isOsBond_heatSqSum_of_moments`), and since the resampling variance is at most the sum of the
 squared flip differences (`ae_resampleVar_le_tsum_bondFlipDiff`), `FluxVarianceBoundD d p` for
-every `d ≥ 3` and supercritical `p < 1` (`fluxVarianceBoundThree_of_weight`).
+every `d ≥ 3` and supercritical `p < 1` (`fluxVarianceBoundThree_of_weight`). Since part 3 is
+proved (`fluxFlipSumPartitionD_holds`), the variance bound rests on part 2 and
+`DarioStepTwoWeightThree` alone (`fluxVarianceBoundThree_of_weightBound`).
 -/
 
 open MeasureTheory Filter LatticeProb.Percolation Rigidity.Percolation Rigidity.External
@@ -171,5 +172,17 @@ theorem fluxVarianceBoundThree_of_weight (hW : DarioStepTwoWeightThree)
       hOs
     filter_upwards [hres, hfin] with ω hl hu
     exact ENNReal.toReal_mono hu.ne hl
+
+/-- **The variance bound (3.4) of Gu's proof of Proposition 1.1 in dimension `d ≥ 3`**
+(`FluxVarianceBoundThree`), from the bound of each flip difference (part 2,
+`FluxFlipWeightBoundD`) and the probabilistic part of Step 2 of the proof of Lemma 3.3 of Dario in
+dimension `d ≥ 3` (`DarioStepTwoWeightThree`); the flip sum through a partition into good cubes
+(part 3) is `fluxFlipSumPartitionD_holds`. The hypothesis on part 2 is required only for `d ≥ 3`
+and supercritical `p < 1`. -/
+theorem fluxVarianceBoundThree_of_weightBound (hW : DarioStepTwoWeightThree)
+    (h2 : ∀ (d : ℕ) [NeZero d], 3 ≤ d → ∀ p : unitInterval, criticalProbability d < (p : ℝ) →
+      (p : ℝ) < 1 → FluxFlipWeightBoundD d p) :
+    FluxVarianceBoundThree :=
+  fluxVarianceBoundThree_of_weight hW h2 fun d _ _ p _ _ => fluxFlipSumPartitionD_holds (d := d) p
 
 end Rigidity.Green.GeneralFlux
