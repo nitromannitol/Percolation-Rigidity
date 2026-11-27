@@ -1,8 +1,5 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoWeight
-import Rigidity.Proofs.Poincare.GeneralBoxMaximal
-import PercolationClusterHomogenization.Proofs.Cluster.GeneralMuLocal
 import Rigidity.Proofs.Corrector.GeneralFlipResampling
-import PercolationClusterHomogenization.Proofs.Cluster.MeyersPlanarBox
 
 /-!
 # The side of the partition into good cubes of `ℤᵈ` capped at a scale

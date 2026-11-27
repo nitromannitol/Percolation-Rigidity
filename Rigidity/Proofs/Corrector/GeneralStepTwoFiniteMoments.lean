@@ -74,7 +74,9 @@ theorem finiteWeight_le_weightMajorant {ω : Configuration d} (hP : PartitionEve
           3 * d * κ * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) v := by
         rw [← hsv] at hc
         have h1 := norm_le_of_mem_supBox hc
-        rw [norm_emb_sub_comm, stoppingSize_eq_partSide hP]
+        rw [LatticeProb.Percolation.latticeEuclideanEmbedding_sub, norm_sub_rev,
+            ← LatticeProb.Percolation.latticeEuclideanEmbedding_sub,
+            stoppingSize_eq_partSide hP]
         push_cast at h1
         linarith
       have hT0 := finiteBallSum_nonneg (κ := κ) hR ω v

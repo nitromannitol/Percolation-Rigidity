@@ -70,10 +70,8 @@ theorem mem_originCube_toIntegerCube_iff {k : ℕ} {a : Vertex d} :
 /-- A triadic cube of scale `n` of `ℤᵈ` has `(3ᵈ)ⁿ` vertices. -/
 theorem card_toIntegerCube_vertices_eq_pow (V : TriadicCube d) :
     ((V.toIntegerCube.vertices.card : ℕ) : ℝ) = ((3 : ℝ) ^ d) ^ V.scale := by
-  rw [IntegerCube.card_vertices_eq]
-  change (((3 ^ V.scale) ^ d : ℕ) : ℝ) = _
-  push_cast
-  rw [← pow_mul, ← pow_mul, mul_comm]
+  rw [TriadicCube.card_toIntegerCube_vertices, TriadicCube.latticeVolume, ← pow_mul, ← pow_mul,
+    mul_comm]
 
 /-- The point of `⟨m + j, c⟩` with offset `a` and block `b`. -/
 def blockPoint (m j : ℕ) (c a b : Vertex d) : Vertex d :=

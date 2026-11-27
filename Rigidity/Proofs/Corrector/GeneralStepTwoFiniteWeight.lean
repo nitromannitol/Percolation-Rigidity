@@ -16,7 +16,8 @@ it depends only on the bonds inside `B(u, (3κ + 9)R + 1)` (`finiteWeight_eq_of_
 dominates the weight of the Step 2 sum (`stepTwoWeight_le_finiteWeight`) when no edge with its tail
 outside `B(u, R)` has `u` in its box (`FarGood`), the capped sides are the sides on `B(u, R)`
 (`SideGood`) and the local gradient bounds dominate the plane gradient bound on `B(u, R + 3κR)`
-(`GradGood`).
+(`GradGood`). The events `FarGoodFlip` and `SideGoodFlip` are the same events for the sides of
+the configurations with one bond `E (v, k)` closed at each tail `v`.
 
 This ports the planar file `DarioStepTwoFiniteWeight`: the boxes are the `ℓ^∞` boxes of `ℤᵈ`, the
 sides are those of the partition into good cubes of `ℤᵈ` (`partSide`, `cappedSide`), the bound
@@ -57,14 +58,14 @@ theorem supBox_subset_of_mem {u v : Vertex d} {r₁ r₂ : ℕ} (hv : v ∈ supB
     (↑(supBox v r₁) : Set (Vertex d)) ⊆ ↑(supBox u (r₁ + r₂)) := fun _ hz =>
   Finset.mem_coe.2 (mem_supBox_trans (Finset.mem_coe.1 hz) hv)
 
-theorem cap_le_aux₁ {κ R a : ℕ} (ha : a ≤ R) : 8 * a + R ≤ (3 * κ + 9) * R + 1 := by
+private theorem cap_le_aux₁ {κ R a : ℕ} (ha : a ≤ R) : 8 * a + R ≤ (3 * κ + 9) * R + 1 := by
   nlinarith
 
-theorem cap_le_aux₂ {κ R a : ℕ} (ha : a ≤ R) :
+private theorem cap_le_aux₂ {κ R a : ℕ} (ha : a ≤ R) :
     2 * R + 1 + (3 * κ * a + R) ≤ (3 * κ + 9) * R + 1 := by
   nlinarith
 
-theorem cap_le_aux₃ {κ R c : ℕ} (hc : c ≤ R) : 3 * κ * c + R ≤ R + 3 * κ * R := by
+private theorem cap_le_aux₃ {κ R c : ℕ} (hc : c ≤ R) : 3 * κ * c + R ≤ R + 3 * κ * R := by
   nlinarith
 
 /-- `T_R(v)`, over the fixed box of radius `3κ 3ⁿ`. -/
@@ -202,6 +203,20 @@ def FarGood (κ R : ℕ) (ω : Configuration d) (u : Vertex d) : Prop :=
 /-- The capped sides are the sides on `B(u, R)`. -/
 def SideGood (R : ℕ) (ω : Configuration d) (u : Vertex d) : Prop :=
   ∀ v ∈ supBox u R, partSide ω v = cappedSide (capScale R) ω v
+
+/-- No edge with its tail `v` outside `B(u, R)` has `u` in the box of radius `3κ` times the side at
+`v` of the configuration with the bond `E (v, k)` closed. -/
+def FarGoodFlip (E : LatticeEdge d → Bond d) (κ R : ℕ) (ω : Configuration d) (u : Vertex d) :
+    Prop :=
+  ∀ v (k : Fin d), u ∈ supBox v (3 * κ * partSide (setBond (E (v, k)) false ω) v) →
+    v ∈ supBox u R
+
+/-- The capped sides of the configurations with the bond `E (v, k)` closed are their sides at the
+points `v` of `B(u, R)`. -/
+def SideGoodFlip (E : LatticeEdge d → Bond d) (R : ℕ) (ω : Configuration d) (u : Vertex d) :
+    Prop :=
+  ∀ v ∈ supBox u R, ∀ k : Fin d, partSide (setBond (E (v, k)) false ω) v =
+    cappedSide (capScale R) (setBond (E (v, k)) false ω) v
 
 section Grad
 
