@@ -8,9 +8,10 @@ The Gaussian upper bound of Barlow on the planar infinite cluster
 (`Rigidity.Green.BarlowGaussianUpperBoundTwo`, Theorem 4 of Dario and Gu) is proved with no
 hypothesis (`Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds`). The two forms of Theorem 1.3 in
 `Rigidity.Assembly.WithPlanarInputs` that take it, `fast_decay_of_sections_barlow` and
-`fast_decay_of_flux_gradient_barlow`, are restated here without it. What remains are the other
-inputs of Theorem 1 of Dario and Gu: `hSec` (Lemma 4.1, Proposition 4.3 and Proposition A.7 of
-Dario and Gu with a common exponent `σ`), or Proposition 2.13 and Theorem 3 (Remark 1.3).
+`fast_decay_of_flux_gradient_barlow`, are restated here without it. The other inputs of Theorem 1
+of Dario and Gu are `hSec` (Lemma 4.1, Proposition 4.3 and Proposition A.7 of Dario and Gu with a
+common exponent `σ`), or Proposition 2.13 and Theorem 3 (Remark 1.3); they are proved in
+`Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean`.
 -/
 
 namespace Rigidity.Assembly.WithProvedBarlow

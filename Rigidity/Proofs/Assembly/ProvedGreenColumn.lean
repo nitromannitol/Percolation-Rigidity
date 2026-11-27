@@ -12,9 +12,10 @@ proof) is proved in every dimension `d ≥ 2`
 the other proved inputs: supercritical uniqueness, Proposition 2.3, the density concentration,
 the rectangle crossings and the Jordan curve theorem on the sphere. Eleven theorems there take it
 and ten are restated: `fastDecay` and `fastDecayWithProvedDensity` give the same statement,
-`fast_decay`. What remains are the corrector inputs (Theorem 2.5), the regularity of order one
-(Theorem 2.4 (iii) at `k = 1`) and the quantitative Green estimate of Dario and Gu, for the results
-that use them.
+`fast_decay`. The theorems of this file still take the corrector inputs (Theorem 2.5), the
+regularity of order one (Theorem 2.4 (iii) at `k = 1`) and the quantitative Green estimate of Dario
+and Gu, for the results that use them; `ProvedOrderOne.lean`, `ProvedCorrector.lean` and
+`ProvedFluxWeakNorm.lean` restate them with the proved inputs removed.
 -/
 
 namespace Rigidity.Assembly.WithProvedGreenColumn

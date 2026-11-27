@@ -79,6 +79,14 @@ regime `p_c(d) < p < 1`, then the cited literature inputs it uses, in the fixed 
 * `hMR : Rigidity.External.MicciancioRegevSmoothing`: the smoothing parameter bound
   (Micciancio-Regev, Lemma 3.3).
 
+The inputs `hUq`, `hCorr`, `hAD`, `hAD1`, `hE`, `hDG`, `hW`, `hK`, `hJ` and `hMR` have proofs in
+this repository: `Rigidity.Percolation.supercritical_bond_uniqueness`,
+`Rigidity.Percolation.wellConnected_input`, `Rigidity.Percolation.kesten_rectangle_crossing`,
+`Rigidity.Topology.jordan_curve_theorem_sphere`, `Rigidity.Smoothing.micciancio_regev_smoothing`,
+and the theorems of `ProvedCorrector.lean`, `ProvedOrderZero.lean`, `ProvedOrderOne.lean`,
+`ProvedGreenColumn.lean` and `ProvedDensity.lean`. The files `Proved*.lean` of this directory
+restate the theorems below without them.
+
 Each of the fifteen theorems concludes exactly the draft statement of `Rigidity/Draft` (with the
 changes named above), by name (for Theorem 1.2, exactly the statement of
 `Rigidity/Frozen/IntegerLinearGrowthV1.lean`); `goodEventLowerBoundDirectional` concludes Lemma

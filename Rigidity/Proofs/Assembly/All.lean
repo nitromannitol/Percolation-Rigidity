@@ -193,14 +193,16 @@ import Rigidity.Steps.Section5.TwoScaleExpansion
 /-!
 # Global import check
 
-Imports every module under `Rigidity/Steps` and `Rigidity/Proofs` (the list is produced by
-`find Rigidity/Steps Rigidity/Proofs -name '*.lean' | sort`). Building this module detects
-declaration-name clashes between files that are never imported together elsewhere, before
-integration. It contains no declarations.
+Imports the modules of `Rigidity/Steps` and `Rigidity/Proofs` listed below, the composed results
+and the files they use. Building this module detects declaration-name clashes between files that
+are never imported together elsewhere. It contains no declarations. Modules of these directories
+that the list does not reach, among them `Rigidity/Proofs/BarlowLattice` and the later files of
+`Rigidity/Proofs/Assembly` (for example `ProvedFluxWeakNorm.lean`), are built by the default target
+of the library.
 
-The modules import together with no clash. Lean accepts a
-repeated name only when both copies are theorems with the same statement; three such repeats
-exist, and each breaks this import as soon as one copy's statement changes:
+The imported modules import together with no clash. Lean accepts a repeated name only when both
+copies are theorems with the same statement; two such repeated names exist among them, and each
+breaks this import as soon as one copy's statement changes:
 * `Rigidity.Steps.Section5.l1_nonneg` in `Steps/Section5/LargeGradientSensitive.lean`,
   `Steps/Section5/FastDecayDichotomy.lean` and `Steps/Section5/TwoScaleExpansion.lean`;
 * `Rigidity.Steps.Section5.cube_finite` in `Steps/Section5/LongNonzeroPaths.lean` and
