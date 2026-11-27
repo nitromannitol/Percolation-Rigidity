@@ -13,10 +13,11 @@ lake build                    # the library
 lake build RigidityAudit      # the comparator challenges and solutions
 ```
 
-The library must build with **no warnings**. Lattice-Probability has no prebuilt cache, so the
-first build compiles it as well as the library. The only intentional `sorry`s are the four
-statement-level ones in `RigidityAudit/*/Challenge.lean`, one each; `lake build RigidityAudit`
-reports them as warnings, and the comparator checks each against its solution.
+The library must build with **no warnings**. Lattice-Probability and
+Percolation-Cluster-Homogenization have no prebuilt cache, so the first build compiles them as well
+as the library. The only intentional `sorry`s are the statement-level ones, one in each
+`RigidityAudit/*/Challenge.lean`; `lake build RigidityAudit` reports them as warnings, and the
+comparator checks each against its solution.
 
 ## The main results and the axiom audit
 
@@ -30,7 +31,7 @@ python3 scripts/check_axioms.py axioms-audit.log
 ```
 
 `RigidityAudit/Axioms.lean` prints the axiom reports of the numbered results, of the propositions
-that state the quoted results, and of the slab connectivity theorem
+that state the quoted results, and of further proved results, such as the slab connectivity theorem
 `Rigidity.Percolation.uniformCubeSlabConnectivity_of_criticalProbability_lt`. It is not imported by
 the root module, because a `#print axioms` command runs again whenever its module is rebuilt.
 `scripts/check_axioms.py` fails on an error or a warning in the log, on `sorryAx`, on any axiom
@@ -40,16 +41,18 @@ not appear in the reports of the theorems.
 
 ## Conventions for Lean files
 
-- No `sorry`, `admit`, `native_decide`, new `axiom` or `set_option maxHeartbeats` in the library.
+- No `sorry`, `admit`, `native_decide` or new `axiom` in the library. Avoid `set_option maxHeartbeats`;
+  where it is used, it raises the limit to at most 400000 for a single declaration.
 - Statements stay faithful to the corrected draft `paper/percolation-harmonic-corrected.tex` and
   are referred to by their number and LaTeX label, never by line number. Where a statement
   departs from the printed paper, the departure is listed in `paper/CORRECTIONS.md`.
-- A result cited from the literature is stated as a proposition in `Rigidity/External/`, with its
-  source in the docstring, and enters a theorem as an explicit hypothesis. Do not add an `axiom`
-  for it.
+- A result cited from the literature is stated as a proposition in `Rigidity/External/` (or in an
+  `External/` module of a dependency), with its source in the docstring, and enters a theorem as an
+  explicit hypothesis. Do not add an `axiom` for it.
 - New declarations go under `Rigidity/`. The dependencies under `.lake/packages/` are read-only.
-- Avoid `lake clean`: it removes the prebuilt mathlib and Lattice-Probability builds and forces
-  the dependencies to be rebuilt from source.
+- Avoid `lake clean`, which removes the builds of the dependencies: the mathlib build from its
+  cache and the builds of Lattice-Probability and Percolation-Cluster-Homogenization, which have no
+  cache and are rebuilt from source.
 
 ## Comparators
 

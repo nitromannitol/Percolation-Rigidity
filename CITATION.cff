@@ -58,4 +58,4 @@ references:
         given-names: William
       - family-names: Dario
         given-names: Paul
-    notes: "The corrected draft of the arXiv v2 source that the statements follow, in paper/percolation-harmonic-corrected.tex; its corrections are listed in README.md."
+    notes: "The corrected draft of the arXiv v2 source that the statements follow, in paper/percolation-harmonic-corrected.tex; its corrections are listed in paper/CORRECTIONS.md."
