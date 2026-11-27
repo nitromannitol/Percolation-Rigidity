@@ -132,8 +132,8 @@ Theorems 1.1, 1.2, 1.3 and 6.5 and Proposition 3.2 are proved with no literature
 ([`Unconditional.lipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean) for Theorem 1.1,
 `Unconditional.notLipschitz` for Proposition 3.2,
 [`Unconditional.integer_valued_linear_growth`](Rigidity/Proofs/Assembly/Unconditional.lean) for
-Theorem 1.2, [`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
-Theorem 1.3 and [`Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) for
+Theorem 1.2, [`Unconditional.fast_decay`](Rigidity/Proofs/Assembly/Unconditional.lean) (that is
+[`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean)) for Theorem 1.3 and [`Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) for
 Theorem 6.5). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
 the dimension-two proof of Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in every
 dimension (`barlowGaussianUpperBound_holds`; in dimension two `barlowGaussianUpperBoundTwo_holds`),
@@ -2926,7 +2926,7 @@ Proposition 2.13 of Dario and Gu on `ℤ^d` is stated as `DarioGuFluxWeakNormD d
 Proposition 1.1, `𝕍[Φ_{r²} ⋆ flux(x)] ≤ O_s(C r^{-d})`, which in the source follows from `𝕍[X] ≤ Σ_e (D_e X)²` and the bound of
 the vertical derivatives through the Green function of the cluster (the argument of Step 2 of Dario's Lemma 3.3; in dimension two
 `fluxFlipSum_isOsBond`; `FluxVarianceBoundD 2 p` is proved from it, `fluxVarianceBoundD_two`, so the hypothesis holds as typed in
-dimension two).
+dimension two; for `d ≥ 3` it holds by `fluxVarianceBoundThree_of_stepTwoWeight` with `darioStepTwoWeightThree_holds`).
 The proof is the one of Appendix B in the lattice form of the planar case, with the exponents of `ℤ^d`
 and the partition into good cubes of `ℤ^d` of Percolation-Cluster-Homogenization. Departures: the positivity of `ā` uses the
 Lipschitz bound of the corrected planes (Dario, Proposition 2.15) instead of Theorem 2.5; in the density bound the
