@@ -220,6 +220,7 @@ import Rigidity.Proofs.Corrector.GeneralVarianceSums
 import Rigidity.Proofs.Corrector.GeneralStepOneHolds
 import Rigidity.Proofs.Corrector.GeneralStepTwoDefs
 import Rigidity.Proofs.Corrector.GeneralStepTwoReduce
+import Rigidity.Proofs.Corrector.GeneralResamplePartitionProved
 import Rigidity.Proofs.Corrector.GeneralLemmaThreeTwoProof
 import Rigidity.Proofs.Corrector.GeneralResamplePartitionHolds
 import Rigidity.Proofs.Corrector.Concentration
@@ -311,6 +312,8 @@ import Rigidity.Proofs.Green.GeneralFluxVarianceTwo
 import Rigidity.Proofs.Green.GeneralFluxPairing
 import Rigidity.Proofs.Green.GeneralFluxFlipSum
 import Rigidity.Proofs.Assembly.GreenQuantitativeFromFluxVariance
+import Rigidity.Proofs.Green.GeneralFluxFlipMoments
+import Rigidity.Proofs.Assembly.GreenQuantitativeFromStepTwoWeight
 import Rigidity.Proofs.Green.DarioGuLatticeSup
 import Rigidity.Proofs.Green.DarioGuLevels
 import Rigidity.Proofs.Green.DarioGuPhiCalculus
@@ -1672,6 +1675,13 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.flipSumTwo_le_of_partition
 #print axioms Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_of_weight
 #print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight
+#print axioms Rigidity.Corrector.GeneralDim.lintegral_comp_setBond_le
+#print axioms Rigidity.Corrector.GeneralDim.stepOneFactor_le
+#print axioms Rigidity.Corrector.GeneralDim.lintegral_stepOneFactor_rpow_le
+#print axioms Rigidity.Corrector.GeneralDim.resamplePartitionBound_holds
+#print axioms Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_holds
+#print axioms Rigidity.Corrector.GeneralDim.darioStepOneSumBoundThree_holds
+#print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight
 #print axioms Rigidity.Corrector.GeneralDim.dario_errorstatpart
 #print axioms Rigidity.Corrector.GeneralDim.statAnchor_translation
 #print axioms Rigidity.Corrector.GeneralDim.statGrad_translation
@@ -1750,6 +1760,12 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Green.GeneralFlux.fluxPairingZeroD_holds
 #print axioms Rigidity.Green.GeneralFlux.fluxFlipSumPartitionD_holds
 #print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_fluxVariance
+#print axioms Rigidity.Green.GeneralFlux.ofReal_le_pathWeight
+#print axioms Rigidity.Green.GeneralFlux.exists_fluxFlipD_weight_data
+#print axioms Rigidity.Green.GeneralFlux.fluxFlipSumD_isOsBond
+#print axioms Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weight
+#print axioms Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound
+#print axioms Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight
 -- The multiscale Poincare inequality (2.26) of Dario in every dimension
 #print axioms Rigidity.Poincare.GeneralDim.multiscalePoincare_holds
 #print axioms Rigidity.Poincare.GeneralDim.exists_multiscalePoincare_box

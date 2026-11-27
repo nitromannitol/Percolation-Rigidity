@@ -9,11 +9,12 @@ bounds of Proposition 2.15 and (3.12). The pieces on `ℤᵈ`, as in the planar 
 * `stepOne_lipschitz_data`: Lipschitz bounds `Λ` of the corrector (from `lipschitz_correctorDiff`)
   with the moments `E[(1 + Λ(x))^q] ≤ (B q^κ)^q` of the single bounds (from
   `lintegral_add_two_rpow_le`).
-* `stepOneFactorSelf`: the factor `F_e` of `W` computed in the configuration itself; the factor of
-  `W` at `ω` is its value at `ω^{e,1}` (`stepOneFactor_eq_self`), so (3.12) in the form
-  `E[f(ω^{e,1})] ≤ p^{-1} E[f]` removes the flip.
-* `stepOneFactorSelf_le`: on the partition event, `F_e ≤ 1{|a_e - y| ≤ κ₁ s} · 16 d² T³` with
-  `s = size(□_𝒫(a_e))` and `T` the sum of `1 + Λ` over the ball of radius `κ₃ s` around `a_e`.
+* `stepOneFactor_le`: on the partition events of both flips,
+  `F_e ≤ 1{|a_e - y| ≤ κ₁ S} · 16 d² (U(ω^{e,0}) + U(ω^{e,1}))³` with `S` the scale of the flips of
+  `e` at its base `a_e` (corrected Lemma 3.5) and `U(ζ)` the sum of `1 + Λ(·, ζ^{e,1})` over the ball
+  of radius `κ₃ size(□_{𝒫(ζ)}(a_e))` (`stepOneBallSum`), so that (3.12) in the form
+  `E[f(ω^{e,b})] ≤ min(p, 1 - p)^{-1} E[f]` reduces the moments to those of the partition sizes and
+  of a sum over a ball of random radius.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -150,147 +151,138 @@ theorem stepOne_lipschitz_data (hd : 2 ≤ d) {p : unitInterval}
 
 end Data
 
-/-- The local factor of Step 1 at the bond `e` seen from `y`, for the side `n`, computed in the
-configuration itself. -/
-noncomputable def stepOneFactorSelfAt (Λ : Vertex d → Configuration d → ℝ) (C₀ C : ℕ)
-    (e : Bond d) (y : Vertex d) (n : ℕ) (ω : Configuration d) : ℝ≥0∞ :=
-  if y ∈ supBox (bondBase e) (C₀ * C * n) then
-    ENNReal.ofReal ((supBox (bondBase e) (C₀ * C * n)).card *
-      (4 * d * ∑ z ∈ supBox (bondBase e) ((C₀ * C * n + 1) + 3 * (C * (C * n))), Λ z ω) ^ 2)
-  else 0
+theorem setBond_setBond (e : Bond d) (b b' : Bool) (ω : Configuration d) :
+    setBond e b (setBond e b' ω) = setBond e b ω := by
+  unfold setBond
+  exact Function.update_idem b' b ω
 
-/-- The local factor of Step 1 at the bond `e` seen from `y`, computed in the configuration
-itself, with the side of its partition cube at the base of `e`. -/
-noncomputable def stepOneFactorSelf (Λ : Vertex d → Configuration d → ℝ) (C₀ C : ℕ) (e : Bond d)
-    (y : Vertex d) (ω : Configuration d) : ℝ≥0∞ :=
-  stepOneFactorSelfAt Λ C₀ C e y
-    ⌊TriadicCube.stoppingSize (TriadicCube.goodCubes ω) (bondBase e)⌋₊ ω
-
-theorem stepOneFactor_eq_self (Λ : Vertex d → Configuration d → ℝ) (C₀ C : ℕ) (e : Bond d)
-    (y : Vertex d) (ω : Configuration d) :
-    stepOneFactor Λ C₀ C e y ω = stepOneFactorSelf Λ C₀ C e y (setBond e true ω) := by
-  unfold stepOneFactor stepOneFactorSelf stepOneFactorAt stepOneFactorSelfAt flipSide
-  rfl
-
-theorem measurable_stepOneFactorSelf {Λ : Vertex d → Configuration d → ℝ}
-    (hΛm : ∀ z, Measurable (Λ z)) (C₀ C : ℕ) (e : Bond d) (y : Vertex d) :
-    Measurable (stepOneFactorSelf Λ C₀ C e y) := by
-  have hF : ∀ n, Measurable (stepOneFactorSelfAt Λ C₀ C e y n) := fun n => by
-    by_cases hc : y ∈ supBox (bondBase e) (C₀ * C * n)
-    · unfold stepOneFactorSelfAt
-      simp only [if_pos hc]
-      exact ENNReal.measurable_ofReal.comp (measurable_const.mul (((Finset.measurable_sum _
-        fun z _ => hΛm z).const_mul _).pow_const 2))
-    · unfold stepOneFactorSelfAt
-      simp only [if_neg hc]
-      exact measurable_const
-  have h : Measurable fun x : Configuration d × ℕ => stepOneFactorSelfAt Λ C₀ C e y x.2 x.1 :=
-    measurable_from_prod_countable_left fun n => hF n
-  have e' : stepOneFactorSelf Λ C₀ C e y =
-      (fun x : Configuration d × ℕ => stepOneFactorSelfAt Λ C₀ C e y x.2 x.1) ∘
-        (fun ω => (ω, ⌊TriadicCube.stoppingSize (TriadicCube.goodCubes ω) (bondBase e)⌋₊)) := rfl
-  rw [e']
-  exact h.comp (measurable_id.prodMk
-    (Nat.measurable_floor.comp (measurable_stoppingSize_goodCubes (bondBase e))))
-
-/-- The sum of `1 + Λ` over the ball of radius `κ size(□_𝒫(v))` around `v`. -/
-noncomputable def stepOneBallSum (Λ : Vertex d → Configuration d → ℝ) (κ : ℝ) (v : Vertex d)
-    (ω : Configuration d) : ℝ≥0∞ :=
-  ∑' z, if ‖latticeEuclideanEmbedding (z - v)‖ ≤
-      κ * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) v
-    then ENNReal.ofReal (1 + Λ z ω) else 0
+/-- The sum of `1 + Λ(·, ζ^{e,1})` over the ball of radius `κ size(□_{𝒫(ζ)}(a_e))` around the base
+`a_e` of `e`. -/
+noncomputable def stepOneBallSum (Λ : Vertex d → Configuration d → ℝ) (κ : ℝ) (e : Bond d)
+    (ζ : Configuration d) : ℝ≥0∞ :=
+  ∑' z, if ‖latticeEuclideanEmbedding (z - bondBase e)‖ ≤
+      κ * TriadicCube.stoppingSize (TriadicCube.goodCubes ζ) (bondBase e)
+    then ENNReal.ofReal (1 + Λ z (setBond e true ζ)) else 0
 
 theorem measurable_stepOneBallSum {Λ : Vertex d → Configuration d → ℝ}
-    (hΛm : ∀ z, Measurable (Λ z)) (κ : ℝ) (v : Vertex d) : Measurable (stepOneBallSum Λ κ v) :=
+    (hΛm : ∀ z, Measurable (Λ z)) (κ : ℝ) (e : Bond d) : Measurable (stepOneBallSum Λ κ e) :=
   Measurable.tsum fun z => Measurable.ite (measurableSet_le measurable_const
-    ((measurable_stoppingSize_goodCubes v).const_mul κ))
-    ((measurable_const.add (hΛm z)).ennreal_ofReal) measurable_const
+    ((measurable_stoppingSize_goodCubes (bondBase e)).const_mul κ))
+    ((measurable_const.add ((hΛm z).comp (measurable_setBond e true))).ennreal_ofReal)
+    measurable_const
 
-/-- **The local factor on the partition event**: `F_e ≤ 1{|a_e - y| ≤ κ₁ s} · 16 d² T³`, with
-`κ₁ = d (C₀ C + 1)`, `s = size(□_𝒫(a_e))` and `T` the sum of `1 + Λ` over the ball of radius
-`κ₃ s`, `κ₃ = d (C₀ C + 1 + 3 C²)`. -/
-theorem stepOneFactorSelf_le {Λ : Vertex d → Configuration d → ℝ} (hΛ0 : ∀ z ω, 0 ≤ Λ z ω)
-    (C₀ C : ℕ) (e : Bond d) (y : Vertex d) {ω : Configuration d} (hP : PartitionEvent ω) :
-    stepOneFactorSelf Λ C₀ C e y ω ≤
+/-- The scale `S` of the flips of `e` at its base, through the stopping sizes, as a real. -/
+noncomputable def flipSideReal (e : Bond d) (ω : Configuration d) : ℝ :=
+  max (TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e false ω)) (bondBase e))
+    (TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e true ω)) (bondBase e))
+
+theorem measurable_flipSideReal (e : Bond d) : Measurable (flipSideReal e) :=
+  ((measurable_stoppingSize_goodCubes (bondBase e)).comp (measurable_setBond e false)).max
+    ((measurable_stoppingSize_goodCubes (bondBase e)).comp (measurable_setBond e true))
+
+/-- **The local factor on the partition events of both flips**:
+`F_e ≤ 1{|a_e - y| ≤ κ₁ S} · 16 d² (U(ω^{e,0}) + U(ω^{e,1}))³`, with `κ₁ = d (C₀ + 1)`, `S` the scale
+of the flips of `e` at its base `a_e` and `U = stepOneBallSum Λ κ₃ e`, `κ₃ = d (C₀ + 1 + 3 C)`. -/
+theorem stepOneFactor_le {Λ : Vertex d → Configuration d → ℝ} (hΛ0 : ∀ z ω, 0 ≤ Λ z ω)
+    (C₀ C : ℕ) (e : Bond d) (y : Vertex d) {ω : Configuration d}
+    (hP₀ : PartitionEvent (setBond e false ω)) (hP₁ : PartitionEvent (setBond e true ω)) :
+    stepOneFactor Λ C₀ C e y ω ≤
       {ω' | ‖latticeEuclideanEmbedding (bondBase e - y)‖ ≤
-          d * ((C₀ : ℝ) * C + 1) *
-            TriadicCube.stoppingSize (TriadicCube.goodCubes ω') (bondBase e)}.indicator
+          d * ((C₀ : ℝ) + 1) * flipSideReal e ω'}.indicator
         (fun ω' => ENNReal.ofReal (16 * d ^ 2) *
-          stepOneBallSum Λ (d * ((C₀ : ℝ) * C + 1 + 3 * (C : ℝ) ^ 2)) (bondBase e) ω' ^ 3) ω := by
+          (stepOneBallSum Λ (d * ((C₀ : ℝ) + 1 + 3 * C)) e (setBond e false ω') +
+            stepOneBallSum Λ (d * ((C₀ : ℝ) + 1 + 3 * C)) e (setBond e true ω')) ^ 3) ω := by
   set a := bondBase e
-  have hS : TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a =
-      ((3 ^ (partitionCube ω a).scale : ℕ) : ℝ) := by
-    rw [TriadicCube.stoppingSize_eq_of_mem (mem_partitionCube hP _) (partitionCube_spec hP _).2]
-    push_cast
+  set N : ℕ := flipScale e ω with hN
+  have hN1 : 1 ≤ N := le_trans (Nat.one_le_pow _ _ (by norm_num))
+    (le_resampleScale_left (setBond e false ω) (setBond e true ω) a)
+  have hS0 : TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e false ω)) a =
+      ((3 ^ (partitionCube (setBond e false ω) a).scale : ℕ) : ℝ) :=
+    stoppingSize_goodCubes_eq_cast hP₀ a
+  have hS1 : TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e true ω)) a =
+      ((3 ^ (partitionCube (setBond e true ω) a).scale : ℕ) : ℝ) :=
+    stoppingSize_goodCubes_eq_cast hP₁ a
+  have hSN : flipSideReal e ω = (N : ℝ) := by
+    unfold flipSideReal
+    rw [hS0, hS1, ← Nat.cast_max]
     rfl
-  set n : ℕ := 3 ^ (partitionCube ω a).scale with hn
-  have hn1 : 1 ≤ n := Nat.one_le_pow _ _ (by norm_num)
-  have hfl : ⌊TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a⌋₊ = n := by
-    rw [hS, Nat.floor_natCast]
-  unfold stepOneFactorSelf stepOneFactorSelfAt
-  rw [hfl]
+  unfold stepOneFactor stepOneFactorAt
+  rw [flipSide_eq hP₀ hP₁, ← hN]
   split_ifs with hy
-  · have hA : ‖latticeEuclideanEmbedding (a - y)‖ ≤
-        d * ((C₀ : ℝ) * C + 1) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a := by
+  · have hA : ‖latticeEuclideanEmbedding (a - y)‖ ≤ d * ((C₀ : ℝ) + 1) * flipSideReal e ω := by
       have h := (norm_sub_le_of_mem_supBox hy).2
-      rw [hS]
-      have : ((C₀ * C * n : ℕ) : ℝ) ≤ ((C₀ : ℝ) * C + 1) * n := by
+      rw [hSN]
+      have : ((C₀ * N : ℕ) : ℝ) ≤ ((C₀ : ℝ) + 1) * N := by
         push_cast
-        nlinarith [(Nat.cast_nonneg n : (0 : ℝ) ≤ n)]
+        nlinarith [(Nat.cast_nonneg N : (0 : ℝ) ≤ N)]
       have hd0 : (0 : ℝ) ≤ d := Nat.cast_nonneg d
-      calc ‖latticeEuclideanEmbedding (a - y)‖ ≤ d * ((C₀ * C * n : ℕ) : ℝ) := h
-        _ ≤ d * (((C₀ : ℝ) * C + 1) * n) := mul_le_mul_of_nonneg_left this hd0
-        _ = d * ((C₀ : ℝ) * C + 1) * n := by ring
+      calc ‖latticeEuclideanEmbedding (a - y)‖ ≤ d * ((C₀ * N : ℕ) : ℝ) := h
+        _ ≤ d * (((C₀ : ℝ) + 1) * N) := mul_le_mul_of_nonneg_left this hd0
+        _ = d * ((C₀ : ℝ) + 1) * N := by ring
     rw [Set.indicator_of_mem (show ω ∈ {ω' | ‖latticeEuclideanEmbedding (a - y)‖ ≤
-      d * ((C₀ : ℝ) * C + 1) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω') a} from hA)]
-    set B := supBox a (C₀ * C * n)
-    set B' := supBox a ((C₀ * C * n + 1) + 3 * (C * (C * n)))
+      d * ((C₀ : ℝ) + 1) * flipSideReal e ω'} from hA)]
+    set B := supBox a (C₀ * N)
+    set B' := supBox a ((C₀ * N + 1) + 3 * (C * N))
     have hBB' : B ⊆ B' := supBox_subset_of_le a (by omega)
-    set T₀ := ∑ z ∈ B', (1 + Λ z ω) with hT₀
+    set T₀ := ∑ z ∈ B', (1 + Λ z (setBond e true ω)) with hT₀
     have hcard : (B.card : ℝ) ≤ T₀ := by
       have h1 : (B.card : ℝ) ≤ B'.card := by exact_mod_cast Finset.card_le_card hBB'
       have h2 : (B'.card : ℝ) = ∑ z ∈ B', (1 : ℝ) := by simp
       rw [h2] at h1
-      exact h1.trans (Finset.sum_le_sum fun z _ => by linarith [hΛ0 z ω])
-    have hsum : ∑ z ∈ B', Λ z ω ≤ T₀ := Finset.sum_le_sum fun z _ => by linarith
-    have hΛs0 : 0 ≤ ∑ z ∈ B', Λ z ω := Finset.sum_nonneg fun z _ => hΛ0 z ω
+      exact h1.trans (Finset.sum_le_sum fun z _ => by linarith [hΛ0 z (setBond e true ω)])
+    have hsum : ∑ z ∈ B', Λ z (setBond e true ω) ≤ T₀ :=
+      Finset.sum_le_sum fun z _ => by linarith
+    have hΛs0 : 0 ≤ ∑ z ∈ B', Λ z (setBond e true ω) :=
+      Finset.sum_nonneg fun z _ => hΛ0 z _
     have hT0 : 0 ≤ T₀ := hΛs0.trans hsum
-    have hreal : (B.card : ℝ) * (4 * d * ∑ z ∈ B', Λ z ω) ^ 2 ≤ 16 * d ^ 2 * T₀ ^ 3 := by
-      have hsq : (∑ z ∈ B', Λ z ω) ^ 2 ≤ T₀ ^ 2 := pow_le_pow_left₀ hΛs0 hsum 2
+    have hreal : (B.card : ℝ) * (4 * d * ∑ z ∈ B', Λ z (setBond e true ω)) ^ 2 ≤
+        16 * d ^ 2 * T₀ ^ 3 := by
+      have hsq : (∑ z ∈ B', Λ z (setBond e true ω)) ^ 2 ≤ T₀ ^ 2 := pow_le_pow_left₀ hΛs0 hsum 2
       have := mul_le_mul hcard hsq (sq_nonneg _) hT0
       have hd2 : (0 : ℝ) ≤ 16 * d ^ 2 := by positivity
-      calc (B.card : ℝ) * (4 * d * ∑ z ∈ B', Λ z ω) ^ 2
-          = 16 * d ^ 2 * ((B.card : ℝ) * (∑ z ∈ B', Λ z ω) ^ 2) := by ring
+      calc (B.card : ℝ) * (4 * d * ∑ z ∈ B', Λ z (setBond e true ω)) ^ 2
+          = 16 * d ^ 2 * ((B.card : ℝ) * (∑ z ∈ B', Λ z (setBond e true ω)) ^ 2) := by ring
         _ ≤ 16 * d ^ 2 * (T₀ * T₀ ^ 2) := mul_le_mul_of_nonneg_left this hd2
         _ = 16 * d ^ 2 * T₀ ^ 3 := by ring
+    -- the box `B'` lies in the ball of radius `κ₃ size` of the flip with the larger side
     have hball : ∀ z ∈ B', ‖latticeEuclideanEmbedding (z - a)‖ ≤
-        d * ((C₀ : ℝ) * C + 1 + 3 * (C : ℝ) ^ 2) *
-          TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a := by
+        d * ((C₀ : ℝ) + 1 + 3 * C) * N := by
       intro z hz
       have h := (norm_sub_le_of_mem_supBox hz).1
-      rw [hS]
-      have : (((C₀ * C * n + 1) + 3 * (C * (C * n)) : ℕ) : ℝ) ≤
-          ((C₀ : ℝ) * C + 1 + 3 * (C : ℝ) ^ 2) * n := by
+      have : (((C₀ * N + 1) + 3 * (C * N) : ℕ) : ℝ) ≤ ((C₀ : ℝ) + 1 + 3 * C) * N := by
         push_cast
-        have : (1 : ℝ) ≤ n := by exact_mod_cast hn1
+        have : (1 : ℝ) ≤ N := by exact_mod_cast hN1
         nlinarith
       have hd0 : (0 : ℝ) ≤ d := Nat.cast_nonneg d
       calc ‖latticeEuclideanEmbedding (z - a)‖
-          ≤ d * (((C₀ * C * n + 1) + 3 * (C * (C * n)) : ℕ) : ℝ) := h
-        _ ≤ d * (((C₀ : ℝ) * C + 1 + 3 * (C : ℝ) ^ 2) * n) := mul_le_mul_of_nonneg_left this hd0
-        _ = d * ((C₀ : ℝ) * C + 1 + 3 * (C : ℝ) ^ 2) * n := by ring
+          ≤ d * (((C₀ * N + 1) + 3 * (C * N) : ℕ) : ℝ) := h
+        _ ≤ d * (((C₀ : ℝ) + 1 + 3 * C) * N) := mul_le_mul_of_nonneg_left this hd0
+        _ = d * ((C₀ : ℝ) + 1 + 3 * C) * N := by ring
     have hT : ENNReal.ofReal T₀ ≤
-        stepOneBallSum Λ (d * ((C₀ : ℝ) * C + 1 + 3 * (C : ℝ) ^ 2)) a ω := by
-      rw [hT₀, ENNReal.ofReal_sum_of_nonneg fun z _ => by linarith [hΛ0 z ω]]
-      unfold stepOneBallSum
-      calc ∑ z ∈ B', ENNReal.ofReal (1 + Λ z ω)
-          = ∑ z ∈ B', (if ‖latticeEuclideanEmbedding (z - a)‖ ≤
-              d * ((C₀ : ℝ) * C + 1 + 3 * (C : ℝ) ^ 2) *
-                TriadicCube.stoppingSize (TriadicCube.goodCubes ω) a
-              then ENNReal.ofReal (1 + Λ z ω) else 0) :=
-            Finset.sum_congr rfl fun z hz => by rw [if_pos (hball z hz)]
-        _ ≤ _ := ENNReal.sum_le_tsum _
-    calc ENNReal.ofReal ((B.card : ℝ) * (4 * d * ∑ z ∈ B', Λ z ω) ^ 2)
+        stepOneBallSum Λ (d * ((C₀ : ℝ) + 1 + 3 * C)) e (setBond e false ω) +
+          stepOneBallSum Λ (d * ((C₀ : ℝ) + 1 + 3 * C)) e (setBond e true ω) := by
+      have hNmax : (N : ℝ) = max (TriadicCube.stoppingSize (TriadicCube.goodCubes
+          (setBond e false ω)) a) (TriadicCube.stoppingSize (TriadicCube.goodCubes
+          (setBond e true ω)) a) := hSN.symm
+      have key : ∀ b : Bool, (N : ℝ) = TriadicCube.stoppingSize
+          (TriadicCube.goodCubes (setBond e b ω)) a →
+          ENNReal.ofReal T₀ ≤ stepOneBallSum Λ (d * ((C₀ : ℝ) + 1 + 3 * C)) e (setBond e b ω) := by
+        intro b hb
+        rw [hT₀, ENNReal.ofReal_sum_of_nonneg fun z _ => by linarith [hΛ0 z (setBond e true ω)]]
+        unfold stepOneBallSum
+        calc ∑ z ∈ B', ENNReal.ofReal (1 + Λ z (setBond e true ω))
+            = ∑ z ∈ B', (if ‖latticeEuclideanEmbedding (z - a)‖ ≤
+                d * ((C₀ : ℝ) + 1 + 3 * C) *
+                  TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e b ω)) a
+                then ENNReal.ofReal (1 + Λ z (setBond e true (setBond e b ω))) else 0) :=
+              Finset.sum_congr rfl fun z hz => by
+                rw [if_pos (by rw [← hb]; exact hball z hz), setBond_setBond]
+          _ ≤ _ := ENNReal.sum_le_tsum _
+      rcases le_total (TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e false ω)) a)
+          (TriadicCube.stoppingSize (TriadicCube.goodCubes (setBond e true ω)) a) with h | h
+      · exact (key true (by rw [hNmax, max_eq_right h])).trans le_add_self
+      · exact (key false (by rw [hNmax, max_eq_left h])).trans le_self_add
+    calc ENNReal.ofReal ((B.card : ℝ) * (4 * d * ∑ z ∈ B', Λ z (setBond e true ω)) ^ 2)
         ≤ ENNReal.ofReal (16 * d ^ 2 * T₀ ^ 3) := ENNReal.ofReal_le_ofReal hreal
       _ = ENNReal.ofReal (16 * d ^ 2) * ENNReal.ofReal T₀ ^ 3 := by
           rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow hT0]

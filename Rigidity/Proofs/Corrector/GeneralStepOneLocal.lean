@@ -10,8 +10,9 @@ coarsenings being taken with the partitions into good cubes of two configuration
 off a bond `e`. Its summand at `y` in direction `j` is `partitionChange ω₀ ω₁ w j y`. Step 1 uses
 Lemma 3.5 through `ResampleLocal ρ M ω₀ ω₁ x`: inside the box `|· - x|_∞ < ρ` the partition cubes
 of both configurations have side at most `M`, and outside it their anchors agree. Lemma 3.5
-(`ResamplePartitionBound C₀ C`) gives it with `ρ = C₀ s₀`, `M = C s₀`, `s₀` the side of the
-partition cube of `ω₀` at the endpoint `x` of `e` (`resampleLocal_of_bound`). Then
+(`ResamplePartitionBound C₀ C`, in the corrected form) gives it with `ρ = C₀ S`, `M = C S`, `S` the
+larger side of the partition cubes of `ω₀` and `ω₁` at the endpoint `x` of `e`
+(`resampleLocal_of_bound`). Then
 
 * `partitionChange_eq_zero`: the summand vanishes unless `y` or `y + e_j` lies in the box;
 * `abs_partitionChange_le`: otherwise it is at most the sum of the total variations of `w` over
@@ -135,22 +136,27 @@ def ResampleLocal (ρ M : ℕ) (ω₀ ω₁ : Configuration d) (x : Vertex d) : 
       3 ^ (partitionCube ω₀ z).scale ≤ M ∧ 3 ^ (partitionCube ω₁ z).scale ≤ M) ∧
     (¬ (∀ i, |z i - x i| < (ρ : ℤ)) → guardAnchor ω₁ z = guardAnchor ω₀ z)
 
-/-- Lemma 3.5 (`ResamplePartitionBound C₀ C`) gives the locality with `ρ = C₀ s₀` and `M = C s₀`,
-`s₀` the side of the partition cube of `ω₀` at the endpoint `x` of `e`. -/
+/-- The corrected Lemma 3.5 (`ResamplePartitionBound C₀ C`) gives the locality with `ρ = C₀ S` and
+`M = C S`, `S = resampleScale ω₀ ω₁ x` the larger side of the partition cubes of `ω₀` and `ω₁` at
+the endpoint `x` of `e`. -/
 theorem resampleLocal_of_bound {C₀ C : ℕ} (hres : ResamplePartitionBound (d := d) C₀ C)
     {e : Bond d} {ω₀ ω₁ : Configuration d} (hagree : ∀ b, b ≠ e → ω₁ b = ω₀ b)
     (hP₀ : PartitionEvent ω₀) (hP₁ : PartitionEvent ω₁) {x : Vertex d} (hx : x ∈ e.1) :
-    ResampleLocal (C₀ * 3 ^ (partitionCube ω₀ x).scale) (C * 3 ^ (partitionCube ω₀ x).scale)
-      ω₀ ω₁ x := by
+    ResampleLocal (C₀ * resampleScale ω₀ ω₁ x) (C * resampleScale ω₀ ω₁ x) ω₀ ω₁ x := by
   intro z
-  have hiff : (∀ i, |z i - x i| < ((C₀ * 3 ^ (partitionCube ω₀ x).scale : ℕ) : ℤ)) ↔
-      InResampleBall C₀ ω₀ x z := by
+  have hiff : (∀ i, |z i - x i| < ((C₀ * resampleScale ω₀ ω₁ x : ℕ) : ℤ)) ↔
+      InResampleBall C₀ ω₀ ω₁ x z := by
     unfold InResampleBall
     push_cast
     exact Iff.rfl
+  have hiff' : InResampleBall C₀ ω₀ ω₁ x z ↔ InResampleBall C₀ ω₁ ω₀ x z := by
+    unfold InResampleBall
+    rw [resampleScale_comm]
   refine ⟨fun hz => ?_, fun hz => ?_⟩
-  · exact ⟨(hres e ω₀ ω₀ (fun _ _ => rfl) hP₀ hP₀ x hx z).1 (hiff.1 hz),
-      (hres e ω₀ ω₁ hagree hP₀ hP₁ x hx z).1 (hiff.1 hz)⟩
+  · have h0 := (hres e ω₁ ω₀ (fun b hb => (hagree b hb).symm) hP₁ hP₀ x hx z).1
+      (hiff'.1 (hiff.1 hz))
+    rw [resampleScale_comm] at h0
+    exact ⟨h0, (hres e ω₀ ω₁ hagree hP₀ hP₁ x hx z).1 (hiff.1 hz)⟩
   · have h := ((hres e ω₀ ω₁ hagree hP₀ hP₁ x hx z).2 fun h => hz (hiff.2 h)).2
     rw [guardAnchor_of_event hP₀, guardAnchor_of_event hP₁, h]
 
@@ -224,8 +230,8 @@ theorem sq_tsum_mul_le_of_support {φ g : Vertex d → ℝ} {B : Finset (Vertex 
     _ = B.card * (∑ y ∈ B, φ y ^ 2) * V ^ 2 := by rw [← Finset.sum_mul, mul_assoc]
 
 /-- **Step 1 of Dario's proof, (3.16) in flip form, on `ℤᵈ`**: if the change of partition from
-`ω₀` to `ω₁` is local around `x` (`ResampleLocal ρ M`, given by Lemma 3.5 with `ρ = C₀ s₀`,
-`M = C s₀`), then for weights `φ`,
+`ω₀` to `ω₁` is local around `x` (`ResampleLocal ρ M`, given by Lemma 3.5 with `ρ = C₀ S`,
+`M = C S`), then for weights `φ`,
 `|Σ_y φ(y) partitionChange(y)|² ≤ |B| (Σ_{y ∈ B} φ(y)²) (V₀ + V₁)²`, with `B` the box of radius `ρ`
 around `x` and `V_b` the total variation of `w` over the open edges of `ω_b` in the box of radius `(ρ + 1) + 3M`. -/
 theorem sq_tsum_partitionChange_le (hd : 0 < d) {ρ M : ℕ} {ω₀ ω₁ : Configuration d}
