@@ -185,7 +185,7 @@ theorem exists_coarseStepWalk [NeZero d] {ω : Configuration d} (hP : PartitionE
   have hle : Rigidity.External.openIn ω ((partitionCube ω z).vertices ∪
       (partitionCube ω (z + LatticeProb.unit j)).vertices) ≤ openGraph ω := fun _ _ h => h.1
   refine ⟨q.mapLe hle, fun w hw => (mem_stepRegion_iff ω).2 ?_⟩
-  rw [SimpleGraph.Walk.support_mapLe] at hw
+  rw [SimpleGraph.Walk.support_mapLe_eq_support] at hw
   exact mem_of_mem_support_openIn ω q (Or.inl (partitionAnchor_mem hP z)) w hw
 
 /-- The path from the anchor of `z` to the anchor of `z + e_j`, inside `stepRegion ω z j`. -/

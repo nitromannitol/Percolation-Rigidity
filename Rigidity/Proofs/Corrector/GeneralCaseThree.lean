@@ -125,7 +125,7 @@ theorem edgeDiv_single {a : LatticeEdge d} (ha : EdgeOpen ω a) (z : Vertex d) :
       exact absurd (Finset.mem_univ j) h
 
 /-- Finite partial sums of the squares of an `ℓ²` field are at most its squared norm. -/
-theorem sum_sq_le_norm_sq (η : EdgeField d) (s : Finset LatticeEdge d) :
+theorem sum_sq_le_norm_sq (η : EdgeField d) (s : Finset (LatticeEdge d)) :
     ∑ a ∈ s, η a ^ 2 ≤ ‖η‖ ^ 2 := by
   have h := lp.sum_rpow_le_norm_rpow (p := 2) (by norm_num) η s
   simp only [ENNReal.toReal_ofNat, Real.rpow_two, Real.norm_eq_abs, sq_abs] at h
