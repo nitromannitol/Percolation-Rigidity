@@ -16,8 +16,8 @@ included as compiled PDFs.
 
 The paper has 48 numbered results. The 43 results that the paper proves are proved in Lean, with no
 `sorry` and only the standard axioms, from twelve results of the literature that enter as explicit
-hypotheses (see [Assumed literature inputs](#assumed-literature-inputs)). All twelve inputs are
-also proved in Lean: the uniqueness of the infinite cluster, the smoothing bound of
+hypotheses of the theorems of `Rigidity.Assembly.Main` (see [Assumed literature inputs](#assumed-literature-inputs)).
+All twelve inputs are also proved in Lean: the uniqueness of the infinite cluster, the smoothing bound of
 Micciancio and Regev, the crossing estimate of Kesten, the Jordan curve theorem on `S²`
 (Lemma 2.14), the well-connectedness of boxes (Proposition 2.3), the concentration of the density
 of the infinite cluster, the regularity of order zero (Theorem 2.4 at order zero), the existence
@@ -128,8 +128,9 @@ in every dimension `d ≥ 2` with no literature hypothesis
 `Rigidity.Assembly.Unconditional.notLipschitz`). Theorem 1.3 in the
 form with the twelve inputs takes only `CorrectorQuantitativeInput` and
 `SupercriticalBondGreenQuantitative` (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
-Theorems 1.1, 1.2, 1.3 and 6.5 are proved with no literature hypothesis
+Theorems 1.1, 1.2, 1.3 and 6.5 and Proposition 3.2 are proved with no literature hypothesis
 ([`Unconditional.lipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean) for Theorem 1.1,
+`Unconditional.notLipschitz` for Proposition 3.2,
 [`Unconditional.integer_valued_linear_growth`](Rigidity/Proofs/Assembly/Unconditional.lean) for
 Theorem 1.2, [`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
 Theorem 1.3 and [`Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) for
@@ -140,10 +141,12 @@ and in dimension two so are Theorem 3 of Dario and Gu
 (`darioGuGradientBoundTwo_holds`) and Proposition 2.13 of Dario and Gu, the weak norm of the centered
 flux of the corrector (`darioGuFluxWeakNormTwo_holds`), from which the quantitative estimate of the
 Green function in dimension two follows (`supercriticalBondGreenQuantitativeTwo_holds`). Proposition 2.13 is
-proved in every dimension `d ≥ 2` from the variance bound (3.4) of the proof of Gu's Proposition 1.1, a named hypothesis
-(`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`), which for `d ≥ 3` follows from `DarioStepTwoWeightThree`
-(`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight`), the bound of each flip difference by the Step 2 factor
-(`FluxFlipWeightBoundD`) being proved (`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`). The five numbered results that the paper does not prove are
+proved in every dimension `d ≥ 2` from the variance bound (3.4) of the proof of Gu's Proposition 1.1, the hypothesis of
+`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`, which is proved: in `d = 2` by
+`Rigidity.Green.GeneralFlux.fluxVarianceBoundD_two`, and for `d ≥ 3` it follows from `DarioStepTwoWeightThree`
+(`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight`), which is proved
+(`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`), the bound of each flip difference by the Step 2 factor
+(`FluxFlipWeightBoundD`) being proved as well (`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`). The five numbered results that the paper does not prove are
 quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
 Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
 them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
@@ -200,7 +203,7 @@ group, with uniform law `U`. There are `c, C > 0` such that almost surely, for e
 large `n`, `‖P^t − U‖₂² ≤ ε` for all `t ≥ C nᵈ log n` and `‖P^t − U‖₂² ≥ ε` for all
 `t ≤ c nᵈ log n`.
 
-Each theorem takes as hypotheses the regime (`2 ≤ d`, `criticalProbability d < p`, `p < 1`; `d = 2`
+Each theorem of `Rigidity.Assembly.Main` takes as hypotheses the regime (`2 ≤ d`, `criticalProbability d < p`, `p < 1`; `d = 2`
 for Theorem 1.3) and the literature inputs its proof uses, listed in
 [Assumed literature inputs](#assumed-literature-inputs). The statements of Theorems 1.1, 1.3 and 6.5
 are the definitions `Rigidity.Section3.LipschitzStmt`, `Rigidity.Section5.FastDecayStmt` and
@@ -364,7 +367,7 @@ Proposition 3.2.
    Proposition 6.4; Propositions 4.1 and 6.4 are proved in every dimension `d ≥ 2`.
 2. **Literature inputs.** Twelve results of the literature enter as explicit hypotheses of the
    theorems that use them; none is an `axiom`. They are listed in
-   [Assumed literature inputs](#assumed-literature-inputs), with the ten of them that are proved.
+   [Assumed literature inputs](#assumed-literature-inputs), where all twelve are shown to be proved.
 3. **Measurability.** Some events quantify over the corrected planes of every configuration and are
    not shown to be measurable. For them, "with positive probability" means that the event contains a
    measurable event of positive probability (Proposition 3.2 and Lemmas 5.25 and 5.27), and an upper bound on
@@ -403,7 +406,8 @@ Proposition 3.2.
    a closed lattice polygon without repeated corner, homeomorphic to the circle), and the Lean proof
    of Proposition 5.12 does not use it, since its loop runs around a spanning tree of the
    connectors. Theorems 2.4 and 2.5, which enter as
-   literature inputs (Theorem 2.4 at order zero, `ArmstrongDarioOrderZero`, is also proved); the remarks, problems and conjectures; the figures. The other two quoted
+   literature inputs, each as two inputs, all four proved (`ArmstrongDarioOrderZero`, `ArmstrongDarioOrderOneOrigin`,
+   `SupercriticalBondCorrectorInput`, `CorrectorQuantitativeInput`); the remarks, problems and conjectures; the figures. The other two quoted
    results, Proposition 2.3 and Lemma 2.14, enter as literature inputs that are proved.
 
 ## Assumed literature inputs
@@ -513,7 +517,8 @@ and the qualitative corrector input, by the printed proof of Proposition 2.12 of
 the dimension two case is `correctorQuantitativeInputTwo_holds`). Theorem 1 of Dario in dimension `d ≥ 3` follows from
 `DarioStepTwoWeightThree` alone (`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound` with
 `Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight`), so `CorrectorQuantitativeInput` rests on it
-alone (`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree`).
+alone (`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree`), and
+`DarioStepTwoWeightThree` is proved (`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 The concentration inequality of Dario (Proposition 2.17) holds in every dimension
 ([`Rigidity.Corrector.GeneralDim.concentration_holds`](Rigidity/Proofs/Corrector/Concentration.lean)).
 The multiscale Poincaré inequality (2.26) of Dario (Proposition 2.19) holds in every dimension
@@ -583,7 +588,9 @@ For `d ≥ 3`, Proposition 2.13 follows from the variance bound `FluxVarianceBou
 ([`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeightOnly.lean)), the bound `FluxFlipWeightBoundD` of each flip difference by the Step 2 factor being proved
 ([`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipWeight.lean)), so the
 quantitative Green estimate follows from `CorrectorQuantitativeInput` and `DarioStepTwoWeightThree`
-([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeightOnly.lean)).
+([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeightOnly.lean)),
+both being proved (`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`,
+`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -1513,7 +1520,7 @@ the following three hypotheses, for `𝔭_c(2) < p < 1`:
 The theorems of the table and their supporting results depend only on axioms among `propext`,
 `Classical.choice` and `Quot.sound`; thirty-three of them (thirty theorems and three definitions,
 those of the three hypotheses) have axiom reports in
-[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The remaining hypotheses of the
+[`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean). The three hypotheses of the
 identification are Lemma 5.7 (`PlanarWeakConvergence`) and Lemma 5.5
 (`PlanarRestrictQuadCoarsenMu`, `PlanarRestrictQuadCoarsenNu`), which are the inputs that
 [Clusters of integer cubes, the Meyers estimate and the coarse energy bounds toward Lemma 5.5](#clusters-of-integer-cubes-the-meyers-estimate-and-the-coarse-energy-bounds-toward-lemma-55)
