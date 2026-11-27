@@ -288,7 +288,7 @@ theorem greenGradientCoreStep (hd : 2 ≤ d) : GreenGradientCoreStep d hd := by
   nlinarith
 
 /-- **Proposition 2.6** from the inputs `SupercriticalBondGreenQuantitative` and
-`CorrectorQuantitativeInput` and the two remaining steps `RegularityScaleStep` (large-scale
+`CorrectorQuantitativeInput` and the two steps `RegularityScaleStep` (large-scale
 regularity beyond a minimal scale) and `DensityScaleStep` (density of the cluster beyond a minimal
 scale). -/
 theorem greenGradientHomogenization_of_regularity_density [NeZero d] (hd : 2 ≤ d)

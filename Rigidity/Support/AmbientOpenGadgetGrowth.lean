@@ -6,7 +6,8 @@ import LatticeProb.Network.OpenLadderEmbedding
 
 Real functions on the integer lattice, integer valued on the literal finite open carrier,
 satisfy the intrinsic growth bound when harmonic at every actual nonterminal. The finite
-neighbor sums are transported through the accepted ambient graph isomorphism.
+neighbor sums are transported through the graph isomorphism `ambientIso` of the open ladder with
+the ambient open carrier.
 -/
 
 namespace Rigidity.OpenGadget.Ambient
@@ -18,7 +19,7 @@ noncomputable section
 
 variable {d : ℕ} {n : ℤ}
 
-/-- The literal ambient open carrier is finite, with its certified finite enumeration. -/
+/-- The ambient open carrier is finite, with the finite enumeration of `ambientSites_finite`. -/
 instance ambientSitesFintype (hd : 2 ≤ d) (n : ℤ) : Fintype (ambientSites hd n) :=
   (ambientSites_finite hd n).fintype
 

@@ -7,7 +7,8 @@ import Rigidity.Proofs.Green.DarioGuTail
 The proof of Lemma 4.1 of Dario–Gu (lines 1993-2148 of the source) uses, besides Theorem 4
 (Barlow), Proposition 2.15 (Carne–Varopoulos) and Proposition A.7, two estimates on balls of the
 infinite cluster: the Poincaré inequality (Proposition 2.7) and the gradient bound on the heat
-kernel (Theorem 3, through Remark 1.3). This file fixes the discrete objects and states them.
+kernel (Theorem 3, through Remark 1.3). This file fixes the discrete objects and states them; both
+statements are proved (`clusterPoincareTwo_holds`, `darioGuGradientBoundTwo_holds`).
 
 * `clusterBall K y r` is `𝒞 ∩ B_r(y)`, the vertices of the component `K` at distance less than
   `r` from `y`; `finAvg U u` is the average `(u)_U`.
@@ -15,7 +16,7 @@ kernel (Theorem 3, through Remark 1.3). This file fixes the discrete objects and
   the sum over the open edges with both endpoints in `U` (Dario–Gu, (1.28) and (1.31) for a
   function on `𝒞_∞ ∩ U`), so that `‖∇u‖_{L̲²(𝒞_∞ ∩ U)} = (gradEnergy ω U u / |U|)^{1/2}`.
 
-Named statements (printed statements, not formalized here):
+The statements, in the forms below:
 
 * `ClusterPoincareTwo`: Proposition 2.7 for `p = 2` (first part), in dimension two, in the weak
   form with the gradient on a dilated ball (cited by the source: Barlow 2004, Theorem 2.18;

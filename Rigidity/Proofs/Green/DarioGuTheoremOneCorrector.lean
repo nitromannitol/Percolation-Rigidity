@@ -5,11 +5,11 @@ import Rigidity.Proofs.Green.DarioGuTwoScaleInitial
 # Theorem 1 of Dario–Gu in dimension two with the two-scale initial error proved
 
 The estimate of `h - θ^{-1} p̄` in §4.3 (`DarioGuTwoScaleInitialTwo`) follows from Proposition 2.12
-(`CorrectorQuantitativeInputTwo`, R5; `darioGuTwoScaleInitialTwo_of_correctorQuantitative`), and
+(`CorrectorQuantitativeInputTwo`; `darioGuTwoScaleInitialTwo_of_correctorQuantitative`), and
 Proposition 2.12 follows from Dario's Theorem 1 (`DarioOptimalCorrectorTwo`) and the qualitative
-corrector input (rigr57's `correctorQuantitativeInputTwo_of_dario`). The remaining hypotheses of
-Theorem 1 are Lemma 4.1, Lemma 4.2, Proposition 4.3, Proposition A.7, Theorem 4 (Barlow) and
-Proposition 2.15 (Carne–Varopoulos).
+corrector input (`correctorQuantitativeInputTwo_of_dario`). The other hypotheses of Theorem 1 are
+Lemma 4.1, Lemma 4.2, Proposition 4.3, Proposition A.7, Theorem 4 (Barlow) and Proposition 2.15
+(Carne–Varopoulos), each of which is proved (see `DarioGuHeatKernelInputs`).
 -/
 
 namespace Rigidity.Green

@@ -22,15 +22,16 @@ Steps:
 * `DensityStep` (step:6.5-density): only its lower bound is used, and it follows from
   `GadgetCountStep` (`densityStep_of_gadgetCountStep`); the upper bound `|V| ≤ (2n+1)^d` is
   `card_le_of_isLargestBoxCluster`. Not a hypothesis of `slowMixing_of_steps`.
-* `UpperBoundStep` (step:6.5-upper): GAP in the paper's proof (L2948-2951). Jerison-Levine-Pike
-  Theorem 4.3 is for a simple graph and a chain adding the chip at a uniform vertex *including the
-  sink*; the chain of Theorem 6.5 adds it at a uniform site of `V`, on the multigraph obtained by
-  wiring the outside of `V` into a sink. For this chain the bound fails when every site of `V`
-  has an even number of open edges leaving `V` (then `1/2` on `V` is harmonic mod 1, `λ = -1`).
+* `UpperBoundStep` (step:6.5-upper): the paper's proof (L2948-2951) applies Jerison-Levine-Pike
+  Theorem 4.3, which is for a simple graph and a chain adding the chip at a uniform vertex
+  *including the sink*; the chain of Theorem 6.5 adds it at a uniform site of `V`, on the
+  multigraph obtained by wiring the outside of `V` into a sink. For this chain the bound fails
+  when every site of `V` has an even number of open edges leaving `V` (then `1/2` on `V` is
+  harmonic mod 1, `λ = -1`).
   The step adds the hypothesis that some site of `V` has exactly one open edge leaving `V`, under
   which the proof of JLP Theorems 3.8, 4.1, 4.3 goes through with a constant depending on `d`.
-* `SingleExitStep`: almost surely, for large `n`, such a site exists. Not in the paper (it repairs
-  the gap above).
+* `SingleExitStep`: almost surely, for large `n`, such a site exists. Not in the paper (it supplies
+  the hypothesis added above).
 * `UpperTimeStep`: the calculus turning `K m log(2m(1 + 1/ε))` into `C n^d log n`. Proved in the
   paper.
 * `GadgetCharacterStep` (step:6.5-gadget-characters): proved in the paper; eigenvalue `1 - 4/m`
@@ -137,8 +138,8 @@ def UpperBoundStep (d : ℕ) : Prop :=
       l2DistSq ω V t ≤ ε
 
 /-- Almost surely, for large `n`, some site of `V` has exactly one open edge leaving `V` (e.g. a
-site of `V` in the relative interior of a face of `Q_n` whose outward edge is open). Repairs the
-gap of step:6.5-upper; not in the paper. -/
+site of `V` in the relative interior of a face of `Q_n` whose outward edge is open). Supplies the
+hypothesis of step:6.5-upper; not in the paper. -/
 def SingleExitStep (d : ℕ) (p : unitInterval) : Prop :=
   ∀ᵐ ω ∂latticeBondLaw d p, ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ᶠ n : ℕ in atTop,
     ∀ V : Finset (Vertex d), IsAdmissibleCluster ω h n V →

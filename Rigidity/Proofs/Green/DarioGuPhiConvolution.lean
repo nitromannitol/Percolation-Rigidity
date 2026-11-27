@@ -1,16 +1,17 @@
 import Rigidity.Proofs.Green.DarioGuWeightedL2
 
 /-!
-# The semigroup property (3.2) of `Φ_C` and the estimate (4.12) of Dario–Gu
+# The semigroup property (3.2) of `Φ_C` of Dario–Gu
 
 * `dgShape_anti`: the shape `g(t, r)` is nonincreasing in `t`;
 * `dgShape_half_ge`: `g(t, r)/8 ≤ g(t, r/2)`;
 * `sum_dgPhi_mul_dgPhi_le`: `Σ_z Φ_C(t₁, z - y) Φ_C(t₂, x - z) ≤ Φ_{C'}(t₁ + t₂, x - y)` for
   `1 ≤ t₁ ≤ t₂` ((3.2), which the source proves "by an explicit computation or by using the
   semigroup property of the law of the random walk on `ℤ^d`", lines 1197-1201; here by the
-  explicit computation);
-* `rpow_mul_dgPhi_le`: `r^a Φ_C(τ, r) ≤ K τ^{a/2} Φ_{2C}(τ, r)` for `0 ≤ a ≤ 1`, `τ ≥ 1` (the
-  estimate (4.12) with `k = a`, in the form used in (4.21) and (4.23)).
+  explicit computation).
+
+The estimate (4.12), in the form used in (4.21) and (4.23), is `mul_dgPhi_le`
+(`s Φ_c(τ, d) ≤ c Φ_{2c}(τ, d)` for `τ ≤ s ≤ d`, in `DarioGuCorrectorLemma`).
 -/
 
 open Finset LatticeProb.Percolation

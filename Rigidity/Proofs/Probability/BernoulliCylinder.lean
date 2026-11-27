@@ -11,9 +11,10 @@ product Bernoulli law on the cube `S → Bool` (`Measure.infinitePi_map_restrict
 
 * `vertSum p X`: the quantity `𝕍[X]` of Dario, Proposition 2.17, for coordinates indexed by `ι`;
 * `lintegral_comp_restrict`, `integral_comp_restrict`: integrals of cylinder functions;
-* `vertSum_comp_restrict`: `𝕍[g(ω|_S)] = vertVar p g (ω|_S)` almost surely;
-* `lintegral_abs_sub_rpow_le_of_comp_restrict`: the moment inequality of the cube
-  (`cubeExp_abs_sub_rpow_le`) for cylinder functions on the infinite product.
+* `vertSum_comp_restrict`: `𝕍[g(ω|_S)] = vertVar p g (ω|_S)` almost surely.
+
+The moment inequality of the cube (`cubeExp_abs_sub_rpow_le`) is carried to the infinite product in
+`Rigidity/Proofs/Probability/BernoulliMoments.lean` (`lintegral_abs_condExp_sub_rpow_le`).
 -/
 
 namespace Rigidity.Probability

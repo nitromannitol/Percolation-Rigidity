@@ -8,7 +8,8 @@ With the weak Poincaré inequality on balls of the cluster proved (`clusterPoinc
 Lemma 4.1 holds from Theorem 3 (Remark 1.3), Theorem 4 and the Carne–Varopoulos bound
 (`darioGuApproxLemmaTwo_of_gradient`), and Theorem 1 of Dario–Gu in dimension two
 (`DarioGuHeatKernelTwo`) holds under Proposition 4.3 for some `σ > 0`, Theorem 3, Theorem 4
-(Barlow, cited) and Proposition 2.12 (R5), or Dario's Theorem 1.
+(Barlow) and Proposition 2.12 (`CorrectorQuantitativeInputTwo`), or Dario's Theorem 1; Theorem 4 is
+proved (`barlowGaussianUpperBoundTwo_holds`).
 -/
 
 namespace Rigidity.Green

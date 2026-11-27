@@ -6,7 +6,7 @@ import Rigidity.Proofs.Corrector.PlanarHeatSmoothing
 # The `ℓ¹` norm of the gradient of the heat kernel of `ℤ²`
 
 For the duality between the heat averages of the flux and the test functions of the `H̲^{-1}`
-norm (Dario–Gu, Appendix B, the estimate (eq.gsmallH-1)), the gradient of the heat kernel
+norm (Dario–Gu, Appendix B, the estimate (B.4)), the gradient of the heat kernel
 `Φ_t(0, ·)` of `ℤ²` is summed over the lattice:
 
 * `tsum_ofReal_abs_lineGauss_sub_le`: the increments of the Gaussian `g_s(k)` sum to `2 g_s(0)`

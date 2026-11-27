@@ -5,7 +5,7 @@ import Rigidity.Proofs.Corrector.DarioGrowthMomentsOps
 # The dyadic heat decomposition of a pairing on `ℤ²`
 
 The lattice form, with dyadic heat times, of the multiscale Poincaré inequality (D.28) of
-Armstrong, Kuusi and Mourrat that Dario–Gu use for the estimate (eq.gsmallH-1) (Appendix B). For
+Armstrong, Kuusi and Mourrat that Dario–Gu use for the estimate (B.4) (Appendix B). For
 `f` summable against every heat kernel and `w` vanishing off a finite set `S`, with
 `t_j = 2·4^j`,
 
