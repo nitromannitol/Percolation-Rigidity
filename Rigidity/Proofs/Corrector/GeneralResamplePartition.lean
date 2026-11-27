@@ -6,7 +6,7 @@ import Rigidity.Proofs.Corrector.GeneralFlipResampling
 Lemma 3.5 of Dario, as printed: there are `C₀, C < ∞` such that for each bond `e = {x, y}` and
 environments `𝐚, 𝐚̃` equal off `e`, `size(□_{𝒫(𝐚̃)}(z)) ≤ C size(□_{𝒫(𝐚)}(x))` for
 `z ∈ B(x, C₀ size(□_{𝒫(𝐚)}(x)))`, and `size(□_{𝒫(𝐚̃)}(z)) = size(□_{𝒫(𝐚)}(z))` outside that ball.
-In dimension `d ≥ 3` this is false for the partition into good cubes: one bond can be opened or
+In dimension `d ≥ 3` this fails for the partition into good cubes: one bond can be opened or
 closed in a configuration whose partition has side `27` everywhere so that the partition of the
 new configuration has arbitrarily large cubes, at `x` and far from `x` (the step of the printed
 proof that fails is the preservation of goodness at large scales, ingredient 3). The corrected
@@ -15,7 +15,8 @@ form, used here, replaces the scale `s = size(□_{𝒫(𝐚)}(x))` by
 `S = max(size(□_{𝒫(𝐚)}(x)), size(□_{𝒫(𝐚̃)}(x)))`
 
 in the radius of the ball and in the bound (`resampleScale`); the same near and far conclusions
-then hold, with equal anchors far from the bond (constants `C₀ = 200`, `C = 1800`), and `S` has the
+then hold, with equal anchors far from the bond (proved here with the constants `C₀ = 81`,
+`C = 243`, `resamplePartitionBound_holds`), and `S` has the
 stretched-exponential tail of the partition sizes. Steps 1 and 2 of the proof of Lemma 3.3 use it
 through the coarsened functions: outside the ball the coarsening `[w]_{𝒫(𝐚̃)}(z)` equals
 `[w]_{𝒫(𝐚)}(z)`, so the second clause is stated for the partition cube and its anchor. Here:
@@ -23,7 +24,8 @@ through the coarsened functions: outside the ball the coarsening `[w]_{𝒫(𝐚
 * `resampleScale`: the scale `S`;
 * `InResampleBall`: the ball `{z : |z - x|_∞ < C₀ S}`;
 * `ResamplePartitionBound C₀ C`: the two clauses of the corrected Lemma 3.5 with constants `C₀, C`;
-* `DarioResamplePartitionThree`: the corrected Lemma 3.5 in every dimension `d ≥ 3` (hypothesis);
+* `DarioResamplePartitionThree`: the corrected Lemma 3.5 in every dimension `d ≥ 3` (proved in
+  `GeneralResamplePartitionProved`, `darioResamplePartitionThree_holds`);
 * `partitionCube_eq_and_anchor_eq_of_resample`, `scale_le_of_resample`: its two clauses for the
   flips `ω^{e,b}` and `ω^{e,b'}` of a configuration, with the anchors `guardAnchor` of the
   corrector chain.
@@ -71,7 +73,8 @@ def ResamplePartitionBound (C₀ C : ℕ) : Prop :=
       (¬ InResampleBall C₀ ω ω' x z →
         partitionCube ω' z = partitionCube ω z ∧ partitionAnchor ω' z = partitionAnchor ω z)
 
-/-- **Dario, Lemma 3.5, in corrected form, in dimension `d ≥ 3`** (hypothesis), for the partition
+/-- **Dario, Lemma 3.5, in corrected form, in dimension `d ≥ 3`** (the statement; it is proved by
+`darioResamplePartitionThree_holds`), for the partition
 into good cubes of `ℤᵈ`: the bound `ResamplePartitionBound C₀ C`, with the scale `S` of both
 configurations at the endpoint, holds for some constants `C₀ > 0` and `C`. The printed form, with
 the scale of one configuration, fails in dimension `d ≥ 3`; the planar form for the partition of

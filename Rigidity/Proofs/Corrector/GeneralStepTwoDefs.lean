@@ -42,7 +42,7 @@ noncomputable def stepTwoRadius (κ : ℕ) (ω : Configuration d) (a : LatticeEd
   κ * max (max (partSide ω a.1) (partSide ω (edgeHead a)))
     (partSide (setBond (edgeBond a) false ω) a.1)
 
-/-- The box `B(x, κ max(s(x), s(y)))` attached to the oriented edge `a`. -/
+/-- The box `B(x, κ max(s(x), s(y), s⁰(x)))` attached to the oriented edge `a`. -/
 noncomputable def stepTwoBox (κ : ℕ) (ω : Configuration d) (a : LatticeEdge d) :
     Finset (Vertex d) :=
   LatticeProb.boxFinset a.1 (stepTwoRadius κ ω a)
