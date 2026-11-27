@@ -2428,8 +2428,8 @@ Calderón–Zygmund theory are not used.
 
 ## Lemma 3.3 in flip form and the bridges to Theorem 1
 
-Lemma 3.3 of Dario (`𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C/r²)`) in `d = 2` is reduced to the named input
-`DarioFlipSumBound` (the estimate (3.13) in flip form), and the Green function estimates and Cases 1 to 3 of Step 2 of its proof
+Lemma 3.3 of Dario (`𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C/r²)`) in `d = 2` is reduced to
+`DarioFlipSumBound` (the estimate (3.13) in flip form), which is proved (`darioFlipSumBound_of_stepTwo`, `darioStepTwoSumBound_holds`), and the Green function estimates and Cases 1 to 3 of Step 2 of its proof
 are proved, in [`Rigidity/Proofs/Corrector/`](Rigidity/Proofs/Corrector/) (thirteen files `DarioBondResampling`,
 `DarioLemmaThreeThreeFlip`, `DarioClusterGreen`, `DarioCoarseHeatField`, `DarioFiniteEnergyGrowth`,
 `DarioFiniteEnergySublinear`, `DarioCaseThree*`, `DarioFlipCluster`, `DarioCaseOneTwo`). `DarioFlipSumBound` is the statement that, for every
@@ -2465,17 +2465,17 @@ qualitative corrector input, order-zero regularity and (1.22) (`correctorOscSubl
 The thirty-five reports for the first table of this section and the eight reports for the bridges are in
 [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
-Exactly the following named inputs remain for these results. Theorem 1 of Dario, R5 and R4: `DarioFlipSumBound` (or `DarioLemmaThreeThree`),
-and nothing else; by [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition),
+The only named input of these bridges for Theorem 1 of Dario, R5 and R4 is `DarioFlipSumBound` (or `DarioLemmaThreeThree`); by [Steps 1 and 2 of Lemma 3.3 in flip form and Lemma 3.5 for the planar partition](#steps-1-and-2-of-lemma-33-in-flip-form-and-lemma-35-for-the-planar-partition),
 `DarioFlipSumBound` follows from Lemma 3.5 in the adapted form `DarioResamplePartitionTwo`, which is proved, and the Step 2 sum (H2), so that Theorem 1 of Dario, R4 and R5 in `d = 2`
-rest on (H2) alone (`DarioStepTwoSumBound`, `darioOptimalCorrectorTwo_of_stepTwo`); (H2) is proved (`darioStepTwoSumBound_holds`), so Theorem 1 of Dario, R5 and R4 in `d = 2` hold (`darioOptimalCorrectorTwo_holds`, `correctorQuantitativeInputTwo_holds`, `armstrongDarioOrderOneOriginTwo_holds`). Dario and Gu, Theorem 1: `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
-`CarneVaropoulosTwo`; the last has since been proved, and the inputs of Theorem 1 of Dario and Gu are given in
-[Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality).
+rest on (H2) alone (`DarioStepTwoSumBound`, `darioOptimalCorrectorTwo_of_stepTwo`); (H2) is proved (`darioStepTwoSumBound_holds`), so Theorem 1 of Dario, R5 and R4 in `d = 2` hold (`darioOptimalCorrectorTwo_holds`, `correctorQuantitativeInputTwo_holds`, `armstrongDarioOrderOneOriginTwo_holds`). The bridges to Theorem 1 of Dario and Gu take `DarioFlipSumBound` (or `DarioLemmaThreeThree`), `hSec`, `BarlowGaussianUpperBoundTwo` and
+`CarneVaropoulosTwo`; the last two are proved, and the inputs of Theorem 1 of Dario and Gu are given in
+[Proposition A.7, Proposition 2.15, Lemma 4.1 and the weak Poincaré inequality](#proposition-a7-proposition-215-lemma-41-and-the-weak-poincaré-inequality);
+Theorem 1 of Dario and Gu holds with no hypothesis (`darioGuHeatKernelTwo_holds`).
 The module [`DarioCorrectorPoincare`](Rigidity/Proofs/Poincare/DarioCorrectorPoincare.lean) states Theorem 1
 from `ConcentrationTwo`, `CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`, and
 [`DarioCorrectorConcentration`](Rigidity/Proofs/Corrector/DarioCorrectorConcentration.lean) from the multiscale Poincaré inequality,
 `CorrectorOscSublinearTwo` and `DarioLemmaThreeThree`; the bridges above discharge the remaining hypotheses.
-Lemma 3.2 and (1.22) were proved before these files and are not restated by them.
+Lemma 3.2 and (1.22) are proved in other sections and are not restated by these files.
 
 Departures from Dario:
 
@@ -2522,7 +2522,7 @@ then `size(□_{𝒫(ω')}(z)) ≤ C size(□_{𝒫(ω)}(x))`; otherwise `□_{�
 | Lean declaration | Statement |
 | --- | --- |
 | [`Rigidity.Corrector.exists_tsum_latticeHeat_sq_le`](Rigidity/Proofs/Corrector/DarioHeatSquareSum.lean) | the square sum of the heat kernel of `ℤ²`: `Σ_y Φ_{r²}(x, y)² ≤ C/r²` for `r ≥ 1`, the form in `d = 2` of the bound on `Σ_y ζ_r(y)²` in the proof of Lemma 3.3. |
-| [`Rigidity.Corrector.ResamplePartitionBound`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean), [`DarioResamplePartitionTwo`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean) | Lemma 3.5 for the planar partition with the anchors, as defined above (hypothesis, not proved). |
+| [`Rigidity.Corrector.ResamplePartitionBound`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean), [`DarioResamplePartitionTwo`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean) | Lemma 3.5 for the planar partition with the anchors, as defined above (the statement; proved by `resamplePartitionBound_holds` and `darioResamplePartitionTwo_holds` below). |
 | [`Rigidity.Percolation.TriadicCube.planarAnchor_eq_of_agree_off`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean), [`Rigidity.Corrector.planarPartCube_eq_and_anchor_eq_of_resample`](Rigidity/Proofs/Corrector/DarioResamplePartition.lean) | the anchor of a triadic cube depends only on the bonds inside its square of side nine times its own, and the two clauses of `ResamplePartitionBound` for the configurations `ω^{e,1}` and `ω^{e,0}`. |
 | [`Rigidity.Corrector.resampleLocal_of_bound`](Rigidity/Proofs/Corrector/DarioStepOneLocal.lean), [`sq_tsum_partitionChange_le`](Rigidity/Proofs/Corrector/DarioStepOneLocal.lean) | Step 1, (3.16) in flip form: from Lemma 3.5 the change of partition is local (`ResampleLocal` with radius `C₀ s₀` and size `C s₀`), and the square of the sum of the weights times the change of the coarse gradient is at most the number of points of the box times the square sum of the weights over the box times the square of the total variation over a larger box. |
 | [`Rigidity.Corrector.bondFlipDiff_heatCoarseComp_eq`](Rigidity/Proofs/Corrector/DarioFlipSplit.lean), [`sq_bondFlipDiff_heatCoarseComp_le`](Rigidity/Proofs/Corrector/DarioFlipSplit.lean) | the split (3.15) in flip form: the flip difference is the change of partition for the corrector with the bond open plus the change of corrector for the partition with the bond closed, and the square of the sum is at most twice the sum of the squares. |
