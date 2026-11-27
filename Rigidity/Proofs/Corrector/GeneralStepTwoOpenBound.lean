@@ -95,7 +95,7 @@ section Planes
 variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
 
 /-- **Step 2 for a bond open in `ω`.** -/
-theorem ae_flipTermTwo_sq_le_open [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC₀ : 2 ≤ C₀)
+theorem ae_flipTermTwo_sq_le_open [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC₀ : 0 < C₀)
     (hres : ResamplePartitionBound (d := d) C₀ C) {p : unitInterval} (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) :
     ∀ᵐ ω ∂latticeBondLaw d p, ∀ (i j : Fin d) (r : ℝ), 0 < r → ∀ (x : Vertex d)
@@ -193,7 +193,12 @@ theorem ae_flipTermTwo_sq_le_open [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC�
   have hρ : ∀ z : Vertex d, (∀ i, |z i - a.1 i| ≤ 1) → ∀ i, |z i - a.1 i| < ((C₀ * s : ℕ) : ℤ) := by
     intro z hz i
     have : (2 : ℤ) ≤ ((C₀ * s : ℕ) : ℤ) := by
-      have : 2 ≤ C₀ * s := le_trans hC₀ (Nat.le_mul_of_pos_right C₀ hs1)
+      have hs3 : 3 ≤ s := by
+        rw [hs, partSide_eq hP]
+        calc 3 = 3 ^ 1 := by norm_num
+          _ ≤ 3 ^ (partitionCube ω a.1).scale := Nat.pow_le_pow_right (by norm_num)
+              (by have := three_le_scale_partitionCube hP a.1; omega)
+      have : 2 ≤ C₀ * s := by nlinarith
       exact_mod_cast this
     linarith [hz i]
   have hsx := ((hloc a.1).1 (hρ a.1 fun i => by simp)).2

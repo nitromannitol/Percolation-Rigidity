@@ -176,7 +176,7 @@ section Weight
 variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d)
 
 /-- **Step 2 for one bond, with the weight**: `T₂(e)² ≤ K₀ F_a (Σ_{B_a} E_v + Σ_{B_a} Φ²)`. -/
-theorem ae_flipTermTwo_sq_le_weight [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC₀ : 2 ≤ C₀)
+theorem ae_flipTermTwo_sq_le_weight [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC₀ : 0 < C₀)
     (hres : ResamplePartitionBound (d := d) C₀ C) {p : unitInterval}
     (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) :
@@ -263,7 +263,7 @@ theorem ae_flipTermTwo_sq_le_weight [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC
       (Finset.sum_nonneg fun u _ => openEnergy_nonneg _ _ u) (hEs hr0) hΦ0
 
 /-- **The Step 2 sum bounded by a weighted energy** (the bound (4)). -/
-theorem ae_flipSumTwo_le [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC₀ : 2 ≤ C₀)
+theorem ae_flipSumTwo_le [NeZero d] (hd : 2 ≤ d) {C₀ C : ℕ} (hC₀ : 0 < C₀)
     (hres : ResamplePartitionBound (d := d) C₀ C)
     {p : unitInterval} (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) :
