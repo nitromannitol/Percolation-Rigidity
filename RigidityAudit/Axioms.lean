@@ -477,6 +477,7 @@ import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood
 import Rigidity.Proofs.Assembly.ProvedBarlow
 import Rigidity.Proofs.BarlowLattice.GaussianHolds
 import Rigidity.Proofs.Assembly.EveryDimension
+import Rigidity.Proofs.Assembly.ProvedCorrectorQuantitative
 
 /-! The axiom report of every numbered result of the paper and of the further proved results: the
 slab connectivity theorem of Grimmett and Marstrand, Proposition 2.3 and the decay of finite
@@ -1689,6 +1690,42 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.darioResamplePartitionThree_holds
 #print axioms Rigidity.Corrector.GeneralDim.darioStepOneSumBoundThree_holds
 #print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight
+#print axioms Rigidity.Corrector.GeneralDim.measurable_localGrad
+#print axioms Rigidity.Corrector.GeneralDim.localGrad_le
+#print axioms Rigidity.Corrector.GeneralDim.abs_correctorDiff_le_localGrad
+#print axioms Rigidity.Corrector.GeneralDim.measure_not_localGradGood_le
+#print axioms Rigidity.Corrector.GeneralDim.growthMoments_localGrad
+#print axioms Rigidity.Corrector.GeneralDim.measurableSet_mem_stepTwoGood
+#print axioms Rigidity.Corrector.GeneralDim.measurable_stepTwoWeight
+#print axioms Rigidity.Corrector.GeneralDim.growthMoments_weightMajorant_edgeRadius_uniform
+#print axioms Rigidity.Corrector.GeneralDim.stepTwoWeight_le_weightMajorant
+#print axioms Rigidity.Corrector.GeneralDim.pathWeight_le_ballSum
+#print axioms Rigidity.Corrector.GeneralDim.growthMoments_ballSum
+#print axioms Rigidity.Corrector.GeneralDim.growthMoments_weightMajorant_zero
+#print axioms Rigidity.Corrector.GeneralDim.measure_exists_cappedDiscrepancy_le
+#print axioms Rigidity.Corrector.GeneralDim.measure_exists_cappedDiscrepancy_setBond_le
+#print axioms Rigidity.Corrector.GeneralDim.measureReal_sum_cube_gt_le
+#print axioms Rigidity.Corrector.GeneralDim.planeGrad_le_siteGrad
+#print axioms Rigidity.Corrector.GeneralDim.stepTwoFactor_le_of_bound
+#print axioms Rigidity.Corrector.GeneralDim.stepTwoWeight_le_finiteWeight
+#print axioms Rigidity.Corrector.GeneralDim.finiteWeight_le
+#print axioms Rigidity.Corrector.GeneralDim.measure_not_gradGood_le
+#print axioms Rigidity.Corrector.GeneralDim.measure_not_farGoodFlip_le
+#print axioms Rigidity.Corrector.GeneralDim.measure_not_sideGoodFlip_le
+#print axioms Rigidity.Corrector.GeneralDim.exists_lintegral_finiteWeight_rpow_le
+#print axioms Rigidity.Corrector.GeneralDim.finiteWeight_le_weightMajorant
+#print axioms Rigidity.Corrector.GeneralDim.measure_not_domGood_le
+#print axioms Rigidity.Corrector.GeneralDim.weight_failure_real_le
+#print axioms Rigidity.Corrector.GeneralDim.exists_measure_not_weightGood_le
+#print axioms Rigidity.Corrector.GeneralDim.exists_stepTwoGood_partition
+#print axioms Rigidity.Corrector.GeneralDim.weightFailureBound_holds
+#print axioms Rigidity.Corrector.GeneralDim.exists_stepTwo_weight_data
+#print axioms Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds
+#print axioms Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_holds
+#print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_holds
+#print axioms Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_holds
+#print axioms Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds
+#print axioms Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds
 #print axioms Rigidity.Corrector.GeneralDim.dario_errorstatpart
 #print axioms Rigidity.Corrector.GeneralDim.statAnchor_translation
 #print axioms Rigidity.Corrector.GeneralDim.statGrad_translation
