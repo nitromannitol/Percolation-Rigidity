@@ -26,7 +26,8 @@ change of partition. With
 
 one gets `(D_e X)² ≤ 2 (1 + (8d 7^d 243^d S^d)²)² G(x₀)² (E_v(x₀) + Φ_{r²}(x, x₀)²)`
 (`ae_fluxFlip_sq_le_openD`, `fluxOpenBoundD_holds`). The planar statement assumes Lemma 3.5 in its
-printed form, with the side `s_ω(x₀)` alone in place of `S`.
+printed form, with the side `s_ω(x₀)` alone in place of `S`; that form holds for the partition of
+the meshed squares of `ℤ²` (`Rigidity.Corrector.darioResamplePartitionTwo_holds`).
 -/
 
 set_option autoImplicit false
