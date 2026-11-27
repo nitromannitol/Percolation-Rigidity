@@ -780,8 +780,8 @@ The six theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound
    joined to it by a transverse crossing. The square is then good, and the union bound over
    subcubes stated with the input gives the statement with `s = 1/800 = 1/(d(10d)²)`. This route
    replaces the estimate of Couronné and Messikh by Kesten's estimate.
-2. **Density concentration** (`Rigidity/Proofs/S2/`, from `BondEfronStein.lean` to
-   `PlanarDensityConcentration.lean`). Resampling one bond changes the number of vertices of the
+2. **Density concentration** (`PercolationClusterHomogenization/Proofs/Density/` of
+   Percolation-Cluster-Homogenization, ending with `PlanarDensityConcentration.lean`). Resampling one bond changes the number of vertices of the
    infinite cluster in the square by at most the sum of the sizes of the finite clusters at the
    endpoints of the bond, before and after resampling. These sizes have stretched-exponential
    tails, because a loop of the infinite cluster in an annulus, obtained from rectangle crossings,
@@ -971,7 +971,7 @@ are in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/).
    `p_n(x, y) ≤ K n^{−(d/2)(1 − 1/(50d))}` for `n ≥ max(n₀, dist(x, y))`, which is summable for
    `d ≥ 3`. Then `g = Σ_n p_n(·, y) / deg(y)` solves `−Δg = δ_y` and tends to zero at infinity, and
    the maximum principle gives the uniqueness.
-6. **Heat kernel and Green column bounds** (`OffDiagonal.lean`, `ClusterHeatKernel.lean`,
+6. **Heat kernel and Green column bounds** (`HeatDomination.lean`, `ClusterHeatKernel.lean`,
    `GreenUpperBound.lean`, `ClusterGreenUpperBound.lean`, `GreenGlobalBound.lean`,
    `SupercriticalGreenBounds.lean`). The off-diagonal bound
    `p_{a+b}(x, y) ≤ √(deg y / deg x) √(p_{2a}(x, x) p_{2b}(y, y))` gives
@@ -3632,7 +3632,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 937 Lean files with 203,645 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 876 Lean files with 197,190 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (21 files, 5,930
 lines) and the axiom report `RigidityAudit/Axioms.lean` (1,978 lines) are counted separately.
 
@@ -3716,7 +3716,6 @@ Rigidity/
     Corrector/, Poincare/     Dario (2018) and Dario and Gu (2021)
     Regularity/               the corrector input and Theorem 2 (iii) at k = 1 in dimension two from
                               Theorem 1 of Dario, from the results of Percolation-Cluster-Homogenization
-  Percolation/                supercritical estimates in boxes for the literature inputs
   Support/                    definitions and lemmas used by the frozen results
 RigidityAudit/
   Axioms.lean                 the axiom report of every numbered result and of the further results
