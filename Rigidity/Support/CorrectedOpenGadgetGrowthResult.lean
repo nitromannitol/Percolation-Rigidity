@@ -13,7 +13,8 @@ namespace Rigidity.OpenGadget
 open LatticeProb.Network.OpenLadder
 
 /-- A single positive real constant bounds terminal oscillation at every positive height
-on the corrected open carrier. The accepted integer growth estimate gives constant one. -/
+on the corrected open carrier. The integer growth estimate of `OpenGadgetIntegerGrowth.lean`
+gives constant one. -/
 theorem corrected_open_gadget_exponential_growth :
     ∃ C : ℝ, 0 < C ∧ ∀ (n : ℕ), 1 ≤ n → ∀ (u : Vertex (n : ℤ) → ℤ),
       Harmonic (fun v => (u v : ℝ)) → (∃ x y, u x ≠ u y) →
