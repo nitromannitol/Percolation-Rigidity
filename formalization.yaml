@@ -164,8 +164,8 @@ status:
     printed, and Theorem 6.5 as printed with its restriction event made explicit. The other five
     numbered results are quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 and
     Lemma 2.14 enter as literature inputs, of which Proposition 2.3, Lemma 2.14, Theorem 2.4 (at
-    order zero and at order one at the origin) and the qualitative part of Theorem 2.5 are also
-    proved, and Lemma 2.13 is used by no proof; its special case for unions of lattice squares, the form
+    order zero and at order one at the origin) and Theorem 2.5 (its qualitative and quantitative
+    parts) are also proved, and Lemma 2.13 is used by no proof; its special case for unions of lattice squares, the form
     applied in the proof of Proposition 5.12, is proved (Rigidity.Assembly.polyominoJordan), and
     the general lemma is not formalized. README.md lists every numbered result with its Lean
     declaration.
