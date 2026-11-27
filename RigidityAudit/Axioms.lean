@@ -586,6 +586,10 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Assembly.Unconditional.integer_valued_linear_growth
 #print axioms Rigidity.Assembly.Unconditional.fast_decay
 
+-- Theorem 1.1 and Proposition 3.2 with every literature input proved
+#print axioms Rigidity.Assembly.Unconditional.lipschitz
+#print axioms Rigidity.Assembly.Unconditional.notLipschitz
+
 -- Theorem 1.3 from its dimension-two literature inputs
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists
