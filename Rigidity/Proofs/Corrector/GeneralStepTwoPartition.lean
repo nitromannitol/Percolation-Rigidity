@@ -1,5 +1,6 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoWeightMeas
 import Rigidity.Proofs.Corrector.DarioStepTwoPartition
+import Rigidity.Proofs.Corrector.GeneralStepTwoWeightFailure
 
 /-!
 # The partition of the good cubes of the summation of estimate (2) on `ℤᵈ`
@@ -14,8 +15,11 @@ Dario (`partition_estimates_general`) gives, almost surely, a partition of `ℤ�
 cubes with stretched exponential moments of their sizes
 (`exists_stepTwoGood_partition_of_weightFailure`).
 
-This is the planar file `DarioStepTwoPartition` on `ℤᵈ`, `d ≥ 2`, with the failure bound of the
-weight bound as a hypothesis: the planar file proves it (`exists_measure_not_weightGood_le`).
+For `d ≥ 3` the failure bound of the weight bound holds (`weightFailureBound`, from
+`exists_measure_not_weightGood_le`), which gives the partition (`exists_stepTwoGood_partition`).
+
+This is the planar file `DarioStepTwoPartition` on `ℤᵈ`: the conditional forms hold for `d ≥ 2`,
+the unconditional ones for `d ≥ 3`.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -97,6 +101,33 @@ theorem exists_stepTwoGood_partition_of_weightFailure [NeZero d] (hd : 2 ≤ d) 
     (latticeBondLaw d p) (stepTwoGood hG hGv κ i ε CM M)
     (measurableSet_mem_stepTwoGood hG hGv κ i ε CM M) hC1 hc hs0 (hfail i)
   exact ⟨hae, hmom⟩
+
+/-- The failure bound of the weight bound holds at every exponent `q ≥ 1` (`d ≥ 3`). -/
+theorem weightFailureBound [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {κ : ℕ} (hκ : 1 ≤ κ) {q : ℝ} (hq : 1 ≤ q) :
+    WeightFailureBound hG hGv p κ q :=
+  exists_measure_not_weightGood_le hG hGv hd hpc hp1 hGae hκ hq
+
+/-- **The partition of the good cubes of the summation of estimate (2)** on `ℤᵈ`, `d ≥ 3`
+(Proposition 2.1 of Armstrong and Dario), in place of the partition `𝒰` of Definition 3.8 of
+Dario: almost surely every vertex lies in exactly one maximal good cube, and the sizes of the cubes
+have stretched exponential moments. Dario's good cubes carry (3.30) and (3.31); here they carry the
+homogeneous Meyers estimate on their children and the weight bound of
+`exists_measure_not_weightGood_le` in place of (3.31). -/
+theorem exists_stepTwoGood_partition [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {κ : ℕ} (hκ : 1 ≤ κ) :
+    ∃ ε CM M : ℝ, 0 < ε ∧ 0 ≤ CM ∧ 0 ≤ M ∧ ∃ s0 : ℝ, 0 < s0 ∧ ∀ i : Fin d,
+      (∀ᵐ ω ∂latticeBondLaw d p, ∀ x : Vertex d, ∃! Q : TriadicCube d,
+        x ∈ Q.vertices ∧ Q.IsMaximalStopping (stepTwoGood hG hGv κ i ε CM M ω)) ∧
+      ∃ θ : ℝ, 0 < θ ∧ ∀ x : Vertex d,
+        Integrable (fun ω => Real.exp ((TriadicCube.stoppingSize
+          (stepTwoGood hG hGv κ i ε CM M ω) x / θ) ^ s0)) (latticeBondLaw d p) ∧
+        (∫ ω, Real.exp ((TriadicCube.stoppingSize (stepTwoGood hG hGv κ i ε CM M ω) x / θ) ^ s0)
+          ∂latticeBondLaw d p) ≤ 2 :=
+  exists_stepTwoGood_partition_of_weightFailure hG hGv (by omega) hpc
+    fun _ hq => weightFailureBound hG hGv hd hpc hp1 hGae hκ hq
 
 end Grad
 

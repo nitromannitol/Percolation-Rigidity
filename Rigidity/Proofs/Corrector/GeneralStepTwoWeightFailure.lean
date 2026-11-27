@@ -1,6 +1,7 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoDomination
 import Rigidity.Proofs.Corrector.GeneralStepTwoBlocks
 import Rigidity.Proofs.Corrector.GeneralStepTwoWeightScale
+import Rigidity.Proofs.Corrector.GeneralStepTwoFiniteMoments
 
 /-!
 # The failure probability of the weight bound of a triadic cube of `ℤᵈ`
@@ -14,8 +15,9 @@ event has probability at most `(3^d)^{m+j} C R^{2d} e^{-c R^σ}`, the second at 
 `K₀ = 3^d d ((7κ)^d 15d)^9`, bounding the finite-range weight (`finiteWeightBound_le`). With the
 real bounds of `GeneralStepTwoWeightScale` at the range `R = 3^{⌊n/D⌋}`, `D = ⌈3 + (10d + 9)q⌉`,
 the weight bound of a cube of scale `n` fails with probability at most `C₁ e^{-c (3ⁿ)^{s₀}}`
-(`measure_not_weightGood_le_large`, and `exists_measure_not_weightGood_le_of_moments` for `d ≥ 3`,
-given the moments of the finite-range weight).
+(`measure_not_weightGood_le_large`; for `d ≥ 3`, `exists_measure_not_weightGood_le_of_moments`
+given the moments of the finite-range weight, and `exists_measure_not_weightGood_le` with the
+moments of `exists_lintegral_finiteWeight_rpow_le`).
 
 This ports the planar file `DarioStepTwoWeightFailure` and the last two theorems of the planar file
 `DarioStepTwoWeightScale`: the planar `9 = 3²` vertices per scale step become `3^d`, the power
@@ -203,6 +205,19 @@ theorem exists_measure_not_weightGood_le_of_moments [NeZero d] (hd : 3 ≤ d) {p
           rw [← Real.exp_add, neg_mul, add_neg_cancel, Real.exp_zero]
       _ ≤ _ := mul_le_mul (le_max_right _ _) hexp (Real.exp_pos _).le
           (le_max_of_le_left hCf)
+
+/-- **The failure bound for the weight bound of the triadic cubes** on `ℤᵈ`, `d ≥ 3`, in place of
+Lemma 3.7 of Dario (the minimal scale (3.31)): for each `q ≥ 1` there is `M` such that a triadic
+cube `T` of side `3ⁿ` fails `Σ_{u ∈ T} W(u)^q ≤ M |T|` for the weight `W` of the Step 2 sum, or has
+a vertex of infinite weight, with probability at most `C₁ exp(−c (3ⁿ)^{s₀})`. -/
+theorem exists_measure_not_weightGood_le [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
+    (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {κ : ℕ} (hκ : 1 ≤ κ) {q : ℝ} (hq : 1 ≤ q) :
+    ∃ M : ℝ, 0 ≤ M ∧ ∃ C1 c s0 : ℝ, 0 ≤ C1 ∧ 0 < c ∧ 0 < s0 ∧ ∀ (i : Fin d) (T : TriadicCube d),
+      latticeBondLaw d p {ω | ¬ weightGood hG hGv κ i q M ω T} ≤
+        ENNReal.ofReal (C1 * Real.exp (-c * ((3 : ℝ) ^ T.scale) ^ s0)) :=
+  exists_measure_not_weightGood_le_of_moments hG hGv hd hpc hp1 hGae hκ hq
+    (exists_lintegral_finiteWeight_rpow_le hd hpc hp1 hκ hq)
 
 end Grad
 
