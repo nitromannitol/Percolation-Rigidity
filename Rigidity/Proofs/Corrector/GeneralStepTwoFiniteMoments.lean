@@ -1,15 +1,19 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoFiniteProb
 import Rigidity.Proofs.Corrector.GeneralStepTwoWeightMoments
+import Rigidity.Proofs.Corrector.GeneralLocalGradientMoments
 
 /-!
 # The moments of the finite-range weight on `ℤᵈ`
 
 With `Λ_R(z) = 2d (J_R(z) + 1)` (`siteLambda`), so that `1 + Λ_R(z)` is the summand of the ball
-sums of the finite-range weight, the finite-range weight is at most the majorant
-`weightMajorant Λ_R (3dκ) (3dκ) u` when the capped sides are the sides near `u`
+sums of the finite-range weight, the moments of `1 + Λ_R(z)` are `((1 + 2d) B q^κ)^q` uniformly in
+`R` and `z` for `d ≥ 3`, since the configuration seen from `z` has the law of the configuration
+(`growthMoments_siteLambda`, from `growthMoments_localGrad`). The finite-range weight is at most the
+majorant `weightMajorant Λ_R (3dκ) (3dκ) u` when the capped sides are the sides near `u`
 (`finiteWeight_le_weightMajorant`); otherwise it is at most a power of `R`, on an event of
 probability `(2R + 1)ᵈ C e^{-c R/3}`, and the product is bounded uniformly in `R`
-(`finiteWeight_tail_le`).
+(`finiteWeight_tail_le`). Hence `E[W_R(u)^q] ≤ M₀` uniformly in `R ≥ 1` and `u`
+(`exists_lintegral_finiteWeight_rpow_le`).
 
 This ports the planar file `DarioStepTwoFiniteMoments`: the planar `Λ_R = 4 + 4 J_R` becomes
 `2d (J_R + 1)`, the radii `6κ` of the planar majorant (twice the side `3κ`) become `3dκ` (the
@@ -155,5 +159,124 @@ theorem finiteWeight_tail_le {κ : ℕ} (hκ : 1 ≤ κ) {q c C' : ℝ} (hq : 1 
         rw [Real.mul_rpow (by positivity) (by positivity), hxq]
         ring
     _ ≤ _ := by gcongr
+
+/-- **The moments of the local gradient bounds at the sites**, uniformly in `R` and `z`, for
+`d ≥ 3`: the configuration seen from `z` has the law of the configuration. -/
+theorem growthMoments_siteLambda [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∃ B κ : ℝ, 0 < B ∧ 0 < κ ∧ ∀ R : ℕ, 1 ≤ R → ∀ z : Vertex d,
+      GrowthMomentsD p (fun ω => ENNReal.ofReal (1 + siteLambda R z ω)) B κ := by
+  obtain ⟨B, κ, hB, hκ, hm⟩ := growthMoments_localGrad hd hpc hp1
+  refine ⟨(1 + 2 * d) * B, κ, by positivity, hκ, fun R hR z q hq => ?_⟩
+  have hq0 : 0 ≤ q := by linarith
+  have hd0 : (0 : ℝ) ≤ d := Nat.cast_nonneg d
+  have hmp := measurePreserving_configurationTranslation p (-z)
+  have hf : Measurable fun ω : Configuration d =>
+      ENNReal.ofReal (1 + 2 * d * (localGrad R ω + 1)) ^ q :=
+    ((((measurable_localGrad R).add_const 1).const_mul (2 * d)).const_add
+      1).ennreal_ofReal.pow_const q
+  calc ∫⁻ ω, ENNReal.ofReal (1 + siteLambda R z ω) ^ q ∂latticeBondLaw d p
+      = ∫⁻ ω, ENNReal.ofReal
+          (1 + 2 * d * (localGrad R (configurationTranslation (-z) ω) + 1)) ^ q
+          ∂latticeBondLaw d p := by
+        refine lintegral_congr fun ω => ?_
+        simp only [siteLambda, siteGrad]
+    _ = ∫⁻ ω, ENNReal.ofReal (1 + 2 * d * (localGrad R ω + 1)) ^ q ∂latticeBondLaw d p :=
+        hmp.lintegral_comp hf
+    _ ≤ ∫⁻ ω, ENNReal.ofReal (1 + 2 * d) ^ q * ENNReal.ofReal (1 + localGrad R ω) ^ q
+          ∂latticeBondLaw d p := by
+        refine lintegral_mono fun ω => ?_
+        have h0 := localGrad_nonneg ω hR
+        rw [← ENNReal.mul_rpow_of_nonneg _ _ hq0]
+        refine ENNReal.rpow_le_rpow ?_ hq0
+        rw [← ENNReal.ofReal_mul (by positivity)]
+        refine ENNReal.ofReal_le_ofReal ?_
+        nlinarith
+    _ = ENNReal.ofReal (1 + 2 * d) ^ q *
+          ∫⁻ ω, ENNReal.ofReal (1 + localGrad R ω) ^ q ∂latticeBondLaw d p :=
+        lintegral_const_mul _
+          ((measurable_const.add (measurable_localGrad R)).ennreal_ofReal.pow_const q)
+    _ ≤ ENNReal.ofReal (1 + 2 * d) ^ q * ENNReal.ofReal ((B * q ^ κ) ^ q) := by
+        gcongr
+        exact hm R hR q hq
+    _ = ENNReal.ofReal (((1 + 2 * d) * B * q ^ κ) ^ q) := by
+        have e : ((1 + 2 * (d : ℝ)) * B * q ^ κ) ^ q = (1 + 2 * d) ^ q * (B * q ^ κ) ^ q := by
+          rw [mul_assoc, Real.mul_rpow (x := 1 + 2 * (d : ℝ)) (y := B * q ^ κ) (by positivity)
+            (by positivity)]
+        rw [e, ENNReal.ofReal_mul (by positivity),
+          ENNReal.ofReal_rpow_of_nonneg (by positivity) hq0]
+
+/-- **The moments of the finite-range weight are bounded uniformly in the range**, for `d ≥ 3`. -/
+theorem exists_lintegral_finiteWeight_rpow_le [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) {κ : ℕ} (hκ : 1 ≤ κ) {q : ℝ}
+    (hq : 1 ≤ q) :
+    ∃ M₀ : ℝ, 0 ≤ M₀ ∧ ∀ R : ℕ, 1 ≤ R → ∀ u : Vertex d,
+      ∫⁻ ω, ENNReal.ofReal (finiteWeight κ R ω u) ^ q ∂latticeBondLaw d p ≤
+        ENNReal.ofReal M₀ := by
+  obtain ⟨B, κm, hB, hκm, hmom⟩ := growthMoments_siteLambda hd hpc hp1
+  have hK : (0 : ℝ) < 3 * d * κ := by
+    have h1 : (1 : ℝ) ≤ κ := by exact_mod_cast hκ
+    have h3 : (3 : ℝ) ≤ d := by exact_mod_cast hd
+    positivity
+  obtain ⟨A, k, hA, hk, hW⟩ := growthMoments_weightMajorant_uniform (by omega) hpc hB hκm hK hK
+  obtain ⟨C, hC, c, hc, hD⟩ := measure_not_sideGood_le (by omega) hpc
+  have hC'0 : 0 ≤ C.toReal := ENNReal.toReal_nonneg
+  have hq0 : 0 ≤ q := by linarith
+  set T : ℝ := (3 ^ d * d * 7 ^ (9 * d) * (1 + 14 * d) ^ 9 * κ ^ (9 * d)) ^ q *
+      (3 ^ d * C.toReal * (((10 * d + 9) * q + d) / (c / 3)) ^ ((10 * d + 9) * q + d)) with hT
+  have hT0 : 0 ≤ T := by positivity
+  refine ⟨(A * q ^ k) ^ q + T, by positivity, fun R hR u => ?_⟩
+  have hPPE : latticeBondLaw d p {ω | ¬ PartitionEvent ω} = 0 :=
+    ae_iff.1 (ae_partitionEvent (by omega) hpc)
+  set W : ℝ := (2 * R + 1) ^ d * (d * ((6 * κ * R + 1) ^ d * (1 + 2 * d * (6 * R + 1))) ^ 9)
+    with hWd
+  have hW0 : 0 ≤ W := by positivity
+  have hpt : ∀ ω, ENNReal.ofReal (finiteWeight κ R ω u) ^ q ≤
+      weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q +
+        {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)}.indicator
+          (fun _ => ENNReal.ofReal (W ^ q)) ω := by
+    intro ω
+    by_cases hω : PartitionEvent ω ∧ SideGood R ω u
+    · exact le_add_right (ENNReal.rpow_le_rpow (finiteWeight_le_weightMajorant hω.1 hR hω.2) hq0)
+    · rw [Set.indicator_of_mem (show ω ∈ {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} from hω)]
+      refine le_add_left ?_
+      rw [ENNReal.ofReal_rpow_of_nonneg (finiteWeight_nonneg hR ω u) hq0]
+      exact ENNReal.ofReal_le_ofReal
+        (Real.rpow_le_rpow (finiteWeight_nonneg hR ω u) (finiteWeight_le hR ω u) hq0)
+  have hbad : latticeBondLaw d p {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} ≤
+      ((2 * R + 1) ^ d : ℕ) * (C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ capScale R))) := by
+    have hsub : {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} ⊆
+        {ω | ¬ PartitionEvent ω} ∪ {ω | PartitionEvent ω ∧ ¬ SideGood R ω u} := by
+      intro ω hω
+      by_cases hP : PartitionEvent ω
+      · exact Or.inr ⟨hP, fun hs => hω ⟨hP, hs⟩⟩
+      · exact Or.inl hP
+    refine (measure_mono hsub).trans ((measure_union_le _ _).trans ?_)
+    rw [hPPE, zero_add]
+    exact hD R u
+  calc ∫⁻ ω, ENNReal.ofReal (finiteWeight κ R ω u) ^ q ∂latticeBondLaw d p
+      ≤ ∫⁻ ω, (weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q +
+          {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)}.indicator
+            (fun _ => ENNReal.ofReal (W ^ q)) ω) ∂latticeBondLaw d p := lintegral_mono hpt
+    _ = ∫⁻ ω, weightMajorant (siteLambda R) (3 * d * κ) (3 * d * κ) u ω ^ q ∂latticeBondLaw d p +
+        ∫⁻ ω, {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)}.indicator
+            (fun _ => ENNReal.ofReal (W ^ q)) ω ∂latticeBondLaw d p :=
+        lintegral_add_left'
+          ((measurable_weightMajorant (measurable_siteLambda R) _ _ u).pow_const q).aemeasurable _
+    _ ≤ ENNReal.ofReal ((A * q ^ k) ^ q) + ENNReal.ofReal (W ^ q) *
+          latticeBondLaw d p {ω | ¬ (PartitionEvent ω ∧ SideGood R ω u)} :=
+        add_le_add (hW (siteLambda R) (measurable_siteLambda R) (hmom R hR) u q hq)
+          (lintegral_indicator_const_le _ _)
+    _ ≤ ENNReal.ofReal ((A * q ^ k) ^ q) + ENNReal.ofReal T := by
+        gcongr
+        calc _ ≤ ENNReal.ofReal (W ^ q) *
+              (((2 * R + 1) ^ d : ℕ) *
+                (C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ capScale R)))) := by gcongr
+          _ = ENNReal.ofReal (W ^ q * ((((2 * R + 1) ^ d : ℕ) : ℝ) *
+                (C.toReal * Real.exp (-c * (3 : ℝ) ^ capScale R)))) := by
+              rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity),
+                ENNReal.ofReal_mul hC'0, ENNReal.ofReal_natCast, ENNReal.ofReal_toReal hC]
+          _ ≤ _ := ENNReal.ofReal_le_ofReal (finiteWeight_tail_le hκ hq hc hC'0 hR)
+    _ = _ := (ENNReal.ofReal_add (by positivity) hT0).symm
 
 end Rigidity.Corrector.GeneralDim
