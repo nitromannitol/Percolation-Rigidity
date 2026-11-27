@@ -2804,7 +2804,7 @@ the flux in Cases 1, 2 and 3 (`FluxPairing{Open,Closed,Zero}D`), the bound of ea
 and the moments of the flip sum from the probabilistic part of Step 2 (`DarioStepTwoWeightThree`). The first, third and fourth
 parts are proved: `FluxVarianceBoundThree` follows from `FluxFlipWeightBoundD` and `DarioStepTwoWeightThree`
 ([`GeneralFluxFlipMoments.lean`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean)). `FluxFlipWeightBoundD` is not yet proved; its
-bound for the bonds open in the configuration is stated as `FluxOpenBoundD`
+bound for the bonds open in the configuration is stated as `FluxOpenBoundD` (not proved)
 ([`GeneralFluxP2Input.lean`](Rigidity/Proofs/Green/GeneralFluxP2Input.lean)), with the larger side `S` of the partition cubes of
 `ω` and `ω^{e,0}`. With Proposition 2.12, `FluxVarianceBoundThree` gives the quantitative Green estimate in every dimension, which
 therefore rests on Proposition 2.12, `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD` alone.
