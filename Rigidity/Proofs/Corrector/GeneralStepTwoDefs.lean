@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoPaths
+import Rigidity.Proofs.Corrector.GeneralFlipCluster
 
 /-!
 # The weight and the good cubes of the Step 2 sum on `ℤᵈ`
@@ -34,9 +35,12 @@ open Rigidity.Poincare.GeneralDim (zdHeat zdHeat_nonneg)
 
 variable {d : ℕ}
 
-/-- The radius `κ max(s(x), s(y))` attached to the oriented edge `a`. -/
+/-- The radius `κ max(s(x), s(y), s⁰(x))` attached to the oriented edge `a`, with `s⁰(x)` the side
+of the partition cube at `x` of the configuration with the bond of `a` closed (the scale of the
+corrected Lemma 3.5 at `x`). -/
 noncomputable def stepTwoRadius (κ : ℕ) (ω : Configuration d) (a : LatticeEdge d) : ℕ :=
-  κ * max (partSide ω a.1) (partSide ω (edgeHead a))
+  κ * max (max (partSide ω a.1) (partSide ω (edgeHead a)))
+    (partSide (setBond (edgeBond a) false ω) a.1)
 
 /-- The box `B(x, κ max(s(x), s(y)))` attached to the oriented edge `a`. -/
 noncomputable def stepTwoBox (κ : ℕ) (ω : Configuration d) (a : LatticeEdge d) :
