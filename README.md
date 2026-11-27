@@ -79,7 +79,11 @@ through the density of the law with one bond forced, at most `min(p, 1 - p)⁻¹
 `Rigidity.Corrector.GeneralDim.lintegral_stepOneFactor_rpow_le`), so the bound of the Step 1 sum holds
 with no hypothesis (`Rigidity.Corrector.GeneralDim.darioStepOneSumBoundThree_holds`), and Lemma 3.3 in
 dimension `d ≥ 3` follows from the probabilistic part of Step 2 alone
-(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight`). For the Step 2 sum the objects
+(`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight`); hence Theorem 1 of Dario in dimension
+`d ≥ 3` and the quantitative corrector input `CorrectorQuantitativeInput` in every dimension rest on the one hypothesis
+`DarioStepTwoWeightThree`
+(`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree` applied to
+`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight`). For the Step 2 sum the objects
 of Dario's proof are defined on `ℤᵈ` with their first properties: the Green projection on the
 open graph (Propositions 2.11 and 2.12, `Rigidity.Corrector.GeneralDim.greenProj`,
 `Rigidity.Corrector.GeneralDim.edgeDiv_greenProj`, `Rigidity.Corrector.GeneralDim.norm_greenProj_le`),
@@ -100,7 +104,9 @@ Step 2 (`DarioStepTwoWeightThree`: the partition of the good cubes and the momen
 `Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_of_weight`,
 `Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight`). The
 Green estimate reduces in every dimension `d ≥ 3` to Theorem 1 of Dario and Gu (`DarioGuHeatKernelD d`,
-`supercriticalBondGreenQuantitative_of_heatKernel`). Theorem 1.3 in the
+`supercriticalBondGreenQuantitative_of_heatKernel`), and follows from `CorrectorQuantitativeInput`,
+`DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
+(`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`). Theorem 1.3 in the
 form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
 Theorems 6.5 and 1.3 are proved with no literature hypothesis
 ([`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
@@ -112,7 +118,9 @@ and in dimension two so are Theorem 3 of Dario and Gu
 flux of the corrector (`darioGuFluxWeakNormTwo_holds`), from which the quantitative estimate of the
 Green function in dimension two follows (`supercriticalBondGreenQuantitativeTwo_holds`). Proposition 2.13 is
 proved in every dimension `d ≥ 2` from the variance bound (3.4) of the proof of Gu's Proposition 1.1, a named hypothesis
-(`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`). The five numbered results that the paper does not prove are
+(`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`), which for `d ≥ 3` follows from `FluxFlipWeightBoundD` and
+`DarioStepTwoWeightThree` (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`); `FluxFlipWeightBoundD` is
+not proved, and its part for the bonds open in the configuration, `FluxOpenBoundD`, is stated and not proved. The five numbered results that the paper does not prove are
 quoted from the literature: Proposition 2.3, Theorems 2.4 and 2.5 (each as two inputs) and
 Lemma 2.14 enter among the twelve inputs, and Lemma 2.13, a fact of plane topology, is not one of
 them and is used by no Lean proof. Its special case that the proof of Proposition 5.12 applies, to
@@ -323,7 +331,7 @@ Proposition 3.2.
    Proposition 6.4; Propositions 4.1 and 6.4 are proved in every dimension `d ≥ 2`.
 2. **Literature inputs.** Twelve results of the literature enter as explicit hypotheses of the
    theorems that use them; none is an `axiom`. They are listed in
-   [Assumed literature inputs](#assumed-literature-inputs), with the eight of them that are proved.
+   [Assumed literature inputs](#assumed-literature-inputs), with the ten of them that are proved.
 3. **Measurability.** Some events quantify over the corrected planes of every configuration and are
    not shown to be measurable. For them, "with positive probability" means that the event contains a
    measurable event of positive probability (Proposition 3.2 and Lemmas 5.25 and 5.27), and an upper bound on
@@ -367,8 +375,9 @@ Proposition 3.2.
 
 ## Assumed literature inputs
 
-The table records the hypotheses of the original theorem statements. Eight of these propositions
-are now proved: [`Rigidity.Percolation.supercritical_bond_uniqueness`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/BondUniqueness.lean),
+The table records the hypotheses of the original theorem statements. Ten of these propositions
+are now proved, eight of them listed here and the qualitative corrector input and the regularity of order one at the
+origin below: [`Rigidity.Percolation.supercritical_bond_uniqueness`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/BondUniqueness.lean),
 [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean),
 [`Rigidity.Percolation.kesten_rectangle_crossing`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/KestenCrossing.lean),
 [`Rigidity.Topology.jordan_curve_theorem_sphere`](Rigidity/Proofs/Topology/JordanCurveSphere.lean),
@@ -453,7 +462,10 @@ In every dimension, the quantitative corrector estimate `CorrectorQuantitativeIn
 Theorem 1 of Dario in dimension `d ≥ 3` (`DarioOptimalCorrectorThree`: `|χ_q(x) - χ_q(y)| ≤ O_s(C|q|)`)
 and the qualitative corrector input, by the printed proof of Proposition 2.12 of Dario and Gu
 ([`Rigidity.Corrector.GeneralDim.correctorQuantitativeInput_of_dario`](Rigidity/Proofs/Corrector/CorrectorQuantitative.lean);
-the dimension two case is `correctorQuantitativeInputTwo_holds`).
+the dimension two case is `correctorQuantitativeInputTwo_holds`). Theorem 1 of Dario in dimension `d ≥ 3` follows from
+`DarioStepTwoWeightThree` alone (`Rigidity.Corrector.GeneralDim.darioOptimalCorrectorThree_of_varianceBound` with
+`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_stepTwoWeight`), so `CorrectorQuantitativeInput` rests on it
+alone (`Rigidity.Assembly.WithProvedCorrector.correctorQuantitativeInput_of_darioVarianceBoundThree`).
 The concentration inequality of Dario (Proposition 2.17) holds in every dimension
 ([`Rigidity.Corrector.GeneralDim.concentration_holds`](Rigidity/Proofs/Corrector/Concentration.lean)).
 The multiscale Poincaré inequality (2.26) of Dario (Proposition 2.19) holds in every dimension
@@ -516,6 +528,12 @@ The whole-cluster estimate on `ℤ^d` follows from Proposition 2.12 (`CorrectorQ
 `ℤ^d` (`DarioGuFluxWeakNormD d`), so the quantitative Green estimate follows from these two in each dimension `d ≥ 3`
 ([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_flux`](Rigidity/Proofs/Assembly/GreenQuantitativeFromFlux.lean));
 see [The whole-cluster estimate of Dario and Gu in every dimension from Propositions 2.12 and 2.13](#the-whole-cluster-estimate-of-dario-and-gu-in-every-dimension-from-propositions-212-and-213).
+For `d ≥ 3`, Proposition 2.13 follows from the variance bound `FluxVarianceBoundThree` of Gu, which follows from
+`FluxFlipWeightBoundD` and `DarioStepTwoWeightThree`
+([`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean)), so the
+quantitative Green estimate follows from `CorrectorQuantitativeInput`, `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
+([`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`](Rigidity/Proofs/Assembly/GreenQuantitativeFromStepTwoWeight.lean));
+`FluxFlipWeightBoundD` is not proved, and its part `FluxOpenBoundD` for the bonds open in the configuration is stated and not proved.
 
 | Lean name | Statement | Source | Results that use it |
 | --- | --- | --- | --- |
@@ -3128,7 +3146,8 @@ proved: `openHeatD` is `bondHeat` and `‖edzD x y‖` is the Euclidean distance
 [The heat kernel and the Gaussian upper bound of Barlow in every dimension](#the-heat-kernel-and-the-gaussian-upper-bound-of-barlow-in-every-dimension)).
 Proposition 2.13 is proved too (`darioGuFluxWeakNormTwo_holds`), so only Theorem 1 of Dario and Gu in dimension `d`
 remains for `d ≥ 3` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_heatKernel`); it follows from the
-whole-cluster estimate of Dario and Gu (next section).
+whole-cluster estimate of Dario and Gu (next section), and so from `CorrectorQuantitativeInput`, `DarioStepTwoWeightThree` and
+`FluxFlipWeightBoundD` (`ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`).
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -3488,7 +3507,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
   checked against its source in an independent model review; the sources are listed in
   [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
-  hypotheses; eight of them are proved, and the versions described there discharge them.
+  hypotheses; ten of them are proved, and the versions described there discharge them.
 
 ## Size
 
