@@ -16,7 +16,7 @@ the sides of the partition cubes near `B_r(y)`:
 * `sum_mul_coarseTest_eq`: the pairing of a function vanishing off `𝒞_∞` with `v` on `V` is its
   pairing with `coarseTest` on `ℤ²`;
 * `coarseTest_eq_zero_of_far`: `coarseTest` vanishes at distance more than `R + L` of `y`;
-* `sum_sq_coarseTest_le`: `‖coarseTest‖²_{ℓ²} ≤ (1 + L²) ‖v‖²_{ℓ²(V)}` ((eq:estcoarseminusu));
+* `sum_sq_coarseTest_le`: `‖coarseTest‖²_{ℓ²} ≤ (1 + L²) ‖v‖²_{ℓ²(V)}` ((2.8));
 * `sum_sq_grad_coarseTest_le`: `‖∇ coarseTest‖²_{ℓ²} ≤ 18 (3 + 10L)⁴ Σ_V |∇v|²`
   ((est.nablacoarsenL2), with the anchors joined inside the boxes of `DarioStepOneLocal`);
 * `card_mul_le_card_dgClusterBall`: `(2m + 1)² ≤ L² |V|` when `2(m + L) < r` (the anchors of the
@@ -142,7 +142,7 @@ theorem coarseTest_eq_zero_of_far (hP : PlanarPartitionEvent ω) {K : Set (Verte
 
 /-! ### The `ℓ²` norm -/
 
-/-- **(eq:estcoarseminusu)**: `‖coarseTest‖² ≤ (1 + L²) ‖v‖²_{ℓ²(V)}`. -/
+/-- **(2.8)**: `‖coarseTest‖² ≤ (1 + L²) ‖v‖²_{ℓ²(V)}`. -/
 theorem sum_sq_coarseTest_le (hP : PlanarPartitionEvent ω) (K : Set (Vertex 2))
     {V : Finset (Vertex 2)} {L : ℕ} (hside : ∀ z ∈ V, planarSide ω z ≤ L) (v : Vertex 2 → ℝ)
     (W : Finset (Vertex 2)) :

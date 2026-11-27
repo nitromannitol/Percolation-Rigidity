@@ -302,8 +302,9 @@ theorem firstGoodEventStep_printed (Cf : ℕ) (R c₁ K : ℝ) :
   rw [sub_zero]
   exact (not_le.mp hlt).le
 
-/-- Lemma 5.25 from Theorem 2.5, the uniqueness of the infinite cluster, Proposition 3.2 and its
-two remaining steps, for `p_c(2) < p < 1`. -/
+/-- Lemma 5.25 from Theorem 2.5, the uniqueness of the infinite cluster, Proposition 3.2 and the
+steps `SecondGoodEventStep` and `ThirdGoodEventStep` (the translation and first good event steps
+are proved above), for `p_c(2) < p < 1`. -/
 theorem goodEventLowerBound_of_second_third {p : unitInterval}
     (hQ : Rigidity.External.CorrectorQuantitativeInput)
     (hUq : LatticeProb.External.SupercriticalBondUniqueness)

@@ -12,7 +12,8 @@ dimension two with no hypothesis (`armstrongDarioOrderZeroTwo_holds`), so Theore
 (`DarioOptimalCorrectorTwo`) and the quantitative corrector input of Dario and Gu
 (`CorrectorQuantitativeInputTwo`, Proposition 2.12) follow from exactly the qualitative corrector
 input, the multiscale Poincaré inequality with some positive constant, the concentration
-inequality and Lemmas 3.2 and 3.3.
+inequality and Lemmas 3.2 and 3.3. These inputs are proved in dimension two, and Theorem 1 holds
+(`Rigidity.Poincare.darioOptimalCorrectorTwo_holds`).
 -/
 
 namespace Rigidity.Corrector

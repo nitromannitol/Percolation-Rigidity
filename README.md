@@ -117,18 +117,23 @@ and `DarioStepTwoWeightThree`
 (`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight`), the bound
 `FluxFlipWeightBoundD` of each flip difference by the Step 2 factor being proved
 (`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`).
-Hence Theorem 1.1 and Proposition 3.2 hold in every dimension `d ≥ 2` from the two statements
+Theorem 1.1 and Proposition 3.2 hold in every dimension `d ≥ 2` from the two statements
 `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD` for `d ≥ 3`, every other literature input being
 proved ([`Rigidity.Assembly.EveryDimension.lipschitz`](Rigidity/Proofs/Assembly/EveryDimension.lean),
 `Rigidity.Assembly.EveryDimension.notLipschitz`), and both statements are proved
 (`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`,
-`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`). Theorem 1.3 in the
+`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`). Hence Theorem 1.1 and Proposition 3.2 hold
+in every dimension `d ≥ 2` with no literature hypothesis
+([`Rigidity.Assembly.Unconditional.lipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean),
+`Rigidity.Assembly.Unconditional.notLipschitz`). Theorem 1.3 in the
 form with the twelve inputs takes only `CorrectorQuantitativeInput` and
 `SupercriticalBondGreenQuantitative` (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
-Theorems 6.5, 1.2 and 1.3 are proved with no literature hypothesis
-([`Unconditional.integer_valued_linear_growth`](Rigidity/Proofs/Assembly/Unconditional.lean) for
-Theorem 1.2 and [`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
-Theorem 1.3). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
+Theorems 1.1, 1.2, 1.3 and 6.5 are proved with no literature hypothesis
+([`Unconditional.lipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean) for Theorem 1.1,
+[`Unconditional.integer_valued_linear_growth`](Rigidity/Proofs/Assembly/Unconditional.lean) for
+Theorem 1.2, [`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean) for
+Theorem 1.3 and [`Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) for
+Theorem 6.5). The Gaussian upper bound of Barlow, which is not one of the twelve inputs but enters
 the dimension-two proof of Theorem 1.3 through Theorem 1 of Dario and Gu, is proved in every
 dimension (`barlowGaussianUpperBound_holds`; in dimension two `barlowGaussianUpperBoundTwo_holds`),
 and in dimension two so are Theorem 3 of Dario and Gu
@@ -174,7 +179,7 @@ configuration `ω` together with a proof `h : HasUniqueInfiniteOpenComponent ω`
 
 | Paper | Lean declaration | Content |
 | --- | --- | --- |
-| Theorem 1.1 | `Rigidity.Assembly.Main.lipschitz` | Lipschitz harmonic functions on the cluster are constant. |
+| Theorem 1.1 | `Rigidity.Assembly.Main.lipschitz`; from the regime only: `Rigidity.Assembly.Unconditional.lipschitz` | Lipschitz harmonic functions on the cluster are constant. |
 | Theorem 1.2 | `Rigidity.Assembly.Main.integerValuedLinearGrowth`; from the regime only: `Rigidity.Assembly.Unconditional.integer_valued_linear_growth` | Integer-valued harmonic functions of linear growth are constant. |
 | Theorem 1.3 | `Rigidity.Assembly.Main.fastDecay`; from the regime only: `Rigidity.Assembly.Unconditional.fast_decay` | In `d = 2`, a function with integer Laplacian of finite support that decays faster than `\|x\|⁻¹` has finite support. |
 | Theorem 6.5 | `Rigidity.Assembly.Main.slowMixing`; from the regime only: `Rigidity.Assembly.Unconditional.slow_mixing` | The sandpile Markov chain on the largest cluster of a box of radius `n` mixes in time of order `nᵈ log n`. |
@@ -200,10 +205,13 @@ for Theorem 1.3) and the literature inputs its proof uses, listed in
 [Assumed literature inputs](#assumed-literature-inputs). The statements of Theorems 1.1, 1.3 and 6.5
 are the definitions `Rigidity.Section3.LipschitzStmt`, `Rigidity.Section5.FastDecayStmt` and
 `Rigidity.Section6.SlowMixingStmt`; Theorem 1.2 is also the theorem
-`Rigidity.integer_valued_linear_growth`, whose statement is written out in full. The three
+`Rigidity.integer_valued_linear_growth`, whose statement is written out in full. The seven
+literature inputs of Theorem 1.1 are proved, and
+[`Rigidity.Assembly.Unconditional.lipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean) is
+Theorem 1.1 with the regime `2 ≤ d`, `criticalProbability d < p`, `p < 1` as its only hypotheses. The three
 literature inputs of Theorem 6.5 are proved, and
 [`Rigidity.Assembly.Unconditional.slow_mixing`](Rigidity/Proofs/Assembly/Unconditional.lean) is
-Theorem 6.5 with the regime `2 ≤ d`, `criticalProbability d < p`, `p < 1` as its only hypotheses.
+Theorem 6.5 with the same regime as its only hypotheses.
 The two literature inputs of Theorem 1.2 are proved, and
 [`Rigidity.Assembly.Unconditional.integer_valued_linear_growth`](Rigidity/Proofs/Assembly/Unconditional.lean)
 is Theorem 1.2 with the same regime as its only hypotheses. Every literature input of Theorem 1.3 is
@@ -225,7 +233,7 @@ that states it, if any, and the theorem that proves this input, if any.
 
 | Paper | Label | Lean declaration | Content |
 | --- | --- | --- | --- |
-| Theorem 1.1 | `theorem:lipschitz` | `Rigidity.Assembly.Main.lipschitz` | Lipschitz harmonic functions on `𝒞_∞` are constant. |
+| Theorem 1.1 | `theorem:lipschitz` | `Rigidity.Assembly.Main.lipschitz`; from the regime only: `Rigidity.Assembly.Unconditional.lipschitz` | Lipschitz harmonic functions on `𝒞_∞` are constant. |
 | Theorem 1.2 | `theorem:integer-valued-linear-growth` | `Rigidity.Assembly.Main.integerValuedLinearGrowth`; from the regime only: `Rigidity.Assembly.Unconditional.integer_valued_linear_growth` | Integer-valued harmonic functions of linear growth are constant. |
 | Theorem 1.3 | `theorem:fast-decay` | `Rigidity.Assembly.Main.fastDecay`; from the regime only: `Rigidity.Assembly.Unconditional.fast_decay` | `d = 2`: integer Laplacian of finite support and decay faster than `\|x\|⁻¹` force finite support. |
 | Lemma 2.1 | `lemma:finite-energy` | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
@@ -238,7 +246,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Lemma 2.14 | `lemma:jordan-curve-theorem-on-s2` | quoted: `Rigidity.External.JordanCurveTheoremSphere`; proved: `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
 | Lemma 2.16 | `lemma:jordan-curves-theorem` | `Rigidity.Assembly.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
 | Lemma 3.1 | `lemma:reduction-to-slope-e1` | `Rigidity.Assembly.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
-| Proposition 3.2 | `prop:not-lipschitz` | `Rigidity.Assembly.Main.notLipschitz` | For every `L`, with positive probability `\|∇ℓ_{e₁}(0)\| > L`. |
+| Proposition 3.2 | `prop:not-lipschitz` | `Rigidity.Assembly.Main.notLipschitz`; from the regime only: `Rigidity.Assembly.Unconditional.notLipschitz` | For every `L`, with positive probability `\|∇ℓ_{e₁}(0)\| > L`. |
 | Lemma 3.3 | `lemma:compare-different-planes` | `Rigidity.Assembly.compareDifferentPlanes` | The change of the corrected planes when finitely many edges are removed. |
 | Proposition 4.1 | `prop:exponential-growth-gadget` | `Rigidity.OpenGadget.exponential_growth_on_ambient_open_gadget` | A nonconstant integer-valued harmonic function on the gadget of height `n` has `\|u(t) − u(s)\| ≥ C 3ⁿ`. |
 | Lemma 4.2 | `lemma:effective-resistance-recurrence` | `Rigidity.Assembly.effectiveResistanceRecurrence` | The gadget resistances satisfy `R₁ = 3`, `R_{n+1} = (3Rₙ + 2)/(Rₙ + 1)`. |
@@ -431,6 +439,12 @@ is Theorem 1.2 with no literature hypothesis, from `WithProvedInputs.integer_val
 `Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds`, and
 [`Rigidity.Assembly.Unconditional.fast_decay`](Rigidity/Proofs/Assembly/Unconditional.lean) is
 Theorem 1.3 with none, in `d = 2`.
+[`Rigidity.Assembly.Unconditional.lipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean) and
+`Rigidity.Assembly.Unconditional.notLipschitz` are Theorem 1.1 and Proposition 3.2 with no
+literature hypothesis, from `WithProvedGreenColumn.lipschitz` and `WithProvedGreenColumn.notLipschitz`
+with `supercriticalBondCorrectorInput_holds`,
+`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds` and
+`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`.
 [`Rigidity.Assembly.WithProvedDensity`](Rigidity/Proofs/Assembly/ProvedDensity.lean) gives
 Proposition 2.6 without the density-concentration hypothesis, and Theorem 1.3 without the
 uniqueness, crossing, sphere Jordan, well-connectedness or density-concentration hypotheses.
@@ -440,7 +454,8 @@ Theorem 1.3, without it.
 [`Rigidity.Assembly.WithProvedGreenColumn`](Rigidity/Proofs/Assembly/ProvedGreenColumn.lean) gives
 the theorems of `Rigidity.Assembly.Main` that take `SupercriticalBondGreenColumnExistence` with
 every proved input supplied: Theorem 1.1 there takes only the two corrector inputs and the
-quantitative Green estimate, and Theorem 1.3 these and the regularity of order one.
+quantitative Green estimate, which are proved as well (above), and Theorem 1.3 these and the
+regularity of order one.
 [`Rigidity.Assembly.WithProvedOrderOne`](Rigidity/Proofs/Assembly/ProvedOrderOne.lean) gives the three of
 them that take the regularity of order one without it: Theorem 1.3 there takes only the two corrector
 inputs and the quantitative Green estimate, which are proved as well (above).
@@ -3489,10 +3504,10 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Guarantees
 
-- **No `sorry`.** The library has none. The seven comparator challenges under
+- **No `sorry`.** The library has none. The eight comparator challenges under
   [`RigidityAudit/`](RigidityAudit/) each contain one intentional statement-level `sorry`, which the
   corresponding solution proves.
-- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1306 axiom
+- **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints 1308 axiom
   reports, among them the theorem of each of the 43 proved results, Lemma 5.25 as printed, the six
   propositions that state the quoted results used by the proofs (Proposition 2.3, Theorems 2.4 and
   2.5, Lemma 2.14), the slab connectivity theorem of
@@ -3577,7 +3592,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1306 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1308 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
@@ -3585,15 +3600,17 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   alone in [`RigidityAudit/Lipschitz/`](RigidityAudit/Lipschitz/),
   [`RigidityAudit/IntegerLinearGrowth/`](RigidityAudit/IntegerLinearGrowth/),
   [`RigidityAudit/FastDecay/`](RigidityAudit/FastDecay/) and
-  [`RigidityAudit/SlowMixing/`](RigidityAudit/SlowMixing/), and Theorems 6.5, 1.2 and 1.3 with the
-  regime as their only hypothesis, as `Rigidity.Assembly.Unconditional.slow_mixing`,
-  `Rigidity.Assembly.Unconditional.integer_valued_linear_growth` and
-  `Rigidity.Assembly.Unconditional.fast_decay` prove them, in
-  [`RigidityAudit/SlowMixingUnconditional/`](RigidityAudit/SlowMixingUnconditional/),
-  [`RigidityAudit/IntegerLinearGrowthUnconditional/`](RigidityAudit/IntegerLinearGrowthUnconditional/)
-  and [`RigidityAudit/FastDecayUnconditional/`](RigidityAudit/FastDecayUnconditional/). Each
+  [`RigidityAudit/SlowMixing/`](RigidityAudit/SlowMixing/), and Theorems 1.1, 1.2, 1.3 and 6.5 with
+  the regime as their only hypothesis, as `Rigidity.Assembly.Unconditional.lipschitz`,
+  `Rigidity.Assembly.Unconditional.integer_valued_linear_growth`,
+  `Rigidity.Assembly.Unconditional.fast_decay` and `Rigidity.Assembly.Unconditional.slow_mixing`
+  prove them, in
+  [`RigidityAudit/LipschitzUnconditional/`](RigidityAudit/LipschitzUnconditional/),
+  [`RigidityAudit/IntegerLinearGrowthUnconditional/`](RigidityAudit/IntegerLinearGrowthUnconditional/),
+  [`RigidityAudit/FastDecayUnconditional/`](RigidityAudit/FastDecayUnconditional/) and
+  [`RigidityAudit/SlowMixingUnconditional/`](RigidityAudit/SlowMixingUnconditional/). Each
   `Challenge.lean` restates every definition that its statement unfolds to and the literature inputs
-  that the theorem takes as hypotheses (none for the three unconditional pairs); each `Solution.lean`
+  that the theorem takes as hypotheses (none for the four unconditional pairs); each `Solution.lean`
   proves the restatement from the library; and
   [leanprover/comparator](https://github.com/leanprover/comparator) checks that the two statements
   agree, that only the permitted axioms are used, and replays the proof through an independent
@@ -3668,7 +3685,7 @@ script builds the library and the audit modules, runs the comparator on every pa
 pair is missing or rejected; its logs are kept under `.lake/comparator-logs/`.
 
 There are two continuous-integration workflows: **CI** builds the library, checks the axiom reports
-and builds the comparator pairs; **Comparator audit** runs the comparator on the seven pairs. CI runs
+and builds the comparator pairs; **Comparator audit** runs the comparator on the eight pairs. CI runs
 on pushes to `main` that change more than documentation, the paper, `formalization.yaml` or
 `CITATION.cff`; the comparator audit runs after each successful CI run on `main` (on the commit that CI built) and on manual dispatch. Both workflows can be started
 manually from the [Actions page](https://github.com/nitromannitol/Percolation-Rigidity/actions).
@@ -3686,7 +3703,7 @@ Rigidity/
   Proofs/                     the proofs of the steps
     Assembly/                 the numbered results, composed from the steps
       Main.lean               the main theorems, from the regime and the literature inputs only
-      Unconditional.lean      Theorems 6.5, 1.2 and 1.3 from the regime only, their literature inputs being proved
+      Unconditional.lean      Theorems 1.1, 1.2, 1.3 and 6.5 and Proposition 3.2 from the regime only, their literature inputs being proved
       ProvedDensity.lean      Proposition 2.6 and Theorem 1.3 without the density concentration
       ProvedOrderZero.lean    the main theorems without the order-zero regularity
       ProvedGreenColumn.lean  the main theorems with the Green columns and every proved input supplied
@@ -3705,9 +3722,9 @@ RigidityAudit/
   Axioms.lean                 the axiom report of every numbered result and of the further results
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
-  SlowMixingUnconditional/, IntegerLinearGrowthUnconditional/, FastDecayUnconditional/
-                              the comparator pairs of Theorems 6.5, 1.2 and 1.3 with the regime as
-                              their only hypothesis
+  LipschitzUnconditional/, IntegerLinearGrowthUnconditional/, FastDecayUnconditional/,
+  SlowMixingUnconditional/    the comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5 with the regime
+                              as their only hypothesis
 paper/                        the arXiv v2 source and the corrected draft (LaTeX and PDF), figures,
                               CORRECTIONS.md, make_corrected.py, the note on the gadget, README.md
 CORRESPONDENCE.md             the results of the cited works mapped to their Lean declarations, with the departures

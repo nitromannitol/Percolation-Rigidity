@@ -5,7 +5,7 @@ import Rigidity.Proofs.Corrector.GeneralResamplePartitionProved
 import Rigidity.Proofs.Green.GeneralFluxStepTwoInput
 
 /-!
-# Theorem 1.1 and Proposition 3.2 in every dimension from the two inputs that remain in `d ≥ 3`
+# Theorem 1.1 and Proposition 3.2 in every dimension from two statements of dimension `d ≥ 3`
 
 The quantitative corrector input (Theorem 2.5 of the paper, Proposition 2.12 of Dario and Gu;
 `Rigidity.External.CorrectorQuantitativeInput`) follows from Lemma 3.3 of Dario in dimension
@@ -16,7 +16,11 @@ are proved). The quantitative Green estimate of Dario and Gu
 statement and from the flip bound of the flux on `ℤᵈ`
 (`Rigidity.Green.GeneralFlux.FluxFlipWeightBoundD`) in every dimension `d ≥ 3`. The other
 literature inputs of Theorem 1.1 and Proposition 3.2 are proved. Hence Theorem 1.1 and
-Proposition 3.2 hold in every dimension `d ≥ 2` from these two statements.
+Proposition 3.2 hold in every dimension `d ≥ 2` from these two statements. Both are proved
+(`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`,
+`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`), and Theorem 1.1 and Proposition 3.2 with
+the regime as their only hypothesis are `Rigidity.Assembly.Unconditional.lipschitz` and
+`Rigidity.Assembly.Unconditional.notLipschitz`.
 -/
 
 namespace Rigidity.Assembly.EveryDimension

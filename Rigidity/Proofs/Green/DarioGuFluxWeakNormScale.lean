@@ -14,7 +14,7 @@ bound of the centered flux `g̃_{e_k}` on `𝒞_∞ ∩ B_r(y)` (`weakNormLe_of_
 
 The test function `v` is coarsened (`coarseTest`); the pairing of `g̃` with `v` is the pairing of
 `g - (σ/2) δ_{ik} (1_{𝒞_∞} - θ)` with the coarsened function (`ā = σθ/2`, (B.5) of the source,
-(eq:2149fr)); the norms of the coarsened function are those of `DarioGuFluxCoarsening`, and
+(B.13)); the norms of the coarsened function are those of `DarioGuFluxCoarsening`, and
 `|𝒞_∞ ∩ B_r(y)| ≥ (2·3^{n-1} + 1)²/L²` (`card_mul_le_card_dgClusterBall`) replaces the minimal
 scale of the density of the cluster used in the source.
 -/

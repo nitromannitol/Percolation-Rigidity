@@ -11,9 +11,9 @@ import Rigidity.Proofs.Green.DarioGuApproxAnnuli
 * at the scales `4 (L 2^n √τ)² ≤ s` when `|x - y| ≤ s`: by the weak Poincaré inequality on
   `B_{2^n √τ}(y)` and the gradient bound (Theorem 3, Remark 1.3) on `B_{L 2^n √τ}(y)`, as in (4.9),
   (4.10) and (4.13) of the source;
-* at the scales `4 (L 2^n √τ)² > s` when `|x - y| ≤ s`: by (eq:PhiCTrick) and (4.15), as in
+* at the scales `4 (L 2^n √τ)² > s` when `|x - y| ≤ s`: by (4.12) and (4.15), as in
   (4.14)-(4.16);
-* when `|x - y| > s`: by (eq:PhiCTrick), (4.15) and `Φ_C(t, r) ≤ C t^{-1/2} Φ_{2C}(t, r)` for
+* when `|x - y| > s`: by (4.12), (4.15) and `Φ_C(t, r) ≤ C t^{-1/2} Φ_{2C}(t, r)` for
   `r ≥ 2t/3` (Remark 1.3 requires `t - τ ≥ |x - y|`; the source applies Theorem 3 at every `x`).
 -/
 
@@ -148,7 +148,7 @@ theorem approx_term_le {C₀ CP CL CG cd Kc C₈ : ℝ} (hC₀ : 0 < C₀) (hCP 
           (Real.sqrt τ / Real.sqrt t) * dgPhi Cs t (latticeDist x y)) :=
           mul_le_mul_of_nonneg_right (le_max_left _ _) this
       _ = _ := by ring
-  · -- (eq:PhiCTrick) and (4.15)
+  · -- (4.12) and (4.15)
     have hmid : dgPhi C₀ τ (annulusInner τ n) *
         ∑ z ∈ clusterBall K' y (2 ^ n * Real.sqrt τ), openHeat ω s x z ≤
         KB * Real.exp (-((2 : ℝ) ^ n / (4 * C₀))) * (Kc * dgPhi C₈ t (latticeDist x y)) := by

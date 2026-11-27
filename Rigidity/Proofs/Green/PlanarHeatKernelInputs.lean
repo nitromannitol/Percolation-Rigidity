@@ -12,7 +12,9 @@ planar bond configuration (`vsrwHeat` with degree bound `4`): it solves
 at `y` stays in the open cluster of `y`, so for `x, y ∈ 𝒞_∞` it is the heat kernel of `𝒞_∞` of the
 source. It is jointly measurable in the configuration and the time.
 
-Two results of Dario–Gu (arXiv:1909.10439v4) on this kernel are stated as hypotheses.
+Two results of Dario–Gu (arXiv:1909.10439v4) on this kernel are stated as propositions, which
+later reductions take as hypotheses; both are proved (`darioGuHeatKernelTwo_holds` in
+`Rigidity.Assembly.ProvedFluxWeakNorm`, `carneVaropoulosTwo_holds`).
 
 * `DarioGuHeatKernelTwo`: **Theorem 1** in dimension two (quantitative local limit theorem):
   there is `σ̄ > 0` such that, for every `δ > 0`, there are `C, s` and random times
@@ -21,7 +23,7 @@ Two results of Dario–Gu (arXiv:1909.10439v4) on this kernel are stated as hypo
   `|p(t, x, y) - θ(p)^{-1} p̄(t, x - y)| ≤ C t^{-1 - (1/2 - δ)} exp(-|x - y|² / (C t))`,
   with `p̄(t, z) = (2π σ̄ t)^{-1} exp(-|z|²/(2 σ̄ t))`. The hypothesis also requires `t ≥ 1`.
 * `CarneVaropoulosTwo`: **Proposition 2.15** (Carne–Varopoulos bound; Davies 1993, Corollaries 11
-  and 12, cited without proof) for unit conductances on an infinite component.
+  and 12) for unit conductances on an infinite component.
 -/
 
 open scoped Classical

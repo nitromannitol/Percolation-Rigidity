@@ -40,8 +40,8 @@ assumes only this regime. A declaration whose name ends in `Two` is the statemen
 ending in `Three` for `d ≥ 3`, and one ending in `D` for a general `d`; `CorrectorQuantitativeInput`,
 `SupercriticalBondGreenQuantitative` and the planar statements `CorrectorQuantitativeInputTwo` and
 `SupercriticalBondGreenQuantitativeTwo` are stated in Percolation-Cluster-Homogenization and Lattice-Probability.
-`X ≤ O_s(C)` is the stretched exponential integrability of the sources. The named hypotheses that
-remain open for `d ≥ 3` are collected in the last section. Each declaration is linked to its file; the axiom
+`X ≤ O_s(C)` is the stretched exponential integrability of the sources. The last section states how the
+two quantitative inputs follow in dimension `d ≥ 3` and lists what is not formalized. Each declaration is linked to its file; the axiom
 report of the library is [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
 
 ## Dario
@@ -574,14 +574,17 @@ report of the library is [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean
 - **Lemma 2.14 of the paper.** Printed for a continuous loop; the theorem is for simple loops, and the Lean
   statement is for simple loops (correction C38). Declaration: [`Rigidity.Topology.jordan_curve_theorem_sphere`](Rigidity/Proofs/Topology/JordanCurveSphere.lean).
 
-## Hypotheses that remain open for `d ≥ 3`
+## The quantitative inputs in dimension `d ≥ 3`
 
-None. `DarioStepTwoWeightThree` ([`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`](Rigidity/Proofs/Poincare/GeneralStepTwoWeightThreeHolds.lean))
+`DarioStepTwoWeightThree` ([`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`](Rigidity/Proofs/Poincare/GeneralStepTwoWeightThreeHolds.lean))
 and `FluxFlipWeightBoundD d p` ([`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipWeight.lean))
 are proved, so `CorrectorQuantitativeInput` (Proposition 2.12 of DG) and `SupercriticalBondGreenQuantitative`
 (Theorem 2 of DG) hold in every dimension
 ([`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`](Rigidity/Proofs/Assembly/ProvedCorrectorQuantitative.lean),
-[`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`](Rigidity/Proofs/Assembly/ProvedCorrectorQuantitative.lean)).
+[`Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds`](Rigidity/Proofs/Assembly/ProvedCorrectorQuantitative.lean)),
+and Theorem 1.1 and Proposition 3.2 of the paper hold with the regime as their only hypothesis
+([`Rigidity.Assembly.Unconditional.lipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean),
+[`Rigidity.Assembly.Unconditional.notLipschitz`](Rigidity/Proofs/Assembly/Unconditional.lean)).
 
 Not formalized: Theorem 5 and Theorem 6 of DG, the first part (A.12) of Proposition A.7, Theorem 3 of DG for
 `d ≥ 3`, and Proposition 3.9 beyond its statement `DarioGuLipschitzTwo`.

@@ -12,7 +12,7 @@ normalized at `y ∈ 𝒞_∞`,
 estimated by using the sublinearity of the corrector stated in Proposition 2.12 and the assumption
 `√t ≥ M_corr,α(z)` ... the details are left to the reader". The details are the following.
 
-* Proposition 2.12 (`CorrectorQuantitativeInputTwo`, R5) at the centre `y`, applied to the corrected
+* Proposition 2.12 (`CorrectorQuantitativeInputTwo`) at the centre `y`, applied to the corrected
   plane `x ↦ x_k + χ_{e_k}(x)` on the ball of radius `√t + |x - y| + 2 ≥ M_corr(y)`, gives
   `|χ_{e_k}(x)| ≤ C (√t + |x - y| + 2)^α` (`χ_{e_k}(y) = 0`).
 * `|D_{e_k} p̄(t, · - y)(x)| ≤ K t^{-3/2} exp(-|x - y|²/(8σt))` (`abs_gaussianHeat_sub_le`).

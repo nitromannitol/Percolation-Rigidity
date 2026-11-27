@@ -28,11 +28,12 @@ Dario–Gu in `d = 2`, zero in `d ≥ 3`), and `ℓ_{eᵢ} = xᵢ + χ_{eᵢ}` t
 
 * `step:2.6-inputs`.
   - `RegularityScaleStep`: (H2) beyond a minimal scale `M_reg(x) ≤ O_s(C)`. Its proof combines
-    Theorem 2.4 at order one (proposed literature input `ArmstrongDarioOrderOne`, [C34])
+    Theorem 2.4 at order one (`Rigidity.Proofs.S2.ArmstrongDarioOrderOneProposed`, [C34])
     with the classification of `𝒜₁` (`LatticeProb.External.SupercriticalBondCorrectorInput`).
   - `DensityScaleStep`: (H4) beyond a minimal scale `M_dense(x) ≤ O_s(C)`. This is the density
     estimate the paper cites from Penrose–Pisztora, Theorem 1 (proposed literature input
-    `ClusterDensityInput`; for bond percolation, Dario–Gu, Proposition A.1 [C35]).
+    `Rigidity.Proofs.S2.ClusterDensityInputProposed`; for bond percolation, Dario–Gu,
+    Proposition A.1 [C35]).
   - `TailOfOsStep`: `X ≤ O_s(θ)` gives a stretched exponential tail (Markov's inequality).
   - (H1) and (H3) come from `SupercriticalBondGreenQuantitative` (`greenClose_scales` below) and
     `CorrectorQuantitativeInput` (with `α = δ/4`).
@@ -142,8 +143,8 @@ theorem DenseAt.mono {ω : Configuration d} {C : OpenComponent ω} {x : Vertex d
 
 /-- step:2.6-inputs, regularity (paper L513-519): Theorems 2.4 and 2.5 combine into (H2) beyond a
 minimal scale `M_reg(x) ≤ O_s(C)`, for every family of corrected planes `ℓ_{eᵢ}`. Its proof needs
-Theorem 2.4 at order one (proposed input `ArmstrongDarioOrderOne`) and the classification of `𝒜₁`
-of `SupercriticalBondCorrectorInput`. -/
+Theorem 2.4 at order one (`Rigidity.Proofs.S2.ArmstrongDarioOrderOneProposed`) and the
+classification of `𝒜₁` of `SupercriticalBondCorrectorInput`. -/
 def RegularityScaleStep (d : ℕ) [NeZero d] (p : unitInterval) : Prop :=
   criticalProbability d < (p : ℝ) → (p : ℝ) < 1 →
     ∃ s C₀ : ℝ, 0 < s ∧ 0 < C₀ ∧ ∀ x : Vertex d,
@@ -156,7 +157,7 @@ def RegularityScaleStep (d : ℕ) [NeZero d] (p : unitInterval) : Prop :=
 
 /-- step:2.6-inputs, density (paper L508-511): (H4) beyond a minimal scale
 `M_dense(x) ≤ O_s(C)`. This is the density estimate cited from Penrose–Pisztora, Theorem 1
-(proposed input `ClusterDensityInput`). -/
+(`Rigidity.Proofs.S2.ClusterDensityInputProposed`). -/
 def DensityScaleStep (d : ℕ) [NeZero d] (p : unitInterval) : Prop :=
   criticalProbability d < (p : ℝ) → (p : ℝ) < 1 →
     ∃ s C c : ℝ, 0 < s ∧ 0 < C ∧ 0 < c ∧ ∀ x : Vertex d,

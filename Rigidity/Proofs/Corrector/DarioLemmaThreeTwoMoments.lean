@@ -11,12 +11,12 @@ differ by crude polynomial moment bounds (`O_s(C r^{2d})`), and the probability 
 * `measure_le_sizeSum_le`: the sum of the `N = (2·3^k + 1)²` partition sizes around `z` has the
   tail `P[t ≤ sizeSum] ≤ 2 e^{-t/(Nθ)}` (Jensen's inequality for the exponential and the uniform
   exponential moments of the sizes);
-* `lintegral_sq_statDiscrepancy_le`: `E[|χ(z̄_stat(z)) - χ(z̄(z))|²] ≤ M_k`, with `M_k` polynomial in
-  `θ_k = 4Nθ + 8·3^k`, from the crude bound of the discrepancy and the moments of sums over random
-  balls;
-* `lintegral_abs_statDiscrepancy_le`: **Step 1 at one vertex**,
-  `E|χ(z̄_stat(z)) - χ(z̄(z))| ≤ e^{-c 3^k/2} (M_k + C)`, since the discrepancy vanishes outside
-  the event of (3.3) for the cube of scale `k` containing `z`.
+* `exists_lintegral_sq_statDiscrepancy_le`: `E[|χ(z̄_stat(z)) - χ(z̄(z))|²] ≤ K₁ (1 + θ₀ 9^k)^4`,
+  from the crude bound of the discrepancy (with the scale `θ_k = 4Nθ + 8·3^k` of the tail of the
+  radius, `statTailScale`) and the moments of sums over random balls;
+* `exists_lintegral_abs_statDiscrepancy_le`: **Step 1 at one vertex**,
+  `E|χ(z̄_stat(z)) - χ(z̄(z))| ≤ K (1 + θ₀ 9^k)^4 e^{-c 3^k/2}`, since the discrepancy vanishes
+  outside the event of (3.3) for the cube of scale `k` containing `z`.
 -/
 
 namespace Rigidity.Corrector

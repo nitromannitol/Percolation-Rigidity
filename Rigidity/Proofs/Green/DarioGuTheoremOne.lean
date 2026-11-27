@@ -10,7 +10,7 @@ whose first step is `κ_0 = κ/2`); after finitely many steps the exponent is `1
 (`exists_dgKappa_ge`), which is Theorem 1 (`darioGuHeatKernelTwo_of_sections`).
 
 Hypotheses: the results of §4.1–§4.2 and Proposition A.7 (`DarioGuSectionFourTwo`), Theorem 4
-(`BarlowGaussianUpperBoundTwo`, cited), Proposition 2.15 (`CarneVaropoulosTwo`, cited) and the
+(`BarlowGaussianUpperBoundTwo`), Proposition 2.15 (`CarneVaropoulosTwo`) and the
 qualitative corrector input (`SupercriticalBondCorrectorInputTwo`, for the normalized correctors
 of §2.3.1).
 -/
@@ -132,7 +132,7 @@ theorem heatLevel_iterate (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : 
     exact heatLevel_step hpc hp1 hσ hSec hBar hCV hCorr hδ hδ4 hc (dgKappa_nonneg hδ hδ4 n)
       (dgKappa_le hδ hδ4 n) hT hH
 
-/-- **Dario–Gu, Theorem 1** in dimension two (`DarioGuHeatKernelTwo`, as stated by rigr57), from
+/-- **Dario–Gu, Theorem 1** in dimension two (`DarioGuHeatKernelTwo`), from
 the results of §4.1–§4.2 and Proposition A.7 for some diffusivity `σ > 0`, Theorem 4 (Barlow),
 Proposition 2.15 (Carne–Varopoulos) and the qualitative corrector input. -/
 theorem darioGuHeatKernelTwo_of_sections

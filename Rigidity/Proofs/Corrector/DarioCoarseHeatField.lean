@@ -7,7 +7,7 @@ In the proof of Lemma 3.3, Step 2, Dario writes `(Φ_{r²} * ∇[u]_𝒫)(0) = �
 `u` of finite energy, with the field `γ_r(e') = Σ_z Φ_{r²}(z) 1{e' ∈ p_{z,z+e_i}}` built from paths
 `p_{z,z'}` joining the anchors of the partition cubes of neighbouring points inside the union of the
 two cubes (3.26), and bounds `|γ_r(e')|` by the heat kernel near the cube of `e'` (3.27). Here the
-partition is main's planar partition, whose anchors of neighbouring cubes are joined by open walks
+partition is the planar partition, whose anchors of neighbouring cubes are joined by open walks
 inside the square of side `9s` around the smaller cube (`reachIn_planarAnchor_of_near`); the walks
 are made paths by `bypass`. With `stepRegion ω z j` that square for the step from `z` to `z + e_j`:
 

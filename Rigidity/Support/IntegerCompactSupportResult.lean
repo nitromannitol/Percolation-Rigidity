@@ -3,7 +3,7 @@ import LatticeProb.Graph.Zd.IntegerLaplacian
 /-!
 # Compactly supported functions with integer full lattice Laplacian
 
-This is Proposition `integer-valued-compact-support` of the pinned paper, lines 2841–2843.
+This is Proposition `integer-valued-compact-support` of the paper, lines 2841–2843.
 The standing dimension assumption is retained. Compact support on the discrete integer
 lattice is expressed as finite function support, and the Laplacian is the full neighbor sum.
 -/
