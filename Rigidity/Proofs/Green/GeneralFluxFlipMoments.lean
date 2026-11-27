@@ -22,8 +22,10 @@ of `y`. Hence `Σ_e (D_e X)² = O_s(C r^{-d})` (`fluxFlipSumD_isOsBond`, by
 `isOsBond_heatSqSum_of_moments`), and since the resampling variance is at most the sum of the
 squared flip differences (`ae_resampleVar_le_tsum_bondFlipDiff`), `FluxVarianceBoundD d p` for
 every `d ≥ 3` and supercritical `p < 1` (`fluxVarianceBoundThree_of_weight`). Since part 3 is
-proved (`fluxFlipSumPartitionD_holds`), the variance bound rests on part 2 and
-`DarioStepTwoWeightThree` alone (`fluxVarianceBoundThree_of_weightBound`).
+proved (`fluxFlipSumPartitionD_holds`), the variance bound follows from part 2 and
+`DarioStepTwoWeightThree` (`fluxVarianceBoundThree_of_weightBound`); part 2 is proved as well
+(`fluxFlipWeightBoundD_holds`), so the variance bound rests on `DarioStepTwoWeightThree` alone
+(`fluxVarianceBoundThree_of_stepTwoWeight`).
 -/
 
 open MeasureTheory Filter LatticeProb.Percolation Rigidity.Percolation Rigidity.External
@@ -178,7 +180,8 @@ theorem fluxVarianceBoundThree_of_weight (hW : DarioStepTwoWeightThree)
 `FluxFlipWeightBoundD`) and the probabilistic part of Step 2 of the proof of Lemma 3.3 of Dario in
 dimension `d ≥ 3` (`DarioStepTwoWeightThree`); the flip sum through a partition into good cubes
 (part 3) is `fluxFlipSumPartitionD_holds`. The hypothesis on part 2 is required only for `d ≥ 3`
-and supercritical `p < 1`. -/
+and supercritical `p < 1`; it holds by `fluxFlipWeightBoundD_holds`, which gives
+`fluxVarianceBoundThree_of_stepTwoWeight`. -/
 theorem fluxVarianceBoundThree_of_weightBound (hW : DarioStepTwoWeightThree)
     (h2 : ∀ (d : ℕ) [NeZero d], 3 ≤ d → ∀ p : unitInterval, criticalProbability d < (p : ℝ) →
       (p : ℝ) < 1 → FluxFlipWeightBoundD d p) :

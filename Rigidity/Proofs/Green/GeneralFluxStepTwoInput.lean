@@ -13,8 +13,9 @@ and on Lemma 3.5. On `ℤ^d` the deterministic and almost sure facts of Step 2 a
 repository (`Rigidity.Corrector.GeneralDim`: `ae_exists_correctedPlane_eq_add_const`,
 `le_of_finite_piece`, `ae_correctedPlane_sub_eq_smul_greenProj`,
 `ae_correctedPlane_sub_eq_smul_greenProj_closed`, `ae_dipoleCoeff_eq`, `tsum_bond_eq_tsum_edge`),
-and the remaining inputs for `d ≥ 3` are Lemma 3.5 for the partition into good cubes of `ℤ^d`
-(in the proof of part 2) and the named hypothesis of the repository
+Lemma 3.5 for the partition into good cubes of `ℤ^d` is proved in its corrected form
+(`Rigidity.Corrector.GeneralDim.resamplePartition_max_bound`) and enters the proof of part 2, and
+the remaining input for `d ≥ 3` is the named hypothesis of the repository
 `Rigidity.Corrector.GeneralDim.DarioStepTwoWeightThree`: the partition of the good cubes of Step 2
 and a majorant with moments of polynomial growth of the Step 2 weight and the path weight.
 
@@ -36,7 +37,12 @@ The target is `FluxVarianceBoundThree`: `FluxVarianceBoundD d p` for every `d �
 
 Each boundary is the planar statement on `ℤ^d`, with the heat kernel `zdHeat d` of `ℤ^d`, the
 partition into good cubes of `ℤ^d` in place of the partition of meshed squares, and the numerical
-constants tied to the square lattice made existential.
+constants tied to the square lattice made existential. The four parts are proved
+(`fluxPairingOpenD_holds`, `fluxPairingClosedD_holds`, `fluxPairingZeroD_holds`,
+`fluxFlipWeightBoundD_holds`, `fluxFlipSumPartitionD_holds`,
+`fluxVarianceBoundThree_of_weightBound`),
+so `FluxVarianceBoundThree` follows from `DarioStepTwoWeightThree` alone
+(`fluxVarianceBoundThree_of_stepTwoWeight`).
 -/
 
 set_option autoImplicit false
@@ -120,7 +126,7 @@ most `K₀ F_a (Σ_{B_a} E_v + Σ_{B_a} Φ_{r²}(x, ·)²)`, with the factor `F_
 box `B_a = stepTwoBox` of the Step 2 sum for some box parameter `κ`, the form of the bound
 `ae_flipTermTwo_sq_le_weight` of the corrector. The planar statement assumes Lemma 3.5 with
 constants `C₀, C` and has the constants `2 · 1297⁴ · 46656` and `κ = C₀ + 5C + 6`; here the
-constants are existential and Lemma 3.5 is left to the proof. -/
+constants are existential and Lemma 3.5 enters only the proof (`fluxFlipWeightBoundD_holds`). -/
 def FluxFlipWeightBoundD (d : ℕ) (p : unitInterval) : Prop :=
   ∀ (G : Set (Configuration d)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d),
     (∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) →

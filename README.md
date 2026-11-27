@@ -2893,8 +2893,8 @@ parts are proved: `FluxVarianceBoundThree` follows from `FluxFlipWeightBoundD` a
 `FluxFlipWeightBoundD` holds (`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`) for `d ≥ 2` and `𝔭_c(d) < p < 1`, from
 the bound for the bonds open in the configuration, `FluxOpenBoundD`
 ([`GeneralFluxP2Input.lean`](Rigidity/Proofs/Green/GeneralFluxP2Input.lean)), with the larger side `S` of the partition cubes of
-`ω` and `ω^{e,0}` from the corrected Lemma 3.5, is proved
-([`GeneralFluxOpenBound.lean`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean)), and the bound for the bonds closed in the configuration
+`ω` and `ω^{e,0}` from the corrected Lemma 3.5
+([`GeneralFluxOpenBound.lean`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean), `fluxOpenBoundD_holds`), and the bound for the bonds closed in the configuration
 ([`GeneralFluxClosedBound.lean`](Rigidity/Proofs/Green/GeneralFluxClosedBound.lean)). The two are combined
 ([`GeneralFluxFlipWeight.lean`](Rigidity/Proofs/Green/GeneralFluxFlipWeight.lean)) with the box parameter `6` and the radius
 `6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))`. With Proposition 2.12, `FluxVarianceBoundThree` gives the quantitative Green estimate in every dimension, which
