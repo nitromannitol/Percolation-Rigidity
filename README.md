@@ -358,7 +358,7 @@ Proposition 3.2.
    (Lemma 4.8 and Proposition 4.1 give Lemma 4.7, and Lemmas 4.7 and 4.9 give Theorem 1.2) is therefore
    verified piece by piece, not as a composition. The paper's proof of Lemma 4.7 uses the gadget bound
    in its isolated joint form, which is proved as `Rigidity.Assembly.nonConstantOnGadgetJoint`;
-   Lemma 4.8 itself is proved as printed, by the argument of corrections C36. Where the Lean proofs
+   Lemma 4.8 itself is proved as printed, by the argument of correction C36. Where the Lean proofs
    of Lemma 5.27, Lemma 5.28 and Proposition 3.2 depart from the printed argument is listed in
    [`paper/CORRECTIONS.md`](paper/CORRECTIONS.md).
 7. **Axioms.** The library contains no `sorry`, `admit`, `native_decide` or new `axiom`. The Lean
@@ -376,7 +376,7 @@ Proposition 3.2.
 ## Assumed literature inputs
 
 The table records the hypotheses of the original theorem statements. Ten of these propositions
-are now proved, eight of them listed here and the qualitative corrector input and the regularity of order one at the
+are proved, eight of them listed here and the qualitative corrector input and the regularity of order one at the
 origin below: [`Rigidity.Percolation.supercritical_bond_uniqueness`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/BondUniqueness.lean),
 [`Rigidity.Smoothing.micciancio_regev_smoothing`](Rigidity/Proofs/Smoothing/MicciancioRegev.lean),
 [`Rigidity.Percolation.kesten_rectangle_crossing`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Percolation/KestenCrossing.lean),
@@ -411,7 +411,7 @@ every proved input supplied: Theorem 1.1 there takes only the two corrector inpu
 quantitative Green estimate, and Theorem 1.3 these and the regularity of order one.
 [`Rigidity.Assembly.WithProvedOrderOne`](Rigidity/Proofs/Assembly/ProvedOrderOne.lean) gives the three of
 them that take the regularity of order one without it: Theorem 1.3 there takes only the two corrector
-inputs and the quantitative Green estimate. The other inputs listed below remain hypotheses.
+inputs and the quantitative Green estimate. The two other inputs of the table, `CorrectorQuantitativeInput` and `SupercriticalBondGreenQuantitative`, enter as hypotheses of these theorems.
 
 For Theorem 1.3, [`Rigidity.Assembly.WithPlanarInputs.fast_decay`](Rigidity/Proofs/Assembly/PlanarInputs.lean)
 assumes only dimension-two forms of the qualitative and quantitative corrector estimates,
@@ -494,7 +494,7 @@ In dimension two, (7.18) at `k = 2` is proved from the estimates on squares of t
 the bound `dim 𝒜₁ ≤ 3` are proved); see
 [Lemma 7.3 at k = 2 and regularity of order one at the origin in dimension two](#lemma-73-at-k--2-and-regularity-of-order-one-at-the-origin-in-dimension-two).
 Theorem 1 of Dario being proved, R4 holds (`armstrongDarioOrderOneOriginTwo_holds`). Of the five planar inputs of
-`fast_decay_of_planar_estimates` only the quantitative Green estimate remains, and Theorem 1.3 follows from it alone
+`fast_decay_of_planar_estimates` four are proved, and Theorem 1.3 follows from the quantitative Green estimate alone
 ([`fast_decay_of_greenQuantitative`](Rigidity/Proofs/Assembly/PlanarDarioGu.lean)), from Theorem 1 of Dario and Gu
 alone (`fast_decay_of_darioGu`), or from the inputs of that theorem: `hSec` and the Gaussian upper bound of Barlow
 (`fast_decay_of_sections_barlow`), or Proposition 2.13, Theorem 3 and that bound (`fast_decay_of_flux_gradient_barlow`).
@@ -844,7 +844,8 @@ The three theorems depend on exactly `propext`, `Classical.choice` and `Quot.sou
    `E[(μ(U, q) + |q|²/18)⁺] ≤ C|q|₁²/√L`, the subadditivity of `μ` and `ν` over the resolved
    subsquares of side `3ⁿ` up to errors of expectation at most `C|q|₁²|U|/√(3ⁿ)` (Lemma 4.8, (4.32)
    and (4.33)), and the lower bound `c|p|² ≤ E[ν(U, p)] + C|p|₁²/√L` ((4.31)). The planar
-   corrector and regularity inputs remain hypotheses.
+   corrector and regularity inputs are proved in later sections; see
+   [Order-zero regularity and the planar corrector input from Lemma 7.1](#order-zero-regularity-and-the-planar-corrector-input-from-lemma-71).
 
 **Departures from Dario and Gu and from Armstrong and Dario.** The existence of Green columns,
 stated by Dario and Gu without proof, is proved by the effective-resistance argument above. AD,
@@ -888,7 +889,7 @@ route bounds the heat kernel of the cluster for `d ≥ 2` and the decay of the G
 | [`Rigidity.Green.greenColumn_le_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0` the Green column `g` with pole `y` satisfies `0 ≤ g(x) ≤ K \|x − y\|^{2 − d + 1/50 + δ}` for `\|x − y\| ≥ R`. |
 | [`Rigidity.Green.greenColumn_le_one_add_rpow_of_three_le`](Rigidity/Proofs/Green/SupercriticalGreenBounds.lean) | for `d ≥ 3`, almost surely, for every `δ > 0`, `0 ≤ g(x) ≤ K (1 + \|x − y\|)^{2 − d + 1/50 + δ}` at every vertex `x`. |
 
-The twenty-one theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
+The twenty-six theorems depend on exactly `propext`, `Classical.choice` and `Quot.sound`. The modules
 are in [`Rigidity/Proofs/Green/`](Rigidity/Proofs/Green/).
 
 1. **Isoperimetry of `ℤᵈ`** (`LatticeIsoperimetry.lean`). The lattice `ℓ¹` Sobolev inequality
