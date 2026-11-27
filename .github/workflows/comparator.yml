@@ -52,14 +52,16 @@ jobs:
       - name: Prefetch the pinned Lean toolchain with retries
         run: python3 scripts/prefetch_toolchain.py
 
+      # The action's own cache of `.lake` is off, as in the CI workflow.
       - name: Set up Lean and fetch the Mathlib cache
         uses: leanprover/lean-action@v1
         with:
           build: false
           use-mathlib-cache: true
+          use-github-cache: false
 
-      # The library artifacts of the CI workflow, if any; the audit modules are always rebuilt in
-      # a fresh copy of the source tree.
+      # The library artifacts of the CI run on the same commit, if any, then its dependency
+      # artifacts; the audit modules are always rebuilt in a fresh copy of the source tree.
       - name: Restore build artifacts
         uses: actions/cache/restore@v6.1.0
         with:
@@ -67,9 +69,17 @@ jobs:
             .lake/build
             .lake/packages/lattice-probability/.lake/build
             .lake/packages/percolation-cluster-homogenization/.lake/build
-          key: lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}
+          key: lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.event.workflow_run.head_sha || github.sha }}
           restore-keys: |
             lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
+
+      - name: Restore dependency build artifacts
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: |
+            .lake/packages/lattice-probability/.lake/build
+            .lake/packages/percolation-cluster-homogenization/.lake/build
+          key: lake-deps-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
 
       - name: Restore verification tools
         id: tools-cache

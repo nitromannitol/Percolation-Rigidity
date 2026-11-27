@@ -16,15 +16,17 @@ on:
       - 'CITATION.cff'
   workflow_dispatch:
 
-# Cancel superseded runs on the same ref.
+# A run on main is never cancelled by a later push: it finishes and banks its build artifacts,
+# and GitHub keeps only the newest pending run of the group, which then builds the newest commit.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  # Mathlib's oleans come from its public cache. Lake builds the Lattice-Probability and
-  # Percolation-Cluster-Homogenization modules this library imports, at the commits pinned in
-  # `lake-manifest.json`, together with the library; the three build directories are cached.
+  # Mathlib's oleans come from its public cache. Lake builds Lattice-Probability and
+  # Percolation-Cluster-Homogenization at the commits pinned in `lake-manifest.json`, then the
+  # library. Two caches hold the build directories: one for the two dependencies, keyed by the
+  # toolchain and the manifest only, and one for all three build directories, keyed by the commit.
   build:
     name: Build and axiom audit
     runs-on: ubuntu-24.04
@@ -51,17 +53,22 @@ jobs:
         run: python3 scripts/prefetch_toolchain.py
 
       # Installs the toolchain named in `lean-toolchain`, fetches every package in
-      # `lake-manifest.json` and downloads the Mathlib oleans.
+      # `lake-manifest.json` and downloads the Mathlib oleans. The action's own cache of `.lake`
+      # (about 2.5 GB per commit, mostly Mathlib oleans that its public cache already serves) is
+      # off, so that it does not evict the build caches below from the repository's cache quota.
       - name: Set up Lean and fetch the Mathlib cache
         uses: leanprover/lean-action@v1
         with:
           build: false
           use-mathlib-cache: true
+          use-github-cache: false
 
-      # Restore and save are split so that the save runs even when a later step fails: an
-      # interrupted build still banks its completed modules. The restore key has no sha, so it
-      # matches the most recent entry with the same toolchain and manifest, which makes an
-      # ordinary push incremental.
+      # Restore and save are split so that a save runs even when a later step fails: a failed or
+      # timed-out build still banks its completed modules. No save runs on a cancelled run, whose
+      # Lake process may still be writing the build directories. The restore key of the commit
+      # cache has no sha, so it matches the most recent entry with the same toolchain and
+      # manifest, which makes an ordinary push incremental; the dependency cache is restored
+      # after it, so that its complete dependency builds take precedence.
       - name: Restore build artifacts
         id: cache-restore
         uses: actions/cache/restore@v6.1.0
@@ -74,14 +81,41 @@ jobs:
           restore-keys: |
             lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
 
+      - name: Restore dependency build artifacts
+        id: deps-restore
+        uses: actions/cache/restore@v6.1.0
+        with:
+          path: |
+            .lake/packages/lattice-probability/.lake/build
+            .lake/packages/percolation-cluster-homogenization/.lake/build
+          key: lake-deps-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
+      # The root module of Percolation-Cluster-Homogenization imports all of its results (the
+      # axiom report prints some that no module of this library imports) and, through them, the
+      # Lattice-Probability modules they use.
+      - name: Build the dependencies
+        timeout-minutes: 240
+        shell: bash
+        run: |
+          set -o pipefail
+          lake build PercolationClusterHomogenization 2>&1 | tee dependency-build.log
+
+      - name: Save dependency build artifacts
+        if: steps.deps-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6.1.0
+        with:
+          path: |
+            .lake/packages/lattice-probability/.lake/build
+            .lake/packages/percolation-cluster-homogenization/.lake/build
+          key: lake-deps-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+
       # The library is compiled with `warningAsError`, so a warning fails the build.
       - name: Build the library and enforce zero warnings
+        timeout-minutes: 240
         shell: bash
         run: |
           set -o pipefail
           lake build 2>&1 | tee production-build.log
-          # The axiom report also prints results of Percolation-Cluster-Homogenization that no module
-          # of this library imports; its root module imports all of them.
           lake build PercolationClusterHomogenization 2>&1 | tee -a production-build.log
           if grep -iE '(^|[[:space:]])warning:|declaration uses .sorry|sorryAx' production-build.log; then
             echo "The production build must have zero warnings and no incomplete proofs."
@@ -113,13 +147,14 @@ jobs:
         with:
           name: build-logs-${{ github.sha }}
           path: |
+            dependency-build.log
             production-build.log
             axioms-audit.log
             audit-build.log
           if-no-files-found: warn
 
       - name: Save build artifacts
-        if: always() && steps.cache-restore.outputs.cache-hit != 'true'
+        if: ${{ !cancelled() && steps.cache-restore.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v6.1.0
         with:
           path: |
