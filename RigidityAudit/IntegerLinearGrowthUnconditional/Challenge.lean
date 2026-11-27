@@ -7,11 +7,10 @@ Mathlib-only comparator challenge for Theorem 1.2 (label `theorem:integer-valued
 of *Rigidity of harmonic functions on the supercritical percolation cluster* (Ahmed Bou-Rabee,
 William Cooperman and Paul Dario), in the form whose only hypotheses are the regime `2 ≤ d`,
 `p_c(d) < p < 1`.  The library's statement is
-`Rigidity.Assembly.WithProvedInputs.integer_valued_linear_growth` in
-`Rigidity/Proofs/Assembly/ProvedInputs.lean`, applied to the proved first-order corrector input
-`Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds`; the two cited
-results that `RigidityAudit/IntegerLinearGrowth/Challenge.lean` takes as hypotheses (supercritical
-uniqueness and the first-order correctors) are proved in the library.
+`Rigidity.Assembly.Unconditional.integer_valued_linear_growth` in
+`Rigidity/Proofs/Assembly/Unconditional.lean`; the two cited results that
+`RigidityAudit/IntegerLinearGrowth/Challenge.lean` takes as hypotheses (supercritical uniqueness
+and the qualitative corrector input) are proved in the library.
 
 **The result.**  Let `d ≥ 2` and `p_c(d) < p < 1`, and let `𝒞_∞` be the infinite cluster of
 Bernoulli bond percolation of parameter `p` on `ℤ^d`.  Almost surely the infinite cluster exists
@@ -212,8 +211,8 @@ open MeasureTheory
 almost surely the infinite cluster `𝒞_∞` exists and is unique, and every harmonic, integer-valued
 function `u : 𝒞_∞ → ℝ` of at most linear growth is a constant integer.  The regime is the only
 hypothesis. -/
-theorem integer_valued_linear_growth_unconditional (d : ℕ) [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
-    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+theorem integer_valued_linear_growth_unconditional (d : ℕ) [NeZero d] (hd : 2 ≤ d)
+    (p : unitInterval) (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
     ∀ᵐ ω ∂latticeBondLaw d p,
       ∃ h : HasUniqueInfiniteOpenComponent ω,
         ∀ u : uniqueInfiniteComponent h → ℝ,

@@ -1,5 +1,5 @@
 import Mathlib
-import Rigidity.Proofs.Assembly.ProvedFluxWeakNorm
+import Rigidity.Proofs.Assembly.Unconditional
 import RigidityAudit.FastDecay.SolutionBasic
 
 /-!
@@ -7,10 +7,10 @@ import RigidityAudit.FastDecay.SolutionBasic
 
 Proves `Rigidity.StatementAudit.FastDecay.fast_decay_unconditional`, with the statement of
 `RigidityAudit/FastDecayUnconditional/Challenge.lean`, from
-`Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_holds`
-(`Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean`), whose only hypotheses are the regime.  The
-vocabulary is that of `RigidityAudit/FastDecay/SolutionBasic.lean`, a token-for-token copy of the
-library's, so the conclusion of the library theorem is definitionally the restated one, as in
+`Rigidity.Assembly.Unconditional.fast_decay` (`Rigidity/Proofs/Assembly/Unconditional.lean`),
+whose only hypotheses are the regime.  The vocabulary is that of
+`RigidityAudit/FastDecay/SolutionBasic.lean`, a token-for-token copy of the library's, so the
+conclusion of the library theorem is definitionally the restated one, as in
 `RigidityAudit/FastDecay/Solution.lean`.
 -/
 
@@ -26,7 +26,7 @@ hypothesis. -/
 theorem fast_decay_unconditional (p : unitInterval)
     (hpc : criticalProbability 2 < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
     FastDecayStmt p := by
-  exact Rigidity.Assembly.ProvedFluxWeakNorm.fast_decay_holds p hpc hp1
+  exact Rigidity.Assembly.Unconditional.fast_decay p hpc hp1
 
 end FastDecay
 end StatementAudit
