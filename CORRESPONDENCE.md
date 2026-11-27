@@ -99,7 +99,7 @@ report of the library is [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean
 | Gu | Lean declaration | Form |
 | --- | --- | --- |
 | Proposition 1.1, (3.4) | [`Rigidity.Green.exists_fluxSpatialAverage_two`](Rigidity/Proofs/Green/DarioGuFluxSpatialAverage.lean); [`Rigidity.Green.GeneralFlux.exists_fluxSpatialAverageD`](Rigidity/Proofs/Green/GeneralFluxSpatialAverage.lean), [`Rigidity.Green.GeneralFlux.fluxVarianceBoundD_two`](Rigidity/Proofs/Green/GeneralFluxVarianceTwo.lean), [`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean) | `\|Φ_{r²} ⋆ g(x)\| ≤ O_s(C r^{−d/2})` (DG (B.8)). `d = 2`: no hypothesis. Every `d ≥ 2`: from the variance bound `FluxVarianceBoundD d p`, which is proved for `d = 2`; for `d ≥ 3` it (`FluxVarianceBoundThree`) follows from `FluxFlipWeightBoundD` and `DarioStepTwoWeightThree` |
-| Steps 1–4, Lemma 3.2 | [`Rigidity.Green.fluxFlipSum_isOsBond`](Rigidity/Proofs/Green/DarioGuFluxFlipMoments.lean), [`Rigidity.Green.GeneralFlux.ae_planeFluxD_setBond_eq`](Rigidity/Proofs/Green/GeneralFluxFlip.lean), [`Rigidity.Green.GeneralFlux.fluxPairingOpenD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`Rigidity.Green.GeneralFlux.fluxPairingClosedD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`Rigidity.Green.GeneralFlux.fluxPairingZeroD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`Rigidity.Green.GeneralFlux.fluxFlipSumPartitionD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipSum.lean) | the flip differences of the heat average of the flux and their sum, `d = 2` and every `d ≥ 2`; the bound of each squared flip difference by the Step 2 factor (`FluxFlipWeightBoundD`) is not proved, and neither is its part for the bonds open in the configuration (`FluxOpenBoundD`) |
+| Steps 1–4, Lemma 3.2 | [`Rigidity.Green.fluxFlipSum_isOsBond`](Rigidity/Proofs/Green/DarioGuFluxFlipMoments.lean), [`Rigidity.Green.GeneralFlux.ae_planeFluxD_setBond_eq`](Rigidity/Proofs/Green/GeneralFluxFlip.lean), [`Rigidity.Green.GeneralFlux.fluxPairingOpenD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`Rigidity.Green.GeneralFlux.fluxPairingClosedD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`Rigidity.Green.GeneralFlux.fluxPairingZeroD_holds`](Rigidity/Proofs/Green/GeneralFluxPairing.lean), [`Rigidity.Green.GeneralFlux.fluxFlipSumPartitionD_holds`](Rigidity/Proofs/Green/GeneralFluxFlipSum.lean) | the flip differences of the heat average of the flux and their sum, `d = 2` and every `d ≥ 2`; the bound of each squared flip difference by the Step 2 factor (`FluxFlipWeightBoundD`) is not proved; its part for the bonds open in the configuration is proved ([`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean)) |
 
 ## Barlow
 
@@ -473,6 +473,16 @@ report of the library is [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean
   follows from the named hypotheses `FluxFlipWeightBoundD d p` and `DarioStepTwoWeightThree`
   ([`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound`](Rigidity/Proofs/Green/GeneralFluxFlipMoments.lean)). Declarations: [`Rigidity.Green.exists_fluxSpatialAverage_two`](Rigidity/Proofs/Green/DarioGuFluxSpatialAverage.lean),
   [`Rigidity.Green.GeneralFlux.exists_fluxSpatialAverageD`](Rigidity/Proofs/Green/GeneralFluxSpatialAverage.lean).
+- **Open-bond bound on `ℤᵈ` (planar [`Rigidity.Green.ae_fluxFlip_sq_le_open`](Rigidity/Proofs/Green/DarioGuFluxOpenBound.lean);
+  `ℤᵈ` [`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean)).** The planar proof
+  bounds the dipole coefficient `R` of Dario's (3.24) (Dario18.tex:1370) through Lemma 3.5 in its printed form, at the
+  side `s_ω(x₀)` of the partition cube of `x₀` in `ω`; that form holds for the partition of the meshed squares of `ℤ²`
+  ([`Rigidity.Corrector.darioResamplePartitionTwo_holds`](Rigidity/Proofs/Corrector/DarioResamplePartitionHolds.lean)). On `ℤᵈ`
+  the proof uses the corrected Lemma 3.5
+  ([`Rigidity.Corrector.GeneralDim.resamplePartition_max_bound`](Rigidity/Proofs/Corrector/GeneralResamplePartitionHolds.lean)),
+  at the scale `S = max(s_ω(x₀), s_{ω^{e,0}}(x₀))`: the partition cubes of `ω^{e,0}` at `x₀` and `y₀` have side at most
+  `243 S`, so `R ≤ (8d 7^d 243^d S^d)²` and
+  `(D_e X)² ≤ 2 (1 + (8d 7^d 243^d S^d)²)² G(x₀)² (E_v(x₀) + Φ_{r²}(x, x₀)²)`.
 
 ### Barlow
 
@@ -546,7 +556,8 @@ report of the library is [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean
   corrector input, `CorrectorQuantitativeInput` (Proposition 2.12 of DG) hold.
 - `FluxFlipWeightBoundD d p` ([`Rigidity.Green.GeneralFlux.FluxFlipWeightBoundD`](Rigidity/Proofs/Green/GeneralFluxStepTwoInput.lean)): the bound of each squared flip
   difference of the heat average of the flux by the Step 2 factor, for `d ≥ 3`; its part for the bonds open in the
-  configuration is stated as `FluxOpenBoundD` ([`Rigidity.Green.GeneralFlux.FluxOpenBoundD`](Rigidity/Proofs/Green/GeneralFluxP2Input.lean)) and is not proved.
+  configuration, `FluxOpenBoundD` ([`Rigidity.Green.GeneralFlux.FluxOpenBoundD`](Rigidity/Proofs/Green/GeneralFluxP2Input.lean)), is proved
+  ([`Rigidity.Green.GeneralFlux.fluxOpenBoundD_holds`](Rigidity/Proofs/Green/GeneralFluxOpenBound.lean)); `FluxFlipWeightBoundD` remains.
   With `DarioStepTwoWeightThree` it gives the variance bound `FluxVarianceBoundThree` of Gu's proof of his
   Proposition 1.1, hence Proposition 2.13 of DG on `ℤ^d`, and with `CorrectorQuantitativeInput` it gives
   `DarioGuHeatKernelD d` (Theorem 1 of DG) and `SupercriticalBondGreenQuantitative` (Theorem 2 of DG).
