@@ -1352,6 +1352,11 @@ further = {
          'Rigidity.BarlowLattice.barlowGaussianUpperBound_of_veryGood',
          'Rigidity.BarlowLattice.barlowGaussianUpperBound_holds',
          'Rigidity.BarlowLattice.barlowGaussianUpperBoundTwo_of_lattice'],
+    'Theorem 1.1 and Proposition 3.2 in every dimension from the inputs that remain in d >= 3':
+        ['Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_of_stepTwoWeight',
+         'Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_of_stepTwoWeight',
+         'Rigidity.Assembly.EveryDimension.lipschitz',
+         'Rigidity.Assembly.EveryDimension.notLipschitz'],
 }
 standard = {'propext', 'Classical.choice', 'Quot.sound'}
 
