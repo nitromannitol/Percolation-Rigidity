@@ -191,8 +191,7 @@ theorem sum_neighborFinset_eq (ω : Configuration d) (F : Vertex d → ℝ) (x :
     Rigidity.Proofs.Regularity.sum_nbrFinset]
   unfold EdgeOpen edgeHead
   refine Finset.sum_congr rfl fun i _ => ?_
-  simp only [sub_add_cancel, (openGraph ω).adj_comm (x - LatticeProb.unit i) x] <;>
-    split_ifs <;> ring
+  simp only [sub_add_cancel, (openGraph ω).adj_comm (x - LatticeProb.unit i) x]
 
 /-- **The energy of the local solution**: `Σ_{x ∈ D} E_w(x) ≤ ‖Pξ‖²`. -/
 theorem sum_clusterEnergy_localSolution_le {ω : Configuration d} {U : Finset (Vertex d)}
@@ -389,7 +388,7 @@ theorem meyers_source {ω : Configuration d} {ε C : ℝ} (hε : 0 < ε) (hC : 0
   have hQD : Q ⊆ D := cube_subset_enl 1 k x₀
   have hQpos : (0 : ℝ) < Q.card := by
     have := card_enl 0 k x₀
-    have hc : (Q.card : ℝ) = ((3 : ℝ) ^ k) ^ 2 := by
+    have hc : (Q.card : ℝ) = ((3 : ℝ) ^ k) ^ d := by
       rw [hQ]
       have := card_enl 0 k x₀
       simpa [enl, cube] using this
