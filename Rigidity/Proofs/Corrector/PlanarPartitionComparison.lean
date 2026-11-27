@@ -9,7 +9,7 @@ of `|∇χ|`. Here, with `a' = a_{𝒫_y}(z)`:
 
 * `χ(a') - χ(a_𝒫(a'))` is a coarsening error (5.10) at the cluster vertex `a'`;
 * `χ(a_𝒫(a')) - χ(a_𝒫(z))` is an increment of the coarsened corrector along the lattice rectangle
-  between `a'` and `z`, bounded by the coarse gradients of main's `abs_coarseAnchor_sub_le`
+  between `a'` and `z`, bounded by the coarse gradients of `abs_coarseAnchor_sub_le`
   (`abs_sub_le_of_chain`), hence by the sums of (5.10) at the vertices of the rectangle;
 * the rectangle lies in the ball of radius `2 size(□_{𝒫_y}(z))` around `z`, and the moments follow
   from `lintegral_randomBallSum_le` with the moments of `stepSix_data`
@@ -122,7 +122,7 @@ theorem abs_sub_le_of_chain {W e : Vertex 2 → ℝ} (he : ∀ u, 0 ≤ e u)
         _ ≤ (e z + e z₁) + (2 * ∑ u ∈ latticeBetween z₁ z', e u - e z₁ - e z') := add_le_add h1 h2
         _ ≤ 2 * ∑ u ∈ latticeBetween z z', e u - e z - e z' := by linarith
 
-/-- Coarse gradients between lattice neighbours (main's `abs_coarseAnchor_sub_le` in both orders). -/
+/-- Coarse gradients between lattice neighbours (`abs_coarseAnchor_sub_le` in both orders). -/
 theorem abs_coarse_step_le {ω : Configuration 2} (hP : PlanarPartitionEvent ω) (w : Vertex 2 → ℝ)
     {u u' : Vertex 2} (hnear : ∀ i, |u i - u' i| ≤ 1) :
     |w (planarCoarseAnchor ω u) - w (planarCoarseAnchor ω u')| ≤

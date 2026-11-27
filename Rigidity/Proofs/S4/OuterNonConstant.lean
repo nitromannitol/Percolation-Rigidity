@@ -31,7 +31,7 @@ random placement. The route here (definitions in `OuterNonConstant/Defs.lean`):
    and `ρ₀` differ all have a face endpoint or lie in `Q_{R-1}`. The connector event has
    probability at least `min(p, 1-p)^{8d²}`. Since it is measurable it splits every set additively,
    so the comparison holds with probability at least `min(p, 1-p)^{8d²}/2` for large `R`
-   (`measure_inter_add_diff`; no measurability of the corrector events is needed).
+   (`measure_inter_add_sdiff`; no measurability of the corrector events is needed).
 3. **Union bound** over the face sites `w ≠ z₀` separated from `z₀ = (1, -R, 0, …)`: at most
    `|Q_R| ≤ (3R)^d` of them.
 4. **Attachment** (`attach_gadget_nonconstant`, `OuterNonConstant/Envs.lean`): the gadget joined to

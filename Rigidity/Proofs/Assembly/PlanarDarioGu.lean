@@ -18,7 +18,13 @@ Theorem 3 with that bound.
 * `fast_decay_of_greenQuantitative`: Theorem 1.3 from `SupercriticalBondGreenQuantitativeTwo`;
 * `fast_decay_of_darioGu`: Theorem 1.3 from Theorem 1 of Dario and Gu (`DarioGuHeatKernelTwo`);
 * `fast_decay_of_sections_barlow`, `fast_decay_of_flux_gradient_barlow`: Theorem 1.3 from the
-  inputs of Theorem 1 of Dario and Gu that are not proved.
+  inputs of Theorem 1 of Dario and Gu (Sections 2 and 4, or Proposition 2.13 and Theorem 3) and the
+  Gaussian upper bound of Barlow.
+
+Every hypothesis of these theorems is proved: the Green estimate and Theorem 1 of Dario and Gu in
+dimension two (`supercriticalBondGreenQuantitativeTwo_holds`, `darioGuHeatKernelTwo_holds`) and
+Theorem 1.3 itself (`fast_decay_holds`), all in `Rigidity.Assembly.ProvedFluxWeakNorm`, and the
+Gaussian upper bound of Barlow (`Rigidity.Barlow.barlowGaussianUpperBoundTwo_holds`).
 -/
 
 namespace Rigidity.Assembly.WithPlanarInputs

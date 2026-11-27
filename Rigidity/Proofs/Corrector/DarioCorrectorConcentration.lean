@@ -8,7 +8,9 @@ With `concentrationTwo_holds` (Dario, Proposition 2.17), Theorem 1 of Dario in d
 (`DarioOptimalCorrectorTwo`) follows from the multiscale Poincaré inequality
 (`MultiscalePoincareTwo`, Proposition 2.19), the quantitative sublinearity of the corrector
 (`CorrectorOscSublinearTwo`; Armstrong and Dario, (1.22), recalled as Dario, (2.1)) and Lemma 3.3
-(`DarioLemmaThreeThree`) alone.
+(`DarioLemmaThreeThree`) alone. All of these are proved in dimension two, and Theorem 1 holds
+(`Rigidity.Poincare.multiscalePoincareTwo_holds`, `correctorOscSublinearTwo_holds`,
+`Rigidity.Poincare.darioOptimalCorrectorTwo_holds`).
 -/
 
 namespace Rigidity.Corrector

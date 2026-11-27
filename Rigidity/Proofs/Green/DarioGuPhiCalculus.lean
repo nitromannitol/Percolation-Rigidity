@@ -10,8 +10,8 @@ import Rigidity.Proofs.Green.DarioGuHeatKernelInputs
 the semigroup property (3.2) of `Φ_C` used in the proof of Theorem 1 (§4.3).
 
 The lattice sums `Σ_x exp(-g(t, |x - z|)/c) ≤ L t` (`sum_exp_neg_dgShape_le`, `t ≥ 1`) give the
-weighted `L²` norms of functions bounded by `Φ_C` (`weightedL2Le_of_abs_le`) and the bound of the
-second factor of the term (4.48)-a1 (`sum_sq_dgPhi_mul_exp_le`).
+weighted `L²` norms of functions bounded by `Φ_C` (`weightedL2Le_of_abs_le_dgPhi`) and the bound of
+the second factor of the term (4.48)-a1 (`sum_sq_dgPhi_mul_exp_le`).
 -/
 
 open Finset LatticeProb.Percolation

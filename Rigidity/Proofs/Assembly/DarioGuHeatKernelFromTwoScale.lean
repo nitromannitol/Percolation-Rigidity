@@ -9,10 +9,14 @@ Proposition A.7 (`darioGuDensityGaussianTwo_holds`), the Carne–Varopoulos boun
 (`carneVaropoulosTwo_holds`), the weak form of Proposition 2.7 (`clusterPoincareTwo_holds`) and,
 from Theorem 3 and Theorem 4, Lemma 4.1 (`darioGuApproxLemmaTwo_of_gradient`) are proved. With
 Theorem 1 of Dario available from Lemma 3.3 (or from its flip form (3.13)), Theorem 1 of Dario and
-Gu in dimension two (`DarioGuHeatKernelTwo`) is reduced to the four named inputs
+Gu in dimension two (`DarioGuHeatKernelTwo`) follows from the four statements
 `DarioGuTwoScaleErrorTwo` (Proposition 4.3, for some `σ > 0` at every supercritical `p < 1`),
 `DarioGuGradientBoundTwo` (Theorem 3 in the form of Remark 1.3), `BarlowGaussianUpperBoundTwo`
 (Theorem 4) and `DarioLemmaThreeThree` (Lemma 3.3), or `DarioFlipSumBound` in place of the last.
+Each of the four is proved: `exists_darioGuTwoScaleErrorTwo_holds`, `darioGuGradientBoundTwo_holds`,
+`barlowGaussianUpperBoundTwo_holds`, and Lemma 3.3 through `darioStepTwoSumBound_holds`,
+`darioFlipSumBound_of_stepTwo` and `darioLemmaThreeThree_of_flipSum`; hence
+`Rigidity.Assembly.ProvedFluxWeakNorm.darioGuHeatKernelTwo_holds`.
 -/
 
 namespace Rigidity.Poincare

@@ -23,9 +23,10 @@ following steps, for a deterministic slope `q ≠ 0`.
   `(x, x̃)`, hence at most `C² R^{2d-2}` pairs; the union bound is made in
   `nonConstantOnGadget_of_steps`.
 
-GAP (`ConditioningStep`). The last sentence of the proof (L1417, "by taking a union bound ... we
-have the desired claim") identifies the conditional law given `𝒞_∞ ∩ Q_R = H` with the law in
-which the bonds near `Q_R` are fixed and the outside bonds are free. The union bound gives a
+The comparison of the two laws (`ConditioningStep`). The last sentence of the proof (L1417, "by
+taking a union bound ... we have the desired claim") identifies the conditional law given
+`𝒞_∞ ∩ Q_R = H` with the law in which the bonds near `Q_R` are fixed and the outside bonds are
+free. The union bound gives a
 placement whose attachment event `W` (an event of the outside bonds) has `P[W] ≥ c R^{-2d+2}`, and
 `P[𝒞_∞ ∩ Q_R = H, ℓ_q not constant on the gadget] ≥ P[bonds near Q_R as in the attachment] P[W]`.
 Conditioning on `𝒞_∞ ∩ Q_R = H` reweights the outside bonds by the probability of the inner
@@ -180,7 +181,7 @@ def PlacementCountStep (d : ℕ) : Prop :=
 
 /-- Not used in the proof of Lemma 4.8, which averages over `H`
 (`Rigidity.Proofs.S4.OuterNonConstant.nonConstantOnGadget`).
-GAP, not proved in the paper (see the module docstring): conditioning on
+Not proved in the paper (see the module docstring): conditioning on
 `𝒞_∞ ∩ Q_R = H R x y` costs at most a constant factor `c₀` against the probability of the
 attachment event, an event of the bonds away from `Q_R`. The paper's last sentence (L1417)
 identifies the two laws. -/

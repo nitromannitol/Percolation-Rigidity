@@ -15,6 +15,12 @@ regularity and the qualitative corrector input. Hence:
   multiscale Poincaré inequality, the concentration inequality and Lemma 3.3;
 * `correctorQuantitativeInputTwo_of_lemmaThreeThree`: Proposition 2.12 of Dario and Gu in dimension
   two from the same three inputs.
+
+The multiscale Poincaré inequality, the concentration inequality and Lemma 3.3 are proved in
+dimension two (`Rigidity.Poincare.multiscalePoincareTwo_holds`, `concentrationTwo_holds`,
+`Rigidity.Poincare.darioFlipSumBound_of_stepTwo` with
+`Rigidity.Poincare.darioStepTwoSumBound_holds`), so Theorem 1 holds
+(`Rigidity.Poincare.darioOptimalCorrectorTwo_holds`).
 -/
 
 namespace Rigidity.Corrector

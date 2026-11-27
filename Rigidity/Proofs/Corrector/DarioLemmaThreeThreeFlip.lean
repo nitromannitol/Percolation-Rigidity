@@ -42,9 +42,10 @@ theorem measurable_heatCoarseComp (i j : Fin 2) (r : ℝ) (x : Vertex 2) :
 
 end Flip
 
-/-- **Dario, (3.13) in flip form, in dimension two** (hypothesis): for the conull sets `G` of the
+/-- **Dario, (3.13) in flip form, in dimension two**: for the conull sets `G` of the
 measurable corrector there are `s, C > 0` such that for all `i, j`, `r ≥ 1` and `x`, the flip sum
-`Σ_e (D_e X)²` of `X = Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)` is almost surely finite and `≤ O_s(C/r²)`. -/
+`Σ_e (D_e X)²` of `X = Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)` is almost surely finite and `≤ O_s(C/r²)`.
+It holds: `darioFlipSumBound_of_stepTwo darioStepTwoSumBound_holds`. -/
 def DarioFlipSumBound : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∀ (G : Set (Configuration 2)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent 2),

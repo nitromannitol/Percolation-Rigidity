@@ -14,7 +14,7 @@ Step 6 of the proof of Dario's Theorem 1 bounds `|χ(y) - [χ]_𝒫(y)| 1_{y ∈
   the stationarity of the corrector increments;
 * `abs_correctorDiff_guardAnchor_le`: on the partition event, `|χ(v) - χ(a_𝒫(v))|` is at most four
   times the sum of these bounds over the square of side `9 size(□_𝒫(v))` around the partition cube
-  (main's `abs_sub_coarseAnchor_le`), hence over the ball of radius `10 size(□_𝒫(v))` around `v`.
+  (`abs_sub_coarseAnchor_le`), hence over the ball of radius `10 size(□_𝒫(v))` around `v`.
 -/
 
 namespace Rigidity.Corrector

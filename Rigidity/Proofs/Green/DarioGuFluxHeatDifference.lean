@@ -5,7 +5,7 @@ import Rigidity.Proofs.Poincare.LatticeHeatFlow
 /-!
 # Increments in time of the heat flow and the duality with heat averages on `ℤ²`
 
-Deterministic ingredients of the estimate (eq.gsmallH-1) of Dario–Gu, Appendix B, in the lattice
+Deterministic ingredients of the estimate (B.4) of Dario–Gu, Appendix B, in the lattice
 form used here (dyadic heat times instead of the continuous multiscale Poincaré inequality (D.28)
 of Armstrong, Kuusi and Mourrat):
 

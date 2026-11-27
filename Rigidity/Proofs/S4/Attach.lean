@@ -19,7 +19,7 @@ cluster `𝒞̃_∞ ∋ x̃, ỹ` with a corrected plane `ℓ̃_q`, `ℓ̃_q(x̃
   each of their sites, `chainBonds_reach`; the gadget is connected), so the cluster `𝒞'_∞` of `x̃`
   in `ω'` contains `𝒞̃_∞` and the sites of `F`. A cluster of `ω'` avoiding `𝒞'_∞` is a cluster of
   `ω̃` other than `𝒞̃_∞`, hence finite: `𝒞'_∞` is the unique infinite cluster of `ω'`, and
-  `𝒞'_∞ ∩ Q_R = H` (`attach_conditioningEvent`).
+  `𝒞'_∞ ∩ Q_R = H` (`attached_componentBondsIn`).
 * The Liouville argument (paper L1415). Let `ℓ'_q` be a corrected plane of `𝒞'_∞` and suppose it
   is constant on the gadget. On the path `P₁` from the low site to the terminal `s`, together with
   the partner `x̃` or `ỹ` of the low site, `ℓ'_q` is harmonic except at the partner, and the gadget

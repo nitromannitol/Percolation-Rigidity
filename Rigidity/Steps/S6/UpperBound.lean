@@ -5,7 +5,7 @@ import Rigidity.External.SmoothingParameter
 
 /-! Carving of step:6.5-upper (`UpperBoundStep`, single-exit form) into steps.
 
-Paper: `paper/percolation-harmonic-corrected.tex` L2948-2951; the gap and its repair are recorded in
+Paper: `paper/percolation-harmonic-corrected.tex` L2948-2951; the added hypothesis is recorded in
 `Rigidity/Steps/S6/SlowMixing.lean`. The route is that of D. C. Jerison, L. Levine and J. Pike,
 *Mixing time and eigenvalues of the abelian sandpile Markov chain* (arXiv 1511.00666), Proposition
 3.6, Theorem 3.8, Theorem 4.1 and the proof of Theorem 4.3, run on the multigraph obtained by

@@ -264,7 +264,7 @@ lemma norm_rhoPt (x) : ‖rhoPt f x‖ = 1 := by
     have hnd : ‖dvec f x‖ ^ 2 = Acoef f x := by
       rw [← real_inner_self_eq_norm_sq]; rfl
     rw [Real.norm_eq_abs, mul_pow, sq_abs, hnd]
-    -- Now: (C+1) + 2*(t*B) + t^2 * A = 1, with t = (-B+√disc)/A
+    -- Goal: (C+1) + 2*(t*B) + t^2 * A = 1, with t = (-B+√disc)/A
     rw [tparam]
     field_simp
     rw [discr] at hsq ⊢

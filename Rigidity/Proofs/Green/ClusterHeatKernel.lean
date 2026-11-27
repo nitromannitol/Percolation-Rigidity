@@ -18,7 +18,7 @@ On the infinite cluster, under `ClusterFaberKrahn d p D η`, this gives almost s
 
   `p_n(x, y) ≤ K n^{-(D/2)(1-η)(1-t)} e^{-t |x - y|²/(2n)}`  for all `x ∈ C_∞` and `n ≥ N`,
 
-`|·|` the Euclidean norm. This is the Gaussian upper bound of Barlow (Dario-Gu, Theorem 3.1, in
+`|·|` the Euclidean norm. This is the Gaussian upper bound of Barlow (Dario-Gu, Theorem 4, in
 the regime `|x - y| ≤ n`) with the on-diagonal exponent `d/2` replaced by `(D/2)(1-η)(1-t)` and
 the Gaussian constant by `2/t`, for the discrete-time simple random walk.
 -/

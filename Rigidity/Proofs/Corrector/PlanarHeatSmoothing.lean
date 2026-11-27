@@ -14,7 +14,7 @@ walk on the lattice (the open graph of the configuration with every bond open), 
 
 * `heatGradient_coarseField_isOsBond`: for every `r` and `x`,
   `|Φ_{r²} * ∇[χ]_𝒫(x)| ≤ O_s(C)` with `s, C` independent of `r, x` — the bound used by Dario for
-  `r ≤ 1`, from the Lipschitz bound (2.22) of the coarsened corrector (here: main's coarse
+  `r ≤ 1`, from the Lipschitz bound (2.22) of the coarsened corrector (from the coarse
   gradients and the sums of (5.10)) and the mass one of `Φ`;
 * `ae_summable_heat_coarseField`: almost surely these convolutions converge absolutely, for
   every point, direction and radius;
@@ -351,11 +351,11 @@ noncomputable def boxOscFun (u : Vertex 2 → ℝ) (m : ℕ) (q : ℝ) : ℝ :=
   (∑ z ∈ boxAt 0 m, |u z - (∑ w ∈ boxAt 0 m, u w) / 9 ^ m| ^ q) / 9 ^ m
 
 /-- **The multiscale Poincaré inequality of Dario, Proposition 2.19 (2.26), in cube form at
-`R = 3^m`** (hypothesis: Dario proves the continuum version in Appendix A from Armstrong, Kuusi
+`R = 3^m`** (Dario proves the continuum version in Appendix A from Armstrong, Kuusi
 and Mourrat, Proposition D.1 and Remark D.6, and Gilbarg and Trudinger, Lemma 7.12 and
 Proposition 9.9, and states that the lattice version follows by standard arguments), with the
 bound `C(d, q) ≤ A₀ q^{3/2}` for `q ≥ 2`. The convolutions `Φ_{r²} * ∇u` of (2.26) are required
-to converge absolutely. -/
+to converge absolutely. It holds for some `A₀ > 0` (`multiscalePoincareTwo_holds`). -/
 def MultiscalePoincareTwo (A₀ : ℝ) : Prop :=
   ∀ u : Vertex 2 → ℝ, (∀ (x : Vertex 2) (j : Fin 2) (r : ℝ), 0 < r →
       Summable fun y => latticeHeat (r ^ 2) x y * (u (y + LatticeProb.unit j) - u y)) →
@@ -366,9 +366,11 @@ def MultiscalePoincareTwo (A₀ : ℝ) : Prop :=
           (Real.exp (-‖latticeEuclideanEmbedding x‖ / (2 * 3 ^ m)) / 9 ^ m) *
           (∫⁻ r in Ioc 0 (2 * 3 ^ m), ENNReal.ofReal (r * heatGradient u r x ^ 2)) ^ (q / 2)
 
-/-- **Dario's Proposition 3.1 in dimension two** for the coarsened correctors (hypothesis):
+/-- **Dario's Proposition 3.1 in dimension two** for the coarsened correctors:
 `|Φ_{r²} * ∇[χ_{e_i}]_𝒫(x)| ≤ O_s(C/r)` for `r ≥ 1`, on every measurable conull carrier of the
-qualitative corrector input. -/
+qualitative corrector input. It holds: `darioPropThreeOneTwo_of_lemmas` applied to
+`armstrongDarioOrderZeroTwo_holds`, `concentrationTwo_holds`, `darioLemmaThreeTwo_holds` and
+Lemma 3.3 (`DarioLemmaThreeThree`). -/
 def DarioPropThreeOneTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∀ (G : Set (Configuration 2)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent 2),

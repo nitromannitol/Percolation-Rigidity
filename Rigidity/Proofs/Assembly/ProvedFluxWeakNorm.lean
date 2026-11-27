@@ -15,7 +15,7 @@ results that took it as the hypothesis `hflux` are restated without it:
 
 * Proposition 4.3 (`exists_darioGuTwoScaleErrorTwo_holds`) and Remark B.3
   (`exists_darioGuTranslatedFluxTwo_holds`), with the quantitative corrector estimate
-  (`correctorQuantitativeInputTwo_holds`), now with no hypothesis;
+  (`correctorQuantitativeInputTwo_holds`), with no hypothesis;
 * Theorem 1 of Dario and Gu in dimension two from Theorem 3 (Remark 1.3) and the Gaussian upper
   bound of Barlow (`darioGuHeatKernelTwo_of_gradient_barlow`), and its variants with Lemma 3.3 of
   Dario, the flip form of (3.13), Lemma 3.5 for the planar partition or the Step 2 sum;

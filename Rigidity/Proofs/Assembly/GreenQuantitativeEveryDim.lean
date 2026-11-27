@@ -5,7 +5,7 @@ import Rigidity.Proofs.Green.GreenQuantitativeThree
 import Rigidity.Proofs.Green.HeatKernelHoldsD
 
 /-!
-# Theorem 2 of Dario and Gu in every dimension from its remaining inputs
+# Theorem 2 of Dario and Gu in every dimension from Theorem 1 in dimensions `d ≥ 3`
 
 The quantitative Green estimate of Dario and Gu in every dimension `d ≥ 2`
 (`LatticeProb.External.SupercriticalBondGreenQuantitative`, Theorem 2) follows from

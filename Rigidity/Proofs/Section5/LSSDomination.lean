@@ -787,8 +787,9 @@ theorem oneDependentDominationStep : Rigidity.Steps.Section5.OneDependentDominat
   exact fun C hC hinc => (hdense C hC hinc).trans (thinLaw_le ν hα hC hinc)
 
 
-/-- Lemma 5.23 from Proposition 2.3, Kesten's crossing estimate and the three remaining steps:
-the Liggett-Schonmann-Stacey step is `oneDependentDominationStep`. -/
+/-- Lemma 5.23 from Proposition 2.3, Kesten's crossing estimate and the three steps
+`VeryGoodProbabilityStep`, `RenormFieldMeasurableStep` and `RenormFieldOneDependentStep`; the
+Liggett-Schonmann-Stacey step is `oneDependentDominationStep`. -/
 theorem renormalizedDomination_of_steps' {p : unitInterval}
     (hW : Rigidity.External.WellConnectedInput) (hK : Rigidity.External.KestenRectangleCrossing)
     (hpc : criticalProbability 2 < (p : ℝ)) (hV : Rigidity.Steps.Section5.VeryGoodProbabilityStep)

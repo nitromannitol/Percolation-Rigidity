@@ -9,8 +9,10 @@ With Lemma 3.5 for the planar partition proved (`darioResamplePartitionTwo_holds
 `DarioFlipSumBound` of (3.13), hence Lemma 3.3 of Dario, follows from the bound of the Step 2 sum
 `Σ_e T₂(e)²` of the proof of Lemma 3.3 alone (`DarioStepTwoSumBound`, the hypothesis `hTwo` of
 `darioFlipSumBound_of_resample`). So do Theorem 1 of Dario in dimension two, Proposition 2.12 of
-Dario and Gu, Theorem 2 (iii) of Armstrong and Dario at `k = 1` at the origin, and, with their
-further named inputs, Theorem 1 of Dario and Gu.
+Dario and Gu, Theorem 2 (iii) of Armstrong and Dario at `k = 1` at the origin, and, with
+Proposition 2.13, Theorem 3 and Theorem 4 (the other inputs of `DarioGuFluxBridges`), Theorem 1 of
+Dario and Gu. The bound of the Step 2 sum itself holds in dimension two
+(`darioStepTwoSumBound_holds`, in `DarioStepTwoHolds`).
 -/
 
 namespace Rigidity.Poincare
