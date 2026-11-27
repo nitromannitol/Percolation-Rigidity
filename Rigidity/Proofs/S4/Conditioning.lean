@@ -27,7 +27,7 @@ fix (`OuterNonConstantStep`).
 * With `S = A_H ∩ G` and `P[A_H] ≤ P[B_H]`:
   `P[patternConfig R H ⁻¹' (A_H ∩ G)] ≤ P[A_H ∩ G] / P[A_H]` (`conditional_ge_pattern`).
 
-The remaining step `OuterNonConstantStep` asks for `H ⊇` (gadget) whose outer event has
+The step `OuterNonConstantStep` of this route asks for `H ⊇` (gadget) whose outer event has
 probability `≥ c R^{-2d+2}`; see its docstring for what is known about it.
 -/
 
@@ -229,10 +229,11 @@ theorem conditional_ge_pattern {p : unitInterval} (hp0 : 0 < (p : ℝ)) (hp1 : (
         ENNReal.div_le_div_right (measure_patternEvent_mul_le p R H (A ∩ G)) _
     _ ≤ μ (A ∩ G) / μ A := ENNReal.div_le_div_left hAB _
 
-/-- **Remaining step of the conditional Lemma 4.8** (not proved): for large `R` there is a bond set
-`H` of `Q_R` containing a translate of the gadget of height `R` as an induced subgraph whose outer
-event `patternConfig R H ⁻¹' (A_H ∩ G)`, an event of the bonds not fixed by `A_H`, has probability
-at least `c R^{-2d+2}`.
+/-- **Step of the fixed-`H` route to the conditional Lemma 4.8**, not proved here (the lemma is
+proved by averaging over `H`, see the module docstring): for large `R` there is a bond set `H` of
+`Q_R` containing a translate of the gadget of height `R` as an induced subgraph whose outer event
+`patternConfig R H ⁻¹' (A_H ∩ G)`, an event of the bonds not fixed by `A_H`, has probability at
+least `c R^{-2d+2}`.
 
 Route and obstruction. Take `H` connected and
 containing every site of `∂Q_R` up to an independent set (otherwise the bonds of `Q_R` between two
@@ -254,7 +255,7 @@ def OuterNonConstantStep (d : ℕ) (hd : 2 ≤ d) (p : unitInterval) : Prop :=
         (latticeBondLaw d p (patternConfig R H ⁻¹'
           (conditioningEvent d R H ∩ gadgetNonconstantEvent hd q R τ))).toReal
 
-/-- **Lemma 4.8 (printed conditional form)** from the remaining step `OuterNonConstantStep`
+/-- **Lemma 4.8 (printed conditional form)** from the step `OuterNonConstantStep`
 (the fixed-`H` route), by the factorization `conditional_ge_pattern`. -/
 theorem nonConstantOnGadget_of_outerStep [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
     (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)

@@ -10,7 +10,9 @@ import Rigidity.Proofs.S2.PlanarGreenGradient
 /-!
 # Fast decay from planar literature inputs
 
-The proof of Theorem 1.3 requires the remaining literature estimates only in dimension two.
+Theorem 1.3 and its supporting estimates from the literature inputs stated in dimension two (the
+planar corrector, regularity, Green-column and quantitative Green estimates), as hypotheses. Each of
+these inputs is proved in `Rigidity/Proofs/Assembly/ProvedFluxWeakNorm.lean` (`fast_decay_holds`).
 -/
 
 namespace Rigidity.Assembly.WithPlanarInputs
