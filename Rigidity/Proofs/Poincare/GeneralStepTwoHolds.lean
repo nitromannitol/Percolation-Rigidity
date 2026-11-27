@@ -9,8 +9,10 @@ surely the good cubes of the summation of estimate (2) partition `ℤᵈ`
 (`exists_stepTwoGood_partition`), and through every such partition the weight of the Step 2 sum
 plus the path weight, `W₂(y) + pathWeight(y)`, is at most a variable `W(y)` with moments of
 polynomial growth uniformly in `y` (`exists_stepTwo_weight_data`): `W₂(y)` is at most the majorant
+on the radii `ρ(a) = max(σ(a), σ♭(a))` of the edges, `σ♭` the size with the bond of the edge closed,
 built from the bound `Λ` of the corrector increments of Step 1 (`stepOne_lipschitz_data`,
-`planeGrad_le_of_lipschitz`, `stepTwoWeight_le_weightMajorant`), and the path weight is at most
+`planeGrad_le_of_lipschitz`, `stepTwoWeight_le_weightMajorant`), whose moments use `p < 1`
+(`growthMoments_weightMajorant_edgeRadius_uniform`), and the path weight is at most
 `(1 + 3^d) σ(y)^d` times a sum over the ball of radius `3dσ(y)` of the `d`-th powers of the sizes of
 the good cubes times the weighted numbers of anchor regions (`pathWeight_le_ballSum`).
 
@@ -116,24 +118,28 @@ theorem exists_stepTwo_weight_data [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
     have hd2' : (2 : ℝ) ≤ d := by exact_mod_cast hd2
     exact ENNReal.ofReal_le_ofReal (by nlinarith [hΛ0 i z ω])
   have hK : (0 : ℝ) < 3 * d * κ := mul_pos (by positivity) (Nat.cast_pos.2 hκ)
-  obtain ⟨AV, kV, hAV, hkV, hV⟩ := growthMoments_weightMajorant hd2 hpc
-    (Λ := fun z ω => 2 * d * Λ i z ω) (fun z => (hΛm i z).const_mul _)
-    (by positivity : (0 : ℝ) < 2 * d * BΛ) hκΛ hΛ' hK hK
-  have hVm : ∀ y, Measurable (weightMajorant (fun z ω => 2 * d * Λ i z ω)
-      (3 * d * κ) (3 * d * κ) y) :=
-    fun y => measurable_weightMajorant (fun z => (hΛm i z).const_mul _) _ _ y
+  obtain ⟨AV, kV, hAV, hkV, hVβ⟩ := growthMoments_weightMajorant_edgeRadius_uniform hd2 hpc hp1
+    (by positivity : (0 : ℝ) < 2 * d * BΛ) hκΛ hK hK
+  have hV := hVβ edgeBond (fun z ω => 2 * d * Λ i z ω) (fun z => (hΛm i z).const_mul _) hΛ'
+  have hVm : ∀ y, Measurable
+      (weightMajorantOf (edgeRadius edgeBond) (fun z ω => 2 * d * Λ i z ω)
+        (3 * d * κ) (3 * d * κ) y) :=
+    fun y => measurable_weightMajorantOf (measurable_edgeRadius edgeBond)
+      (fun z => (hΛm i z).const_mul _) _ _ y
   -- the constants
   set Bm : ℝ := max AV (Bσ * BS * 2 ^ (kσ + kS))
   set km : ℝ := max kV (kσ + kS)
   have hBm0 : 0 < Bm := lt_max_of_lt_left hAV
   have hkm0 : 0 < km := lt_max_of_lt_left hkV
-  have hW1 : ∀ y, GrowthMomentsD p (weightMajorant (fun z ω => 2 * d * Λ i z ω)
-      (3 * d * κ) (3 * d * κ) y) Bm km :=
+  have hW1 : ∀ y, GrowthMomentsD p
+      (weightMajorantOf (edgeRadius edgeBond) (fun z ω => 2 * d * Λ i z ω)
+        (3 * d * κ) (3 * d * κ) y) Bm km :=
     fun y => (hV y).of_le hAV.le (le_max_left _ _) (le_max_left _ _)
   have hW2 : ∀ y, GrowthMomentsD p (fun ω => ENNReal.ofReal
       ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d) * S y ω) Bm km :=
     fun y => (hP y).of_le (by positivity) (le_max_right _ _) (le_max_right _ _)
-  refine ⟨fun y ω => weightMajorant (fun z ω => 2 * d * Λ i z ω) (3 * d * κ) (3 * d * κ) y ω +
+  refine ⟨fun y ω => weightMajorantOf (edgeRadius edgeBond) (fun z ω => 2 * d * Λ i z ω)
+        (3 * d * κ) (3 * d * κ) y ω +
       ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d) *
         S y ω,
     2 * Bm, km, by positivity, hkm0, fun y => (hVm y).add ((hσm y).mul (hSm y)),
@@ -142,8 +148,9 @@ theorem exists_stepTwo_weight_data [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
   -- the almost sure bound
   filter_upwards [ae_partitionEvent hd2 hpc, hlip i] with ω hPω hl
   intro hpart j y
-  have h1 : stepTwoWeight hG hGv κ i ω y ≤ weightMajorant (fun z ω => 2 * d * Λ i z ω)
-      (3 * d * κ) (3 * d * κ) y ω :=
+  have h1 : stepTwoWeight hG hGv κ i ω y ≤
+      weightMajorantOf (edgeRadius edgeBond) (fun z ω => 2 * d * Λ i z ω)
+        (3 * d * κ) (3 * d * κ) y ω :=
     stepTwoWeight_le_weightMajorant hG hGv (Λ := fun z ω => 2 * d * Λ i z ω) hPω
       (fun z => mul_nonneg (by positivity) (hΛ0 i z ω))
       (fun z => planeGrad_le_of_lipschitz hG hGv (fun z => hΛ0 i z ω) hl z) y
