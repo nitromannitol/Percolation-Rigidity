@@ -13,9 +13,10 @@ percolation clusters*, Ann. Appl. Probab. 2021, arXiv:1805.00902)
 `|χ_p(x) - χ_p(y)| 1_{x, y ∈ 𝒞_∞} ≤ O_s(C |p| log^{1/2} |x - y|)` in dimension two with Lemma 1.6
 applied to the sequence `X_n = 3^{-αn} sup_{x ∈ B_{3^n}(y)} |χ_p(x) - χ_p(y)| 1_{x, y ∈ 𝒞_∞}`.
 
-This file states Dario's Theorem 1 in dimension two as the named hypothesis
-`DarioOptimalCorrectorTwo` and proves the planar corrector input `CorrectorQuantitativeInputTwo`
-from it and the planar qualitative corrector input `SupercriticalBondCorrectorInputTwo`.
+This file states Dario's Theorem 1 in dimension two as `DarioOptimalCorrectorTwo` (proved:
+`Rigidity.Poincare.darioOptimalCorrectorTwo_holds`) and proves the planar corrector input
+`CorrectorQuantitativeInputTwo` from it and the planar qualitative corrector input
+`SupercriticalBondCorrectorInputTwo`.
 
 * The pairs are taken in the lattice ball `B_{3^n}(x)` around the centre `x` of the statement, not
   from the centre: this bounds the oscillation also when `x ∉ 𝒞_∞`.
@@ -25,7 +26,7 @@ from it and the planar qualitative corrector input `SupercriticalBondCorrectorIn
 * The bound for every slope `q` and every corrected plane of slope `q` follows from the two
   coordinate slopes: by the uniqueness of corrected planes (first clause of the qualitative input)
   the corrector is linear in the slope modulo constants (Dario–Gu, §2.3.1).
-* Dario's display has `log^{1/2} |x - y|`, which vanishes at `|x - y| = 1`; the hypothesis uses
+* Dario's display has `log^{1/2} |x - y|`, which vanishes at `|x - y| = 1`; the statement uses
   `log^{1/2} (2 + |x - y|)`, comparable to it for `|x - y| ≥ 2`.
 -/
 

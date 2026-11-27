@@ -574,8 +574,10 @@ theorem PoincareCoarsenedData.linftyIterationData {F : Vertex 2 → Vertex 2 →
     have h2 : 0 ≤ 2 * C * (1 / s) ^ (1 / s) := by positivity
     exact mul_le_mul_of_nonneg_left h1 h2
 
-/-- **The coarsened corrector of Dario, §4–§5, in dimension two** (hypothesis): fields `G i y` and
-`S i y` satisfying `PoincareCoarsenedData`, and the coarsening error of Step 6. -/
+/-- **The coarsened corrector of Dario, §4–§5, in dimension two** (a hypothesis of this reduction):
+fields `G i y` and `S i y` satisfying `PoincareCoarsenedData`, and the coarsening error of
+Step 6 (`CoarseningErrorTwo`, proved for the coarsened correctors of the planar partition by
+`coarseningErrorTwo_recentred` and `baseCoarseningError`). -/
 def DarioPoincareCorrectorTwo (p : unitInterval) : Prop :=
   ∃ A₀ C s s₆ C₆ : ℝ, 0 < s₆ ∧ 0 < C₆ ∧
     ∃ (G : Fin 2 → Vertex 2 → Vertex 2 → Vertex 2 → Configuration 2 → ℝ)

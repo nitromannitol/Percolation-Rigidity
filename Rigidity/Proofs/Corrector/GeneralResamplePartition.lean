@@ -15,8 +15,8 @@ form, used here, replaces the scale `s = size(□_{𝒫(𝐚)}(x))` by
 `S = max(size(□_{𝒫(𝐚)}(x)), size(□_{𝒫(𝐚̃)}(x)))`
 
 in the radius of the ball and in the bound (`resampleScale`); the same near and far conclusions
-then hold, with equal anchors far from the bond (proved here with the constants `C₀ = 81`,
-`C = 243`, `resamplePartitionBound_holds`), and `S` has the
+then hold, with equal anchors far from the bond (proved in `GeneralResamplePartitionHolds`
+with the constants `C₀ = 81`, `C = 243`, `resamplePartitionBound_holds`), and `S` has the
 stretched-exponential tail of the partition sizes. Steps 1 and 2 of the proof of Lemma 3.3 use it
 through the coarsened functions: outside the ball the coarsening `[w]_{𝒫(𝐚̃)}(z)` equals
 `[w]_{𝒫(𝐚)}(z)`, so the second clause is stated for the partition cube and its anchor. Here:

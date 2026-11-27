@@ -11,7 +11,7 @@ import Rigidity.Proofs.Section5.PlanarCrossingEvents
 
 Dario's §5 uses, besides the partition `𝒫` of good cubes, its translates `𝒫_y = y + 𝒫(τ_{-y})`:
 the partition computed from the configuration seen from `y`, moved back by `y`. For the planar
-partition of main (`planarPartCube`, anchors `planarCoarseAnchor`) this file proves:
+partition (`planarPartCube`, anchors `planarCoarseAnchor`) this file proves:
 
 * on the partition event, the anchors of the partition cubes of all vertices lie in one infinite
   open component (`reachable_planarCoarseAnchor`, `infinite_planarCoarseAnchor`), as for the

@@ -14,8 +14,9 @@ at most `s`, then for every vertex `z` of that square in an infinite open cluste
 `|W(z) - W([0]_𝒫)| ≤ 400 s^{3/2} (R + 1)^{1/2} E^{1/2}`,
 
 where `E` bounds the energy of `W` on every finite set (`abs_sub_coarseAnchor_zero_le`). The proof
-compares `W` with its coarsening ((2.8)-(2.10) of Armstrong and Dario, in main's planar form
-`abs_sub_coarseAnchor_le`, `abs_coarseAnchor_sub_le`), bounds the total variation over the square
+compares `W` with its coarsening (Propositions 2.8 and 2.10 of Dario, that is Lemmas 3.2 and
+3.3 of Armstrong and Dario, in the planar form `abs_sub_coarseAnchor_le`,
+`abs_coarseAnchor_sub_le`), bounds the total variation over the square
 of side `9s` around a partition cube by Cauchy-Schwarz (`edgeVariationIn_le`), and sums along two
 straight segments from the origin to `z`, where each vertex lies in at most `10s + 1` of the
 squares (`sum_localEnergy_le`).

@@ -12,7 +12,7 @@ cluster (`component_local_gradient`) bounds it along the edges at the origin by
 `180 √K C₀ max(X, 2)²` (`localGrad_le_of_orderZero`, the argument of `abs_sub_le_of_orderZero` for
 a function harmonic in a ball). When `R < 10 max(X, 2)` the bound `localGrad ≤ 6R` gives the same
 form, and when the origin is in the local cluster but not in the infinite cluster it lies in a
-finite cluster of at least `R + 1` points. Hence (`localGrad_le_max_sq`)
+finite cluster of at least `R + 1` points. Hence (`ae_localGrad_le`)
 
 `localGrad R ω ≤ L max(X, 2)² + 6R 1{the origin is in a finite cluster of at least R + 1 points}`,
 

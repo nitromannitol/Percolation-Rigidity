@@ -10,12 +10,12 @@ import PercolationClusterHomogenization.Proofs.Percolation.PlanarAnchorTranslati
 
 For Lemma 3.2, Dario coarsens the corrector with respect to the stationary partition
 `𝒫_stat^k` (here the planar partition capped at scale `k`, `TriadicCube.cappedCube`), with the
-anchor `z̄_stat(□)` of (d.corsenstatio): the anchor `z̄(□)` of a good cube when it lies in the
+anchor `z̄_stat(□)` of Dario's Definition 3.4: the anchor `z̄(□)` of a good cube when it lies in the
 infinite cluster, and otherwise the point of the infinite cluster closest to `□`, ties broken by
 the lexicographic order.
 
 * `TriadicCube.IsNearestInf`, `nearestInf`: the point of the infinite open components which is
-  the smallest for main's anchor order of `□` (distance to the centre, then the lexicographic
+  the smallest for the anchor order of `□` (distance to the centre, then the lexicographic
   order), its existence, uniqueness, translation covariance and measurability;
 * `statAnchor k ω z`: Dario's anchor of the cube of `𝒫_stat^k` containing `z`; it lies in the
   infinite cluster, equals the anchor of the planar partition where the cube is the planar
@@ -194,7 +194,7 @@ namespace Rigidity.Corrector
 open MeasureTheory LatticeProb.Percolation Rigidity.Percolation
 open scoped Classical
 
-/-- Dario's anchor (d.corsenstatio) of a cube: its anchor if it is good with anchor in the
+/-- Dario's anchor (Definition 3.4) of a cube: its anchor if it is good with anchor in the
 infinite cluster, the nearest point of the infinite cluster otherwise. -/
 noncomputable def statAnchorOf (ω : Configuration 2) (Q : TriadicCube 2) : Vertex 2 :=
   if Q ∈ planarGoodCubes ω ∧ ω ∈ infiniteComponentEvent (Q.planarAnchor ω) then Q.planarAnchor ω

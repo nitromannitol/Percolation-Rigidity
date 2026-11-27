@@ -177,13 +177,15 @@ def BaseTheorem (p : unitInterval) (A k a : ℝ) : Prop :=
     ∫⁻ ω, ENNReal.ofReal (boxOsc (coarseField hG hGv i 0) m q ω) ∂latticeBondLaw d p ≤
       ENNReal.ofReal ((A * q ^ k) ^ q * (m : ℝ) ^ (q * a))
 
-/-- **The moment form of (5.7)** for the coarsened correctors (base hypothesis). -/
+/-- **The moment form of (5.7)** for the coarsened correctors (base hypothesis; proved:
+`baseComparison`). -/
 def BaseComparison (p : unitInterval) (B k : ℝ) : Prop :=
   ∀ (i : Fin d) (y' z : Vertex d) (q : ℝ), 1 ≤ q →
     mom p (fun ω => coarseField hG hGv i y' z ω - coarseField hG hGv i 0 z ω) q ≤
       ENNReal.ofReal ((B * q ^ k) ^ q)
 
-/-- **The coarsening error (5.10)** at a point of the infinite cluster (base hypothesis). -/
+/-- **The coarsening error (5.10)** at a point of the infinite cluster (base hypothesis; proved:
+`baseCoarseningError`). -/
 def BaseCoarseningError (p : unitInterval) (s₆ C₆ : ℝ) : Prop :=
   ∀ (i : Fin d) (v : Vertex d), ∃ E : Configuration d → ℝ, Measurable E ∧ IsOsBond d p E s₆ C₆ ∧
     ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ infiniteComponentEvent v →

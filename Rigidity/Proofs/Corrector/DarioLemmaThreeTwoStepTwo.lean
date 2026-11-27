@@ -4,13 +4,13 @@ import Rigidity.Proofs.Corrector.DarioLemmaThreeTwoMoments
 # Dario, Lemma 3.2, Step 2: the stationary coarsened gradient has mean zero over a period
 
 Step 2 of the proof of Lemma 3.2 uses the quantitative sublinearity of the corrector (Dario,
-(2.1), from Armstrong and Dario, (1.22)): `osc_{𝒞_∞ ∩ B_R} χ_p ≤ O_s(C |p| R^{1-δ})`, here the
-hypothesis `CorrectorOscSublinearTwo`. With it, the sum of `∇_j[χ]_{𝒫_stat^k}` along a segment
-of length `N` in the direction `e_j`, which telescopes to `χ(z̄_stat(y + N e_j)) - χ(z̄_stat(y))`,
-has expectation `O(N^{1-δ})`; by the stationarity under `3^k ℤ²`, the sum over `m` periods is `m`
-times the sum over one period, which therefore vanishes.
+(2.1), from Armstrong and Dario, (1.22)): `osc_{𝒞_∞ ∩ B_R} χ_p ≤ O_s(C |p| R^{1-δ})`, here
+`CorrectorOscSublinearTwo` (proved: `correctorOscSublinearTwo_holds`). With it, the sum of
+`∇_j[χ]_{𝒫_stat^k}` along a segment of length `N` in the direction `e_j`, which telescopes to
+`χ(z̄_stat(y + N e_j)) - χ(z̄_stat(y))`, has expectation `O(N^{1-δ})`; by the stationarity under
+`3^k ℤ²`, the sum over `m` periods is `m` times the sum over one period, which therefore vanishes.
 
-* `CorrectorOscSublinearTwo`: (1.22) in dimension two (hypothesis);
+* `CorrectorOscSublinearTwo`: (1.22) in dimension two (proved: `correctorOscSublinearTwo_holds`);
 * `sum_statGrad_eq`: the telescoping of the coarsened gradient along a segment;
 * `exists_lintegral_abs_statSegment_le`: `E|χ(z̄_stat(y + N e_j)) - χ(z̄_stat(y))| ≤ C₂ N^{1-δ} + C₃`.
 -/
@@ -20,8 +20,9 @@ namespace Rigidity.Corrector
 open MeasureTheory Filter Set LatticeProb.Percolation Rigidity.Percolation Rigidity.External
 open scoped Classical ENNReal
 
-/-- **Armstrong and Dario, (1.22)** (Dario, (2.1); hypothesis): the oscillation of the correctors on
-`𝒞_∞ ∩ B_R` is at most `O_s(C |q| R^{1-δ})`, for some `δ ∈ (0, 1]`. -/
+/-- **Armstrong and Dario, (1.22)** (Dario, (2.1)): the oscillation of the correctors on
+`𝒞_∞ ∩ B_R` is at most `O_s(C |q| R^{1-δ})`, for some `δ ∈ (0, 1]`. It holds
+(`correctorOscSublinearTwo_holds`). -/
 def CorrectorOscSublinearTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∃ s δ C : ℝ, 0 < s ∧ 0 < δ ∧ δ ≤ 1 ∧ 0 < C ∧ ∀ R : ℝ, 1 ≤ R →

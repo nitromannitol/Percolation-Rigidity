@@ -8,8 +8,8 @@ import PercolationClusterHomogenization.Proofs.Cluster.GeneralMuLocal
 For Lemma 3.2, Dario coarsens the corrector with respect to the stationary partition
 `𝒫_stat^k`: the partition into good cubes of `ℤᵈ` capped at scale `k`
 (`TriadicCube.cappedCube (TriadicCube.goodCubes ω) k`), with the anchor `z̄_stat(□)` of
-(d.corsenstatio): the anchor of a good cube when it lies in the infinite cluster, and otherwise
-the point of the infinite cluster closest to `□`, ties broken by the anchor order
+Dario's Definition 3.4: the anchor of a good cube when it lies in the infinite cluster, and
+otherwise the point of the infinite cluster closest to `□`, ties broken by the anchor order
 (`TriadicCube.nearestInf`).
 
 * `dario_errorstatpart`: **(3.3)**, `P[∃ x ∈ □, □_𝒫(x) ≠ □_{𝒫_stat^k}(x)] ≤ C exp(-c 3^k)` for
@@ -45,7 +45,7 @@ theorem dario_errorstatpart [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
   obtain ⟨x, hx, hne⟩ := hω
   exact ⟨x, hx, partitionCube ω x, (partitionCube_spec hP x).1, (partitionCube_spec hP x).2, hne⟩
 
-/-- Dario's anchor (d.corsenstatio) of a cube: its anchor if it is good with anchor in the
+/-- Dario's anchor (Definition 3.4) of a cube: its anchor if it is good with anchor in the
 infinite cluster, the nearest point of the infinite cluster otherwise. -/
 noncomputable def statAnchorOf (ω : Configuration d) (Q : TriadicCube d) : Vertex d :=
   if Q ∈ TriadicCube.goodCubes ω ∧ ω ∈ infiniteComponentEvent (Q.anchor ω) then Q.anchor ω
