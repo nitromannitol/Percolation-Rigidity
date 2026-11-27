@@ -70,7 +70,7 @@ theorem stepOne_lipschitz_data (hd : 2 ≤ d) {p : unitInterval}
       ∑ j, |(Pi.single i (1 : ℝ) : Fin d → ℝ) j|,
     3 * (L + 2) * (2 * D * (d : ℝ) ^ (1 / s)) ^ (4 * d), 4 * d / s, by positivity, by positivity,
     fun i x => ?_, fun i x ω => ?_, fun i => ae_all_iff.2 fun x => hlip _ x, fun i x q hq => ?_⟩
-  · exact ((((hXm.comp (measurable_configurationTranslation (-x))).max
+  · exact ((((hXm.comp (configurationTranslationMeasurableEquiv (-x)).measurable).max
       measurable_const).pow_const d).const_mul L |>.add_const 1).mul_const _
   · simp only [hQ]
     positivity
@@ -134,7 +134,7 @@ theorem stepOne_lipschitz_data (hd : 2 ≤ d) {p : unitInterval}
               ring
             rw [h4r, Real.rpow_mul hx0, Real.rpow_natCast, hr, Real.mul_rpow hd0.le hq0.le, ← hqd]
             congr 1
-            ring
+            ring_nf
           have h3 : (3 : ℝ) ≤ 3 ^ q := by
             simpa using Real.rpow_le_rpow_of_exponent_le (by norm_num : (1 : ℝ) ≤ 3) hq
           rw [e1]
