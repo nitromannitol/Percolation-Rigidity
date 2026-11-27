@@ -79,7 +79,16 @@ the sublinear growth of functions of finite energy
 divergence source (`Rigidity.Corrector.GeneralDim.meyers_source`), the summation over cells
 (`Rigidity.Corrector.GeneralDim.tsum_weight_energy_le`), and the weight and the good cubes of the
 summation of estimate (2) (`Rigidity.Corrector.GeneralDim.stepTwoWeight`,
-`Rigidity.Corrector.GeneralDim.stepTwoGood`, `Rigidity.Corrector.GeneralDim.tsum_weight_openEnergy_le`). The
+`Rigidity.Corrector.GeneralDim.stepTwoGood`, `Rigidity.Corrector.GeneralDim.tsum_weight_openEnergy_le`).
+Given Lemma 3.5, the term `T₂(e)` is computed in Cases 1 to 3 for the bonds open and closed in the
+configuration (`Rigidity.Corrector.GeneralDim.ae_flipTermTwo_sq_le_open`,
+`Rigidity.Corrector.GeneralDim.ae_flipTermTwo_sq_le_closed`), the Step 2 sum is bounded by a weighted
+energy (`Rigidity.Corrector.GeneralDim.ae_flipSumTwo_le`) and summed through a partition of good
+cubes (`Rigidity.Corrector.GeneralDim.flipSumTwo_le_of_partition`), so the bound of the Step 2 sum,
+and with it Lemma 3.3 in dimension `d ≥ 3`, follows from Lemma 3.5 and the probabilistic part of
+Step 2 (`DarioStepTwoWeightThree`: the partition of the good cubes and the moments of the weight,
+`Rigidity.Corrector.GeneralDim.darioStepTwoSumBoundThree_of_weight`,
+`Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_weight`). The
 Green estimate reduces in every dimension `d ≥ 3` to Theorem 1 of Dario and Gu (`DarioGuHeatKernelD d`,
 `supercriticalBondGreenQuantitative_of_heatKernel`). Theorem 1.3 in the
 form with the twelve inputs takes only these two (`Rigidity.Assembly.WithProvedCorrector.fast_decay`).
@@ -3414,7 +3423,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   the special case of Lemma 2.13 for unions of lattice squares (`Rigidity.Assembly.polyominoJordan`),
   and the thirty-five theorems of
   [The subadditive quantities of Armstrong and Dario in every dimension: Lemmas 5.3 and 5.4, (5.21) to (5.24) and Step 1 of Lemma 5.10](#the-subadditive-quantities-of-armstrong-and-dario-in-every-dimension-lemmas-53-and-54-521-to-524-and-step-1-of-lemma-510).
-  Each of the 1219 reports lists only axioms among `propext`, `Classical.choice` and
+  Each of the 1231 reports lists only axioms among `propext`, `Classical.choice` and
   `Quot.sound`. [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any other axiom, on
   `sorryAx`, or on a missing report. The literature inputs are hypotheses, not axioms, so they do
   not appear in the reports of the theorems.
