@@ -20,9 +20,7 @@ the named hypothesis `DarioStepTwoWeightThree` (in dimension two these are
 moments of the majorants). From it and Lemma 3.5 for the partition into good cubes,
 `isOsBond_heatSqSum_of_moments` gives the bound of the Step 2 sum
 (`darioStepTwoSumBoundThree_of_weight`), and with Step 1, Lemma 3.3 in dimension `d ≥ 3`
-(`darioVarianceBoundThree_of_weight`); with Lemma 3.5 from the one-bond stability of good cubes,
-from that stability and the probabilistic part of Step 2
-(`darioVarianceBoundThree_of_goodFlipStable`).
+(`darioVarianceBoundThree_of_weight`).
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -222,11 +220,5 @@ and the probabilistic part of Step 2. -/
 theorem darioVarianceBoundThree_of_weight (h35 : DarioResamplePartitionThree)
     (hW : DarioStepTwoWeightThree) : DarioVarianceBoundThree :=
   darioVarianceBoundThree_of_resample h35 (darioStepTwoSumBoundThree_of_weight h35 hW)
-
-/-- **Dario, Lemma 3.3 in dimension `d ≥ 3`**, from the one-bond stability of good cubes at large
-scales and the probabilistic part of Step 2. -/
-theorem darioVarianceBoundThree_of_goodFlipStable (h : DarioGoodFlipStableThree)
-    (hW : DarioStepTwoWeightThree) : DarioVarianceBoundThree :=
-  darioVarianceBoundThree_of_weight (darioResamplePartitionThree_of_goodFlipStable h) hW
 
 end Rigidity.Corrector.GeneralDim
