@@ -9,7 +9,7 @@ import LatticeProb.Prob.Percolation.RootedHarmonicMeasurable
 The hypotheses of `edgeGrad_eq_smul_greenProj_of_liouville` other than the equation and the growth
 of `v` hold almost surely on the planar infinite cluster:
 
-* `exists_eq_const_of_sublinearLiouville`: main's Liouville theorem (`SublinearLiouville`, proved
+* `exists_eq_const_of_sublinearLiouville`: the Liouville theorem (`SublinearLiouville`, proved
   for `p_c(2) < p < 1` from the planar qualitative corrector input,
   `sublinearLiouville_two_of_correctorInput supercriticalBondCorrectorInputTwo_holds`) in the
   vertex form, through `componentLaplacian_restrict_eq` and `laplacian_openGraph_eq_edgeDiv`;
@@ -26,7 +26,7 @@ namespace Rigidity.Corrector
 
 open MeasureTheory LatticeProb.Percolation Rigidity.Percolation
 
-/-- Main's Liouville theorem in vertex form. -/
+/-- The Liouville theorem (`SublinearLiouville`) in vertex form. -/
 theorem exists_eq_const_of_sublinearLiouville {ω : Configuration 2}
     (hL : ∀ h : HasUniqueInfiniteOpenComponent ω, ∀ v : uniqueInfiniteComponent h → ℝ,
       (∀ x, componentLaplacian _ v x = 0) →

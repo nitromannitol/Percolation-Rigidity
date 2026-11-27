@@ -8,10 +8,12 @@ import PercolationClusterHomogenization.Proofs.Density.ClusterDensityConcentrati
 `darioGuApproxLemmaTwo_of_inputs`: Lemma 4.1 of Dario–Gu in the form used in the iteration of
 §4.3 (`DarioGuApproxLemmaTwo`) holds for every diffusivity `σ > 0`, from
 
-* Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`, proved in §3 of the source),
-* the Poincaré inequality, Proposition 2.7 (`ClusterPoincareTwo`, cited by the source),
-* Theorem 4 (`BarlowGaussianUpperBoundTwo`, cited) and Proposition 2.15 (`CarneVaropoulosTwo`,
-  cited),
+* Theorem 3 in the form of Remark 1.3 (`DarioGuGradientBoundTwo`, proved in §3 of the source and
+  here as `darioGuGradientBoundTwo_holds`),
+* the Poincaré inequality, Proposition 2.7 (`ClusterPoincareTwo`, proved as
+  `clusterPoincareTwo_holds`),
+* Theorem 4 (`BarlowGaussianUpperBoundTwo`) and Proposition 2.15 (`CarneVaropoulosTwo`), proved as
+  `barlowGaussianUpperBoundTwo_holds` and `carneVaropoulosTwo_holds`,
 
 with Proposition A.7 (`darioGuDensityGaussianTwo_holds`) and the lower bound on the volume of the
 cluster in balls from Proposition A.1 (`clusterDensityInputFaithful_of_concentration`).

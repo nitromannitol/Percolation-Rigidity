@@ -7,9 +7,9 @@ import Rigidity.Proofs.Green.DarioGuWeightedL2
 * `gaussianHeat_mul_gaussianHeat`: the identity
   `p̄(s, u) p̄(s, v) = p̄(2s, u + v) p̄(s/2, (v - u)/2)` (Dario–Gu, line 2599, from the parallelogram
   law), with `u = x - y`, `v = y - z`, `(v - u)/2 = y - (x + z)/2`.
-* `abs_sum_gaussian_sub_le`: `Σ_y |p̄(τ, y - m) - p̄(τ, y - m')| ≤ M τ^{-1/2}` for `|m - m'| ≤ 1`
-  and `τ ≥ 1`; with it Proposition A.7, printed for lattice centres, applies at the centre
-  `(x + z)/2` of (4.48)-b.
+* `sum_abs_gaussianHeat_sub_le`: `Σ_y |p̄(τ, y - m) - p̄(τ, y - m')| ≤ M τ^{-1/2}` for
+  `|m - m'| ≤ 1` and `τ ≥ 1`; with it Proposition A.7, printed for lattice centres, applies at the
+  centre `(x + z)/2` of (4.48)-b.
 -/
 
 open Finset LatticeProb.Percolation

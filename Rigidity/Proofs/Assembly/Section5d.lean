@@ -23,8 +23,8 @@ import Rigidity.Proofs.Section5.TriangleDensity
 
 /-! # Section 5: composed results (d = 2)
 
-This file composes results of Section 5 whose step proofs are finished but which were not composed
-in `Section5.lean` or `Section5b.lean`. Each concludes its draft statement verbatim:
+This file composes results of Section 5 in addition to those of `Section5.lean` and
+`Section5b.lean`. Each concludes its draft statement verbatim:
 * Proposition 5.20 (`boundarySize : BoundarySizeStmt p f`), from `boundarySize_of_inputs`
   (`ThreeExitsStep` is proved), Lemma 5.16 and Proposition 5.12;
 * Proposition 5.8 (`twoScaleExpansion : TwoScaleExpansionStmt p f`), from

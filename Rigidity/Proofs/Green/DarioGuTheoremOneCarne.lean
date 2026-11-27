@@ -7,8 +7,9 @@ import Rigidity.Proofs.Green.PlanarCarneVaropoulos
 With the Carne–Varopoulos bound proved (`carneVaropoulosTwo_holds`), Proposition A.7 proved and
 Lemma 4.1 reduced to Theorem 3 and the Poincaré inequality, Theorem 1 of Dario–Gu in dimension two
 (`DarioGuHeatKernelTwo`) holds under Proposition 4.3 for some `σ > 0`, Theorem 3 (Remark 1.3),
-the Poincaré inequality (Proposition 2.7), Theorem 4 (Barlow, cited) and Proposition 2.12 (R5), or
-Dario's Theorem 1.
+the Poincaré inequality (Proposition 2.7), Theorem 4 (Barlow) and Proposition 2.12
+(`CorrectorQuantitativeInputTwo`), or Dario's Theorem 1; Theorem 4 is proved
+(`barlowGaussianUpperBoundTwo_holds`).
 -/
 
 namespace Rigidity.Green

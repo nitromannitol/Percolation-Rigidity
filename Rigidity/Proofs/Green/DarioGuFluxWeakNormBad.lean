@@ -4,11 +4,11 @@ import Rigidity.Proofs.Green.DarioGuFluxWeakNormScale
 # The bad scales of the minimal scale of Proposition B.1 of Dario–Gu
 
 Step 3 of the proof of Proposition B.1 (Appendix B) builds the minimal scale `M_flux,α(y)` from
-Lemma 1.5 of the source (Lemme 2.2 of Armstrong–Dario). Here the bad scales are bounded by:
+Lemma 1.6 of the source (Lemma 2.3 of Armstrong–Dario). Here the bad scales are bounded by:
 
 * `measure_planarSide_lt_le`: `P(∃ z ∈ S, L < size(□_𝒫(z))) ≤ |S| · 2 e^{-L/θ}`, from the
   exponential moments of the sizes of the partition cubes (`planar_meshed_partition_estimates`);
-* `measure_toReal_lt_le_of_growthMoments`: a variable with moments `E[X^q] ≤ (A q^κ)^q` exceeds
+* `exists_measure_toReal_lt_le`: a variable with moments `E[X^q] ≤ (A q^κ)^q` exceeds
   `t` with probability at most `2 exp(-(t/C)^s)` (`isOsBond_of_moment_le`,
   `measure_lt_le_of_isOsBond`), and is finite almost surely;
 * `exists_summable_badBound`: the resulting bounds

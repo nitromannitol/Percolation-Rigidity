@@ -8,11 +8,15 @@ With the measurable corrector, the translated partitions and the coarsened corre
 the stationarity (2.3) (`linftyIterationData_recentred`), the comparison (5.7) of the translated
 partitions (`baseComparison`) and the coarsening error (5.10) (`baseCoarseningError`), from the
 qualitative corrector input `SupercriticalBondCorrectorInputTwo`, the order-zero regularity input
-`ArmstrongDarioOrderZeroTwo` and the exponential moments of the partition sizes of main.
+`ArmstrongDarioOrderZeroTwo` and the exponential moments of the partition sizes.
 
-The remaining input is the moment form (5.5) of Theorem 2 for the coarsened corrector at the
-origin (`DarioTheoremTwoOriginTwo`), which Step 1 of the proof of Theorem 2 derives from the
-multiscale Poincaré inequality and Proposition 3.1 (`lintegral_boxOsc_le_of_poincare`).
+The remaining input of this reduction is the moment form (5.5) of Theorem 2 for the coarsened
+corrector at the origin (`DarioTheoremTwoOriginTwo`), which Step 1 of the proof of Theorem 2
+derives from the multiscale Poincaré inequality and Proposition 3.1
+(`lintegral_boxOsc_le_of_poincare`). It follows from `DarioPoincareInputsTwo`
+(`darioTheoremTwoOriginTwo_of_poincare`), which is established from the multiscale Poincaré
+inequality (`multiscalePoincareTwo_holds`) and Proposition 3.1 in
+`darioOptimalCorrectorTwo_of_prop31`.
 -/
 
 namespace Rigidity.Corrector
@@ -42,9 +46,9 @@ theorem BaseComparison.mono_exponent {B k k' : ℝ} (hB : 0 ≤ B) (h : BaseComp
 end Mono
 
 /-- **Theorem 2 of Dario at the origin for the coarsened correctors, in dimension two, moment
-form** (hypothesis; (5.5)): on every measurable conull carrier of the qualitative corrector input,
-the box oscillations of the coarsened correctors `coarseField i 0` have moments
-`(A q^k)^q m^{q/2}`. -/
+form** (a hypothesis of this reduction; (5.5)): on every measurable conull carrier of the
+qualitative corrector input, the box oscillations of the coarsened correctors `coarseField i 0`
+have moments `(A q^k)^q m^{q/2}`. -/
 def DarioTheoremTwoOriginTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∀ (G : Set (Configuration 2)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent 2),
@@ -86,9 +90,10 @@ theorem baseTheoremTwo_of_poincare {G : Set (Configuration 2)} (hG : MeasurableS
     (hSm i) (hS0 i) (hmsp i) (h31 i) (hlip i) hm hq
 
 /-- **The inputs of Step 1 of the proof of Theorem 2** for the coarsened correctors
-(hypothesis): smoothed gradients `S i r x` (standing for `|Φ_{r²} * ∇[χ_{e_i}]_𝒫(x)|`) satisfying
-the multiscale Poincaré inequality (Proposition 2.19 in cube form), Proposition 3.1 and the
-Lipschitz bound (2.22) for `r ≤ 1`. -/
+(a hypothesis of this reduction; `darioOptimalCorrectorTwo_of_prop31` establishes it from
+`MultiscalePoincareTwo` and `DarioPropThreeOneTwo`): smoothed gradients `S i r x` (standing for
+`|Φ_{r²} * ∇[χ_{e_i}]_𝒫(x)|`) satisfying the multiscale Poincaré inequality (Proposition 2.19 in
+cube form), Proposition 3.1 and the Lipschitz bound (2.22) for `r ≤ 1`. -/
 def DarioPoincareInputsTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∀ (G : Set (Configuration 2)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent 2),

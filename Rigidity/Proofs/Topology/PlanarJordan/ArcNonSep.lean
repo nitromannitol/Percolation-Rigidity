@@ -156,9 +156,9 @@ theorem arc_not_separates (hbr : BrouwerFPT) {A : Set Plane}
         h1.norm.inv₀ (fun z => by
           simp only [ne_eq, norm_eq_zero, sub_eq_zero]; exact hQne z)
       -- Each step is ascribed explicitly, and the scalar is passed to `const_smul`
-      -- rather than inferred: since Mathlib `905b9581`, `continuous_const.smul _`
-      -- leaves the scalar an undetermined metavariable, because unifying the `Pi`-level
-      -- `f • g` of `Continuous.smul` against `fun z ↦ R • …` no longer solves for it.
+      -- rather than inferred: `continuous_const.smul _` leaves the scalar an undetermined
+      -- metavariable, because unifying the `Pi`-level `f • g` of `Continuous.smul` against
+      -- `fun z ↦ R • …` does not solve for it.
       have h3 : Continuous (fun z => (‖Q z - o‖)⁻¹ • (Q z - o)) := h2.smul h1
       have h4 : Continuous (fun z => R • ((‖Q z - o‖)⁻¹ • (Q z - o))) := h3.const_smul R
       exact continuous_const.sub h4

@@ -6,7 +6,7 @@ import Rigidity.Support.GadgetGrowth
 
 A nonconstant integer voltage harmonic at every nonterminal has nonzero top difference.
 Its absolute value is at least one, so the exact transfer identity yields the numerator
-bound and hence `3 ^ n`. Explicit integer voltages at heights one and two consume the result.
+bound and hence `3 ^ n`. Explicit integer voltages at heights one and two attain the bound.
 -/
 
 namespace Rigidity.OpenGadget
@@ -35,7 +35,7 @@ theorem three_pow_le_abs_terminal_gap {n : ℕ} (hn : 1 ≤ n)
 /-- The height-one integer voltage is the horizontal coordinate minus one. -/
 def integerVoltageOne (v : Vertex 1) : ℤ := v.val.1 - 1
 
-/-- Casting the explicit integer height-one voltage recovers the accepted real voltage. -/
+/-- Casting the explicit integer height-one voltage recovers the real voltage `voltageOne`. -/
 theorem integerVoltageOne_cast :
     (fun v => (integerVoltageOne v : ℝ)) = voltageOne := by
   funext v
@@ -57,7 +57,7 @@ theorem integerVoltageOne_gap :
       topDifference (n := 1) (by omega) integerVoltageOne = 1 := by
   norm_num [integerVoltageOne, source, target, topDifference, left, right]
 
-/-- The height-one integer consumer attains the bound three. -/
+/-- The height-one integer voltage attains the bound three. -/
 theorem integerVoltageOne_growth :
     (3 : ℤ) ^ 1 ≤ |integerVoltageOne (target 1) - integerVoltageOne (source 1)| := by
   exact three_pow_le_abs_terminal_gap (n := 1) (by omega)
@@ -68,7 +68,7 @@ def integerVoltageTwo (v : Vertex 2) : ℤ :=
   if v.val.2 = 2 then v.val.1 + 3
   else if v.val.1 ≤ 2 then 4 * (v.val.1 - 1) else 4 * v.val.1 - 5
 
-/-- Casting the explicit height-two integers recovers the accepted real voltage. -/
+/-- Casting the explicit height-two integers recovers the real voltage `voltageTwo`. -/
 theorem integerVoltageTwo_cast :
     (fun v => (integerVoltageTwo v : ℝ)) = voltageTwo := by
   funext v
@@ -91,7 +91,7 @@ theorem integerVoltageTwo_gap :
       topDifference (n := 2) (by omega) integerVoltageTwo = 1 := by
   norm_num [integerVoltageTwo, source, target, topDifference, left, right]
 
-/-- The height-two integer consumer has gap eleven, which dominates nine. -/
+/-- The height-two integer voltage has gap eleven, which dominates nine. -/
 theorem integerVoltageTwo_growth :
     (3 : ℤ) ^ 2 ≤ |integerVoltageTwo (target 2) - integerVoltageTwo (source 2)| := by
   exact three_pow_le_abs_terminal_gap (n := 2) (by omega)

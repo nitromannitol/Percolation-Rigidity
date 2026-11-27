@@ -224,7 +224,7 @@ theorem localEnergy_le_of_isGradOf {η : EdgeField} {W : Vertex 2 → ℝ} (h : 
         exact add_le_add (sum_sq_le_norm_sq η _) (sum_sq_le_norm_sq η _)
     _ = 2 * ‖η‖ ^ 2 := by ring
 
-/-- Sublinear growth on a set of vertices, `|f(z)| ≤ ε |z|` for `|z|` large, as in main's
+/-- Sublinear growth on a set of vertices, `|f(z)| ≤ ε |z|` for `|z|` large, as in the
 Liouville theorem `SublinearLiouville`. -/
 def SublinearOn (C : Set (Vertex 2)) (f : Vertex 2 → ℝ) : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ R : ℝ, ∀ z ∈ C, R ≤ Rigidity.Section5.eucl z →

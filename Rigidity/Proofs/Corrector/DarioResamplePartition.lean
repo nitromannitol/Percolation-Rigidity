@@ -3,25 +3,28 @@ import Rigidity.Proofs.Corrector.PlanarShiftedAnchor
 import PercolationClusterHomogenization.Proofs.Percolation.PlanarLocality
 
 /-!
-# Lemma 3.5 of Dario for the planar partition (hypothesis) and the locality of the anchors
+# Lemma 3.5 of Dario for the planar partition and the locality of the anchors
 
 Lemma 3.5 of Dario: there are `C₀, C < ∞` such that for each bond `e = {x, y}` and environments
 `𝐚, 𝐚̃` equal off `e`, `size(□_{𝒫(𝐚̃)}(z)) ≤ C size(□_{𝒫(𝐚)}(x))` for `z ∈ B(x, C₀ size(□_{𝒫(𝐚)}(x)))`,
 and `size(□_{𝒫(𝐚̃)}(z)) = size(□_{𝒫(𝐚)}(z))` outside that ball. Its printed proof lists five
-ingredients for Dario's partition; it is not proved here for the planar partition of meshed cubes.
+ingredients for Dario's partition; for the planar partition of meshed cubes it is stated here
+(`DarioResamplePartitionTwo`) and proved in the module `DarioResamplePartitionHolds`
+(`darioResamplePartitionTwo_holds`).
 
 Step 1 of the proof of Lemma 3.3 uses Lemma 3.5 through the coarsened functions: outside the ball
 the coarsening `[w]_{𝒫(𝐚̃)}(z) = w(z̄(□_{𝒫(𝐚̃)}(z)))` equals `[w]_{𝒫(𝐚)}(z)`. The anchors of the planar
 partition depend on the bonds inside the square of side `9s` around the cube, not only on the
-cube, so the hypothesis `DarioResamplePartitionTwo` states the second clause for the partition
-cube and its anchor. Here
+cube, so `DarioResamplePartitionTwo` states the second clause for the partition cube and its
+anchor. Here
 
 * `TriadicCube.planarAnchor_eq_of_adj_iff`: the anchor of a triadic cube depends only on the bonds
   inside its square of side `9s` (from the locality of meshedness and of the anchor property);
 * `TriadicCube.planarAnchor_eq_of_agree_off`: changing one bond outside that square does not move
   the anchor;
 * `DarioResamplePartitionTwo`: Lemma 3.5 for the planar partition, with the ball
-  `{z : |z - x|_∞ < C₀ 3^k}`, `3^k` the side of `□_{𝒫(𝐚)}(x)` (hypothesis);
+  `{z : |z - x|_∞ < C₀ 3^k}`, `3^k` the side of `□_{𝒫(𝐚)}(x)` (proved:
+  `darioResamplePartitionTwo_holds`);
 * `planarPartCube_eq_and_anchor_eq_of_resample`, `scale_le_of_resample`: its two clauses for the
   flips `ω^{e,b}` and `ω^{e,¬b}` of a configuration.
 -/
@@ -84,8 +87,9 @@ def ResamplePartitionBound (C₀ C : ℕ) : Prop :=
       (¬ InResampleBall C₀ ω x z →
         planarPartCube ω' z = planarPartCube ω z ∧ planarCoarseAnchor ω' z = planarCoarseAnchor ω z)
 
-/-- **Dario, Lemma 3.5, for the planar partition** (hypothesis; the printed proof is for Dario's
-partition): the bound `ResamplePartitionBound C₀ C` holds for some constants `C₀ > 0` and `C`. -/
+/-- **Dario, Lemma 3.5, for the planar partition** (the printed proof is for Dario's partition): the
+bound `ResamplePartitionBound C₀ C` holds for some constants `C₀ > 0` and `C`. It holds
+(`darioResamplePartitionTwo_holds`, with `C₀ = 4747`, `C = 14244`). -/
 def DarioResamplePartitionTwo : Prop :=
   ∃ C₀ C : ℕ, 0 < C₀ ∧ ResamplePartitionBound C₀ C
 

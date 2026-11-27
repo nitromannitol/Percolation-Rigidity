@@ -9,14 +9,17 @@ Proposition 4.3 of Dario and Gu is proved from the weak norm estimate of the cen
 (Proposition 2.13, `DarioGuFluxWeakNormTwo`) and the quantitative corrector estimate
 (`exists_darioGuTwoScaleErrorTwo_of_inputs`), and the quantitative corrector estimate follows from
 Lemma 3.3 of Dario. Theorem 1 of Dario and Gu in dimension two (`DarioGuHeatKernelTwo`) is
-therefore reduced to the following named inputs:
+therefore a consequence of the following statements:
 
-* `DarioGuFluxWeakNormTwo p σ` for some `σ > 0` at every supercritical `p < 1` (Proposition 2.13);
-* `DarioGuGradientBoundTwo` (Theorem 3 in the form of Remark 1.3);
-* `BarlowGaussianUpperBoundTwo` (Theorem 4);
+* `DarioGuFluxWeakNormTwo p σ` for some `σ > 0` at every supercritical `p < 1` (Proposition 2.13),
+  proved as `darioGuFluxWeakNormTwo_holds`;
+* `DarioGuGradientBoundTwo` (Theorem 3 in the form of Remark 1.3), proved as
+  `darioGuGradientBoundTwo_holds`;
+* `BarlowGaussianUpperBoundTwo` (Theorem 4), proved as `barlowGaussianUpperBoundTwo_holds`;
 * one of `DarioLemmaThreeThree` (Lemma 3.3), `DarioFlipSumBound` (the flip form of (3.13)), or
-  `DarioResamplePartitionTwo` (Lemma 3.5 for the planar partition) together with the bound of the
-  Step 2 sum.
+  `DarioResamplePartitionTwo` (Lemma 3.5 for the planar partition, proved as
+  `darioResamplePartitionTwo_holds`) together with the bound of the Step 2 sum
+  (`darioStepTwoSumBound_holds`); Lemma 3.3 follows from the last two.
 -/
 
 namespace Rigidity.Poincare

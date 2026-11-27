@@ -31,6 +31,9 @@ Named statements:
 * `ClusterPoincare d`: Dario–Gu, Proposition 2.7, weak form, in the normalized `L̲²` averages:
   `‖u - (u)_{𝒞_∞ ∩ B_R(y)}‖_{L̲²} ≤ C R ‖∇u‖_{L̲²(𝒞_∞ ∩ B_{LR}(y))}` for `R ≥ M(y) ≤ O_s(C)`.
 
+All three statements hold for `d ≥ 2`: `clusterGoodBalls_holds` (`GoodBallsHolds.lean`),
+`clusterVeryGoodBalls_holds` and `clusterPoincare_holds` (`VeryGood.lean`).
+
 Barlow works with the balls of the graph distance of `𝒞_∞` and the measure `μ_x = deg(x)`; here the
 balls are Euclidean and the measure is the counting measure, as in Dario–Gu. The Euclidean balls are
 a different family from the balls of the graph distance, not a change of constants; the counting

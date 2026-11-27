@@ -11,8 +11,10 @@ concentration inequality of Proposition 2.17 (Armstrong and Lin, ARMA 225, 2017,
 
 * `ConcentrationTwo`: Proposition 2.17 (proved as `concentrationTwo_holds`), for integrable `X` with
   `𝕍[X] < ∞` almost surely, where `resampleVar p X = Σ_e (X - E[X | F(𝓑_d \ {e})])²`;
-* `DarioLemmaThreeTwo`, `DarioLemmaThreeThree`: Lemmas 3.2 and 3.3 (hypotheses), at every point
-  `x`; Dario states them at `x = 0` and reduces to it by stationarity, which for the partition
+* `DarioLemmaThreeTwo`, `DarioLemmaThreeThree`: Lemmas 3.2 and 3.3 (hypotheses of the reduction,
+  proved in dimension two: `darioLemmaThreeTwo_holds`, and `darioLemmaThreeThree_of_flipSum` with
+  `darioFlipSumBound_of_stepTwo darioStepTwoSumBound_holds`), at every point `x`; Dario states
+  them at `x = 0` and reduces to it by stationarity, which for the partition
   `𝒫` (not stationary) amounts to the same lemmas for the translated partitions;
 * `lintegral_abs_sub_integral_rpow_le`: the concentration inequality and `𝕍[X] ≤ O_s(θ)` bound
   the moments of `|X - E[X]|` by `(A √θ q^{(1+s)/(2s)})^q`, with `β = 2s/(1+s)`;
@@ -69,8 +71,9 @@ def ConcentrationTwo : Prop :=
           (Real.exp ((C * (resampleVar p X ω).toReal) ^ (β / (2 - β)))) ∂latticeBondLaw 2 p) ^
           ((2 - β) / β)
 
-/-- **Dario, Lemma 3.2 in dimension two** (hypothesis; its proof uses (3.3), whose proof is
-sketched in the source): `|E[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)]| ≤ C/r` for `r ≥ 1`. -/
+/-- **Dario, Lemma 3.2 in dimension two** (its proof uses (3.3), whose proof is sketched in the
+source): `|E[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)]| ≤ C/r` for `r ≥ 1`. It holds
+(`darioLemmaThreeTwo_holds`). -/
 def DarioLemmaThreeTwo : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∀ (G : Set (Configuration 2)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent 2),
@@ -78,9 +81,10 @@ def DarioLemmaThreeTwo : Prop :=
         ∀ (i j : Fin 2) (r : ℝ), 1 ≤ r → ∀ x : Vertex 2,
           |∫ ω, heatComp (fun z => coarseField hG hGv i 0 z ω) r x j ∂latticeBondLaw 2 p| ≤ C / r
 
-/-- **Dario, Lemma 3.3 in dimension two** (hypothesis; its proof uses Lemma 3.5, whose proof is
-sketched in the source, and Propositions 2.11-2.15, 3.6 and Lemma 3.7):
-`𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C/r²)` for `r ≥ 1`. -/
+/-- **Dario, Lemma 3.3 in dimension two** (its proof uses Lemma 3.5, whose proof is sketched in the
+source, and Propositions 2.11-2.15, 3.6 and Lemma 3.7):
+`𝕍[Φ_{r²} * ∇_j[χ_{e_i}]_𝒫(x)] ≤ O_s(C/r²)` for `r ≥ 1`. It holds: `darioLemmaThreeThree_of_flipSum`
+applied to `darioFlipSumBound_of_stepTwo darioStepTwoSumBound_holds`. -/
 def DarioLemmaThreeThree : Prop :=
   ∀ p : unitInterval, criticalProbability 2 < (p : ℝ) → (p : ℝ) < 1 →
     ∀ (G : Set (Configuration 2)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent 2),

@@ -6,7 +6,7 @@ import Rigidity.Proofs.Corrector.DarioFlipSumTerms
 Of the three heat series of the split (`FlipSummable`), the first and the third are the series of
 `Φ_{r²} * ∇_j[χ_{e_i}]_𝒫` for the flips `ω^{e,1}` and `ω^{e,0}` themselves
 (`flipCorrector_sub_eq_coarseField_sub`), which converge almost surely for every flip
-(`ae_flipSeries_summable`, from `ae_summable_heat_coarseField` of main and the quasi-invariance of
+(`ae_flipSeries_summable`, from `ae_summable_heat_coarseField` and the quasi-invariance of
 the bond law under flips). The second is the sum of the third and of the series of the term
 (3.15)-(ii) (`flipSummable_of`). Hence (`darioFlipSumBound_of_sums`) Dario's (3.13) in flip form
 follows from the convergence of the series of the term (3.15)-(ii) (`FlipTermTwoSummable`) and

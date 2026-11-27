@@ -23,7 +23,7 @@ of each direction of a very good cube `(2R + 1) z' + Q_r`. A channel is *unhit* 
   (`reached_of_channel`).
 * For neighbouring sites, the overlap of the two cubes has width `2⌊R/10⌋ ≥ (C_f + 2) w`, so it
   contains `C_f + 1` transverse channel bands of the first cube; an unhit transverse channel there
-  meets the unhit channels of the second cube (`exists_linked_channels`).
+  meets the unhit channels of the second cube (`linked_of_neighbours`).
 * A path of `S` from `x` to its first exit from `x + Q_{⌊R/10⌋ - 1}` stays in
   `(2R + 1) z + Q_r` and crosses `C_f + 1` channel bands transversally; an unhit channel among
   them meets `S` at a vertex `s₀` (`exists_reached_of_crossing`).
