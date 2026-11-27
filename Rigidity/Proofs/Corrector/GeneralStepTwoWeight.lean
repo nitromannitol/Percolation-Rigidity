@@ -162,7 +162,7 @@ theorem boxFinset_mono {x : Vertex d} {r r' : ℕ} (h : r ≤ r') :
 
 section Grad
 
-variable [NeZero d] {G : Set (Configuration d)} (hG : MeasurableSet G)
+variable {G : Set (Configuration d)} (hG : MeasurableSet G)
   (hGv : G ⊆ correctorValidEvent d)
 
 /-- A bound for the gradient of the corrected plane of slope `e_i` at `z`. -/
@@ -234,7 +234,7 @@ theorem abs_correctorDiff_add_one_le {i : Fin d} {ω : Configuration d} {z w : V
 
 /-- The corrected plane of slope `e_i` rooted at `o`, extended by `0` off the infinite cluster,
 changes by at most `G(u)` along the open edges at `u`. -/
-theorem abs_sub_rootedPlane_le {i : Fin d} {ω : Configuration d} (hω : ω ∈ G) {o : Vertex d}
+theorem abs_sub_rootedPlane_le [NeZero d] {i : Fin d} {ω : Configuration d} (hω : ω ∈ G) {o : Vertex d}
     (ho : ω ∈ infiniteComponentEvent o) {u w : Vertex d} (h : (openGraph ω).Adj u w) :
     |(if ω ∈ infiniteComponentEvent u then
           correctorDiff hG hGv (Pi.single i 1) ω u o + (u i : ℝ) else 0) -

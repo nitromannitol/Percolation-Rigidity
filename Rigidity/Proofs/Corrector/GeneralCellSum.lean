@@ -403,7 +403,7 @@ theorem tsum_weight_energy_le {n : Vertex d → ℕ} (hn : IsCellScale n)
           rw [card_cube, ← pow_mul, ← pow_mul, mul_comm]
         rw [hcard]
         refine mul_le_mul_of_nonneg_right (Real.rpow_le_rpow (by positivity)
-          (pow_le_pow_right₀ (by norm_num) hkz) hα0) (edgeSq_nonneg γ z)
+          (pow_le_pow_right₀ (one_le_pow₀ (by norm_num)) hkz) hα0) (edgeSq_nonneg γ z)
       have hsplit : ENNReal.ofReal (K * (∑ z ∈ enl 1 (n u - 1) u, E z +
           ((cube (n u - 1) u).card : ℝ) ^ α * ∑ z ∈ enl 1 (n u - 1) u, edgeSq γ z)) ≤
           ENNReal.ofReal K * (∑ z ∈ enl 1 (n u - 1) u, ENNReal.ofReal (E z) +
