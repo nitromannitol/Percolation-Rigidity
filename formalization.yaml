@@ -11,14 +11,15 @@ project:
     that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov chain on
     the largest cluster of a box of radius n mixes in time of order n^d log n (Theorem 6.5). All 43
     numbered results that the paper proves are proved in Lean, from twelve results of the literature
-    that enter as explicit hypotheses; ten of these inputs are also proved in Lean, the other two
-    (the quantitative corrector input and the quantitative Green estimate of Dario and Gu) remain
-    hypotheses in general dimension; their dimension-two forms are proved, so Theorem 1.3
-    (fast_decay_holds) and Theorem 6.5 are proved with no literature hypothesis. For d >= 3 the
-    quantitative corrector input rests on the single hypothesis DarioStepTwoWeightThree (Lemma 3.5
-    of Dario in corrected form and the Step 1 sum being proved), and the quantitative Green
-    estimate on that hypothesis alone (FluxFlipWeightBoundD is proved,
-    Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds). The other five numbered results are quoted from the
+    that enter as explicit hypotheses; all twelve inputs are also proved in Lean. The last two are the
+    quantitative corrector input in every dimension
+    (Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds, from Lemma 3.3 of Dario in
+    dimension d >= 3, whose Step 2 is proved through DarioStepTwoWeightThree,
+    Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds) and the quantitative Green estimate of
+    Dario and Gu in every dimension (Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds,
+    from Proposition 2.12 and DarioStepTwoWeightThree, FluxFlipWeightBoundD being proved,
+    Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds); Theorem 1.3 (fast_decay_holds) and
+    Theorem 6.5 are proved with no literature hypothesis. The other five numbered results are quoted from the
     literature; one of them, Lemma 2.13, is not an input and is used by no Lean proof, and its
     special case for unions of lattice squares is proved. Theorems 1.1, 1.2, 1.3 and 6.5 are
     independently checked by the comparator pairs under RigidityAudit/.
@@ -437,7 +438,7 @@ fidelity:
     coarsening of the test functions by the anchors of the partition of the good cubes and a minimal scale;
     Rigidity.Green.darioGuFluxWeakNormTwo_holds; in every dimension d >= 2 from the variance bound (3.4) of the proof of
     Proposition 1.1 of Gu, Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance, which for d >= 3 follows from
-    DarioStepTwoWeightThree, Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound, FluxFlipWeightBoundD being proved,
+    DarioStepTwoWeightThree, proved, Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_weightBound, FluxFlipWeightBoundD being proved,
     Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds), so that Theorems 1 and 2 of Dario
     and Gu and Theorem 1.3 hold in dimension two
     with no hypothesis (Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitativeTwo_holds, fast_decay_holds)) (the Carne-Varopoulos bound
