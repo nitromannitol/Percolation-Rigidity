@@ -193,10 +193,10 @@ status:
     Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds, which proves
     LatticeProb.External.ArmstrongDarioOrderZero, and
     Rigidity.Green.supercriticalBondGreenColumnExistence_holds, which proves
-    LatticeProb.External.SupercriticalBondGreenColumnExistence), the
-    qualitative corrector input (Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds) and the
-    regularity of order one at the origin (Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_holds) and, in every
-    dimension, the quantitative corrector input (Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds) and the
+    LatticeProb.External.SupercriticalBondGreenColumnExistence), and, in every dimension, the
+    qualitative corrector input (Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds), the
+    regularity of order one at the origin (Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_holds), the
+    quantitative corrector input (Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds) and the
     quantitative Green estimate of Dario and Gu
     (Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds) (see README.md). In dimension two the existence
     of Green columns, which Dario and Gu state without proof, is also proved
