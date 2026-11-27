@@ -78,8 +78,10 @@ theorem stepOne_lipschitz_data (hd : 2 ≤ d) {p : unitInterval}
     set r : ℝ := d * q with hr
     have hr1 : 1 ≤ r := by rw [hr]; nlinarith
     simp only [hQ, mul_one]
-    have hpt : ∀ ω, ENNReal.ofReal (1 + (L * max (X (configurationTranslation (-x) ω)) 2 ^ d + 1))
-        ^ q ≤ ENNReal.ofReal ((L + 2) ^ q * (X (configurationTranslation (-x) ω) + 2) ^ (4 * r)) := by
+    have hpt : ∀ ω,
+        ENNReal.ofReal (1 + (L * max (X (configurationTranslation (-x) ω)) 2 ^ d + 1)) ^ q ≤
+          ENNReal.ofReal
+            ((L + 2) ^ q * (X (configurationTranslation (-x) ω) + 2) ^ (4 * r)) := by
       intro ω
       have hY0 : 0 ≤ X (configurationTranslation (-x) ω) := hX0 _
       rw [ENNReal.ofReal_rpow_of_nonneg (by positivity) hq0.le]

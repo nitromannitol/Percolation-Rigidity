@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Corrector.GeneralCoarseningError
+import Rigidity.Proofs.Corrector.GeneralStepOneLocal
 import PercolationClusterHomogenization.Proofs.Dirichlet.GeneralScaleForms
 
 /-!
@@ -11,7 +11,7 @@ concludes by the Liouville theorem. The missing ingredient is the sublinear grow
 `W` of finite energy on the infinite cluster. This is the argument of the planar file
 `DarioFiniteEnergyGrowth` for the partition into good cubes of `ℤᵈ`:
 
-* `abs_partitionAnchor_sub_le`: the anchors of the partition cubes of lattice neighbours are
+* `abs_partitionAnchor_sub_le` (in `GeneralStepOneLocal`): the anchors of the partition cubes of lattice neighbours are
   joined inside the union of the two cubes (Armstrong and Dario, Corollary 2.10,
   `reachable_partitionAnchor_of_adj`), so `W` changes between them by at most its total variation
   over the box of radius `s` around the first point, `s` bounding the sides of the two cubes;
@@ -116,49 +116,6 @@ theorem sum_localEnergy_le (ω : Configuration d) {W : Vertex d → ℝ} {E : �
     _ ≤ M * E := mul_le_mul_of_nonneg_left (hE U) (Nat.cast_nonneg M)
 
 /-! ### Anchors of neighbouring points -/
-
-/-- Two points of a triadic cube differ by less than its side in every coordinate. -/
-theorem abs_sub_lt_side_of_mem {Q : TriadicCube d} {x y : Vertex d} (hx : x ∈ Q.vertices)
-    (hy : y ∈ Q.vertices) (i : Fin d) : |x i - y i| < Q.side := by
-  have h1 : |2 * (x i - Q.side * Q.index i)| < Q.side := hx i
-  have h2 : |2 * (y i - Q.side * Q.index i)| < Q.side := hy i
-  obtain ⟨a1, a2⟩ := abs_lt.1 h1
-  obtain ⟨b1, b2⟩ := abs_lt.1 h2
-  rw [abs_lt]
-  constructor <;> linarith
-
-theorem abs_sub_le_of_mem_partitionCube {ω : Configuration d} (hP : PartitionEvent ω)
-    {x y : Vertex d} (hy : y ∈ (partitionCube ω x).vertices) {s : ℕ}
-    (hs : 3 ^ (partitionCube ω x).scale ≤ s) (i : Fin d) : |y i - x i| + 1 ≤ s := by
-  have h := abs_sub_lt_side_of_mem hy (mem_partitionCube hP x) i
-  have hs' : (partitionCube ω x).side ≤ s := by
-    rw [← TriadicCube.natCast_three_pow_scale]
-    exact_mod_cast hs
-  linarith
-
-/-- The anchors of the partition cubes of lattice neighbours `x, y`, of sides at most `s`, are
-joined inside the box of radius `s` around `x`; so `W` changes between them by at most its total
-variation over that box. -/
-theorem abs_partitionAnchor_sub_le (hd : 0 < d) {ω : Configuration d} (hP : PartitionEvent ω)
-    {x y : Vertex d} (hxy : (nearestNeighborGraph d).Adj x y) {s : ℕ}
-    (hsx : 3 ^ (partitionCube ω x).scale ≤ s) (hsy : 3 ^ (partitionCube ω y).scale ≤ s)
-    (W : Vertex d → ℝ) :
-    |W (partitionAnchor ω x) - W (partitionAnchor ω y)| ≤
-      edgeVariationIn ω (LatticeProb.boxFinset x s) W := by
-  refine abs_sub_le_edgeVariationIn_of_reachable _ W
-    (Rigidity.Percolation.openIn_reachable_mono_region ?_ (reachable_partitionAnchor_of_adj hd hP hxy))
-  intro z hz
-  rw [Finset.mem_coe, LatticeProb.mem_boxFinset_iff]
-  intro i
-  rcases hz with hz | hz
-  · have := abs_sub_le_of_mem_partitionCube hP hz hsx i
-    linarith
-  · have h1 := abs_sub_le_of_mem_partitionCube hP hz hsy i
-    have h2 := abs_sub_le_one_of_adj_lattice hxy i
-    have h3 : |z i - x i| ≤ |z i - y i| + |x i - y i| := by
-      rw [abs_sub_comm (x i)]
-      exact abs_sub_le _ _ _
-    linarith
 
 /-- Along a chain of lattice neighbours whose partition cubes have side at most `s`, `W` changes at
 the anchors by at most the sum of its total variations over the boxes of radius `s`. -/

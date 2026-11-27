@@ -281,7 +281,8 @@ theorem lintegral_randomBallSum_rpow_le_of_growth {p : unitInterval} (v : Vertex
     {q : ℝ} (hq : 1 ≤ q) :
     ∫⁻ ω, (∑' x, if ‖latticeEuclideanEmbedding (x - v)‖ ≤ ρ ω then Y x ω else 0) ^ q
         ∂latticeBondLaw d p ≤
-      ENNReal.ofReal (((2 * (1 + 8 * d * θ)) ^ d * Real.sqrt 2 * (B * 2 ^ κ) * q ^ (κ + d)) ^ q) := by
+      ENNReal.ofReal
+        (((2 * (1 + 8 * d * θ)) ^ d * Real.sqrt 2 * (B * 2 ^ κ) * q ^ (κ + d)) ^ q) := by
   have hq0 : 0 < q := by linarith
   have hM0 : 0 ≤ (B * (2 * q) ^ κ) ^ q := by positivity
   have hYm' : ∀ x, ∫⁻ ω, Y x ω ^ (2 * q) ∂latticeBondLaw d p ≤

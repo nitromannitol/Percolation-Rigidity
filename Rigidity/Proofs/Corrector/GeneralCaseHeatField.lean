@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Corrector.GeneralClusterGreen
+import Rigidity.Proofs.Corrector.GeneralStepOneLocal
 import Rigidity.Proofs.Corrector.GeneralShiftedAnchor
 import Rigidity.Proofs.Corrector.GeneralPropThreeOne
 
@@ -147,11 +148,6 @@ theorem pathField_spec {x y : Vertex d} (p : (openGraph ω).Walk x y) :
         linarith
 
 /-! ### The paths between the anchors of neighbouring partition cubes -/
-
-theorem abs_sub_add_unit_le (z : Vertex d) (j i : Fin d) :
-    |z i - (z + LatticeProb.unit j) i| ≤ 1 ∧ |(z + LatticeProb.unit j) i - z i| ≤ 1 := by
-  simp only [Pi.add_apply, LatticeProb.unit, Pi.single_apply]
-  split_ifs <;> simp
 
 /-- The union of the partition cubes of `z` and `z + e_j`. -/
 noncomputable def stepRegion (z : Vertex d) (j : Fin d) : Finset (Vertex d) :=

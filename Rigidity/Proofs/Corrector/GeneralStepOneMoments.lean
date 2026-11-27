@@ -61,8 +61,9 @@ theorem isOsBond_heatSqSum_of_moments {p : unitInterval} {A k : ℝ} (hA : 0 < A
   obtain ⟨CH, hCH, hheat⟩ := exists_zdHeat_le_div_rpow (d := d)
   have hs0 : 0 < 1 / (2 * k) := by positivity
   have hsk : 1 / (2 * k) * k < 1 := by field_simp; linarith
+  have hd0 : (0 : ℝ) < d := by exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne d)
   obtain ⟨C, hC, hmom⟩ := isOsBond_of_moment_le (d := d) (p := p)
-    (by positivity : 0 < 2 * d * A) hs0 hsk
+    (mul_pos (mul_pos two_pos hd0) hA : 0 < 2 * d * A) hs0 hsk
   refine ⟨1 / (2 * k), CH * C, hs0, by positivity, fun r hr x W hWm hWmom Y hYm hY => ?_⟩
   have hr0 : 0 < r := by linarith
   have hrd : 0 < r ^ (d : ℝ) := Real.rpow_pos_of_pos hr0 _

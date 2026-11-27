@@ -217,6 +217,7 @@ import Rigidity.Proofs.Corrector.GeneralPartitionComparison
 import Rigidity.Proofs.Corrector.GeneralHeatSmoothing
 import Rigidity.Proofs.Corrector.GeneralPropThreeOne
 import Rigidity.Proofs.Corrector.GeneralVarianceSums
+import Rigidity.Proofs.Corrector.GeneralStepOneHolds
 import Rigidity.Proofs.Corrector.Concentration
 import Rigidity.Proofs.Poincare.GeneralMultiscalePoincare
 import Rigidity.Proofs.Green.FrullaniGaussian
@@ -1621,6 +1622,20 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_flipSum
 #print axioms Rigidity.Corrector.GeneralDim.darioFlipSumBoundThree_of_sums
 #print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_sums
+#print axioms Rigidity.Corrector.GeneralDim.resampleLocal_of_bound
+#print axioms Rigidity.Corrector.GeneralDim.sq_tsum_partitionChange_le
+#print axioms Rigidity.Corrector.GeneralDim.flipTermOne_sq_le
+#print axioms Rigidity.Corrector.GeneralDim.exists_zdHeat_le_div_rpow
+#print axioms Rigidity.Corrector.GeneralDim.isOsBond_heatSqSum_of_moments
+#print axioms Rigidity.Corrector.GeneralDim.flipTermOne_sq_le_of_bound
+#print axioms Rigidity.Corrector.GeneralDim.ae_flipSumOne_le
+#print axioms Rigidity.Corrector.GeneralDim.flipSumOne_isOsBond_of_moments
+#print axioms Rigidity.Corrector.GeneralDim.stepOne_lipschitz_data
+#print axioms Rigidity.Corrector.GeneralDim.stepOneW_moments
+#print axioms Rigidity.Corrector.GeneralDim.flipSumOne_isOsBond_of_resample
+#print axioms Rigidity.Corrector.GeneralDim.flipTermOneSummable_of_resample
+#print axioms Rigidity.Corrector.GeneralDim.darioStepOneSumBoundThree_of_resample
+#print axioms Rigidity.Corrector.GeneralDim.darioVarianceBoundThree_of_resample
 
 -- The concentration inequality of Dario (Proposition 2.17) in every dimension
 #print axioms Rigidity.Corrector.GeneralDim.concentration_holds

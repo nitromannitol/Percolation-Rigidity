@@ -1,6 +1,5 @@
 import Rigidity.Proofs.Corrector.GeneralResamplePartition
-import Rigidity.Proofs.Corrector.GeneralCaseFiniteEnergy
-import Rigidity.Proofs.Corrector.GeneralCaseHeatField
+import Rigidity.Proofs.Corrector.GeneralCoarseningError
 import Rigidity.Proofs.Poincare.GeneralBoxMaximal
 
 /-!
@@ -34,6 +33,43 @@ open LatticeProb.Percolation Rigidity.Percolation Rigidity.Poincare.GeneralDim
 open scoped Classical
 
 variable {d : ℕ}
+
+theorem abs_sub_add_unit_le (z : Vertex d) (j i : Fin d) :
+    |z i - (z + LatticeProb.unit j) i| ≤ 1 ∧ |(z + LatticeProb.unit j) i - z i| ≤ 1 := by
+  simp only [Pi.add_apply, LatticeProb.unit, Pi.single_apply]
+  split_ifs <;> simp
+
+theorem abs_sub_le_of_mem_partitionCube {ω : Configuration d} (hP : PartitionEvent ω)
+    {x y : Vertex d} (hy : y ∈ (partitionCube ω x).vertices) {s : ℕ}
+    (hs : 3 ^ (partitionCube ω x).scale ≤ s) (i : Fin d) : |y i - x i| + 1 ≤ s := by
+  have h := Rigidity.Proofs.Regularity.abs_sub_lt_side_of_mem hy (mem_partitionCube hP x) i
+  have hs' : ((3 : ℤ) ^ (partitionCube ω x).scale) ≤ s := by exact_mod_cast hs
+  linarith
+
+/-- The anchors of the partition cubes of lattice neighbours `x, y`, of sides at most `s`, are
+joined inside the box of radius `s` around `x`; so `W` changes between them by at most its total
+variation over that box. -/
+theorem abs_partitionAnchor_sub_le (hd : 0 < d) {ω : Configuration d} (hP : PartitionEvent ω)
+    {x y : Vertex d} (hxy : (nearestNeighborGraph d).Adj x y) {s : ℕ}
+    (hsx : 3 ^ (partitionCube ω x).scale ≤ s) (hsy : 3 ^ (partitionCube ω y).scale ≤ s)
+    (W : Vertex d → ℝ) :
+    |W (partitionAnchor ω x) - W (partitionAnchor ω y)| ≤
+      edgeVariationIn ω (LatticeProb.boxFinset x s) W := by
+  refine abs_sub_le_edgeVariationIn_of_reachable _ W
+    (Rigidity.Percolation.openIn_reachable_mono_region ?_
+      (reachable_partitionAnchor_of_adj hd hP hxy))
+  intro z hz
+  rw [Finset.mem_coe, LatticeProb.mem_boxFinset_iff]
+  intro i
+  rcases hz with hz | hz
+  · have := abs_sub_le_of_mem_partitionCube hP hz hsx i
+    linarith
+  · have h1 := abs_sub_le_of_mem_partitionCube hP hz hsy i
+    have h2 := abs_sub_le_one_of_adj_lattice hxy i
+    have h3 : |z i - x i| ≤ |z i - y i| + |x i - y i| := by
+      rw [abs_sub_comm (x i)]
+      exact abs_sub_le _ _ _
+    linarith
 
 theorem supBox_eq_boxFinset (x : Vertex d) (r : ℕ) : supBox x r = LatticeProb.boxFinset x r :=
   rfl
@@ -189,9 +225,9 @@ theorem sq_tsum_mul_le_of_support {φ g : Vertex d → ℝ} {B : Finset (Vertex 
 
 /-- **Step 1 of Dario's proof, (3.16) in flip form, on `ℤᵈ`**: if the change of partition from
 `ω₀` to `ω₁` is local around `x` (`ResampleLocal ρ M`, given by Lemma 3.5 with `ρ = C₀ s₀`,
-`M = C s₀`), then for weights `φ`, `|Σ_y φ(y) partitionChange(y)|² ≤ |B| (Σ_{y ∈ B} φ(y)²) (V₀ + V₁)²`,
-with `B` the box of radius `ρ` around `x` and `V_b` the total variation of `w` over the open edges of
-`ω_b` in the box of radius `(ρ + 1) + 3M`. -/
+`M = C s₀`), then for weights `φ`,
+`|Σ_y φ(y) partitionChange(y)|² ≤ |B| (Σ_{y ∈ B} φ(y)²) (V₀ + V₁)²`, with `B` the box of radius `ρ`
+around `x` and `V_b` the total variation of `w` over the open edges of `ω_b` in the box of radius `(ρ + 1) + 3M`. -/
 theorem sq_tsum_partitionChange_le (hd : 0 < d) {ρ M : ℕ} {ω₀ ω₁ : Configuration d}
     {x : Vertex d} (hloc : ResampleLocal ρ M ω₀ ω₁ x) (hP₀ : PartitionEvent ω₀)
     (hP₁ : PartitionEvent ω₁) (φ w : Vertex d → ℝ) (j : Fin d) :

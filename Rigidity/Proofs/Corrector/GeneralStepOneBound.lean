@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Corrector.GeneralStepOneMoments
 
 /-!
-# Step 1 of Lemma 3.3 of Dario on `ℤᵈ`, bond by bond, with the partition of the flip with the bond open
+# Step 1 of Lemma 3.3 of Dario on `ℤᵈ`, bond by bond, with the partition of the open flip
 
 `flipTermOne_sq_le` bounds `T₁(e)²` through boxes around an endpoint `a` of `e` of radii comparable
 to the side `s₀` of the partition cube of `ω^{e,0}` at `a`. Applying Lemma 3.5
@@ -26,9 +26,10 @@ noncomputable def bondBase (e : Bond d) : Vertex d := Classical.choose e.2
 
 theorem bondBase_mem (e : Bond d) : bondBase e ∈ e.1 := by
   obtain ⟨y, hy, -⟩ := Classical.choose_spec e.2
-  unfold bondBase
-  rw [hy]
-  exact Sym2.mem_mk_left _ _
+  have key : ∀ (b : Sym2 (Vertex d)) (u v : Vertex d), b = s(u, v) → u ∈ b := by
+    rintro b u v rfl
+    exact Sym2.mem_mk_left _ _
+  exact key _ _ _ hy
 
 theorem supBox_subset_of_le (a : Vertex d) {ρ ρ' : ℕ} (h : ρ ≤ ρ') : supBox a ρ ⊆ supBox a ρ' :=
   fun z hz => by

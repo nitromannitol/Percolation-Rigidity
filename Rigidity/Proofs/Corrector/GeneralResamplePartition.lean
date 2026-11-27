@@ -4,11 +4,12 @@ import Rigidity.Proofs.Corrector.GeneralFlipResampling
 # Lemma 3.5 of Dario for the partition into good cubes of `ℤᵈ`
 
 Lemma 3.5 of Dario: there are `C₀, C < ∞` such that for each bond `e = {x, y}` and environments
-`𝐚, 𝐚̃` equal off `e`, `size(□_{𝒫(𝐚̃)}(z)) ≤ C size(□_{𝒫(𝐚)}(x))` for `z ∈ B(x, C₀ size(□_{𝒫(𝐚)}(x)))`,
+`𝐚, 𝐚̃` equal off `e`, `size(□_{𝒫(𝐚̃)}(z)) ≤ C size(□_{𝒫(𝐚)}(x))` for
+`z ∈ B(x, C₀ size(□_{𝒫(𝐚)}(x)))`,
 and `size(□_{𝒫(𝐚̃)}(z)) = size(□_{𝒫(𝐚)}(z))` outside that ball. Steps 1 and 2 of the proof of
 Lemma 3.3 use it through the coarsened functions: outside the ball the coarsening
-`[w]_{𝒫(𝐚̃)}(z) = w(z̄(□_{𝒫(𝐚̃)}(z)))` equals `[w]_{𝒫(𝐚)}(z)`, so the second clause is stated for the
-partition cube and its anchor, as in the planar form `Rigidity.Corrector.ResamplePartitionBound`.
+`[w]_{𝒫(𝐚̃)}(z) = w(z̄(□_{𝒫(𝐚̃)}(z)))` equals `[w]_{𝒫(𝐚)}(z)`, so the second clause is stated
+for the partition cube and its anchor, as in the planar form `Rigidity.Corrector.ResamplePartitionBound`.
 Here, for the partition of Armstrong and Dario into good cubes of `ℤᵈ` (`partitionCube`,
 `partitionAnchor`):
 
