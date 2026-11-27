@@ -1,6 +1,7 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoWeight
 import Rigidity.Proofs.Poincare.GeneralBoxMaximal
 import PercolationClusterHomogenization.Proofs.Cluster.GeneralMuLocal
+import Rigidity.Proofs.Corrector.GeneralFlipResampling
 import PercolationClusterHomogenization.Proofs.Cluster.MeyersPlanarBox
 
 /-!
@@ -18,6 +19,15 @@ capped at scale `n` (all cubes of scale at least `n` declared good). Then:
   `v` (`localRegion_capCube_subset`), and is measurable;
 * `measure_exists_cappedDiscrepancy_le`: the probability of a discrepancy at some vertex of a box
   of radius `r` is at most `(2r + 1)ᵈ C e^{-c 3ⁿ}`.
+
+The same holds for the configurations `ω^{e,0}` with one bond closed (`setBond e false ω`): the
+capped side of `ω^{e,0}` is local (`cappedSide_setBond_eq_of_localBonds`) and measurable, almost
+surely the partition of every `ω^{e,0}` exists (`ae_partitionEvent_setBond`), and since forcing a
+bond closed changes probabilities by at most the factor `1/(1 - p)`
+(`measure_preimage_setBond_false_le`, from `ofReal_bondWeight_mul_lintegral_setBond_le`), a
+discrepancy of `ω^{e(v,k),0}` at some vertex `v` of a box of radius `r`, for any choice of bonds
+`e(v, k)`, `k < d`, has probability at most `d (2r + 1)ᵈ C e^{-c 3ⁿ}/(1 - p)`
+(`measure_exists_cappedDiscrepancy_setBond_le`).
 
 This is the finite-range version of the side in the weight of the Step 2 sum. It ports the planar
 file `DarioStepTwoCapped`: the planar partition is replaced by the partition into good cubes of
@@ -112,5 +122,112 @@ theorem measure_exists_cappedDiscrepancy_le [NeZero d] (hd : 2 ≤ d) {p : unitI
       ≤ ∑ _v ∈ supBox u r, C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ n)) :=
         Finset.sum_le_sum fun v _ => hD (capCube n v)
     _ = _ := by rw [Finset.sum_const, nsmul_eq_mul, card_supBox]
+
+/-! ### The configurations with one bond closed -/
+
+/-- **Forcing a bond closed**: `P(ω^{e,0} ∈ S) ≤ P(S)/(1 - p)`. -/
+theorem measure_preimage_setBond_false_le {p : unitInterval} (hp1 : (p : ℝ) < 1)
+    {S : Set (Configuration d)} (hS : MeasurableSet S) (e : Bond d) :
+    latticeBondLaw d p (setBond e false ⁻¹' S) ≤
+      (ENNReal.ofReal (1 - p))⁻¹ * latticeBondLaw d p S := by
+  have hq : (0 : ℝ) < 1 - p := by linarith
+  have hq' : ENNReal.ofReal (1 - p) ≠ 0 := (ENNReal.ofReal_pos.2 hq).ne'
+  have hflip := ofReal_bondWeight_mul_lintegral_setBond_le p
+    (f := S.indicator fun _ => (1 : ℝ≥0∞)) (measurable_const.indicator hS) e false
+  have hpre : (fun ω => S.indicator (fun _ => (1 : ℝ≥0∞)) (setBond e false ω)) =
+      (setBond e false ⁻¹' S).indicator fun _ => 1 := by
+    funext ω
+    simp only [Set.indicator_apply, Set.mem_preimage]
+  have hbw : bondWeight p false = 1 - p := by simp [bondWeight]
+  rw [hpre, lintegral_indicator_const (hS.preimage (measurable_setBond e false)),
+    lintegral_indicator_const hS, one_mul, one_mul, hbw] at hflip
+  calc latticeBondLaw d p (setBond e false ⁻¹' S)
+      = (ENNReal.ofReal (1 - p))⁻¹ *
+          (ENNReal.ofReal (1 - p) * latticeBondLaw d p (setBond e false ⁻¹' S)) := by
+        rw [← mul_assoc, ENNReal.inv_mul_cancel hq' ENNReal.ofReal_ne_top, one_mul]
+    _ ≤ _ := by gcongr
+
+/-- Almost surely the partition into good cubes of every `ω^{e,b}` exists. -/
+theorem ae_partitionEvent_setBond [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∀ᵐ ω ∂latticeBondLaw d p, ∀ (e : Bond d) (b : Bool), PartitionEvent (setBond e b ω) :=
+  ae_setBond ((criticalProbability_nonneg d).trans_lt hpc) hp1 (ae_partitionEvent hd hpc)
+
+/-- Configurations agreeing on a set of bonds still agree there after setting one bond. -/
+theorem setBond_apply_eq_of_apply_eq {S : Set (Bond d)} {ω ω' : Configuration d}
+    (h : ∀ e' ∈ S, ω e' = ω' e') (e : Bond d) (b : Bool) {e' : Bond d} (he' : e' ∈ S) :
+    setBond e b ω e' = setBond e b ω' e' := by
+  by_cases hee : e' = e
+  · subst hee
+    simp only [setBond, Function.update_self]
+  · rw [setBond_apply_ne hee, setBond_apply_ne hee]
+    exact h e' he'
+
+/-- **Locality of the capped side of `ω^{e,b}`.** -/
+theorem cappedSide_setBond_eq_of_localBonds {ω ω' : Configuration d} {n : ℕ} {v : Vertex d}
+    (e : Bond d) (b : Bool) (h : ∀ e' ∈ localBonds (capCube n v).localRegion, ω e' = ω' e') :
+    cappedSide n (setBond e b ω') v = cappedSide n (setBond e b ω) v :=
+  cappedSide_eq_of_localBonds fun _ he' => setBond_apply_eq_of_apply_eq h e b he'
+
+theorem measurable_cappedSide_setBond (n : ℕ) (v : Vertex d) (e : Bond d) (b : Bool) :
+    Measurable fun ω : Configuration d => cappedSide n (setBond e b ω) v :=
+  (measurable_cappedSide n v).comp (measurable_setBond e b)
+
+/-- The capped side of `ω^{e,b}` is its side when its partition agrees with its capped
+partition. -/
+theorem partSide_setBond_eq_cappedSide {ω : Configuration d} {e : Bond d} {b : Bool}
+    (hP : PartitionEvent (setBond e b ω)) {n : ℕ} {v : Vertex d}
+    (h : ¬ CubeCappedDiscrepancy (setBond e b ω) (capCube n v)) :
+    partSide (setBond e b ω) v = cappedSide n (setBond e b ω) v :=
+  partSide_eq_cappedSide hP h
+
+/-- **The capped sides of the configurations with one bond closed are their sides on a box, with
+high probability**: for any bonds `e(v, k)`, `k < d`, a discrepancy of `ω^{e(v,k),0}` at some
+vertex `v` of a box of radius `r` has probability at most `d (2r + 1)ᵈ C e^{-c 3ⁿ}/(1 - p)`. -/
+theorem measure_exists_cappedDiscrepancy_setBond_le [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∃ C : ℝ≥0∞, C ≠ ∞ ∧ ∃ c : ℝ, 0 < c ∧
+      ∀ (E : LatticeEdge d → Bond d) (n : ℕ) (u : Vertex d) (r : ℕ),
+        latticeBondLaw d p {ω | ∃ v ∈ supBox u r, ∃ k : Fin d,
+            CubeCappedDiscrepancy (setBond (E (v, k)) false ω) (capCube n v)} ≤
+          ((d * (2 * r + 1) ^ d : ℕ) : ℝ≥0∞) *
+            (C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ n) / (1 - p))) := by
+  obtain ⟨C, hC, c, hc, hD⟩ := exists_measure_cubeCappedDiscrepancy_le hd hpc
+  refine ⟨C, hC, c, hc, fun E n u r => ?_⟩
+  have hq : (0 : ℝ) < 1 - p := by linarith
+  have key : ∀ (e : Bond d) (V : TriadicCube d),
+      latticeBondLaw d p {ω | CubeCappedDiscrepancy (setBond e false ω) V} ≤
+        C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ V.scale) / (1 - p)) := by
+    intro e V
+    refine (measure_preimage_setBond_false_le hp1 (measurableSet_cubeCappedDiscrepancy V) e).trans
+      ?_
+    calc (ENNReal.ofReal (1 - p))⁻¹ * latticeBondLaw d p {ω | CubeCappedDiscrepancy ω V}
+        ≤ (ENNReal.ofReal (1 - p))⁻¹ *
+            (C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ V.scale))) := by
+          gcongr
+          exact hD V
+      _ = _ := by
+          rw [ENNReal.ofReal_div_of_pos hq, div_eq_mul_inv]
+          ac_rfl
+  have e : {ω | ∃ v ∈ supBox u r, ∃ k : Fin d,
+      CubeCappedDiscrepancy (setBond (E (v, k)) false ω) (capCube n v)} =
+      ⋃ v ∈ supBox u r, ⋃ k : Fin d,
+        {ω | CubeCappedDiscrepancy (setBond (E (v, k)) false ω) (capCube n v)} := by
+    ext ω; simp only [Set.mem_setOf_eq, Set.mem_iUnion, exists_prop]
+  rw [e]
+  refine (measure_biUnion_finset_le _ _).trans ?_
+  calc ∑ v ∈ supBox u r, latticeBondLaw d p (⋃ k : Fin d,
+        {ω | CubeCappedDiscrepancy (setBond (E (v, k)) false ω) (capCube n v)})
+      ≤ ∑ v ∈ supBox u r, ∑ k : Fin d, latticeBondLaw d p
+          {ω | CubeCappedDiscrepancy (setBond (E (v, k)) false ω) (capCube n v)} :=
+        Finset.sum_le_sum fun v _ => measure_iUnion_fintype_le _ _
+    _ ≤ ∑ _v ∈ supBox u r, ∑ _k : Fin d,
+          C * ENNReal.ofReal (Real.exp (-c * (3 : ℝ) ^ n) / (1 - p)) :=
+        Finset.sum_le_sum fun v _ => Finset.sum_le_sum fun k _ => key (E (v, k)) (capCube n v)
+    _ = _ := by
+        rw [Finset.sum_const, Finset.sum_const, Finset.card_univ, Fintype.card_fin, card_supBox,
+          nsmul_eq_mul, nsmul_eq_mul]
+        push_cast
+        ring
 
 end Rigidity.Corrector.GeneralDim
