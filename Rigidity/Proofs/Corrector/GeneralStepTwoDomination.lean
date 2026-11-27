@@ -6,13 +6,15 @@ import Rigidity.Proofs.Corrector.GeneralStepTwoFiniteProb
 
 A vertex `u` is good for the domination at range `R` (`DomGood`) when the partition into good cubes
 exists, the configuration lies in the event `G` of the corrector, no far edge reaches `u`, the
-capped sides are the sides near `u` and the local gradient bounds dominate the plane gradient bound
-near `u`. Then the weight of the Step 2 sum at `u` is at most the finite-range weight, and on a
-triadic cube all of whose vertices are good the weight bound of the cube follows from the same
-bound for the finite-range weight (`weightGood_of_domGood`). For `d ≥ 3` a vertex fails to be good
-with probability at most `C R^{2d} e^{-c R^σ}`, `σ = min(1/d, δs) ≤ 1` (`measure_not_domGood_le`),
-collecting the three failure probabilities of `GeneralStepTwoFiniteProb`, which are brought to this
-common form by real bounds:
+capped sides are the sides near `u`, the same two events hold for the sides of the configurations
+with the bond of an edge closed (`FarGoodFlip`, `SideGoodFlip`), and the local gradient bounds
+dominate the plane gradient bound near `u`. Then the weight of the Step 2 sum at `u` is at most the
+finite-range weight, and on a triadic cube all of whose vertices are good the weight bound of the
+cube follows from the same bound for the finite-range weight (`weightGood_of_domGood`). For `d ≥ 3`
+a vertex fails to be good with probability at most `C R^{2d} e^{-c R^σ}`, `σ = min(1/d, δs) ≤ 1`
+(`measure_not_domGood_le`), collecting the five failure probabilities of
+`GeneralStepTwoFiniteProb` (those of the closed-bond sides carry the factor `d/(1-p)`), which are
+brought to this common form by real bounds:
 
 * the far-edge term `K e^{-R/A}` (`far_term_le`), for `c ≤ 1/A` and `σ ≤ 1`;
 * the capped-side term `(2R + 1)^d C e^{-c_s 3ⁿ}` for `R < 3 · 3ⁿ` (`side_term_le`), for
@@ -155,7 +157,8 @@ variable {G : Set (Configuration d)} (hG : MeasurableSet G) (hGv : G ⊆ correct
 
 /-- The vertex `u` is good for the domination of the weight at range `R`. -/
 def DomGood (κ R : ℕ) (i : Fin d) (ω : Configuration d) (u : Vertex d) : Prop :=
-  PartitionEvent ω ∧ ω ∈ G ∧ FarGood κ R ω u ∧ SideGood R ω u ∧ GradGood hG hGv κ R i ω u
+  PartitionEvent ω ∧ ω ∈ G ∧ FarGood κ R ω u ∧ SideGood R ω u ∧ FarGoodFlip edgeBond κ R ω u ∧
+    SideGoodFlip edgeBond R ω u ∧ GradGood hG hGv κ R i ω u
 
 /-- **The weight bound of a cube from the finite-range weight.** -/
 theorem weightGood_of_domGood {κ R : ℕ} (hR : 1 ≤ R) {i : Fin d} {q M : ℝ} (hq : 0 ≤ q)
@@ -165,31 +168,40 @@ theorem weightGood_of_domGood {κ R : ℕ} (hR : 1 ≤ R) {i : Fin d} {q M : ℝ
       M * T.toIntegerCube.vertices.card) :
     weightGood hG hGv κ i q M ω T := by
   have hle : ∀ u ∈ T.toIntegerCube.vertices,
-      stepTwoWeight hG hGv κ i ω u ≤ ENNReal.ofReal (finiteWeight κ R ω u) := fun u hu =>
-    stepTwoWeight_le_finiteWeight hG hGv (hdom u hu).1 hR (hdom u hu).2.2.1 (hdom u hu).2.2.2.1
-      (hdom u hu).2.2.2.2
+      stepTwoWeight hG hGv κ i ω u ≤ ENNReal.ofReal (finiteWeight κ R ω u) := fun u hu => by
+    obtain ⟨hP, -, hfar, hside, hfarF, hsideF, hgrad⟩ := hdom u hu
+    exact stepTwoWeight_le_finiteWeight hG hGv hP hR hfar hfarF hside hsideF hgrad
   refine ⟨fun u hu => ne_top_of_le_ne_top ENNReal.ofReal_ne_top (hle u hu), le_trans ?_ hsum⟩
   refine Finset.sum_le_sum fun u hu => Real.rpow_le_rpow ENNReal.toReal_nonneg ?_ hq
   exact ENNReal.toReal_le_of_le_ofReal (finiteWeight_nonneg hR ω u) (hle u hu)
 
-/-- The failure of the domination splits into the three failure events. -/
+/-- The failure of the domination splits into the five failure events. -/
 theorem measure_not_domGood_le_add {p : unitInterval}
     (hP0 : latticeBondLaw d p {ω | ¬ PartitionEvent ω} = 0)
     (hG0 : latticeBondLaw d p Gᶜ = 0) (κ R : ℕ) (i : Fin d) (u : Vertex d) :
     latticeBondLaw d p {ω | ¬ DomGood hG hGv κ R i ω u} ≤
       latticeBondLaw d p {ω | PartitionEvent ω ∧ ¬ FarGood κ R ω u} +
         (latticeBondLaw d p {ω | PartitionEvent ω ∧ ¬ SideGood R ω u} +
-          latticeBondLaw d p {ω | ω ∈ G ∧ ¬ GradGood hG hGv κ R i ω u}) := by
+          (latticeBondLaw d p {ω | ¬ FarGoodFlip edgeBond κ R ω u} +
+            (latticeBondLaw d p {ω | ¬ SideGoodFlip edgeBond R ω u} +
+              latticeBondLaw d p {ω | ω ∈ G ∧ ¬ GradGood hG hGv κ R i ω u}))) := by
   have hsub : {ω | ¬ DomGood hG hGv κ R i ω u} ⊆ ({ω | ¬ PartitionEvent ω} ∪ Gᶜ) ∪
       ({ω | PartitionEvent ω ∧ ¬ FarGood κ R ω u} ∪
         ({ω | PartitionEvent ω ∧ ¬ SideGood R ω u} ∪
-          {ω | ω ∈ G ∧ ¬ GradGood hG hGv κ R i ω u})) := by
+          ({ω | ¬ FarGoodFlip edgeBond κ R ω u} ∪
+            ({ω | ¬ SideGoodFlip edgeBond R ω u} ∪
+              {ω | ω ∈ G ∧ ¬ GradGood hG hGv κ R i ω u})))) := by
     intro ω hω
     by_cases hP : PartitionEvent ω
     · by_cases hGω : ω ∈ G
       · by_cases hF : FarGood κ R ω u
         · by_cases hS : SideGood R ω u
-          · exact Or.inr (Or.inr (Or.inr ⟨hGω, fun hg => hω ⟨hP, hGω, hF, hS, hg⟩⟩))
+          · by_cases hFF : FarGoodFlip edgeBond κ R ω u
+            · by_cases hSF : SideGoodFlip edgeBond R ω u
+              · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+                  ⟨hGω, fun hg => hω ⟨hP, hGω, hF, hS, hFF, hSF, hg⟩⟩))))
+              · exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl hSF))))
+            · exact Or.inr (Or.inr (Or.inr (Or.inl hFF)))
           · exact Or.inr (Or.inr (Or.inl ⟨hP, hS⟩))
         · exact Or.inr (Or.inl ⟨hP, hF⟩)
       · exact Or.inl (Or.inr hGω)
@@ -197,7 +209,9 @@ theorem measure_not_domGood_le_add {p : unitInterval}
   have hN := measure_union_null hP0 hG0
   refine (measure_mono hsub).trans ((measure_union_le _ _).trans ?_)
   rw [hN, zero_add]
-  exact (measure_union_le _ _).trans (add_le_add le_rfl (measure_union_le _ _))
+  exact (measure_union_le _ _).trans (add_le_add le_rfl ((measure_union_le _ _).trans
+    (add_le_add le_rfl ((measure_union_le _ _).trans
+      (add_le_add le_rfl (measure_union_le _ _))))))
 
 /-- **A vertex is good for the domination, with high probability** (`d ≥ 3`). -/
 theorem measure_not_domGood_le [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
@@ -208,33 +222,48 @@ theorem measure_not_domGood_le [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
         ENNReal.ofReal (C * (R : ℝ) ^ (2 * d) * Real.exp (-(c * (R : ℝ) ^ σ))) := by
   obtain ⟨θ, hθ, hfar⟩ := measure_not_farGood_le (by omega : 2 ≤ d) hpc
   obtain ⟨Cs, hCs, cs, hcs, hside⟩ := measure_not_sideGood_le (by omega : 2 ≤ d) hpc
+  obtain ⟨θF, hθF, hfarF⟩ := measure_not_farGoodFlip_le (by omega : 2 ≤ d) hpc hp1
+  obtain ⟨CF, hCF, cF, hcF, hsideF⟩ := measure_not_sideGoodFlip_le (by omega : 2 ≤ d) hpc hp1
   obtain ⟨C₁, c₁, s, δ, C₂, hC₁, hc₁, hs, hδ, hC₂, hgrad⟩ :=
     measure_not_gradGood_le hG hGv hd hpc hp1 hGae
   have hd1 : (1 : ℝ) ≤ d := by exact_mod_cast (show 1 ≤ d by omega)
   have hL : (0 : ℝ) < 2 * (d : ℝ) := by positivity
   have hτ : (0 : ℝ) ≤ (d : ℝ)⁻¹ := by positivity
+  have hκ0 : (0 : ℝ) < κ := by exact_mod_cast hκ
+  have hp1' : (0 : ℝ) < 1 - p := by linarith
+  have hdp : (0 : ℝ) ≤ d / (1 - p) := by positivity
   obtain ⟨σ, hσ⟩ : ∃ σ : ℝ, σ = min (d : ℝ)⁻¹ (δ * s) := ⟨_, rfl⟩
   have hσ0 : 0 < σ := hσ ▸ lt_min (by positivity) (mul_pos hδ hs)
   have hστ : σ ≤ (d : ℝ)⁻¹ := hσ ▸ min_le_left _ _
   have hσ1 : σ ≤ 1 := hστ.trans (inv_le_one_of_one_le₀ hd1)
   have hσδ : σ ≤ δ * s := hσ ▸ min_le_right _ _
-  have hca0 : 0 < 1 / (2 * (3 * (d : ℝ) * κ * θ)) := by
-    have : (0 : ℝ) < κ := by exact_mod_cast hκ
-    positivity
+  have hca0 : 0 < 1 / (2 * (3 * (d : ℝ) * κ * θ)) := by positivity
+  have hcaF0 : 0 < 1 / (2 * (3 * (d : ℝ) * κ * θF)) := by positivity
   have hc₃0 : 0 < ((2 * (d : ℝ)) ^ (δ - 1) / C₂) ^ s := by positivity
-  obtain ⟨c, hc⟩ : ∃ c : ℝ, c = min (min (1 / (2 * (3 * (d : ℝ) * κ * θ))) (cs / 3))
+  obtain ⟨c, hc⟩ : ∃ c : ℝ, c = min (min (min (1 / (2 * (3 * (d : ℝ) * κ * θ))) (cs / 3))
+      (min (1 / (2 * (3 * (d : ℝ) * κ * θF))) (cF / 3)))
       (min c₁ (((2 * (d : ℝ)) ^ (δ - 1) / C₂) ^ s)) := ⟨_, rfl⟩
-  have hc0 : 0 < c := hc ▸ lt_min (lt_min hca0 (by positivity)) (lt_min hc₁ hc₃0)
+  have hc0 : 0 < c := hc ▸ lt_min (lt_min (lt_min hca0 (by positivity))
+    (lt_min hcaF0 (by positivity))) (lt_min hc₁ hc₃0)
   have hcca : c ≤ 1 / (2 * (3 * (d : ℝ) * κ * θ)) :=
-    hc ▸ (min_le_left _ _).trans (min_le_left _ _)
-  have hccs : c ≤ cs / 3 := hc ▸ (min_le_left _ _).trans (min_le_right _ _)
+    hc ▸ ((min_le_left _ _).trans (min_le_left _ _)).trans (min_le_left _ _)
+  have hccs : c ≤ cs / 3 :=
+    hc ▸ ((min_le_left _ _).trans (min_le_left _ _)).trans (min_le_right _ _)
+  have hccaF : c ≤ 1 / (2 * (3 * (d : ℝ) * κ * θF)) :=
+    hc ▸ ((min_le_left _ _).trans (min_le_right _ _)).trans (min_le_left _ _)
+  have hccsF : c ≤ cF / 3 :=
+    hc ▸ ((min_le_left _ _).trans (min_le_right _ _)).trans (min_le_right _ _)
   have hcc₁ : c ≤ c₁ := hc ▸ (min_le_right _ _).trans (min_le_left _ _)
   have hcc₃ : c ≤ ((2 * (d : ℝ)) ^ (δ - 1) / C₂) ^ s :=
     hc ▸ (min_le_right _ _).trans (min_le_right _ _)
   have hCs0 : 0 ≤ Cs.toReal := ENNReal.toReal_nonneg
+  have hCF0 : 0 ≤ CF.toReal := ENNReal.toReal_nonneg
   have hCa0 : 0 ≤ 2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θ)))) ^ d := by positivity
+  have hCaF0 : 0 ≤ 2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θF)))) ^ d := by positivity
   have hCg0 : 0 ≤ 3 ^ d * (1 + 3 * (κ : ℝ)) ^ d * (3 ^ d * C₁ + 2) := by positivity
   refine ⟨2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θ)))) ^ d + 3 ^ d * Cs.toReal +
+      d / (1 - p) * (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θF)))) ^ d) +
+      d / (1 - p) * (3 ^ d * CF.toReal) +
       3 ^ d * (1 + 3 * (κ : ℝ)) ^ d * (3 ^ d * C₁ + 2) + 1, c, σ, by positivity, hc0, hσ0, hσ1,
     fun i R hR u => ?_⟩
   have hx1 : (1 : ℝ) ≤ R := by exact_mod_cast hR
@@ -253,6 +282,38 @@ theorem measure_not_domGood_le [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
     rw [hconv]
     exact ENNReal.ofReal_le_ofReal
       (side_term_le hR (lt_three_mul_three_pow_capScale R) hcs hσ1 hc0.le hccs hCs0)
+  have hAF : latticeBondLaw d p {ω | ¬ FarGoodFlip edgeBond κ R ω u} ≤
+      ENNReal.ofReal (d / (1 - p) * (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θF)))) ^ d) *
+        (R : ℝ) ^ (2 * d) * Real.exp (-(c * (R : ℝ) ^ σ))) := by
+    refine (hfarF edgeBond κ R hκ u).trans (ENNReal.ofReal_le_ofReal ?_)
+    have h := far_term_le (a := 2 * d) (σ := σ) hCaF0 hx1 hσ1 hc0.le hccaF
+    calc _ = (d : ℝ) / (1 - (p : ℝ)) * (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θF)))) ^ d *
+          Real.exp (-((R : ℝ) / (2 * (3 * d * κ * θF))))) := by ring
+      _ ≤ (d : ℝ) / (1 - (p : ℝ)) * (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θF)))) ^ d *
+          (R : ℝ) ^ (2 * d) * Real.exp (-(c * (R : ℝ) ^ σ))) :=
+          mul_le_mul_of_nonneg_left h hdp
+      _ = _ := by ring
+  have hBF : latticeBondLaw d p {ω | ¬ SideGoodFlip edgeBond R ω u} ≤
+      ENNReal.ofReal (d / (1 - p) * (3 ^ d * CF.toReal) * (R : ℝ) ^ (2 * d) *
+        Real.exp (-(c * (R : ℝ) ^ σ))) := by
+    refine (hsideF edgeBond R u).trans ?_
+    have hconv : ((d * (2 * R + 1) ^ d : ℕ) : ℝ≥0∞) *
+        (CF * ENNReal.ofReal (Real.exp (-cF * (3 : ℝ) ^ capScale R) / (1 - p))) =
+        ENNReal.ofReal (((d * (2 * R + 1) ^ d : ℕ) : ℝ) *
+          (CF.toReal * (Real.exp (-cF * (3 : ℝ) ^ capScale R) / (1 - p)))) := by
+      rw [ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul hCF0, ENNReal.ofReal_natCast,
+        ENNReal.ofReal_toReal hCF]
+    rw [hconv]
+    refine ENNReal.ofReal_le_ofReal ?_
+    have h := side_term_le (d := d) hR (lt_three_mul_three_pow_capScale R) hcF hσ1 hc0.le hccsF
+      hCF0
+    calc (((d * (2 * R + 1) ^ d : ℕ) : ℝ) *
+          (CF.toReal * (Real.exp (-cF * (3 : ℝ) ^ capScale R) / (1 - p))))
+        = (d : ℝ) / (1 - (p : ℝ)) * ((((2 * R + 1) ^ d : ℕ) : ℝ) *
+          (CF.toReal * Real.exp (-cF * (3 : ℝ) ^ capScale R))) := by push_cast; ring
+      _ ≤ (d : ℝ) / (1 - (p : ℝ)) * (3 ^ d * CF.toReal * (R : ℝ) ^ (2 * d) *
+          Real.exp (-(c * (R : ℝ) ^ σ))) := mul_le_mul_of_nonneg_left h hdp
+      _ = _ := by ring
   have hC : latticeBondLaw d p {ω | ω ∈ G ∧ ¬ GradGood hG hGv κ R i ω u} ≤
       ENNReal.ofReal (3 ^ d * (1 + 3 * (κ : ℝ)) ^ d * (3 ^ d * C₁ + 2) * (R : ℝ) ^ (2 * d) *
         Real.exp (-(c * (R : ℝ) ^ σ))) := by
@@ -262,18 +323,26 @@ theorem measure_not_domGood_le [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
       (grad_term_le hR hC₁.le hL hC₂ hτ hστ hσδ hc0.le hcc₁ hcc₃)
   refine (measure_not_domGood_le_add hG hGv (ae_iff.1 (ae_partitionEvent (by omega) hpc))
     (ae_iff.1 hGae) κ R i u).trans ?_
-  refine (add_le_add hA (add_le_add hB hC)).trans ?_
+  refine (add_le_add hA (add_le_add hB (add_le_add hAF (add_le_add hBF hC)))).trans ?_
   rw [← ENNReal.ofReal_add (by positivity) (by positivity),
+    ← ENNReal.ofReal_add (by positivity) (by positivity),
+    ← ENNReal.ofReal_add (by positivity) (by positivity),
     ← ENNReal.ofReal_add (by positivity) (by positivity)]
   refine ENNReal.ofReal_le_ofReal ?_
   have e : (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θ)))) ^ d + 3 ^ d * Cs.toReal +
+      d / (1 - p) * (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θF)))) ^ d) +
+      d / (1 - p) * (3 ^ d * CF.toReal) +
       3 ^ d * (1 + 3 * (κ : ℝ)) ^ d * (3 ^ d * C₁ + 2) + 1) * (R : ℝ) ^ (2 * d) *
         Real.exp (-(c * (R : ℝ) ^ σ)) =
       (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θ)))) ^ d * (R : ℝ) ^ (2 * d) *
           Real.exp (-(c * (R : ℝ) ^ σ)) +
         (3 ^ d * Cs.toReal * (R : ℝ) ^ (2 * d) * Real.exp (-(c * (R : ℝ) ^ σ)) +
-          3 ^ d * (1 + 3 * (κ : ℝ)) ^ d * (3 ^ d * C₁ + 2) * (R : ℝ) ^ (2 * d) *
-            Real.exp (-(c * (R : ℝ) ^ σ)))) +
+          (d / (1 - p) * (2 * (2 * (1 + (d : ℝ) * (2 * (3 * d * κ * θF)))) ^ d) *
+              (R : ℝ) ^ (2 * d) * Real.exp (-(c * (R : ℝ) ^ σ)) +
+            (d / (1 - p) * (3 ^ d * CF.toReal) * (R : ℝ) ^ (2 * d) *
+                Real.exp (-(c * (R : ℝ) ^ σ)) +
+              3 ^ d * (1 + 3 * (κ : ℝ)) ^ d * (3 ^ d * C₁ + 2) * (R : ℝ) ^ (2 * d) *
+                Real.exp (-(c * (R : ℝ) ^ σ)))))) +
         (R : ℝ) ^ (2 * d) * Real.exp (-(c * (R : ℝ) ^ σ)) := by ring
   rw [e]
   exact le_add_of_nonneg_right hX
