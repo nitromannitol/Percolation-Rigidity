@@ -3718,6 +3718,7 @@ Rigidity/
                               Theorem 1 of Dario, from the results of Percolation-Cluster-Homogenization
   Support/                    definitions and lemmas used by the frozen results
 RigidityAudit/
+  AssembledFidelity.lean      hand-written checks of the assembled theorems against the statements of Rigidity/Draft/
   Axioms.lean                 the axiom report of every numbered result and of the further results
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
