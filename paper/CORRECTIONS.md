@@ -5,7 +5,7 @@ authors. The preserved source is paper/percolation-harmonic.tex (identical to th
 source). The corrected draft is produced from it by paper/make_corrected.py; each change carries a
 comment `% CORRECTION [Cn]` above the changed line that gives its reason in short, and the entries
 below give the reason for each correction (sub-tags without an entry refer to the main tag). There are
-60 tags, for 38 numbered corrections C1-C39 (there is no C27); the entry C40 concerns a cited source and changes
+60 tags, for 38 numbered corrections C1-C39 (C27 is not used); the entry C40 concerns a cited source and changes
 no line of the draft. Each correction
 was tested in an independent model review, and the literature inputs C34 and C35 were checked
 against their sources; paper/open-gadget-correction.tex explains C9 and C10. The Lean statements
