@@ -1,4 +1,5 @@
 import Rigidity.Proofs.Corrector.GeneralStepTwoWeightBound
+import Rigidity.Proofs.Corrector.GeneralStepRegionSummable
 
 /-!
 # The path weight of the Step 2 sum on `ℤᵈ` under ball sums
@@ -7,22 +8,22 @@ On the partition event of the good cubes of `ℤᵈ`, with `σ` the stopping siz
 `s` the side of the partition cubes:
 
 * `stepRegion_subset_supBox`: the anchor region of `z` (the union of the partition cubes of `z` and
-  `z + e_j`) lies in the box of radius `3s(z)` around `z`, so it has at most `(7σ(z))^d` points
-  (`card_stepRegion_le`);
+  `z + e_j`) lies in the box of radius `3s(z)` around `z`; it has at most `(1 + 3^d) σ(z)^d` points
+  (`card_stepRegion_le`, from `GeneralStepRegionSummable`);
 * `regionWeight_le_weightMajorant`: the number `N(z)` of anchor regions through `z`, weighted by
   their sizes, is at most the majorant `Σ_a 1{|a - z| ≤ 3dσ(a)} T₀(a)⁹` with `T₀(a)` the number of
-  points within `4dσ(a)` of `a`, since `(7σ(a))^d ≤ T₀(a)` (`ballCount_le`);
+  points within `4dσ(a)` of `a`, since `(1 + 3^d) σ(a)^d ≤ T₀(a)` (`ballCount_le`);
 * `pathWeight_le_ballSum`: the path weight `|R(y)| Σ_{z ∈ R(y)} c(z) N(z)` is at most
-  `(7σ(y))^d Σ_{|z - y| ≤ 3dσ(y)} c'(z) N'(z)` for any `c' ≥ c`;
+  `(1 + 3^d) σ(y)^d Σ_{|z - y| ≤ 3dσ(y)} c'(z) N'(z)` for any `c' ≥ c`;
 * `planeGrad_le_of_lipschitz`: if the corrector increments at each vertex of the infinite cluster
   are at most `Λ`, the plane gradient bound is at most `1 + 2dΛ`.
 
 This is the planar file `DarioStepTwoPathBound` on `ℤᵈ`. The anchor region of `z` is here the union
 of two neighbouring partition cubes, of sides at most `3s(z)`, instead of the ninefold enlargement
 of the smaller one, so the box of radius `6s(z)` and the `81σ(z)²` points of the planar region
-become the box of radius `3s(z)` and `(7σ(z))^d`; the Euclidean radius of a box of radius `r` is
-`d r` instead of `2r`, so the radii `12, 10` of the planar majorant become `3d, 4d`; and the plane
-gradient bound sums `2d` instead of `4` increments.
+become the box of radius `3s(z)` and `(1 + 3^d) σ(z)^d` points; the Euclidean radius of a box of
+radius `r` is `d r` instead of `2r`, so the radii `12, 10` of the planar majorant become `3d, 4d`;
+and the plane gradient bound sums `2d` instead of `4` increments.
 -/
 
 namespace Rigidity.Corrector.GeneralDim
@@ -58,26 +59,11 @@ theorem stepRegion_subset_supBox {ω : Configuration d} (hP : PartitionEvent ω)
     push_cast at h1
     linarith
 
-/-- The anchor region of `z` has at most `(7σ(z))^d` points. -/
-theorem card_stepRegion_le {ω : Configuration d} (hP : PartitionEvent ω) (z : Vertex d)
-    (j : Fin d) :
-    ((stepRegion ω z j).card : ℝ) ≤
-      (7 * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) z) ^ d := by
-  rw [stoppingSize_eq_partSide hP]
-  have hs1 : 1 ≤ partSide ω z := by rw [partSide_eq hP]; exact Nat.one_le_pow _ _ (by norm_num)
-  have h1 : (1 : ℝ) ≤ partSide ω z := by exact_mod_cast hs1
-  have hc := Finset.card_le_card (stepRegion_subset_supBox hP z j)
-  rw [card_supBox] at hc
-  have hc' : ((stepRegion ω z j).card : ℝ) ≤ ((2 * (3 * partSide ω z) + 1) ^ d : ℕ) := by
-    exact_mod_cast hc
-  refine hc'.trans ?_
-  push_cast
-  exact pow_le_pow_left₀ (by positivity) (by linarith) d
-
 theorem regionWeight_le {ω : Configuration d} (hP : PartitionEvent ω) (j : Fin d)
     (z : Vertex d) :
     regionWeight ω j z ≤ ∑' y, if z ∈ supBox y (3 * partSide ω y) then
-      ENNReal.ofReal ((7 * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y) ^ d) else 0 := by
+      ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d)
+    else 0 := by
   unfold regionWeight
   refine ENNReal.tsum_le_tsum fun y => ?_
   split_ifs with h1 h2
@@ -87,21 +73,30 @@ theorem regionWeight_le {ω : Configuration d} (hP : PartitionEvent ω) (j : Fin
   · positivity
   · exact le_rfl
 
-/-- `(7σ(y))^d` is at most the number of points within `4dσ(y)` of `y`. -/
-theorem ballCount_le {ω : Configuration d} (hP : PartitionEvent ω) (y : Vertex d) :
-    ENNReal.ofReal ((7 * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y) ^ d) ≤
+/-- `(1 + 3^d) σ(y)^d` is at most the number of points within `4dσ(y)` of `y`. -/
+theorem ballCount_le [NeZero d] {ω : Configuration d} (hP : PartitionEvent ω) (y : Vertex d) :
+    ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d) ≤
       stepOneBallSum (fun _ _ => 0) (4 * d) y ω := by
   have hσ := stoppingSize_eq_partSide hP y
   have hs1 : 1 ≤ partSide ω y := by
     rw [partSide_eq hP]; exact Nat.one_le_pow _ _ (by norm_num)
   have hs1' : (1 : ℝ) ≤ partSide ω y := by exact_mod_cast hs1
+  have h4 : (1 : ℝ) + 3 ^ d ≤ 4 ^ d := by
+    have h := pow_add_pow_le (zero_le_one : (0 : ℝ) ≤ 1) (by norm_num : (0 : ℝ) ≤ 3) (NeZero.ne d)
+    rw [one_pow] at h
+    norm_num at h
+    exact h
   unfold stepOneBallSum
-  calc ENNReal.ofReal ((7 * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y) ^ d)
+  calc ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d)
       ≤ ((supBox y (4 * partSide ω y)).card : ℝ≥0∞) := by
         rw [← ENNReal.ofReal_natCast, card_supBox, hσ]
         refine ENNReal.ofReal_le_ofReal ?_
         push_cast
-        exact pow_le_pow_left₀ (by positivity) (by linarith) d
+        calc (1 + 3 ^ d) * (partSide ω y : ℝ) ^ d ≤ 4 ^ d * (partSide ω y : ℝ) ^ d :=
+              mul_le_mul_of_nonneg_right h4 (by positivity)
+          _ = (4 * (partSide ω y : ℝ)) ^ d := (mul_pow _ _ _).symm
+          _ ≤ (2 * (4 * (partSide ω y : ℝ)) + 1) ^ d :=
+              pow_le_pow_left₀ (by positivity) (by linarith) d
     _ = ∑ w ∈ supBox y (4 * partSide ω y),
           (if ‖latticeEuclideanEmbedding (w - y)‖ ≤
               4 * d * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y then
@@ -124,7 +119,8 @@ theorem regionWeight_le_weightMajorant [NeZero d] {ω : Configuration d} (hP : P
       stepOneBallSum (fun _ _ => 0) (4 * d) a.1 ω ^ (9 : ℝ) else 0 with hg
   refine (regionWeight_le hP j z).trans ?_
   calc (∑' y, if z ∈ supBox y (3 * partSide ω y) then
-        ENNReal.ofReal ((7 * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y) ^ d) else 0)
+        ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d)
+      else 0)
       ≤ ∑' y, ∑' k : Fin d, g (y, k) := by
         refine ENNReal.tsum_le_tsum fun y => ?_
         split_ifs with h
@@ -142,10 +138,12 @@ theorem regionWeight_le_weightMajorant [NeZero d] {ω : Configuration d} (hP : P
             have hs1 : 1 ≤ partSide ω y := by
               rw [partSide_eq hP]; exact Nat.one_le_pow _ _ (by norm_num)
             have hs1' : (1 : ℝ) ≤ partSide ω y := by exact_mod_cast hs1
-            exact one_le_pow₀ (by linarith)
+            have h3 : (1 : ℝ) ≤ 1 + 3 ^ d := le_add_of_nonneg_right (by positivity)
+            exact one_le_mul_of_one_le_of_one_le h3 (one_le_pow₀ hs1')
           refine le_trans ?_ (ENNReal.le_tsum (0 : Fin d))
           simp only [hg, if_pos hc]
-          calc ENNReal.ofReal ((7 * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y) ^ d)
+          calc ENNReal.ofReal
+                ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d)
               ≤ stepOneBallSum (fun _ _ => 0) (4 * d) y ω := ballCount_le hP y
             _ = stepOneBallSum (fun _ _ => 0) (4 * d) y ω ^ (1 : ℝ) := (ENNReal.rpow_one _).symm
             _ ≤ stepOneBallSum (fun _ _ => 0) (4 * d) y ω ^ (9 : ℝ) :=
@@ -159,7 +157,7 @@ theorem pathWeight_le_ballSum [NeZero d] {ω : Configuration d} (hP : PartitionE
     {c : Vertex d → ℝ} {c' : Vertex d → ℝ≥0∞} (hc : ∀ z, ENNReal.ofReal (c z) ≤ c' z)
     (j : Fin d) (y : Vertex d) :
     pathWeight c ω j y ≤
-      ENNReal.ofReal ((7 * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y) ^ d) *
+      ENNReal.ofReal ((1 + 3 ^ d) * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y ^ d) *
         ∑' z, if ‖latticeEuclideanEmbedding (z - y)‖ ≤
             3 * d * TriadicCube.stoppingSize (TriadicCube.goodCubes ω) y then
           c' z * weightMajorant (fun _ _ => 0) (3 * d) (4 * d) z ω else 0 := by

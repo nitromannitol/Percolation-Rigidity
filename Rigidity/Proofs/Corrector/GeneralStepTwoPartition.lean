@@ -15,7 +15,7 @@ Dario (`partition_estimates_general`) gives, almost surely, a partition of `ℤ�
 cubes with stretched exponential moments of their sizes
 (`exists_stepTwoGood_partition_of_weightFailure`).
 
-For `d ≥ 3` the failure bound of the weight bound holds (`weightFailureBound`, from
+For `d ≥ 3` the failure bound of the weight bound holds (`weightFailureBound_holds`, from
 `exists_measure_not_weightGood_le`), which gives the partition (`exists_stepTwoGood_partition`).
 
 This is the planar file `DarioStepTwoPartition` on `ℤᵈ`: the conditional forms hold for `d ≥ 2`,
@@ -103,7 +103,7 @@ theorem exists_stepTwoGood_partition_of_weightFailure [NeZero d] (hd : 2 ≤ d) 
   exact ⟨hae, hmom⟩
 
 /-- The failure bound of the weight bound holds at every exponent `q ≥ 1` (`d ≥ 3`). -/
-theorem weightFailureBound [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
+theorem weightFailureBound_holds [NeZero d] (hd : 3 ≤ d) {p : unitInterval}
     (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1)
     (hGae : ∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) {κ : ℕ} (hκ : 1 ≤ κ) {q : ℝ} (hq : 1 ≤ q) :
     WeightFailureBound hG hGv p κ q :=
@@ -127,7 +127,7 @@ theorem exists_stepTwoGood_partition [NeZero d] (hd : 3 ≤ d) {p : unitInterval
         (∫ ω, Real.exp ((TriadicCube.stoppingSize (stepTwoGood hG hGv κ i ε CM M ω) x / θ) ^ s0)
           ∂latticeBondLaw d p) ≤ 2 :=
   exists_stepTwoGood_partition_of_weightFailure hG hGv (by omega) hpc
-    fun _ hq => weightFailureBound hG hGv hd hpc hp1 hGae hκ hq
+    fun _ hq => weightFailureBound_holds hG hGv hd hpc hp1 hGae hκ hq
 
 end Grad
 
