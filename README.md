@@ -1551,9 +1551,10 @@ Caccioppoli inequality; the parts that leave the triple meet its cluster, by the
 planar cells. The concentration of the averages of the powers of the reach (the analogue of AD
 Proposition 2.4 for the planar partition) is proved as well (`planarReachConcentration_holds`). The
 hypothesis `PlanarGehringPartition`, a Gehring partition in the form used by the planar Meyers estimate,
-is the hypothesis only of the theorems `planarRestrictQuadCoarsenMu_of_gehring`,
-`planarRestrictQuadCoarsenNu_of_gehring`, `planarWeakConvergence_of_gehring` and
-`planarMuLimit_eq_of_gehring_partition`; the theorems above do not assume it.
+is a hypothesis of the theorems of the table below that are stated with it and of
+`planarRestrictQuadCoarsenMu_of_gehring`, `planarRestrictQuadCoarsenNu_of_gehring`,
+`planarWeakConvergence_of_gehring` and `planarMuLimit_eq_of_gehring_partition`; the theorems named
+`_holds` in the table do not assume it.
 
 | Lean declaration | Statement |
 | --- | --- |
@@ -3026,8 +3027,12 @@ identity (`IsSlopeQuadratic`) and by the cube quantities `cubeMu`, `cubeNu` and 
 | [`exists_cubeAhomInvFinite_mul_cubeAhomFinite`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`cubeMuMean_cubeAhomFinite_sub_le`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean), [`cubeOmegaD_succ_le`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Cluster/GeneralFiniteVolumeMatrix.lean) | `ā_n^{−1}` is invertible from some scale on, `x ↦ E[−μ(□_n, x)] − ξ · x` is minimal at `x = ā_n ξ`, and the first part of Step 1 of Lemma 5.10: `D_{n+1} ≤ D_n` minus the increments of `E[ν]` at the unit vectors and of `E[−μ]` at `ā_n e_i`. |
 
 The thirty-five reports for the declarations of this section are in [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean).
-The second part of Step 1 of Lemma 5.10 and the rest of Lemma 5.10, Lemmas 5.5, 5.7, 5.8, 5.9 and 5.11 and Proposition 5.2
-are not proved in every dimension; in dimension two they are proved in the planar sections above.
+Lemma 5.9, Steps 2 to 4 of Lemma 5.10, Proposition 5.2, Lemma 5.11 and Proposition 5.13 are proved in every
+dimension with no hypothesis in Percolation-Cluster-Homogenization (`exists_cubeOmegaD_le_decay` in
+[`GeneralOmegaRate.lean`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Cluster/GeneralOmegaRate.lean); `exists_cubeOmegaD_le_pow`,
+`cubeMuLimit_eq`, `exists_cubeRho_tail` and `exists_cubeBoundN` in
+[`GeneralSectionFive.lean`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Cluster/GeneralSectionFive.lean)); in dimension two they are
+also proved in the planar sections above.
 
 Departures from Armstrong and Dario:
 
