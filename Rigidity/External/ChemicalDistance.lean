@@ -1,10 +1,10 @@
 import LatticeProb.Prob.Percolation.LatticeBondCritical
 import LatticeProb.Prob.Percolation.LatticeBondGraph
 
-/-! The chemical distance in supercritical bond percolation (literature input): two connected sites
-at Euclidean distance `L` are joined by an open path of length at most `ρ L` outside an event of
-probability exponentially small in `L`. Used where the paper passes from a Lipschitz bound for the
-graph distance of the cluster to a growth bound in `|x|` (proof of Lemma 3.1).
+/-! The chemical distance in supercritical bond percolation: two connected sites at Euclidean
+distance `L` are joined by an open path of length at most `ρ L` outside an event of probability
+exponentially small in `L`. It is stated as a proposition; no numbered result and no proof in the
+library uses it.
 
 Source: P. Antal and A. Pisztora, *On the chemical distance for supercritical Bernoulli
 percolation*, Ann. Probab. 24 (1996), Theorem 1.1, which states, for `p > p_c(d)`, that
@@ -16,7 +16,7 @@ open MeasureTheory LatticeProb.Percolation
 
 namespace Rigidity.External
 
-/-- **Antal–Pisztora, Theorem 1.1** (literature input). -/
+/-- **Antal–Pisztora, Theorem 1.1**, stated as a proposition; no proof uses it. -/
 def AntalPisztoraChemicalDistance : Prop :=
   ∀ (d : ℕ) [NeZero d], 2 ≤ d → ∀ p : unitInterval, criticalProbability d < (p : ℝ) →
     ∃ ρ c C : ℝ, 0 < ρ ∧ 0 < c ∧ 0 < C ∧ ∀ x y : Vertex d,
