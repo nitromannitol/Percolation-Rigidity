@@ -10,36 +10,31 @@ A Lean 4 formalization of the paper
 > Transactions of the American Mathematical Society 378(6) (2025), 3823–3896,
 > [doi:10.1090/tran/9264](https://doi.org/10.1090/tran/9264).
 
-Every numbered result of the paper is stated in Lean, and every result that the paper proves is
-proved, with no `sorry` and only the standard axioms. The results that the paper quotes from other
-works and uses in its proofs are proved in Lean as well. The four main theorems therefore hold in
-Lean with no assumption beyond the setting of the paper.
+The paper shows that harmonic functions on the infinite cluster of supercritical bond percolation
+on `ℤᵈ` are far more rigid than those on `ℤᵈ`: almost surely, the Lipschitz ones and the
+integer-valued ones of linear growth are constant. It also proves a unique continuation theorem in
+the plane, and that the abelian sandpile chain on the cluster in the box `[−n, n]ᵈ` mixes in time of
+order `nᵈ log n`. Every result that the paper proves is proved in Lean, and so are the results that
+it quotes from other works and uses. The main theorems therefore hold with no assumption beyond the
+setting of the paper, and the proofs use only the standard axioms of Lean.
 
 ## The paper
 
 Open each edge of the lattice `ℤᵈ`, `d ≥ 2`, independently with probability `p`. When `p` is above
-the critical value `p_c(d)`, there is exactly one infinite connected cluster `𝒞_∞` of open edges. A
-function `u` on the cluster is *harmonic* if at every vertex its value is the average of its values at
-the neighbours joined to it by open edges.
+the critical value `p_c(d)`, there is almost surely exactly one infinite connected cluster `𝒞_∞` of
+open edges. The Laplacian of the cluster is `Δu(x) = Σ_{y ∼ x} (u(y) − u(x))`, the sum over the open
+edges at `x`, and `u : 𝒞_∞ → ℝ` is *harmonic* if `Δu = 0`.
 
-On the full lattice the linear functions are harmonic. On the cluster there are harmonic functions
-that grow linearly too, the *corrected planes*. The paper shows that, apart from these, harmonic
-functions on the cluster are far more rigid than on `ℤᵈ`:
+On `ℤᵈ` the linear functions are harmonic. On the cluster, for each slope `q ∈ ℝᵈ` there is a
+harmonic function `ℓ_q`, unique up to an additive constant, that grows like `q · x` at infinity: the
+*corrected plane* of slope `q`. Apart from these, harmonic functions on the cluster are far more
+rigid than on `ℤᵈ`.
 
-- **Theorem 1.1.** Almost surely, every harmonic function on the cluster that is Lipschitz for the
-  graph distance of the cluster is constant. On `ℤᵈ` the linear functions are counterexamples.
-- **Theorem 1.2.** Almost surely, every harmonic function on the cluster that takes integer values and
-  grows at most linearly is constant.
-- **Theorem 1.3.** In dimension two, almost surely, if `−Δu` is integer-valued with finite support
-  and `u(x)` decays faster than `1/|x|`, then `u` has finite support.
-- **Theorem 6.5.** The abelian sandpile Markov chain on the largest cluster of the box of side `n`
-  mixes in time of order `nᵈ log n`.
+**Theorem 1.1.** Almost surely, if `u : 𝒞_∞ → ℝ` is harmonic and Lipschitz for the graph distance of
+the cluster, `|u(x) − u(y)| ≤ C dist_{𝒞_∞}(x, y)` for all `x, y ∈ 𝒞_∞`, then `u` is constant.
 
-Precisely, with `Δ` the Laplacian of the cluster, `Δu(x) = Σ_{y ∼ x} (u(y) − u(x))` over the open
-edges at `x`:
-
-**Theorem 1.1.** Almost surely, if `u : 𝒞_∞ → ℝ` is harmonic and `|u(x) − u(y)| ≤ C dist_{𝒞_∞}(x, y)`
-for all `x, y ∈ 𝒞_∞`, then `u` is constant.
+On `ℤᵈ` the linear functions are counterexamples. The proof shows that the corrected plane `ℓ_{e₁}`
+is not Lipschitz: for every `L`, with positive probability `|∇ℓ_{e₁}(0)| > L` (Proposition 3.2).
 
 **Theorem 1.2.** Almost surely, if `u : 𝒞_∞ → ℝ` is harmonic, integer-valued and `u(x) = O(|x|)`, then
 `u` is constant.
@@ -48,10 +43,17 @@ for all `x, y ∈ 𝒞_∞`, then `u` is constant.
 `u : 𝒞_∞ → ℝ` satisfies `−Δu = f` and `lim sup_{R→∞} R · sup_{B_R ∖ B_{R/2}} |u| = 0`, then `u` has
 finite support.
 
-**Theorem 6.5.** Let `𝒞_*(Q_n)` be the largest open cluster of the box `Q_n = {x : |x|_∞ ≤ n}`, and
-`P^t` the law after `t` steps of the abelian sandpile chain on it, a random walk on its sandpile group,
-with uniform law `U`. There are `c, C > 0` such that almost surely, for every `ε > 0` and all large
-`n`, `‖P^t − U‖₂² ≤ ε` for `t ≥ C nᵈ log n` and `‖P^t − U‖₂² ≥ ε` for `t ≤ c nᵈ log n`.
+In words: a function with integer Laplacian of finite support that decays faster than `1/|x|` has
+finite support. On `ℤ²` this fails: with `G` the Green function of `ℤ²`, the function
+`G(x − e₁) + G(x + e₁) − 2G(x)` has integer Laplacian of finite support and decays like `|x|⁻²`.
+
+**Theorem 6.5.** Let `𝒞_*(Q_n)` be the largest open cluster of the box `Q_n = {x : |x|_∞ ≤ n}`. A site
+of it holding at least as many chips as its degree in `𝒞_∞` *topples*: it gives one chip to each
+neighbour, and chips sent out of `Q_n` are lost. The *abelian sandpile chain* adds a chip at a
+uniformly chosen site of `𝒞_*(Q_n)` and then topples sites until every site is stable. Its
+stationary law `U` is uniform on the recurrent configurations; let `P^t` be its law after `t` steps.
+There are `c, C > 0` such that almost surely, for every `ε > 0` and all large `n`,
+`‖P^t − U‖₂² ≤ ε` for `t ≥ C nᵈ log n` and `‖P^t − U‖₂² ≥ ε` for `t ≤ c nᵈ log n`.
 
 ## The main theorems in Lean
 
@@ -139,6 +141,8 @@ Two further forms are proved: Lemma 4.8 in the joint form that the proof of Lemm
 (`Rigidity.Assembly.nonConstantOnGadgetJoint`), and Lemma 5.25 with the event `G₃` as printed
 (`Rigidity.Assembly.Main.goodEventLowerBoundDirectional`; see correction C32).
 
+<a id="corrections-to-the-published-version"></a>
+
 ## Corrections
 
 The Lean statements follow a corrected draft of the arXiv v2 source,
@@ -157,11 +161,18 @@ reasons.
 The unmodified arXiv v2 source is [`paper/percolation-harmonic.tex`](paper/percolation-harmonic.tex);
 both versions are included as PDFs.
 
-The formalization also found an error in a cited work. Lemma 3.5 of Dario (2018) is false as printed
-in dimension `d ≥ 3`. The repository proves a corrected form, and the conclusion of Dario's Theorem 1,
-which the paper uses, is unchanged. [`CORRESPONDENCE.md`](CORRESPONDENCE.md) maps the results of the
-cited works to their Lean declarations and records every place where the Lean proofs depart from the
-paper or from its sources.
+The formalization also found statements of two cited works that are false as printed.
+The [departures](CORRESPONDENCE.md#departures) in `CORRESPONDENCE.md` record each one, with the form
+that the Lean proofs use instead.
+
+- In Dario, *Optimal corrector estimates on percolation clusters* (2021), Lemma 3.5 fails in
+  dimension `d ≥ 3`, and so does the form of the Meyers estimate in Proposition 3.6.
+- In Dario and Gu, *Quantitative homogenization of the parabolic and elliptic Green's functions on
+  percolation clusters* (2021), Proposition 2.7, Lemma 2.10, Proposition 3.9 at `r = R` and Theorem 5
+  fail as printed (Theorem 5 is entry C40 of [`paper/CORRECTIONS.md`](paper/CORRECTIONS.md)).
+
+None of these affects the paper: the results of the two works that the paper uses are proved in
+Lean, through corrected forms of these statements or by other routes.
 
 ## Scope
 
@@ -169,35 +180,33 @@ paper or from its sources.
   shown to be measurable. For them, "with positive probability" means that the event contains a
   measurable event of positive probability (Proposition 3.2, Lemmas 5.25 and 5.27), and an upper bound
   on a probability bounds the outer measure.
-- **Theorem 6.5.** The chain is the random walk on the sandpile group of a largest open cluster `V` of
-  `Q_n`, started from the saturated sandpile, adding at each step a chip at a uniformly chosen site of
-  `V`. The statement asserts that almost surely, for all large `n`, some largest open cluster of `Q_n`
-  lies in `𝒞_∞`, and the two bounds hold for every such cluster that meets the boundary of `Q_n`.
+- **Theorem 6.5.** The chain starts from the saturated sandpile, with `deg − 1` chips at each site.
+  The Lean statement asserts that almost surely, for all large `n`, some largest open cluster of `Q_n`
+  lies in `𝒞_∞`, and that the two bounds hold for every such cluster that meets the boundary of `Q_n`.
 - **Not formalized.** Lemma 2.13 in general, which no proof uses; the remarks, problems and
   conjectures of the paper; the figures.
 
 ## Checking the proofs
 
-- **No `sorry`.** The library has none. Each of the eight comparator challenge files under
-  [`RigidityAudit/`](RigidityAudit/) contains one intentional `sorry` at the statement, which the
-  matching solution file proves.
+- **No `sorry`.** The library has none, and the CI build fails on any warning. Each of the eight
+  comparator challenges under [`RigidityAudit/`](RigidityAudit/) contains one intentional `sorry`, in
+  place of the proof of its theorem, and the matching solution gives the proof.
 - **Standard axioms only.** [`RigidityAudit/Axioms.lean`](RigidityAudit/Axioms.lean) prints the axioms
   of every numbered result and of the main intermediate results, 1308 reports in all.
   [`scripts/check_axioms.py`](scripts/check_axioms.py) fails on any axiom other than `propext`,
   `Classical.choice` and `Quot.sound`, and on a missing report.
-- **Independent check of the statements.** Each main theorem has a comparator pair: a
-  `Challenge.lean` that restates the theorem and every definition it uses, and a `Solution.lean` that
-  proves it from the library. Four pairs restate Theorems 1.1, 1.2, 1.3 and 6.5 using mathlib alone,
-  and four restate them with the setting of the paper as the only hypothesis.
+- **Independent check of the statements.** Theorems 1.1, 1.2, 1.3 and 6.5 have two comparator pairs
+  each. In a pair, `Challenge.lean` imports only mathlib and restates the theorem with every
+  definition it uses, and `Solution.lean` proves it from the library. One pair of each theorem takes
+  the results of other works that its proof uses as explicit hypotheses, as in
+  `Rigidity.Assembly.Main`; the other has the setting of the paper as its only hypothesis.
   [leanprover/comparator](https://github.com/leanprover/comparator) checks that the two statements
   agree, that only the standard axioms are used, and replays the proof through an independent
   implementation of the Lean kernel.
-- **Continuous integration.** The **CI** workflow builds the library, checks the axiom reports and
-  builds the comparator pairs. The **Comparator audit** workflow runs the comparator on the eight pairs
-  after each successful CI run on `main`.
-
-`Rigidity/` and `Rigidity.lean` contain 875 Lean files with 196,843 lines, built on mathlib,
-Lattice-Probability and Percolation-Cluster-Homogenization.
+- **Continuous integration.** The **CI** workflow builds the library and its two dependencies, checks
+  the axiom reports and builds the comparator pairs; it does not run on changes to documentation
+  alone. The **Comparator audit** workflow runs the comparator on the eight pairs after each
+  successful CI run on `main`.
 
 ## Building
 
@@ -212,6 +221,7 @@ python3 scripts/check_axioms.py axioms-audit.log            # the axiom reports
 lake build RigidityAudit                                    # the comparator pairs
 ```
 
+`import Rigidity.Proofs.Assembly.Unconditional` loads the main theorems and what they use.
 Lattice-Probability and Percolation-Cluster-Homogenization have no prebuilt cache, so the first build
 compiles them as well as the library. They are public repositories, pinned in
 [`lake-manifest.json`](lake-manifest.json):
@@ -222,14 +232,11 @@ compiles them as well as the library. They are public repositories, pinned in
 - Percolation-Cluster-Homogenization: `https://github.com/nitromannitol/Percolation-Cluster-Homogenization`
   at `51e38b875e2fdebe3a4ec08b84595ff060be59ea`.
 
-The main theorems are in `Rigidity/Proofs/Assembly/Unconditional.lean`;
-`import Rigidity.Proofs.Assembly.Unconditional` loads them and what they use.
-
 To rebuild the PDFs of the paper, run `pdflatex` three times on `percolation-harmonic.tex` or
 `percolation-harmonic-corrected.tex` in [`paper/`](paper/); the bibliography is included as `.bbl`
-files, so BibTeX is not needed.
+files, so BibTeX is not needed. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for build conventions.
 
-## Running the comparators
+### Running the comparators
 
 Each comparator pair has a configuration `RigidityAudit/<Pair>/comparator.json`, which permits exactly
 `propext`, `Classical.choice` and `Quot.sound` and enables the nanoda kernel. Build
@@ -247,22 +254,22 @@ The four variables default to the paths under `~/tools` where the workflow build
 script builds the library and the audit modules, runs the comparator on every pair and fails if a
 pair is missing or rejected; its logs are kept under `.lake/comparator-logs/`.
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for build conventions.
-
 ## Repository layout
+
+`Rigidity/` and `Rigidity.lean` contain 875 Lean files with 196,843 lines.
 
 ```text
 Rigidity.lean            the root module
 Rigidity/
   Draft/                 the statements of the numbered results, one file per section of the paper
-  Frozen/                eight numbered results stated and proved first, with their definitions
+  Frozen/                eight numbered results with the definitions they use, one file each
   External/              the statements of the results quoted from other works
   Steps/                 one Lean proposition per step of the paper's proofs
   Proofs/                the proofs
     Assembly/            the numbered results; Unconditional.lean holds the main theorems
     Corrector/, Poincare/, Green/, Regularity/, Barlow/, BarlowLattice/
                          the results of Armstrong-Dario, Dario, Dario-Gu and Barlow that the proofs use
-  Support/               definitions and lemmas used by the frozen results
+  Support/               the lemmas from which the results in Frozen/ are proved
 RigidityAudit/           the axiom reports and the eight comparator pairs
 paper/                   the arXiv v2 source and the corrected draft (LaTeX and PDF), CORRECTIONS.md
 CORRESPONDENCE.md        the results of the cited works, their Lean declarations and the departures
@@ -272,9 +279,9 @@ scripts/                 check_axioms.py and run_comparators.sh
 ## How this was built
 
 The Lean code was written with AI assistance, using models from Anthropic (Claude) and OpenAI (GPT),
-under the direction of Ahmed Bou-Rabee. Every proof is checked by the Lean kernel. The corrections
-of the paper and the literature inputs were also reviewed against the printed proofs and their
-sources with AI models. The models, tooling and review process are disclosed in [`formalization.yaml`](formalization.yaml), following the
+under the direction of Ahmed Bou-Rabee. Every proof is checked by the Lean kernel. The models, the
+tooling, and the AI review of the corrections and of the results quoted from other works are recorded
+in [`formalization.yaml`](formalization.yaml), following the
 [mathlib-initiative](https://github.com/mathlib-initiative/formalization.yaml) standard.
 
 ## Copied code
