@@ -3658,7 +3658,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 
 ## Size
 
-`Rigidity/` and `Rigidity.lean`: 875 Lean files with 196,827 lines, on top of mathlib,
+`Rigidity/` and `Rigidity.lean`: 875 Lean files with 196,843 lines, on top of mathlib,
 Lattice-Probability and Percolation-Cluster-Homogenization. The comparator pairs (23 files, 6,183
 lines), the axiom report `RigidityAudit/Axioms.lean` (1,982 lines) and the checks of the assembled
 theorems `RigidityAudit/AssembledFidelity.lean` (481 lines) are counted separately.
