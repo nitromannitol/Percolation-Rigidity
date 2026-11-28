@@ -52,13 +52,24 @@ jobs:
       - name: Prefetch the pinned Lean toolchain with retries
         run: python3 scripts/prefetch_toolchain.py
 
-      # The action's own cache of `.lake` is off, as in the CI workflow.
-      - name: Set up Lean and fetch the Mathlib cache
+      # The action's own cache of `.lake` is off, as in the CI workflow, and the Mathlib cache is
+      # fetched with retries in the next step.
+      - name: Set up Lean
         uses: leanprover/lean-action@v1
         with:
           build: false
-          use-mathlib-cache: true
+          use-mathlib-cache: false
           use-github-cache: false
+
+      - name: Fetch the Mathlib cache with retries
+        shell: bash
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if lake exe cache get; then exit 0; fi
+            echo "Fetching the Mathlib cache failed (attempt $attempt of 5)."
+            sleep $((attempt * 30))
+          done
+          exit 1
 
       # The library artifacts of the CI run on the same commit, if any, then its dependency
       # artifacts; the audit modules are always rebuilt in a fresh copy of the source tree.
