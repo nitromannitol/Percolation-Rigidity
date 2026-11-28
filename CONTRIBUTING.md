@@ -22,8 +22,10 @@ comparator checks each against its solution.
 ## The main results and the axiom audit
 
 The main theorems (Theorems 1.1, 1.2, 1.3 and 6.5) are in
-`Rigidity/Proofs/Assembly/Main.lean`; the other numbered results are in the neighbouring files
-of `Rigidity/Proofs/Assembly/`.
+`Rigidity/Proofs/Assembly/Main.lean`, with the literature inputs as hypotheses, and in
+`Rigidity/Proofs/Assembly/Unconditional.lean`, with the regime as their only hypothesis. The other
+proved numbered results are in `Rigidity/Proofs/Assembly/Section*.lean`, except the eight in
+`Rigidity/Frozen/`; the table "All numbered results" of README.md gives the declaration of each.
 
 ```bash
 lake env lean RigidityAudit/Axioms.lean 2>&1 | tee axioms-audit.log
