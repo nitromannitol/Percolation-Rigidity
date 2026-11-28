@@ -7,7 +7,7 @@ comment `% CORRECTION [Cn]` above the changed line that gives its reason in shor
 below give the reason for each correction (sub-tags without an entry refer to the main tag). There are
 60 tags, for 38 numbered corrections C1-C39 (C27 is not used); the entry C40 concerns a cited source and changes
 no line of the draft. Each correction
-was tested in an independent model review, and the literature inputs C34 and C35 were checked
+was checked against the printed proof and the cited sources, and the literature inputs C34 and C35
 against their sources; paper/open-gadget-correction.tex explains C9 and C10. The Lean statements
 follow the corrected draft. A correction applied at several places carries the tags Cn, Cnb, Cnc, ...
 

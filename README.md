@@ -300,8 +300,9 @@ The corrected draft differs from arXiv v2 by the corrections below, each marked 
 carries the tags `Cn`, `Cnb`, `Cnc`, …. The full list, with the reason for each change, is
 [`paper/CORRECTIONS.md`](paper/CORRECTIONS.md), and the script
 [`paper/make_corrected.py`](paper/make_corrected.py) produces the corrected draft from the arXiv
-source by applying them. Each correction was tested in an independent model review. The corrected
-draft carries 60 tags, for 38 numbered corrections C1–C39; there is no correction C27.
+source by applying them. Each correction was checked against the printed proof and the cited
+sources. The corrected draft carries 60 tags, for 38 numbered corrections C1–C39; there is no
+correction C27.
 [`CORRESPONDENCE.md`](CORRESPONDENCE.md) maps the results of the cited works that the repository proves to their Lean
 declarations and records where the Lean proofs depart from the paper or from the cited source.
 
@@ -624,7 +625,7 @@ Couronné and Messikh; see
 [Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2).
 The two cases together prove `WellConnectedInput`, as `Rigidity.Percolation.wellConnected_input`.
 
-Each input was checked against its source in an independent model review. Page numbers refer to the
+Each input was checked against the statement in its source. Page numbers refer to the
 arXiv versions listed below. AD: S. Armstrong and P. Dario, *Elliptic regularity and quantitative
 homogenization on percolation clusters*, Comm. Pure Appl. Math. 71 (2018); arXiv:1609.09431v2.
 DG: P. Dario and C. Gu, *Quantitative homogenization of the parabolic and elliptic Green's functions
@@ -3651,7 +3652,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   `paper/percolation-harmonic.tex` has SHA-256
   `8a77e097b6e5c2debd4a249d4c9a7721636277817026f87fe18189934adb0b1e`.
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
-  checked against its source in an independent model review; the sources are listed in
+  checked against the statement in its source; the sources are listed in
   [Assumed literature inputs](#assumed-literature-inputs). The original theorem statements retain these
   hypotheses; all twelve are proved, and the versions described there discharge them.
 
@@ -3767,8 +3768,9 @@ lakefile.lean, lake-manifest.json, lean-toolchain   the build
 ## How this was built
 
 The Lean code was written with AI assistance, using models from Anthropic (Claude) and OpenAI (GPT),
-under the direction of Ahmed Bou-Rabee. Every proof is checked by the Lean kernel. The models,
-tooling and review process are disclosed in [`formalization.yaml`](formalization.yaml), following the
+under the direction of Ahmed Bou-Rabee. Every proof is checked by the Lean kernel. The corrections
+of the paper and the literature inputs were also reviewed against the printed proofs and their
+sources with AI models. The models, tooling and review process are disclosed in [`formalization.yaml`](formalization.yaml), following the
 [mathlib-initiative](https://github.com/mathlib-initiative/formalization.yaml) standard.
 
 ## Copied code
