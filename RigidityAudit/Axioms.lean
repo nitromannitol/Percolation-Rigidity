@@ -622,6 +622,8 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 #print axioms Rigidity.Assembly.Unconditional.renormalizedDomination
 #print axioms Rigidity.Assembly.Unconditional.longPathRenormalized
 #print axioms Rigidity.Assembly.Unconditional.finiteBranches
+#print axioms Rigidity.Assembly.Unconditional.mixed_green
+#print axioms Rigidity.Assembly.Unconditional.nonConstantOnGadgetJoint
 
 -- Theorem 1.3 from its dimension-two literature inputs
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay

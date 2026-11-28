@@ -124,7 +124,9 @@ further = {
          'Rigidity.Assembly.Unconditional.disjointPathsToInfinity',
          'Rigidity.Assembly.Unconditional.renormalizedDomination',
          'Rigidity.Assembly.Unconditional.longPathRenormalized',
-         'Rigidity.Assembly.Unconditional.finiteBranches'],
+         'Rigidity.Assembly.Unconditional.finiteBranches',
+         'Rigidity.Assembly.Unconditional.mixed_green',
+         'Rigidity.Assembly.Unconditional.nonConstantOnGadgetJoint'],
     'Theorem 1.3 from its dimension-two inputs':
         ['Rigidity.Assembly.WithPlanarInputs.fast_decay',
          'Rigidity.Assembly.WithPlanarInputs.fast_decay_of_green_exists'],

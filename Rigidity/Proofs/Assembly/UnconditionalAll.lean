@@ -1,3 +1,4 @@
+import Rigidity.Frozen.MixedGreenV1
 import Rigidity.Proofs.Assembly.Main
 import Rigidity.Proofs.Assembly.Section2
 import Rigidity.Proofs.Assembly.Section3
@@ -21,12 +22,13 @@ import PercolationClusterHomogenization.Proofs.Regularity.GeneralOrderOneHolds
 
 `Rigidity.Assembly.Unconditional` states Theorems 1.1, 1.2, 1.3, 6.5 and Proposition 3.2 with the
 regime as their only hypotheses. This module does the same for the other numbered results whose
-theorems of `Rigidity.Assembly.Main` and of `Rigidity.Assembly.Section2` to `Section5e` take
-literature inputs: Proposition 2.6, Lemmas 2.16, 3.1, 3.3, 4.7, 4.8 and 4.9, Proposition 4.10,
-Theorem 5.1, Propositions 5.3, 5.5, 5.7, 5.8, 5.11, 5.12, 5.20, 5.21 and 5.24, and Lemmas 5.6, 5.14,
-5.16 to 5.19, 5.23, 5.25 (both forms), 5.26, 5.27 and 5.28. Each wrapper has the conclusion of the
-original theorem and, as its only hypotheses, the regime `2 ≤ d`, `p_c(d) < p < 1`
-(`p_c(2) < p < 1` in dimension two), with every literature input supplied by its proof:
+theorems of `Rigidity.Assembly.Main`, of `Rigidity.Assembly.Section2` to `Section5e` and
+`Rigidity.mixed_green` take literature inputs: Propositions 2.6 and 2.8, Lemmas 2.16, 3.1, 3.3, 4.7,
+4.8 (both forms) and 4.9, Proposition 4.10, Theorem 5.1, Propositions 5.3, 5.5, 5.7, 5.8, 5.11,
+5.12, 5.20, 5.21 and 5.24, and Lemmas 5.6, 5.14, 5.16 to 5.19, 5.23, 5.25 (both forms), 5.26, 5.27
+and 5.28. Each wrapper has the conclusion of the original theorem and, as its only hypotheses, the
+regime `2 ≤ d`, `p_c(d) < p < 1` (`p_c(2) < p < 1` in dimension two), with every literature input
+supplied by its proof:
 
 * supercritical uniqueness of the infinite cluster
   (`Rigidity.Percolation.supercritical_bond_uniqueness`);
@@ -313,5 +315,44 @@ theorem finiteBranches (p : unitInterval) (f : Vertex 2 → ℤ)
   Rigidity.Assembly.finiteBranches Rigidity.Percolation.supercritical_bond_uniqueness
     Rigidity.Percolation.kesten_rectangle_crossing
     Rigidity.Topology.jordan_curve_theorem_sphere hpc hp1 f
+
+section MixedGreen
+
+open scoped Classical
+
+/-- **Proposition 2.8**, with every literature input supplied by its proof: the regime
+`2 ≤ d`, `p_c(d) < p < 1` is its only hypothesis. -/
+theorem mixed_green (d : ℕ) [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    ∀ δ : ℝ, 0 < δ → ∃ s C : ℝ, 0 < s ∧ 0 < C ∧
+        ∀ y : Vertex d, ∃ M : Configuration d → ℝ,
+          Measurable M ∧ (∀ ω, 1 ≤ M ω) ∧
+          Integrable (fun ω => Real.exp (Real.rpow (M ω / C) s)) (latticeBondLaw d p) ∧
+          (∫ ω, Real.exp (Real.rpow (M ω / C) s) ∂latticeBondLaw d p) ≤ 2 ∧
+          ∀ᵐ ω ∂latticeBondLaw d p,
+            ∃ _h : HasUniqueInfiniteOpenComponent ω,
+              ∀ h : HasUniqueInfiniteOpenComponent ω,
+                ∀ hy : y ∈ (uniqueInfiniteComponent h).supp,
+                  ∀ g : uniqueInfiniteComponent h → uniqueInfiniteComponent h → ℝ,
+                    (∀ z, IsGreenColumn d hd (uniqueInfiniteComponent h) z (g z)) →
+                    ∀ x : uniqueInfiniteComponent h,
+                      M ω ≤ (latticeL1Dist x.val y : ℝ) →
+                      (∑ i : Fin d, ∑ j : Fin d,
+                        |mixedEntry (uniqueInfiniteComponent h) g x ⟨y, hy⟩ i j|) ≤
+                          C / Real.rpow (latticeL1Dist x.val y : ℝ) ((d : ℝ) - δ) :=
+  fun δ hδ => Rigidity.mixed_green
+    Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds
+    Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds d hd p hpc hp1 δ hδ
+
+end MixedGreen
+
+/-- **Lemma 4.8** in the joint form that the proof of Lemma 4.7 uses, with every literature input
+supplied by its proof: the regime `2 ≤ d`, `p_c(d) < p < 1` is its only hypothesis. -/
+theorem nonConstantOnGadgetJoint (d : ℕ) [NeZero d] (hd : 2 ≤ d) (p : unitInterval)
+    (hpc : criticalProbability d < (p : ℝ)) (hp1 : (p : ℝ) < 1) :
+    Rigidity.Steps.S4.NonConstantOnGadgetJointStmt d hd p :=
+  Rigidity.Assembly.nonConstantOnGadgetJoint hd p hpc hp1 Rigidity.Percolation.wellConnected_input
+    Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds
+    Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds
 
 end Rigidity.Assembly.Unconditional
