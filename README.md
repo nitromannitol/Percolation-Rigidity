@@ -2940,7 +2940,7 @@ source has `O_s(C)` for `d ≥ 3`); the factor `|V|^{-1/d}` of (1.32) is bounded
 scale of the density.
 
 In dimension `d ≥ 3` the variance bound for all `d ≥ 3` and `𝔭_c(d) < p < 1`, `FluxVarianceBoundThree`
-([`GeneralFluxStepTwoInput.lean`](Rigidity/Proofs/Green/GeneralFluxStepTwoInput.lean)), is proved by the port to `ℤ^d` of the
+([`GeneralFluxStepTwoInput.lean`](Rigidity/Proofs/Green/GeneralFluxStepTwoInput.lean)), is proved on `ℤ^d` by the argument of the
 planar flip chain `DarioGuFlux{Flip,Pairing,OpenBound,ClosedBound,FlipSum,Partition,FlipMoments}`, on the Step 2 objects of
 Dario's Lemma 3.3 on `ℤ^d`, in four parts whose boundaries are stated in that file: the flip difference of the heat average of
 the flux in Cases 1, 2 and 3 (`FluxPairing{Open,Closed,Zero}D`), the bound of each squared flip difference by the Step 2 factor
@@ -3648,7 +3648,7 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
 - **The paper is part of the repository.** [`paper/`](paper/) holds the arXiv v2 source, the
   corrected draft, both compiled to PDF, and the list of corrections. The statements follow the
   corrected draft `paper/percolation-harmonic-corrected.tex`, with SHA-256
-  `7efc35830365f4965c0e1c77f8ce60527798bee4df760511ea6d0728b3fb5abd`; the arXiv v2 source
+  `095d614ca3a31a0c6158d2a3d3a9a0ba2696b4a7a25393eec1c53d8c92ec9b28`; the arXiv v2 source
   `paper/percolation-harmonic.tex` has SHA-256
   `8a77e097b6e5c2debd4a249d4c9a7721636277817026f87fe18189934adb0b1e`.
 - **Literature inputs checked against their sources.** Each of the twelve literature inputs was
