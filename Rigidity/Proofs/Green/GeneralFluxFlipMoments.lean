@@ -3,7 +3,7 @@ import Rigidity.Proofs.Green.GeneralFluxFlipSum
 /-!
 # The variance bound of Gu on `ℤ^d`, `d ≥ 3`, from the boundaries of the flip chain
 
-Part 4 of the port to `ℤ^d` of the proof of the variance bound (3.4) of Gu's proof of his
+Part 4 of the proof on `ℤ^d` of the variance bound (3.4) of Gu's proof of his
 Proposition 1.1 (*An efficient algorithm for solving elliptic problems on percolation clusters*),
 after the second half of `DarioGuFluxFlipMoments.lean`. Let
 `X = Σ_z Φ_{r²}(x, z) flux_{e_k}(z, i)` be the heat average of the flux (`fluxObsD`). From the
@@ -24,8 +24,9 @@ squared flip differences (`ae_resampleVar_le_tsum_bondFlipDiff`), `FluxVarianceB
 every `d ≥ 3` and supercritical `p < 1` (`fluxVarianceBoundThree_of_weight`). Since part 3 is
 proved (`fluxFlipSumPartitionD_holds`), the variance bound follows from part 2 and
 `DarioStepTwoWeightThree` (`fluxVarianceBoundThree_of_weightBound`); part 2 is proved as well
-(`fluxFlipWeightBoundD_holds`), so the variance bound rests on `DarioStepTwoWeightThree` alone
-(`fluxVarianceBoundThree_of_stepTwoWeight`).
+(`fluxFlipWeightBoundD_holds`), so the variance bound follows from `DarioStepTwoWeightThree`
+(`fluxVarianceBoundThree_of_stepTwoWeight`), which is proved
+(`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 -/
 
 open MeasureTheory Filter LatticeProb.Percolation Rigidity.Percolation Rigidity.External

@@ -2,7 +2,7 @@ import Rigidity.Proofs.Green.GeneralFluxHeatEdge
 import Rigidity.Proofs.Corrector.GeneralFlipCluster
 
 /-!
-# The variance bound of Gu on `ℤ^d`: the inputs and the boundaries of the port of the flip chain
+# The variance bound of Gu on `ℤ^d`: the inputs and the boundaries of the flip chain
 
 The variance bound (3.4) of Gu's proof of his Proposition 1.1 (*An efficient algorithm for solving
 elliptic problems on percolation clusters*), `FluxVarianceBoundD d p`, is proved in dimension two
@@ -15,12 +15,13 @@ repository (`Rigidity.Corrector.GeneralDim`: `ae_exists_correctedPlane_eq_add_co
 `ae_correctedPlane_sub_eq_smul_greenProj_closed`, `ae_dipoleCoeff_eq`, `tsum_bond_eq_tsum_edge`),
 Lemma 3.5 for the partition into good cubes of `ℤ^d` is proved in its corrected form
 (`Rigidity.Corrector.GeneralDim.resamplePartition_max_bound`) and enters the proof of part 2, and
-the remaining input for `d ≥ 3` is the named hypothesis of the repository
-`Rigidity.Corrector.GeneralDim.DarioStepTwoWeightThree`: the partition of the good cubes of Step 2
-and a majorant with moments of polynomial growth of the Step 2 weight and the path weight.
+the probabilistic part of Step 2 for `d ≥ 3`,
+`Rigidity.Corrector.GeneralDim.DarioStepTwoWeightThree` (the partition of the good cubes of Step 2
+and a majorant with moments of polynomial growth of the Step 2 weight and the path weight), is
+proved as well (`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 
 The target is `FluxVarianceBoundThree`: `FluxVarianceBoundD d p` for every `d ≥ 3` and
-`p_c(d) < p < 1`. This file fixes the boundary statements between the four parts of the port:
+`p_c(d) < p < 1`. This file fixes the boundary statements between the four parts of the proof on `ℤ^d`:
 
 * part 1 (`DarioGuFlux{Flip,Heat,Observable,Pairing}`, with `GeneralFluxHeatEdge`):
   `FluxPairingOpenD`, `FluxPairingClosedD`, `FluxPairingZeroD`, the flip difference of the heat
@@ -41,8 +42,9 @@ constants tied to the square lattice made existential. The four parts are proved
 (`fluxPairingOpenD_holds`, `fluxPairingClosedD_holds`, `fluxPairingZeroD_holds`,
 `fluxFlipWeightBoundD_holds`, `fluxFlipSumPartitionD_holds`,
 `fluxVarianceBoundThree_of_weightBound`),
-so `FluxVarianceBoundThree` follows from `DarioStepTwoWeightThree` alone
-(`fluxVarianceBoundThree_of_stepTwoWeight`).
+so `FluxVarianceBoundThree` follows from `DarioStepTwoWeightThree`
+(`fluxVarianceBoundThree_of_stepTwoWeight`), which is proved
+(`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 -/
 
 set_option autoImplicit false

@@ -16,8 +16,10 @@ the bound of each squared flip difference of the heat average of the flux by the
 Hence the Green input of Theorem 1.1 in every dimension follows from Proposition 2.12,
 `DarioStepTwoWeightThree` and `FluxFlipWeightBoundD`
 (`supercriticalBondGreenQuantitative_of_corrector_stepTwoWeight`). Since `FluxFlipWeightBoundD` is
-proved (`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`), it rests on Proposition 2.12 and
-`DarioStepTwoWeightThree` alone (`supercriticalBondGreenQuantitative_of_corrector_weight`).
+proved (`Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds`), it follows from Proposition 2.12 and
+`DarioStepTwoWeightThree` (`supercriticalBondGreenQuantitative_of_corrector_weight`), both proved
+(`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`,
+`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 -/
 
 namespace Rigidity.Assembly.ProvedFluxWeakNorm

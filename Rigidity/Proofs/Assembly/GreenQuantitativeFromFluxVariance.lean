@@ -12,10 +12,11 @@ the variance bound (3.4) of Gu's proof of his Proposition 1.1 (*An efficient alg
 elliptic problems on percolation clusters*), `FluxVarianceBoundD d p`
 (`Rigidity.Green.GeneralFlux.darioGuFluxWeakNormD_of_variance`). Hence the input follows from the
 quantitative corrector estimate and the variance bound in every dimension `d ≥ 3`
-(`supercriticalBondGreenQuantitative_of_corrector_fluxVariance`); the variance bound is the target
-`FluxVarianceBoundThree` of the port of the flip chain of the flux to `ℤ^d`
+(`supercriticalBondGreenQuantitative_of_corrector_fluxVariance`); the variance bound is
+`FluxVarianceBoundThree`, the target of the flip chain of the flux on `ℤ^d`
 (`Rigidity.Green.GeneralFlux`, `GeneralFluxStepTwoInput.lean`), which follows from
-`DarioStepTwoWeightThree` (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight`).
+`DarioStepTwoWeightThree` (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight`),
+proved in `Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`.
 -/
 
 namespace Rigidity.Assembly.ProvedFluxWeakNorm

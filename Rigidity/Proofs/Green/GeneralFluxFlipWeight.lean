@@ -15,7 +15,7 @@ for every radius `R ≥ 6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))` (`ae_
 the deterministic `sq_le_radius_of_bounds`), with `K₀ = flipWeightConst d (fluxOpenConst d)`,
 `G = planeGrad` and `v` the potential of the Green projection of the heat field of the edges. With
 the radius `stepTwoRadius 6 ω a = 6 max(s_ω(x₀), s_ω(y₀), s_{ω^{e,0}}(x₀))` this is the boundary
-statement `FluxFlipWeightBoundD` of part 2 of the port (`fluxFlipWeightBoundD_of_open`), the form of
+statement `FluxFlipWeightBoundD` of part 2 of the proof on `ℤ^d` (`fluxFlipWeightBoundD_of_open`), the form of
 the bound (4) of the Step 2 sum of the proof of Lemma 3.3 of Dario (*Optimal corrector estimates on
 percolation clusters*) used for the corrector (`ae_flipTermTwo_sq_le_weight`). With the bound for
 the open bonds (`fluxOpenBoundD_holds`) it holds with no hypothesis (`fluxFlipWeightBoundD_holds`).
@@ -196,7 +196,7 @@ theorem ae_fluxFlipD_sq_le_radius [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
     (planeGrad_nonneg hG hGv k ω) (openEnergy_nonneg _ _) hs₀ hR
     (fun h => hcl k i r hr x a h hP) (fun h => hop k i r hr x a h hP)
 
-/-- **Part 2 of the port, from the bound for the open bonds** (planar:
+/-- **Part 2 of the proof on `ℤ^d`, from the bound for the open bonds** (planar:
 `Rigidity.Green.ae_fluxFlip_sq_le_weight`): `FluxFlipWeightBoundD d p`, with the constant
 `flipWeightConst d (fluxOpenConst d)` and the box parameter `6`. -/
 theorem fluxFlipWeightBoundD_of_open [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
@@ -207,7 +207,7 @@ theorem fluxFlipWeightBoundD_of_open [NeZero d] (hd : 2 ≤ d) {p : unitInterval
   filter_upwards [ae_fluxFlipD_sq_le_radius hG hGv hd hpc hp1 hO hGae] with ω h k i r hr x a hP
   exact h k i r hr x a hP (stepTwoRadius 6 ω a) le_rfl
 
-/-- **Part 2 of the port** (planar: `Rigidity.Green.ae_fluxFlip_sq_le_weight`): the bound of each
+/-- **Part 2 of the proof on `ℤ^d`** (planar: `Rigidity.Green.ae_fluxFlip_sq_le_weight`): the bound of each
 squared flip difference of the heat average of the flux by the Step 2 factor,
 `FluxFlipWeightBoundD d p`, for `d ≥ 2` and `𝔭_c(d) < p < 1`, with no hypothesis. -/
 theorem fluxFlipWeightBoundD_holds [NeZero d] (hd : 2 ≤ d) {p : unitInterval}
