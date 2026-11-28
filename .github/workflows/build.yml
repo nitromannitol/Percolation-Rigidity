@@ -52,16 +52,28 @@ jobs:
       - name: Prefetch the pinned Lean toolchain with retries
         run: python3 scripts/prefetch_toolchain.py
 
-      # Installs the toolchain named in `lean-toolchain`, fetches every package in
-      # `lake-manifest.json` and downloads the Mathlib oleans. The action's own cache of `.lake`
-      # (about 2.5 GB per commit, mostly Mathlib oleans that its public cache already serves) is
-      # off, so that it does not evict the build caches below from the repository's cache quota.
-      - name: Set up Lean and fetch the Mathlib cache
+      # Installs the toolchain named in `lean-toolchain`. The action's own cache of `.lake` (about
+      # 2.5 GB per commit, mostly Mathlib oleans that its public cache already serves) is off, so
+      # that it does not evict the build caches below from the repository's cache quota.
+      - name: Set up Lean
         uses: leanprover/lean-action@v1
         with:
           build: false
-          use-mathlib-cache: true
+          use-mathlib-cache: false
           use-github-cache: false
+
+      # Fetches every package in `lake-manifest.json` and downloads the Mathlib oleans. A download
+      # from the Mathlib cache can fail part-way; `lake exe cache get` keeps the files it already
+      # has, so each retry fetches only the missing ones.
+      - name: Fetch the Mathlib cache with retries
+        shell: bash
+        run: |
+          for attempt in 1 2 3 4 5; do
+            if lake exe cache get; then exit 0; fi
+            echo "Fetching the Mathlib cache failed (attempt $attempt of 5)."
+            sleep $((attempt * 30))
+          done
+          exit 1
 
       # Restore and save are split so that a save runs even when a later step fails: a failed or
       # timed-out build still banks its completed modules. No save runs on a cancelled run, whose
