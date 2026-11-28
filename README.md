@@ -80,64 +80,62 @@ Five of them are quoted from other works: Proposition 2.3, Theorems 2.4 and 2.5,
 2.14. Four of these are proved here. Lemma 2.13, a fact of plane topology, is used by no proof; its
 special case for unions of lattice squares is proved.
 
-The declarations in `Rigidity.Assembly.Main` take the quoted results that their proofs use as explicit
-hypotheses. Every one of these is proved in the repository, and [`CORRESPONDENCE.md`](CORRESPONDENCE.md)
-names each proof, so each of these results also holds with no hypothesis beyond the setting of the paper.
-
 | Paper | Lean declaration | Content |
 | --- | --- | --- |
 | Theorem 1.1 | `Rigidity.Assembly.Unconditional.lipschitz` | Lipschitz harmonic functions on `𝒞_∞` are constant. |
 | Theorem 1.2 | `Rigidity.Assembly.Unconditional.integer_valued_linear_growth` | Integer-valued harmonic functions of linear growth are constant. |
 | Theorem 1.3 | `Rigidity.Assembly.Unconditional.fast_decay` | `d = 2`: integer Laplacian of finite support and decay faster than `\|x\|⁻¹` force finite support. |
 | Lemma 2.1 | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
-| Proposition 2.3 | quoted; proved: `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
-| Theorem 2.4 | quoted; proved: `Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds` (order zero), `Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_holds` (order one at the origin) | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
-| Theorem 2.5 | quoted; proved: `Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds` (qualitative), `Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds` (quantitative) | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
-| Proposition 2.6 | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
-| Proposition 2.8 | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
-| Lemma 2.13 | quoted, used by no proof; the case of unions of lattice squares: `Rigidity.Assembly.polyominoJordan` | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
-| Lemma 2.14 | quoted; proved: `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
-| Lemma 2.16 | `Rigidity.Assembly.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
-| Lemma 3.1 | `Rigidity.Assembly.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
+| Proposition 2.3 | `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
+| Theorem 2.4 (order zero) | `Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
+| Theorem 2.4 (order one at the origin) | `Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_holds` | The order-one part of the same regularity statement, at the origin. |
+| Theorem 2.5 (qualitative) | `Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`. |
+| Theorem 2.5 (quantitative) | `Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds` | Bounds on the corrector. |
+| Proposition 2.6 | `Rigidity.Assembly.Unconditional.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
+| Proposition 2.8 | `Rigidity.Assembly.Unconditional.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
+| Lemma 2.13 (unions of lattice squares) | `Rigidity.Assembly.polyominoJordan` | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
+| Lemma 2.14 | `Rigidity.Topology.jordan_curve_theorem_sphere` | The Jordan curve theorem on the sphere `S²`. |
+| Lemma 2.16 | `Rigidity.Assembly.Unconditional.jordanCurves` | Arcs from `K` points of a Jordan curve to the north pole leave at least `K` components whose closure contains the pole. |
+| Lemma 3.1 | `Rigidity.Assembly.Unconditional.reductionToSlopeE1` | A nonconstant Lipschitz harmonic function forces `ℓ_{e₁}` to be Lipschitz. |
 | Proposition 3.2 | `Rigidity.Assembly.Unconditional.notLipschitz` | For every `L`, with positive probability `\|∇ℓ_{e₁}(0)\| > L`. |
-| Lemma 3.3 | `Rigidity.Assembly.compareDifferentPlanes` | The change of the corrected planes when finitely many edges are removed. |
+| Lemma 3.3 | `Rigidity.Assembly.Unconditional.compareDifferentPlanes` | The change of the corrected planes when finitely many edges are removed. |
 | Proposition 4.1 | `Rigidity.OpenGadget.exponential_growth_on_ambient_open_gadget` | A nonconstant integer-valued harmonic function on the gadget of height `n` has `\|u(t) − u(s)\| ≥ C 3ⁿ`. |
 | Lemma 4.2 | `Rigidity.Assembly.effectiveResistanceRecurrence` | The gadget resistances satisfy `R₁ = 3`, `R_{n+1} = (3Rₙ + 2)/(Rₙ + 1)`. |
 | Lemma 4.3 | `Rigidity.Assembly.reducedRationalRecursion` | `Rₙ = A_{n+1}/Bₙ`. |
 | Lemma 4.4 | `Rigidity.Gadget.numDenomRecs` | The recursions of the numerators `Aₙ` and denominators `Bₙ`. |
 | Lemma 4.5 | `Rigidity.Gadget.reducedRational` | `A_{n+1}` and `Bₙ` are coprime. |
 | Lemma 4.6 | `Rigidity.Gadget.exponentialGrowth` | `A_{n+1} > 3^{n−1}`. |
-| Lemma 4.7 | `Rigidity.Assembly.detSlope` | For a nonzero slope `q`, almost surely some edge carries a non-integer increment of `ℓ_q`. |
-| Lemma 4.8 | `Rigidity.Assembly.Main.nonConstantOnGadget` | Conditionally on `𝒞_∞ ∩ Q_R = H`, `ℓ_q` is nonconstant on a gadget with probability at least `c R^{−2d+2}`. |
-| Lemma 4.9 | `Rigidity.Assembly.ergodicityLipschitz` | A nonconstant integer-valued harmonic function of linear growth yields an integer-valued corrected plane. |
-| Proposition 4.10 | `Rigidity.Assembly.rationalMatrix` | No nonconstant integer-valued harmonic function is within `o(\|x\|)` of a harmonic quadratic. |
-| Theorem 5.1 | `Rigidity.Assembly.Main.fastDecayDichotomy` | `d = 2`: if `u → 0` and `Δu ∈ ℤ`, then `lim sup \|x\| \|u(x)\| > 0` or `u` vanishes outside a ball. |
-| Proposition 5.3 | `Rigidity.Assembly.Main.fastDecayPotential` | The dichotomy of Theorem 5.1 for the potentials `u_f = Σ_y f(y) H(·, y)`. |
-| Proposition 5.5 | `Rigidity.Assembly.logGrowth` | If `Σ f ≠ 0`, then `u_f` grows like `log \|x\|`. |
-| Lemma 5.6 | `Rigidity.Assembly.meanZeroRepresentation` | If `Σ f = 0`, then `u_f = Σ_e F(e) ∇H(·, e)` for a finitely supported field `F`. |
-| Proposition 5.7 | `Rigidity.Assembly.Main.gradientTrichotomy` | For `p ≠ 0` and `Σ f = 0`: `Σ f ℓ_p ≠ 0`, or `u_f − lim u_f` has finite support. |
-| Proposition 5.8 | `Rigidity.Assembly.Main.twoScaleExpansion` | Two-scale expansion of `u_f` with error `C \|x\|^{−5/4}`. |
-| Proposition 5.11 | `Rigidity.Assembly.Main.levelSetDensity` | Edges where `∇u_f ≠ 0` and `∇ℓ_p ≠ 0` have positive lower density in dyadic balls. |
-| Proposition 5.12 | `Rigidity.Assembly.infiniteDisjointPaths` | A component of the level set `L₀` contains at most `\|supp f\| + 2` disjoint infinite paths. |
-| Lemma 5.14 | `Rigidity.Assembly.loopsAroundAnnuli` | Above a random scale, `𝒞_∞` has a loop around the origin in every annulus `Q_{2R} ∖ Q_R`. |
-| Lemma 5.16 | `Rigidity.Assembly.strongMaxPrinciple` | A maximum principle for bounded functions harmonic on an infinite proper subset. |
-| Lemma 5.17 | `Rigidity.Assembly.polesSuperLevelSets` | Every component of a super-level set `{u > a}` meets the support of `f`. |
-| Lemma 5.18 | `Rigidity.Assembly.longNonzeroPaths` | Paths of `𝒞_∞` leaving `Q_{R'}` from `Q_R ⊇ supp f` avoid the zero set of `u`. |
-| Lemma 5.19 | `Rigidity.Assembly.noThickPaths` | If `supp u` is infinite, no bi-infinite path in `L₀` has a whole side in `L₀`. |
-| Proposition 5.20 | `Rigidity.Assembly.boundarySize` | At most `C_f` disjoint paths join a biconnected subset of a level set to infinity. |
-| Proposition 5.21 | `Rigidity.Assembly.disjointPathsToInfinity` | `P(E_R(x)) ≥ 1 − C exp(−c Rˢ)`. |
-| Lemma 5.23 | `Rigidity.Assembly.renormalizedDomination` | The renormalized process dominates site percolation of parameter `1 − C exp(−c Rˢ)`. |
-| Proposition 5.24 | `Rigidity.Assembly.longPathRenormalized` | Long paths cross many good boxes, outside an event of probability `C exp(−cK)`. |
-| Lemma 5.25 | `Rigidity.Assembly.Main.goodEventLowerBound` | The good event `G(x, C_χ, K)` has probability at least `c > 0` for all large `K`. |
-| Lemma 5.26 | `Rigidity.Assembly.Main.goodEventDensity` | The density of good points in the triangles `T_L` tends to the probability of the good event. |
-| Lemma 5.27 | `Rigidity.Assembly.Main.largeGradientSensitive` | Near a good point, some edge has `∇ℓ_{e₁} ≠ 0` and `∇u_f ≠ 0`. |
-| Lemma 5.28 | `Rigidity.Assembly.finiteBranches` | For every edge `(x₀, x₁)` of `𝒞_∞` as in the proof of Lemma 5.27, the pruned block-cut tree has at most `C_branches` branches. |
+| Lemma 4.7 | `Rigidity.Assembly.Unconditional.detSlope` | For a nonzero slope `q`, almost surely some edge carries a non-integer increment of `ℓ_q`. |
+| Lemma 4.8 | `Rigidity.Assembly.Unconditional.nonConstantOnGadget` | Conditionally on `𝒞_∞ ∩ Q_R = H`, `ℓ_q` is nonconstant on a gadget with probability at least `c R^{−2d+2}`. |
+| Lemma 4.9 | `Rigidity.Assembly.Unconditional.ergodicityLipschitz` | A nonconstant integer-valued harmonic function of linear growth yields an integer-valued corrected plane. |
+| Proposition 4.10 | `Rigidity.Assembly.Unconditional.rationalMatrix` | No nonconstant integer-valued harmonic function is within `o(\|x\|)` of a harmonic quadratic. |
+| Theorem 5.1 | `Rigidity.Assembly.Unconditional.fastDecayDichotomy` | `d = 2`: if `u → 0` and `Δu ∈ ℤ`, then `lim sup \|x\| \|u(x)\| > 0` or `u` vanishes outside a ball. |
+| Proposition 5.3 | `Rigidity.Assembly.Unconditional.fastDecayPotential` | The dichotomy of Theorem 5.1 for the potentials `u_f = Σ_y f(y) H(·, y)`. |
+| Proposition 5.5 | `Rigidity.Assembly.Unconditional.logGrowth` | If `Σ f ≠ 0`, then `u_f` grows like `log \|x\|`. |
+| Lemma 5.6 | `Rigidity.Assembly.Unconditional.meanZeroRepresentation` | If `Σ f = 0`, then `u_f = Σ_e F(e) ∇H(·, e)` for a finitely supported field `F`. |
+| Proposition 5.7 | `Rigidity.Assembly.Unconditional.gradientTrichotomy` | For `p ≠ 0` and `Σ f = 0`: `Σ f ℓ_p ≠ 0`, or `u_f − lim u_f` has finite support. |
+| Proposition 5.8 | `Rigidity.Assembly.Unconditional.twoScaleExpansion` | Two-scale expansion of `u_f` with error `C \|x\|^{−5/4}`. |
+| Proposition 5.11 | `Rigidity.Assembly.Unconditional.levelSetDensity` | Edges where `∇u_f ≠ 0` and `∇ℓ_p ≠ 0` have positive lower density in dyadic balls. |
+| Proposition 5.12 | `Rigidity.Assembly.Unconditional.infiniteDisjointPaths` | A component of the level set `L₀` contains at most `\|supp f\| + 2` disjoint infinite paths. |
+| Lemma 5.14 | `Rigidity.Assembly.Unconditional.loopsAroundAnnuli` | Above a random scale, `𝒞_∞` has a loop around the origin in every annulus `Q_{2R} ∖ Q_R`. |
+| Lemma 5.16 | `Rigidity.Assembly.Unconditional.strongMaxPrinciple` | A maximum principle for bounded functions harmonic on an infinite proper subset. |
+| Lemma 5.17 | `Rigidity.Assembly.Unconditional.polesSuperLevelSets` | Every component of a super-level set `{u > a}` meets the support of `f`. |
+| Lemma 5.18 | `Rigidity.Assembly.Unconditional.longNonzeroPaths` | Paths of `𝒞_∞` leaving `Q_{R'}` from `Q_R ⊇ supp f` avoid the zero set of `u`. |
+| Lemma 5.19 | `Rigidity.Assembly.Unconditional.noThickPaths` | If `supp u` is infinite, no bi-infinite path in `L₀` has a whole side in `L₀`. |
+| Proposition 5.20 | `Rigidity.Assembly.Unconditional.boundarySize` | At most `C_f` disjoint paths join a biconnected subset of a level set to infinity. |
+| Proposition 5.21 | `Rigidity.Assembly.Unconditional.disjointPathsToInfinity` | `P(E_R(x)) ≥ 1 − C exp(−c Rˢ)`. |
+| Lemma 5.23 | `Rigidity.Assembly.Unconditional.renormalizedDomination` | The renormalized process dominates site percolation of parameter `1 − C exp(−c Rˢ)`. |
+| Proposition 5.24 | `Rigidity.Assembly.Unconditional.longPathRenormalized` | Long paths cross many good boxes, outside an event of probability `C exp(−cK)`. |
+| Lemma 5.25 | `Rigidity.Assembly.Unconditional.goodEventLowerBound` | The good event `G(x, C_χ, K)` has probability at least `c > 0` for all large `K`. |
+| Lemma 5.26 | `Rigidity.Assembly.Unconditional.goodEventDensity` | The density of good points in the triangles `T_L` tends to the probability of the good event. |
+| Lemma 5.27 | `Rigidity.Assembly.Unconditional.largeGradientSensitive` | Near a good point, some edge has `∇ℓ_{e₁} ≠ 0` and `∇u_f ≠ 0`. |
+| Lemma 5.28 | `Rigidity.Assembly.Unconditional.finiteBranches` | For every edge `(x₀, x₁)` of `𝒞_∞` as in the proof of Lemma 5.27, the pruned block-cut tree has at most `C_branches` branches. |
 | Proposition 6.4 | `Rigidity.integer_valued_compact_support` | A finitely supported function on `ℤᵈ` with integer Laplacian is integer-valued. |
 | Theorem 6.5 | `Rigidity.Assembly.Unconditional.slow_mixing` | The sandpile chain on `𝒞_*(Q_n)` mixes in `L²` in time of order `nᵈ log n`. |
 
 Two further forms are proved: Lemma 4.8 in the joint form that the proof of Lemma 4.7 uses
-(`Rigidity.Assembly.nonConstantOnGadgetJoint`), and Lemma 5.25 with the event `G₃` as printed
-(`Rigidity.Assembly.Main.goodEventLowerBoundDirectional`; see correction C32).
+(`Rigidity.Assembly.Unconditional.nonConstantOnGadgetJoint`), and Lemma 5.25 with the event `G₃` as printed
+(`Rigidity.Assembly.Unconditional.goodEventLowerBoundDirectional`; see correction C32).
 
 ## Corrections
 
