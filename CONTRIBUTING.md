@@ -46,8 +46,10 @@ not appear in the reports of the theorems.
 - No `sorry`, `admit`, `native_decide` or new `axiom` in the library. Avoid `set_option maxHeartbeats`;
   where it is used, it raises the limit to at most 400000 for a single declaration.
 - Statements stay faithful to the corrected draft `paper/percolation-harmonic-corrected.tex` and
-  are referred to by their number and LaTeX label, never by line number. Where a statement
-  departs from the printed paper, the departure is listed in `paper/CORRECTIONS.md`.
+  are referred to by their number and LaTeX label. A docstring may add the lines of the corrected
+  draft next to the number (for example `L722-725`); line numbers refer to the committed file,
+  whose SHA-256 the README records. Where a statement departs from the printed paper, the
+  departure is listed in `paper/CORRECTIONS.md`.
 - A result cited from the literature is stated as a proposition in `Rigidity/External/` (or in an
   `External/` module of a dependency), with its source in the docstring, and enters a theorem as an
   explicit hypothesis. Do not add an `axiom` for it.
