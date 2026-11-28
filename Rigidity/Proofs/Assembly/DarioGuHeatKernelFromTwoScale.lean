@@ -1,4 +1,4 @@
-import Rigidity.Proofs.Poincare.DarioCorrectorBridges
+import Rigidity.Proofs.Assembly.DarioCorrectorFromLemmaThreeThree
 import Rigidity.Proofs.Green.DarioGuTheoremOnePoincare
 
 /-!

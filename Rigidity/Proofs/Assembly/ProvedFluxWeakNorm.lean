@@ -1,7 +1,7 @@
 import Rigidity.Proofs.Green.DarioGuFluxWeakNormHolds
 import Rigidity.Proofs.Green.DarioGuFluxTranslateHolds
-import Rigidity.Proofs.Poincare.DarioGuFluxBridges
-import Rigidity.Proofs.Poincare.DarioStepTwoBridges
+import Rigidity.Proofs.Assembly.DarioGuHeatKernelFromFlux
+import Rigidity.Proofs.Assembly.DarioCorrectorFromStepTwoSum
 import Rigidity.Proofs.Assembly.PlanarDarioGu
 import Rigidity.Proofs.Assembly.ProvedBarlow
 import Rigidity.Proofs.Assembly.PlanarDarioGuVeryGood

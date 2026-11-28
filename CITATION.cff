@@ -7,14 +7,18 @@ abstract: >-
   A Lean 4 and Mathlib formalization of the paper "Rigidity of harmonic functions on the
   supercritical percolation cluster" by Ahmed Bou-Rabee, William Cooperman and Paul Dario, in a
   corrected draft of the arXiv v2 source kept in paper/. All 43 numbered results that the paper
-  proves are proved in Lean, with no sorry and only the standard axioms, from twelve results of the
-  literature that enter as explicit hypotheses; the other five numbered results are quoted from the
-  literature. Among them are the main theorems: on the infinite cluster of supercritical bond
-  percolation, Lipschitz harmonic functions and integer-valued harmonic functions of linear growth
-  are constant (Theorems 1.1 and 1.2), in two dimensions a function with integer Laplacian of finite
-  support that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov
-  chain on the largest cluster of a box mixes in time of order n^d log n (Theorem 6.5). Each of the
-  four main theorems has a Mathlib-only comparator challenge.
+  proves are proved in Lean, with no sorry and only the standard axioms; the other five numbered
+  results are quoted from the literature. The proved results include the main theorems: on the
+  infinite cluster of supercritical bond percolation, Lipschitz harmonic functions and
+  integer-valued harmonic functions of linear growth are constant (Theorems 1.1 and 1.2), in two
+  dimensions a function with integer Laplacian of finite support that decays faster than |x|^-1 has
+  finite support (Theorem 1.3), and the sandpile Markov chain on the largest cluster of a box mixes
+  in time of order n^d log n (Theorem 6.5). The theorems of Rigidity.Assembly.Main take twelve
+  results of the literature as explicit hypotheses; all twelve are also proved in Lean, so Theorems
+  1.1, 1.2, 1.3 and 6.5 and Proposition 3.2 hold with the supercritical regime p_c(d) < p < 1 as
+  their only hypothesis (Rigidity.Assembly.Unconditional). Each of the four main theorems has two
+  Mathlib-only comparator challenges, one with the literature inputs as hypotheses and one with the
+  regime as its only hypothesis.
 authors:
   - family-names: Bou-Rabee
     given-names: Ahmed

@@ -4,7 +4,7 @@ import Rigidity.Proofs.Green.DarioGuFluxSpatialAverage
 /-!
 # The variance bound of Gu in dimension two
 
-The named hypothesis `FluxVarianceBoundD d p` of Proposition 2.13 on `ℤ^d` (the variance bound
+The statement `FluxVarianceBoundD d p` used in Proposition 2.13 on `ℤ^d` (the variance bound
 (3.4) of Gu's proof of his Proposition 1.1) holds in dimension two (`fluxVarianceBoundD_two`): at
 `d = 2` the flux `fluxValD`, its heat average `fluxObsD` and the resampling variance of
 `Rigidity.Corrector.GeneralDim.resampleVar` are the planar objects `fluxVal`, `fluxObs` and

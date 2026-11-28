@@ -17,8 +17,9 @@ almost surely (`exists_fluxWeakNormBoxD`), where `Y` and `Z` do not depend on `w
 centered flux at the dyadic times `4^j ≥ 1` are bounded by Gu's Proposition 1.1
 (`exists_fluxSpatialAverageD`, used in the weaker form `O_s(C/r)` valid for `d ≥ 2`), and the times
 below `2` by the moments of the flux itself, from the Lipschitz bound of the corrected planes
-(Dario, Proposition 2.15, `lipschitz_correctedPlane_origin`), which is (fluxbounded.est). Unlike the
-planar case, where (3.4) is proved, the bound here assumes (3.4) (`FluxVarianceBoundD`).
+(Dario, Proposition 2.15, `lipschitz_correctedPlane_origin`), which is (fluxbounded.est). The bound
+takes (3.4) as the hypothesis `FluxVarianceBoundD`, which is proved for `d = 2`
+(`fluxVarianceBoundD_two`) and for every `d ≥ 3` (`fluxVarianceBoundThree_of_stepTwoWeight`).
 -/
 
 open MeasureTheory LatticeProb LatticeProb.Percolation Rigidity.Poincare.GeneralDim

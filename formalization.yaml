@@ -11,7 +11,7 @@ project:
     that decays faster than |x|^-1 has finite support (Theorem 1.3), and the sandpile Markov chain on
     the largest cluster of a box of radius n mixes in time of order n^d log n (Theorem 6.5). All 43
     numbered results that the paper proves are proved in Lean, from twelve results of the literature
-    that enter as explicit hypotheses; all twelve inputs are also proved in Lean. The last two are the
+    that enter as explicit hypotheses; all twelve inputs are also proved in Lean. Among them are the
     quantitative corrector input in every dimension
     (Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds, from Lemma 3.3 of Dario in
     dimension d >= 3, whose Step 2 is proved through DarioStepTwoWeightThree,
@@ -19,9 +19,11 @@ project:
     Dario and Gu in every dimension (Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds,
     from Proposition 2.12 and DarioStepTwoWeightThree, FluxFlipWeightBoundD being proved,
     Rigidity.Green.GeneralFlux.fluxFlipWeightBoundD_holds); Theorem 1.1
-    (Rigidity.Assembly.Unconditional.lipschitz), Theorem 1.2
-    (Rigidity.Assembly.Unconditional.integer_valued_linear_growth), Theorem 1.3 (fast_decay_holds)
-    and Theorem 6.5 are proved with no literature hypothesis. The other five numbered results are quoted from the
+    (Rigidity.Assembly.Unconditional.lipschitz), Proposition 3.2
+    (Rigidity.Assembly.Unconditional.notLipschitz), Theorem 1.2
+    (Rigidity.Assembly.Unconditional.integer_valued_linear_growth), Theorem 1.3
+    (Rigidity.Assembly.Unconditional.fast_decay) and Theorem 6.5
+    (Rigidity.Assembly.Unconditional.slow_mixing) are proved with the regime as their only hypothesis. The other five numbered results are quoted from the
     literature; one of them, Lemma 2.13, is not an input and is used by no Lean proof, and its
     special case for unions of lattice squares is proved. Theorems 1.1, 1.2, 1.3 and 6.5 are
     independently checked by the comparator pairs under RigidityAudit/, and so are Theorems 1.1, 1.2,
@@ -56,12 +58,12 @@ sources:
     authors: ["Scott Armstrong", "Paul Dario"]
     type: "paper"
     relationship: "assumes"
-    note: "Comm. Pure Appl. Math. 71 (2018); arXiv:1609.09431v2. Theorem 2(iii) at k = 0 and k = 1, with (1.16), enters as literature inputs (see README)."
+    note: "Comm. Pure Appl. Math. 71 (2018); arXiv:1609.09431v2. Theorem 2(iii) at k = 0 and k = 1, with (1.16), enters as literature inputs of the theorems of Rigidity/Proofs/Assembly/Main.lean (see README); they are proved in Lean (Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds, Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds, Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_holds)."
   - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
     relationship: "assumes"
-    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs. Proposition A.1, also stated as a literature input, is proved, and so is the existence and uniqueness of the Green's function, in every dimension (next two entries)."
+    note: "Ann. Probab. 49 (2021); arXiv:1909.10439v4. Theorem 2 with (1.10)-(1.11), the existence and uniqueness of the Green's function around (1.8) (stated there without proof) and Proposition 2.12 enter as literature inputs of the theorems of Rigidity/Proofs/Assembly/Main.lean. All are proved in Lean in every dimension: Theorem 2 (Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds), Proposition 2.12 (Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds), and Proposition A.1 and the existence and uniqueness of the Green's function (next two entries)."
   - title: "Quantitative homogenization of the parabolic and elliptic Green's functions on percolation clusters"
     authors: ["Paul Dario", "Chenlin Gu"]
     type: "paper"
@@ -78,12 +80,12 @@ sources:
     authors: ["Geoffrey Grimmett"]
     type: "book"
     relationship: "assumes"
-    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input, with Burton and Keane, Theorem 2. Theorem (8.21), the exponential decay of the radius of finite clusters, is proved for d >= 3 by a route through crossing estimates (README, Well-connected cubes and finite clusters for d >= 3); it replaces the tail of Kesten and Zhang in the proof of the density concentration for d >= 3."
+    note: "Second edition, Springer, 1999. (1.8), (1.10), (1.11) and Theorem 8.1 enter as a literature input (the uniqueness of the infinite cluster, proved in Lean: Rigidity.Percolation.supercritical_bond_uniqueness), with Burton and Keane, Theorem 2. Theorem (8.21), the exponential decay of the radius of finite clusters, is proved for d >= 3 by a route through crossing estimates (README, Well-connected cubes and finite clusters for d >= 3); it replaces the tail of Kesten and Zhang in the proof of the density concentration for d >= 3."
   - title: "Density and uniqueness in percolation"
     authors: ["Robert M. Burton", "Michael Keane"]
     type: "paper"
     relationship: "assumes"
-    note: "Comm. Math. Phys. 121 (1989), 501-505. Theorem 2 (uniqueness of the infinite cluster) enters as a literature input."
+    note: "Comm. Math. Phys. 121 (1989), 501-505. Theorem 2 (uniqueness of the infinite cluster) enters as a literature input, proved in Lean (Rigidity.Percolation.supercritical_bond_uniqueness)."
   - title: "Surface order large deviations for Ising, Potts and percolation models"
     authors: ["Agoston Pisztora"]
     type: "paper"
@@ -98,22 +100,22 @@ sources:
     authors: ["Harry Kesten"]
     type: "book"
     relationship: "assumes"
-    note: "Birkhäuser, 1982. Theorem 11.1, equation (11.4), enters as a literature input."
+    note: "Birkhäuser, 1982. Theorem 11.1, equation (11.4), enters as a literature input, proved in Lean (Rigidity.Percolation.kesten_rectangle_crossing)."
   - title: "Real and Complex Analysis"
     authors: ["Walter Rudin"]
     type: "book"
     relationship: "assumes"
-    note: "Chapter 14, as cited in the paper: the Jordan curve theorem on the sphere enters as a literature input."
+    note: "Chapter 14, as cited in the paper: the Jordan curve theorem on the sphere enters as a literature input, proved in Lean (Rigidity.Topology.jordan_curve_theorem_sphere)."
   - title: "Algebraic Topology"
     authors: ["Allen Hatcher"]
     type: "book"
     relationship: "assumes"
-    note: "Cambridge University Press, 2002. Proposition 2B.1 and the remark after it (p. 169): the Jordan curve theorem on the sphere, a literature input."
+    note: "Cambridge University Press, 2002. Proposition 2B.1 and the remark after it (p. 169): the Jordan curve theorem on the sphere, a literature input, proved in Lean (Rigidity.Topology.jordan_curve_theorem_sphere)."
   - title: "Worst-case to average-case reductions based on Gaussian measures"
     authors: ["Daniele Micciancio", "Oded Regev"]
     type: "paper"
     relationship: "assumes"
-    note: "SIAM J. Comput. 37 (2007). Lemma 3.3 enters as a literature input."
+    note: "SIAM J. Comput. 37 (2007). Lemma 3.3 enters as a literature input, proved in Lean (Rigidity.Smoothing.micciancio_regev_smoothing)."
   - title: "Percolation on graphs of polynomial growth"
     authors: ["Daniel Contreras"]
     type: "dissertation"
@@ -183,7 +185,7 @@ status:
     Twelve results of the literature are stated as propositions, seven in the External/ directories of this repository and of
     Percolation-Cluster-Homogenization and five in the directory LatticeProb/External/ of Lattice-Probability, each with its source in its
     docstring. They enter as explicit hypotheses of the theorems that use them, not as axioms;
-    README.md lists them with the results that use them. Ten of them are proved in Lean
+    README.md lists them with the results that use them. All twelve are proved in Lean
     (Rigidity.Percolation.supercritical_bond_uniqueness, Rigidity.Smoothing.micciancio_regev_smoothing,
     Rigidity.Percolation.kesten_rectangle_crossing, Rigidity.Topology.jordan_curve_theorem_sphere,
     Rigidity.Percolation.wellConnected_input, Rigidity.Proofs.S2.cluster_density_concentration,
@@ -192,7 +194,11 @@ status:
     LatticeProb.External.ArmstrongDarioOrderZero, and
     Rigidity.Green.supercriticalBondGreenColumnExistence_holds, which proves
     LatticeProb.External.SupercriticalBondGreenColumnExistence), and, in every dimension, the
-    qualitative corrector input and the regularity of order one at the origin (see README.md). In dimension two the existence
+    qualitative corrector input (Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds), the
+    regularity of order one at the origin (Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_holds), the
+    quantitative corrector input (Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds) and the
+    quantitative Green estimate of Dario and Gu
+    (Rigidity.Assembly.EveryDimension.supercriticalBondGreenQuantitative_holds) (see README.md). In dimension two the existence
     of Green columns, which Dario and Gu state without proof, is also proved
     (Rigidity.Proofs.Section5.planar_greenColumn_exists); with the planar order-zero estimate it gives
     the planar Green-column input, and

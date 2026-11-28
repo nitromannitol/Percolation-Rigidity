@@ -4,7 +4,7 @@ import Rigidity.Proofs.Corrector.GeneralResamplePartitionHolds
 /-!
 # The boundary between the bounds for the bonds open and closed in the variance bound of Gu on `ℤ^d`
 
-Part 2 of the port of the flip chain of the flux to `ℤ^d` (`GeneralFluxStepTwoInput.lean`), the
+Part 2 of the flip chain of the flux on `ℤ^d` (`GeneralFluxStepTwoInput.lean`), the
 bound `FluxFlipWeightBoundD` of each squared flip difference by the Step 2 factor, splits as in the
 planar files into the bound for the bonds open in the configuration (`DarioGuFluxOpenBound.lean`)
 and the bound for the bonds closed in the configuration with their combination

@@ -12,9 +12,11 @@ clusters*) in every dimension `d ≥ 3` follows from the probabilistic part of S
 Lemma 3.3 of Dario (*Optimal corrector estimates on percolation clusters*) in dimension `d ≥ 3`
 alone (`Rigidity.Green.GeneralFlux.fluxVarianceBoundThree_of_stepTwoWeight`), and the input
 `LatticeProb.External.SupercriticalBondGreenQuantitative` (Dario and Gu, Theorem 2), the Green
-input of Theorem 1.1 in every dimension, rests only on Proposition 2.12 of Dario and Gu
+input of Theorem 1.1 in every dimension, follows from Proposition 2.12 of Dario and Gu
 (`CorrectorQuantitativeInput`) and `DarioStepTwoWeightThree`
-(`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight`).
+(`Rigidity.Assembly.ProvedFluxWeakNorm.supercriticalBondGreenQuantitative_of_corrector_weight`),
+both proved (`Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds`,
+`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 -/
 
 open LatticeProb.Percolation

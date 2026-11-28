@@ -14,10 +14,12 @@ piecewise constant extension.
 The proof is Gu's (Step 1): the exponential Efron–Stein inequality (Proposition 2.17 of Dario,
 `Rigidity.Corrector.GeneralDim.concentration_holds`) with the mean `E[X] = ā δ_{ik}`
 (`integral_fluxObsD`) and the variance bound (3.4) of Gu's proof, `𝕍[X] ≤ O_s(C r^{-d})`. The
-variance bound is the named hypothesis `FluxVarianceBoundD`; Gu proves it (Steps 2–4) from the
+variance bound is the statement `FluxVarianceBoundD`; Gu proves it (Steps 2–4) from the
 bound of the vertical derivatives `Σ_e (D_e X)²` by the Green function of the cluster, the
-argument of Dario's Lemma 3.3 (Step 2), which `DarioGuFluxFlipMoments.lean` carries out in dimension
-two (`fluxFlipSum_isOsBond`).
+argument of Dario's Lemma 3.3 (Step 2). It is proved in dimension two (`fluxVarianceBoundD_two`,
+`GeneralFluxVarianceTwo.lean`) and in every dimension `d ≥ 3`
+(`fluxVarianceBoundThree_of_stepTwoWeight` with
+`Rigidity.Corrector.GeneralDim.darioStepTwoWeightThree_holds`).
 -/
 
 set_option autoImplicit false
@@ -28,12 +30,13 @@ open scoped Classical ENNReal
 
 namespace Rigidity.Green.GeneralFlux
 
-/-- **The variance bound (3.4) of Gu's proof of Proposition 1.1** on `ℤ^d` (hypothesis): for every
+/-- **The variance bound (3.4) of Gu's proof of Proposition 1.1** on `ℤ^d`: for every
 measurable conull set `G` of valid configurations, the resampling variance of the heat average
 `X = Σ_z Φ_{r²}(x, z) flux_{e_k}(z, i)` of the flux is `O_s(C r^{-d})` for `r ≥ 1`, uniformly in
 `k, i, x`. In the source it follows from `𝕍[X] ≤ Σ_e (D_e X)²` and the bound of the vertical
 derivatives through the Green function of the cluster (Gu, Steps 2–4, the argument of Dario's
-Lemma 3.3). -/
+Lemma 3.3). It is proved for `d = 2` (`fluxVarianceBoundD_two`) and for every `d ≥ 3`
+(`fluxVarianceBoundThree_of_stepTwoWeight`). -/
 def FluxVarianceBoundD (d : ℕ) (p : unitInterval) : Prop :=
   ∀ (G : Set (Configuration d)) (hG : MeasurableSet G) (hGv : G ⊆ correctorValidEvent d),
     (∀ᵐ ω ∂latticeBondLaw d p, ω ∈ G) →
