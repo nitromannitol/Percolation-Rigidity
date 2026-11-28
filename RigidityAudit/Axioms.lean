@@ -12,6 +12,7 @@ import PercolationClusterHomogenization.Percolation.Blocks.SlabConnectivity
 import PercolationClusterHomogenization.Percolation.Pisztora.FiniteClusters
 import Rigidity.Proofs.Assembly.PlanarInputs
 import Rigidity.Proofs.Assembly.Unconditional
+import Rigidity.Proofs.Assembly.UnconditionalAll
 import Rigidity.Proofs.Assembly.ProvedDensity
 import Rigidity.Proofs.Assembly.ProvedOrderZero
 import Rigidity.Proofs.Assembly.ProvedGreenColumn
@@ -589,6 +590,38 @@ unions of lattice squares, the form applied at L2124, is reported as a further p
 -- Theorem 1.1 and Proposition 3.2 with every literature input proved
 #print axioms Rigidity.Assembly.Unconditional.lipschitz
 #print axioms Rigidity.Assembly.Unconditional.notLipschitz
+
+-- The numbered results with every literature input proved
+#print axioms Rigidity.Assembly.Unconditional.greenGradientHomogenization
+#print axioms Rigidity.Assembly.Unconditional.nonConstantOnGadget
+#print axioms Rigidity.Assembly.Unconditional.fastDecayDichotomy
+#print axioms Rigidity.Assembly.Unconditional.fastDecayPotential
+#print axioms Rigidity.Assembly.Unconditional.gradientTrichotomy
+#print axioms Rigidity.Assembly.Unconditional.twoScaleExpansion
+#print axioms Rigidity.Assembly.Unconditional.levelSetDensity
+#print axioms Rigidity.Assembly.Unconditional.goodEventLowerBound
+#print axioms Rigidity.Assembly.Unconditional.goodEventLowerBoundDirectional
+#print axioms Rigidity.Assembly.Unconditional.goodEventDensity
+#print axioms Rigidity.Assembly.Unconditional.largeGradientSensitive
+#print axioms Rigidity.Assembly.Unconditional.jordanCurves
+#print axioms Rigidity.Assembly.Unconditional.reductionToSlopeE1
+#print axioms Rigidity.Assembly.Unconditional.compareDifferentPlanes
+#print axioms Rigidity.Assembly.Unconditional.detSlope
+#print axioms Rigidity.Assembly.Unconditional.ergodicityLipschitz
+#print axioms Rigidity.Assembly.Unconditional.rationalMatrix
+#print axioms Rigidity.Assembly.Unconditional.logGrowth
+#print axioms Rigidity.Assembly.Unconditional.meanZeroRepresentation
+#print axioms Rigidity.Assembly.Unconditional.infiniteDisjointPaths
+#print axioms Rigidity.Assembly.Unconditional.loopsAroundAnnuli
+#print axioms Rigidity.Assembly.Unconditional.strongMaxPrinciple
+#print axioms Rigidity.Assembly.Unconditional.polesSuperLevelSets
+#print axioms Rigidity.Assembly.Unconditional.longNonzeroPaths
+#print axioms Rigidity.Assembly.Unconditional.noThickPaths
+#print axioms Rigidity.Assembly.Unconditional.boundarySize
+#print axioms Rigidity.Assembly.Unconditional.disjointPathsToInfinity
+#print axioms Rigidity.Assembly.Unconditional.renormalizedDomination
+#print axioms Rigidity.Assembly.Unconditional.longPathRenormalized
+#print axioms Rigidity.Assembly.Unconditional.finiteBranches
 
 -- Theorem 1.3 from its dimension-two literature inputs
 #print axioms Rigidity.Assembly.WithPlanarInputs.fast_decay
