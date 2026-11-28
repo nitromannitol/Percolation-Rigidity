@@ -21,12 +21,12 @@ The cited works whose results are formalized here are
 > P. Dario and C. Gu, *Quantitative homogenization of the parabolic and elliptic Green's functions on
 > percolation clusters*, Ann. Probab. 49 (2021); [arXiv:1909.10439v4](https://arxiv.org/abs/1909.10439)
 
-and, with the citations given in the README, the Gaussian upper bound of M. T. Barlow, *Random walks on
+and the Gaussian upper bound of M. T. Barlow, *Random walks on
 supercritical percolation clusters*, Ann. Probab. 32 (2004), and Proposition 1.1 of Gu, *An efficient algorithm
 for solving elliptic problems on percolation clusters*, arXiv:1907.13571. "Dario" and "DG" below are the first two
 works. The numbering of Dario and of DG is that of their arXiv sources as compiled, which counts every numbered
 equation, and `Dario18.tex:n` and `DG21.tex:n` are line numbers in those sources; the numbering of Barlow is
-the one used in the sections of the [README](README.md) on his Gaussian upper bound. The results of S. Armstrong and
+that of his paper in Ann. Probab. 32 (2004). The results of S. Armstrong and
 P. Dario, *Elliptic regularity and quantitative homogenization on percolation clusters*, Comm. Pure Appl. Math.
 71 (2018), arXiv:1609.09431, are formalized in
 [Percolation-Cluster-Homogenization](https://github.com/nitromannitol/Percolation-Cluster-Homogenization), on
