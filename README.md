@@ -228,8 +228,8 @@ proof is [`ProvedFluxWeakNorm.fast_decay_holds`](Rigidity/Proofs/Assembly/Proved
 The table lists the 48 numbered results in the order of the paper, with their LaTeX labels. Theorems
 and lemmas in `Rigidity.Assembly.Main` are in
 [`Rigidity/Proofs/Assembly/Main.lean`](Rigidity/Proofs/Assembly/Main.lean), and the other
-`Rigidity.Assembly` theorems in `Rigidity/Proofs/Assembly/Section*.lean`. The eight results proved
-first, with their own definitions, are in [`Rigidity/Frozen/`](Rigidity/Frozen/). For a statement
+`Rigidity.Assembly` theorems in `Rigidity/Proofs/Assembly/Section*.lean`. The eight results with
+their own definitions are in [`Rigidity/Frozen/`](Rigidity/Frozen/). For a statement
 in `Rigidity.Assembly`, the definition `Rigidity.Section<n>.<Name>Stmt` that it concludes is in
 [`Rigidity/Draft/`](Rigidity/Draft/). A quoted result is marked *quoted*, with the literature input
 that states it, if any, and the theorem that proves this input, if any.
@@ -242,7 +242,7 @@ that states it, if any, and the theorem that proves this input, if any.
 | Lemma 2.1 | `lemma:finite-energy` | `Rigidity.finite_flip_full_measure` | A full-measure event still holds, almost surely, after every finite modification of the bonds. |
 | Proposition 2.3 | `prop:well-connected` | quoted: `Rigidity.External.WellConnectedInput`; proved: `Rigidity.Percolation.wellConnected_input` | The box `Q_N` is well-connected with probability at least `1 − C exp(−c Nˢ)`. |
 | Theorem 2.4 | `theorem:large scale-regularity` | quoted: `LatticeProb.External.ArmstrongDarioOrderZero`, `Rigidity.External.ArmstrongDarioOrderOneOrigin`; proved at order zero in every `d ≥ 2`: `Rigidity.Proofs.Regularity.armstrongDarioOrderZero_holds`; at order one at the origin in every `d ≥ 2` from the existence of the corrected planes: `Rigidity.Proofs.Regularity.armstrongDarioOrderOneOrigin_of_supercriticalBondCorrectorInput` | Large-scale regularity of harmonic functions on `𝒞_∞` above a minimal scale. |
-| Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput`; the qualitative part proved in every `d ≥ 2`: `Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
+| Theorem 2.5 | `theorem:first-order-corrector` | quoted: `LatticeProb.External.SupercriticalBondCorrectorInput`, `Rigidity.External.CorrectorQuantitativeInput`; the qualitative part proved in every `d ≥ 2`: `Rigidity.Proofs.Regularity.GeneralDim.supercriticalBondCorrectorInput_holds`; the quantitative part proved in every `d ≥ 2`: `Rigidity.Assembly.EveryDimension.correctorQuantitativeInput_holds` | Harmonic functions of linear growth are corrected planes `a + p·x + χ_p`; bounds on the corrector. |
 | Proposition 2.6 | `prop:homogenizationellipticgreen` | `Rigidity.Assembly.Main.greenGradientHomogenization` | `∇ₓG(x, y)` is close to `Σᵢ ∇ℓ_{eᵢ}(x) ∂ᵢḠ(x − y)` above a minimal scale. |
 | Proposition 2.8 | `prop:green-mixed-derivative` | `Rigidity.mixed_green` | Decay of the mixed derivative `∇ₓ∇_y G` above a minimal scale. |
 | Lemma 2.13 | (none) | quoted, not used; the special case used in the proof of Proposition 5.12 (line 2124 of the corrected draft; the interior of a finite union of lattice squares) proved: `Rigidity.Assembly.polyominoJordan` (statement `Rigidity.Section2.PolyominoJordanStmt`); the general lemma is not formalized | A simply connected bounded planar domain whose boundary points are simple is bounded by a Jordan curve. |
@@ -645,9 +645,13 @@ Jerison, Levine and Pike: D. C. Jerison, L. Levine and J. Pike, *Mixing time and
 abelian sandpile Markov chain*, Trans. Amer. Math. Soc. 372 (2019).
 
 The precise Lean statement of each input, with its pinpoint reference and its conventions, is in
-[`Rigidity/External/`](Rigidity/External/) or, for the inputs in the namespace
-`LatticeProb.External`, in the directory `LatticeProb/External/` of Lattice-Probability at the
-pinned commit (five of these files are not on its `main` branch). Eight results use no literature
+[`Rigidity/External/`](Rigidity/External/) (`JordanCurveTheoremSphere`, `MicciancioRegevSmoothing`),
+in the directory
+[`PercolationClusterHomogenization/External/`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/tree/main/PercolationClusterHomogenization/External)
+of Percolation-Cluster-Homogenization (`WellConnectedInput`, `CorrectorQuantitativeInput`,
+`ArmstrongDarioOrderOneOrigin`, `ClusterDensityConcentrationInput`, `KestenRectangleCrossing`, all in
+the namespace `Rigidity.External`) or, for the inputs in the namespace `LatticeProb.External`, in
+the directory `LatticeProb/External/` of Lattice-Probability at the pinned commit (five of these files are not on its `main` branch). Eight results use no literature
 input: Lemma 2.1, Proposition 4.1, Lemmas 4.2 to 4.6 and Proposition 6.4.
 The library also declares `Rigidity.External.AntalPisztoraChemicalDistance` (Antal and Pisztora,
 Theorem 1.1), which no numbered result uses.
@@ -1868,7 +1872,7 @@ side the mean of `|∇u 1_{𝐚≠0}|^p`, which is not homogeneous in `u` while 
 
 Lemma 7.1 of Armstrong and Dario, the harmonic approximation of the coarsening `[u]_𝒫` on the balls of the
 cluster, holds in `d = 2` for `𝔭_c(2) < p < 1` with no hypothesis, and so does the order-zero regularity of
-Theorem 2(iii) at `k = 0` ([`planarHarmonicApproximationTwo_holds`, `armstrongDarioOrderZeroTwo_holds`](Rigidity/Proofs/Regularity/PlanarHarmonicApproximationHolds.lean)).
+Theorem 2(iii) at `k = 0` ([`planarHarmonicApproximationTwo_holds`, `armstrongDarioOrderZeroTwo_holds`](https://github.com/nitromannitol/Percolation-Cluster-Homogenization/blob/main/PercolationClusterHomogenization/Proofs/Regularity/PlanarHarmonicApproximationHolds.lean)).
 The three estimates on the squares `□_j` of the proof of Lemma 7.1 (the statement `PlanarSquareEstimatesTwo p`, with
 `L = 6`) are proved almost surely above one minimal scale `X ≤ O_s(θ)`, from Theorem 1
 ([Theorem 1 of Armstrong and Dario in dimension two](#theorem-1-of-armstrong-and-dario-in-dimension-two)) and the
@@ -3535,14 +3539,14 @@ chain, Theorem 3.8 by the Chapman–Kolmogorov equation at `t/2`), with these ch
   [Slab connectivity above the critical point](#slab-connectivity-above-the-critical-point), the
   four theorems of
   [Well-connected cubes and finite clusters for d ≥ 3](#well-connected-cubes-and-finite-clusters-for-d--3),
-  the four theorems of
+  the six theorems of
   [Proposition 2.3 and the density concentration for d = 2](#proposition-23-and-the-density-concentration-for-d--2),
   the two forms of Theorem 1.3 from dimension-two inputs, `WithPlanarInputs.fast_decay` and
   `WithPlanarInputs.fast_decay_of_green_exists`, the three theorems of
   [Density concentration in every dimension](#density-concentration-in-every-dimension), the
   three theorems of
   [Green columns and the coarse-grained cluster for d = 2](#green-columns-and-the-coarse-grained-cluster-for-d--2),
-  the twenty-one theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
+  the twenty-six theorems of [Green columns for d ≥ 3](#green-columns-for-d--3), the thirteen
   declarations of
   [Order-zero regularity in every dimension](#order-zero-regularity-in-every-dimension), the two
   theorems of
@@ -3740,7 +3744,8 @@ Rigidity/
                               Theorem 1 of Dario, from the results of Percolation-Cluster-Homogenization
   Support/                    definitions and lemmas used by the frozen results
 RigidityAudit/
-  AssembledFidelity.lean      hand-written checks of the assembled theorems against the statements of Rigidity/Draft/
+  AssembledFidelity.lean      hand-written checks of the assembled theorems against the statements
+                              of Rigidity/Draft/
   Axioms.lean                 the axiom report of every numbered result and of the further results
   Lipschitz/, IntegerLinearGrowth/, FastDecay/, SlowMixing/
                               the mathlib-only comparator pairs of Theorems 1.1, 1.2, 1.3 and 6.5
